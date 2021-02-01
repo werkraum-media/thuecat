@@ -22,7 +22,8 @@
         "phpunit/phpunit": "^9.5",
         "maglnet/composer-require-checker": "^2.1",
         "phpspec/prophecy-phpunit": "^2.0",
-        "typo3/testing-framework": "^6.6"
+        "typo3/testing-framework": "^6.6",
+        "symplify/easy-coding-standard": "^9.0"
     },
     "scripts": {
         "post-autoload-dump": [
