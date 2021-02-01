@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
+        <header/>
+        <body>
+            <trans-unit id="module.actions" xml:space="preserve">
+                <source>Actions</source>
+            </trans-unit>
+            <trans-unit id="module.overview.headline" xml:space="preserve">
+                <source>ThüCAT - Overview</source>
+            </trans-unit>
+
+            <trans-unit id="module.importConfigurations.headline" xml:space="preserve">
+                <source>Import Configurations</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.missing.title" xml:space="preserve">
+                <source>None configured</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.lastChanged" xml:space="preserve">
+                <source>Last changed</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.missing.text" xml:space="preserve">
+                <source><![CDATA[No import configuration is available yet. Please <a href="%1$s">create the first</a> to get started.]]></source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.actions.edit" xml:space="preserve">
+                <source>Edit import configuration</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.actions.new" xml:space="preserve">
+                <source>Create new import configuration</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.actions.import" xml:space="preserve">
+                <source>Import based on import configuration</source>
+            </trans-unit>
+
+            <trans-unit id="module.organisations.headline" xml:space="preserve">
+                <source>Organisations</source>
+            </trans-unit>
+            <trans-unit id="module.organisations.missing.title" xml:space="preserve">
+                <source>None imported</source>
+            </trans-unit>
+            <trans-unit id="module.organisations.missing.text" xml:space="preserve">
+                <source>Please provide an import configuration and trigger import to create an organisation.</source>
+            </trans-unit>
+            <trans-unit id="module.organisation.title" xml:space="preserve">
+                <source>Organisation</source>
+            </trans-unit>
+            <trans-unit id="module.organisation.towns" xml:space="preserve">
+                <source>Towns</source>
+            </trans-unit>
+            <trans-unit id="module.organisation.towns.none" xml:space="preserve">
+                <source>-</source>
+            </trans-unit>
+            <trans-unit id="module.organisation.lastImported" xml:space="preserve">
+                <source>Last imported</source>
+            </trans-unit>
+
+            <trans-unit id="module.imports.headline" xml:space="preserve">
+                <source>ThüCAT - Imports</source>
+            </trans-unit>
+            <trans-unit id="module.imports.missing.title" xml:space="preserve">
+                <source>No imports</source>
+            </trans-unit>
+            <trans-unit id="module.imports.missing.text" xml:space="preserve">
+                <source>No import was executed yet.</source>
+            </trans-unit>
+            <trans-unit id="module.imports.th.created" xml:space="preserve">
+                <source>Created</source>
+            </trans-unit>
+            <trans-unit id="module.imports.th.amountOfRecords" xml:space="preserve">
+                <source>Number of records</source>
+            </trans-unit>
+            <trans-unit id="module.imports.th.configuration" xml:space="preserve">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="module.imports.th.errors" xml:space="preserve">
+                <source>Errors</source>
+            </trans-unit>
+            <trans-unit id="module.imports.th.summary" xml:space="preserve">
+                <source>Summary</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
+                <source>Organisation</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_tourist_information" xml:space="preserve">
+                <source>Tourist Information</source>
+            </trans-unit>
+
+            <trans-unit id="controller.backend.import.import.success.title" xml:space="preserve">
+                <source>Import finished</source>
+            </trans-unit>
+            <trans-unit id="controller.backend.import.import.success.text" xml:space="preserve">
+                <source>Imported configuration "%1$s".</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
