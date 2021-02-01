@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  WerkraumMedia\ThueCat\:
+    resource: '../Classes/*'
+
+  WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData:
+    arguments:
+      $requestFactory: '@WerkraumMedia\ThueCat\Domain\Import\RequestFactory'

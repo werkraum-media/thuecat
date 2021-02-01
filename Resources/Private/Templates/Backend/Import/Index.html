@@ -1,0 +1,54 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+    <h1>{f:translate(id: 'module.imports.headline')}</h1>
+
+    <f:flashMessages />
+
+    <f:if condition="{imports}">
+        <f:then>
+            {f:render(section: 'Imports', arguments: {imports: imports})}
+        </f:then>
+        <f:else>
+            <f:be.infobox
+                title="{f:translate(id: 'module.imports.missing.title')}"
+                state="1"
+            >
+                {f:translate(id: 'module.imports.missing.text')}
+            </f:be.infobox>
+        </f:else>
+    </f:if>
+
+    <f:section name="Imports">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{f:translate(id: 'module.imports.th.created')}</th>
+                    <th>{f:translate(id: 'module.imports.th.configuration')}</th>
+                    <th>{f:translate(id: 'module.imports.th.amountOfRecords')}</th>
+                    <th>{f:translate(id: 'module.imports.th.summary')}</th>
+                    <th>{f:translate(id: 'module.imports.th.errors')}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <f:for each="{imports}" as="import">
+                    {f:render(section: 'Import', arguments: {import: import})}
+                </f:for>
+            </tbody>
+        </table>
+    </f:section>
+
+    <f:section name="Import">
+        <tr class="{f:if(condition: import.errors, then: 'danger')}">
+            <td>{import.created -> f:format.date(format: 'd.m.Y H:i:s')}</td>
+            <td>{import.configuration.title}</td>
+            <td>{import.entries -> f:count()}</td>
+            <td><f:for each="{import.summaryOfEntries}" key="tableName" as="amount">
+                {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount}<br>
+            </f:for></td>
+            <td><f:for each="{import.listOfErrors}" as="error">
+                {error}<br>
+            </f:for></td>
+        </tr>
+    </f:section>
+</html>

@@ -1,5 +1,7 @@
 <?php
 
+defined('TYPO3') or die();
+
 (static function (string $extensionKey, string $tableName) {
     $languagePath = 'LLL:EXT:' . $extensionKey . '/Resources/Private/Language/locallang_be.xlf:' . $tableName . '.';
 
@@ -22,4 +24,4 @@
             ],
         ],
     ]);
-})('thuecat', 'site');
+})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY, 'site');

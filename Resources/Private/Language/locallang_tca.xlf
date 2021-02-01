@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat TCA Labels">
+        <header/>
+        <body>
+            <trans-unit id="tx_thuecat_organisation" xml:space="preserve">
+                <source>Organisation</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.tstamp" xml:space="preserve">
+                <source>Last imported</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.div.manages" xml:space="preserve">
+                <source>Manages</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.manages_towns" xml:space="preserve">
+                <source>Towns</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.manages_tourist_information" xml:space="preserve">
+                <source>Tourist Information</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_tourist_information" xml:space="preserve">
+                <source>Tourist Information</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.managed_by" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.managed_by.unkown" xml:space="preserve">
+                <source>Unkown</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.tourist_information" xml:space="preserve">
+                <source>Tourist Information</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.managed_by" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.managed_by.unkown" xml:space="preserve">
+                <source>Unkown</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_import_configuration" xml:space="preserve">
+                <source>Import Configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.type" xml:space="preserve">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.type.static" xml:space="preserve">
+                <source>Static list of URLs</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.configuration" xml:space="preserve">
+                <source>Configuration</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_import_log" xml:space="preserve">
+                <source>Import Log</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log.configuration" xml:space="preserve">
+                <source>Used configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log.log_entries" xml:space="preserve">
+                <source>Imported entries</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log.crdate" xml:space="preserve">
+                <source>Created</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_import_log_entry" xml:space="preserve">
+                <source>Import Log Entry</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.insertion" xml:space="preserve">
+                <source>Was inserted or updated</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.insertion.yes" xml:space="preserve">
+                <source>Inserted</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.insertion.no" xml:space="preserve">
+                <source>Updated</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.table_name" xml:space="preserve">
+                <source>Table name (record type)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.record_uid" xml:space="preserve">
+                <source>Record UID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.errors" xml:space="preserve">
+                <source>Errors (JSON Format)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.import_log" xml:space="preserve">
+                <source>Part of this import log</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.crdate" xml:space="preserve">
+                <source>Created</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,9 @@
+module {
+    tx_thuecat {
+        view {
+            templateRootPaths {
+                0 = EXT:thuecat/Resources/Private/Templates/
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat FlexForms Labels">
+        <header/>
+        <body>
+            <trans-unit id="importConfiguration.static.sheetTitle" xml:space="preserve">
+                <source>Static import configuration</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.static.urls" xml:space="preserve">
+                <source>URLs</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.static.url" xml:space="preserve">
+                <source>URL</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
