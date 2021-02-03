@@ -49,7 +49,7 @@ class SaveData
         $identifier = $this->getIdentifier($entity);
         $dataHandler->start([
             $entity->getTypo3DatabaseTableName() => [
-                 $identifier => array_merge($entity->getData(), [
+                $identifier => array_merge($entity->getData(), [
                     'pid' => $entity->getTypo3StoragePid(),
                     'remote_id' => $entity->getRemoteId(),
                 ]),

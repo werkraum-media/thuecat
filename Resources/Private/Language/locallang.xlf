@@ -97,6 +97,12 @@
             <trans-unit id="controller.backend.import.import.success.text" xml:space="preserve">
                 <source>Imported configuration "%1$s".</source>
             </trans-unit>
+            <trans-unit id="controller.backend.import.import.error.title" xml:space="preserve">
+                <source>Import finished</source>
+            </trans-unit>
+            <trans-unit id="controller.backend.import.import.error.text" xml:space="preserve">
+                <source>Imported configuration "%1$s". But had at least one error.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

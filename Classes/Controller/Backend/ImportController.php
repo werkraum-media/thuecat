@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
@@ -58,7 +59,40 @@ class ImportController extends AbstractController
 
     public function importAction(ImportConfiguration $importConfiguration): void
     {
-        $this->importer->importConfiguration($importConfiguration);
+        $importLog = $this->importer->importConfiguration($importConfiguration);
+
+        if ($importLog->hasErrors()) {
+            $this->createImportErrorFlashMessage($importConfiguration);
+        } else {
+            $this->createImportDoneFlashMessage($importConfiguration);
+        }
+
+        $this->redirect('index', 'Backend\Overview');
+    }
+
+    protected function getMenu(): Menu
+    {
+        return $this->menu;
+    }
+
+    private function createImportErrorFlashMessage(ImportConfiguration $importConfiguration): void
+    {
+        $this->addFlashMessage(
+            $this->translation->translate(
+                'controller.backend.import.import.error.text',
+                Extension::EXTENSION_NAME,
+                [$importConfiguration->getTitle()]
+            ),
+            $this->translation->translate(
+                'controller.backend.import.import.error.title',
+                Extension::EXTENSION_NAME
+            ),
+            AbstractMessage::ERROR
+        );
+    }
+
+    private function createImportDoneFlashMessage(ImportConfiguration $importConfiguration): void
+    {
         $this->addFlashMessage(
             $this->translation->translate(
                 'controller.backend.import.import.success.text',
@@ -68,13 +102,8 @@ class ImportController extends AbstractController
             $this->translation->translate(
                 'controller.backend.import.import.success.title',
                 Extension::EXTENSION_NAME
-            )
+            ),
+            AbstractMessage::OK
         );
-        $this->redirect('index', 'Backend\Overview');
-    }
-
-    protected function getMenu(): Menu
-    {
-        return $this->menu;
     }
 }
