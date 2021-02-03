@@ -1,0 +1,10 @@
+{
+    "scan-files": [
+        "Configuration/*php",
+        "Configuration/Extbase/*.php",
+        "Configuration/SiteConfiguration/Overrides/*.php",
+        "Configuration/TCA/*.php",
+        "ext_emconf.php",
+        "ext_tables.php"
+    ]
+}
