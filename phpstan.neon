@@ -1,0 +1,27 @@
+includes:
+    - vendor/friendsoftypo3/phpstan-typo3/extension.neon
+parameters:
+    level: max
+    paths:
+        - Classes
+        - Configuration
+        - Tests
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: true
+    ignoreErrors:
+        -
+            message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+            count: 1
+            path: Classes/Domain/Import/Importer/SaveData.php
+        -
+            message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLog\\:\\:\\$logEntries \\(iterable\\<WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\>&TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\) does not accept TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\.$#"
+            count: 1
+            path: Classes/Domain/Model/Backend/ImportLog.php
+        -
+            message: "#^Cannot call method getFirst\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
+            count: 1
+            path: Classes/Domain/Repository/Backend/TownRepository.php
+        -
+            message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByRemoteIds\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\.$#"
+            count: 1
+            path: Classes/Domain/Repository/Backend/TownRepository.php

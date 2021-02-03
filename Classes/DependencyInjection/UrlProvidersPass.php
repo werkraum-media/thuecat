@@ -29,11 +29,13 @@ use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry;
 
 class UrlProvidersPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public const TAG = 'thuecat:urlprovider';
+
+    public function process(ContainerBuilder $container): void
     {
         $registry = $container->findDefinition(Registry::class);
 
-        foreach ($container->findTaggedServiceIds('thuecat.urlprovider') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
             $definition = $container->findDefinition($id);
             if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
                 continue;

@@ -37,9 +37,6 @@ class Registry
         $this->provider[] = $provider;
     }
 
-    /**
-     * @return UrlProvider[]
-     */
     public function getProviderForConfiguration(ImportConfiguration $configuration): ?UrlProvider
     {
         foreach ($this->provider as $provider) {

@@ -38,8 +38,12 @@
         "typo3/cms-extbase": "^10.4"
     },
     "require-dev": {
+        "friendsoftypo3/phpstan-typo3": "^0.6.0",
+        "jangregor/phpstan-prophecy": "^0.8.1",
         "maglnet/composer-require-checker": "^2.1",
         "phpspec/prophecy-phpunit": "^2.0",
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan": "^0.12.71",
         "phpunit/phpunit": "^9.5",
         "symplify/easy-coding-standard": "^9.0",
         "typo3/testing-framework": "^6.6"
@@ -48,6 +52,9 @@
         "post-autoload-dump": [
             "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
         ]
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "typo3/cms": {

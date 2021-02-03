@@ -44,7 +44,7 @@ abstract class AbstractController extends ActionController
      */
     protected $defaultViewObjectName = BackendTemplateView::class;
 
-    protected function initializeView(ViewInterface $view)
+    protected function initializeView(ViewInterface $view): void
     {
         if ($view instanceof BackendTemplateView) {
             $this->getMenu()->addMenu(

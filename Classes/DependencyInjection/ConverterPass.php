@@ -29,11 +29,13 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Registry;
 
 class ConverterPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public const TAG = 'thuecat.converter';
+
+    public function process(ContainerBuilder $container): void
     {
         $registry = $container->findDefinition(Registry::class);
 
-        foreach ($container->findTaggedServiceIds('thuecat.converter') as $id => $tags) {
+        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
             $definition = $container->findDefinition($id);
             if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
                 continue;

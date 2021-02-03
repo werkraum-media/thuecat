@@ -28,6 +28,9 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 class FetchData
 {
+    private RequestFactoryInterface $requestFactory;
+    private ClientInterface $httpClient;
+
     public function __construct(
         RequestFactoryInterface $requestFactory,
         ClientInterface $httpClient
