@@ -27,6 +27,7 @@ class GenericEntity implements Entity
 {
     private int $typo3StoragePid;
     private string $typo3DatabaseTableName;
+    private int $typo3SystemLanguageUid;
     private bool $created = false;
     private int $typo3Uid = 0;
     private string $remoteId;
@@ -35,11 +36,13 @@ class GenericEntity implements Entity
     public function __construct(
         int $typo3StoragePid,
         string $typo3DatabaseTableName,
+        int $typo3SystemLanguageUid,
         string $remoteId,
         array $data
     ) {
         $this->typo3StoragePid = $typo3StoragePid;
         $this->typo3DatabaseTableName = $typo3DatabaseTableName;
+        $this->typo3SystemLanguageUid = $typo3SystemLanguageUid;
         $this->remoteId = $remoteId;
         $this->data = $data;
     }
@@ -52,6 +55,21 @@ class GenericEntity implements Entity
     public function getTypo3DatabaseTableName(): string
     {
         return $this->typo3DatabaseTableName;
+    }
+
+    public function getTypo3SystemLanguageUid(): int
+    {
+        return $this->typo3SystemLanguageUid;
+    }
+
+    public function isForDefaultLanguage(): bool
+    {
+        return $this->getTypo3SystemLanguageUid() === 0;
+    }
+
+    public function isTranslation(): bool
+    {
+        return $this->getTypo3SystemLanguageUid() !== 0;
     }
 
     public function getRemoteId(): string

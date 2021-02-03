@@ -10,3 +10,7 @@ services:
   WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData:
     arguments:
       $requestFactory: '@WerkraumMedia\ThueCat\Domain\Import\RequestFactory'
+
+  WerkraumMedia\ThueCat\Frontend\DataProcessing\:
+    resource: '../Classes/Frontend/DataProcessing/*'
+    public: true

@@ -85,6 +85,7 @@ class ImportLogEntry extends Typo3AbstractEntity
     {
         if ($this->errorsAsArray === [] && $this->errors !== '') {
             $this->errorsAsArray = json_decode($this->errors, true);
+            $this->errorsAsArray = array_unique($this->errorsAsArray);
         }
 
         return $this->errorsAsArray;

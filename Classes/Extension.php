@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
 use WerkraumMedia\ThueCat\Controller\Backend\OverviewController;
@@ -32,6 +33,8 @@ class Extension
     public const EXTENSION_KEY = 'thuecat';
 
     public const EXTENSION_NAME = 'Thuecat';
+
+    public const TT_CONTENT_GROUP = 'thuecat';
 
     public static function getLanguagePath(): string
     {
@@ -55,5 +58,27 @@ class Extension
                 'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
             ]
         );
+    }
+
+    public static function registerConfig(): void
+    {
+        $languagePath = self::getLanguagePath() . 'locallang_tca.xlf:tt_content';
+
+        // TODO: Add Icon
+        ExtensionManagementUtility::addPageTSConfig('
+            mod.wizards.newContentElement.wizardItems.thuecat {
+                header = ' . $languagePath . '.group
+                show = *
+                elements {
+                    thuecat_tourist_attraction{
+                        title = ' . $languagePath . '.thuecat_tourist_attraction
+                        description =  ' . $languagePath . '.thuecat_tourist_attraction.description
+                        tt_content_defValues {
+                            CType = thuecat_tourist_attraction
+                        }
+                    }
+                }
+            }
+        ');
     }
 }

@@ -25,8 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
-use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristInformation;
+use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
@@ -35,71 +34,54 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\TouristInformation
+ * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction
  * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
  * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
-class TouristInformationTest extends TestCase
+class TouristAttractionTest extends TestCase
 {
     use ProphecyTrait;
 
     /**
      * @test
      */
-    public function instanceCanBeCreated(): void
+    public function canBeCreated(): void
     {
         $parser = $this->prophesize(Parser::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
-        $subject = new TouristInformation(
+        $subject = new TouristAttraction(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
-        self::assertInstanceOf(TouristInformation::class, $subject);
+
+        self::assertInstanceOf(TouristAttraction::class, $subject);
     }
 
     /**
      * @test
      */
-    public function isInstanceOfConverter(): void
+    public function canConvert(): void
     {
         $parser = $this->prophesize(Parser::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
-        $subject = new TouristInformation(
+        $subject = new TouristAttraction(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
-        self::assertInstanceOf(Converter::class, $subject);
+
+        self::assertTrue($subject->canConvert(['schema:TouristAttraction']));
     }
 
     /**
      * @test
      */
-    public function canConvertTouristMarketingCompany(): void
-    {
-        $parser = $this->prophesize(Parser::class);
-        $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $townRepository = $this->prophesize(TownRepository::class);
-
-        $subject = new TouristInformation(
-            $parser->reveal(),
-            $organisationRepository->reveal(),
-            $townRepository->reveal()
-        );
-        self::assertTrue($subject->canConvert([
-            'thuecat:TouristInformation',
-        ]));
-    }
-
-    /**
-     * @test
-     */
-    public function convertsJsonIdToGenericEntityWithoutRelations(): void
+    public function convertsWithoutRelations(): void
     {
         $jsonLD = [
             '@id' => 'https://example.com/resources/018132452787-ngbe',
@@ -130,47 +112,43 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/043064193523-jcyt',
             'https://example.com/resources/573211638937-gmqb',
         ]);
+        $parser->getLanguages($jsonLD)->willReturn(['de']);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD)->willReturn('Title');
-        $parser->getDescription($jsonLD)->willReturn('Description');
+        $parser->getTitle($jsonLD, 'de')->willReturn('Title');
+        $parser->getDescription($jsonLD, 'de')->willReturn('Description');
+        $parser->getOpeningHours($jsonLD)->willReturn([]);
 
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')
-            ->willReturn(null);
-
         $townRepository = $this->prophesize(TownRepository::class);
-        $townRepository->findOneByRemoteIds([
-            'https://example.com/resources/043064193523-jcyt',
-            'https://example.com/resources/573211638937-gmqb',
-        ])->willReturn(null);
 
-        $subject = new TouristInformation(
+        $subject = new TouristAttraction(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
+
         $entities = $subject->convert($jsonLD);
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
 
         $entity = $entities->getEntities()[0];
-
         self::assertSame(10, $entity->getTypo3StoragePid());
-        self::assertSame('tx_thuecat_tourist_information', $entity->getTypo3DatabaseTableName());
+        self::assertSame('tx_thuecat_tourist_attraction', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([
             'title' => 'Title',
             'description' => 'Description',
             'managed_by' => 0,
             'town' => 0,
+            'opening_hours' => '[]',
         ], $entity->getData());
     }
 
     /**
      * @test
      */
-    public function convertsJsonIdToGenericEntityWithRelations(): void
+    public function convertsWithRelations(): void
     {
         $jsonLD = [
             '@id' => 'https://example.com/resources/018132452787-ngbe',
@@ -201,15 +179,16 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/043064193523-jcyt',
             'https://example.com/resources/573211638937-gmqb',
         ]);
+        $parser->getLanguages($jsonLD)->willReturn(['de']);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD)->willReturn('Title');
-        $parser->getDescription($jsonLD)->willReturn('Description');
+        $parser->getTitle($jsonLD, 'de')->willReturn('Title');
+        $parser->getDescription($jsonLD, 'de')->willReturn('Description');
+        $parser->getOpeningHours($jsonLD)->willReturn([]);
 
         $organisation = $this->prophesize(Organisation::class);
         $organisation->getUid()->willReturn(10);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')
-            ->willReturn($organisation->reveal());
+        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn($organisation->reveal());
 
         $town = $this->prophesize(Town::class);
         $town->getUid()->willReturn(20);
@@ -219,26 +198,27 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ])->willReturn($town->reveal());
 
-        $subject = new TouristInformation(
+        $subject = new TouristAttraction(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
+
         $entities = $subject->convert($jsonLD);
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
 
         $entity = $entities->getEntities()[0];
-
         self::assertSame(10, $entity->getTypo3StoragePid());
-        self::assertSame('tx_thuecat_tourist_information', $entity->getTypo3DatabaseTableName());
+        self::assertSame('tx_thuecat_tourist_attraction', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([
             'title' => 'Title',
             'description' => 'Description',
             'managed_by' => 10,
             'town' => 20,
+            'opening_hours' => '[]',
         ], $entity->getData());
     }
 }

@@ -3,7 +3,7 @@
 defined('TYPO3') or die();
 
 (static function (string $extensionKey, string $tableName) {
-    $languagePath = 'LLL:EXT:' . $extensionKey . '/Resources/Private/Language/locallang_be.xlf:' . $tableName . '.';
+    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath() . 'locallang_be.xlf:' . $tableName . '.';
 
     \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['SiteConfiguration']['site'], [
         'columns' => [

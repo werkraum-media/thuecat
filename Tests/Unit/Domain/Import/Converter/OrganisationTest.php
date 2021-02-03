@@ -24,21 +24,28 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
  */
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 
 /**
  * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
+ * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
  * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class OrganisationTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
     public function instanceCanBeCreated(): void
     {
-        $subject = new Organisation();
+        $parser = $this->prophesize(Parser::class);
+        $subject = new Organisation($parser->reveal());
         self::assertInstanceOf(Organisation::class, $subject);
     }
 
@@ -47,7 +54,8 @@ class OrganisationTest extends TestCase
      */
     public function isInstanceOfConverter(): void
     {
-        $subject = new Organisation();
+        $parser = $this->prophesize(Parser::class);
+        $subject = new Organisation($parser->reveal());
         self::assertInstanceOf(Converter::class, $subject);
     }
 
@@ -56,7 +64,8 @@ class OrganisationTest extends TestCase
      */
     public function canConvertTouristMarketingCompany(): void
     {
-        $subject = new Organisation();
+        $parser = $this->prophesize(Parser::class);
+        $subject = new Organisation($parser->reveal());
         self::assertTrue($subject->canConvert([
             'thuecat:TouristMarketingCompany',
             'schema:Thing',
@@ -69,8 +78,7 @@ class OrganisationTest extends TestCase
      */
     public function convertsJsonIdToGenericEntity(): void
     {
-        $subject = new Organisation();
-        $entity = $subject->convert([
+        $jsonLD = [
             '@id' => 'https://example.com/resources/018132452787-ngbe',
             'schema:name' => [
                 '@value' => 'Title',
@@ -78,8 +86,20 @@ class OrganisationTest extends TestCase
             'schema:description' => [
                 '@value' => 'Description',
             ],
-        ]);
+        ];
 
+        $parser = $this->prophesize(Parser::class);
+        $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
+        $parser->getTitle($jsonLD)->willReturn('Title');
+        $parser->getDescription($jsonLD)->willReturn('Description');
+
+        $subject = new Organisation($parser->reveal());
+        $entities = $subject->convert($jsonLD);
+
+        self::assertInstanceOf(EntityCollection::class, $entities);
+        self::assertCount(1, $entities->getEntities());
+
+        $entity = $entities->getEntities()[0];
         self::assertSame(10, $entity->getTypo3StoragePid());
         self::assertSame('tx_thuecat_organisation', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());

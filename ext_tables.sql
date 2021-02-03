@@ -40,3 +40,12 @@ CREATE TABLE tx_thuecat_tourist_information (
     title varchar(255) DEFAULT '' NOT NULL,
     description text DEFAULT '' NOT NULL,
 );
+
+CREATE TABLE tx_thuecat_tourist_attraction (
+    remote_id varchar(255) DEFAULT '' NOT NULL,
+    managed_by int(11) unsigned DEFAULT '0' NOT NULL,
+    town int(11) unsigned DEFAULT '0' NOT NULL,
+    title varchar(255) DEFAULT '' NOT NULL,
+    description text DEFAULT '' NOT NULL,
+    opening_hours text DEFAULT '' NOT NULL,
+);

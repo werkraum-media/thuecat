@@ -23,21 +23,38 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 
 class Organisation implements Converter
 {
-    public function convert(array $jsonIdOfEntity): GenericEntity
+    private Parser $parser;
+
+    public function __construct(
+        Parser $parser
+    ) {
+        $this->parser = $parser;
+    }
+
+    public function convert(array $jsonLD): EntityCollection
     {
-        return new GenericEntity(
+        $entity = GeneralUtility::makeInstance(
+            GenericEntity::class,
             10,
             'tx_thuecat_organisation',
-            $jsonIdOfEntity['@id'],
+            0,
+            $this->parser->getId($jsonLD),
             [
-                'title' => $jsonIdOfEntity['schema:name']['@value'],
-                'description' => $jsonIdOfEntity['schema:description']['@value'],
+                'title' => $this->parser->getTitle($jsonLD),
+                'description' => $this->parser->getDescription($jsonLD),
             ]
         );
+        $entities = GeneralUtility::makeInstance(EntityCollection::class);
+        $entities->add($entity);
+
+        return $entities;
     }
 
     public function canConvert(array $type): bool

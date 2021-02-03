@@ -20,6 +20,8 @@ The extension already allows:
 
   * Tourist information
 
+  * Tourist attraction
+
 * Backend module:
 
   * To inspect current existing organisations
@@ -35,8 +37,6 @@ The extension already allows:
 ## Short time goals
 
 * Integrate proper icons
-
-* Import of tourist attraction
 
 * Content element to display tourist attraction,
   town, tourist information and organisation.

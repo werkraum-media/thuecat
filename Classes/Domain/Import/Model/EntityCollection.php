@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
+namespace WerkraumMedia\ThueCat\Domain\Import\Model;
 
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
@@ -23,19 +23,44 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  * 02110-1301, USA.
  */
 
-use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
-
-interface Converter
+class EntityCollection
 {
     /**
-     * A single type is an array of different types.
-     * All types together identify a specific entity and possible converter.
+     * @var Entity[]
      */
-    public function canConvert(array $type): bool;
+    private array $entities = [];
+
+    public function add(Entity $entity): void
+    {
+        $this->entities[] = $entity;
+    }
 
     /**
-     * A single JSONLD entity can have multiple languages.
-     * That may result in multiple entities in TYPO3.
+     * @return Entity[]
      */
-    public function convert(array $jsonLD): EntityCollection;
+    public function getEntities(): array
+    {
+        return $this->entities;
+    }
+
+    public function getDefaultLanguageEntity(): ?Entity
+    {
+        foreach ($this->entities as $entity) {
+            if ($entity->isForDefaultLanguage()) {
+                return $entity;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Entity[]
+     */
+    public function getTranslatedEntities(): array
+    {
+        return array_filter($this->entities, function (Entity $entity) {
+            return $entity->isTranslation();
+        });
+    }
 }
