@@ -10,9 +10,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 
 return function (ContainerConfigurator $container, ContainerBuilder $containerBuilder) {
-    $containerBuilder->registerForAutoconfiguration(UrlProvider::class)->addTag('thuecat.urlprovider');
-    $containerBuilder->addCompilerPass(new DependencyInjection\UrlProvidersPass('thuecat.urlprovider'));
+    $containerBuilder->registerForAutoconfiguration(UrlProvider::class)->addTag(DependencyInjection\UrlProvidersPass::TAG);
+    $containerBuilder->addCompilerPass(new DependencyInjection\UrlProvidersPass());
 
-    $containerBuilder->registerForAutoconfiguration(Converter::class)->addTag('thuecat.converter');
-    $containerBuilder->addCompilerPass(new DependencyInjection\ConverterPass('thuecat.converter'));
+    $containerBuilder->registerForAutoconfiguration(Converter::class)->addTag(DependencyInjection\ConverterPass::TAG);
+    $containerBuilder->addCompilerPass(new DependencyInjection\ConverterPass());
 };

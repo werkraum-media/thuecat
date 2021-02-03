@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Registry as ConverterRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
+use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
@@ -61,6 +62,10 @@ class Importer
         $this->importLog = GeneralUtility::makeInstance(ImportLog::class, $configuration);
 
         $urlProvider = $this->urls->getProviderForConfiguration($configuration);
+        if (!$urlProvider instanceof UrlProvider) {
+            return $this->importLog;
+        }
+
         foreach ($urlProvider->getUrls() as $url) {
             $this->importResourceByUrl($url);
         }

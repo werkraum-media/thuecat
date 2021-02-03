@@ -31,7 +31,7 @@ class RequestFactory extends Typo3RequestFactory
 {
     public function createRequest(string $method, $uri): RequestInterface
     {
-        $uri = new Uri($uri);
+        $uri = new Uri((string) $uri);
         $uri = $uri->withQuery('?format=jsonId');
 
         // TODO: Add api key from site

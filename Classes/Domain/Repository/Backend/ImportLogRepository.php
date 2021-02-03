@@ -42,7 +42,6 @@ class ImportLogRepository extends Repository
         parent::__construct($objectManager);
 
         $this->dataHandler = $dataHandler;
-        $this->dataHandler->stripslashes_values = 0;
 
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);

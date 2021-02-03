@@ -46,7 +46,7 @@ class StaticUrlProvider implements UrlProvider
 
     public function createWithConfiguration(
         ImportConfiguration $configuration
-    ): UrlProvider {
+    ): StaticUrlProvider {
         return GeneralUtility::makeInstance(self::class, $configuration);
     }
 

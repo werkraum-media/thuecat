@@ -39,7 +39,6 @@ class SaveData
         ConnectionPool $connectionPool
     ) {
         $this->dataHandler = $dataHandler;
-        $this->dataHandler->stripslashes_values = 0;
         $this->connectionPool = $connectionPool;
     }
 
