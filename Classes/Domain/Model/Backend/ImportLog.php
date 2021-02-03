@@ -80,6 +80,7 @@ class ImportLog extends Typo3AbstractEntity
         foreach ($this->getEntries() as $entry) {
             if ($entry->hasErrors()) {
                 $errors = array_merge($errors, $entry->getErrors());
+                $errors = array_unique($errors);
             }
         }
 

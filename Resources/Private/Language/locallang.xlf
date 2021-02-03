@@ -90,6 +90,9 @@
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_tourist_information" xml:space="preserve">
                 <source>Tourist Information</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_tourist_attraction" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
 
             <trans-unit id="controller.backend.import.import.success.title" xml:space="preserve">
                 <source>Import finished</source>

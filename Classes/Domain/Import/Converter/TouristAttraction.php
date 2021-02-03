@@ -28,46 +28,59 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
-class Town implements Converter
+class TouristAttraction implements Converter
 {
     private Parser $parser;
     private OrganisationRepository $organisationRepository;
+    private TownRepository $townRepository;
 
     public function __construct(
         Parser $parser,
-        OrganisationRepository $organisationRepository
+        OrganisationRepository $organisationRepository,
+        TownRepository $townRepository
     ) {
         $this->parser = $parser;
         $this->organisationRepository = $organisationRepository;
+        $this->townRepository = $townRepository;
     }
 
     public function convert(array $jsonLD): EntityCollection
     {
-        $manager = $this->organisationRepository->findOneByRemoteId(
-            $this->parser->getManagerId($jsonLD)
-        );
-
-        $entity = GeneralUtility::makeInstance(
-            GenericEntity::class,
-            10,
-            'tx_thuecat_town',
-            0,
-            $this->parser->getId($jsonLD),
-            [
-                'title' => $this->parser->getTitle($jsonLD),
-                'description' => $this->parser->getDescription($jsonLD),
-                'managed_by' => $manager ? $manager->getUid() : 0,
-            ]
-        );
+        $storagePid = 10;
+        $manager = $this->organisationRepository->findOneByRemoteId($this->parser->getManagerId($jsonLD));
+        $town = $this->townRepository->findOneByRemoteIds($this->parser->getContainedInPlaceIds($jsonLD));
         $entities = GeneralUtility::makeInstance(EntityCollection::class);
-        $entities->add($entity);
+
+        foreach ($this->parser->getLanguages($jsonLD) as $language) {
+            if ($language !== 'de') {
+                continue;
+            }
+            $systemLanguageUid = 0;
+
+            $entity = GeneralUtility::makeInstance(
+                GenericEntity::class,
+                $storagePid,
+                'tx_thuecat_tourist_attraction',
+                $systemLanguageUid,
+                $this->parser->getId($jsonLD),
+                [
+                    'title' => $this->parser->getTitle($jsonLD, $language),
+                    'description' => $this->parser->getDescription($jsonLD, $language),
+                    'managed_by' => $manager ? $manager->getUid() : 0,
+                    'town' => $town ? $town->getUid() : 0,
+                    'opening_hours' => json_encode($this->parser->getOpeningHours($jsonLD)),
+                ]
+            );
+            $entities->add($entity);
+        }
 
         return $entities;
     }
 
     public function canConvert(array $type): bool
     {
-        return array_search('thuecat:Town', $type) !== false;
+        return array_search('schema:TouristAttraction', $type) !== false;
     }
 }

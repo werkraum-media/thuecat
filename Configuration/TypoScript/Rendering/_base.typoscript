@@ -1,0 +1,6 @@
+lib.thuecatContentElement =< lib.contentElement
+lib.thuecatContentElement {
+    templateRootPaths {
+        9999 = EXT:thuecat/Resources/Private/Templates/Frontend/ContentElement/
+    }
+}

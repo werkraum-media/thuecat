@@ -23,50 +23,59 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 class TouristInformation implements Converter
 {
+    private Parser $parser;
     private OrganisationRepository $organisationRepository;
     private TownRepository $townRepository;
 
     public function __construct(
+        Parser $parser,
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository
     ) {
+        $this->parser = $parser;
         $this->organisationRepository = $organisationRepository;
         $this->townRepository = $townRepository;
     }
 
-    public function convert(array $jsonIdOfEntity): GenericEntity
+    public function convert(array $jsonLD): EntityCollection
     {
-        $manager = $this->organisationRepository->findOneByRemoteId($jsonIdOfEntity['thuecat:managedBy']['@id']);
-        $town = $this->townRepository->findOneByRemoteIds($this->getContainedInPlaceIds($jsonIdOfEntity));
+        $manager = $this->organisationRepository->findOneByRemoteId(
+            $this->parser->getManagerId($jsonLD)
+        );
+        $town = $this->townRepository->findOneByRemoteIds(
+            $this->parser->getContainedInPlaceIds($jsonLD)
+        );
 
-        return new GenericEntity(
+        $entity = GeneralUtility::makeInstance(
+            GenericEntity::class,
             10,
             'tx_thuecat_tourist_information',
-            $jsonIdOfEntity['@id'],
+            0,
+            $this->parser->getId($jsonLD),
             [
-                'title' => $jsonIdOfEntity['schema:name']['@value'],
-                'description' => $jsonIdOfEntity['schema:description'][0]['@value'],
+                'title' => $this->parser->getTitle($jsonLD),
+                'description' => $this->parser->getDescription($jsonLD),
                 'managed_by' => $manager ? $manager->getUid() : 0,
                 'town' => $town ? $town->getUid() : 0,
             ]
         );
+        $entities = GeneralUtility::makeInstance(EntityCollection::class);
+        $entities->add($entity);
+
+        return $entities;
     }
 
     public function canConvert(array $type): bool
     {
         return array_search('thuecat:TouristInformation', $type) !== false;
-    }
-
-    private function getContainedInPlaceIds(array $jsonIdOfEntity): array
-    {
-        return array_map(function (array $place) {
-            return $place['@id'];
-        }, $jsonIdOfEntity['schema:containedInPlace']);
     }
 }

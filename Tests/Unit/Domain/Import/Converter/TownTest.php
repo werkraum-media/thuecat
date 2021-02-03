@@ -27,11 +27,14 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Town;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
 /**
  * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Town
+ * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
  * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class TownTest extends TestCase
@@ -43,9 +46,13 @@ class TownTest extends TestCase
      */
     public function instanceCanBeCreated(): void
     {
+        $parser = $this->prophesize(Parser::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
 
-        $subject = new Town($organisationRepository->reveal());
+        $subject = new Town(
+            $parser->reveal(),
+            $organisationRepository->reveal()
+        );
         self::assertInstanceOf(Town::class, $subject);
     }
 
@@ -54,9 +61,13 @@ class TownTest extends TestCase
      */
     public function isInstanceOfConverter(): void
     {
+        $parser = $this->prophesize(Parser::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
 
-        $subject = new Town($organisationRepository->reveal());
+        $subject = new Town(
+            $parser->reveal(),
+            $organisationRepository->reveal()
+        );
         self::assertInstanceOf(Converter::class, $subject);
     }
 
@@ -65,9 +76,13 @@ class TownTest extends TestCase
      */
     public function canConvertTouristMarketingCompany(): void
     {
+        $parser = $this->prophesize(Parser::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
 
-        $subject = new Town($organisationRepository->reveal());
+        $subject = new Town(
+            $parser->reveal(),
+            $organisationRepository->reveal()
+        );
         self::assertTrue($subject->canConvert([
             'thuecat:Town',
         ]));
@@ -78,11 +93,7 @@ class TownTest extends TestCase
      */
     public function convertsJsonIdToGenericEntityWithoutOrganisation(): void
     {
-        $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn(null);
-
-        $subject = new Town($organisationRepository->reveal());
-        $entity = $subject->convert([
+        $jsonLD = [
             '@id' => 'https://example.com/resources/018132452787-ngbe',
             'thuecat:managedBy' => [
                 '@id' => 'https://example.com/resources/018132452787-xxxx',
@@ -93,7 +104,27 @@ class TownTest extends TestCase
             'schema:description' => [
                 '@value' => 'Description',
             ],
-        ]);
+        ];
+
+        $parser = $this->prophesize(Parser::class);
+        $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
+        $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
+        $parser->getTitle($jsonLD)->willReturn('Title');
+        $parser->getDescription($jsonLD)->willReturn('Description');
+
+        $organisationRepository = $this->prophesize(OrganisationRepository::class);
+        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn(null);
+
+        $subject = new Town(
+            $parser->reveal(),
+            $organisationRepository->reveal()
+        );
+        $entities = $subject->convert($jsonLD);
+
+        self::assertInstanceOf(EntityCollection::class, $entities);
+        self::assertCount(1, $entities->getEntities());
+
+        $entity = $entities->getEntities()[0];
 
         self::assertSame(10, $entity->getTypo3StoragePid());
         self::assertSame('tx_thuecat_town', $entity->getTypo3DatabaseTableName());
@@ -110,13 +141,7 @@ class TownTest extends TestCase
      */
     public function convertsJsonIdToGenericEntityWithOrganisation(): void
     {
-        $organisation = $this->prophesize(Organisation::class);
-        $organisation->getUid()->willReturn(10);
-        $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn($organisation->reveal());
-
-        $subject = new Town($organisationRepository->reveal());
-        $entity = $subject->convert([
+        $jsonLD = [
             '@id' => 'https://example.com/resources/018132452787-ngbe',
             'thuecat:managedBy' => [
                 '@id' => 'https://example.com/resources/018132452787-xxxx',
@@ -127,7 +152,29 @@ class TownTest extends TestCase
             'schema:description' => [
                 '@value' => 'Description',
             ],
-        ]);
+        ];
+
+        $parser = $this->prophesize(Parser::class);
+        $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
+        $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
+        $parser->getTitle($jsonLD)->willReturn('Title');
+        $parser->getDescription($jsonLD)->willReturn('Description');
+
+        $organisation = $this->prophesize(Organisation::class);
+        $organisation->getUid()->willReturn(10);
+        $organisationRepository = $this->prophesize(OrganisationRepository::class);
+        $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn($organisation->reveal());
+
+        $subject = new Town(
+            $parser->reveal(),
+            $organisationRepository->reveal()
+        );
+        $entities = $subject->convert($jsonLD);
+
+        self::assertInstanceOf(EntityCollection::class, $entities);
+        self::assertCount(1, $entities->getEntities());
+
+        $entity = $entities->getEntities()[0];
 
         self::assertSame(10, $entity->getTypo3StoragePid());
         self::assertSame('tx_thuecat_town', $entity->getTypo3DatabaseTableName());

@@ -72,6 +72,31 @@
                 <source>Unkown</source>
             </trans-unit>
 
+            <trans-unit id="tx_thuecat_tourist_attraction" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.town.unkown" xml:space="preserve">
+                <source>Unkown</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.managed_by" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.managed_by.unkown" xml:space="preserve">
+                <source>Unkown</source>
+            </trans-unit>
+
             <trans-unit id="tx_thuecat_import_configuration" xml:space="preserve">
                 <source>Import Configuration</source>
             </trans-unit>
@@ -127,6 +152,16 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.crdate" xml:space="preserve">
                 <source>Created</source>
+            </trans-unit>
+
+            <trans-unit id="tt_content.group" xml:space="preserve">
+                <source>ThüCAT</source>
+            </trans-unit>
+            <trans-unit id="tt_content.thuecat_tourist_attraction" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
+            <trans-unit id="tt_content.thuecat_tourist_attraction.description" xml:space="preserve">
+                <source>Renders selected tourist attractions</source>
             </trans-unit>
         </body>
     </file>

@@ -29,6 +29,12 @@ interface Entity
 
     public function getTypo3DatabaseTableName(): string;
 
+    public function getTypo3SystemLanguageUid(): int;
+
+    public function isForDefaultLanguage(): bool;
+
+    public function isTranslation(): bool;
+
     /**
      * Return full remote id as delivered by remote API.
      */

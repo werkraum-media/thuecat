@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
+namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
@@ -23,19 +23,20 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  * 02110-1301, USA.
  */
 
-use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-interface Converter
+class Town extends AbstractEntity
 {
-    /**
-     * A single type is an array of different types.
-     * All types together identify a specific entity and possible converter.
-     */
-    public function canConvert(array $type): bool;
+    protected string $title = '';
+    protected string $description = '';
 
-    /**
-     * A single JSONLD entity can have multiple languages.
-     * That may result in multiple entities in TYPO3.
-     */
-    public function convert(array $jsonLD): EntityCollection;
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
 }

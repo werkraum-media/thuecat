@@ -39,6 +39,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             []
         );
@@ -53,6 +54,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             10,
             '',
+            0,
             '',
             []
         );
@@ -67,10 +69,56 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             'tx_thuecat_entity',
+            0,
             '',
             []
         );
         self::assertSame('tx_thuecat_entity', $subject->getTypo3DatabaseTableName());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsTypo3SystemLanguageUid(): void
+    {
+        $subject = new GenericEntity(
+            0,
+            '',
+            10,
+            '',
+            []
+        );
+        self::assertSame(10, $subject->getTypo3SystemLanguageUid());
+    }
+
+    /**
+     * @test
+     */
+    public function claimsIsForDefaultLanguage(): void
+    {
+        $subject = new GenericEntity(
+            0,
+            '',
+            0,
+            '',
+            []
+        );
+        self::assertTrue($subject->isForDefaultLanguage());
+    }
+
+    /**
+     * @test
+     */
+    public function claimsIsTranslation(): void
+    {
+        $subject = new GenericEntity(
+            0,
+            '',
+            10,
+            '',
+            []
+        );
+        self::assertTrue($subject->isTranslation());
     }
 
     /**
@@ -81,6 +129,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             'https://example.com/resources/333039283321-xxwg',
             []
         );
@@ -98,6 +147,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             [
                 'column_name_1' => 'value 1',
@@ -121,6 +171,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             []
         );
@@ -138,6 +189,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             []
         );
@@ -155,6 +207,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             []
         );
@@ -172,6 +225,7 @@ class GenericEntityTest extends TestCase
         $subject = new GenericEntity(
             0,
             '',
+            0,
             '',
             []
         );

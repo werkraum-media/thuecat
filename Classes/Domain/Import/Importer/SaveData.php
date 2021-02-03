@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
@@ -33,6 +34,7 @@ class SaveData
 {
     private DataHandler $dataHandler;
     private ConnectionPool $connectionPool;
+    private array $errorLog;
 
     public function __construct(
         DataHandler $dataHandler,
@@ -42,31 +44,50 @@ class SaveData
         $this->connectionPool = $connectionPool;
     }
 
-    public function import(Entity $entity, ImportLog $log): void
+    public function import(EntityCollection $entityCollection, ImportLog $log): void
     {
-        $dataHandler = clone $this->dataHandler;
+        $this->errorLog = [];
 
-        $identifier = $this->getIdentifier($entity);
-        $dataHandler->start([
-            $entity->getTypo3DatabaseTableName() => [
-                $identifier => array_merge($entity->getData(), [
-                    'pid' => $entity->getTypo3StoragePid(),
-                    'remote_id' => $entity->getRemoteId(),
-                ]),
-            ],
-        ], []);
-        $dataHandler->process_datamap();
+        $this->processSimpleDataHandlerDataMap($entityCollection);
+        // TODO: Insert update / insert of localization
 
-        if (isset($dataHandler->substNEWwithIDs[$identifier])) {
-            $entity->setImportedTypo3Uid($dataHandler->substNEWwithIDs[$identifier]);
-        } elseif (is_numeric($identifier)) {
-            $entity->setExistingTypo3Uid((int) $identifier);
+        foreach ($entityCollection->getEntities() as $entity) {
+            $log->addEntry(new ImportLogEntry($entity, $this->errorLog));
+        }
+    }
+
+    private function processSimpleDataHandlerDataMap(EntityCollection $collection): void
+    {
+        $dataArray = [];
+        $identifierMapping = [];
+
+        foreach ($collection->getEntities() as $entity) {
+            $identifier = $this->getIdentifier($entity);
+            if (strpos($identifier, 'NEW') === 0 && $entity->isTranslation()) {
+                continue;
+            }
+            if (is_numeric($identifier)) {
+                $entity->setExistingTypo3Uid((int) $identifier);
+            } else {
+                $identifierMapping[spl_object_id($entity)] = $identifier;
+            }
+
+            $dataArray[$entity->getTypo3DatabaseTableName()][$identifier] = $this->getEntityData($entity);
         }
 
-        $log->addEntry(new ImportLogEntry(
-            $entity,
-            $dataHandler->errorLog
-        ));
+        $dataHandler = clone $this->dataHandler;
+        $dataHandler->start($dataArray, []);
+        $dataHandler->process_datamap();
+        $this->errorLog = array_merge($this->errorLog, $dataHandler->errorLog);
+
+        foreach ($collection->getEntities() as $entity) {
+            if (
+                isset($identifierMapping[spl_object_id($entity)])
+                && isset($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]])
+            ) {
+                $entity->setImportedTypo3Uid($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]]);
+            }
+        }
     }
 
     private function getIdentifier(Entity $entity): string
@@ -77,7 +98,17 @@ class SaveData
             return (string) $existingUid;
         }
 
-        return 'NEW_1';
+        $identifier = 'NEW_' . sha1($entity->getRemoteId() . $entity->getTypo3SystemLanguageUid());
+        // Ensure new ID is max 30, as this is max volumn of the sys_log column
+        return substr($identifier, 0, 30);
+    }
+
+    private function getEntityData(Entity $entity): array
+    {
+        return array_merge($entity->getData(), [
+            'pid' => $entity->getTypo3StoragePid(),
+            'remote_id' => $entity->getRemoteId(),
+        ]);
     }
 
     private function getExistingUid(Entity $entity): int

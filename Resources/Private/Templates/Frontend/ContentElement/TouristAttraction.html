@@ -1,0 +1,21 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+    <f:for each="{entities}" as="entity">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{entity.title} ({entity.town.title})</h5>
+                <p class="card-text">{entity.description}</p>
+
+                <f:for each="{entity.openingHours}" as="openingHour">
+                    <p>
+                        <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
+                            {weekday}: {openingHour.opens} - {openingHour.closes}<br>
+                        </f:for>
+                        {openingHour.from -> f:format.date(format: 'd.m.Y')} -
+                        {openingHour.through -> f:format.date(format: 'd.m.Y')}
+                    </p>
+                </f:for>
+            </div>
+        </div>
+    </f:for>
+</html>

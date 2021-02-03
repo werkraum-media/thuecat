@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Registry as ConverterRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
-use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -65,6 +65,35 @@ class ImporterTest extends TestCase
             $saveData->reveal()
         );
         self::assertInstanceOf(Importer::class, $subject);
+    }
+
+    /**
+     * @test
+     */
+    public function importsNothingIfUrlProviderCouldNotBeResolved(): void
+    {
+        $urls = $this->prophesize(UrlProviderRegistry::class);
+        $converter = $this->prophesize(ConverterRegistry::class);
+        $importLogRepository = $this->prophesize(ImportLogRepository::class);
+        $fetchData = $this->prophesize(FetchData::class);
+        $saveData = $this->prophesize(SaveData::class);
+        $configuration = $this->prophesize(ImportConfiguration::class);
+
+        $urls->getProviderForConfiguration($configuration->reveal())->willReturn(null);
+        $fetchData->jsonLDFromUrl()->shouldNotBeCalled();
+        $saveData->import()->shouldNotBeCalled();
+
+        $subject = new Importer(
+            $urls->reveal(),
+            $converter->reveal(),
+            $importLogRepository->reveal(),
+            $fetchData->reveal(),
+            $saveData->reveal()
+        );
+        $result = $subject->importConfiguration($configuration->reveal());
+
+        self::assertInstanceOf(ImportLog::class, $result);
+        self::assertCount(0, $result->getEntries());
     }
 
     /**
@@ -109,8 +138,8 @@ class ImporterTest extends TestCase
         $saveData = $this->prophesize(SaveData::class);
         $configuration = $this->prophesize(ImportConfiguration::class);
 
-        $entity1 = $this->prophesize(Entity::class);
-        $entity2 = $this->prophesize(Entity::class);
+        $entities1 = $this->prophesize(EntityCollection::class);
+        $entities2 = $this->prophesize(EntityCollection::class);
 
         $urls->getProviderForConfiguration($configuration->reveal())->willReturn($urlProvider->reveal());
         $urlProvider->getUrls()->willReturn([
@@ -144,13 +173,13 @@ class ImporterTest extends TestCase
 
         $concreteConverter->convert(Argument::that(function (array $jsonEntity) {
             return $jsonEntity['@id'] === 'https://example.com/resources/34343-ex';
-        }))->willReturn($entity1->reveal());
+        }))->willReturn($entities1->reveal());
         $concreteConverter->convert(Argument::that(function (array $jsonEntity) {
             return $jsonEntity['@id'] === 'https://example.com/resources/34344-es';
-        }))->willReturn($entity2->reveal());
+        }))->willReturn($entities2->reveal());
 
-        $saveData->import($entity1->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();
-        $saveData->import($entity2->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();
+        $saveData->import($entities1->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();
+        $saveData->import($entities2->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();
 
         $subject = new Importer(
             $urls->reveal(),
