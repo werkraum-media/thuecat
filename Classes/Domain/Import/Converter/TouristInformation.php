@@ -46,7 +46,7 @@ class TouristInformation implements Converter
         $town = $this->townRepository->findOneByRemoteIds($this->getContainedInPlaceIds($jsonIdOfEntity));
 
         return new GenericEntity(
-            95,
+            10,
             'tx_thuecat_tourist_information',
             $jsonIdOfEntity['@id'],
             [

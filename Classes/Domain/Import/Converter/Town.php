@@ -40,7 +40,7 @@ class Town implements Converter
     {
         $manager = $this->organisationRepository->findOneByRemoteId($jsonIdOfEntity['thuecat:managedBy']['@id']);
         return new GenericEntity(
-            95,
+            10,
             'tx_thuecat_town',
             $jsonIdOfEntity['@id'],
             [
