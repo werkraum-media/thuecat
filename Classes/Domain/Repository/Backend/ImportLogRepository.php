@@ -56,7 +56,7 @@ class ImportLogRepository extends Repository
         $dataHandler = clone $this->dataHandler;
         $dataHandler->start([
             'tx_thuecat_import_log' => [
-                 'NEW0' => [
+                'NEW0' => [
                     'pid' => 0,
                     'configuration' => $log->getConfiguration()->getUid(),
                 ],
@@ -77,7 +77,7 @@ class ImportLogRepository extends Repository
             $entries['NEW' . $number] = [
                 'pid' => 0,
                 'import_log' => 'NEW0',
-                'insertion' => $entry->wasInsertion(),
+                'insertion' => (int) $entry->wasInsertion(),
                 'record_uid' => $entry->getRecordUid(),
                 'table_name' => $entry->getRecordDatabaseTableName(),
                 'errors' => json_encode($entry->getErrors()),
