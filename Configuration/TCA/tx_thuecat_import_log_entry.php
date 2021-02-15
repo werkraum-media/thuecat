@@ -11,7 +11,7 @@ return (static function (string $extensionKey, string $tableName) {
             'label' => 'table_name',
             'label_alt' => 'record_uid',
             'label_alt_force' => true,
-            'default_sortby' => 'title',
+            'default_sortby' => 'crdate',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'cruser_id' => 'cruser_id',
