@@ -129,7 +129,7 @@ class TouristInformationTest extends TestCase
             ],
         ]);
 
-        self::assertSame(95, $entity->getTypo3StoragePid());
+        self::assertSame(10, $entity->getTypo3StoragePid());
         self::assertSame('tx_thuecat_tourist_information', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([
@@ -186,7 +186,7 @@ class TouristInformationTest extends TestCase
             ],
         ]);
 
-        self::assertSame(95, $entity->getTypo3StoragePid());
+        self::assertSame(10, $entity->getTypo3StoragePid());
         self::assertSame('tx_thuecat_tourist_information', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([

@@ -30,7 +30,7 @@ class Organisation implements Converter
     public function convert(array $jsonIdOfEntity): GenericEntity
     {
         return new GenericEntity(
-            95,
+            10,
             'tx_thuecat_organisation',
             $jsonIdOfEntity['@id'],
             [
