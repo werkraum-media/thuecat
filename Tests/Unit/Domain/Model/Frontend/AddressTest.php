@@ -21,8 +21,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address;
 
 /**
  * @covers WerkraumMedia\ThueCat\Domain\Model\Frontend\Address
@@ -112,6 +112,26 @@ class AddressTest extends TestCase
         $subject = new Address('{"fax": "+49 361 99998"}');
 
         self::assertSame('+49 361 99998', $subject->getFax());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsLatitude(): void
+    {
+        $subject = new Address('{"geo": {"latitude": 50.978765}}');
+
+        self::assertSame(50.978765, $subject->getLatitute());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsLongitude(): void
+    {
+        $subject = new Address('{"geo": {"longitude": 11.029133}}');
+
+        self::assertSame(11.029133, $subject->getLongitude());
     }
 
     /**

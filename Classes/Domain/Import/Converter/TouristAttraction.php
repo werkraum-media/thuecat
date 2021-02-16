@@ -72,6 +72,7 @@ class TouristAttraction implements Converter
                     'town' => $town ? $town->getUid() : 0,
                     'opening_hours' => json_encode($this->parser->getOpeningHours($jsonLD)),
                     'address' => json_encode($this->parser->getAddress($jsonLD)),
+                    'media' => json_encode($this->parser->getMedia($jsonLD)),
                 ]
             );
             $entities->add($entity);

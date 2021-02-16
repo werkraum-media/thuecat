@@ -49,6 +49,6 @@ class RequestFactoryTest extends TestCase
         $subject = new RequestFactory();
         $request = $subject->createRequest('GET', 'https://example.com/resources/333039283321-xxwg');
 
-        self::assertSame('format=jsonId', $request->getUri()->getQuery());
+        self::assertSame('format=jsonld', $request->getUri()->getQuery());
     }
 }

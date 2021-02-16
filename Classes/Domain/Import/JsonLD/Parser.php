@@ -24,20 +24,25 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD;
  */
 
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 class Parser
 {
     private OpeningHours $openingHours;
     private Address $address;
+    private Media $media;
 
     public function __construct(
         OpeningHours $openingHours,
-        Address $address
+        Address $address,
+        Media $media
     ) {
         $this->openingHours = $openingHours;
         $this->address = $address;
+        $this->media = $media;
     }
+
     public function getId(array $jsonLD): string
     {
         return $jsonLD['@id'];
@@ -76,6 +81,11 @@ class Parser
     public function getAddress(array $jsonLD): array
     {
         return $this->address->get($jsonLD);
+    }
+
+    public function getMedia(array $jsonLD): array
+    {
+        return $this->media->get($jsonLD);
     }
 
     /**

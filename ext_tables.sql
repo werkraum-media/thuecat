@@ -49,4 +49,5 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     description text DEFAULT '' NOT NULL,
     opening_hours text DEFAULT '' NOT NULL,
     address text DEFAULT '' NOT NULL,
+    media text DEFAULT '' NOT NULL,
 );

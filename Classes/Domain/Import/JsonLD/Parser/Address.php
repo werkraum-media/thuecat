@@ -26,9 +26,7 @@ class Address
     public function get(array $jsonLD): array
     {
         $address = $jsonLD['schema:address'] ?? [];
-        if (isset($address['@id']) === false) {
-            return [];
-        }
+        $geo = $jsonLD['schema:geo'] ?? [];
 
         return [
             'street' => $this->getStreet($address),
@@ -37,6 +35,7 @@ class Address
             'email' => $this->getEmail($address),
             'phone' => $this->getPhone($address),
             'fax' => $this->getFax($address),
+            'geo' => $this->getGeo($geo),
         ];
     }
 
@@ -68,5 +67,13 @@ class Address
     private function getFax(array $address): string
     {
         return $address['schema:faxNumber']['@value'] ?? '';
+    }
+
+    private function getGeo(array $geo): array
+    {
+        return [
+            'latitude' => floatval($geo['schema:latitude']['@value'] ?? 0.00),
+            'longitude' => floatval($geo['schema:longitude']['@value'] ?? 0.00),
+        ];
     }
 }

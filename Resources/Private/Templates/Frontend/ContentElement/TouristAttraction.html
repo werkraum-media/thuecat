@@ -4,6 +4,10 @@
         <h5>{entity.title} ({entity.town.title})</h5>
         <p>{entity.description}</p>
 
+        <f:if condition="{entity.media.mainImage}">
+            <f:image src="{entity.media.mainImage.url}" />
+        </f:if>
+
         <f:for each="{entity.openingHours}" as="openingHour">
             <p>
                 <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">

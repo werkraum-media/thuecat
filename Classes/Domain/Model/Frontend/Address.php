@@ -66,6 +66,16 @@ class Address implements TypeInterface
         return $this->data['fax'] ?? '';
     }
 
+    public function getLatitute(): float
+    {
+        return $this->data['geo']['latitude'] ?? 0.0;
+    }
+
+    public function getLongitude(): float
+    {
+        return $this->data['geo']['longitude'] ?? 0.0;
+    }
+
     public function __toString(): string
     {
         return $this->serialized;

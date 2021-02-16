@@ -23,44 +23,42 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Core\Type\TypeInterface;
 
-class TouristAttraction extends AbstractEntity
+class Media implements TypeInterface
 {
-    protected string $title = '';
-    protected string $description = '';
-    protected ?OpeningHours $openingHours = null;
-    protected ?Address $address = null;
-    protected ?Town $town = null;
-    protected ?Media $media = null;
+    private string $serialized;
+    private array $data;
 
-    public function getTitle(): string
+    public function __construct(string $serialized)
     {
-        return $this->title;
+        $this->serialized = $serialized;
+        $this->data = json_decode($serialized, true);
     }
 
-    public function getDescription(): string
+    public function getMainImage(): array
     {
-        return $this->description;
+        foreach ($this->data as $media) {
+            if (
+                $media['type'] === 'image'
+                && $media['mainImage'] === true
+            ) {
+                return $media;
+            }
+        }
+
+        return [];
     }
 
-    public function getOpeningHours(): ?OpeningHours
+    public function getImages(): array
     {
-        return $this->openingHours;
+        return array_filter($this->data, function (array $media) {
+            return $media['type'] === 'image';
+        });
     }
 
-    public function getAddress(): ?Address
+    public function __toString(): string
     {
-        return $this->address;
-    }
-
-    public function getTown(): ?Town
-    {
-        return $this->town;
-    }
-
-    public function getMedia(): ?Media
-    {
-        return $this->media;
+        return $this->serialized;
     }
 }
