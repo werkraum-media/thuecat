@@ -27,8 +27,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::SETS, [
         SetList::PSR_12,
-        SetList::PHP_70,
-        SetList::PHP_73_MIGRATION,
         SetList::PHPUNIT,
     ]);
 
