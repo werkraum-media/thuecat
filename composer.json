@@ -39,6 +39,7 @@
         "typo3/cms-frontend": "^10.4"
     },
     "require-dev": {
+        "csa/guzzle-cache-middleware": "^1.0",
         "friendsoftypo3/phpstan-typo3": "^0.6.0",
         "jangregor/phpstan-prophecy": "^0.8.1",
         "maglnet/composer-require-checker": "^2.1",
@@ -51,7 +52,8 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+            "mkdir -p .Build/web/typo3conf/ext/",
+            "[ -L .Build/web/typo3conf/ext/thuecat ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/thuecat"
         ]
     },
     "config": {
