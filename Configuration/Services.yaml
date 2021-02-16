@@ -10,7 +10,16 @@ services:
   WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData:
     arguments:
       $requestFactory: '@WerkraumMedia\ThueCat\Domain\Import\RequestFactory'
+      $cache: '@cache.thuecat_fetchdata'
 
   WerkraumMedia\ThueCat\Frontend\DataProcessing\:
     resource: '../Classes/Frontend/DataProcessing/*'
     public: true
+
+  'cache.thuecat_fetchdata':
+    class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
+    factory:
+      - '@TYPO3\CMS\Core\Cache\CacheManager'
+      - 'getCache'
+    arguments:
+      - 'thuecat_fetchdata'

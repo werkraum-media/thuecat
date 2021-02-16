@@ -29,6 +29,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
 /**
@@ -45,10 +46,12 @@ class FetchDataTest extends TestCase
     {
         $requestFactory = $this->prophesize(RequestFactoryInterface::class);
         $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
 
         $subject = new FetchData(
             $requestFactory->reveal(),
-            $httpClient->reveal()
+            $httpClient->reveal(),
+            $cache->reveal()
         );
 
         self::assertInstanceOf(FetchData::class, $subject);
@@ -61,6 +64,7 @@ class FetchDataTest extends TestCase
     {
         $requestFactory = $this->prophesize(RequestFactoryInterface::class);
         $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
 
         $request = $this->prophesize(RequestInterface::class);
         $response = $this->prophesize(ResponseInterface::class);
@@ -75,7 +79,8 @@ class FetchDataTest extends TestCase
 
         $subject = new FetchData(
             $requestFactory->reveal(),
-            $httpClient->reveal()
+            $httpClient->reveal(),
+            $cache->reveal()
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -95,6 +100,7 @@ class FetchDataTest extends TestCase
     {
         $requestFactory = $this->prophesize(RequestFactoryInterface::class);
         $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
 
         $request = $this->prophesize(RequestInterface::class);
         $response = $this->prophesize(ResponseInterface::class);
@@ -109,10 +115,44 @@ class FetchDataTest extends TestCase
 
         $subject = new FetchData(
             $requestFactory->reveal(),
-            $httpClient->reveal()
+            $httpClient->reveal(),
+            $cache->reveal()
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
         self::assertSame([], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsResultFromCacheIfAvailable(): void
+    {
+        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
+        $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
+
+        $cache->get('03c8a7eb2a06e47c28883d95f7e834089baf9c3e')->willReturn([
+            '@graph' => [
+                [
+                    '@id' => 'https://example.com/resources/018132452787-ngbe',
+                ],
+            ],
+        ]);
+
+        $subject = new FetchData(
+            $requestFactory->reveal(),
+            $httpClient->reveal(),
+            $cache->reveal()
+        );
+
+        $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
+        self::assertSame([
+            '@graph' => [
+                [
+                    '@id' => 'https://example.com/resources/018132452787-ngbe',
+                ],
+            ],
+        ], $result);
     }
 }

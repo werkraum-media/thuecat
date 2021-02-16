@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
@@ -62,6 +63,12 @@ class Extension
 
     public static function registerConfig(): void
     {
+        self::addCaching();
+        self::addContentElements();
+    }
+
+    private static function addContentElements(): void
+    {
         $languagePath = self::getLanguagePath() . 'locallang_tca.xlf:tt_content';
 
         // TODO: Add Icon
@@ -80,5 +87,16 @@ class Extension
                 }
             }
         ');
+    }
+
+    private static function addCaching(): void
+    {
+        $cacheIdentifier = 'thuecat_fetchdata';
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
+        }
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'] = TransientMemoryBackend::class;
+        }
     }
 }

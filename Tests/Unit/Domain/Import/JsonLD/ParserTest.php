@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 /**
@@ -43,9 +44,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         self::assertInstanceOf(Parser::class, $subject);
@@ -58,9 +61,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getId([
@@ -77,9 +82,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getManagerId([
@@ -99,9 +106,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getTitle($jsonLD, $language);
@@ -224,9 +233,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getDescription($jsonLD, $language);
@@ -348,9 +359,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getContainedInPlaceIds([
@@ -379,9 +392,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getLanguages([
@@ -415,9 +430,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $this->expectExceptionCode(1612367481);
@@ -438,9 +455,11 @@ class ParserTest extends TestCase
     {
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getLanguages([]);
@@ -473,9 +492,11 @@ class ParserTest extends TestCase
         $openingHours = $this->prophesize(OpeningHours::class);
         $openingHours->get($jsonLD)->willReturn($generatedOpeningHours);
         $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getOpeningHours($jsonLD);
@@ -509,14 +530,72 @@ class ParserTest extends TestCase
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $address->get($jsonLD)->willReturn($generatedAddress);
+        $media = $this->prophesize(Media::class);
 
         $subject = new Parser(
             $openingHours->reveal(),
-            $address->reveal()
+            $address->reveal(),
+            $media->reveal()
         );
 
         $result = $subject->getAddress($jsonLD);
 
         self::assertSame($generatedAddress, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsMedia(): void
+    {
+        $jsonLD = [
+            'schema:photo' => [
+                '@id' => 'https://thuecat.org/resources/dms_5099196',
+            ],
+            'schema:image' => [
+                '@id' => 'https://thuecat.org/resources/dms_5099196',
+            ],
+        ];
+        $generatedMedia = [
+            [
+                'mainImage' => true,
+                'type' => 'image',
+                'title' => 'Erfurt-Alte Synagoge',
+                'description' => 'Frontaler Blick auf die Hausfront/Hausfassade im Innenhof mit Zugang über die Waagegasse',
+                'url' => 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+                'copyrightYear' => 2009,
+                'license' => [
+                    'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                    'author' => 'F:\Bilddatenbank\Museen und Ausstellungen\Alte Synagoge',
+                ],
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Alte Synagoge',
+                'description' => 'Frontaler Blick auf die Hausfront/Hausfassade im Innenhof mit Zugang über die Waagegasse',
+                'url' => 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+                'copyrightYear' => 2009,
+                'license' => [
+                    'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                    'author' => 'F:\Bilddatenbank\Museen und Ausstellungen\Alte Synagoge',
+                ],
+            ],
+        ];
+
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
+        $media->get($jsonLD)->willReturn($generatedMedia);
+
+        $subject = new Parser(
+            $openingHours->reveal(),
+            $address->reveal(),
+            $media->reveal()
+        );
+
+        $result = $subject->getMedia($jsonLD);
+
+        self::assertSame($generatedMedia, $result);
     }
 }

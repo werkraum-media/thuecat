@@ -25,28 +25,39 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
 
 class FetchData
 {
     private RequestFactoryInterface $requestFactory;
     private ClientInterface $httpClient;
+    private CacheFrontendInterface $cache;
 
     public function __construct(
         RequestFactoryInterface $requestFactory,
-        ClientInterface $httpClient
+        ClientInterface $httpClient,
+        CacheFrontendInterface $cache
     ) {
         $this->requestFactory = $requestFactory;
         $this->httpClient = $httpClient;
+        $this->cache = $cache;
     }
 
     public function jsonLDFromUrl(string $url): array
     {
+        $cacheIdentifier = sha1($url);
+        $cacheEntry = $this->cache->get($cacheIdentifier);
+        if (is_array($cacheEntry)) {
+            return $cacheEntry;
+        }
+
         $request = $this->requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 
-        $json = json_decode((string) $response->getBody(), true);
-        if (is_array($json)) {
-            return $json;
+        $jsonLD = json_decode((string) $response->getBody(), true);
+        if (is_array($jsonLD)) {
+            $this->cache->set($cacheIdentifier, $jsonLD);
+            return $jsonLD;
         }
 
         return [];
