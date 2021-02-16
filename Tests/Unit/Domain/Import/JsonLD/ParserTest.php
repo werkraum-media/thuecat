@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 /**
@@ -41,8 +42,10 @@ class ParserTest extends TestCase
     public function canBeCreated(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
 
         self::assertInstanceOf(Parser::class, $subject);
@@ -54,9 +57,12 @@ class ParserTest extends TestCase
     public function returnsId(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
+
         $result = $subject->getId([
             '@id' => 'https://example.com/resources/165868194223-id',
         ]);
@@ -70,9 +76,12 @@ class ParserTest extends TestCase
     public function returnsManagerId(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
+
         $result = $subject->getManagerId([
             'thuecat:contentResponsible' => [
                 '@id' => 'https://example.com/resources/165868194223-manager',
@@ -89,10 +98,14 @@ class ParserTest extends TestCase
     public function returnsTitle(array $jsonLD, string $language, string $expected): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
+
         $result = $subject->getTitle($jsonLD, $language);
+
         self::assertSame($expected, $result);
     }
 
@@ -210,10 +223,14 @@ class ParserTest extends TestCase
     public function returnsDescription(array $jsonLD, string $language, string $expected): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
+
         $result = $subject->getDescription($jsonLD, $language);
+
         self::assertSame($expected, $result);
     }
 
@@ -330,9 +347,12 @@ class ParserTest extends TestCase
     public function returnsContainedInPlaceIds(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
+
         $result = $subject->getContainedInPlaceIds([
             'schema:containedInPlace' => [
                 ['@id' => 'https://thuecat.org/resources/043064193523-jcyt'],
@@ -342,6 +362,7 @@ class ParserTest extends TestCase
                 ['@id' => 'https://thuecat.org/resources/573211638937-gmqb'],
             ],
         ]);
+
         self::assertSame([
             'https://thuecat.org/resources/043064193523-jcyt',
             'https://thuecat.org/resources/349986440346-kbkf',
@@ -357,8 +378,10 @@ class ParserTest extends TestCase
     public function returnsLanguages(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
 
         $result = $subject->getLanguages([
@@ -391,8 +414,10 @@ class ParserTest extends TestCase
     public function throwsExceptionOnUnkownLanguage(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
 
         $this->expectExceptionCode(1612367481);
@@ -412,8 +437,10 @@ class ParserTest extends TestCase
     public function returnsNoLanguagesIfInfoIsMissing(): void
     {
         $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
 
         $result = $subject->getLanguages([]);
@@ -445,13 +472,51 @@ class ParserTest extends TestCase
 
         $openingHours = $this->prophesize(OpeningHours::class);
         $openingHours->get($jsonLD)->willReturn($generatedOpeningHours);
-
+        $address = $this->prophesize(Address::class);
         $subject = new Parser(
-            $openingHours->reveal()
+            $openingHours->reveal(),
+            $address->reveal()
         );
 
         $result = $subject->getOpeningHours($jsonLD);
 
         self::assertSame($generatedOpeningHours, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsAddress(): void
+    {
+        $jsonLD = [
+            'schema:address' => [
+                '@id' => 'genid-28b33237f71b41e3ad54a99e1da769b9-b0',
+                'schema:addressLocality' => [
+                    '@language' => 'de',
+                    '@value' => 'Erfurt',
+                ],
+            ],
+        ];
+        $generatedAddress = [
+            'street' => '',
+            'zip' => '',
+            'city' => 'Erfurt',
+            'email' => '',
+            'phone' => '',
+            'fax' => '',
+        ];
+
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $address->get($jsonLD)->willReturn($generatedAddress);
+
+        $subject = new Parser(
+            $openingHours->reveal(),
+            $address->reveal()
+        );
+
+        $result = $subject->getAddress($jsonLD);
+
+        self::assertSame($generatedAddress, $result);
     }
 }

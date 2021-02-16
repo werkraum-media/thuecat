@@ -42,6 +42,13 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'address' => [
+                'label' => $languagePath . '.address',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
             'remote_id' => [
                 'label' => $languagePath . '.remote_id',
                 'config' => [
@@ -82,7 +89,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, opening_hours, remote_id, town, managed_by',
+                'showitem' => 'title, description, opening_hours, address, remote_id, town, managed_by',
             ],
         ],
     ];

@@ -117,6 +117,7 @@ class TouristAttractionTest extends TestCase
         $parser->getTitle($jsonLD, 'de')->willReturn('Title');
         $parser->getDescription($jsonLD, 'de')->willReturn('Description');
         $parser->getOpeningHours($jsonLD)->willReturn([]);
+        $parser->getAddress($jsonLD)->willReturn([]);
 
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
@@ -142,6 +143,7 @@ class TouristAttractionTest extends TestCase
             'managed_by' => 0,
             'town' => 0,
             'opening_hours' => '[]',
+            'address' => '[]',
         ], $entity->getData());
     }
 
@@ -184,6 +186,7 @@ class TouristAttractionTest extends TestCase
         $parser->getTitle($jsonLD, 'de')->willReturn('Title');
         $parser->getDescription($jsonLD, 'de')->willReturn('Description');
         $parser->getOpeningHours($jsonLD)->willReturn([]);
+        $parser->getAddress($jsonLD)->willReturn([]);
 
         $organisation = $this->prophesize(Organisation::class);
         $organisation->getUid()->willReturn(10);
@@ -219,6 +222,7 @@ class TouristAttractionTest extends TestCase
             'managed_by' => 10,
             'town' => 20,
             'opening_hours' => '[]',
+            'address' => '[]',
         ], $entity->getData());
     }
 }

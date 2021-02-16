@@ -23,38 +23,51 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Core\Type\TypeInterface;
 
-class TouristAttraction extends AbstractEntity
+class Address implements TypeInterface
 {
-    protected string $title = '';
-    protected string $description = '';
-    protected ?OpeningHours $openingHours = null;
-    protected ?Address $address = null;
-    protected ?Town $town = null;
+    private string $serialized;
+    private array $data;
 
-    public function getTitle(): string
+    public function __construct(string $serialized)
     {
-        return $this->title;
+        $this->serialized = $serialized;
+        $this->data = json_decode($serialized, true);
     }
 
-    public function getDescription(): string
+    public function getStreet(): string
     {
-        return $this->description;
+        return $this->data['street'] ?? '';
     }
 
-    public function getOpeningHours(): ?OpeningHours
+    public function getZip(): string
     {
-        return $this->openingHours;
+        return $this->data['zip'] ?? '';
     }
 
-    public function getAddress(): ?Address
+    public function getCity(): string
     {
-        return $this->address;
+        return $this->data['city'] ?? '';
     }
 
-    public function getTown(): ?Town
+    public function getEmail(): string
     {
-        return $this->town;
+        return $this->data['email'] ?? '';
+    }
+
+    public function getPhone(): string
+    {
+        return $this->data['phone'] ?? '';
+    }
+
+    public function getFax(): string
+    {
+        return $this->data['fax'] ?? '';
+    }
+
+    public function __toString(): string
+    {
+        return $this->serialized;
     }
 }

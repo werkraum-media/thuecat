@@ -23,16 +23,20 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD;
  * 02110-1301, USA.
  */
 
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 class Parser
 {
     private OpeningHours $openingHours;
+    private Address $address;
 
     public function __construct(
-        OpeningHours $openingHours
+        OpeningHours $openingHours,
+        Address $address
     ) {
         $this->openingHours = $openingHours;
+        $this->address = $address;
     }
     public function getId(array $jsonLD): string
     {
@@ -67,6 +71,11 @@ class Parser
     public function getOpeningHours(array $jsonLD): array
     {
         return $this->openingHours->get($jsonLD);
+    }
+
+    public function getAddress(array $jsonLD): array
+    {
+        return $this->address->get($jsonLD);
     }
 
     /**
