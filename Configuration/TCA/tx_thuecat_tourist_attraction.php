@@ -17,10 +17,50 @@ return (static function (string $extensionKey, string $tableName) {
                 'disabled' => 'disable',
             ],
             'searchFields' => 'title, description',
+            'transOrigPointerField' => 'l18n_parent',
+            'transOrigDiffSourceField' => 'l18n_diffsource',
+            'languageField' => 'sys_language_uid',
+            'translationSource' => 'l10n_source',
         ],
         'columns' => [
+            'sys_language_uid' => [
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'special' => 'languages',
+                    'items' => [
+                        [
+                            'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
+                            -1,
+                            'flags-multiple',
+                        ],
+                    ],
+                    'default' => 0,
+                ],
+            ],
+            'l18n_parent' => [
+                'displayCond' => 'FIELD:sys_language_uid:>:0',
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [['', 0]],
+                    'foreign_table' => $tableName,
+                    'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',
+                    'default' => 0,
+                ],
+            ],
+            'l10n_source' => [
+                'config' => [
+                    'type' => 'passthrough',
+                ],
+            ],
+
             'title' => [
                 'label' => $languagePath . '.title',
+                'l10n_mode' => 'prefixLangTitle',
                 'config' => [
                     'type' => 'input',
                     'size' => 20,
@@ -30,6 +70,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'description' => [
                 'label' => $languagePath . '.description',
+                'l10n_mode' => 'prefixLangTitle',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
@@ -37,6 +78,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'opening_hours' => [
                 'label' => $languagePath . '.opening_hours',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
@@ -44,6 +86,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'address' => [
                 'label' => $languagePath . '.address',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
@@ -51,6 +94,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'media' => [
                 'label' => $languagePath . '.media',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
@@ -58,6 +102,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'remote_id' => [
                 'label' => $languagePath . '.remote_id',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
@@ -65,6 +110,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'town' => [
                 'label' => $languagePath . '.town',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -80,6 +126,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'managed_by' => [
                 'label' => $languagePath . '.managed_by',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -94,9 +141,15 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
         ],
+        'palettes' => [
+            'language' => [
+                'label' => $languagePath . '.palette.language',
+                'showitem' => 'sys_language_uid,l18n_parent',
+            ],
+        ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, opening_hours, address, media, remote_id, town, managed_by',
+                'showitem' => '--palette--;;language, title, description, opening_hours, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];

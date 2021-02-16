@@ -23,6 +23,7 @@ CREATE TABLE tx_thuecat_organisation (
     description text DEFAULT '' NOT NULL,
     manages_towns int(11) unsigned DEFAULT '0' NOT NULL,
     manages_tourist_information int(11) unsigned DEFAULT '0' NOT NULL,
+    manages_tourist_attraction int(11) unsigned DEFAULT '0' NOT NULL,
 );
 
 CREATE TABLE tx_thuecat_town (

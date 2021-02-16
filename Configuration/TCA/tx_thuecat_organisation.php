@@ -60,6 +60,15 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'manages_tourist_attraction' => [
+                'label' => $languagePath . '.manages_tourist_attraction',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_tourist_attraction',
+                    'foreign_field' => 'managed_by',
+                    'readOnly' => true,
+                ],
+            ],
             'tstamp' => [
                 'label' => $languagePath . '.tstamp',
                 'config' => [
@@ -74,7 +83,7 @@ return (static function (string $extensionKey, string $tableName) {
             '0' => [
                 'showitem' => 'title, description, remote_id, tstamp'
                 . ',--div--;' . $languagePath . '.div.manages'
-                . ',manages_towns, manages_tourist_information',
+                . ',manages_towns, manages_tourist_information, manages_tourist_attraction',
             ],
         ],
     ];

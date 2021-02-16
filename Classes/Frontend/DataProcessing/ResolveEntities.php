@@ -29,11 +29,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class ResolveEntities implements DataProcessorInterface
 {
     private ConnectionPool $connectionPool;
     private DataMapper $dataMapper;
+    private TypoScriptFrontendController $tsfe;
 
     public function __construct(
         ConnectionPool $connectionPool,
@@ -41,6 +43,7 @@ class ResolveEntities implements DataProcessorInterface
     ) {
         $this->connectionPool = $connectionPool;
         $this->dataMapper = $dataMapper;
+        $this->tsfe = $GLOBALS['TSFE'];
     }
 
     public function process(
@@ -50,36 +53,44 @@ class ResolveEntities implements DataProcessorInterface
         array $processedData
     ) {
         $as = $cObj->stdWrapValue('as', $processorConfiguration, 'entities');
-        $table = $cObj->stdWrapValue('table', $processorConfiguration, '');
+        $tableName = $cObj->stdWrapValue('table', $processorConfiguration, '');
         $uids = $cObj->stdWrapValue('uids', $processorConfiguration, '');
 
         $uids = GeneralUtility::intExplode(',', $uids);
-        if ($uids === [] || $table === '') {
+        if ($uids === [] || $tableName === '') {
             return $processedData;
         }
 
-        $processedData[$as] = $this->resolveEntities($table, $uids);
+        $processedData[$as] = $this->resolveEntities($tableName, $uids);
         return $processedData;
     }
 
-    private function resolveEntities(string $table, array $uids): array
+    private function resolveEntities(string $tableName, array $uids): array
     {
-        $targetType = '\WerkraumMedia\ThueCat\Domain\Model\Frontend\\' . $this->convertTableToEntity($table);
+        $targetType = '\WerkraumMedia\ThueCat\Domain\Model\Frontend\\' . $this->convertTableToEntity($tableName);
 
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($tableName);
         $queryBuilder->select('*');
-        $queryBuilder->from($table);
+        $queryBuilder->from($tableName);
         $queryBuilder->where($queryBuilder->expr()->in(
             'uid',
             $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)
         ));
 
-        return $this->dataMapper->map($targetType, $queryBuilder->execute()->fetchAll());
+        $rows = [];
+        foreach ($queryBuilder->execute() as $row) {
+            $row = $this->tsfe->sys_page->getLanguageOverlay($tableName, $row);
+            if (is_array($row)) {
+                $rows[] = $row;
+            }
+        }
+
+        return $this->dataMapper->map($targetType, $rows);
     }
 
-    private function convertTableToEntity(string $table): string
+    private function convertTableToEntity(string $tableName): string
     {
-        $entityPart = str_replace('tx_thuecat_', '', $table);
+        $entityPart = str_replace('tx_thuecat_', '', $tableName);
         return GeneralUtility::underscoredToUpperCamelCase($entityPart);
     }
 }

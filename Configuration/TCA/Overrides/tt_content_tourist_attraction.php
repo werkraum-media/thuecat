@@ -38,6 +38,11 @@ defined('TYPO3') or die();
                     'records' => [
                         'config' => [
                             'allowed' => 'tx_thuecat_tourist_attraction',
+                            'suggestOptions' => [
+                                'tx_thuecat_tourist_attraction' => [
+                                    'addWhere' => 'sys_language_uid in (0,-1)',
+                                ],
+                            ],
                         ],
                     ],
                 ],
