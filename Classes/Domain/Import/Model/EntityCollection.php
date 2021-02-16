@@ -57,10 +57,19 @@ class EntityCollection
     /**
      * @return Entity[]
      */
-    public function getTranslatedEntities(): array
+    public function getEntitiesToTranslate(): array
     {
         return array_filter($this->entities, function (Entity $entity) {
-            return $entity->isTranslation();
+            return $entity->isTranslation()
+                && $entity->exists() === false
+                ;
+        });
+    }
+
+    public function getExistingEntities(): array
+    {
+        return array_filter($this->entities, function (Entity $entity) {
+            return $entity->exists();
         });
     }
 }

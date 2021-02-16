@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
@@ -48,11 +49,13 @@ class TouristAttractionTest extends TestCase
     public function canBeCreated(): void
     {
         $parser = $this->prophesize(Parser::class);
+        $language = $this->prophesize(LanguageHandling::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristAttraction(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -66,11 +69,13 @@ class TouristAttractionTest extends TestCase
     public function canConvert(): void
     {
         $parser = $this->prophesize(Parser::class);
+        $language = $this->prophesize(LanguageHandling::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristAttraction(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -120,11 +125,16 @@ class TouristAttractionTest extends TestCase
         $parser->getAddress($jsonLD)->willReturn([]);
         $parser->getMedia($jsonLD)->willReturn([]);
 
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->isUnknown('de', 10)->willReturn(false);
+        $language->getSystemUid('de', 10)->willReturn(0);
+
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristAttraction(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -191,6 +201,10 @@ class TouristAttractionTest extends TestCase
         $parser->getAddress($jsonLD)->willReturn([]);
         $parser->getMedia($jsonLD)->willReturn([]);
 
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->isUnknown('de', 10)->willReturn(false);
+        $language->getSystemUid('de', 10)->willReturn(0);
+
         $organisation = $this->prophesize(Organisation::class);
         $organisation->getUid()->willReturn(10);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
@@ -206,6 +220,7 @@ class TouristAttractionTest extends TestCase
 
         $subject = new TouristAttraction(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );

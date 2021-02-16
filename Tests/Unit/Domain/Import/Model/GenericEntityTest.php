@@ -175,9 +175,25 @@ class GenericEntityTest extends TestCase
             '',
             []
         );
-        self::assertSame(
-            false,
+        self::assertFalse(
             $subject->wasCreated()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function returnsNotExistingByDefault(): void
+    {
+        $subject = new GenericEntity(
+            0,
+            '',
+            0,
+            '',
+            []
+        );
+        self::assertFalse(
+            $subject->exists()
         );
     }
 
@@ -213,7 +229,8 @@ class GenericEntityTest extends TestCase
         );
 
         $subject->setImportedTypo3Uid(10);
-        self::assertSame(true, $subject->wasCreated());
+        self::assertTrue($subject->wasCreated());
+        self::assertTrue($subject->exists());
         self::assertSame(10, $subject->getTypo3Uid());
     }
 
@@ -231,7 +248,8 @@ class GenericEntityTest extends TestCase
         );
 
         $subject->setExistingTypo3Uid(10);
-        self::assertSame(false, $subject->wasCreated());
+        self::assertFalse($subject->wasCreated());
+        self::assertTrue($subject->exists());
         self::assertSame(10, $subject->getTypo3Uid());
     }
 }

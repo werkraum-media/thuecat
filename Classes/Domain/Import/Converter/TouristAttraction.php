@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
@@ -33,15 +34,18 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 class TouristAttraction implements Converter
 {
     private Parser $parser;
+    private LanguageHandling $language;
     private OrganisationRepository $organisationRepository;
     private TownRepository $townRepository;
 
     public function __construct(
         Parser $parser,
+        LanguageHandling $language,
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository
     ) {
         $this->parser = $parser;
+        $this->language = $language;
         $this->organisationRepository = $organisationRepository;
         $this->townRepository = $townRepository;
     }
@@ -54,16 +58,15 @@ class TouristAttraction implements Converter
         $entities = GeneralUtility::makeInstance(EntityCollection::class);
 
         foreach ($this->parser->getLanguages($jsonLD) as $language) {
-            if ($language !== 'de') {
+            if ($this->language->isUnknown($language, $storagePid)) {
                 continue;
             }
-            $systemLanguageUid = 0;
 
             $entity = GeneralUtility::makeInstance(
                 GenericEntity::class,
                 $storagePid,
                 'tx_thuecat_tourist_attraction',
-                $systemLanguageUid,
+                $this->language->getSystemUid($language, $storagePid),
                 $this->parser->getId($jsonLD),
                 [
                     'title' => $this->parser->getTitle($jsonLD, $language),

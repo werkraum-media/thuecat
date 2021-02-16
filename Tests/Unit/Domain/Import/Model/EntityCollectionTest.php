@@ -96,43 +96,39 @@ class EntityCollectionTest extends TestCase
     /**
      * @test
      */
-    public function returnsAllTranslatedEntities(): void
+    public function returnsEntitiesToTranslate(): void
     {
-        $entityWithTranslation1 = $this->prophesize(Entity::class);
-        $entityWithTranslation1->isTranslation()->willReturn(true);
-        $entityWithTranslation2 = $this->prophesize(Entity::class);
-        $entityWithTranslation2->isTranslation()->willReturn(true);
-        $entitiyWithDefaultLanguage = $this->prophesize(Entity::class);
-        $entitiyWithDefaultLanguage->isTranslation()->willReturn(false);
+        $entityWithTranslation = $this->prophesize(Entity::class);
+        $entityWithTranslation->isTranslation()->willReturn(true);
+        $entityWithTranslation->exists()->willReturn(false);
 
         $subject = new EntityCollection();
-        $subject->add($entityWithTranslation1->reveal());
-        $subject->add($entitiyWithDefaultLanguage->reveal());
-        $subject->add($entityWithTranslation2->reveal());
+        $subject->add($entityWithTranslation->reveal());
 
         self::assertSame(
             [
-                0 => $entityWithTranslation1->reveal(),
-                2 => $entityWithTranslation2->reveal(),
+                $entityWithTranslation->reveal(),
             ],
-            $subject->getTranslatedEntities()
+            $subject->getEntitiesToTranslate()
         );
     }
 
     /**
      * @test
      */
-    public function returnsEmptyArrayIfNoTranslatedEntityExists(): void
+    public function returnsExistingEntities(): void
     {
-        $entitiyWithDefaultLanguage = $this->prophesize(Entity::class);
-        $entitiyWithDefaultLanguage->isTranslation()->willReturn(false);
+        $entityWithTranslation = $this->prophesize(Entity::class);
+        $entityWithTranslation->exists()->willReturn(true);
 
         $subject = new EntityCollection();
-        $subject->add($entitiyWithDefaultLanguage->reveal());
+        $subject->add($entityWithTranslation->reveal());
 
         self::assertSame(
-            [],
-            $subject->getTranslatedEntities()
+            [
+                $entityWithTranslation->reveal(),
+            ],
+            $subject->getExistingEntities()
         );
     }
 }

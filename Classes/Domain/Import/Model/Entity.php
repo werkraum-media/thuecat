@@ -65,6 +65,11 @@ interface Entity
     public function getTypo3Uid(): int;
 
     /**
+     * Must return true in case the entitiy did exist.
+     */
+    public function exists(): bool;
+
+    /**
      * Must return true in case the entitiy did not exist.
      */
     public function wasCreated(): bool;

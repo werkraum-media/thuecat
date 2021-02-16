@@ -52,6 +52,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
  * @uses WerkraumMedia\ThueCat\Domain\Import\Converter\Town
  * @uses WerkraumMedia\ThueCat\Domain\Import\Importer
  * @uses WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
+ * @uses WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling
  * @uses WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser
  * @uses WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address
  * @uses WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media
@@ -81,6 +82,10 @@ class ImportTest extends TestCase
 
     protected $testExtensionsToLoad = [
         'typo3conf/ext/thuecat/',
+    ];
+
+    protected $pathsToLinkInTestInstance = [
+        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
     ];
 
     protected function setUp(): void
@@ -201,34 +206,9 @@ class ImportTest extends TestCase
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
         $touristAttractions = $this->getAllRecords('tx_thuecat_tourist_attraction');
-        self::assertCount(3, $touristAttractions);
+        self::assertCount(8, $touristAttractions);
 
-        self::assertSame('https://thuecat.org/resources/835224016581-dara', $touristAttractions[0]['remote_id']);
-        self::assertSame('Dom St. Marien', $touristAttractions[0]['title']);
-        self::assertSame('[{"opens":"09:30:00","closes":"18:00:00","from":{"date":"2021-05-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2021-10-31 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Friday","Monday","Saturday","Thursday","Tuesday","Wednesday"]},{"opens":"13:00:00","closes":"18:00:00","from":{"date":"2021-05-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2021-10-31 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Sunday"]},{"opens":"09:30:00","closes":"17:00:00","from":{"date":"2021-11-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2022-04-30 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Friday","Monday","Saturday","Thursday","Tuesday","Wednesday"]},{"opens":"13:00:00","closes":"17:00:00","from":{"date":"2021-11-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2022-04-30 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Sunday"]}]', $touristAttractions[0]['opening_hours']);
-        self::assertSame('{"street":"Domstufen 1","zip":"99084","city":"Erfurt","email":"dominformation@domberg-erfurt.de","phone":"+49 361 6461265","fax":"","geo":{"latitude":50.975955358589545,"longitude":11.023667024961856}}', $touristAttractions[0]['address']);
-        self::assertSame('[{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg","description":"","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159216\/Preview-1280x0\/image","copyrightYear":2016,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}},{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg","description":"Sicht auf Dom St. Marien, St. Severikirche sowie die davor liegenden Klostergeb\u00e4ude und einem Ausschnitt des Biergartens umgeben von einem d\u00e4mmerungsverf\u00e4rten Himmel","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159186\/Preview-1280x0\/image","copyrightYear":2020,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}},{"mainImage":false,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg","description":"","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159216\/Preview-1280x0\/image","copyrightYear":2016,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}}]', $touristAttractions[0]['media']);
-        self::assertSame('1', $touristAttractions[0]['managed_by']);
-        self::assertSame('1', $touristAttractions[0]['town']);
-        self::assertSame('1', $touristAttractions[0]['uid']);
-
-        self::assertSame('https://thuecat.org/resources/165868194223-zmqf', $touristAttractions[1]['remote_id']);
-        self::assertSame('Alte Synagoge', $touristAttractions[1]['title']);
-        self::assertSame('[{"opens":"10:00:00","closes":"18:00:00","from":{"date":"2021-03-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2021-12-31 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Friday","Saturday","Sunday","Thursday","Tuesday","Wednesday"]}]', $touristAttractions[1]['opening_hours']);
-        self::assertSame('{"street":"Waagegasse 8","zip":"99084","city":"Erfurt","email":"altesynagoge@erfurt.de","phone":"+49 361 6551520","fax":"+49 361 6551669","geo":{"latitude":50.978765,"longitude":11.029133}}', $touristAttractions[1]['address']);
-        self::assertSame('[{"mainImage":true,"type":"image","title":"Erfurt-Alte Synagoge","description":"Frontaler Blick auf die Hausfront\/Hausfassade im Innenhof mit Zugang \u00fcber die Waagegasse","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5099196\/Preview-1280x0\/image","copyrightYear":2009,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":"F:\\\\Bilddatenbank\\\\Museen und Ausstellungen\\\\Alte Synagoge"}},{"mainImage":false,"type":"image","title":"Erfurt-Alte Synagoge","description":"Frontaler Blick auf die Hausfront\/Hausfassade im Innenhof mit Zugang \u00fcber die Waagegasse","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5099196\/Preview-1280x0\/image","copyrightYear":2009,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":"F:\\\\Bilddatenbank\\\\Museen und Ausstellungen\\\\Alte Synagoge"}}]', $touristAttractions[1]['media']);
-        self::assertSame('1', $touristAttractions[1]['managed_by']);
-        self::assertSame('1', $touristAttractions[1]['town']);
-        self::assertSame('2', $touristAttractions[1]['uid']);
-
-        self::assertSame('https://thuecat.org/resources/215230952334-yyno', $touristAttractions[2]['remote_id']);
-        self::assertSame('Krämerbrücke', $touristAttractions[2]['title']);
-        self::assertSame('[]', $touristAttractions[2]['opening_hours']);
-        self::assertSame('{"street":"Benediktsplatz 1","zip":"99084","city":"Erfurt","email":"service@erfurt-tourismus.de","phone":"+49 361 66 400","fax":"","geo":{"latitude":50.978772,"longitude":11.031622}}', $touristAttractions[2]['address']);
-        self::assertSame('[{"mainImage":true,"type":"image","title":"Erfurt-Kraemerbruecke-11.jpg","description":"Kr\u00e4merbr\u00fccke in Erfurt","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/134362\/Preview-1280x0\/image","copyrightYear":2019,"license":{"type":"https:\/\/creativecommons.org\/publicdomain\/zero\/1.0\/deed.de","author":"https:\/\/home.ttgnet.de\/ttg\/projekte\/10006\/90136\/Projektdokumente\/Vergabe%20Rahmenvertrag%20Fotoproduktion"}},{"mainImage":false,"type":"image","title":"Erfurt-Kraemerbruecke.jpg","description":"Kr\u00e4merbr\u00fccke in Erfurt","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/134288\/Preview-1280x0\/image","copyrightYear":2019,"license":{"type":"https:\/\/creativecommons.org\/publicdomain\/zero\/1.0\/deed.de","author":"https:\/\/home.ttgnet.de\/ttg\/projekte\/10006\/90136\/Projektdokumente\/Vergabe%20Rahmenvertrag%20Fotoproduktion"}},{"mainImage":false,"type":"image","title":"Erfurt-Kraemerbruecke-11.jpg","description":"Kr\u00e4merbr\u00fccke in Erfurt","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/134362\/Preview-1280x0\/image","copyrightYear":2019,"license":{"type":"https:\/\/creativecommons.org\/publicdomain\/zero\/1.0\/deed.de","author":"https:\/\/home.ttgnet.de\/ttg\/projekte\/10006\/90136\/Projektdokumente\/Vergabe%20Rahmenvertrag%20Fotoproduktion"}},{"mainImage":false,"type":"image","title":"Erfurt-Kraemerbruecke-13.jpg","description":"Ansicht der Kr\u00e4merbr\u00fccke, Erfurt","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/652340\/Preview-1280x0\/image","copyrightYear":2019,"license":{"type":"https:\/\/creativecommons.org\/publicdomain\/zero\/1.0\/deed.de","author":"https:\/\/home.ttgnet.de\/ttg\/projekte\/10006\/90136\/Projektdokumente\/Vergabe%20Rahmenvertrag%20Fotoproduktion"}}]', $touristAttractions[2]['media']);
-        self::assertSame('1', $touristAttractions[2]['managed_by']);
-        self::assertSame('1', $touristAttractions[2]['town']);
-        self::assertSame('3', $touristAttractions[2]['uid']);
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelationsResult.csv');
     }
 
     /**

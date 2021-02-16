@@ -2,7 +2,7 @@ parameters:
 	ignoreErrors:
 		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
-			count: 1
+			count: 2
 			path: Classes/Domain/Import/Importer/SaveData.php
 
 		-
@@ -21,7 +21,12 @@ parameters:
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int\\.$#"
+			message: "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Driver\\\\Statement\\|int supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: Classes/Frontend/DataProcessing/ResolveEntities.php
+
+		-
+			message: "#^Cannot call method getLanguageOverlay\\(\\) on string\\|TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
 			count: 1
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 

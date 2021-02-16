@@ -1,0 +1,47 @@
+base: 'https:/example.com'
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    base: /
+    typo3Language: de
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    websiteTitle: ''
+    languageId: 0
+  -
+    title: English
+    enabled: true
+    base: /en
+    typo3Language: default
+    locale: en_GB.UTF-8
+    iso-639-1: en
+    websiteTitle: ''
+    navigationTitle: English
+    hreflang: en-GB
+    direction: ''
+    flag: gb
+    languageId: 1
+    fallbackType: strict
+    fallbacks: '0'
+  -
+    title: French
+    enabled: true
+    base: /fr/
+    typo3Language: fr
+    locale: fr_FR.ytf8
+    iso-639-1: fr
+    websiteTitle: ''
+    navigationTitle: ''
+    hreflang: fr-FR
+    direction: ''
+    fallbackType: strict
+    fallbacks: '1,0'
+    flag: fr
+    languageId: 2
+rootPageId: 1
+websiteTitle: 'Example Website'

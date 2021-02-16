@@ -48,39 +48,54 @@ class SaveData
     {
         $this->errorLog = [];
 
-        $this->processSimpleDataHandlerDataMap($entityCollection);
-        // TODO: Insert update / insert of localization
+        $this->updateKnownData($entityCollection);
+        $this->createEntities($entityCollection);
+        $this->updateKnownData($entityCollection);
+        $this->updateEntities($entityCollection);
 
         foreach ($entityCollection->getEntities() as $entity) {
             $log->addEntry(new ImportLogEntry($entity, $this->errorLog));
         }
     }
 
-    private function processSimpleDataHandlerDataMap(EntityCollection $collection): void
+    private function updateKnownData(EntityCollection $entities): void
     {
-        $dataArray = [];
-        $identifierMapping = [];
-
-        foreach ($collection->getEntities() as $entity) {
-            $identifier = $this->getIdentifier($entity);
-            if (strpos($identifier, 'NEW') === 0 && $entity->isTranslation()) {
+        foreach ($entities->getEntities() as $entity) {
+            if ($entity->exists()) {
                 continue;
             }
+
+            $identifier = $this->getIdentifier($entity);
             if (is_numeric($identifier)) {
                 $entity->setExistingTypo3Uid((int) $identifier);
-            } else {
-                $identifierMapping[spl_object_id($entity)] = $identifier;
             }
-
-            $dataArray[$entity->getTypo3DatabaseTableName()][$identifier] = $this->getEntityData($entity);
         }
+    }
+
+    private function createEntities(EntityCollection $entities): void
+    {
+        $this->createDefaultLanguageEntities($entities);
+        $this->createTranslationEntities($entities);
+    }
+
+    private function createDefaultLanguageEntities(EntityCollection $entities): void
+    {
+        $identifierMapping = [];
+
+        $entity = $entities->getDefaultLanguageEntity();
+        if ($entity === null) {
+            return;
+        }
+        $identifier = $this->getIdentifier($entity);
+        $identifierMapping[spl_object_id($entity)] = $identifier;
+        $dataArray[$entity->getTypo3DatabaseTableName()][$identifier] = $this->getEntityData($entity);
 
         $dataHandler = clone $this->dataHandler;
         $dataHandler->start($dataArray, []);
         $dataHandler->process_datamap();
         $this->errorLog = array_merge($this->errorLog, $dataHandler->errorLog);
 
-        foreach ($collection->getEntities() as $entity) {
+        foreach ($entities->getEntities() as $entity) {
             if (
                 isset($identifierMapping[spl_object_id($entity)])
                 && isset($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]])
@@ -88,6 +103,40 @@ class SaveData
                 $entity->setImportedTypo3Uid($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]]);
             }
         }
+    }
+
+    private function createTranslationEntities(EntityCollection $entities): void
+    {
+        $commandMap = [];
+
+        foreach ($entities->getEntitiesToTranslate() as $entity) {
+            $identifier = $this->getDefaultLanguageIdentifier($entity);
+            if (
+                $entity->isForDefaultLanguage()
+                || $identifier === 0
+            ) {
+                continue;
+            }
+            $commandMap[$entity->getTypo3DatabaseTableName()][$identifier]['localize'] = $entity->getTypo3SystemLanguageUid();
+            $dataHandler = clone $this->dataHandler;
+            $dataHandler->start([], $commandMap);
+            $dataHandler->process_cmdmap();
+            $this->errorLog = array_merge($this->errorLog, $dataHandler->errorLog);
+        }
+    }
+
+    private function updateEntities(EntityCollection $entities): void
+    {
+        $dataArray = [];
+
+        foreach ($entities->getExistingEntities() as $entity) {
+            $dataArray[$entity->getTypo3DatabaseTableName()][$entity->getTypo3Uid()] = $this->getEntityData($entity);
+        }
+
+        $dataHandler = clone $this->dataHandler;
+        $dataHandler->start($dataArray, []);
+        $dataHandler->process_datamap();
+        $this->errorLog = array_merge($this->errorLog, $dataHandler->errorLog);
     }
 
     private function getIdentifier(Entity $entity): string
@@ -113,6 +162,11 @@ class SaveData
 
     private function getExistingUid(Entity $entity): int
     {
+        $tableColumns = $this->connectionPool
+            ->getConnectionForTable($entity->getTypo3DatabaseTableName())
+            ->getSchemaManager()
+            ->listTableColumns($entity->getTypo3DatabaseTableName());
+
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($entity->getTypo3DatabaseTableName());
         $queryBuilder->getRestrictions()->removeAll();
         $queryBuilder->select('uid');
@@ -120,6 +174,35 @@ class SaveData
         $queryBuilder->where($queryBuilder->expr()->eq(
             'remote_id',
             $queryBuilder->createNamedParameter($entity->getRemoteId())
+        ));
+        if (isset($tableColumns['sys_language_uid'])) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq(
+                'sys_language_uid',
+                $queryBuilder->createNamedParameter($entity->getTypo3SystemLanguageUid())
+            ));
+        }
+
+        $result = $queryBuilder->execute()->fetchColumn();
+        if (is_numeric($result)) {
+            return (int) $result;
+        }
+
+        return 0;
+    }
+
+    private function getDefaultLanguageIdentifier(Entity $entity): int
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($entity->getTypo3DatabaseTableName());
+        $queryBuilder->getRestrictions()->removeAll();
+        $queryBuilder->select('uid');
+        $queryBuilder->from($entity->getTypo3DatabaseTableName());
+        $queryBuilder->where($queryBuilder->expr()->eq(
+            'remote_id',
+            $queryBuilder->createNamedParameter($entity->getRemoteId())
+        ));
+        $queryBuilder->andWhere($queryBuilder->expr()->eq(
+            'sys_language_uid',
+            $queryBuilder->createNamedParameter(0)
         ));
 
         $result = $queryBuilder->execute()->fetchColumn();

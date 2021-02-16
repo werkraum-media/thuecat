@@ -99,6 +99,11 @@ class GenericEntity implements Entity
         return $this->typo3Uid;
     }
 
+    public function exists(): bool
+    {
+        return $this->getTypo3Uid() !== 0;
+    }
+
     public function wasCreated(): bool
     {
         return $this->created;
