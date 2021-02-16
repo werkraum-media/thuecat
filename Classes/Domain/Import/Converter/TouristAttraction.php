@@ -71,6 +71,7 @@ class TouristAttraction implements Converter
                     'managed_by' => $manager ? $manager->getUid() : 0,
                     'town' => $town ? $town->getUid() : 0,
                     'opening_hours' => json_encode($this->parser->getOpeningHours($jsonLD)),
+                    'address' => json_encode($this->parser->getAddress($jsonLD)),
                 ]
             );
             $entities->add($entity);

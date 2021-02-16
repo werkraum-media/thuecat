@@ -84,6 +84,12 @@
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.opening_hours" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.address" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.town" xml:space="preserve">
                 <source>Town</source>
             </trans-unit>
