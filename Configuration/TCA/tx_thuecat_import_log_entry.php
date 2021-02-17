@@ -11,6 +11,7 @@ return (static function (string $extensionKey, string $tableName) {
             'label' => 'table_name',
             'label_alt' => 'record_uid',
             'label_alt_force' => true,
+            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
             'default_sortby' => 'crdate',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
