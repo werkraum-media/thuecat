@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 class Organisation implements Converter
 {
@@ -38,11 +39,11 @@ class Organisation implements Converter
         $this->parser = $parser;
     }
 
-    public function convert(array $jsonLD): EntityCollection
+    public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection
     {
         $entity = GeneralUtility::makeInstance(
             GenericEntity::class,
-            10,
+            $configuration->getStoragePid(),
             'tx_thuecat_organisation',
             0,
             $this->parser->getId($jsonLD),

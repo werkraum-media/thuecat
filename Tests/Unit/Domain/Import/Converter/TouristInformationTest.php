@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristInformation;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
@@ -144,12 +145,15 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ])->willReturn(null);
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new TouristInformation(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
@@ -219,12 +223,15 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ])->willReturn($town->reveal());
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new TouristInformation(
             $parser->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());

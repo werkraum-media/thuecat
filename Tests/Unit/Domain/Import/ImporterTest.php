@@ -173,10 +173,10 @@ class ImporterTest extends TestCase
 
         $concreteConverter->convert(Argument::that(function (array $jsonEntity) {
             return $jsonEntity['@id'] === 'https://example.com/resources/34343-ex';
-        }))->willReturn($entities1->reveal());
+        }), $configuration->reveal())->willReturn($entities1->reveal());
         $concreteConverter->convert(Argument::that(function (array $jsonEntity) {
             return $jsonEntity['@id'] === 'https://example.com/resources/34344-es';
-        }))->willReturn($entities2->reveal());
+        }), $configuration->reveal())->willReturn($entities2->reveal());
 
         $saveData->import($entities1->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();
         $saveData->import($entities2->reveal(), Argument::type(ImportLog::class))->shouldBeCalled();

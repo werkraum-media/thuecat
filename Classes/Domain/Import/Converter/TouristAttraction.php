@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
@@ -50,12 +51,12 @@ class TouristAttraction implements Converter
         $this->townRepository = $townRepository;
     }
 
-    public function convert(array $jsonLD): EntityCollection
+    public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection
     {
-        $storagePid = 10;
         $manager = $this->organisationRepository->findOneByRemoteId($this->parser->getManagerId($jsonLD));
         $town = $this->townRepository->findOneByRemoteIds($this->parser->getContainedInPlaceIds($jsonLD));
         $entities = GeneralUtility::makeInstance(EntityCollection::class);
+        $storagePid = $configuration->getStoragePid();
 
         foreach ($this->parser->getLanguages($jsonLD) as $language) {
             if ($this->language->isUnknown($language, $storagePid)) {

@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Town;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
@@ -115,11 +116,14 @@ class TownTest extends TestCase
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn(null);
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new Town(
             $parser->reveal(),
             $organisationRepository->reveal()
         );
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
@@ -165,11 +169,14 @@ class TownTest extends TestCase
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')->willReturn($organisation->reveal());
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new Town(
             $parser->reveal(),
             $organisationRepository->reveal()
         );
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());

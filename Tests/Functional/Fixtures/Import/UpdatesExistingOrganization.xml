@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dataset>
     <pages>
-        <uid>10</uid>
+        <uid>1</uid>
         <pid>0</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <doktype>4</doktype>
+        <title>Rootpage</title>
+        <is_siteroot>1</is_siteroot>
+    </pages>
+    <pages>
+        <uid>10</uid>
+        <pid>1</pid>
         <tstamp>1613400587</tstamp>
         <crdate>1613400558</crdate>
         <cruser_id>1</cruser_id>
@@ -24,6 +34,9 @@
                 <data>
                     <sheet index="sDEF">
                         <language index="lDEF">
+                            <field index="storagePid">
+                                <value index="vDEF">10</value>
+                            </field>
                             <field index="urls">
                                 <el index="el">
                                     <field index="602a89e212237114263881">

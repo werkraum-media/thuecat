@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**
  * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
@@ -93,8 +94,11 @@ class OrganisationTest extends TestCase
         $parser->getTitle($jsonLD)->willReturn('Title');
         $parser->getDescription($jsonLD)->willReturn('Description');
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new Organisation($parser->reveal());
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
