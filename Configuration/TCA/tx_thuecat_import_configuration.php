@@ -9,6 +9,7 @@ return (static function (string $extensionKey, string $tableName) {
     return [
         'ctrl' => [
             'label' => 'title',
+            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',

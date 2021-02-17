@@ -55,7 +55,7 @@ class Extension
             ],
             [
                 'access' => 'user,group',
-                'icon' => 'EXT:' . self::EXTENSION_KEY . '/Resources/Public/Icons/module.svg',
+                'icon' => self::getIconPath() . 'Extension.svg',
                 'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
             ]
         );
@@ -65,6 +65,11 @@ class Extension
     {
         self::addCaching();
         self::addContentElements();
+    }
+
+    public static function getIconPath(): string
+    {
+        return 'EXT:' . self::EXTENSION_KEY . '/Resources/Public/Icons/';
     }
 
     private static function addContentElements(): void
