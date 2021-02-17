@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
@@ -132,6 +133,9 @@ class TouristAttractionTest extends TestCase
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new TouristAttraction(
             $parser->reveal(),
             $language->reveal(),
@@ -139,7 +143,7 @@ class TouristAttractionTest extends TestCase
             $townRepository->reveal()
         );
 
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());
@@ -218,6 +222,9 @@ class TouristAttractionTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ])->willReturn($town->reveal());
 
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
         $subject = new TouristAttraction(
             $parser->reveal(),
             $language->reveal(),
@@ -225,7 +232,7 @@ class TouristAttractionTest extends TestCase
             $townRepository->reveal()
         );
 
-        $entities = $subject->convert($jsonLD);
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);
         self::assertCount(1, $entities->getEntities());

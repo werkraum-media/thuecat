@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  */
 
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 interface Converter
 {
@@ -37,5 +38,5 @@ interface Converter
      * A single JSONLD entity can have multiple languages.
      * That may result in multiple entities in TYPO3.
      */
-    public function convert(array $jsonLD): EntityCollection;
+    public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection;
 }

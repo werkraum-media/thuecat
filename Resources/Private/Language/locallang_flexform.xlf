@@ -6,6 +6,9 @@
             <trans-unit id="importConfiguration.static.sheetTitle" xml:space="preserve">
                 <source>Static import configuration</source>
             </trans-unit>
+            <trans-unit id="importConfiguration.static.storagePid" xml:space="preserve">
+                <source>Storage Page UID</source>
+            </trans-unit>
             <trans-unit id="importConfiguration.static.urls" xml:space="preserve">
                 <source>URLs</source>
             </trans-unit>

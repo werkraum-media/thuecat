@@ -42,6 +42,7 @@ class Importer
     private SaveData $saveData;
     private ImportLog $importLog;
     private ImportLogRepository $importLogRepository;
+    private ImportConfiguration $configuration;
 
     public function __construct(
         UrlProviderRegistry $urls,
@@ -59,9 +60,11 @@ class Importer
 
     public function importConfiguration(ImportConfiguration $configuration): ImportLog
     {
-        $this->importLog = GeneralUtility::makeInstance(ImportLog::class, $configuration);
+        $this->configuration = $configuration;
 
-        $urlProvider = $this->urls->getProviderForConfiguration($configuration);
+        $this->importLog = GeneralUtility::makeInstance(ImportLog::class, $this->configuration);
+
+        $urlProvider = $this->urls->getProviderForConfiguration($this->configuration);
         if (!$urlProvider instanceof UrlProvider) {
             return $this->importLog;
         }
@@ -91,7 +94,8 @@ class Importer
     {
         $converter = $this->converter->getConverterBasedOnType($jsonEntity['@type']);
         if ($converter instanceof Converter) {
-            $this->saveData->import($converter->convert($jsonEntity), $this->importLog);
+            $entities = $converter->convert($jsonEntity, $this->configuration);
+            $this->saveData->import($entities, $this->importLog);
             return;
         }
     }

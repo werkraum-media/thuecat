@@ -12,6 +12,8 @@ The extension already allows:
 * Create static configuration to import specified resources,
   e.g. defined organisation or towns.
 
+* Support multiple languages
+
 * Import of the following types (not all properties are supported):
 
   * Organisations (responsible for content)
@@ -34,13 +36,14 @@ The extension already allows:
   * To inspect past imports and possible errors,
     as well as number of affected records
 
+* Frontend:
+
+    * Content element to display tourist attraction
+
 ## Short time goals
 
 * Integrate proper icons
 
-* Content element to display tourist attraction,
-  town, tourist information and organisation.
+* Content element to display town, tourist information and organisation.
 
 * Extending import to include further properties
-
-* Support multiple languages

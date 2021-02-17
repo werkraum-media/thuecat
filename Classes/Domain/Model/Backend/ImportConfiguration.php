@@ -54,6 +54,24 @@ class ImportConfiguration extends AbstractEntity
         return $this->tstamp;
     }
 
+    public function getStoragePid(): int
+    {
+        if ($this->configuration === '') {
+            return 0;
+        }
+
+        $storagePid = ArrayUtility::getValueByPath(
+            GeneralUtility::xml2array($this->configuration),
+            'data/sDEF/lDEF/storagePid/vDEF'
+        );
+
+        if (is_numeric($storagePid) && $storagePid > 0) {
+            return intval($storagePid);
+        }
+
+        return 0;
+    }
+
     public function getUrls(): array
     {
         if ($this->configuration === '') {

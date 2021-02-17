@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
 class Town implements Converter
@@ -42,7 +43,7 @@ class Town implements Converter
         $this->organisationRepository = $organisationRepository;
     }
 
-    public function convert(array $jsonLD): EntityCollection
+    public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection
     {
         $manager = $this->organisationRepository->findOneByRemoteId(
             $this->parser->getManagerId($jsonLD)
@@ -50,7 +51,7 @@ class Town implements Converter
 
         $entity = GeneralUtility::makeInstance(
             GenericEntity::class,
-            10,
+            $configuration->getStoragePid(),
             'tx_thuecat_town',
             0,
             $this->parser->getId($jsonLD),

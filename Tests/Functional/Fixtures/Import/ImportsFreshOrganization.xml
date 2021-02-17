@@ -11,7 +11,7 @@
         <is_siteroot>1</is_siteroot>
     </pages>
     <pages>
-        <uid>10</uid>
+        <uid>11</uid>
         <pid>1</pid>
         <tstamp>1613400587</tstamp>
         <crdate>1613400558</crdate>
@@ -34,6 +34,9 @@
                 <data>
                     <sheet index="sDEF">
                         <language index="lDEF">
+                            <field index="storagePid">
+                                <value index="vDEF">11</value>
+                            </field>
                             <field index="urls">
                                 <el index="el">
                                     <field index="602a89e212237114263881">

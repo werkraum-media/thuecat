@@ -10,6 +10,15 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
+                    <storagePid>
+                        <TCEforms>
+                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.storagePid</label>
+                            <config>
+                                <type>input</type>
+                                <eval>int,required</eval>
+                            </config>
+                        </TCEforms>
+                    </storagePid>
                     <urls>
                         <title>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.urls</title>
                         <section>1</section>
