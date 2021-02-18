@@ -1,3 +1,7 @@
+CREATE TABLE pages (
+    tx_thuecat_flexform text,
+);
+
 CREATE TABLE tx_thuecat_import_configuration (
     title varchar(255) DEFAULT '' NOT NULL,
     type varchar(255) DEFAULT '' NOT NULL,

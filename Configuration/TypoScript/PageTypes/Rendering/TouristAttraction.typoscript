@@ -1,0 +1,16 @@
+page {
+    10 {
+        dataProcessing {
+            950 = WerkraumMedia\ThueCat\Frontend\DataProcessing\ResolveEntities
+            950 {
+                as = touristAttraction
+                if {
+                    isInList.data = page:doktype
+                    value = 950
+                }
+                table = tx_thuecat_tourist_attraction
+                uids.data = flexform:tx_thuecat_flexform:touristAttraction
+            }
+        }
+    }
+}

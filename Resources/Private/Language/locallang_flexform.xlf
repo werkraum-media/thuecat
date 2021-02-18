@@ -15,6 +15,13 @@
             <trans-unit id="importConfiguration.static.url" xml:space="preserve">
                 <source>URL</source>
             </trans-unit>
+
+            <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
+            <trans-unit id="pages.tourist_attraction.tourist_attraction" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

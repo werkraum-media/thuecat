@@ -9,7 +9,7 @@ defined('TYPO3') or die();
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup(
         $tableName,
         'CType',
-        \WerkraumMedia\ThueCat\Extension::TT_CONTENT_GROUP,
+        \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
         $languagePath . '.group'
     );
 })(
