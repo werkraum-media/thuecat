@@ -101,6 +101,14 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'offers' => [
+                'label' => $languagePath . '.offers',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
             'remote_id' => [
                 'label' => $languagePath . '.remote_id',
                 'l10n_mode' => 'exclude',
@@ -150,7 +158,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, opening_hours, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
+                'showitem' => '--palette--;;language, title, description, opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];

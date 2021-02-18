@@ -23,17 +23,35 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-
-class TouristAttraction extends AbstractEntity
+class Offer
 {
-    protected string $title = '';
-    protected string $description = '';
-    protected ?OpeningHours $openingHours = null;
-    protected ?Offers $offers = null;
-    protected ?Address $address = null;
-    protected ?Town $town = null;
-    protected ?Media $media = null;
+    private string $title;
+    private string $description;
+    private array $prices;
+
+    private function __construct(
+        string $title,
+        string $description,
+        array $prices
+    ) {
+        $this->title = $title;
+        $this->description = $description;
+        $this->prices = $prices;
+    }
+
+    public static function createFromArray(array $rawData): self
+    {
+        $prices = [];
+        foreach ($rawData['prices'] as $price) {
+            $prices[] = Price::createFromArray($price);
+        }
+
+        return new self(
+            $rawData['title'],
+            $rawData['description'],
+            $prices
+        );
+    }
 
     public function getTitle(): string
     {
@@ -45,28 +63,8 @@ class TouristAttraction extends AbstractEntity
         return $this->description;
     }
 
-    public function getOpeningHours(): ?OpeningHours
+    public function getPrices(): array
     {
-        return $this->openingHours;
-    }
-
-    public function getOffers(): ?Offers
-    {
-        return $this->offers;
-    }
-
-    public function getAddress(): ?Address
-    {
-        return $this->address;
-    }
-
-    public function getTown(): ?Town
-    {
-        return $this->town;
-    }
-
-    public function getMedia(): ?Media
-    {
-        return $this->media;
+        return $this->prices;
     }
 }

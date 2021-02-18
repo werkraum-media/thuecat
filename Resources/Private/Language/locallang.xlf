@@ -106,6 +106,16 @@
             <trans-unit id="controller.backend.import.import.error.text" xml:space="preserve">
                 <source>Imported configuration "%1$s". But had at least one error.</source>
             </trans-unit>
+
+            <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
+                <source>pro Paket</source>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerGroup" xml:space="preserve">
+                <source>pro Gruppe</source>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerPerson" xml:space="preserve">
+                <source>pro Person</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

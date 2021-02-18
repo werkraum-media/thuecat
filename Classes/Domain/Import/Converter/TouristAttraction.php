@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -35,17 +36,20 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 class TouristAttraction implements Converter
 {
     private Parser $parser;
+    private Offers $parserForOffers;
     private LanguageHandling $language;
     private OrganisationRepository $organisationRepository;
     private TownRepository $townRepository;
 
     public function __construct(
         Parser $parser,
+        Offers $parserForOffers,
         LanguageHandling $language,
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository
     ) {
         $this->parser = $parser;
+        $this->parserForOffers = $parserForOffers;
         $this->language = $language;
         $this->organisationRepository = $organisationRepository;
         $this->townRepository = $townRepository;
@@ -77,6 +81,7 @@ class TouristAttraction implements Converter
                     'opening_hours' => json_encode($this->parser->getOpeningHours($jsonLD)),
                     'address' => json_encode($this->parser->getAddress($jsonLD)),
                     'media' => json_encode($this->parser->getMedia($jsonLD)),
+                    'offers' => json_encode($this->parserForOffers->get($jsonLD, $language)),
                 ]
             );
             $entities->add($entity);

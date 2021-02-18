@@ -23,50 +23,53 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Core\Type\TypeInterface;
 
-class TouristAttraction extends AbstractEntity
+/**
+ * @implements \Iterator<int, Offer>
+ */
+class Offers implements TypeInterface, \Iterator
 {
-    protected string $title = '';
-    protected string $description = '';
-    protected ?OpeningHours $openingHours = null;
-    protected ?Offers $offers = null;
-    protected ?Address $address = null;
-    protected ?Town $town = null;
-    protected ?Media $media = null;
+    private string $serialized = '';
+    private array $array = [];
+    private int $position = 0;
 
-    public function getTitle(): string
+    public function __construct(string $serialized)
     {
-        return $this->title;
+        $this->serialized = $serialized;
+        $this->array = array_map(
+            [Offer::class, 'createFromArray'],
+            json_decode($serialized, true)
+        );
     }
 
-    public function getDescription(): string
+    public function __toString(): string
     {
-        return $this->description;
+        return $this->serialized;
     }
 
-    public function getOpeningHours(): ?OpeningHours
+    public function current(): Offer
     {
-        return $this->openingHours;
+        return $this->array[$this->position];
     }
 
-    public function getOffers(): ?Offers
+    public function next(): void
     {
-        return $this->offers;
+        ++$this->position;
     }
 
-    public function getAddress(): ?Address
+    public function key(): int
     {
-        return $this->address;
+        return $this->position;
     }
 
-    public function getTown(): ?Town
+    public function valid(): bool
     {
-        return $this->town;
+        return isset($this->array[$this->position]);
     }
 
-    public function getMedia(): ?Media
+    public function rewind(): void
     {
-        return $this->media;
+        $this->position = 0;
     }
 }

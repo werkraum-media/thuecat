@@ -14,8 +14,7 @@ defined('TYPO3') or die();
         ],
         'types' => [
             $cType => [
-                'showitem' =>
-                    '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,'
+                'showitem' => '--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,'
                     . '--palette--;;general,'
                     . '--palette--;;headers,'
                     . 'records,'

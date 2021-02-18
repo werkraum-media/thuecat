@@ -27,5 +27,22 @@
                 {entity.address.fax}
             </p>
         </f:if>
+
+        <f:if condition="{entity.offers}">
+            <f:for each="{entity.offers}" as="offer">
+                <h3>{offer.title}</h3>
+                <f:if condition="{offer.description}">
+                    <p>{offer.description}</p>
+                </f:if>
+                <f:for each="{offer.prices}" as="price">
+                    <h4>{price.title}</h4>
+                    <f:if condition="{price.description}">
+                        <p>{price.description}</p>
+                    </f:if>
+                    {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                    {f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}
+                </f:for>
+            </f:for>
+        </f:if>
     </f:for>
 </html>
