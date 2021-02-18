@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
@@ -42,10 +43,13 @@ class ParserTest extends TestCase
      */
     public function canBeCreated(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -59,10 +63,13 @@ class ParserTest extends TestCase
      */
     public function returnsId(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -78,12 +85,77 @@ class ParserTest extends TestCase
     /**
      * @test
      */
-    public function returnsManagerId(): void
+    public function returnsTitle(): void
     {
+        $jsonLD = [
+            'schema:name' => [
+                '@language' => 'de',
+                '@value' => 'Erfurt',
+            ],
+        ];
+
+        $genericFields = $this->prophesize(GenericFields::class);
+        $genericFields->getTitle($jsonLD, 'de')->willReturn('Erfurt');
+
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
+            $openingHours->reveal(),
+            $address->reveal(),
+            $media->reveal()
+        );
+
+        $result = $subject->getTitle($jsonLD, 'de');
+
+        self::assertSame('Erfurt', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsDescription(): void
+    {
+        $jsonLD = [
+            'schema:description' => [
+                '@language' => 'de',
+                '@value' => 'Erfurt',
+            ],
+        ];
+
+        $genericFields = $this->prophesize(GenericFields::class);
+        $genericFields->getDescription($jsonLD, 'de')->willReturn('Erfurt');
+
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
+
+        $subject = new Parser(
+            $genericFields->reveal(),
+            $openingHours->reveal(),
+            $address->reveal(),
+            $media->reveal()
+        );
+
+        $result = $subject->getDescription($jsonLD, 'de');
+
+        self::assertSame('Erfurt', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsManagerId(): void
+    {
+        $genericFields = $this->prophesize(GenericFields::class);
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
+
+        $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -100,267 +172,16 @@ class ParserTest extends TestCase
 
     /**
      * @test
-     * @dataProvider titles
-     */
-    public function returnsTitle(array $jsonLD, string $language, string $expected): void
-    {
-        $openingHours = $this->prophesize(OpeningHours::class);
-        $address = $this->prophesize(Address::class);
-        $media = $this->prophesize(Media::class);
-        $subject = new Parser(
-            $openingHours->reveal(),
-            $address->reveal(),
-            $media->reveal()
-        );
-
-        $result = $subject->getTitle($jsonLD, $language);
-
-        self::assertSame($expected, $result);
-    }
-
-    public function titles(): array
-    {
-        return [
-            'json has multiple lanugages, one matches' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Title',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Title',
-                        ],
-                    ],
-                ],
-                'language' => 'de',
-                'expected' => 'DE Title',
-            ],
-            'json has multiple lanugages, no language specified' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Title',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Title',
-                        ],
-                    ],
-                ],
-                'language' => '',
-                'expected' => 'DE Title',
-            ],
-            'json has multiple languages, none matches' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Title',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Title',
-                        ],
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json has multiple languages, missing @language key' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        [
-                            '@value' => 'DE Title',
-                        ],
-                        [
-                            '@value' => 'FR Title',
-                        ],
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json has single language, that one matches' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Title',
-                    ],
-                ],
-                'language' => 'de',
-                'expected' => 'DE Title',
-            ],
-            'json contains single language, but another is requested' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Title',
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json contains single language, no language specified' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Title',
-                    ],
-                ],
-                'language' => '',
-                'expected' => 'DE Title',
-            ],
-            'json contains single language, missing @language key' => [
-                'jsonLD' => [
-                    'schema:name' => [
-                        '@value' => 'DE Title',
-                    ],
-                ],
-                'language' => '',
-                'expected' => '',
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider descriptions
-     */
-    public function returnsDescription(array $jsonLD, string $language, string $expected): void
-    {
-        $openingHours = $this->prophesize(OpeningHours::class);
-        $address = $this->prophesize(Address::class);
-        $media = $this->prophesize(Media::class);
-        $subject = new Parser(
-            $openingHours->reveal(),
-            $address->reveal(),
-            $media->reveal()
-        );
-
-        $result = $subject->getDescription($jsonLD, $language);
-
-        self::assertSame($expected, $result);
-    }
-
-    public function descriptions(): array
-    {
-        return [
-            'json has multiple lanugages, one matches' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Description',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Description',
-                        ],
-                    ],
-                ],
-                'language' => 'de',
-                'expected' => 'DE Description',
-            ],
-            'json has multiple lanugages, no language specified' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Description',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Description',
-                        ],
-                    ],
-                ],
-                'language' => '',
-                'expected' => 'DE Description',
-            ],
-            'json has multiple languages, none matches' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        [
-                            '@language' => 'de',
-                            '@value' => 'DE Description',
-                        ],
-                        [
-                            '@language' => 'fr',
-                            '@value' => 'FR Description',
-                        ],
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json has multiple languages, missing @language key' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        [
-                            '@value' => 'DE Description',
-                        ],
-                        [
-                            '@value' => 'FR Description',
-                        ],
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json has single language, that one matches' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Description',
-                    ],
-                ],
-                'language' => 'de',
-                'expected' => 'DE Description',
-            ],
-            'json contains single language, but another is requested' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Description',
-                    ],
-                ],
-                'language' => 'en',
-                'expected' => '',
-            ],
-            'json contains single language, no language specified' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        '@language' => 'de',
-                        '@value' => 'DE Description',
-                    ],
-                ],
-                'language' => '',
-                'expected' => 'DE Description',
-            ],
-            'json contains single language, missing @language key' => [
-                'jsonLD' => [
-                    'schema:description' => [
-                        '@value' => 'DE Description',
-                    ],
-                ],
-                'language' => '',
-                'expected' => '',
-            ],
-        ];
-    }
-
-    /**
-     * @test
      */
     public function returnsContainedInPlaceIds(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -390,10 +211,13 @@ class ParserTest extends TestCase
      */
     public function returnsLanguages(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -428,10 +252,13 @@ class ParserTest extends TestCase
      */
     public function throwsExceptionOnUnkownLanguage(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -453,10 +280,13 @@ class ParserTest extends TestCase
      */
     public function returnsNoLanguagesIfInfoIsMissing(): void
     {
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -489,11 +319,14 @@ class ParserTest extends TestCase
             'daysOfWeek' => [],
         ];
 
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $openingHours->get($jsonLD)->willReturn($generatedOpeningHours);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
+
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -527,12 +360,14 @@ class ParserTest extends TestCase
             'fax' => '',
         ];
 
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $address->get($jsonLD)->willReturn($generatedAddress);
         $media = $this->prophesize(Media::class);
 
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()
@@ -583,12 +418,14 @@ class ParserTest extends TestCase
             ],
         ];
 
+        $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
         $media = $this->prophesize(Media::class);
         $media->get($jsonLD)->willReturn($generatedMedia);
 
         $subject = new Parser(
+            $genericFields->reveal(),
             $openingHours->reveal(),
             $address->reveal(),
             $media->reveal()

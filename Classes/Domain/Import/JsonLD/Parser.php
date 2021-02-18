@@ -24,20 +24,24 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD;
  */
 
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
+use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 class Parser
 {
+    private GenericFields $genericFields;
     private OpeningHours $openingHours;
     private Address $address;
     private Media $media;
 
     public function __construct(
+        GenericFields $genericFields,
         OpeningHours $openingHours,
         Address $address,
         Media $media
     ) {
+        $this->genericFields = $genericFields;
         $this->openingHours = $openingHours;
         $this->address = $address;
         $this->media = $media;
@@ -50,12 +54,12 @@ class Parser
 
     public function getTitle(array $jsonLD, string $language = ''): string
     {
-        return $this->getValueForLanguage($jsonLD['schema:name'], $language);
+        return $this->genericFields->getTitle($jsonLD, $language);
     }
 
     public function getDescription(array $jsonLD, string $language = ''): string
     {
-        return $this->getValueForLanguage($jsonLD['schema:description'], $language);
+        return $this->genericFields->getDescription($jsonLD, $language);
     }
 
     public function getManagerId(array $jsonLD): string
@@ -108,6 +112,7 @@ class Parser
         $languages = array_map(function (array $language) {
             $language = $language['@value'];
 
+            // TODO: Make configurable / easier to extend
             if ($language === 'thuecat:German') {
                 return 'de';
             }
@@ -122,38 +127,5 @@ class Parser
         }, $languages);
 
         return $languages;
-    }
-
-    private function getValueForLanguage(
-        array $property,
-        string $language
-    ): string {
-        if (
-            $this->doesLanguageMatch($property, $language)
-            && isset($property['@value'])
-        ) {
-            return $property['@value'];
-        }
-
-        foreach ($property as $languageEntry) {
-            if (
-                is_array($languageEntry)
-                && $this->doesLanguageMatch($languageEntry, $language)
-            ) {
-                return $languageEntry['@value'];
-            }
-        }
-
-        return '';
-    }
-
-    private function doesLanguageMatch(array $property, string $language): bool
-    {
-        return isset($property['@language'])
-            && (
-                $property['@language'] === $language
-                || $language === ''
-            )
-            ;
     }
 }

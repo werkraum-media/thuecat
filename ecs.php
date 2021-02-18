@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
+use PhpCsFixer\Fixer\ArrayNotation\NoMultilineWhitespaceAroundDoubleArrowFixer;
 use PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer;
 use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
@@ -39,6 +40,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(NoUnusedImportsFixer::class);
     $services->set(FullyQualifiedStrictTypesFixer::class);
+    $services->set(NoMultilineWhitespaceAroundDoubleArrowFixer::class);
     $services->set(ArraySyntaxFixer::class)->call('configure', [[
         'syntax' => 'short',
     ]]);
