@@ -40,9 +40,9 @@ The extension already allows:
 
     * Content element to display tourist attraction
 
-## Short time goals
+    * Page Type to reference tourist attraction
 
-* Integrate proper icons
+## Short time goals
 
 * Content element to display town, tourist information and organisation.
 

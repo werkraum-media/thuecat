@@ -24,7 +24,10 @@ namespace WerkraumMedia\ThueCat;
  */
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
+use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
 use WerkraumMedia\ThueCat\Controller\Backend\OverviewController;
@@ -35,7 +38,9 @@ class Extension
 
     public const EXTENSION_NAME = 'Thuecat';
 
-    public const TT_CONTENT_GROUP = 'thuecat';
+    public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
+
+    public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
 
     public static function getLanguagePath(): string
     {
@@ -65,6 +70,8 @@ class Extension
     {
         self::addCaching();
         self::addContentElements();
+        self::addPageTypes();
+        self::addIcons();
     }
 
     public static function getIconPath(): string
@@ -76,7 +83,6 @@ class Extension
     {
         $languagePath = self::getLanguagePath() . 'locallang_tca.xlf:tt_content';
 
-        // TODO: Add Icon
         ExtensionManagementUtility::addPageTSConfig('
             mod.wizards.newContentElement.wizardItems.thuecat {
                 header = ' . $languagePath . '.group
@@ -85,6 +91,7 @@ class Extension
                     thuecat_tourist_attraction{
                         title = ' . $languagePath . '.thuecat_tourist_attraction
                         description =  ' . $languagePath . '.thuecat_tourist_attraction.description
+                        iconIdentifier = tx_thuecat_tourist_attraction
                         tt_content_defValues {
                             CType = thuecat_tourist_attraction
                         }
@@ -92,6 +99,30 @@ class Extension
                 }
             }
         ');
+    }
+
+    private static function addPageTypes(): void
+    {
+        ExtensionManagementUtility::addUserTSConfig(
+            "@import 'EXT:" . self::EXTENSION_KEY . "/Configuration/TSconfig/User/All.tsconfig'"
+        );
+    }
+
+    private static function addIcons(): void
+    {
+        $iconFiles = GeneralUtility::getFilesInDir(GeneralUtility::getFileAbsFileName(self::getIconPath()));
+        if (is_array($iconFiles) === false) {
+            return;
+        }
+
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        foreach ($iconFiles as $iconFile) {
+            $iconRegistry->registerIcon(
+                str_replace('.svg', '', $iconFile),
+                SvgIconProvider::class,
+                ['source' => self::getIconPath() . $iconFile]
+            );
+        }
     }
 
     private static function addCaching(): void

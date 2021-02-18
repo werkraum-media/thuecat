@@ -181,6 +181,19 @@
             <trans-unit id="tt_content.thuecat_tourist_attraction.description" xml:space="preserve">
                 <source>Renders selected tourist attractions</source>
             </trans-unit>
+
+            <trans-unit id="pages.group" xml:space="preserve">
+                <source>ThüCAT</source>
+            </trans-unit>
+            <trans-unit id="pages.tourist_attraction" xml:space="preserve">
+                <source>Tourist Attraction</source>
+            </trans-unit>
+            <trans-unit id="pages.palette.tx_thuecat" xml:space="preserve">
+                <source>ThüCAT</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_thuecat_flexform" xml:space="preserve">
+                <source>Configuration</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

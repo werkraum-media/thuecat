@@ -52,6 +52,10 @@ class ResolveEntities implements DataProcessorInterface
         array $processorConfiguration,
         array $processedData
     ) {
+        if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {
+            return $processedData;
+        }
+
         $as = $cObj->stdWrapValue('as', $processorConfiguration, 'entities');
         $tableName = $cObj->stdWrapValue('table', $processorConfiguration, '');
         $uids = $cObj->stdWrapValue('uids', $processorConfiguration, '');
