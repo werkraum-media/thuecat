@@ -3,7 +3,8 @@
     <f:for each="{entities}" as="entity">
         <div class="row mb-5">
             <div class="col-12 col-md-6">
-                <h2>{entity.title} <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if></h2>
+                <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if>
+                <h2>{entity.title} ({entity.town.title})</h2>
                 {entity.description -> f:format.html()}
             </div>
             <div class="col-12 col-md-6">
@@ -17,7 +18,7 @@
             <div class="col-12 col-md-3">
                 <f:if condition="{entity.address}">
                     <h5>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h5>
-                    {f:render(section: 'Address', arguments: {address: entity.address})}
+                    {f:render(partial: 'Address', arguments: {address: entity.address})}
                 </f:if>
                 <f:if condition="{entity.distanceToPublicTransport}">
                     <h5>{f:translate(id: 'content.distanceToPublicTransport', extensionName: 'thuecat')}</h5>
@@ -27,7 +28,7 @@
                 </f:if>
                 <f:if condition="{entity.parkingFacilitiesNearBy}">
                     <h5>{f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}</h5>
-                    {f:render(section: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
+                    {f:render(partial: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
                 </f:if>
             </div>
             <div class="col-12 col-md-3">
@@ -36,15 +37,11 @@
                     <f:if condition="{entity.otherServices}">
                         {f:render(partial: 'Service', arguments: {otherServices: entity.otherServices})}
                     </f:if>
-                    <f:if condition="{entity.petsAllowed}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}</span>
-                    </f:if>
-                    <f:if condition="{entity.isAccessibleForFree}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}</span>
-                    </f:if>
-                    <f:if condition="{entity.publicAccess}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}</span>
-                    </f:if>
+
+                    <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}</span>
+                    <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}</span>
+                    <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}</span>
+                    <span class="badge bg-secondary">{f:translate(id: 'content.accessibilitySpecification.certificationStatus.{entity.accessibilitySpecification.certificationStatus}', default: entity.accessibilitySpecification.certificationStatus, extensionName: 'Thuecat')}</span>
                 </p>
 
                 <f:if condition="{entity.museumServices}">
@@ -107,31 +104,11 @@
                 </f:if>
             </div>
         </div>
-        <f:if condition="{entity.accessibilitySpecification}">
+        <f:if condition="{entity.accessibilitySpecification.certificationStatus} != ''">
             <div class="row">
                 <h3>{f:translate(id: 'content.accessibility', extensionName: 'Thuecat')}</h3>
                 {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification})}
             </div>
         </f:if>
     </f:for>
-
-    <f:section name="Address">
-        <p>
-            {address.street}<br>
-            {address.zip} {address.city}<br>
-            <f:if condition="{address.email}">
-                <f:link.email email="{address.email}">{address.email}</f:link.email><br>
-            </f:if>
-            {address.phone}<br>
-            {address.fax}
-        </p>
-    </f:section>
-
-    <f:section name="Parking">
-        <f:for each="{parkingFacilitiesNearBy}" as="parkingFacility">
-            {parkingFacility.title}
-            {f:render(section: 'Address', arguments: {address: parkingFacility.address})}
-        </f:for>
-    </f:section>
-
 </html>
