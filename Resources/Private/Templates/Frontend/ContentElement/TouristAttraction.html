@@ -1,48 +1,67 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
-        <h5>{entity.title} ({entity.town.title})</h5>
-        <p>{entity.description}</p>
 
-        <f:if condition="{entity.media.mainImage}">
-            <f:image src="{entity.media.mainImage.url}" />
-        </f:if>
+        <h2>{entity.title} ({entity.town.title})</h2>
 
-        <f:for each="{entity.openingHours}" as="openingHour">
-            <p>
-                <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                    {weekday}: {openingHour.opens} - {openingHour.closes}<br>
-                </f:for>
-                {openingHour.from -> f:format.date(format: 'd.m.Y')} -
-                {openingHour.through -> f:format.date(format: 'd.m.Y')}
-            </p>
-        </f:for>
+        <div class="row">
+            <div class="col-md-6">
 
-        <f:if condition="{entity.address}">
-            <p>
-                {entity.address.street}<br>
-                {entity.address.zip} {entity.address.city}<br>
-                {entity.address.email}<br>
-                {entity.address.phone}<br>
-                {entity.address.fax}
-            </p>
-        </f:if>
+                <p>{entity.description}</p>
+            </div>
 
-        <f:if condition="{entity.offers}">
-            <f:for each="{entity.offers}" as="offer">
-                <h3>{offer.title}</h3>
-                <f:if condition="{offer.description}">
-                    <p>{offer.description}</p>
+            <div class="col-md-6">
+                <f:if condition="{entity.media.mainImage}">
+                    <f:image src="{entity.media.mainImage.url}" class="img-fluid"/>
                 </f:if>
-                <f:for each="{offer.prices}" as="price">
-                    <h4>{price.title}</h4>
-                    <f:if condition="{price.description}">
-                        <p>{price.description}</p>
-                    </f:if>
-                    {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                    {f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <f:if condition="{entity.address}">
+                    <p>
+                        {entity.address.street}<br>
+                        {entity.address.zip} {entity.address.city}<br>
+                        {entity.address.email}<br>
+                        {entity.address.phone}<br>
+                        {entity.address.fax}
+                    </p>
+                </f:if>
+            </div>
+
+            <div class="col-md-4">
+                <f:for each="{entity.openingHours}" as="openingHour">
+                    <p>
+                        <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
+                            {weekday}: {openingHour.opens} - {openingHour.closes}<br>
+                        </f:for>
+                        {openingHour.from -> f:format.date(format: 'd.m.Y')} -
+                        {openingHour.through -> f:format.date(format: 'd.m.Y')}
+                    </p>
                 </f:for>
-            </f:for>
-        </f:if>
+            </div>
+
+            <div class="col-md-4">
+                <f:if condition="{entity.offers}">
+                    <f:for each="{entity.offers}" as="offer">
+                        <h3>{offer.title}</h3>
+                        <f:if condition="{offer.description}">
+                            <p>{offer.description}</p>
+                        </f:if>
+                        <f:for each="{offer.prices}" as="price">
+                            <h4>{price.title}</h4>
+                            <f:if condition="{price.description}">
+                                <p>{price.description}</p>
+                            </f:if>
+                            {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                            {f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}
+                        </f:for>
+                    </f:for>
+                </f:if>
+            </div>
+
+        </div>
+
     </f:for>
 </html>
