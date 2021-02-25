@@ -52,53 +52,7 @@ class LanguageHandlingTest extends TestCase
     /**
      * @test
      */
-    public function allowsToCheckForUnkownLanguage(): void
-    {
-        $language = $this->prophesize(SiteLanguage::class);
-        $language->getTwoLetterIsoCode()->willReturn('en');
-
-        $site = $this->prophesize(Site::class);
-        $site->getLanguages()->willReturn([$language->reveal()]);
-
-        $siteFinder = $this->prophesize(SiteFinder::class);
-        $siteFinder->getSiteByPageId(10)->willReturn($site->reveal());
-
-        $subject = new LanguageHandling(
-            $siteFinder->reveal()
-        );
-
-        $result = $subject->isUnknown('de', 10);
-
-        self::assertTrue($result);
-    }
-
-    /**
-     * @test
-     */
-    public function allowsToCheckForKnownLanguage(): void
-    {
-        $language = $this->prophesize(SiteLanguage::class);
-        $language->getTwoLetterIsoCode()->willReturn('de');
-
-        $site = $this->prophesize(Site::class);
-        $site->getLanguages()->willReturn([$language->reveal()]);
-
-        $siteFinder = $this->prophesize(SiteFinder::class);
-        $siteFinder->getSiteByPageId(10)->willReturn($site->reveal());
-
-        $subject = new LanguageHandling(
-            $siteFinder->reveal()
-        );
-
-        $result = $subject->isUnknown('de', 10);
-
-        self::assertFalse($result);
-    }
-
-    /**
-     * @test
-     */
-    public function providesSystemLanguageUidForLanguage(): void
+    public function returnsAllLanguagesForGivenPageUid(): void
     {
         $language = $this->prophesize(SiteLanguage::class);
         $language->getTwoLetterIsoCode()->willReturn('de');
@@ -114,21 +68,24 @@ class LanguageHandlingTest extends TestCase
             $siteFinder->reveal()
         );
 
-        $result = $subject->getSystemUid('de', 10);
+        $result = $subject->getLanguages(10);
 
-        self::assertSame(2, $result);
+        self::assertCount(1, $result);
+        self::assertSame(2, $result[0]->getLanguageId());
+        self::assertSame('de', $result[0]->getTwoLetterIsoCode());
     }
 
     /**
      * @test
      */
-    public function providesZeroAsFallbackSystemLanguageUidForUnkownLanguage(): void
+    public function returnsDefaultLanguageForGivenPageUid(): void
     {
         $language = $this->prophesize(SiteLanguage::class);
-        $language->getTwoLetterIsoCode()->willReturn('fr');
+        $language->getTwoLetterIsoCode()->willReturn('de');
+        $language->getLanguageId()->willReturn(2);
 
         $site = $this->prophesize(Site::class);
-        $site->getLanguages()->willReturn([$language->reveal()]);
+        $site->getDefaultLanguage()->willReturn($language->reveal());
 
         $siteFinder = $this->prophesize(SiteFinder::class);
         $siteFinder->getSiteByPageId(10)->willReturn($site->reveal());
@@ -137,8 +94,10 @@ class LanguageHandlingTest extends TestCase
             $siteFinder->reveal()
         );
 
-        $result = $subject->getSystemUid('de', 10);
+        $result = $subject->getDefaultLanguage(10);
 
-        self::assertSame(0, $result);
+        self::assertInstanceOf(SiteLanguage::class, $result);
+        self::assertSame(2, $result->getLanguageId());
+        self::assertSame('de', $result->getTwoLetterIsoCode());
     }
 }

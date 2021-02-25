@@ -21,15 +21,17 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+
 class LanguageValues
 {
     public function getValueForLanguage(
         array $property,
-        string $language
+        SiteLanguage $language
     ): string {
         if (
-            $this->doesLanguageMatch($property, $language)
-            && isset($property['@value'])
+            isset($property['@value'])
+            && $this->doesLanguageMatch($property, $language)
         ) {
             return $property['@value'];
         }
@@ -48,13 +50,12 @@ class LanguageValues
 
     private function doesLanguageMatch(
         array $property,
-        string $language
+        SiteLanguage $language
     ): bool {
+        $isoCode = $language->getTwoLetterIsoCode();
+
         return isset($property['@language'])
-            && (
-                $property['@language'] === $language
-                || $language === ''
-            )
+            && $property['@language'] === $isoCode
             ;
     }
 }

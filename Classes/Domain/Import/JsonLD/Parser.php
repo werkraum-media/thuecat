@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
@@ -52,12 +53,12 @@ class Parser
         return $jsonLD['@id'];
     }
 
-    public function getTitle(array $jsonLD, string $language = ''): string
+    public function getTitle(array $jsonLD, SiteLanguage $language): string
     {
         return $this->genericFields->getTitle($jsonLD, $language);
     }
 
-    public function getDescription(array $jsonLD, string $language = ''): string
+    public function getDescription(array $jsonLD, SiteLanguage $language): string
     {
         return $this->genericFields->getDescription($jsonLD, $language);
     }
@@ -90,42 +91,5 @@ class Parser
     public function getMedia(array $jsonLD): array
     {
         return $this->media->get($jsonLD);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLanguages(array $jsonLD): array
-    {
-        if (isset($jsonLD['schema:availableLanguage']) === false) {
-            return [];
-        }
-
-        $languages = $jsonLD['schema:availableLanguage'];
-
-        $languages = array_filter($languages, function (array $language) {
-            return isset($language['@type'])
-                && $language['@type'] === 'thuecat:Language'
-                ;
-        });
-
-        $languages = array_map(function (array $language) {
-            $language = $language['@value'];
-
-            // TODO: Make configurable / easier to extend
-            if ($language === 'thuecat:German') {
-                return 'de';
-            }
-            if ($language === 'thuecat:English') {
-                return 'en';
-            }
-            if ($language === 'thuecat:French') {
-                return 'fr';
-            }
-
-            throw new \Exception('Unsupported language "' . $language . '".', 1612367481);
-        }, $languages);
-
-        return $languages;
     }
 }

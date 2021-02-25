@@ -34,31 +34,16 @@ class LanguageHandling
         $this->siteFinder = $siteFinder;
     }
 
-    public function isUnknown(string $languageIsoCode, int $pageUid): bool
-    {
-        $availableIsoCodes = array_map(function (SiteLanguage $language) {
-            return $language->getTwoLetterIsoCode();
-        }, $this->getLanguages($pageUid));
-
-        return in_array($languageIsoCode, $availableIsoCodes) === false;
-    }
-
-    public function getSystemUid(string $languageIsoCode, int $pageUid): int
-    {
-        foreach ($this->getLanguages($pageUid) as $language) {
-            if ($language->getTwoLetterIsoCode() === $languageIsoCode) {
-                return $language->getLanguageId();
-            }
-        }
-
-        return 0;
-    }
-
     /**
      * @return SiteLanguage[]
      */
-    private function getLanguages(int $pageUid): array
+    public function getLanguages(int $pageUid): array
     {
         return $this->siteFinder->getSiteByPageId($pageUid)->getLanguages();
+    }
+
+    public function getDefaultLanguage(int $pageUid): SiteLanguage
+    {
+        return $this->siteFinder->getSiteByPageId($pageUid)->getDefaultLanguage();
     }
 }

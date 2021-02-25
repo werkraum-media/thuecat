@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
@@ -117,26 +118,26 @@ class TouristAttractionTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+        $siteLanguage->getLanguageId()->willReturn(2);
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getLanguages(10)->willReturn([$siteLanguage->reveal()]);
+
         $parser = $this->prophesize(Parser::class);
         $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
         $parser->getContainedInPlaceIds($jsonLD)->willReturn([
             'https://example.com/resources/043064193523-jcyt',
             'https://example.com/resources/573211638937-gmqb',
         ]);
-        $parser->getLanguages($jsonLD)->willReturn(['de']);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD, 'de')->willReturn('Title');
-        $parser->getDescription($jsonLD, 'de')->willReturn('Description');
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Title');
+        $parser->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Description');
         $parser->getOpeningHours($jsonLD)->willReturn([]);
         $parser->getAddress($jsonLD)->willReturn([]);
         $parser->getMedia($jsonLD)->willReturn([]);
 
         $parserForOffers = $this->prophesize(Offers::class);
-        $parserForOffers->get($jsonLD, 'de')->willReturn([]);
-
-        $language = $this->prophesize(LanguageHandling::class);
-        $language->isUnknown('de', 10)->willReturn(false);
-        $language->getSystemUid('de', 10)->willReturn(0);
+        $parserForOffers->get($jsonLD, $siteLanguage->reveal())->willReturn([]);
 
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
@@ -159,6 +160,7 @@ class TouristAttractionTest extends TestCase
 
         $entity = $entities->getEntities()[0];
         self::assertSame(10, $entity->getTypo3StoragePid());
+        self::assertSame(2, $entity->getTypo3SystemLanguageUid());
         self::assertSame('tx_thuecat_tourist_attraction', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([
@@ -201,26 +203,26 @@ class TouristAttractionTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+        $siteLanguage->getLanguageId()->willReturn(2);
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getLanguages(10)->willReturn([$siteLanguage->reveal()]);
+
         $parser = $this->prophesize(Parser::class);
         $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
         $parser->getContainedInPlaceIds($jsonLD)->willReturn([
             'https://example.com/resources/043064193523-jcyt',
             'https://example.com/resources/573211638937-gmqb',
         ]);
-        $parser->getLanguages($jsonLD)->willReturn(['de']);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD, 'de')->willReturn('Title');
-        $parser->getDescription($jsonLD, 'de')->willReturn('Description');
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Title');
+        $parser->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Description');
         $parser->getOpeningHours($jsonLD)->willReturn([]);
         $parser->getAddress($jsonLD)->willReturn([]);
         $parser->getMedia($jsonLD)->willReturn([]);
 
         $parserForOffers = $this->prophesize(Offers::class);
-        $parserForOffers->get($jsonLD, 'de')->willReturn([]);
-
-        $language = $this->prophesize(LanguageHandling::class);
-        $language->isUnknown('de', 10)->willReturn(false);
-        $language->getSystemUid('de', 10)->willReturn(0);
+        $parserForOffers->get($jsonLD, $siteLanguage->reveal())->willReturn([]);
 
         $organisation = $this->prophesize(Organisation::class);
         $organisation->getUid()->willReturn(10);
@@ -253,6 +255,7 @@ class TouristAttractionTest extends TestCase
 
         $entity = $entities->getEntities()[0];
         self::assertSame(10, $entity->getTypo3StoragePid());
+        self::assertSame(2, $entity->getTypo3SystemLanguageUid());
         self::assertSame('tx_thuecat_tourist_attraction', $entity->getTypo3DatabaseTableName());
         self::assertSame('https://example.com/resources/018132452787-ngbe', $entity->getRemoteId());
         self::assertSame([
@@ -265,5 +268,67 @@ class TouristAttractionTest extends TestCase
             'media' => '[]',
             'offers' => '[]',
         ], $entity->getData());
+    }
+
+    /**
+     * @test
+     */
+    public function skipsLanguagesWithoutTitle(): void
+    {
+        $jsonLD = [
+            '@id' => 'https://example.com/resources/018132452787-ngbe',
+            'thuecat:managedBy' => [
+                '@id' => 'https://example.com/resources/018132452787-xxxx',
+            ],
+            'schema:containedInPlace' => [
+                [
+                    '@id' => 'https://example.com/resources/043064193523-jcyt',
+                ],
+                [
+                    '@id' => 'https://example.com/resources/573211638937-gmqb',
+                ],
+            ],
+            'schema:name' => [
+                '@value' => 'Title',
+            ],
+            'schema:description' => [
+                [
+                    '@value' => 'Description',
+                ],
+            ],
+        ];
+
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+        $siteLanguage->getLanguageId()->willReturn(2);
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getLanguages(10)->willReturn([$siteLanguage->reveal()]);
+
+        $parser = $this->prophesize(Parser::class);
+        $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
+        $parser->getContainedInPlaceIds($jsonLD)->willReturn([
+            'https://example.com/resources/043064193523-jcyt',
+            'https://example.com/resources/573211638937-gmqb',
+        ]);
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('');
+        $parserForOffers = $this->prophesize(Offers::class);
+
+        $organisationRepository = $this->prophesize(OrganisationRepository::class);
+        $townRepository = $this->prophesize(TownRepository::class);
+
+        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration->getStoragePid()->willReturn(10);
+
+        $subject = new TouristAttraction(
+            $parser->reveal(),
+            $parserForOffers->reveal(),
+            $language->reveal(),
+            $organisationRepository->reveal(),
+            $townRepository->reveal()
+        );
+
+        $entities = $subject->convert($jsonLD, $configuration->reveal());
+
+        self::assertInstanceOf(EntityCollection::class, $entities);
+        self::assertCount(0, $entities->getEntities());
     }
 }

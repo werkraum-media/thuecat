@@ -25,8 +25,10 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -46,7 +48,13 @@ class OrganisationTest extends TestCase
     public function instanceCanBeCreated(): void
     {
         $parser = $this->prophesize(Parser::class);
-        $subject = new Organisation($parser->reveal());
+        $language = $this->prophesize(LanguageHandling::class);
+
+        $subject = new Organisation(
+            $parser->reveal(),
+            $language->reveal()
+        );
+
         self::assertInstanceOf(Organisation::class, $subject);
     }
 
@@ -56,7 +64,13 @@ class OrganisationTest extends TestCase
     public function isInstanceOfConverter(): void
     {
         $parser = $this->prophesize(Parser::class);
-        $subject = new Organisation($parser->reveal());
+        $language = $this->prophesize(LanguageHandling::class);
+
+        $subject = new Organisation(
+            $parser->reveal(),
+            $language->reveal()
+        );
+
         self::assertInstanceOf(Converter::class, $subject);
     }
 
@@ -66,7 +80,13 @@ class OrganisationTest extends TestCase
     public function canConvertTouristMarketingCompany(): void
     {
         $parser = $this->prophesize(Parser::class);
-        $subject = new Organisation($parser->reveal());
+        $language = $this->prophesize(LanguageHandling::class);
+
+        $subject = new Organisation(
+            $parser->reveal(),
+            $language->reveal()
+        );
+
         self::assertTrue($subject->canConvert([
             'thuecat:TouristMarketingCompany',
             'schema:Thing',
@@ -89,15 +109,24 @@ class OrganisationTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getDefaultLanguage(10)->willReturn($siteLanguage->reveal());
+
         $parser = $this->prophesize(Parser::class);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD)->willReturn('Title');
-        $parser->getDescription($jsonLD)->willReturn('Description');
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Title');
+        $parser->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Description');
 
         $configuration = $this->prophesize(ImportConfiguration::class);
         $configuration->getStoragePid()->willReturn(10);
 
-        $subject = new Organisation($parser->reveal());
+        $subject = new Organisation(
+            $parser->reveal(),
+            $language->reveal()
+        );
+
         $entities = $subject->convert($jsonLD, $configuration->reveal());
 
         self::assertInstanceOf(EntityCollection::class, $entities);

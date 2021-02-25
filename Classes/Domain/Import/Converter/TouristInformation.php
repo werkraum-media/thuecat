@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
@@ -34,21 +35,25 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 class TouristInformation implements Converter
 {
     private Parser $parser;
+    private LanguageHandling $language;
     private OrganisationRepository $organisationRepository;
     private TownRepository $townRepository;
 
     public function __construct(
         Parser $parser,
+        LanguageHandling $language,
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository
     ) {
         $this->parser = $parser;
+        $this->language = $language;
         $this->organisationRepository = $organisationRepository;
         $this->townRepository = $townRepository;
     }
 
     public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection
     {
+        $language = $this->language->getDefaultLanguage($configuration->getStoragePid());
         $manager = $this->organisationRepository->findOneByRemoteId(
             $this->parser->getManagerId($jsonLD)
         );
@@ -63,8 +68,8 @@ class TouristInformation implements Converter
             0,
             $this->parser->getId($jsonLD),
             [
-                'title' => $this->parser->getTitle($jsonLD),
-                'description' => $this->parser->getDescription($jsonLD),
+                'title' => $this->parser->getTitle($jsonLD, $language),
+                'description' => $this->parser->getDescription($jsonLD, $language),
                 'managed_by' => $manager ? $manager->getUid() : 0,
                 'town' => $town ? $town->getUid() : 0,
             ]
