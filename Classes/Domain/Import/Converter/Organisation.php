@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
@@ -32,15 +33,20 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 class Organisation implements Converter
 {
     private Parser $parser;
+    private LanguageHandling $language;
 
     public function __construct(
-        Parser $parser
+        Parser $parser,
+        LanguageHandling $language
     ) {
         $this->parser = $parser;
+        $this->language = $language;
     }
 
     public function convert(array $jsonLD, ImportConfiguration $configuration): EntityCollection
     {
+        $language = $this->language->getDefaultLanguage($configuration->getStoragePid());
+
         $entity = GeneralUtility::makeInstance(
             GenericEntity::class,
             $configuration->getStoragePid(),
@@ -48,8 +54,8 @@ class Organisation implements Converter
             0,
             $this->parser->getId($jsonLD),
             [
-                'title' => $this->parser->getTitle($jsonLD),
-                'description' => $this->parser->getDescription($jsonLD),
+                'title' => $this->parser->getTitle($jsonLD, $language),
+                'description' => $this->parser->getDescription($jsonLD, $language),
             ]
         );
         $entities = GeneralUtility::makeInstance(EntityCollection::class);

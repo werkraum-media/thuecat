@@ -62,8 +62,9 @@ class TouristAttraction implements Converter
         $entities = GeneralUtility::makeInstance(EntityCollection::class);
         $storagePid = $configuration->getStoragePid();
 
-        foreach ($this->parser->getLanguages($jsonLD) as $language) {
-            if ($this->language->isUnknown($language, $storagePid)) {
+        foreach ($this->language->getLanguages($storagePid) as $language) {
+            $title = $this->parser->getTitle($jsonLD, $language);
+            if ($title === '') {
                 continue;
             }
 
@@ -71,7 +72,7 @@ class TouristAttraction implements Converter
                 GenericEntity::class,
                 $storagePid,
                 'tx_thuecat_tourist_attraction',
-                $this->language->getSystemUid($language, $storagePid),
+                $language->getLanguageId(),
                 $this->parser->getId($jsonLD),
                 [
                     'title' => $this->parser->getTitle($jsonLD, $language),

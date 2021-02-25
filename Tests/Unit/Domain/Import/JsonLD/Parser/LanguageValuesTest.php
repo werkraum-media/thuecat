@@ -22,6 +22,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD\Parser;
  */
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues;
 
 /**
@@ -29,6 +31,8 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues;
  */
 class LanguageValuesTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
@@ -46,10 +50,13 @@ class LanguageValuesTest extends TestCase
      */
     public function returnsValue(array $jsonLD, string $language, string $expected): void
     {
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+        $siteLanguage->getTwoLetterIsoCode()->willReturn($language);
+
         $subject = new LanguageValues(
         );
 
-        $result = $subject->getValueForLanguage($jsonLD, $language);
+        $result = $subject->getValueForLanguage($jsonLD, $siteLanguage->reveal());
 
         self::assertSame($expected, $result);
     }
@@ -69,20 +76,6 @@ class LanguageValuesTest extends TestCase
                     ],
                 ],
                 'language' => 'de',
-                'expected' => 'DE value',
-            ],
-            'has multiple lanugages, no language specified' => [
-                'jsonLD' => [
-                    [
-                        '@language' => 'de',
-                        '@value' => 'DE value',
-                    ],
-                    [
-                        '@language' => 'fr',
-                        '@value' => 'FR value',
-                    ],
-                ],
-                'language' => '',
                 'expected' => 'DE value',
             ],
             'has multiple languages, none matches' => [
@@ -126,14 +119,6 @@ class LanguageValuesTest extends TestCase
                 ],
                 'language' => 'en',
                 'expected' => '',
-            ],
-            'has single language, no language specified' => [
-                'jsonLD' => [
-                    '@language' => 'de',
-                    '@value' => 'DE value',
-                ],
-                'language' => '',
-                'expected' => 'DE value',
             ],
             'has single language, missing @language key' => [
                 'jsonLD' => [

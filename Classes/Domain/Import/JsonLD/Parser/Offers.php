@@ -21,6 +21,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+
 class Offers
 {
     private GenericFields $genericFields;
@@ -31,10 +33,17 @@ class Offers
         $this->genericFields = $genericFields;
     }
 
-    public function get(array $jsonLD, string $language): array
+    public function get(array $jsonLD, SiteLanguage $language): array
     {
         $offers = [];
         $jsonLDOffers = $jsonLD['schema:makesOffer'] ?? [];
+
+        if (isset($jsonLDOffers['@id'])) {
+            return [
+                $this->getOffer($jsonLDOffers, $language),
+            ];
+        }
+
         foreach ($jsonLDOffers as $jsonLDOffer) {
             $offer = $this->getOffer($jsonLDOffer, $language);
             if ($offer !== []) {
@@ -45,7 +54,7 @@ class Offers
         return $offers;
     }
 
-    private function getOffer(array $jsonLD, string $language): array
+    private function getOffer(array $jsonLD, SiteLanguage $language): array
     {
         return [
             'title' => $this->genericFields->getTitle($jsonLD, $language),
@@ -54,10 +63,16 @@ class Offers
         ];
     }
 
-    private function getPrices(array $jsonLD, string $language): array
+    private function getPrices(array $jsonLD, SiteLanguage $language): array
     {
         $prices = [];
         $jsonLDPrices = $jsonLD['schema:priceSpecification'] ?? [];
+
+        if (isset($jsonLDPrices['@id'])) {
+            return [
+                $this->getPrice($jsonLDPrices, $language),
+            ];
+        }
 
         foreach ($jsonLDPrices as $jsonLDPrice) {
             $price = $this->getPrice($jsonLDPrice, $language);
@@ -69,7 +84,7 @@ class Offers
         return $prices;
     }
 
-    private function getPrice(array $jsonLD, string $language): array
+    private function getPrice(array $jsonLD, SiteLanguage $language): array
     {
         return [
             'title' => $this->genericFields->getTitle($jsonLD, $language),

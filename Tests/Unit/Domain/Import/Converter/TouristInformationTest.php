@@ -25,8 +25,10 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Converter;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\TouristInformation;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -50,11 +52,13 @@ class TouristInformationTest extends TestCase
     public function instanceCanBeCreated(): void
     {
         $parser = $this->prophesize(Parser::class);
+        $language = $this->prophesize(LanguageHandling::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristInformation(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -67,11 +71,13 @@ class TouristInformationTest extends TestCase
     public function isInstanceOfConverter(): void
     {
         $parser = $this->prophesize(Parser::class);
+        $language = $this->prophesize(LanguageHandling::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristInformation(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -84,11 +90,13 @@ class TouristInformationTest extends TestCase
     public function canConvertTouristMarketingCompany(): void
     {
         $parser = $this->prophesize(Parser::class);
+        $language = $this->prophesize(LanguageHandling::class);
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $townRepository = $this->prophesize(TownRepository::class);
 
         $subject = new TouristInformation(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -125,6 +133,11 @@ class TouristInformationTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getDefaultLanguage(10)->willReturn($siteLanguage);
+
         $parser = $this->prophesize(Parser::class);
         $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
         $parser->getContainedInPlaceIds($jsonLD)->willReturn([
@@ -132,8 +145,8 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ]);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD)->willReturn('Title');
-        $parser->getDescription($jsonLD)->willReturn('Description');
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Title');
+        $parser->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Description');
 
         $organisationRepository = $this->prophesize(OrganisationRepository::class);
         $organisationRepository->findOneByRemoteId('https://example.com/resources/018132452787-xxxx')
@@ -150,6 +163,7 @@ class TouristInformationTest extends TestCase
 
         $subject = new TouristInformation(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );
@@ -199,6 +213,11 @@ class TouristInformationTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
+        $language = $this->prophesize(LanguageHandling::class);
+        $language->getDefaultLanguage(10)->willReturn($siteLanguage);
+
         $parser = $this->prophesize(Parser::class);
         $parser->getManagerId($jsonLD)->willReturn('https://example.com/resources/018132452787-xxxx');
         $parser->getContainedInPlaceIds($jsonLD)->willReturn([
@@ -206,8 +225,8 @@ class TouristInformationTest extends TestCase
             'https://example.com/resources/573211638937-gmqb',
         ]);
         $parser->getId($jsonLD)->willReturn('https://example.com/resources/018132452787-ngbe');
-        $parser->getTitle($jsonLD)->willReturn('Title');
-        $parser->getDescription($jsonLD)->willReturn('Description');
+        $parser->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Title');
+        $parser->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Description');
 
         $organisation = $this->prophesize(Organisation::class);
         $organisation->getUid()->willReturn(10);
@@ -228,6 +247,7 @@ class TouristInformationTest extends TestCase
 
         $subject = new TouristInformation(
             $parser->reveal(),
+            $language->reveal(),
             $organisationRepository->reveal(),
             $townRepository->reveal()
         );

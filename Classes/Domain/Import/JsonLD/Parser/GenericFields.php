@@ -21,6 +21,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
  * 02110-1301, USA.
  */
 
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+
 class GenericFields
 {
     private LanguageValues $languageValues;
@@ -31,12 +33,12 @@ class GenericFields
         $this->languageValues = $languageValues;
     }
 
-    public function getTitle(array $jsonLD, string $language = ''): string
+    public function getTitle(array $jsonLD, SiteLanguage $language): string
     {
         return $this->languageValues->getValueForLanguage($jsonLD['schema:name'] ?? [], $language);
     }
 
-    public function getDescription(array $jsonLD, string $language = ''): string
+    public function getDescription(array $jsonLD, SiteLanguage $language): string
     {
         return $this->languageValues->getValueForLanguage($jsonLD['schema:description'] ?? [], $language);
     }

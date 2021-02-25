@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
@@ -94,8 +95,10 @@ class ParserTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
         $genericFields = $this->prophesize(GenericFields::class);
-        $genericFields->getTitle($jsonLD, 'de')->willReturn('Erfurt');
+        $genericFields->getTitle($jsonLD, $siteLanguage->reveal())->willReturn('Erfurt');
 
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
@@ -108,7 +111,7 @@ class ParserTest extends TestCase
             $media->reveal()
         );
 
-        $result = $subject->getTitle($jsonLD, 'de');
+        $result = $subject->getTitle($jsonLD, $siteLanguage->reveal());
 
         self::assertSame('Erfurt', $result);
     }
@@ -125,8 +128,10 @@ class ParserTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
         $genericFields = $this->prophesize(GenericFields::class);
-        $genericFields->getDescription($jsonLD, 'de')->willReturn('Erfurt');
+        $genericFields->getDescription($jsonLD, $siteLanguage->reveal())->willReturn('Erfurt');
 
         $openingHours = $this->prophesize(OpeningHours::class);
         $address = $this->prophesize(Address::class);
@@ -139,7 +144,7 @@ class ParserTest extends TestCase
             $media->reveal()
         );
 
-        $result = $subject->getDescription($jsonLD, 'de');
+        $result = $subject->getDescription($jsonLD, $siteLanguage->reveal());
 
         self::assertSame('Erfurt', $result);
     }
@@ -204,97 +209,6 @@ class ParserTest extends TestCase
             'https://thuecat.org/resources/476888881990-xpwq',
             'https://thuecat.org/resources/573211638937-gmqb',
         ], $result);
-    }
-
-    /**
-     * @test
-     */
-    public function returnsLanguages(): void
-    {
-        $genericFields = $this->prophesize(GenericFields::class);
-        $openingHours = $this->prophesize(OpeningHours::class);
-        $address = $this->prophesize(Address::class);
-        $media = $this->prophesize(Media::class);
-
-        $subject = new Parser(
-            $genericFields->reveal(),
-            $openingHours->reveal(),
-            $address->reveal(),
-            $media->reveal()
-        );
-
-        $result = $subject->getLanguages([
-            'schema:availableLanguage' => [
-                0 => [
-                    '@type' => 'thuecat:Language',
-                    '@value' => 'thuecat:German',
-                ],
-                1 => [
-                    '@type' => 'thuecat:Language',
-                    '@value' => 'thuecat:English',
-                ],
-                2 => [
-                    '@type' => 'thuecat:Language',
-                    '@value' => 'thuecat:French',
-                ],
-            ],
-        ]);
-
-        self::assertSame([
-            'de',
-            'en',
-            'fr',
-        ], $result);
-    }
-
-    /**
-     * @test
-     */
-    public function throwsExceptionOnUnkownLanguage(): void
-    {
-        $genericFields = $this->prophesize(GenericFields::class);
-        $openingHours = $this->prophesize(OpeningHours::class);
-        $address = $this->prophesize(Address::class);
-        $media = $this->prophesize(Media::class);
-
-        $subject = new Parser(
-            $genericFields->reveal(),
-            $openingHours->reveal(),
-            $address->reveal(),
-            $media->reveal()
-        );
-
-        $this->expectExceptionCode(1612367481);
-        $result = $subject->getLanguages([
-            'schema:availableLanguage' => [
-                0 => [
-                    '@type' => 'thuecat:Language',
-                    '@value' => 'thuecat:Unkown',
-                ],
-            ],
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function returnsNoLanguagesIfInfoIsMissing(): void
-    {
-        $genericFields = $this->prophesize(GenericFields::class);
-        $openingHours = $this->prophesize(OpeningHours::class);
-        $address = $this->prophesize(Address::class);
-        $media = $this->prophesize(Media::class);
-
-        $subject = new Parser(
-            $genericFields->reveal(),
-            $openingHours->reveal(),
-            $address->reveal(),
-            $media->reveal()
-        );
-
-        $result = $subject->getLanguages([]);
-
-        self::assertSame([], $result);
     }
 
     /**

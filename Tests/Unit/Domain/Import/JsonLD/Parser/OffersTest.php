@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD\Parser;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers;
 
@@ -52,13 +53,14 @@ class OffersTest extends TestCase
      */
     public function returnsEmptyArrayIfNoOfferExists(): void
     {
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
         $genericFields = $this->prophesize(GenericFields::class);
 
         $subject = new Offers(
             $genericFields->reveal()
         );
 
-        $result = $subject->get([], '');
+        $result = $subject->get([], $siteLanguage->reveal());
 
         self::assertSame([], $result);
     }
@@ -66,7 +68,7 @@ class OffersTest extends TestCase
     /**
      * @test
      */
-    public function returnsSingleOfferWithSinglePrice(): void
+    public function returnsMultipleOfferWithMultiplePrices(): void
     {
         $jsonLD = [
             'schema:makesOffer' => [
@@ -255,53 +257,66 @@ class OffersTest extends TestCase
             ],
         ];
 
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
         $genericFields = $this->prophesize(GenericFields::class);
 
         // Offer 1
-        $genericFields->getTitle($jsonLD['schema:makesOffer'][0], 'de')->willReturn('Führungen');
-        $genericFields->getDescription($jsonLD['schema:makesOffer'][0], 'de')->willReturn('Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten');
+        $genericFields->getTitle(
+            $jsonLD['schema:makesOffer'][0],
+            $siteLanguage->reveal()
+        )->willReturn('Führungen');
+        $genericFields->getDescription(
+            $jsonLD['schema:makesOffer'][0],
+            $siteLanguage->reveal()
+        )->willReturn('Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten');
         $genericFields->getTitle(
             $jsonLD['schema:makesOffer'][0]['schema:priceSpecification'][0],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('Erwachsene');
         $genericFields->getDescription(
             $jsonLD['schema:makesOffer'][0]['schema:priceSpecification'][0],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('');
         $genericFields->getTitle(
             $jsonLD['schema:makesOffer'][0]['schema:priceSpecification'][1],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('Ermäßigt');
         $genericFields->getDescription(
             $jsonLD['schema:makesOffer'][0]['schema:priceSpecification'][1],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('als ermäßigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt');
 
         // Offer2
-        $genericFields->getTitle($jsonLD['schema:makesOffer'][1], 'de')->willReturn('Eintritt');
-        $genericFields->getDescription($jsonLD['schema:makesOffer'][1], 'de')->willReturn("Schulklassen und Kitagruppen im Rahmen des Unterrichts: Eintritt frei\nAn jedem ersten Dienstag im Monat: Eintritt frei");
+        $genericFields->getTitle(
+            $jsonLD['schema:makesOffer'][1],
+            $siteLanguage->reveal()
+        )->willReturn('Eintritt');
+        $genericFields->getDescription(
+            $jsonLD['schema:makesOffer'][1],
+            $siteLanguage->reveal()
+        )->willReturn("Schulklassen und Kitagruppen im Rahmen des Unterrichts: Eintritt frei\nAn jedem ersten Dienstag im Monat: Eintritt frei");
         $genericFields->getTitle(
             $jsonLD['schema:makesOffer'][1]['schema:priceSpecification'][0],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('Ermäßigt');
         $genericFields->getDescription(
             $jsonLD['schema:makesOffer'][1]['schema:priceSpecification'][0],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('als ermäßigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt');
         $genericFields->getTitle(
             $jsonLD['schema:makesOffer'][1]['schema:priceSpecification'][1],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('Familienkarte');
         $genericFields->getDescription(
             $jsonLD['schema:makesOffer'][1]['schema:priceSpecification'][1],
-            'de'
+            $siteLanguage->reveal()
         )->willReturn('');
 
         $subject = new Offers(
             $genericFields->reveal()
         );
 
-        $result = $subject->get($jsonLD, 'de');
+        $result = $subject->get($jsonLD, $siteLanguage->reveal());
 
         self::assertSame([
             [
@@ -341,6 +356,113 @@ class OffersTest extends TestCase
                         'price' => 17.0,
                         'currency' => 'EUR',
                         'rule' => 'PerGroup',
+                    ],
+                ],
+            ],
+        ], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsSingleOfferWithSinglePrice(): void
+    {
+        $jsonLD = [
+            'schema:makesOffer' => [
+                '@id' => 'genid-28b33237f71b41e3ad54a99e1da769b9-b5',
+                '@type' => [
+                    0 => 'schema:Intangible',
+                    1 => 'schema:Thing',
+                    2 => 'schema:Offer',
+                ],
+                'rdfs:label' => [
+                    '@language' => 'de',
+                    '@value' => 'Führungen',
+                ],
+                'schema:description' => [
+                    '@language' => 'de',
+                    '@value' => 'Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten',
+                ],
+                'schema:name' => [
+                    '@language' => 'de',
+                    '@value' => 'Führungen',
+                ],
+                'schema:offeredBy' => [
+                    '@id' => 'https://thuecat.org/resources/165868194223-zmqf',
+                ],
+                'schema:priceSpecification' => [
+                    '@id' => 'genid-28b33237f71b41e3ad54a99e1da769b9-b6',
+                    '@type' => [
+                        0 => 'schema:Intangible',
+                        1 => 'schema:StructuredValue',
+                        2 => 'schema:PriceSpecification',
+                        3 => 'schema:Thing',
+                    ],
+                    'rdfs:label' => [
+                        '@language' => 'de',
+                        '@value' => 'Erwachsene',
+                    ],
+                    'schema:name' => [
+                        '@language' => 'de',
+                        '@value' => 'Erwachsene',
+                    ],
+                    'schema:price' => [
+                        '@type' => 'schema:Number',
+                        '@value' => '8',
+                    ],
+                    'schema:priceCurrency' => [
+                        '@type' => 'thuecat:Currency',
+                        '@value' => 'thuecat:EUR',
+                    ],
+                    'thuecat:calculationRule' => [
+                        '@type' => 'thuecat:CalculationRule',
+                        '@value' => 'thuecat:PerPerson',
+                    ],
+                ],
+                'thuecat:offerType' => [
+                    '@type' => 'thuecat:OfferType',
+                    '@value' => 'thuecat:GuidedTourOffer',
+                ],
+            ],
+        ];
+
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+        $genericFields = $this->prophesize(GenericFields::class);
+
+        $genericFields->getTitle(
+            $jsonLD['schema:makesOffer'],
+            $siteLanguage->reveal()
+        )->willReturn('Führungen');
+        $genericFields->getDescription(
+            $jsonLD['schema:makesOffer'],
+            $siteLanguage->reveal()
+        )->willReturn('Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten');
+        $genericFields->getTitle(
+            $jsonLD['schema:makesOffer']['schema:priceSpecification'],
+            $siteLanguage->reveal()
+        )->willReturn('Erwachsene');
+        $genericFields->getDescription(
+            $jsonLD['schema:makesOffer']['schema:priceSpecification'],
+            $siteLanguage->reveal()
+        )->willReturn('');
+
+        $subject = new Offers(
+            $genericFields->reveal()
+        );
+
+        $result = $subject->get($jsonLD, $siteLanguage->reveal());
+
+        self::assertSame([
+            [
+                'title' => 'Führungen',
+                'description' => 'Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten',
+                'prices' => [
+                    [
+                        'title' => 'Erwachsene',
+                        'description' => '',
+                        'price' => 8.0,
+                        'currency' => 'EUR',
+                        'rule' => 'PerPerson',
                     ],
                 ],
             ],

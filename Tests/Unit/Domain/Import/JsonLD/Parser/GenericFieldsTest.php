@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD\Parser;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues;
 
@@ -52,10 +53,12 @@ class GenericFieldsTest extends TestCase
      */
     public function returnsTitle(): void
     {
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
         $languageValues = $this->prophesize(LanguageValues::class);
         $languageValues->getValueForLanguage([
             '@value' => 'DE Title',
-        ], 'de')->willReturn('DE Title');
+        ], $siteLanguage->reveal())->willReturn('DE Title');
 
         $subject = new GenericFields(
             $languageValues->reveal()
@@ -65,7 +68,7 @@ class GenericFieldsTest extends TestCase
             'schema:name' => [
                 '@value' => 'DE Title',
             ],
-        ], 'de');
+        ], $siteLanguage->reveal());
 
         self::assertSame('DE Title', $result);
     }
@@ -75,10 +78,12 @@ class GenericFieldsTest extends TestCase
      */
     public function returnsDescription(): void
     {
+        $siteLanguage = $this->prophesize(SiteLanguage::class);
+
         $languageValues = $this->prophesize(LanguageValues::class);
         $languageValues->getValueForLanguage([
             '@value' => 'DE Description',
-        ], 'de')->willReturn('DE Description');
+        ], $siteLanguage->reveal())->willReturn('DE Description');
 
         $subject = new GenericFields(
             $languageValues->reveal()
@@ -88,7 +93,7 @@ class GenericFieldsTest extends TestCase
             'schema:description' => [
                 '@value' => 'DE Description',
             ],
-        ], 'de');
+        ], $siteLanguage->reveal());
 
         self::assertSame('DE Description', $result);
     }
