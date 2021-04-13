@@ -32,8 +32,15 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 class Organisation implements Converter
 {
-    private Parser $parser;
-    private LanguageHandling $language;
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var LanguageHandling
+     */
+    private $language;
 
     public function __construct(
         Parser $parser,

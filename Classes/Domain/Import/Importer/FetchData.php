@@ -29,9 +29,20 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
 
 class FetchData
 {
-    private RequestFactoryInterface $requestFactory;
-    private ClientInterface $httpClient;
-    private CacheFrontendInterface $cache;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $requestFactory;
+
+    /**
+     * @var ClientInterface
+     */
+    private $httpClient;
+
+    /**
+     * @var CacheFrontendInterface
+     */
+    private $cache;
 
     public function __construct(
         RequestFactoryInterface $requestFactory,

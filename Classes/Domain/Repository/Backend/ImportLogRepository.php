@@ -32,7 +32,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 
 class ImportLogRepository extends Repository
 {
-    private DataHandler $dataHandler;
+    /**
+     * @var DataHandler
+     */
+    private $dataHandler;
 
     public function __construct(
         ObjectManagerInterface $objectManager,

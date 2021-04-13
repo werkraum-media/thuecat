@@ -28,7 +28,7 @@ class EntityCollection
     /**
      * @var Entity[]
      */
-    private array $entities = [];
+    private $entities = [];
 
     public function add(Entity $entity): void
     {

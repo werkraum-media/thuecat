@@ -33,10 +33,25 @@ use WerkraumMedia\ThueCat\View\Backend\Menu;
 
 class ImportController extends AbstractController
 {
-    private Importer $importer;
-    private ImportLogRepository $repository;
-    private TranslationService $translation;
-    private Menu $menu;
+    /**
+     * @var Importer
+     */
+    private $importer;
+
+    /**
+     * @var ImportLogRepository
+     */
+    private $repository;
+
+    /**
+     * @var TranslationService
+     */
+    private $translation;
+
+    /**
+     * @var Menu
+     */
+    private $menu;
 
     public function __construct(
         Importer $importer,

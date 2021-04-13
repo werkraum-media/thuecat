@@ -25,7 +25,10 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 
 class GenericFields
 {
-    private LanguageValues $languageValues;
+    /**
+     * @var LanguageValues
+     */
+    private $languageValues;
 
     public function __construct(
         LanguageValues $languageValues

@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         php-version:
+          - 7.3
           - 7.4
     steps:
       - name: Checkout
@@ -104,7 +105,7 @@ jobs:
 
   coding-guideline:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - check-dependencies
       - xml-linting
     steps:
@@ -176,6 +177,7 @@ jobs:
     strategy:
       matrix:
         php-version:
+          - 7.3
           - 7.4
     steps:
       - uses: actions/checkout@v2

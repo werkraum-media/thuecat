@@ -25,7 +25,10 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
 class Media
 {
-    private FetchData $fetchData;
+    /**
+     * @var FetchData
+     */
+    private $fetchData;
 
     public function __construct(
         FetchData $fetchData

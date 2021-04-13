@@ -29,9 +29,20 @@ use WerkraumMedia\ThueCat\View\Backend\Menu;
 
 class OverviewController extends AbstractController
 {
-    private OrganisationRepository $organisationRepository;
-    private ImportConfigurationRepository $importConfigurationRepository;
-    private Menu $menu;
+    /**
+     * @var OrganisationRepository
+     */
+    private $organisationRepository;
+
+    /**
+     * @var ImportConfigurationRepository
+     */
+    private $importConfigurationRepository;
+
+    /**
+     * @var Menu
+     */
+    private $menu;
 
     public function __construct(
         OrganisationRepository $organisationRepository,

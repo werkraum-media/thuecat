@@ -25,9 +25,20 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 class Offer
 {
-    private string $title;
-    private string $description;
-    private array $prices;
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var mixed[]
+     */
+    private $prices;
 
     private function __construct(
         string $title,
@@ -39,7 +50,10 @@ class Offer
         $this->prices = $prices;
     }
 
-    public static function createFromArray(array $rawData): self
+    /**
+     * @return $this
+     */
+    public static function createFromArray(array $rawData)
     {
         $prices = [];
         foreach ($rawData['prices'] as $price) {

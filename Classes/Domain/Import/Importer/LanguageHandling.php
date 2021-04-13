@@ -26,7 +26,10 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 
 class LanguageHandling
 {
-    private SiteFinder $siteFinder;
+    /**
+     * @var SiteFinder
+     */
+    private $siteFinder;
 
     public function __construct(
         SiteFinder $siteFinder

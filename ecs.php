@@ -5,6 +5,7 @@ declare(strict_types=1);
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\ArrayNotation\NoMultilineWhitespaceAroundDoubleArrowFixer;
 use PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer;
+use PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer;
 use PhpCsFixer\Fixer\Import\FullyQualifiedStrictTypesFixer;
 use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitTestAnnotationFixer;
@@ -49,5 +50,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services->set(PhpUnitTestAnnotationFixer::class)->call('configure', [[
         'style' => 'annotation',
+    ]]);
+    $services->set(ClassAttributesSeparationFixer::class)->call('configure', [[
+        'elements' => [
+            'const' => ClassAttributesSeparationFixer::SPACING_ONE,
+            'method' => ClassAttributesSeparationFixer::SPACING_ONE,
+            'property' => ClassAttributesSeparationFixer::SPACING_ONE,
+        ],
     ]]);
 };

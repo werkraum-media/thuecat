@@ -29,10 +29,25 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class ImportConfiguration extends AbstractEntity
 {
-    protected string $title = '';
-    protected string $type = '';
-    protected string $configuration = '';
-    protected ?\DateTimeImmutable $tstamp = null;
+    /**
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * @var string
+     */
+    protected $type = '';
+
+    /**
+     * @var string
+     */
+    protected $configuration = '';
+
+    /**
+     * @var \DateTimeImmutable|null
+     */
+    protected $tstamp = null;
 
     public function getTitle(): string
     {

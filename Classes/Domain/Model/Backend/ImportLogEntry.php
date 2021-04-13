@@ -53,7 +53,10 @@ class ImportLogEntry extends Typo3AbstractEntity
      */
     protected $errors = '';
 
-    protected array $errorsAsArray = [];
+    /**
+     * @var string[]
+     */
+    protected $errorsAsArray = [];
 
     public function __construct(
         Entity $entity,
