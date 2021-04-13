@@ -25,11 +25,30 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 class Price
 {
-    private string $title;
-    private string $description;
-    private float $price;
-    private string $currency;
-    private string $rule;
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var float
+     */
+    private $price;
+
+    /**
+     * @var string
+     */
+    private $currency;
+
+    /**
+     * @var string
+     */
+    private $rule;
 
     private function __construct(
         string $title,
@@ -45,7 +64,10 @@ class Price
         $this->rule = $rule;
     }
 
-    public static function createFromArray(array $rawData): self
+    /**
+     * @return $this
+     */
+    public static function createFromArray(array $rawData)
     {
         return new self(
             $rawData['title'],

@@ -30,7 +30,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
  */
 class Registry
 {
-    private array $provider = [];
+    /**
+     * @var UrlProvider[]
+     */
+    private $provider = [];
 
     public function registerProvider(UrlProvider $provider): void
     {

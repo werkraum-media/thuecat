@@ -28,7 +28,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 class StaticUrlProvider implements UrlProvider
 {
-    private array $urls = [];
+    /**
+     * @var string[]
+     */
+    private $urls = [];
 
     public function __construct(
         ImportConfiguration $configuration
@@ -46,7 +49,7 @@ class StaticUrlProvider implements UrlProvider
 
     public function createWithConfiguration(
         ImportConfiguration $configuration
-    ): StaticUrlProvider {
+    ): UrlProvider {
         return GeneralUtility::makeInstance(self::class, $configuration);
     }
 

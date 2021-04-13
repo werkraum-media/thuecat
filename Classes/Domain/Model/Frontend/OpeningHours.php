@@ -30,9 +30,20 @@ use TYPO3\CMS\Core\Type\TypeInterface;
  */
 class OpeningHours implements TypeInterface, \Iterator
 {
-    private string $serialized = '';
-    private array $array = [];
-    private int $position = 0;
+    /**
+     * @var string
+     */
+    private $serialized = '';
+
+    /**
+     * @var mixed[]
+     */
+    private $array = [];
+
+    /**
+     * @var int
+     */
+    private $position = 0;
 
     public function __construct(string $serialized)
     {

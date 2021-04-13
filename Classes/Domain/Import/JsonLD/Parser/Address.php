@@ -72,8 +72,8 @@ class Address
     private function getGeo(array $geo): array
     {
         return [
-            'latitude' => floatval($geo['schema:latitude']['@value'] ?? 0.00),
-            'longitude' => floatval($geo['schema:longitude']['@value'] ?? 0.00),
+            'latitude' => floatval($geo['schema:latitude']['@value'] ?? 0.0),
+            'longitude' => floatval($geo['schema:longitude']['@value'] ?? 0.0),
         ];
     }
 }

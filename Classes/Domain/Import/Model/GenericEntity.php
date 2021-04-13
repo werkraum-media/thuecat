@@ -25,13 +25,40 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Model;
 
 class GenericEntity implements Entity
 {
-    private int $typo3StoragePid;
-    private string $typo3DatabaseTableName;
-    private int $typo3SystemLanguageUid;
-    private bool $created = false;
-    private int $typo3Uid = 0;
-    private string $remoteId;
-    private array $data;
+    /**
+     * @var int
+     */
+    private $typo3StoragePid;
+
+    /**
+     * @var string
+     */
+    private $typo3DatabaseTableName;
+
+    /**
+     * @var int
+     */
+    private $typo3SystemLanguageUid;
+
+    /**
+     * @var bool
+     */
+    private $created = false;
+
+    /**
+     * @var int
+     */
+    private $typo3Uid = 0;
+
+    /**
+     * @var string
+     */
+    private $remoteId;
+
+    /**
+     * @var mixed[]
+     */
+    private $data;
 
     public function __construct(
         int $typo3StoragePid,

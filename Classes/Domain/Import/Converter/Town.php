@@ -33,9 +33,20 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
 class Town implements Converter
 {
-    private Parser $parser;
-    private LanguageHandling $language;
-    private OrganisationRepository $organisationRepository;
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var LanguageHandling
+     */
+    private $language;
+
+    /**
+     * @var OrganisationRepository
+     */
+    private $organisationRepository;
 
     public function __construct(
         Parser $parser,

@@ -27,13 +27,40 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class TouristAttraction extends AbstractEntity
 {
-    protected string $title = '';
-    protected string $description = '';
-    protected ?OpeningHours $openingHours = null;
-    protected ?Offers $offers = null;
-    protected ?Address $address = null;
-    protected ?Town $town = null;
-    protected ?Media $media = null;
+    /**
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * @var string
+     */
+    protected $description = '';
+
+    /**
+     * @var OpeningHours|null
+     */
+    protected $openingHours = null;
+
+    /**
+     * @var Offers|null
+     */
+    protected $offers = null;
+
+    /**
+     * @var Address|null
+     */
+    protected $address = null;
+
+    /**
+     * @var Town|null
+     */
+    protected $town = null;
+
+    /**
+     * @var Media|null
+     */
+    protected $media = null;
 
     public function getTitle(): string
     {

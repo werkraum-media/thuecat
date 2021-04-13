@@ -31,10 +31,25 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 class Parser
 {
-    private GenericFields $genericFields;
-    private OpeningHours $openingHours;
-    private Address $address;
-    private Media $media;
+    /**
+     * @var GenericFields
+     */
+    private $genericFields;
+
+    /**
+     * @var OpeningHours
+     */
+    private $openingHours;
+
+    /**
+     * @var Address
+     */
+    private $address;
+
+    /**
+     * @var Media
+     */
+    private $media;
 
     public function __construct(
         GenericFields $genericFields,

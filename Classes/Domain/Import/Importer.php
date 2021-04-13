@@ -36,13 +36,40 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
 {
-    private UrlProviderRegistry $urls;
-    private ConverterRegistry $converter;
-    private FetchData $fetchData;
-    private SaveData $saveData;
-    private ImportLog $importLog;
-    private ImportLogRepository $importLogRepository;
-    private ImportConfiguration $configuration;
+    /**
+     * @var UrlProviderRegistry
+     */
+    private $urls;
+
+    /**
+     * @var ConverterRegistry
+     */
+    private $converter;
+
+    /**
+     * @var FetchData
+     */
+    private $fetchData;
+
+    /**
+     * @var SaveData
+     */
+    private $saveData;
+
+    /**
+     * @var ImportLog
+     */
+    private $importLog;
+
+    /**
+     * @var ImportLogRepository
+     */
+    private $importLogRepository;
+
+    /**
+     * @var ImportConfiguration
+     */
+    private $configuration;
 
     public function __construct(
         UrlProviderRegistry $urls,

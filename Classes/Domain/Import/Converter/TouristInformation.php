@@ -34,10 +34,25 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 class TouristInformation implements Converter
 {
-    private Parser $parser;
-    private LanguageHandling $language;
-    private OrganisationRepository $organisationRepository;
-    private TownRepository $townRepository;
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var LanguageHandling
+     */
+    private $language;
+
+    /**
+     * @var OrganisationRepository
+     */
+    private $organisationRepository;
+
+    /**
+     * @var TownRepository
+     */
+    private $townRepository;
 
     public function __construct(
         Parser $parser,

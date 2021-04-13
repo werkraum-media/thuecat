@@ -32,7 +32,10 @@ use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 class Menu
 {
-    private TranslationService $translation;
+    /**
+     * @var TranslationService
+     */
+    private $translation;
 
     public function __construct(
         TranslationService $translation

@@ -27,8 +27,15 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class Town extends AbstractEntity
 {
-    protected string $title = '';
-    protected string $description = '';
+    /**
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * @var string
+     */
+    protected $description = '';
 
     public function getTitle(): string
     {

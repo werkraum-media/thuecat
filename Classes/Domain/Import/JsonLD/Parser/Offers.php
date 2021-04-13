@@ -25,7 +25,10 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 
 class Offers
 {
-    private GenericFields $genericFields;
+    /**
+     * @var GenericFields
+     */
+    private $genericFields;
 
     public function __construct(
         GenericFields $genericFields

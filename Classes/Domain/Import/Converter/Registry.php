@@ -28,7 +28,10 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Converter;
  */
 class Registry
 {
-    private array $converters = [];
+    /**
+     * @var Converter[]
+     */
+    private $converters = [];
 
     public function registerConverter(Converter $converter): void
     {

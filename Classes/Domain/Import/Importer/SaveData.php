@@ -32,9 +32,20 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class SaveData
 {
-    private DataHandler $dataHandler;
-    private ConnectionPool $connectionPool;
-    private array $errorLog;
+    /**
+     * @var DataHandler
+     */
+    private $dataHandler;
+
+    /**
+     * @var ConnectionPool
+     */
+    private $connectionPool;
+
+    /**
+     * @var mixed[]
+     */
+    private $errorLog;
 
     public function __construct(
         DataHandler $dataHandler,

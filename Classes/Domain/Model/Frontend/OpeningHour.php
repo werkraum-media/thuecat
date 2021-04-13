@@ -25,11 +25,30 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 class OpeningHour
 {
-    private string $opens;
-    private string $closes;
-    private array $daysOfWeek;
-    private ?\DateTimeImmutable $from;
-    private ?\DateTimeImmutable $through;
+    /**
+     * @var string
+     */
+    private $opens;
+
+    /**
+     * @var string
+     */
+    private $closes;
+
+    /**
+     * @var mixed[]
+     */
+    private $daysOfWeek;
+
+    /**
+     * @var \DateTimeImmutable|null
+     */
+    private $from;
+
+    /**
+     * @var \DateTimeImmutable|null
+     */
+    private $through;
 
     private function __construct(
         string $opens,
@@ -45,7 +64,10 @@ class OpeningHour
         $this->through = $through;
     }
 
-    public static function createFromArray(array $rawData): self
+    /**
+     * @return $this
+     */
+    public static function createFromArray(array $rawData)
     {
         $from = null;
         if (isset($rawData['from'])) {
