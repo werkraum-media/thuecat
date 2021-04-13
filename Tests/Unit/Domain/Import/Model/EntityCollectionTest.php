@@ -87,8 +87,7 @@ class EntityCollectionTest extends TestCase
         $subject = new EntityCollection();
         $subject->add($entityWithTranslation->reveal());
 
-        self::assertSame(
-            null,
+        self::assertNull(
             $subject->getDefaultLanguageEntity()
         );
     }

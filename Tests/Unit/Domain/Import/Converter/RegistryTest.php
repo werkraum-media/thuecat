@@ -103,6 +103,6 @@ class RegistryTest extends TestCase
 
         $result = $subject->getConverterBasedOnType(['thuecat:Entity']);
 
-        self::assertSame(null, $result);
+        self::assertNull($result);
     }
 }

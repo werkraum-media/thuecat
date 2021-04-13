@@ -65,7 +65,7 @@ class OpeningHour
     }
 
     /**
-     * @return $this
+     * @return OpeningHour
      */
     public static function createFromArray(array $rawData)
     {

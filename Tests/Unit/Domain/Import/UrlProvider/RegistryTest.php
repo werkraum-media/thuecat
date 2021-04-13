@@ -68,7 +68,7 @@ class RegistryTest extends TestCase
         $subject = new Registry();
 
         $result = $subject->getProviderForConfiguration($configuration->reveal());
-        self::assertSame(null, $result);
+        self::assertNull($result);
     }
 
     /**

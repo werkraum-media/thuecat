@@ -65,7 +65,7 @@ class Price
     }
 
     /**
-     * @return $this
+     * @return Price
      */
     public static function createFromArray(array $rawData)
     {

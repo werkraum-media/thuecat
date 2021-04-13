@@ -304,7 +304,7 @@ class OpeningHoursTest extends TestCase
         self::assertSame('', $result[0]['opens']);
         self::assertSame('', $result[0]['closes']);
         self::assertSame([], $result[0]['daysOfWeek']);
-        self::assertSame(null, $result[0]['from']);
-        self::assertSame(null, $result[0]['through']);
+        self::assertNull($result[0]['from']);
+        self::assertNull($result[0]['through']);
     }
 }
