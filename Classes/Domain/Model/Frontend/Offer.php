@@ -51,7 +51,7 @@ class Offer
     }
 
     /**
-     * @return $this
+     * @return Offer
      */
     public static function createFromArray(array $rawData)
     {
