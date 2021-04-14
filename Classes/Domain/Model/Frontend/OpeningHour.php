@@ -83,7 +83,7 @@ class OpeningHour
         return new self(
             $rawData['opens'] ?? '',
             $rawData['closes'] ?? '',
-            $rawData['daysOfWeek'] ?? '',
+            $rawData['daysOfWeek'] ?? [],
             $from,
             $through
         );
