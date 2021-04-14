@@ -28,7 +28,7 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 /**
  * @implements \Iterator<int, Offer>
  */
-class Offers implements TypeInterface, \Iterator
+class Offers implements TypeInterface, \Iterator, \Countable
 {
     /**
      * @var string
@@ -82,5 +82,10 @@ class Offers implements TypeInterface, \Iterator
     public function rewind(): void
     {
         $this->position = 0;
+    }
+
+    public function count()
+    {
+        return count($this->array);
     }
 }
