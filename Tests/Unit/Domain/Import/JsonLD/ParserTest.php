@@ -178,7 +178,7 @@ class ParserTest extends TestCase
     /**
      * @test
      */
-    public function returnsContainedInPlaceIds(): void
+    public function returnsContainedInPlaceIdsForMultipleEntries(): void
     {
         $genericFields = $this->prophesize(GenericFields::class);
         $openingHours = $this->prophesize(OpeningHours::class);
@@ -208,6 +208,34 @@ class ParserTest extends TestCase
             'https://thuecat.org/resources/794900260253-wjab',
             'https://thuecat.org/resources/476888881990-xpwq',
             'https://thuecat.org/resources/573211638937-gmqb',
+        ], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsContainedInPlaceIdsForSingleEntry(): void
+    {
+        $genericFields = $this->prophesize(GenericFields::class);
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
+
+        $subject = new Parser(
+            $genericFields->reveal(),
+            $openingHours->reveal(),
+            $address->reveal(),
+            $media->reveal()
+        );
+
+        $result = $subject->getContainedInPlaceIds([
+            'schema:containedInPlace' => [
+                '@id' => 'https://thuecat.org/resources/043064193523-jcyt',
+            ],
+        ]);
+
+        self::assertSame([
+            'https://thuecat.org/resources/043064193523-jcyt',
         ], $result);
     }
 

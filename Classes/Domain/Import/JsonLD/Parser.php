@@ -88,6 +88,12 @@ class Parser
      */
     public function getContainedInPlaceIds(array $jsonLD): array
     {
+        if (isset($jsonLD['schema:containedInPlace']['@id'])) {
+            return [
+                $jsonLD['schema:containedInPlace']['@id'],
+            ];
+        }
+
         return array_map(function (array $place) {
             return $place['@id'];
         }, $jsonLD['schema:containedInPlace']);
