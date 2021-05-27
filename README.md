@@ -45,6 +45,8 @@ The extension already allows:
 
     * Page Type to reference tourist attraction
 
+    * Descriptions are formatted HTML, use `f:format.html` ViewHelper for rendering.
+
 ## Short time goals
 
 * Content element to display town, tourist information and organisation.
