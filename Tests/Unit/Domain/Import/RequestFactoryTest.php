@@ -24,6 +24,9 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
  */
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 /**
@@ -31,12 +34,18 @@ use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
  */
 class RequestFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
     public function canBeCreated(): void
     {
-        $subject = new RequestFactory();
+        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
+
+        $subject = new RequestFactory(
+            $extensionConfiguration->reveal()
+        );
 
         self::assertInstanceOf(RequestFactory::class, $subject);
     }
@@ -46,9 +55,48 @@ class RequestFactoryTest extends TestCase
      */
     public function returnsRequestWithJsonIdFormat(): void
     {
-        $subject = new RequestFactory();
-        $request = $subject->createRequest('GET', 'https://example.com/resources/333039283321-xxwg');
+        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
 
-        self::assertSame('format=jsonld', $request->getUri()->getQuery());
+        $subject = new RequestFactory(
+            $extensionConfiguration->reveal()
+        );
+
+        $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
+
+        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsRequestWithApiKeyWhenConfigured(): void
+    {
+        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
+        $extensionConfiguration->get('thuecat', 'apiKey')->willReturn('some-api-key');
+
+        $subject = new RequestFactory(
+            $extensionConfiguration->reveal()
+        );
+
+        $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
+
+        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsRequestWithoutApiKeyWhenUnkown(): void
+    {
+        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
+        $extensionConfiguration->get('thuecat', 'apiKey')->willThrow(new ExtensionConfigurationExtensionNotConfiguredException());
+
+        $subject = new RequestFactory(
+            $extensionConfiguration->reveal()
+        );
+
+        $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
+
+        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
     }
 }

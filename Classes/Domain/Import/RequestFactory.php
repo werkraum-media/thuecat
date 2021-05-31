@@ -24,17 +24,41 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
  */
 
 use Psr\Http\Message\RequestInterface;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
 use TYPO3\CMS\Core\Http\Uri;
 
 class RequestFactory extends Typo3RequestFactory
 {
+    /**
+     * @var ExtensionConfiguration
+     */
+    private $extensionConfiguration;
+
+    public function __construct(
+        ExtensionConfiguration $extensionConfiguration
+    ) {
+        $this->extensionConfiguration = $extensionConfiguration;
+    }
+
     public function createRequest(string $method, $uri): RequestInterface
     {
         $uri = new Uri((string) $uri);
-        $uri = $uri->withQuery('?format=jsonld');
 
-        // TODO: Add api key from site
+        $query = [];
+        parse_str($uri->getQuery(), $query);
+        $query = array_merge($query, [
+            'format' => 'jsonld',
+        ]);
+
+        try {
+            $query['api_key'] = $this->extensionConfiguration->get('thuecat', 'apiKey');
+        } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
+            // Nothing todo, not configured, don't add.
+        }
+
+        $uri = $uri->withQuery(http_build_query($query));
 
         return parent::createRequest($method, $uri);
     }

@@ -91,6 +91,14 @@ class ImportTest extends TestCase
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
     ];
 
+    protected $configurationToUseInTestInstance = [
+        'EXTENSIONS' => [
+            'thuecat' => [
+                'apiKey' => null,
+            ],
+        ],
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -210,6 +218,24 @@ class ImportTest extends TestCase
         self::assertCount(8, $touristAttractions);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelationsResult.csv');
+    }
+
+    /**
+     * @test
+     */
+    public function importsBasedOnSyncScope(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.xml');
+
+        $serverRequest = $this->getServerRequest();
+
+        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
+        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+
+        $touristAttractions = $this->getAllRecords('tx_thuecat_tourist_attraction');
+        self::assertCount(8, $touristAttractions);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScopeResult.csv');
     }
 
     /**

@@ -25,7 +25,10 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
 class FetchData
 {
@@ -44,6 +47,16 @@ class FetchData
      */
     private $cache;
 
+    /**
+     * @var string
+     */
+    private $databaseUrlPrefix = 'https://cdb.thuecat.org';
+
+    /**
+     * @var string
+     */
+    private $urlPrefix = 'https://thuecat.org';
+
     public function __construct(
         RequestFactoryInterface $requestFactory,
         ClientInterface $httpClient,
@@ -52,6 +65,15 @@ class FetchData
         $this->requestFactory = $requestFactory;
         $this->httpClient = $httpClient;
         $this->cache = $cache;
+    }
+
+    public function updatedNodes(string $scopeId): array
+    {
+        return $this->jsonLDFromUrl(
+            $this->databaseUrlPrefix
+            . '/api/ext-sync/get-updated-nodes?syncScopeId='
+            . urlencode($scopeId)
+        );
     }
 
     public function jsonLDFromUrl(string $url): array
@@ -65,6 +87,8 @@ class FetchData
         $request = $this->requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 
+        $this->handleInvalidResponse($response, $request);
+
         $jsonLD = json_decode((string) $response->getBody(), true);
         if (is_array($jsonLD)) {
             $this->cache->set($cacheIdentifier, $jsonLD);
@@ -72,5 +96,36 @@ class FetchData
         }
 
         return [];
+    }
+
+    public function getResourceEndpoint(): string
+    {
+        return $this->urlPrefix . '/resources/';
+    }
+
+    private function handleInvalidResponse(
+        ResponseInterface $response,
+        RequestInterface $request
+    ): void {
+        if ($response->getStatusCode() === 200) {
+            return;
+        }
+
+        if ($response->getStatusCode() === 401) {
+            throw new InvalidResponseException(
+                'Unauthorized API request, ensure apiKey is properly configured.',
+                1622461709
+            );
+        }
+
+        if ($response->getStatusCode() === 404) {
+            throw new InvalidResponseException(
+                sprintf(
+                    'Not found, given resource could not be found: "%s".',
+                    $request->getUri()
+                ),
+                1622461820
+            );
+        }
     }
 }

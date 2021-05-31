@@ -3,6 +3,7 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat FlexForms Labels">
         <header/>
         <body>
+            <!-- Static Import Configuration -->
             <trans-unit id="importConfiguration.static.sheetTitle" xml:space="preserve">
                 <source>Static import configuration</source>
             </trans-unit>
@@ -14,6 +15,17 @@
             </trans-unit>
             <trans-unit id="importConfiguration.static.url" xml:space="preserve">
                 <source>URL</source>
+            </trans-unit>
+
+            <!-- Sync Scope Import Configuration -->
+            <trans-unit id="importConfiguration.syncScope.sheetTitle" xml:space="preserve">
+                <source>Sync Scope import configuration</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.storagePid" xml:space="preserve">
+                <source>Storage Page UID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.syncScopeId" xml:space="preserve">
+                <source>syncScopeId</source>
             </trans-unit>
 
             <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">

@@ -130,6 +130,9 @@
             <trans-unit id="tx_thuecat_import_configuration.type.static" xml:space="preserve">
                 <source>Static list of URLs</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.type.syncScope" xml:space="preserve">
+                <source>Synchronization area</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_configuration.configuration" xml:space="preserve">
                 <source>Configuration</source>
             </trans-unit>

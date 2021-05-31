@@ -97,14 +97,46 @@ class ImportConfiguration extends AbstractEntity
             return ArrayUtility::getValueByPath($urlEntry, 'url/el/url/vDEF');
         }, $this->getEntries());
 
+        $entries = array_filter($entries);
+
         return array_values($entries);
+    }
+
+    public function getSyncScopeId(): string
+    {
+        if ($this->configuration === '') {
+            return '';
+        }
+
+        $configurationAsArray = $this->getConfigurationAsArray();
+        $arrayPath = 'data/sDEF/lDEF/syncScopeId/vDEF';
+
+        if (ArrayUtility::isValidPath($configurationAsArray, $arrayPath) === false) {
+            return '';
+        }
+
+        return ArrayUtility::getValueByPath(
+            $configurationAsArray,
+            $arrayPath
+        );
     }
 
     private function getEntries(): array
     {
+        $configurationAsArray = $this->getConfigurationAsArray();
+
+        if (ArrayUtility::isValidPath($configurationAsArray, 'data/sDEF/lDEF/urls/el') === false) {
+            return [];
+        }
+
         return ArrayUtility::getValueByPath(
-            GeneralUtility::xml2array($this->configuration),
+            $configurationAsArray,
             'data/sDEF/lDEF/urls/el'
         );
+    }
+
+    private function getConfigurationAsArray(): array
+    {
+        return GeneralUtility::xml2array($this->configuration);
     }
 }

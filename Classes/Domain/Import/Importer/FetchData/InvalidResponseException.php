@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
+namespace WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
@@ -23,32 +21,6 @@ namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
-
-class StaticUrlProvider implements UrlProvider
+class InvalidResponseException extends \RuntimeException
 {
-    /**
-     * @var string[]
-     */
-    private $urls = [];
-
-    public function canProvideForConfiguration(
-        ImportConfiguration $configuration
-    ): bool {
-        return $configuration->getType() === 'static';
-    }
-
-    public function createWithConfiguration(
-        ImportConfiguration $configuration
-    ): UrlProvider {
-        $instance = clone $this;
-        $instance->urls = $configuration->getUrls();
-
-        return $instance;
-    }
-
-    public function getUrls(): array
-    {
-        return $this->urls;
-    }
 }
