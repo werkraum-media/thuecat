@@ -10,6 +10,7 @@ return (static function (string $extensionKey, string $tableName) {
         'ctrl' => [
             'label' => 'title',
             'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'type' => 'type',
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -40,6 +41,10 @@ return (static function (string $extensionKey, string $tableName) {
                             $languagePath . '.type.static',
                             'static',
                         ],
+                        [
+                            $languagePath . '.type.syncScope',
+                            'syncScope',
+                        ],
                     ],
                 ],
             ],
@@ -51,6 +56,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'ds' => [
                         'default' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
                         'static' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
+                        'syncScope' => $flexFormConfigurationPath . 'ImportConfiguration/SyncScope.xml',
                     ],
                 ],
             ],

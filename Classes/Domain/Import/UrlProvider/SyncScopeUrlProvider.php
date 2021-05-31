@@ -23,32 +23,52 @@ namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-class StaticUrlProvider implements UrlProvider
+class SyncScopeUrlProvider implements UrlProvider
 {
     /**
-     * @var string[]
+     * @var FetchData
      */
-    private $urls = [];
+    private $fetchData;
+
+    /**
+     * @var string
+     */
+    private $syncScopeId = '';
+
+    public function __construct(
+        FetchData $fetchData
+    ) {
+        $this->fetchData = $fetchData;
+    }
 
     public function canProvideForConfiguration(
         ImportConfiguration $configuration
     ): bool {
-        return $configuration->getType() === 'static';
+        return $configuration->getType() === 'syncScope';
     }
 
     public function createWithConfiguration(
         ImportConfiguration $configuration
     ): UrlProvider {
         $instance = clone $this;
-        $instance->urls = $configuration->getUrls();
+        $instance->syncScopeId = $configuration->getSyncScopeId();
 
         return $instance;
     }
 
     public function getUrls(): array
     {
-        return $this->urls;
+        $response = $this->fetchData->updatedNodes($this->syncScopeId);
+
+        $resourceIds = array_values($response['data']['createdOrUpdated'] ?? []);
+
+        $urls = array_map(function (string $id) {
+            return $this->fetchData->getResourceEndpoint() . $id;
+        }, $resourceIds);
+
+        return $urls;
     }
 }

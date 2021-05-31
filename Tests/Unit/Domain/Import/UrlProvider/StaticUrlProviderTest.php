@@ -40,10 +40,7 @@ class StaticUrlProviderTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUrls()->willReturn([]);
-
-        $subject = new StaticUrlProvider($configuration->reveal());
+        $subject = new StaticUrlProvider();
         self::assertInstanceOf(StaticUrlProvider::class, $subject);
     }
 
@@ -56,7 +53,7 @@ class StaticUrlProviderTest extends TestCase
         $configuration->getUrls()->willReturn([]);
         $configuration->getType()->willReturn('static');
 
-        $subject = new StaticUrlProvider($configuration->reveal());
+        $subject = new StaticUrlProvider();
 
         $result = $subject->canProvideForConfiguration($configuration->reveal());
         self::assertTrue($result);
@@ -70,7 +67,7 @@ class StaticUrlProviderTest extends TestCase
         $configuration = $this->prophesize(ImportConfiguration::class);
         $configuration->getUrls()->willReturn(['https://example.com']);
 
-        $subject = new StaticUrlProvider($configuration->reveal());
+        $subject = new StaticUrlProvider();
 
         $result = $subject->createWithConfiguration($configuration->reveal());
         self::assertInstanceOf(StaticUrlProvider::class, $subject);
@@ -84,7 +81,7 @@ class StaticUrlProviderTest extends TestCase
         $configuration = $this->prophesize(ImportConfiguration::class);
         $configuration->getUrls()->willReturn(['https://example.com']);
 
-        $subject = new StaticUrlProvider($configuration->reveal());
+        $subject = new StaticUrlProvider();
 
         $concreteProvider = $subject->createWithConfiguration($configuration->reveal());
         $result = $concreteProvider->getUrls();

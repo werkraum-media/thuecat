@@ -1,6 +1,5 @@
 # ThüCAT integration into TYPO3 CMS
 
-
 ThüCAT is ¨Thüringer Content Architektur Tourismus¨.
 This is an extension for TYPO3 CMS (https://typo3.org/) to integrate ThüCAT.
 The existing API is integrated and allows importing data into the system.
@@ -9,8 +8,12 @@ The existing API is integrated and allows importing data into the system.
 
 The extension already allows:
 
-* Create static configuration to import specified resources,
-  e.g. defined organisation or towns.
+* Create configuration to import:
+
+  * specified resources via static configuration,
+    e.g. defined organisation or towns.
+
+  * sync scope, a syncScopeId to always update delivered resources.
 
 * Support multiple languages
 
@@ -47,3 +50,10 @@ The extension already allows:
 * Content element to display town, tourist information and organisation.
 
 * Extending import to include further properties
+
+## Installation
+
+Please configure API Key via Extension Configuration.
+
+Configuration records need to be created, e.g. by visiting the ThüCAT module.
+Those can then be imported via the same module.

@@ -31,6 +31,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
 /**
  * @covers WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
@@ -75,6 +76,7 @@ class FetchDataTest extends TestCase
         $httpClient->sendRequest($request->reveal())
             ->willReturn($response->reveal());
 
+        $response->getStatusCode()->willReturn(200);
         $response->getBody()->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
 
         $subject = new FetchData(
@@ -111,6 +113,7 @@ class FetchDataTest extends TestCase
         $httpClient->sendRequest($request->reveal())
             ->willReturn($response->reveal());
 
+        $response->getStatusCode()->willReturn(200);
         $response->getBody()->willReturn('');
 
         $subject = new FetchData(
@@ -154,5 +157,75 @@ class FetchDataTest extends TestCase
                 ],
             ],
         ], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function throwsExceptionOn404(): void
+    {
+        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
+        $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
+
+        $request = $this->prophesize(RequestInterface::class);
+        $response = $this->prophesize(ResponseInterface::class);
+
+        $request->getUri()->willReturn('https://example.com/resources/018132452787-ngbe');
+
+        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
+            ->willReturn($request->reveal());
+
+        $httpClient->sendRequest($request->reveal())
+            ->willReturn($response->reveal());
+
+
+        $response->getStatusCode()->willReturn(404);
+        $response->getBody()->willReturn('{"error":"404"}');
+
+        $subject = new FetchData(
+            $requestFactory->reveal(),
+            $httpClient->reveal(),
+            $cache->reveal()
+        );
+
+        $this->expectException(InvalidResponseException::class);
+        $this->expectExceptionCode(1622461820);
+        $this->expectExceptionMessage('Not found, given resource could not be found: "https://example.com/resources/018132452787-ngbe".');
+
+        $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
+    }
+
+    /**
+     * @test
+     */
+    public function throwsExceptionOn401(): void
+    {
+        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
+        $httpClient = $this->prophesize(ClientInterface::class);
+        $cache = $this->prophesize(FrontendInterface::class);
+
+        $request = $this->prophesize(RequestInterface::class);
+        $response = $this->prophesize(ResponseInterface::class);
+
+        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
+            ->willReturn($request->reveal());
+
+        $httpClient->sendRequest($request->reveal())
+            ->willReturn($response->reveal());
+
+        $response->getStatusCode()->willReturn(401);
+
+        $subject = new FetchData(
+            $requestFactory->reveal(),
+            $httpClient->reveal(),
+            $cache->reveal()
+        );
+
+        $this->expectException(InvalidResponseException::class);
+        $this->expectExceptionCode(1622461709);
+        $this->expectExceptionMessage('Unauthorized API request, ensure apiKey is properly configured.');
+
+        $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
     }
 }
