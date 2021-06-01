@@ -1,5 +1,10 @@
 module {
     tx_thuecat {
+        settings {
+            newRecordPid {
+                tx_thuecat_import_configuration = 0
+            }
+        }
         view {
             templateRootPaths {
                 0 = EXT:thuecat/Resources/Private/Templates/
