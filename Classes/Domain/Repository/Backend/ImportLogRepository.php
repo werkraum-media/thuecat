@@ -61,7 +61,7 @@ class ImportLogRepository extends Repository
             'tx_thuecat_import_log' => [
                 'NEW0' => [
                     'pid' => 0,
-                    'configuration' => $log->getConfiguration()->getUid(),
+                    'configuration' => $log->getConfigurationUid(),
                 ],
             ],
             'tx_thuecat_import_log_entry' => $this->getLogEntries($log),
