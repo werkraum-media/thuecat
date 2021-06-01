@@ -20,7 +20,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'disabled' => 'disable',
             ],
             'searchFields' => 'title',
-            'rootLevel' => 1,
+            'rootLevel' => -1,
         ],
         'columns' => [
             'title' => [

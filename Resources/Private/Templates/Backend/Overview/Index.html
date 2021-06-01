@@ -11,6 +11,7 @@
         {f:translate(id: 'module.importConfigurations.headline')}
         <f:link.newRecord
             table="tx_thuecat_import_configuration"
+            pid="{settings.newRecordPid.tx_thuecat_import_configuration}"
             title="{f:translate(id: 'module.importConfigurations.actions.new')}"
         >
             {f:icon(identifier: 'actions-document-add')}
@@ -28,7 +29,7 @@
                 {f:translate(
                     id: 'module.importConfigurations.missing.text',
                     arguments: {
-                        0: "{f:uri.newRecord(table: 'tx_thuecat_import_configuration')}"
+                        0: "{f:uri.newRecord(table: 'tx_thuecat_import_configuration', pid: settings.newRecordPid.tx_thuecat_import_configuration)}"
                     }
                 ) -> f:format.raw()}
             </f:be.infobox>
