@@ -4,6 +4,8 @@ ThüCAT is ¨Thüringer Content Architektur Tourismus¨.
 This is an extension for TYPO3 CMS (https://typo3.org/) to integrate ThüCAT.
 The existing API is integrated and allows importing data into the system.
 
+Full documentation available at https://docs.typo3.org/p/werkraummedia/thuecat/master/en-us/.
+
 ## Current state
 
 The extension already allows:

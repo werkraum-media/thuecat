@@ -5,9 +5,10 @@
     "license": "GPL-2.0-or-later",
     "homepage": "https://github.com/werkraum-media/thuecat",
     "support": {
+        "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/master/en-us/",
         "email": "coding@daniel-siepmann.de",
-        "source": "https://github.com/werkraum-media/thuecat",
-        "issues": "https://github.com/werkraum-media/thuecat/issues"
+        "issues": "https://github.com/werkraum-media/thuecat/issues",
+        "source": "https://github.com/werkraum-media/thuecat"
     },
     "authors": [
         {
