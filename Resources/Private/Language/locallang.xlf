@@ -81,6 +81,9 @@
             <trans-unit id="module.imports.th.summary" xml:space="preserve">
                 <source>Summary</source>
             </trans-unit>
+            <trans-unit id="module.imports.configuration.notAvailable" xml:space="preserve">
+                <source>Not available</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
             </trans-unit>

@@ -41,7 +41,16 @@
     <f:section name="Import">
         <tr class="{f:if(condition: import.errors, then: 'danger')}">
             <td>{import.created -> f:format.date(format: 'd.m.Y H:i:s')}</td>
-            <td>{import.configuration.title}</td>
+            <td>
+                <f:if condition="{import.configuration}">
+                    <f:then>
+                        {import.configuration.title}
+                    </f:then>
+                    <f:else>
+                        {f:translate(id: 'module.imports.configuration.notAvailable')}
+                    </f:else>
+                </f:if>
+            </td>
             <td>{import.entries -> f:count()}</td>
             <td><f:for each="{import.summaryOfEntries}" key="tableName" as="amount">
                 {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount}<br>

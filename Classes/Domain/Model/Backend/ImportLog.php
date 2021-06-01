@@ -34,9 +34,9 @@ class ImportLog extends Typo3AbstractEntity
     protected $logEntries;
 
     /**
-     * @var ImportConfiguration
+     * @var ImportConfiguration|null
      */
-    protected $configuration;
+    protected $configuration = null;
 
     /**
      * @var \DateTimeImmutable|null
@@ -44,7 +44,7 @@ class ImportLog extends Typo3AbstractEntity
     protected $crdate;
 
     public function __construct(
-        ImportConfiguration $configuration
+        ?ImportConfiguration $configuration = null
     ) {
         $this->logEntries = new ObjectStorage();
         $this->configuration = $configuration;
@@ -55,9 +55,18 @@ class ImportLog extends Typo3AbstractEntity
         $this->logEntries->attach($entry);
     }
 
-    public function getConfiguration(): ImportConfiguration
+    public function getConfiguration(): ?ImportConfiguration
     {
         return $this->configuration;
+    }
+
+    public function getConfigurationUid(): int
+    {
+        if ($this->configuration instanceof ImportConfiguration) {
+            $uid = $this->configuration->getUid();
+        }
+
+        return $uid ?? 0;
     }
 
     /**
