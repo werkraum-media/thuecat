@@ -27,7 +27,10 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours
+ * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours
+ *
+ * @uses \WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHour
+ *
  * @testdox Frontend model for offers
  */
 class OpeningHoursTest extends TestCase

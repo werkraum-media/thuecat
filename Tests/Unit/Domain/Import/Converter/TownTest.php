@@ -36,9 +36,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Town
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Converter\Town
+ *
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class TownTest extends TestCase
 {

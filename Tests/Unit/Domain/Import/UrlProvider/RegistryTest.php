@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry
  */
 class RegistryTest extends TestCase
 {

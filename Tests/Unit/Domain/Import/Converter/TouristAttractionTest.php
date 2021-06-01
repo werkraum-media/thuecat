@@ -38,9 +38,10 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction
+ *
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class TouristAttractionTest extends TestCase
 {

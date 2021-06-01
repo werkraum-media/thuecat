@@ -34,9 +34,10 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
- * @uses WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
+ *
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
+ * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class OrganisationTest extends TestCase
 {

@@ -30,7 +30,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\RequestFactory
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\RequestFactory
  */
 class RequestFactoryTest extends TestCase
 {

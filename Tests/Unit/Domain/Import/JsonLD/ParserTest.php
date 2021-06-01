@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser
  */
 class ParserTest extends TestCase
 {

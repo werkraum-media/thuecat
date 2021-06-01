@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media
  */
 class MediaTest extends TestCase
 {
