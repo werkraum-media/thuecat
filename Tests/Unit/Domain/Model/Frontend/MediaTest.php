@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Model\Frontend\Media
+ * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Media
  */
 class MediaTest extends TestCase
 {

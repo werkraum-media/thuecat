@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Converter\Registry;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Converter\Registry
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Converter\Registry
  */
 class RegistryTest extends TestCase
 {

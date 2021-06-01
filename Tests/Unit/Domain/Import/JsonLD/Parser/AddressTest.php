@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address
  */
 class AddressTest extends TestCase
 {

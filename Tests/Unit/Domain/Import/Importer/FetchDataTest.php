@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
  */
 class FetchDataTest extends TestCase
 {

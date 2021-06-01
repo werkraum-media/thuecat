@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
  */
 class EntityCollectionTest extends TestCase
 {

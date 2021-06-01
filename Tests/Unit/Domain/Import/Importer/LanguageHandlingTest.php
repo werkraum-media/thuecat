@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling
  */
 class LanguageHandlingTest extends TestCase
 {

@@ -27,7 +27,11 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers
+ * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers
+ *
+ * @uses \WerkraumMedia\ThueCat\Domain\Model\Frontend\Offer
+ * @uses \WerkraumMedia\ThueCat\Domain\Model\Frontend\Price
+ *
  * @testdox Frontend model for offers
  */
 class OffersTest extends TestCase

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
 
 /*
@@ -23,15 +21,16 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
-use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider;
+use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider
  */
-class StaticUrlProviderTest extends TestCase
+class SyncScopeUrlProviderTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -40,19 +39,28 @@ class StaticUrlProviderTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $subject = new StaticUrlProvider();
-        self::assertInstanceOf(StaticUrlProvider::class, $subject);
+        $fetchData = $this->prophesize(FetchData::class);
+
+        $subject = new SyncScopeUrlProvider(
+            $fetchData->reveal()
+        );
+
+        self::assertInstanceOf(SyncScopeUrlProvider::class, $subject);
     }
 
     /**
      * @test
      */
-    public function canProvideForStaticConfiguration(): void
+    public function canProvideForSyncScope(): void
     {
         $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getType()->willReturn('static');
+        $configuration->getType()->willReturn('syncScope');
 
-        $subject = new StaticUrlProvider();
+        $fetchData = $this->prophesize(FetchData::class);
+
+        $subject = new SyncScopeUrlProvider(
+            $fetchData->reveal()
+        );
 
         $result = $subject->canProvideForConfiguration($configuration->reveal());
         self::assertTrue($result);
@@ -64,12 +72,25 @@ class StaticUrlProviderTest extends TestCase
     public function returnsConcreteProviderForConfiguration(): void
     {
         $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUrls()->willReturn(['https://example.com']);
+        $configuration->getSyncScopeId()->willReturn(10);
 
-        $subject = new StaticUrlProvider();
+        $fetchData = $this->prophesize(FetchData::class);
+        $fetchData->updatedNodes(10)->willReturn([
+            'data' => [
+                'canBeCreated' => [
+                    '835224016581-dara',
+                    '165868194223-zmqf',
+                ],
+            ],
+        ]);
+
+        $subject = new SyncScopeUrlProvider(
+            $fetchData->reveal()
+        );
 
         $result = $subject->createWithConfiguration($configuration->reveal());
-        self::assertInstanceOf(StaticUrlProvider::class, $result);
+
+        self::assertInstanceOf(SyncScopeUrlProvider::class, $result);
     }
 
     /**
@@ -78,14 +99,29 @@ class StaticUrlProviderTest extends TestCase
     public function concreteProviderReturnsUrls(): void
     {
         $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUrls()->willReturn(['https://example.com']);
+        $configuration->getSyncScopeId()->willReturn(10);
 
-        $subject = new StaticUrlProvider();
+        $fetchData = $this->prophesize(FetchData::class);
+        $fetchData->getResourceEndpoint()->willReturn('https://example.com/api/');
+        $fetchData->updatedNodes(10)->willReturn([
+            'data' => [
+                'createdOrUpdated' => [
+                    '835224016581-dara',
+                    '165868194223-zmqf',
+                ],
+            ],
+        ]);
+
+        $subject = new SyncScopeUrlProvider(
+            $fetchData->reveal()
+        );
 
         $concreteProvider = $subject->createWithConfiguration($configuration->reveal());
         $result = $concreteProvider->getUrls();
+
         self::assertSame([
-            'https://example.com',
+            'https://example.com/api/835224016581-dara',
+            'https://example.com/api/165868194223-zmqf',
         ], $result);
     }
 }

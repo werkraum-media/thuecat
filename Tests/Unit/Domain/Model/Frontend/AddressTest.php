@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Model\Frontend\Address
+ * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Address
  */
 class AddressTest extends TestCase
 {

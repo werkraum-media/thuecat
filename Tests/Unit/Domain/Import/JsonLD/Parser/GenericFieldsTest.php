@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields
  */
 class GenericFieldsTest extends TestCase
 {

@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  */
 class GenericEntityTest extends TestCase
 {

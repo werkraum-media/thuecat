@@ -39,8 +39,8 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\Importer
- * @uses WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer
+ * @uses \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog
  */
 class ImporterTest extends TestCase
 {

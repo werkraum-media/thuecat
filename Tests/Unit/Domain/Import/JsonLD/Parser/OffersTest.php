@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers
  */
 class OffersTest extends TestCase
 {

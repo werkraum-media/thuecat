@@ -27,7 +27,7 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues;
 
 /**
- * @covers WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues
+ * @covers \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues
  */
 class LanguageValuesTest extends TestCase
 {
