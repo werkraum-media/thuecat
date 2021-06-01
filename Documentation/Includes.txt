@@ -1,0 +1,9 @@
+﻿.. role:: html(code)
+.. role:: typoscript(code)
+.. role:: ts(typoscript)
+   :class: typoscript
+.. role:: php(code)
+.. role:: yaml(code)
+
+.. default-role:: typoscript
+.. highlight:: typoscript
