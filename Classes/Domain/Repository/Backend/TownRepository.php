@@ -46,6 +46,10 @@ class TownRepository extends Repository
 
     public function findOneByRemoteIds(array $remoteIds): ?Town
     {
+        if ($remoteIds === []) {
+            return null;
+        }
+
         $query = $this->createQuery();
 
         $query->in('remoteId', $remoteIds);

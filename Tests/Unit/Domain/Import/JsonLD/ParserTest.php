@@ -214,6 +214,28 @@ class ParserTest extends TestCase
     /**
      * @test
      */
+    public function returnsContainedInPlaceIdsForNoEntry(): void
+    {
+        $genericFields = $this->prophesize(GenericFields::class);
+        $openingHours = $this->prophesize(OpeningHours::class);
+        $address = $this->prophesize(Address::class);
+        $media = $this->prophesize(Media::class);
+
+        $subject = new Parser(
+            $genericFields->reveal(),
+            $openingHours->reveal(),
+            $address->reveal(),
+            $media->reveal()
+        );
+
+        $result = $subject->getContainedInPlaceIds([]);
+
+        self::assertSame([], $result);
+    }
+
+    /**
+     * @test
+     */
     public function returnsContainedInPlaceIdsForSingleEntry(): void
     {
         $genericFields = $this->prophesize(GenericFields::class);

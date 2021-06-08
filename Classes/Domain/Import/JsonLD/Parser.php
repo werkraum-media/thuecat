@@ -94,6 +94,10 @@ class Parser
             ];
         }
 
+        if (isset($jsonLD['schema:containedInPlace']) === false) {
+            return [];
+        }
+
         return array_map(function (array $place) {
             return $place['@id'];
         }, $jsonLD['schema:containedInPlace']);
