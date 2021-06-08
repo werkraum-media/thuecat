@@ -49,6 +49,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'foreign_table' => 'tx_thuecat_town',
+                    'default' => '0',
                     'items' => [
                         [
                             $languagePath . '.town.unkown',
@@ -64,6 +65,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'foreign_table' => 'tx_thuecat_organisation',
+                    'default' => '0',
                     'items' => [
                         [
                             $languagePath . '.managed_by.unkown',
