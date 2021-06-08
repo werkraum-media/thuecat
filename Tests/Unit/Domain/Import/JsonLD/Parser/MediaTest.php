@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\JsonLD\Parser;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media;
 
 /**
@@ -140,6 +141,31 @@ class MediaTest extends TestCase
                 ],
             ],
         ], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsEmptyArrayOn404(): void
+    {
+        $fetchData = $this->prophesize(FetchData::class);
+
+        $fetchData->jsonLDFromUrl('https://thuecat.org/resources/dms_5099196')->willThrow(new InvalidResponseException());
+
+        $subject = new Media(
+            $fetchData->reveal()
+        );
+
+        $result = $subject->get([
+            'schema:photo' => [
+                '@id' => 'https://thuecat.org/resources/dms_5099196',
+            ],
+            'schema:image' => [
+                '@id' => 'https://thuecat.org/resources/dms_5099196',
+            ],
+        ]);
+
+        self::assertSame([], $result);
     }
 
     /**
