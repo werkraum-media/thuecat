@@ -56,4 +56,5 @@ Synchronization area
    This requires an configured :ref:`api-key`.
 
 All configurations also provide an input to define the page where records should be
-stored and updated.
+stored and updated. This page uid is also used to fetch accordingly site
+configuration. The related languages are used during the import.
