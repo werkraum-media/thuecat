@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
  */
 
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
 class Media
 {
@@ -40,36 +41,73 @@ class Media
     {
         $media = [];
 
-        if (isset($jsonLD['schema:photo']['@id'])) {
+        $media = $this->addMainImage($jsonLD, $media);
+        $media = $this->addSingleImage($jsonLD, $media);
+        $media = $this->addImages($jsonLD, $media);
+
+        return $media;
+    }
+
+    private function addMainImage(array $jsonLD, array $media): array
+    {
+        if (isset($jsonLD['schema:photo']['@id']) === false) {
+            return $media;
+        }
+
+        try {
             $media[] = array_merge(
                 [
                     'mainImage' => true,
                 ],
                 $this->getMedia($jsonLD['schema:photo']['@id'])
             );
+        } catch (InvalidResponseException $e) {
+            // Nothing todo
         }
 
-        if (isset($jsonLD['schema:image']['@id'])) {
+        return $media;
+    }
+
+    private function addSingleImage(array $jsonLD, array $media): array
+    {
+        if (isset($jsonLD['schema:image']['@id']) === false) {
+            return $media;
+        }
+
+        try {
             $media[] = array_merge(
                 [
                     'mainImage' => false,
                 ],
                 $this->getMedia($jsonLD['schema:image']['@id'])
             );
+        } catch (InvalidResponseException $e) {
+            // Nothing todo
         }
 
+        return $media;
+    }
+
+    private function addImages(array $jsonLD, array $media): array
+    {
         if (
-            isset($jsonLD['schema:image'])
-            && isset($jsonLD['schema:image']['@id']) === false
-            && is_array($jsonLD['schema:image'])
+            isset($jsonLD['schema:image']) === false
+            || isset($jsonLD['schema:image']['@id'])
+            || is_array($jsonLD['schema:image']) === false
         ) {
-            foreach ($jsonLD['schema:image'] as $image) {
+            return $media;
+        }
+
+        foreach ($jsonLD['schema:image'] as $image) {
+            try {
                 $media[] = array_merge(
                     [
                         'mainImage' => false,
                     ],
                     $this->getMedia($image['@id'])
                 );
+            } catch (InvalidResponseException $e) {
+                // Nothing todo
             }
         }
 
