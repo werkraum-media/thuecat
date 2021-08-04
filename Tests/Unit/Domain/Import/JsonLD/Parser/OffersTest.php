@@ -79,10 +79,6 @@ class OffersTest extends TestCase
                         1 => 'schema:Thing',
                         2 => 'schema:Offer',
                     ],
-                    'rdfs:label' => [
-                        '@language' => 'de',
-                        '@value' => 'Führungen',
-                    ],
                     'schema:description' => [
                         '@language' => 'de',
                         '@value' => 'Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten',
@@ -102,10 +98,6 @@ class OffersTest extends TestCase
                                 1 => 'schema:StructuredValue',
                                 2 => 'schema:PriceSpecification',
                                 3 => 'schema:Thing',
-                            ],
-                            'rdfs:label' => [
-                                '@language' => 'de',
-                                '@value' => 'Erwachsene',
                             ],
                             'schema:name' => [
                                 '@language' => 'de',
@@ -131,10 +123,6 @@ class OffersTest extends TestCase
                                 1 => 'schema:StructuredValue',
                                 2 => 'schema:PriceSpecification',
                                 3 => 'schema:Thing',
-                            ],
-                            'rdfs:label' => [
-                                '@language' => 'de',
-                                '@value' => 'Ermäßigt',
                             ],
                             'schema:description' => [
                                 '@language' => 'de',
@@ -170,10 +158,6 @@ class OffersTest extends TestCase
                         1 => 'schema:Thing',
                         2 => 'schema:Offer',
                     ],
-                    'rdfs:label' => [
-                        '@language' => 'de',
-                        '@value' => 'Eintritt',
-                    ],
                     'schema:description' => [
                         '@language' => 'de',
                         '@value' => "Schulklassen und Kitagruppen im Rahmen des Unterrichts: Eintritt frei\nAn jedem ersten Dienstag im Monat: Eintritt frei",
@@ -193,10 +177,6 @@ class OffersTest extends TestCase
                                 1 => 'schema:StructuredValue',
                                 2 => 'schema:PriceSpecification',
                                 3 => 'schema:Thing',
-                            ],
-                            'rdfs:label' => [
-                                '@language' => 'de',
-                                '@value' => 'Ermäßigt',
                             ],
                             'schema:description' => [
                                 '@language' => 'de',
@@ -226,10 +206,6 @@ class OffersTest extends TestCase
                                 1 => 'schema:StructuredValue',
                                 2 => 'schema:PriceSpecification',
                                 3 => 'schema:Thing',
-                            ],
-                            'rdfs:label' => [
-                                '@language' => 'de',
-                                '@value' => 'Familienkarte',
                             ],
                             'schema:name' => [
                                 '@language' => 'de',
@@ -375,10 +351,6 @@ class OffersTest extends TestCase
                     1 => 'schema:Thing',
                     2 => 'schema:Offer',
                 ],
-                'rdfs:label' => [
-                    '@language' => 'de',
-                    '@value' => 'Führungen',
-                ],
                 'schema:description' => [
                     '@language' => 'de',
                     '@value' => 'Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten',
@@ -397,10 +369,6 @@ class OffersTest extends TestCase
                         1 => 'schema:StructuredValue',
                         2 => 'schema:PriceSpecification',
                         3 => 'schema:Thing',
-                    ],
-                    'rdfs:label' => [
-                        '@language' => 'de',
-                        '@value' => 'Erwachsene',
                     ],
                     'schema:name' => [
                         '@language' => 'de',
