@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string\\|null, 'getSupportedTypes'\\) given\\.$#"
+			count: 1
+			path: Classes/DependencyInjection/EntityPass.php
+
+		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
 			count: 2
 			path: Classes/Domain/Import/Importer/SaveData.php
@@ -16,7 +21,7 @@ parameters:
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 
 		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByRemoteIds\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByEntity\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 

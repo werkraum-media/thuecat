@@ -26,11 +26,10 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 
-/**
- * @method Town|null findOneByRemoteIds(string[] $remoteIds)
- */
 class TownRepository extends Repository
 {
     public function __construct(
@@ -44,8 +43,12 @@ class TownRepository extends Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    public function findOneByRemoteIds(array $remoteIds): ?Town
+    public function findOneByEntity(Place $entity): ?Town
     {
+        $remoteIds = array_map(function (ForeignReference $reference) {
+            return $reference->getId();
+        }, $entity->getContainedInPlaces());
+
         if ($remoteIds === []) {
             return null;
         }

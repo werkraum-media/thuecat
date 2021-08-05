@@ -21,27 +21,33 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+/**
+ * Represents a foreign reference with only id = URL.
+ * This reference is not resolved.
+ */
+class ForeignReference
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * URL to the original source at ThüCAT.
+     * Not unique within our system. We have one entity per language,
+     * while ThüCAT has a single entity containing all languages.
+     *
+     * @var string
+     */
+    protected $id = '';
 
-    public function process(ContainerBuilder $container): void
+    public function getId(): string
     {
-        $registry = $container->findDefinition(Registry::class);
+        return $this->id;
+    }
 
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
-            }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
-        }
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 }

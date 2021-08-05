@@ -21,27 +21,38 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+/**
+ * Registry with supported entities and their types.
+ */
+class EntityRegistry
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * @var array[]
+     */
+    private $entityClassNames = [];
 
-    public function process(ContainerBuilder $container): void
+    /**
+     * @param string[] $supportedTypes
+     */
+    public function registerEntityClass(
+        string $entityClassName,
+        array $supportedTypes
+    ): void {
+        $this->entityClassNames[$entityClassName] = $supportedTypes;
+    }
+
+    public function getEntityByTypes(array $types): string
     {
-        $registry = $container->findDefinition(Registry::class);
-
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
+        foreach ($types as $type) {
+            foreach ($this->entityClassNames as $className => $supportedTypes) {
+                if (in_array($type, $supportedTypes)) {
+                    return $className;
+                }
             }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
         }
+
+        return '';
     }
 }

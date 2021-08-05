@@ -21,27 +21,16 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+class TouristInformation extends Place implements MapsToType
 {
-    public const TAG = 'thuecat.typo3.converter';
+    // TODO: Only has title and description which should be moved to trait anyway
 
-    public function process(ContainerBuilder $container): void
+    public static function getSupportedTypes(): array
     {
-        $registry = $container->findDefinition(Registry::class);
-
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
-            }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
-        }
+        return [
+            'thuecat:TouristInformation',
+        ];
     }
 }

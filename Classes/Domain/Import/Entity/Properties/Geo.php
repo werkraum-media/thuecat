@@ -21,27 +21,43 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+class Geo
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * @var float
+     */
+    protected $longitude = 0.00;
 
-    public function process(ContainerBuilder $container): void
+    /**
+     * @var float
+     */
+    protected $latitude = 0.00;
+
+    public function getLongitude(): float
     {
-        $registry = $container->findDefinition(Registry::class);
+        return $this->longitude;
+    }
 
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
-            }
+    public function getLatitude(): float
+    {
+        return $this->latitude;
+    }
 
-            $registry->addMethodCall('registerConverter', [$definition]);
-        }
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setLongitude(string $longitude): void
+    {
+        $this->longitude = (float) $longitude;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setLatitude(string $latitude): void
+    {
+        $this->latitude = (float) $latitude;
     }
 }

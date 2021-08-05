@@ -53,14 +53,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Address
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\GenericFields
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\LanguageValues
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Media
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\Offers
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours
- * @uses \WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser\OpeningHours
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
  * @uses \WerkraumMedia\ThueCat\Domain\Import\RequestFactory

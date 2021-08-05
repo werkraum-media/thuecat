@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace WerkraumMedia\ThueCat\DependencyInjection;
+
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
@@ -21,27 +23,30 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
-
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 
-class ConverterPass implements CompilerPassInterface
+class EntityPass implements CompilerPassInterface
 {
-    public const TAG = 'thuecat.typo3.converter';
+    public const TAG = 'thuecat.entity';
 
     public function process(ContainerBuilder $container): void
     {
-        $registry = $container->findDefinition(Registry::class);
-
+        $registry = $container->findDefinition(EntityRegistry::class);
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
             $definition = $container->findDefinition($id);
             if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
                 continue;
             }
 
-            $registry->addMethodCall('registerConverter', [$definition]);
+            $registry->addMethodCall(
+                'registerEntityClass',
+                [
+                    $definition->getClass(),
+                    call_user_func([$definition->getClass(), 'getSupportedTypes']),
+                ]
+            );
         }
     }
 }

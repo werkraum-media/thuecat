@@ -21,27 +21,18 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+class DayOfWeek
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * @var string
+     */
+    protected $dayOfWeek = '';
 
-    public function process(ContainerBuilder $container): void
-    {
-        $registry = $container->findDefinition(Registry::class);
-
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
-            }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
-        }
+    public function __construct(
+        string $dayOfWeek
+    ) {
+        $this->dayOfWeek = $dayOfWeek;
     }
 }
