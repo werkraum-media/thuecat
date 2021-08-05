@@ -24,10 +24,14 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\Converter\Converter;
-use WerkraumMedia\ThueCat\Domain\Import\Converter\Registry as ConverterRegistry;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
+use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -42,9 +46,24 @@ class Importer
     private $urls;
 
     /**
-     * @var ConverterRegistry
+     * @var Converter
      */
     private $converter;
+
+    /**
+     * @var EntityRegistry
+     */
+    private $entityRegistry;
+
+    /**
+     * @var EntityMapper
+     */
+    private $entityMapper;
+
+    /**
+     * @var Languages
+     */
+    private $languages;
 
     /**
      * @var FetchData
@@ -73,13 +92,19 @@ class Importer
 
     public function __construct(
         UrlProviderRegistry $urls,
-        ConverterRegistry $converter,
+        Converter $converter,
+        EntityRegistry $entityRegistry,
+        EntityMapper $entityMapper,
+        Languages $languages,
         ImportLogRepository $importLogRepository,
         FetchData $fetchData,
         SaveData $saveData
     ) {
         $this->urls = $urls;
         $this->converter = $converter;
+        $this->entityRegistry = $entityRegistry;
+        $this->entityMapper = $entityMapper;
+        $this->languages = $languages;
         $this->importLogRepository = $importLogRepository;
         $this->fetchData = $fetchData;
         $this->saveData = $saveData;
@@ -119,11 +144,39 @@ class Importer
 
     private function importJsonEntity(array $jsonEntity): void
     {
-        $converter = $this->converter->getConverterBasedOnType($jsonEntity['@type']);
-        if ($converter instanceof Converter) {
-            $entities = $converter->convert($jsonEntity, $this->configuration);
-            $this->saveData->import($entities, $this->importLog);
+        $targetEntity = $this->entityRegistry->getEntityByTypes($jsonEntity['@type']);
+        if ($targetEntity === '') {
             return;
         }
+
+        $entities = new EntityCollection();
+
+        foreach ($this->languages->getAvailable($this->configuration) as $language) {
+            $mappedEntity = $this->entityMapper->mapDataToEntity(
+                $jsonEntity,
+                $targetEntity,
+                [
+                    JsonDecode::ACTIVE_LANGUAGE => $language,
+                ]
+            );
+            if (!$mappedEntity instanceof MapsToType) {
+                continue;
+            }
+            $convertedEntity = $this->converter->convert(
+                $mappedEntity,
+                $this->configuration,
+                $language
+            );
+
+            if ($convertedEntity === null) {
+                continue;
+            }
+            $entities->add($convertedEntity);
+        }
+
+        $this->saveData->import(
+            $entities,
+            $this->importLog
+        );
     }
 }

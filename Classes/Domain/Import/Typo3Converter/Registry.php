@@ -21,27 +21,33 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 
-class ConverterPass implements CompilerPassInterface
+/**
+ * Central registry of all available converters.
+ */
+class Registry
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * @var Converter[]
+     */
+    private $converters = [];
 
-    public function process(ContainerBuilder $container): void
+    public function registerConverter(Converter $converter): void
     {
-        $registry = $container->findDefinition(Registry::class);
+        $this->converters[] = $converter;
+    }
 
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
+    public function getConverterBasedOnType(MapsToType $entity): ?Converter
+    {
+        foreach ($this->converters as $converter) {
+            if ($converter->canConvert($entity)) {
+                return $converter;
             }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
         }
+
+        return null;
     }
 }

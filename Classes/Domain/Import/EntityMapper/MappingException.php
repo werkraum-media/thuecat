@@ -21,27 +21,31 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
+namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-
-class ConverterPass implements CompilerPassInterface
+class MappingException extends \Exception
 {
-    public const TAG = 'thuecat.typo3.converter';
+    /**
+     * @var array
+     */
+    protected $jsonLD = [];
 
-    public function process(ContainerBuilder $container): void
-    {
-        $registry = $container->findDefinition(Registry::class);
+    /**
+     * @var string
+     */
+    protected $targetClassName = '';
 
-        foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
-            $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
-                continue;
-            }
-
-            $registry->addMethodCall('registerConverter', [$definition]);
-        }
+    public function __construct(
+        array $jsonLD,
+        string $targetClassName,
+        \Throwable $previous
+    ) {
+        parent::__construct(
+            'Could not map incoming JSON-LD to target object: ' . $previous->getMessage(),
+            1628157659,
+            $previous
+        );
+        $this->jsonLD = $jsonLD;
+        $this->targetClassName = $targetClassName;
     }
 }
