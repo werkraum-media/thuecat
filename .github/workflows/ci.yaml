@@ -52,7 +52,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Keep composer V1 until all dev dependencies are ready
+      - name: Use expected composer version
         run: sudo composer selfupdate --2
 
       - name: Install dependencies
@@ -87,7 +87,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Keep composer V1 until all dev dependencies are ready
+      - name: Use expected composer version
         run: sudo composer selfupdate --2
 
       - name: Install dependencies
@@ -127,7 +127,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Keep composer V1 until all dev dependencies are ready
+      - name: Use expected composer version
         run: sudo composer selfupdate --2
 
       - name: Install dependencies
@@ -159,7 +159,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Keep composer V1 until all dev dependencies are ready
+      - name: Use expected composer version
         run: sudo composer selfupdate --2
 
       - name: Install dependencies
@@ -198,7 +198,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Keep composer V1 until all dev dependencies are ready
+      - name: Use expected composer version
         run: sudo composer selfupdate --2
 
       - name: Install dependencies
