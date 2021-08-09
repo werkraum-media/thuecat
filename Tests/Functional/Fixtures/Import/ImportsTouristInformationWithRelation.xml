@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <doktype>4</doktype>
+        <title>Rootpage</title>
+        <is_siteroot>1</is_siteroot>
+    </pages>
+    <pages>
+        <uid>10</uid>
+        <pid>1</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <doktype>254</doktype>
+        <title>Storage folder</title>
+    </pages>
+
+    <sys_language>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>English</title>
+        <flag>en-us-gb</flag>
+        <language_isocode>en</language_isocode>
+    </sys_language>
+
+    <sys_language>
+        <uid>2</uid>
+        <pid>0</pid>
+        <title>French</title>
+        <flag>fr</flag>
+        <language_isocode>fr</language_isocode>
+    </sys_language>
+
+    <tx_thuecat_import_configuration>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <disable>0</disable>
+        <title>Tourist Information</title>
+        <type>static</type>
+        <configuration><![CDATA[<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+            <T3FlexForms>
+                <data>
+                    <sheet index="sDEF">
+                        <language index="lDEF">
+                            <field index="storagePid">
+                                <value index="vDEF">10</value>
+                            </field>
+                            <field index="urls">
+                                <el index="el">
+                                    <field index="602a89f54d694654233086">
+                                        <value index="url">
+                                            <el>
+                                                <field index="url">
+                                                    <value index="vDEF">https://thuecat.org/resources/333039283321-xxwg</value>
+                                                </field>
+                                            </el>
+                                        </value>
+                                        <value index="_TOGGLE">0</value>
+                                    </field>
+                                </el>
+                            </field>
+                        </language>
+                    </sheet>
+                </data>
+            </T3FlexForms>
+        ]]></configuration>
+    </tx_thuecat_import_configuration>
+
+    <tx_thuecat_town>
+        <uid>1</uid>
+        <pid>10</pid>
+        <tstamp>1613401129</tstamp>
+        <crdate>1613401129</crdate>
+        <cruser_id>1</cruser_id>
+        <disable>0</disable>
+        <remote_id>https://thuecat.org/resources/043064193523-jcyt</remote_id>
+        <managed_by>1</managed_by>
+        <tourist_information>0</tourist_information>
+        <title>Erfurt</title>
+    </tx_thuecat_town>
+
+    <tx_thuecat_organisation>
+        <uid>1</uid>
+        <pid>10</pid>
+        <tstamp>1613400969</tstamp>
+        <crdate>1613400969</crdate>
+        <cruser_id>1</cruser_id>
+        <disable>0</disable>
+        <remote_id>https://thuecat.org/resources/018132452787-ngbe</remote_id>
+        <title>Erfurt Tourismus und Marketing GmbH</title>
+        <description>Die Erfurt Tourismus &amp; Marketing GmbH (ETMG) wurde 1997 als offizielle Organisation zur Tourismusförderung in der Landeshauptstadt Erfurt gegründet und nahm am 01.0  1.1998 die Geschäftstätigkeit auf.</description>
+        <manages_towns>0</manages_towns>
+        <manages_tourist_information>0</manages_tourist_information>
+    </tx_thuecat_organisation>
+</dataset>
