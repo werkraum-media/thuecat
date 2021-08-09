@@ -261,6 +261,24 @@ class ImportTest extends TestCase
     /**
      * @test
      */
+    public function importsTouristInformationWithRelation(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.xml');
+
+        $serverRequest = $this->getServerRequest();
+
+        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
+        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+
+        $touristInformation = $this->getAllRecords('tx_thuecat_tourist_information');
+        self::assertCount(1, $touristInformation);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelationResult.csv');
+    }
+
+    /**
+     * @test
+     */
     public function importsBasedOnSyncScope(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.xml');
