@@ -207,6 +207,42 @@ class ImportTest extends TestCase
     /**
      * @test
      */
+    public function importsTown(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.xml');
+
+        $serverRequest = $this->getServerRequest();
+
+        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
+        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+
+        $towns = $this->getAllRecords('tx_thuecat_town');
+        self::assertCount(1, $towns);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTown.csv');
+    }
+
+    /**
+     * @test
+     */
+    public function importsTownWithRelation(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.xml');
+
+        $serverRequest = $this->getServerRequest();
+
+        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
+        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+
+        $towns = $this->getAllRecords('tx_thuecat_town');
+        self::assertCount(1, $towns);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTownWithRelation.csv');
+    }
+
+    /**
+     * @test
+     */
     public function importsTouristAttractionsWithRelations(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithRelations.xml');
