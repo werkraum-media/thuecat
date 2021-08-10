@@ -111,13 +111,28 @@
             </trans-unit>
 
             <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
-                <source>pro Paket</source>
+                <source>per package</source>
             </trans-unit>
             <trans-unit id="content.price.rule.PerGroup" xml:space="preserve">
-                <source>pro Gruppe</source>
+                <source>per group</source>
             </trans-unit>
             <trans-unit id="content.price.rule.PerPerson" xml:space="preserve">
-                <source>pro Person</source>
+                <source>per person</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation.Toilets" xml:space="preserve">
+                <source>Toilets</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation.DisabledToilets" xml:space="preserve">
+                <source>Disabled Toilets</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation.NappyChangingArea" xml:space="preserve">
+                <source>Nappy Changing Area</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation.FamilyAndChildFriendly" xml:space="preserve">
+                <source>Family and Child Friendly</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation.ZeroSanitation" xml:space="preserve">
+                <source>Zero Sanitation</source>
             </trans-unit>
         </body>
     </file>

@@ -47,5 +47,9 @@
         </f:if>
 
         {entity.startOfConstruction}
+
+        <f:for each="{entity.sanitation}" as="sanitation">
+            {f:translate(id: 'content.sanitation.{sanitation}', default: sanitation, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>

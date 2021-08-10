@@ -92,6 +92,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('pro Person', (string)$result->getBody());
 
         self::assertStringContainsString('11. Jh', (string)$result->getBody());
+
+        self::assertStringContainsString('Toilette', (string)$result->getBody());
+        self::assertStringContainsString('Behindertentoilette', (string)$result->getBody());
+        self::assertStringContainsString('Wickelplatz', (string)$result->getBody());
+        self::assertStringContainsString('familien- / kindgerecht', (string)$result->getBody());
     }
 
     /**

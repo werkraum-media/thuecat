@@ -35,6 +35,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $startOfConstruction = '';
 
+    /**
+     * @var string[]
+     */
+    protected $sanitations = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -43,6 +48,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getStartOfConstruction(): string
     {
         return $this->startOfConstruction;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSanitations(): array
+    {
+        return $this->sanitations;
     }
 
     /**
@@ -59,6 +72,21 @@ class TouristAttraction extends Place implements MapsToType
     public function setStartOfConstruction(string $startOfConstruction): void
     {
         $this->startOfConstruction = $startOfConstruction;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $sanitation
+     */
+    public function setSanitation($sanitation): void
+    {
+        if (is_string($sanitation)) {
+            $sanitation = [$sanitation];
+        }
+
+        $this->sanitations = array_map(function (string $sanitation) {
+            return str_replace('thuecat:', '', $sanitation);
+        }, $sanitation);
     }
 
     public static function getSupportedTypes(): array

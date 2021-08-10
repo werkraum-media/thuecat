@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
+        <header/>
+        <body>
+            <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
+                <source>per package</source>
+                <target>pro Paket</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerGroup" xml:space="preserve">
+                <source>per group</source>
+                <target>pro Gruppe</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerPerson" xml:space="preserve">
+                <source>per person</source>
+                <target>pro Person</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation.Toilets" xml:space="preserve">
+                <source>Toilets</source>
+                <target>Toilette</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation.DisabledToilets" xml:space="preserve">
+                <source>Disabled Toilets</source>
+                <target>Behindertentoilette</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation.NappyChangingArea" xml:space="preserve">
+                <source>Nappy Changing Area</source>
+                <target>Wickelplatz</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation.FamilyAndChildFriendly" xml:space="preserve">
+                <source>Family and Child Friendly</source>
+                <target>familien- / kindgerecht</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation.ZeroSanitation" xml:space="preserve">
+                <source>Zero Sanitation</source>
+                <target>keine sanitäre Einrichtung</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

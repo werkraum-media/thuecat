@@ -12,6 +12,7 @@
         <offers>[{"title":"F\u00fchrungen","description":"Immer samstags, um 11:15 Uhr findet eine \u00f6ffentliche F\u00fchrung durch das Museum statt. Dauer etwa 90 Minuten","prices":[{"title":"Erwachsene","description":"","price":8,"currency":"EUR","rule":"PerPerson"},{"title":"Erm\u00e4\u00dfigt","description":"als erm\u00e4\u00dfigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner\/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt","price":5,"currency":"EUR","rule":"PerPerson"}]},{"title":"Eintritt","description":"Schulklassen und Kitagruppen im Rahmen des Unterrichts: Eintritt frei\nAn jedem ersten Dienstag im Monat: Eintritt frei","prices":[{"title":"Erm\u00e4\u00dfigt","description":"als erm\u00e4\u00dfigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner\/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt","price":5,"currency":"EUR","rule":"PerPerson"},{"title":"Familienkarte","description":"","price":17,"currency":"EUR","rule":"PerGroup"},{"title":"ErfurtCard","description":"","price":14.9,"currency":"EUR","rule":"PerPackage"},{"title":"Erwachsene","description":"","price":8,"currency":"EUR","rule":"PerPerson"}]}]</offers>
         <slogan>Highlight</slogan>
         <start_of_construction>11. Jh</start_of_construction>
+        <sanitation>Toilets,DisabledToilets,NappyChangingArea,FamilyAndChildFriendly</sanitation>
     </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>
