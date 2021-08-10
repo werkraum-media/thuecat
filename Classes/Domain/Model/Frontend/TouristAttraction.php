@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class TouristAttraction extends AbstractEntity
@@ -72,6 +73,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $startOfConstruction = '';
 
+    /**
+     * @var string
+     */
+    protected $sanitation = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -115,5 +121,10 @@ class TouristAttraction extends AbstractEntity
     public function getStartOfConstruction(): string
     {
         return $this->startOfConstruction;
+    }
+
+    public function getSanitation(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->sanitation, true);
     }
 }

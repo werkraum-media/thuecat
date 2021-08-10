@@ -109,6 +109,7 @@ class TouristAttraction implements Converter
                 'description' => $entity->getDescription(),
                 'slogan' => $entity->getSlogan(),
                 'start_of_construction' => $entity->getStartOfConstruction(),
+                'sanitation' => implode(',', $entity->getSanitations()),
                 'managed_by' => $manager ? $manager->getUid() : 0,
                 'town' => $town ? $town->getUid() : 0,
                 'media' => $this->getMedia($entity, $language),
