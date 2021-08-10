@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace WerkraumMedia\ThueCat\DependencyInjection;
-
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
@@ -22,6 +20,8 @@ namespace WerkraumMedia\ThueCat\DependencyInjection;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+
+namespace WerkraumMedia\ThueCat\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
-
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
@@ -22,6 +20,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+
+namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 

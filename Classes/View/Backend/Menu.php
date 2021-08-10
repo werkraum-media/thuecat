@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace WerkraumMedia\ThueCat\View\Backend;
-
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
@@ -22,6 +20,8 @@ namespace WerkraumMedia\ThueCat\View\Backend;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+
+namespace WerkraumMedia\ThueCat\View\Backend;
 
 use TYPO3\CMS\Backend\Template\Components\MenuRegistry;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
