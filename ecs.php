@@ -39,6 +39,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
     ]);
 
+    $services->set(DeclareStrictTypesFixer::class);
+
     $services->set(NoUnusedImportsFixer::class);
     $services->set(FullyQualifiedStrictTypesFixer::class);
     $services->set(NoMultilineWhitespaceAroundDoubleArrowFixer::class);
