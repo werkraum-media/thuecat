@@ -21,46 +21,46 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Shared;
 
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 
-class Offer extends Minimum
+trait ContainedInPlace
 {
     /**
-     * @var PriceSpecification[]
+     * @var ForeignReference[]
      */
-    protected $prices = [];
+    protected $containedInPlace = [];
 
     /**
-     * @return PriceSpecification[]
+     * @return ForeignReference[]
      */
-    public function getPrices(): array
+    public function getContainedInPlaces(): array
     {
-        return $this->prices;
+        return $this->containedInPlace;
     }
 
     /**
-     * @return PriceSpecification[]
+     * @return ForeignReference[]
      * @internal for mapping via Symfony component.
      */
-    public function getPriceSpecification(): array
+    public function getContainedInPlace(): array
     {
-        return $this->prices;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function addPriceSpecification(PriceSpecification $priceSpecification): void
-    {
-        $this->prices[] = $priceSpecification;
+        return $this->containedInPlace;
     }
 
     /**
      * @internal for mapping via Symfony component.
      */
-    public function removePriceSpecification(PriceSpecification $priceSpecification): void
+    public function addContainedInPlace(ForeignReference $place): void
+    {
+        $this->containedInPlace[] = $place;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function removeContainedInPlace(ForeignReference $place): void
     {
     }
 }

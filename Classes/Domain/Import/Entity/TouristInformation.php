@@ -23,9 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-class TouristInformation extends Place implements MapsToType
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ManagedBy;
+
+class TouristInformation extends Minimum implements MapsToType
 {
-    // TODO: Only has title and description which should be moved to trait anyway
+    use ManagedBy;
+    use ContainedInPlace;
 
     public static function getSupportedTypes(): array
     {

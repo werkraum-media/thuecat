@@ -26,7 +26,6 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 
@@ -43,8 +42,12 @@ class TownRepository extends Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    public function findOneByEntity(Place $entity): ?Town
+    public function findOneByEntity(object $entity): ?Town
     {
+        if (method_exists($entity, 'getContainedInPlaces') === false) {
+            return null;
+        }
+
         $remoteIds = array_map(function (ForeignReference $reference) {
             return $reference->getId();
         }, $entity->getContainedInPlaces());
