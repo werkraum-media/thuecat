@@ -1,7 +1,5 @@
 <?php
 
-namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
-
 /*
  * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
@@ -20,6 +18,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+
+namespace WerkraumMedia\ThueCat\Domain\Import\JsonLD\Parser;
 
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
