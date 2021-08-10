@@ -25,6 +25,24 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
 class TouristAttraction extends Place implements MapsToType
 {
+    /**
+     * @var string
+     */
+    protected $slogan = '';
+
+    public function getSlogan(): string
+    {
+        return $this->slogan;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setSlogan(string $slogan): void
+    {
+        $this->slogan = str_replace('thuecat:', '', $slogan);
+    }
+
     public static function getSupportedTypes(): array
     {
         return [

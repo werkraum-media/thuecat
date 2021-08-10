@@ -90,6 +90,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.description" xml:space="preserve">
                 <source>Description</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.slogan" xml:space="preserve">
+                <source>Slogan</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

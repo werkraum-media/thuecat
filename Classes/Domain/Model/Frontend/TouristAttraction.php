@@ -38,6 +38,11 @@ class TouristAttraction extends AbstractEntity
     protected $description = '';
 
     /**
+     * @var string
+     */
+    protected $slogan = '';
+
+    /**
      * @var OpeningHours|null
      */
     protected $openingHours = null;
@@ -70,6 +75,11 @@ class TouristAttraction extends AbstractEntity
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getSlogan(): string
+    {
+        return $this->slogan;
     }
 
     public function getOpeningHours(): ?OpeningHours
