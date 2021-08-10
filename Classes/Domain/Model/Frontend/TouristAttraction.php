@@ -67,6 +67,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $media = null;
 
+    /**
+     * @var string
+     */
+    protected $startOfConstruction = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -105,5 +110,10 @@ class TouristAttraction extends AbstractEntity
     public function getMedia(): ?Media
     {
         return $this->media;
+    }
+
+    public function getStartOfConstruction(): string
+    {
+        return $this->startOfConstruction;
     }
 }
