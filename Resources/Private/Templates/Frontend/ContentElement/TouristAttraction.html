@@ -2,6 +2,7 @@
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
         <h5>{entity.title} ({entity.town.title})</h5>
+        {entity.slogan}
         {entity.description -> f:format.html()}
 
         <f:if condition="{entity.media.mainImage}">
