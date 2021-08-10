@@ -21,14 +21,29 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
+namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Shared;
 
-class TouristMarketingCompany extends Minimum implements MapsToType
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+
+trait ManagedBy
 {
-    public static function getSupportedTypes(): array
+    /**
+     * The Thing responsible for the data within this Thing.
+     *
+     * @var ForeignReference
+     */
+    protected $managedBy;
+
+    public function getManagedBy(): ?ForeignReference
     {
-        return [
-            'thuecat:TouristMarketingCompany',
-        ];
+        return $this->managedBy;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setContentResponsible(ForeignReference $contentResponsible): void
+    {
+        $this->managedBy = $contentResponsible;
     }
 }

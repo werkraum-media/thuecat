@@ -24,41 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ManagedBy;
 
-
-class Base
+class Base extends Minimum
 {
-    /**
-     * URL to the original source at ThüCAT.
-     * Not unique within our system. We have one entity per language,
-     * while ThüCAT has a single entity containing all languages.
-     *
-     * @var string
-     */
-    protected $id = '';
-
-    /**
-     * Short name of the thing.
-     * Can be translated.
-     *
-     * @var string
-     */
-    protected $name = '';
-
-    /**
-     * Long text describing the thing.
-     * Can be translated.
-     *
-     * @var string
-     */
-    protected $description = '';
-
-    /**
-     * URL to official version of this thing outside of ThüCAT.
-     *
-     * @var string
-     */
-    protected $url = '';
+    use ManagedBy;
 
     /**
      * @var ForeignReference
@@ -72,38 +42,6 @@ class Base
      */
     protected $images = [];
 
-    /**
-     * The Thing responsible for the data within this Thing.
-     *
-     * @var ForeignReference
-     */
-    protected $managedBy;
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function hasName(): bool
-    {
-        return trim($this->name) !== '';
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
     public function getPhoto(): ?ForeignReference
     {
         return $this->photo;
@@ -115,43 +53,6 @@ class Base
     public function getImages(): array
     {
         return $this->images;
-    }
-
-    public function getManagedBy(): ?ForeignReference
-    {
-        return $this->managedBy;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setId(string $url): void
-    {
-        $this->id = $url;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setUrl(string $url): void
-    {
-        $this->url = $url;
     }
 
     /**
@@ -185,17 +86,4 @@ class Base
     public function removeImage(ForeignReference $image): void
     {
     }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setContentResponsible(ForeignReference $contentResponsible): void
-    {
-        $this->managedBy = $contentResponsible;
-    }
-
-    // TODO: Address
-    // TODO: Offers
-
-    // TODO: containedInPlace -> resolve to town, etc.
 }

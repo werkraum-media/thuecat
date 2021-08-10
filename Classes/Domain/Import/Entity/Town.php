@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-class Town extends Base implements MapsToType
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ManagedBy;
+
+class Town extends Minimum implements MapsToType
 {
-    // TODO: Only has title and description which should be moved to trait anyway
+    use ManagedBy;
 
     public static function getSupportedTypes(): array
     {

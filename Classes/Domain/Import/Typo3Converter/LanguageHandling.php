@@ -48,8 +48,7 @@ class LanguageHandling implements Languages
 
     public function getLanguageUidForString(int $pageUid, string $isoCode): int
     {
-        $languages = $this->siteFinder->getSiteByPageId($pageUid)->getLanguages();
-        foreach ($languages as $language) {
+        foreach ($this->getLanguages($pageUid) as $language) {
             if ($language->getTwoLetterIsoCode() === $isoCode) {
                 return $language->getLanguageId();
             }
@@ -65,18 +64,11 @@ class LanguageHandling implements Languages
         );
     }
 
-    // TODO: Check usages and remove below methods
-
     /**
      * @return SiteLanguage[]
      */
-    public function getLanguages(int $pageUid): array
+    private function getLanguages(int $pageUid): array
     {
         return $this->siteFinder->getSiteByPageId($pageUid)->getLanguages();
-    }
-
-    public function getDefaultLanguage(int $pageUid): SiteLanguage
-    {
-        return $this->siteFinder->getSiteByPageId($pageUid)->getDefaultLanguage();
     }
 }

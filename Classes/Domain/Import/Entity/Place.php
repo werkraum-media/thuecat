@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Geo;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\Organization;
 
 class Place extends Base
 {
     use Organization;
+    use ContainedInPlace;
 
     /**
      * @var Address
@@ -48,11 +49,6 @@ class Place extends Base
      */
     protected $openingHours = [];
 
-    /**
-     * @var ForeignReference[]
-     */
-    protected $containedInPlace = [];
-
     public function getAddress(): ?Address
     {
         return $this->address;
@@ -61,14 +57,6 @@ class Place extends Base
     public function getGeo(): ?Geo
     {
         return $this->geo;
-    }
-
-    /**
-     * @return ForeignReference[]
-     */
-    public function getContainedInPlaces(): array
-    {
-        return $this->containedInPlace;
     }
 
     /**
@@ -108,30 +96,6 @@ class Place extends Base
      * @internal for mapping via Symfony component.
      */
     public function removeOpeningHoursSpecification(OpeningHour $openingHour): void
-    {
-    }
-
-    /**
-     * @return ForeignReference[]
-     * @internal for mapping via Symfony component.
-     */
-    public function getContainedInPlace(): array
-    {
-        return $this->containedInPlace;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function addContainedInPlace(ForeignReference $place): void
-    {
-        $this->containedInPlace[] = $place;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function removeContainedInPlace(ForeignReference $place): void
     {
     }
 }

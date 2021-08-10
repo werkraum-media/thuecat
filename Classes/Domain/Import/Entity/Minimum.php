@@ -23,86 +23,94 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-class MediaObject extends Minimum implements MapsToType
+class Minimum
 {
     /**
-     * @var int
-     */
-    protected $copyrightYear = 0;
-
-    /**
+     * URL to the original source at ThüCAT.
+     * Not unique within our system. We have one entity per language,
+     * while ThüCAT has a single entity containing all languages.
+     *
      * @var string
      */
-    protected $license = '';
+    protected $id = '';
 
     /**
+     * Short name of the thing.
+     * Can be translated.
+     *
      * @var string
      */
-    protected $licenseAuthor = '';
+    protected $name = '';
 
     /**
+     * Long text describing the thing.
+     * Can be translated.
+     *
      * @var string
      */
-    protected $type = '';
+    protected $description = '';
 
-    public function getCopyrightYear(): int
+    /**
+     * URL to official version of this thing outside of ThüCAT.
+     *
+     * @var string
+     */
+    protected $url = '';
+
+    public function getId(): string
     {
-        return $this->copyrightYear;
+        return $this->id;
     }
 
-    public function getLicense(): string
+    public function hasName(): bool
     {
-        return $this->license;
+        return trim($this->name) !== '';
     }
 
-    public function getLicenseAuthor(): string
+    public function getName(): string
     {
-        return $this->licenseAuthor;
+        return $this->name;
     }
 
-    public function getType(): string
+    public function getDescription(): string
     {
-        return $this->type;
+        return $this->description;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setCopyrightYear(string $copyrightYear): void
+    public function setId(string $url): void
     {
-        $this->copyrightYear = (int) $copyrightYear;
+        $this->id = $url;
     }
 
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setLicense(string $license): void
+    public function setName(string $name): void
     {
-        $this->license = $license;
+        $this->name = $name;
     }
 
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setLicenseAuthor(string $licenseAuthor): void
+    public function setDescription(string $description): void
     {
-        $this->licenseAuthor = $licenseAuthor;
+        $this->description = $description;
     }
 
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setType(array $type): void
+    public function setUrl(string $url): void
     {
-        if (in_array('schema:ImageObject', $type)) {
-            $this->type = 'image';
-        }
-    }
-
-    public static function getSupportedTypes(): array
-    {
-        return [
-            'schema:MediaObject',
-        ];
+        $this->url = $url;
     }
 }

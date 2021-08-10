@@ -23,21 +23,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-class PriceSpecification
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+
+class PriceSpecification extends Minimum
 {
-    // TODO: Move name to trait
-    // TODO: Move description to trait
-
-    /**
-     * @var string
-     */
-    protected $name = '';
-
-    /**
-     * @var string
-     */
-    protected $description = '';
-
     /**
      * @var float
      */
@@ -59,16 +48,6 @@ class PriceSpecification
      */
     protected $calculationRule = '';
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     public function getPrice(): float
     {
         return $this->price;
@@ -82,22 +61,6 @@ class PriceSpecification
     public function getCalculationRule(): string
     {
         return $this->calculationRule;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
     }
 
     /**
