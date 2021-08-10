@@ -30,9 +30,19 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $slogan = '';
 
+    /**
+     * @var string
+     */
+    protected $startOfConstruction = '';
+
     public function getSlogan(): string
     {
         return $this->slogan;
+    }
+
+    public function getStartOfConstruction(): string
+    {
+        return $this->startOfConstruction;
     }
 
     /**
@@ -41,6 +51,14 @@ class TouristAttraction extends Place implements MapsToType
     public function setSlogan(string $slogan): void
     {
         $this->slogan = str_replace('thuecat:', '', $slogan);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setStartOfConstruction(string $startOfConstruction): void
+    {
+        $this->startOfConstruction = $startOfConstruction;
     }
 
     public static function getSupportedTypes(): array
