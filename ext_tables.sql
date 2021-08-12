@@ -59,4 +59,5 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     slogan text DEFAULT '' NOT NULL,
     start_of_construction text DEFAULT '' NOT NULL,
     sanitation text DEFAULT '' NOT NULL,
+    other_service text DEFAULT '' NOT NULL,
 );

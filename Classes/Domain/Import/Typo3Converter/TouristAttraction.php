@@ -116,6 +116,7 @@ class TouristAttraction implements Converter
                 'opening_hours' => $this->getOpeningHours($entity),
                 'address' => $this->getAddress($entity),
                 'offers' => $this->getOffers($entity),
+                'other_service' => implode(',', $entity->getOtherServices()),
             ]
         );
     }

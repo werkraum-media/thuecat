@@ -78,6 +78,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $sanitation = '';
 
+    /**
+     * @var string
+     */
+    protected $otherService = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -126,5 +131,10 @@ class TouristAttraction extends AbstractEntity
     public function getSanitation(): array
     {
         return GeneralUtility::trimExplode(',', $this->sanitation, true);
+    }
+
+    public function getOtherServices(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->otherService, true);
     }
 }

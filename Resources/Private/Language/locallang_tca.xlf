@@ -99,6 +99,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.sanitation" xml:space="preserve">
                 <source>Sanitation</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.other_service" xml:space="preserve">
+                <source>Other Service</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

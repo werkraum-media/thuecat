@@ -97,6 +97,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Behindertentoilette', (string)$result->getBody());
         self::assertStringContainsString('Wickelplatz', (string)$result->getBody());
         self::assertStringContainsString('familien- / kindgerecht', (string)$result->getBody());
+
+        self::assertStringContainsString('Spielplatz', (string)$result->getBody());
+        self::assertStringContainsString('Ruhezone mit Sitzmöglichkeit oder separate Sitzmöglichkeit', (string)$result->getBody());
+        self::assertStringContainsString('Souvenirshop', (string)$result->getBody());
+        self::assertStringContainsString('Spielecke / Spielbereich', (string)$result->getBody());
     }
 
     /**
