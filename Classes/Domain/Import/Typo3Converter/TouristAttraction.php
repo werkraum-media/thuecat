@@ -118,6 +118,7 @@ class TouristAttraction implements Converter
                 'offers' => $this->getOffers($entity),
                 'other_service' => implode(',', $entity->getOtherServices()),
                 'museum_service' => implode(',', $entity->getMuseumServices()),
+                'architectural_style' => implode(',', $entity->getArchitecturalStyles()),
             ]
         );
     }

@@ -88,6 +88,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $museumService = '';
 
+    /**
+     * @var string
+     */
+    protected $architecturalStyle = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -146,5 +151,10 @@ class TouristAttraction extends AbstractEntity
     public function getMuseumServices(): array
     {
         return GeneralUtility::trimExplode(',', $this->museumService, true);
+    }
+
+    public function getArchitecturalStyles(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->architecturalStyle, true);
     }
 }
