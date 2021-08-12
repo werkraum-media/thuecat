@@ -13,6 +13,7 @@
         <slogan>Highlight</slogan>
         <start_of_construction>11. Jh</start_of_construction>
         <sanitation>Toilets,DisabledToilets,NappyChangingArea,FamilyAndChildFriendly</sanitation>
+        <other_service>Playground,SeatingPossibilitiesRestArea,SouvenirShop,PlayCornerOrPlayArea</other_service>
     </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>

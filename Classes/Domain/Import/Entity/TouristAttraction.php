@@ -40,6 +40,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $sanitations = [];
 
+    /**
+     * @var string[]
+     */
+    protected $otherServices = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -56,6 +61,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getSanitations(): array
     {
         return $this->sanitations;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOtherServices(): array
+    {
+        return $this->otherServices;
     }
 
     /**
@@ -87,6 +100,21 @@ class TouristAttraction extends Place implements MapsToType
         $this->sanitations = array_map(function (string $sanitation) {
             return str_replace('thuecat:', '', $sanitation);
         }, $sanitation);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $otherService
+     */
+    public function setOtherService($otherService): void
+    {
+        if (is_string($otherService)) {
+            $otherService = [$otherService];
+        }
+
+        $this->otherServices = array_map(function (string $otherService) {
+            return str_replace('thuecat:', '', $otherService);
+        }, $otherService);
     }
 
     public static function getSupportedTypes(): array

@@ -134,6 +134,39 @@
             <trans-unit id="content.sanitation.ZeroSanitation" xml:space="preserve">
                 <source>Zero Sanitation</source>
             </trans-unit>
+            <trans-unit id="content.otherService.BaggageStorage" xml:space="preserve">
+                <source>Baggage Storage</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.ChargingPossibilitiesForMobileDevices" xml:space="preserve">
+                <source>Charging Possibilities For Mobile Devices</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.Childcare" xml:space="preserve">
+                <source>Childcare</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.FreeWlan" xml:space="preserve">
+                <source>Free Wlan</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.LockBoxes" xml:space="preserve">
+                <source>Lock Boxes</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.PlayCornerOrPlayArea" xml:space="preserve">
+                <source>Play Corner Or Play Area</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.Playground" xml:space="preserve">
+                <source>Playground</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.SeatingPossibilitiesRestArea" xml:space="preserve">
+                <source>Seating Possibilities Rest Area</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.SouvenirShop" xml:space="preserve">
+                <source>Souvenir Shop</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.Wardrobe" xml:space="preserve">
+                <source>Wardrobe</source>
+            </trans-unit>
+            <trans-unit id="content.otherService.ZeroOtherServiceEnumMem" xml:space="preserve">
+                <source>Zero Other Service</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

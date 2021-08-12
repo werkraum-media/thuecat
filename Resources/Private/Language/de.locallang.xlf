@@ -35,6 +35,50 @@
                 <source>Zero Sanitation</source>
                 <target>keine sanitäre Einrichtung</target>
             </trans-unit>
+            <trans-unit id="content.otherService.BaggageStorage" xml:space="preserve">
+                <source>Baggage Storage</source>
+                <target>Gepäckaufbewahrung</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.ChargingPossibilitiesForMobileDevices" xml:space="preserve">
+                <source>Charging Possibilities For Mobile Devices</source>
+                <target>Lademöglichkeit für mobile Geräte</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.Childcare" xml:space="preserve">
+                <source>Childcare</source>
+                <target>Kinderbetreuung</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.FreeWlan" xml:space="preserve">
+                <source>Free Wlan</source>
+                <target>kostenfreies WLAN</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.LockBoxes" xml:space="preserve">
+                <source>Lock Boxes</source>
+                <target>Schließfächer</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.PlayCornerOrPlayArea" xml:space="preserve">
+                <source>Play Corner Or Play Area</source>
+                <target>Spielecke / Spielbereich</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.Playground" xml:space="preserve">
+                <source>Playground</source>
+                <target>Spielplatz</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.SeatingPossibilitiesRestArea" xml:space="preserve">
+                <source>Seating Possibilities Rest Area</source>
+                <target>Ruhezone mit Sitzmöglichkeit oder separate Sitzmöglichkeit</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.SouvenirShop" xml:space="preserve">
+                <source>Souvenir Shop</source>
+                <target>Souvenirshop</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.Wardrobe" xml:space="preserve">
+                <source>Wardrobe</source>
+                <target>Garderobe</target>
+            </trans-unit>
+            <trans-unit id="content.otherService.ZeroOtherServiceEnumMem" xml:space="preserve">
+                <source>Zero Other Service</source>
+                <target>kein sonstiger Service</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
