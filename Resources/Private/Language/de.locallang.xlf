@@ -79,6 +79,19 @@
                 <source>Zero Other Service</source>
                 <target>kein sonstiger Service</target>
             </trans-unit>
+
+            <trans-unit id="content.museumService.MuseumShop" xml:space="preserve">
+                <source>Museum Shop</source>
+                <target>Museumsshop</target>
+            </trans-unit>
+            <trans-unit id="content.museumService.PedagogicalOffer" xml:space="preserve">
+                <source>Pedagogical Offer</source>
+                <target>Pädagogisches Angebot</target>
+            </trans-unit>
+            <trans-unit id="content.museumService.ZeroInformationMuseumService" xml:space="preserve">
+                <source>Zero Information Museum Service</source>
+                <target>kein weiterer Service</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -102,6 +102,10 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Ruhezone mit Sitzmöglichkeit oder separate Sitzmöglichkeit', (string)$result->getBody());
         self::assertStringContainsString('Souvenirshop', (string)$result->getBody());
         self::assertStringContainsString('Spielecke / Spielbereich', (string)$result->getBody());
+
+        self::assertStringContainsString('Museumsshop', (string)$result->getBody());
+        self::assertStringContainsString('Pädagogisches Angebot', (string)$result->getBody());
+        self::assertStringContainsString('kein weiterer Service', (string)$result->getBody());
     }
 
     /**

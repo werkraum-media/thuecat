@@ -45,6 +45,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $otherServices = [];
 
+    /**
+     * @var string[]
+     */
+    protected $museumServices = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -69,6 +74,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getOtherServices(): array
     {
         return $this->otherServices;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMuseumServices(): array
+    {
+        return $this->museumServices;
     }
 
     /**
@@ -115,6 +128,21 @@ class TouristAttraction extends Place implements MapsToType
         $this->otherServices = array_map(function (string $otherService) {
             return str_replace('thuecat:', '', $otherService);
         }, $otherService);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $museumService
+     */
+    public function setMuseumService($museumService): void
+    {
+        if (is_string($museumService)) {
+            $museumService = [$museumService];
+        }
+
+        $this->museumServices = array_map(function (string $museumService) {
+            return str_replace('thuecat:', '', $museumService);
+        }, $museumService);
     }
 
     public static function getSupportedTypes(): array
