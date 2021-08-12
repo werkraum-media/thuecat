@@ -177,6 +177,100 @@
             <trans-unit id="content.museumService.ZeroInformationMuseumService" xml:space="preserve">
                 <source>Zero Information Museum Service</source>
             </trans-unit>
+
+            <trans-unit id="content.architecturalStyle.ArchitectureOfHomelandSecurity" xml:space="preserve">
+                <source>Architecture of Homeland Security</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.ArtDeco" xml:space="preserve">
+                <source>Art Deco</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.ArtNouveau" xml:space="preserve">
+                <source>Art Nouveau</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Baroque" xml:space="preserve">
+                <source>Baroque</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.BauhausStyle" xml:space="preserve">
+                <source>Bauhaus Style</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Brutalism" xml:space="preserve">
+                <source>Brutalism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Classicism" xml:space="preserve">
+                <source>Classicism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Constructivism" xml:space="preserve">
+                <source>Constructivism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.CriticalRegionalism" xml:space="preserve">
+                <source>Critical Regionalism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Deconstructivism" xml:space="preserve">
+                <source>Deconstructivism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Expressionism" xml:space="preserve">
+                <source>Expressionism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Functionalism" xml:space="preserve">
+                <source>Functionalism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.GothicArt" xml:space="preserve">
+                <source>Gothic Art</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.GothicRevival" xml:space="preserve">
+                <source>Gothic Revival</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.HighTechArchitecture" xml:space="preserve">
+                <source>High Tech Architecture</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Historicism" xml:space="preserve">
+                <source>Historicism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.InternationalStyle" xml:space="preserve">
+                <source>International Style</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Minimalism" xml:space="preserve">
+                <source>Minimalism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Modernism" xml:space="preserve">
+                <source>Modernism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Neoclassicism" xml:space="preserve">
+                <source>Neoclassicism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Neorenaissance" xml:space="preserve">
+                <source>Neorenaissance</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.NewBuilding" xml:space="preserve">
+                <source>New Building</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.NewObjectivity" xml:space="preserve">
+                <source>New Objectivity</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.OrganicConstruction" xml:space="preserve">
+                <source>Organic Construction</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.PostWarModernism" xml:space="preserve">
+                <source>Post War Modernism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.PostmodernAge" xml:space="preserve">
+                <source>Postmodern Age</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Rationalism" xml:space="preserve">
+                <source>Rationalism</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Renaissance" xml:space="preserve">
+                <source>Renaissance</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.Rococo" xml:space="preserve">
+                <source>Rococo</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.RomanesquePeriod" xml:space="preserve">
+                <source>Romanesque Period</source>
+            </trans-unit>
+            <trans-unit id="content.architecturalStyle.ZeroInformationArchitecturalStyle" xml:space="preserve">
+                <source>Zero Information Architectural Style</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -106,6 +106,37 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Museumsshop', (string)$result->getBody());
         self::assertStringContainsString('Pädagogisches Angebot', (string)$result->getBody());
         self::assertStringContainsString('kein weiterer Service', (string)$result->getBody());
+
+        self::assertStringContainsString('Heimatschutzarchitektur', (string)$result->getBody());
+        self::assertStringContainsString('Art Déco', (string)$result->getBody());
+        self::assertStringContainsString('Jugendstil', (string)$result->getBody());
+        self::assertStringContainsString('Barock', (string)$result->getBody());
+        self::assertStringContainsString('Bauhaus', (string)$result->getBody());
+        self::assertStringContainsString('Brutalismus', (string)$result->getBody());
+        self::assertStringContainsString('Klassizismus', (string)$result->getBody());
+        self::assertStringContainsString('Konstruktivismus', (string)$result->getBody());
+        self::assertStringContainsString('Kritischer Regionalismus', (string)$result->getBody());
+        self::assertStringContainsString('Dekonstruktivismus', (string)$result->getBody());
+        self::assertStringContainsString('Expressionismus', (string)$result->getBody());
+        self::assertStringContainsString('Funktionalismus', (string)$result->getBody());
+        self::assertStringContainsString('Gotik', (string)$result->getBody());
+        self::assertStringContainsString('Neogotik', (string)$result->getBody());
+        self::assertStringContainsString('High-Tech-Architektur', (string)$result->getBody());
+        self::assertStringContainsString('Historismus', (string)$result->getBody());
+        self::assertStringContainsString('Internationaler Stil', (string)$result->getBody());
+        self::assertStringContainsString('Minimalismus', (string)$result->getBody());
+        self::assertStringContainsString('Moderne', (string)$result->getBody());
+        self::assertStringContainsString('Neoklassizismus', (string)$result->getBody());
+        self::assertStringContainsString('Neorenaissance', (string)$result->getBody());
+        self::assertStringContainsString('Neues Bauen', (string)$result->getBody());
+        self::assertStringContainsString('Neue Sachlichkeit', (string)$result->getBody());
+        self::assertStringContainsString('Organische Architektur', (string)$result->getBody());
+        self::assertStringContainsString('Postmoderne', (string)$result->getBody());
+        self::assertStringContainsString('Rationalismus', (string)$result->getBody());
+        self::assertStringContainsString('Renaissance', (string)$result->getBody());
+        self::assertStringContainsString('Rokoko', (string)$result->getBody());
+        self::assertStringContainsString('Romanik', (string)$result->getBody());
+        self::assertStringContainsString('keine Angabe', (string)$result->getBody());
     }
 
     /**

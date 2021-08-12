@@ -59,5 +59,9 @@
         <f:for each="{entity.museumServices}" as="service">
             {f:translate(id: 'content.museumService.{service}', default: service, extensionName: 'thuecat')}
         </f:for>
+
+        <f:for each="{entity.architecturalStyles}" as="style">
+            {f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>

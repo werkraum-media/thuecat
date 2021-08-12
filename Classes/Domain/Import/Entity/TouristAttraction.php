@@ -50,6 +50,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $museumServices = [];
 
+    /**
+     * @var string[]
+     */
+    protected $architecturalStyles = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -82,6 +87,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getMuseumServices(): array
     {
         return $this->museumServices;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getArchitecturalStyles(): array
+    {
+        return $this->architecturalStyles;
     }
 
     /**
@@ -143,6 +156,21 @@ class TouristAttraction extends Place implements MapsToType
         $this->museumServices = array_map(function (string $museumService) {
             return str_replace('thuecat:', '', $museumService);
         }, $museumService);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $architecturalStyle
+     */
+    public function setArchitecturalStyle($architecturalStyle): void
+    {
+        if (is_string($architecturalStyle)) {
+            $architecturalStyle = [$architecturalStyle];
+        }
+
+        $this->architecturalStyles = array_map(function (string $architecturalStyle) {
+            return str_replace('thuecat:', '', $architecturalStyle);
+        }, $architecturalStyle);
     }
 
     public static function getSupportedTypes(): array
