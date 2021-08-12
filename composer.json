@@ -49,6 +49,7 @@
         "phpstan/phpstan": "^0.12.71",
         "phpunit/phpunit": "^9.5",
         "symplify/easy-coding-standard": "^9.0",
+        "typo3/cms-fluid-styled-content": "^10.4",
         "typo3/testing-framework": "^6.6"
     },
     "scripts": {

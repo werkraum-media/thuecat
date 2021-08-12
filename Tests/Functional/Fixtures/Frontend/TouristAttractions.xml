@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <tx_thuecat_tourist_attraction>
+        <uid>1</uid>
+        <pid>3</pid>
+        <title>Erste Attraktion</title>
+        <description>Die Beschreibung der Attraktion</description>
+        <town>1</town>
+        <media>[{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg","description":"","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159216\/Preview-1280x0\/image","copyrightYear":2016,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}},{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg","description":"Sicht auf Dom St. Marien, St. Severikirche sowie die davor liegenden Klostergeb\u00e4ude und einem Ausschnitt des Biergartens umgeben von einem d\u00e4mmerungsverf\u00e4rten Himmel","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159186\/Preview-1280x0\/image","copyrightYear":2020,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}},{"mainImage":false,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg","description":"","url":"https:\/\/cms.thuecat.org\/o\/adaptive-media\/image\/5159216\/Preview-1280x0\/image","copyrightYear":2016,"license":{"type":"https:\/\/creativecommons.org\/licenses\/by\/4.0\/","author":""}}]</media>
+        <opening_hours>[{"opens":"09:30:00","closes":"18:00:00","from":{"date":"2021-05-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2021-10-31 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Saturday","Friday","Thursday","Tuesday","Monday","Wednesday"]},{"opens":"13:00:00","closes":"18:00:00","from":{"date":"2021-05-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2021-10-31 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Sunday"]},{"opens":"09:30:00","closes":"17:00:00","from":{"date":"2021-11-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2022-04-30 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Saturday","Friday","Thursday","Tuesday","Monday","Wednesday"]},{"opens":"13:00:00","closes":"17:00:00","from":{"date":"2021-11-01 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"through":{"date":"2022-04-30 00:00:00.000000","timezone_type":3,"timezone":"UTC"},"daysOfWeek":["Sunday"]}]</opening_hours>
+        <address>{"street":"Beispielstraße 1a","zip":"99084","city":"Beispielstadt","email":"example@example.com","phone":"(0)30 23125 000","fax":"","geo":{"latitude":50.975955358589545,"longitude":11.023667024961856}}</address>
+        <offers>[{"title":"F\u00fchrungen","description":"Immer samstags, um 11:15 Uhr findet eine \u00f6ffentliche F\u00fchrung durch das Museum statt. Dauer etwa 90 Minuten","prices":[{"title":"Erwachsene","description":"","price":8,"currency":"EUR","rule":"PerPerson"},{"title":"Erm\u00e4\u00dfigt","description":"als erm\u00e4\u00dfigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner\/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt","price":5,"currency":"EUR","rule":"PerPerson"}]},{"title":"Eintritt","description":"Schulklassen und Kitagruppen im Rahmen des Unterrichts: Eintritt frei\nAn jedem ersten Dienstag im Monat: Eintritt frei","prices":[{"title":"Erm\u00e4\u00dfigt","description":"als erm\u00e4\u00dfigt gelten schulpflichtige Kinder, Auszubildende, Studierende, Rentner\/-innen, Menschen mit Behinderungen, Inhaber Sozialausweis der Landeshauptstadt Erfurt","price":5,"currency":"EUR","rule":"PerPerson"},{"title":"Familienkarte","description":"","price":17,"currency":"EUR","rule":"PerGroup"},{"title":"ErfurtCard","description":"","price":14.9,"currency":"EUR","rule":"PerPackage"},{"title":"Erwachsene","description":"","price":8,"currency":"EUR","rule":"PerPerson"}]}]</offers>
+    </tx_thuecat_tourist_attraction>
+    <tx_thuecat_town>
+        <uid>1</uid>
+        <pid>3</pid>
+        <title>Beispielstadt</title>
+        <description>Die Beschreibung der Stadt</description>
+    </tx_thuecat_town>
+</dataset>
+

@@ -1,0 +1,18 @@
+base: /
+languages:
+  -
+    title: e
+    enabled: true
+    base: /
+    typo3Language: default
+    locale: e
+    iso-639-1: ab
+    websiteTitle: ''
+    navigationTitle: ''
+    hreflang: ''
+    direction: ''
+    flag: global
+    languageId: 0
+rootPageId: 1
+thuecat_api_key: ''
+websiteTitle: test
