@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>Root</title>
+        <slug>/</slug>
+        <sorting>128</sorting>
+        <deleted>0</deleted>
+    </pages>
+    <pages>
+        <uid>2</uid>
+        <pid>1</pid>
+        <title>Tourist Attraction</title>
+        <slug>/example-attraction/</slug>
+        <sorting>128</sorting>
+        <deleted>0</deleted>
+    </pages>
+    <pages>
+        <uid>3</uid>
+        <pid>1</pid>
+        <title>Storage</title>
+        <doktype>254</doktype>
+        <sorting>128</sorting>
+        <deleted>0</deleted>
+    </pages>
+    <tt_content>
+        <uid>2</uid>
+        <pid>2</pid>
+        <hidden>0</hidden>
+        <sorting>1</sorting>
+        <CType>thuecat_tourist_attraction</CType>
+        <header>Show Example Tourist Attraction</header>
+        <deleted>0</deleted>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <colPos>0</colPos>
+        <sys_language_uid>0</sys_language_uid>
+        <records>1</records>
+    </tt_content>
+</dataset>
+
