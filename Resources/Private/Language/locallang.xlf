@@ -324,6 +324,25 @@
             <trans-unit id="content.paymentAccepted.Visa">
                 <source>Visa</source>
             </trans-unit>
+
+            <trans-unit id="content.digitalOffer.AppForMobileDevices">
+                <source>App for Mobile Devices</source>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.AudioGuide">
+                <source>Audio Guide</source>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.AugmentedReality">
+                <source>Augmented Reality</source>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.VideoGuide">
+                <source>Video Guide</source>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.VirtuellReality">
+                <source>Virtuell Reality</source>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.ZeroDigitalOffer">
+                <source>Zero Digital Offer</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

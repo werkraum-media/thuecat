@@ -103,6 +103,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $paymentAccepted = '';
 
+    /**
+     * @var string
+     */
+    protected $digitalOffer = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -176,5 +181,10 @@ class TouristAttraction extends AbstractEntity
     public function getPaymentAccepted(): array
     {
         return GeneralUtility::trimExplode(',', $this->paymentAccepted, true);
+    }
+
+    public function getDigitalOffer(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->digitalOffer, true);
     }
 }

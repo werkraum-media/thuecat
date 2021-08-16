@@ -287,6 +287,31 @@
                 <source>Visa</source>
                 <target>Visa</target>
             </trans-unit>
+
+            <trans-unit id="content.digitalOffer.AppForMobileDevices">
+                <source>App for Mobile Devices</source>
+                <target>App für mobile Endgeräte</target>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.AudioGuide">
+                <source>Audio Guide</source>
+                <target>Audioguide</target>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.AugmentedReality">
+                <source>Augmented Reality</source>
+                <target>Augmented Reality</target>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.VideoGuide">
+                <source>Video Guide</source>
+                <target>Videoguide</target>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.VirtuellReality">
+                <source>Virtuell Reality</source>
+                <target>Virtual Reality</target>
+            </trans-unit>
+            <trans-unit id="content.digitalOffer.ZeroDigitalOffer">
+                <source>Zero Digital Offer</source>
+                <target>kein digitales Angebot</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

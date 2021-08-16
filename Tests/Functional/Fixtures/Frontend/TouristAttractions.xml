@@ -18,6 +18,7 @@
         <architectural_style>ArchitectureOfHomelandSecurity,ArtDeco,ArtNouveau,Baroque,BauhausStyle,Brutalism,Classicism,Constructivism,CriticalRegionalism,Deconstructivism,Expressionism,Functionalism,GothicArt,GothicRevival,HighTechArchitecture,Historicism,InternationalStyle,Minimalism,Modernism,Neoclassicism,Neorenaissance,NewBuilding,NewObjectivity,OrganicConstruction,PostWarModernism,PostmodernAge,Rationalism,Renaissance,Rococo,RomanesquePeriod,ZeroInformationArchitecturalStyle</architectural_style>
         <traffic_infrastructure>BicycleLockersEnumMem,BicycleStandsEnumMem,BicycleStandsBicycleLockersEnumMem,BusParkCoachParkEnumMem,EbikeChargingStationEnumMem,ElectricVehicleCarChargingStationEnumMem,ZeroSpecialTrafficInfrastructure</traffic_infrastructure>
         <payment_accepted>AliPay,AmericanExpress,ApplePay,CashPayment,EC,InstantBankTransfer,Invoice,MasterCard,PayPal,Visa</payment_accepted>
+        <digital_offer>AppForMobileDevices,AudioGuide,AugmentedReality,VideoGuide,VirtuellReality,ZeroDigitalOffer</digital_offer>
     </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>
