@@ -168,6 +168,42 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Fotografieren erlaubt', (string)$result->getBody());
         self::assertStringContainsString('Fotografieren nicht gestattet', (string)$result->getBody());
         self::assertStringContainsString('some free text value for photography', (string)$result->getBody());
+
+        self::assertStringContainsString('Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithPetsFalse(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(4);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('Keine Tiere erlaubt', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithPetsTrue(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(5);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('Tiere erlaubt', (string)$result->getBody());
     }
 
     /**
