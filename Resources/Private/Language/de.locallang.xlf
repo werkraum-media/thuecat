@@ -217,6 +217,35 @@
                 <source>Zero Information Architectural Style</source>
                 <target>keine Angabe</target>
             </trans-unit>
+
+            <trans-unit id="content.trafficInfrastructure.BicycleLockersEnumMem" xml:space="preserve">
+                <source>Bicycle Lockers</source>
+                <target>Fahrradboxen</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BicycleStandsBicycleLockersEnumMem" xml:space="preserve">
+                <source>Bicycle Stands Bicycle Lockers</source>
+                <target>Fahrradständer / -boxen</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BicycleStandsEnumMem" xml:space="preserve">
+                <source>Bicycle Stands</source>
+                <target>Fahrradständer</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BusParkCoachParkEnumMem" xml:space="preserve">
+                <source>Bus Park Coach Park</source>
+                <target>Bushaltepunkt (für Ein- und Ausstieg) vorhanden</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.EbikeChargingStationEnumMem" xml:space="preserve">
+                <source>Ebike Charging Station</source>
+                <target>E-Bike-Ladestation</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.ElectricVehicleCarChargingStationEnumMem" xml:space="preserve">
+                <source>Electric Vehicle Car Charging Station</source>
+                <target>E-Auto-Ladestation</target>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.ZeroSpecialTrafficInfrastructure" xml:space="preserve">
+                <source>Zero Special Traffic Infrastructure</source>
+                <target>keine Angabe</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

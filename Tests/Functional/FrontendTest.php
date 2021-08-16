@@ -137,6 +137,14 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Rokoko', (string)$result->getBody());
         self::assertStringContainsString('Romanik', (string)$result->getBody());
         self::assertStringContainsString('keine Angabe', (string)$result->getBody());
+
+        self::assertStringContainsString('Fahrradboxen', (string)$result->getBody());
+        self::assertStringContainsString('Fahrradständer / -boxen', (string)$result->getBody());
+        self::assertStringContainsString('Fahrradständer', (string)$result->getBody());
+        self::assertStringContainsString('Bushaltepunkt (für Ein- und Ausstieg) vorhanden', (string)$result->getBody());
+        self::assertStringContainsString('E-Bike-Ladestation', (string)$result->getBody());
+        self::assertStringContainsString('E-Auto-Ladestation', (string)$result->getBody());
+        self::assertStringContainsString('keine Angabe', (string)$result->getBody());
     }
 
     /**

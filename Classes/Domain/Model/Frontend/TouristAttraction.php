@@ -93,6 +93,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $architecturalStyle = '';
 
+    /**
+     * @var string
+     */
+    protected $trafficInfrastructure = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -156,5 +161,10 @@ class TouristAttraction extends AbstractEntity
     public function getArchitecturalStyles(): array
     {
         return GeneralUtility::trimExplode(',', $this->architecturalStyle, true);
+    }
+
+    public function getTrafficInfrastructures(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->trafficInfrastructure, true);
     }
 }

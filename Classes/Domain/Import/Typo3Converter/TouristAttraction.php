@@ -119,6 +119,7 @@ class TouristAttraction implements Converter
                 'other_service' => implode(',', $entity->getOtherServices()),
                 'museum_service' => implode(',', $entity->getMuseumServices()),
                 'architectural_style' => implode(',', $entity->getArchitecturalStyles()),
+                'traffic_infrastructure' => implode(',', $entity->getTrafficInfrastructures()),
             ]
         );
     }

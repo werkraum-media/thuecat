@@ -63,5 +63,9 @@
         <f:for each="{entity.architecturalStyles}" as="style">
             {f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}
         </f:for>
+
+        <f:for each="{entity.trafficInfrastructures}" as="trafficInfrastructure">
+            {f:translate(id: 'content.trafficInfrastructure.{trafficInfrastructure}', default: trafficInfrastructure, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>
