@@ -145,6 +145,17 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('E-Bike-Ladestation', (string)$result->getBody());
         self::assertStringContainsString('E-Auto-Ladestation', (string)$result->getBody());
         self::assertStringContainsString('keine Angabe', (string)$result->getBody());
+
+        self::assertStringContainsString('AliPay', (string)$result->getBody());
+        self::assertStringContainsString('American Express', (string)$result->getBody());
+        self::assertStringContainsString('ApplePay', (string)$result->getBody());
+        self::assertStringContainsString('Barzahlung', (string)$result->getBody());
+        self::assertStringContainsString('EC', (string)$result->getBody());
+        self::assertStringContainsString('Sofortüberweisung', (string)$result->getBody());
+        self::assertStringContainsString('Rechnung', (string)$result->getBody());
+        self::assertStringContainsString('MasterCard', (string)$result->getBody());
+        self::assertStringContainsString('PayPal', (string)$result->getBody());
+        self::assertStringContainsString('Visa', (string)$result->getBody());
     }
 
     /**

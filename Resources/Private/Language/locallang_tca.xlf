@@ -111,6 +111,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.traffic_infrastructure" xml:space="preserve">
                 <source>Traffic Infrastructure</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.payment_accepted" xml:space="preserve">
+                <source>Payment Accepted</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

@@ -293,6 +293,37 @@
             <trans-unit id="content.trafficInfrastructure.ZeroSpecialTrafficInfrastructure" xml:space="preserve">
                 <source>Zero Special Traffic Infrastructure</source>
             </trans-unit>
+
+            <trans-unit id="content.paymentAccepted.AliPay">
+                <source>AliPay</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.AmericanExpress">
+                <source>American Express</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.ApplePay">
+                <source>ApplePay</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.CashPayment">
+                <source>Cash Payment</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.EC">
+                <source>EC</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.InstantBankTransfer">
+                <source>Instant Bank Transfer</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.Invoice">
+                <source>Invoice</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.MasterCard">
+                <source>MasterCard</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.PayPal">
+                <source>PayPal</source>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.Visa">
+                <source>Visa</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
