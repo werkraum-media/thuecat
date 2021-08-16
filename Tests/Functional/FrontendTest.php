@@ -156,6 +156,13 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('MasterCard', (string)$result->getBody());
         self::assertStringContainsString('PayPal', (string)$result->getBody());
         self::assertStringContainsString('Visa', (string)$result->getBody());
+
+        self::assertStringContainsString('App für mobile Endgeräte', (string)$result->getBody());
+        self::assertStringContainsString('Audioguide', (string)$result->getBody());
+        self::assertStringContainsString('Augmented Reality', (string)$result->getBody());
+        self::assertStringContainsString('Videoguide', (string)$result->getBody());
+        self::assertStringContainsString('Virtual Reality', (string)$result->getBody());
+        self::assertStringContainsString('kein digitales Angebot', (string)$result->getBody());
     }
 
     /**

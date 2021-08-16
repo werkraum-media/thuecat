@@ -65,6 +65,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $paymentsAccepted = [];
 
+    /**
+     * @var string[]
+     */
+    protected $digitalOffers = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -121,6 +126,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getPaymentsAccepted(): array
     {
         return $this->paymentsAccepted;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDigitalOffers(): array
+    {
+        return $this->digitalOffers;
     }
 
     /**
@@ -227,6 +240,21 @@ class TouristAttraction extends Place implements MapsToType
         $this->paymentsAccepted = array_map(function (string $paymentAccepted) {
             return str_replace('thuecat:', '', $paymentAccepted);
         }, $paymentAccepted);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $digitalOffer
+     */
+    public function setDigitalOffer($digitalOffer): void
+    {
+        if (is_string($digitalOffer)) {
+            $digitalOffer = [$digitalOffer];
+        }
+
+        $this->digitalOffers = array_map(function (string $digitalOffer) {
+            return str_replace('thuecat:', '', $digitalOffer);
+        }, $digitalOffer);
     }
 
     public static function getSupportedTypes(): array
