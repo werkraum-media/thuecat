@@ -163,6 +163,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Videoguide', (string)$result->getBody());
         self::assertStringContainsString('Virtual Reality', (string)$result->getBody());
         self::assertStringContainsString('kein digitales Angebot', (string)$result->getBody());
+
+        self::assertStringContainsString('Fotolizenz kostenpflichtig', (string)$result->getBody());
+        self::assertStringContainsString('Fotografieren erlaubt', (string)$result->getBody());
+        self::assertStringContainsString('Fotografieren nicht gestattet', (string)$result->getBody());
+        self::assertStringContainsString('some free text value for photography', (string)$result->getBody());
     }
 
     /**

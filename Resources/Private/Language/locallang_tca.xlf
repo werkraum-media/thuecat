@@ -117,6 +117,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.digital_offer" xml:space="preserve">
                 <source>Digital Offer</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.photography" xml:space="preserve">
+                <source>Photography</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

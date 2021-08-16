@@ -312,6 +312,19 @@
                 <source>Zero Digital Offer</source>
                 <target>kein digitales Angebot</target>
             </trans-unit>
+
+            <trans-unit id="content.photography.PhotoLicenceFeeRequired">
+                <source>PhotoLicenceFeeRequired</source>
+                <target>Fotolizenz kostenpflichtig</target>
+            </trans-unit>
+            <trans-unit id="content.photography.TakingPicturesPermitted">
+                <source>TakingPicturesPermitted</source>
+                <target>Fotografieren erlaubt</target>
+            </trans-unit>
+            <trans-unit id="content.photography.ZeroPhotography">
+                <source>ZeroPhotography</source>
+                <target>Fotografieren nicht gestattet</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

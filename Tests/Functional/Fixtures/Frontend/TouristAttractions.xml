@@ -19,6 +19,7 @@
         <traffic_infrastructure>BicycleLockersEnumMem,BicycleStandsEnumMem,BicycleStandsBicycleLockersEnumMem,BusParkCoachParkEnumMem,EbikeChargingStationEnumMem,ElectricVehicleCarChargingStationEnumMem,ZeroSpecialTrafficInfrastructure</traffic_infrastructure>
         <payment_accepted>AliPay,AmericanExpress,ApplePay,CashPayment,EC,InstantBankTransfer,Invoice,MasterCard,PayPal,Visa</payment_accepted>
         <digital_offer>AppForMobileDevices,AudioGuide,AugmentedReality,VideoGuide,VirtuellReality,ZeroDigitalOffer</digital_offer>
+        <photography>PhotoLicenceFeeRequired,TakingPicturesPermitted,ZeroPhotography,some free text value for photography</photography>
     </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>
