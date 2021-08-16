@@ -271,6 +271,28 @@
             <trans-unit id="content.architecturalStyle.ZeroInformationArchitecturalStyle" xml:space="preserve">
                 <source>Zero Information Architectural Style</source>
             </trans-unit>
+
+            <trans-unit id="content.trafficInfrastructure.BicycleLockersEnumMem" xml:space="preserve">
+                <source>Bicycle Lockers</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BicycleStandsBicycleLockersEnumMem" xml:space="preserve">
+                <source>Bicycle Stands Bicycle Lockers</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BicycleStandsEnumMem" xml:space="preserve">
+                <source>Bicycle Stands</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.BusParkCoachParkEnumMem" xml:space="preserve">
+                <source>Bus Park Coach Park</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.EbikeChargingStationEnumMem" xml:space="preserve">
+                <source>Ebike Charging Station</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.ElectricVehicleCarChargingStationEnumMem" xml:space="preserve">
+                <source>Electric Vehicle Car Charging Station</source>
+            </trans-unit>
+            <trans-unit id="content.trafficInfrastructure.ZeroSpecialTrafficInfrastructure" xml:space="preserve">
+                <source>Zero Special Traffic Infrastructure</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
