@@ -75,6 +75,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $photographies = [];
 
+    /**
+     * @var string
+     */
+    protected $petsAllowed = '';
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -147,6 +152,11 @@ class TouristAttraction extends Place implements MapsToType
     public function getPhotographies(): array
     {
         return $this->photographies;
+    }
+
+    public function getPetsAllowed(): string
+    {
+        return $this->petsAllowed;
     }
 
     /**
@@ -283,6 +293,14 @@ class TouristAttraction extends Place implements MapsToType
         $this->photographies = array_map(function (string $photography) {
             return str_replace('thuecat:', '', $photography);
         }, $photography);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setPetsAllowed(string $petsAllowed): void
+    {
+        $this->petsAllowed = $petsAllowed;
     }
 
     public static function getSupportedTypes(): array

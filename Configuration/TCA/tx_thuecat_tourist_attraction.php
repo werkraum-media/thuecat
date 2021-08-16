@@ -157,6 +157,14 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'pets_allowed' => [
+                'label' => $languagePath . '.pets_allowed',
+                'l10n_mode' => 'prefixLangTitle',
+                'config' => [
+                    'type' => 'input',
+                    'readOnly' => true,
+                ],
+            ],
             'opening_hours' => [
                 'label' => $languagePath . '.opening_hours',
                 'l10n_mode' => 'exclude',
@@ -240,7 +248,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, slogan, start_of_construction, sanitation, other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, photography, opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
+                'showitem' => '--palette--;;language, title, description, slogan, start_of_construction, sanitation, other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, photography, pets_allowed, opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];

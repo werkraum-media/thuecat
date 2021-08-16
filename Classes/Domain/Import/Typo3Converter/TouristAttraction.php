@@ -123,6 +123,7 @@ class TouristAttraction implements Converter
                 'payment_accepted' => implode(',', $entity->getPaymentsAccepted()),
                 'digital_offer' => implode(',', $entity->getDigitalOffers()),
                 'photography' => implode(',', $entity->getPhotographies()),
+                'pets_allowed' => $entity->getPetsAllowed(),
             ]
         );
     }

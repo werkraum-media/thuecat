@@ -113,6 +113,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $photography = '';
 
+    /**
+     * @var string
+     */
+    protected $petsAllowed = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -196,5 +201,10 @@ class TouristAttraction extends AbstractEntity
     public function getPhotography(): array
     {
         return GeneralUtility::trimExplode(',', $this->photography, true);
+    }
+
+    public function getPetsAllowed(): string
+    {
+        return $this->petsAllowed;
     }
 }

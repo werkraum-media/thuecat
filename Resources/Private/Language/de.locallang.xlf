@@ -325,6 +325,15 @@
                 <source>ZeroPhotography</source>
                 <target>Fotografieren nicht gestattet</target>
             </trans-unit>
+
+            <trans-unit id="content.petsAllowed.false">
+                <source>No Pets Allowed</source>
+                <target>Keine Tiere erlaubt</target>
+            </trans-unit>
+            <trans-unit id="content.petsAllowed.true">
+                <source>Pets Allowed</source>
+                <target>Tiere erlaubt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -66,4 +66,5 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     payment_accepted text DEFAULT '' NOT NULL,
     digital_offer text DEFAULT '' NOT NULL,
     photography text DEFAULT '' NOT NULL,
+    pets_allowed text DEFAULT '' NOT NULL,
 );
