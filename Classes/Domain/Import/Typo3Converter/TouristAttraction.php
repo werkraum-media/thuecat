@@ -122,6 +122,7 @@ class TouristAttraction implements Converter
                 'traffic_infrastructure' => implode(',', $entity->getTrafficInfrastructures()),
                 'payment_accepted' => implode(',', $entity->getPaymentsAccepted()),
                 'digital_offer' => implode(',', $entity->getDigitalOffers()),
+                'photography' => implode(',', $entity->getPhotographies()),
             ]
         );
     }

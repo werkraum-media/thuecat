@@ -343,6 +343,16 @@
             <trans-unit id="content.digitalOffer.ZeroDigitalOffer">
                 <source>Zero Digital Offer</source>
             </trans-unit>
+
+            <trans-unit id="content.photography.PhotoLicenceFeeRequired">
+                <source>PhotoLicenceFeeRequired</source>
+            </trans-unit>
+            <trans-unit id="content.photography.TakingPicturesPermitted">
+                <source>TakingPicturesPermitted</source>
+            </trans-unit>
+            <trans-unit id="content.photography.ZeroPhotography">
+                <source>ZeroPhotography</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -75,5 +75,9 @@
         <f:for each="{entity.digitalOffer}" as="offer">
             {f:translate(id: 'content.digitalOffer.{offer}', default: offer, extensionName: 'thuecat')}
         </f:for>
+
+        <f:for each="{entity.photography}" as="photography">
+            {f:translate(id: 'content.photography.{photography}', default: photography, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>
