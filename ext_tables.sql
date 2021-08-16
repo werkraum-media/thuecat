@@ -63,4 +63,5 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     museum_service text DEFAULT '' NOT NULL,
     architectural_style text DEFAULT '' NOT NULL,
     traffic_infrastructure text DEFAULT '' NOT NULL,
+    payment_accepted text DEFAULT '' NOT NULL,
 );

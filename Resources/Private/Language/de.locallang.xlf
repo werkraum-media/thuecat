@@ -246,6 +246,47 @@
                 <source>Zero Special Traffic Infrastructure</source>
                 <target>keine Angabe</target>
             </trans-unit>
+
+            <trans-unit id="content.paymentAccepted.AliPay">
+                <source>AliPay</source>
+                <target>AliPay</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.AmericanExpress">
+                <source>American Express</source>
+                <target>American Express</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.ApplePay">
+                <source>ApplePay</source>
+                <target>ApplePay</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.CashPayment">
+                <source>Cash Payment</source>
+                <target>Barzahlung</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.EC">
+                <source>EC</source>
+                <target>EC</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.InstantBankTransfer">
+                <source>Instant Bank Transfer</source>
+                <target>Sofortüberweisung</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.Invoice">
+                <source>Invoice</source>
+                <target>Rechnung</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.MasterCard">
+                <source>MasterCard</source>
+                <target>MasterCard</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.PayPal">
+                <source>PayPal</source>
+                <target>PayPal</target>
+            </trans-unit>
+            <trans-unit id="content.paymentAccepted.Visa">
+                <source>Visa</source>
+                <target>Visa</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

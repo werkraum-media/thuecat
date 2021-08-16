@@ -67,5 +67,9 @@
         <f:for each="{entity.trafficInfrastructures}" as="trafficInfrastructure">
             {f:translate(id: 'content.trafficInfrastructure.{trafficInfrastructure}', default: trafficInfrastructure, extensionName: 'thuecat')}
         </f:for>
+
+        <f:for each="{entity.paymentAccepted}" as="payment">
+            {f:translate(id: 'content.paymentAccepted.{payment}', default: payment, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>

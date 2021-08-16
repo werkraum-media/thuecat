@@ -60,6 +60,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $trafficInfrastructures = [];
 
+    /**
+     * @var string[]
+     */
+    protected $paymentsAccepted = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -108,6 +113,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getTrafficInfrastructures(): array
     {
         return $this->trafficInfrastructures;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPaymentsAccepted(): array
+    {
+        return $this->paymentsAccepted;
     }
 
     /**
@@ -199,6 +212,21 @@ class TouristAttraction extends Place implements MapsToType
         $this->trafficInfrastructures = array_map(function (string $trafficInfrastructure) {
             return str_replace('thuecat:', '', $trafficInfrastructure);
         }, $trafficInfrastructure);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $paymentAccepted
+     */
+    public function setPaymentAccepted($paymentAccepted): void
+    {
+        if (is_string($paymentAccepted)) {
+            $paymentAccepted = [$paymentAccepted];
+        }
+
+        $this->paymentsAccepted = array_map(function (string $paymentAccepted) {
+            return str_replace('thuecat:', '', $paymentAccepted);
+        }, $paymentAccepted);
     }
 
     public static function getSupportedTypes(): array
