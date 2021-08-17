@@ -69,4 +69,5 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     pets_allowed text DEFAULT '' NOT NULL,
     is_accessible_for_free text DEFAULT '' NOT NULL,
     public_access text DEFAULT '' NOT NULL,
+    available_languages text DEFAULT '' NOT NULL,
 );
