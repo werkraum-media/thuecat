@@ -90,6 +90,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $publicAccess = '';
 
+    /**
+     * @var string[]
+     */
+    protected $availableLanguages = [];
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -177,6 +182,14 @@ class TouristAttraction extends Place implements MapsToType
     public function getPublicAccess(): string
     {
         return $this->publicAccess;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableLanguages(): array
+    {
+        return $this->availableLanguages;
     }
 
     /**
@@ -337,6 +350,21 @@ class TouristAttraction extends Place implements MapsToType
     public function setPublicAccess(string $publicAccess): void
     {
         $this->publicAccess = $publicAccess;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $availableLanguage
+     */
+    public function setAvailableLanguage($availableLanguage): void
+    {
+        if (is_string($availableLanguage)) {
+            $availableLanguage = [$availableLanguage];
+        }
+
+        $this->availableLanguages = array_map(function (string $availableLanguage) {
+            return str_replace('thuecat:', '', $availableLanguage);
+        }, $availableLanguage);
     }
 
     public static function getSupportedTypes(): array

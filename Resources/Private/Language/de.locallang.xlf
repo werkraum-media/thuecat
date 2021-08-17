@@ -352,6 +352,19 @@
                 <source>Public Access</source>
                 <target>öffentlich zugänglich</target>
             </trans-unit>
+
+            <trans-unit id="content.availableLanguage.German">
+                <source>German</source>
+                <target>Deutsch</target>
+            </trans-unit>
+            <trans-unit id="content.availableLanguage.English">
+                <source>English</source>
+                <target>Englisch</target>
+            </trans-unit>
+            <trans-unit id="content.availableLanguage.French">
+                <source>French</source>
+                <target>Französisch</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

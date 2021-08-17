@@ -83,5 +83,9 @@
         {f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}
         {f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}
         {f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}
+
+        <f:for each="{entity.availableLanguages}" as="language">
+            {f:translate(id: 'content.availableLanguage.{language}', default: language, extensionName: 'thuecat')}
+        </f:for>
     </f:for>
 </html>

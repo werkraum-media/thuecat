@@ -126,6 +126,7 @@ class TouristAttraction implements Converter
                 'pets_allowed' => $entity->getPetsAllowed(),
                 'is_accessible_for_free' => $entity->getIsAccessibleForFree(),
                 'public_access' => $entity->getPublicAccess(),
+                'available_languages' => implode(',', $entity->getAvailableLanguages()),
             ]
         );
     }

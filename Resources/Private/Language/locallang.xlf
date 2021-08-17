@@ -374,6 +374,16 @@
             <trans-unit id="content.publicAccess.true">
                 <source>Public Access</source>
             </trans-unit>
+
+            <trans-unit id="content.availableLanguage.German">
+                <source>German</source>
+            </trans-unit>
+            <trans-unit id="content.availableLanguage.English">
+                <source>English</source>
+            </trans-unit>
+            <trans-unit id="content.availableLanguage.French">
+                <source>French</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

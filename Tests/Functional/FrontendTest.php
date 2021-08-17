@@ -177,6 +177,10 @@ class FrontendTest extends FunctionalTestCase
 
         self::assertStringNotContainsString('nicht öffentlich zugänglich', (string)$result->getBody());
         self::assertStringNotContainsString('öffentlich zugänglich', (string)$result->getBody());
+
+        self::assertStringNotContainsString('Deutsch', (string)$result->getBody());
+        self::assertStringNotContainsString('Englisch', (string)$result->getBody());
+        self::assertStringNotContainsString('Französisch', (string)$result->getBody());
     }
 
     /**
