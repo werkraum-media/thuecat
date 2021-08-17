@@ -124,6 +124,7 @@ class TouristAttraction implements Converter
                 'digital_offer' => implode(',', $entity->getDigitalOffers()),
                 'photography' => implode(',', $entity->getPhotographies()),
                 'pets_allowed' => $entity->getPetsAllowed(),
+                'is_accessible_for_free' => $entity->getIsAccessibleForFree(),
             ]
         );
     }
