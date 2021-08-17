@@ -85,6 +85,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $isAccessibleForFree = '';
 
+    /**
+     * @var string
+     */
+    protected $publicAccess = '';
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -167,6 +172,11 @@ class TouristAttraction extends Place implements MapsToType
     public function getIsAccessibleForFree(): string
     {
         return $this->isAccessibleForFree;
+    }
+
+    public function getPublicAccess(): string
+    {
+        return $this->publicAccess;
     }
 
     /**
@@ -319,6 +329,14 @@ class TouristAttraction extends Place implements MapsToType
     public function setIsAccessibleForFree(string $isAccessibleForFree): void
     {
         $this->isAccessibleForFree = $isAccessibleForFree;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setPublicAccess(string $publicAccess): void
+    {
+        $this->publicAccess = $publicAccess;
     }
 
     public static function getSupportedTypes(): array

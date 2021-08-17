@@ -126,6 +126,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.is_accessible_for_free" xml:space="preserve">
                 <source>Is Accessible for Free</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.public_access" xml:space="preserve">
+                <source>Public Access</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
