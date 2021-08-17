@@ -128,6 +128,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $publicAccess = '';
 
+    /**
+     * @var string
+     */
+    protected $distanceToPublicTransport = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -226,5 +231,17 @@ class TouristAttraction extends AbstractEntity
     public function getPublicAccess(): string
     {
         return $this->publicAccess;
+    }
+
+    public function getDistanceToPublicTransport(): array
+    {
+        $values = GeneralUtility::trimExplode(':', $this->distanceToPublicTransport, true, 2);
+        if ($values === []) {
+            return [];
+        }
+        return [
+            'value' => $values[0] ?? '',
+            'unit' => $values[1] ?? '',
+        ];
     }
 }

@@ -169,6 +169,8 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Fotografieren nicht gestattet', (string)$result->getBody());
         self::assertStringContainsString('some free text value for photography', (string)$result->getBody());
 
+        self::assertStringContainsString('Entfernung zum ÖPNV: 250 Meter', (string)$result->getBody());
+
         self::assertStringNotContainsString('Keine tiere erlaubt', (string)$result->getBody());
         self::assertStringNotContainsString('Tiere erlaubt', (string)$result->getBody());
 

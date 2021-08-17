@@ -87,5 +87,9 @@
         <f:for each="{entity.availableLanguages}" as="language">
             {f:translate(id: 'content.availableLanguage.{language}', default: language, extensionName: 'thuecat')}
         </f:for>
+
+        <f:if condition="{entity.distanceToPublicTransport}">
+            {f:translate(id: 'content.distanceToPublicTransport', extensionName: 'thuecat')} {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'thuecat')}
+        </f:if>
     </f:for>
 </html>
