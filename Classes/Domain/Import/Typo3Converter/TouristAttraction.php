@@ -127,6 +127,7 @@ class TouristAttraction implements Converter
                 'is_accessible_for_free' => $entity->getIsAccessibleForFree(),
                 'public_access' => $entity->getPublicAccess(),
                 'available_languages' => implode(',', $entity->getAvailableLanguages()),
+                'distance_to_public_transport' => $entity->getDistanceToPublicTransport(),
             ]
         );
     }

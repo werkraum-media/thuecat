@@ -365,6 +365,16 @@
                 <source>French</source>
                 <target>Französisch</target>
             </trans-unit>
+
+            <trans-unit id="content.distanceToPublicTransport">
+                <source>Distance to Public Transport</source>
+                <target>Entfernung zum ÖPNV:</target>
+            </trans-unit>
+
+            <trans-unit id="content.unit.MTR">
+                <source>Meters</source>
+                <target>Meter</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

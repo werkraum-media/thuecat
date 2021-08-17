@@ -132,6 +132,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.available_languages" xml:space="preserve">
                 <source>Available Languages</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_to_public_transport" xml:space="preserve">
+                <source>Distance to Public Transport</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

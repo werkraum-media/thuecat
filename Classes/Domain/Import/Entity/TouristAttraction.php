@@ -95,6 +95,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $availableLanguages = [];
 
+    /**
+     * @var string
+     */
+    protected $distanceToPublicTransport = '';
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -190,6 +195,11 @@ class TouristAttraction extends Place implements MapsToType
     public function getAvailableLanguages(): array
     {
         return $this->availableLanguages;
+    }
+
+    public function getDistanceToPublicTransport(): string
+    {
+        return $this->distanceToPublicTransport;
     }
 
     /**
@@ -365,6 +375,18 @@ class TouristAttraction extends Place implements MapsToType
         $this->availableLanguages = array_map(function (string $availableLanguage) {
             return str_replace('thuecat:', '', $availableLanguage);
         }, $availableLanguage);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setDistanceToPublicTransport(array $distanceToPublicTransport): void
+    {
+        $unit = $distanceToPublicTransport['unitCode'] ?? '';
+        $value = $distanceToPublicTransport['value'] ?? '';
+        if ($unit && $value) {
+            $this->distanceToPublicTransport = $value . ':' . str_replace('thuecat:', '', $unit);
+        }
     }
 
     public static function getSupportedTypes(): array
