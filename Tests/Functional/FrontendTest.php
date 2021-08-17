@@ -174,6 +174,9 @@ class FrontendTest extends FunctionalTestCase
 
         self::assertStringNotContainsString('kein freier Eintritt', (string)$result->getBody());
         self::assertStringNotContainsString('freier Eintritt', (string)$result->getBody());
+
+        self::assertStringNotContainsString('nicht öffentlich zugänglich', (string)$result->getBody());
+        self::assertStringNotContainsString('öffentlich zugänglich', (string)$result->getBody());
     }
 
     /**
@@ -242,6 +245,40 @@ class FrontendTest extends FunctionalTestCase
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('freier Eintritt', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithPublicAccessFalse(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPublicAccess.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(4);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('nicht öffentlich zugänglich', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithPublicAccessTrue(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPublicAccess.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(5);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('öffentlich zugänglich', (string)$result->getBody());
     }
 
     /**

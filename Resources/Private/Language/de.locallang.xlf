@@ -343,6 +343,15 @@
                 <source>is Accessible for Free</source>
                 <target>freier Eintritt</target>
             </trans-unit>
+
+            <trans-unit id="content.publicAccess.false">
+                <source>no Public Access</source>
+                <target>nicht öffentlich zugänglich</target>
+            </trans-unit>
+            <trans-unit id="content.publicAccess.true">
+                <source>Public Access</source>
+                <target>öffentlich zugänglich</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

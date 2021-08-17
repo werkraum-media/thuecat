@@ -123,6 +123,11 @@ class TouristAttraction extends AbstractEntity
      */
     protected $isAccessibleForFree = '';
 
+    /**
+     * @var string
+     */
+    protected $publicAccess = '';
+
     public function getTitle(): string
     {
         return $this->title;
@@ -216,5 +221,10 @@ class TouristAttraction extends AbstractEntity
     public function getIsAccessibleForFree(): string
     {
         return $this->isAccessibleForFree;
+    }
+
+    public function getPublicAccess(): string
+    {
+        return $this->publicAccess;
     }
 }

@@ -125,6 +125,7 @@ class TouristAttraction implements Converter
                 'photography' => implode(',', $entity->getPhotographies()),
                 'pets_allowed' => $entity->getPetsAllowed(),
                 'is_accessible_for_free' => $entity->getIsAccessibleForFree(),
+                'public_access' => $entity->getPublicAccess(),
             ]
         );
     }
