@@ -123,6 +123,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.pets_allowed" xml:space="preserve">
                 <source>Pets Allowed</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.is_accessible_for_free" xml:space="preserve">
+                <source>Is Accessible for Free</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>

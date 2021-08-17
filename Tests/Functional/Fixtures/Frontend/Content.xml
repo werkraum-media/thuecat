@@ -27,16 +27,16 @@
     <pages>
         <uid>4</uid>
         <pid>1</pid>
-        <title>Tourist Attraction pets_allowed = false</title>
-        <slug>/example-attraction-pets-false/</slug>
+        <title>Tourist Attraction false</title>
+        <slug>/example-attraction-false/</slug>
         <sorting>128</sorting>
         <deleted>0</deleted>
     </pages>
     <pages>
         <uid>5</uid>
         <pid>1</pid>
-        <title>Tourist Attraction pets_allowed = true</title>
-        <slug>/example-attraction-pets-true/</slug>
+        <title>Tourist Attraction true</title>
+        <slug>/example-attraction-true/</slug>
         <sorting>128</sorting>
         <deleted>0</deleted>
     </pages>
@@ -60,7 +60,7 @@
         <hidden>0</hidden>
         <sorting>1</sorting>
         <CType>thuecat_tourist_attraction</CType>
-        <header>Show Example Tourist Attraction with pets_allowed = false</header>
+        <header>Show Example Tourist Attraction with false</header>
         <deleted>0</deleted>
         <starttime>0</starttime>
         <endtime>0</endtime>
@@ -74,7 +74,7 @@
         <hidden>0</hidden>
         <sorting>1</sorting>
         <CType>thuecat_tourist_attraction</CType>
-        <header>Show Example Tourist Attraction with pets_allowed = true</header>
+        <header>Show Example Tourist Attraction with true</header>
         <deleted>0</deleted>
         <starttime>0</starttime>
         <endtime>0</endtime>

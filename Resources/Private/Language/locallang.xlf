@@ -360,6 +360,13 @@
             <trans-unit id="content.petsAllowed.true">
                 <source>Pets Allowed</source>
             </trans-unit>
+
+            <trans-unit id="content.isAccessibleForFree.false">
+                <source>is not Accessible for Free</source>
+            </trans-unit>
+            <trans-unit id="content.isAccessibleForFree.true">
+                <source>is Accessible for Free</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

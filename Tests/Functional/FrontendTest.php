@@ -169,7 +169,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Fotografieren nicht gestattet', (string)$result->getBody());
         self::assertStringContainsString('some free text value for photography', (string)$result->getBody());
 
-        self::assertStringContainsString('Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.', (string)$result->getBody());
+        self::assertStringNotContainsString('Keine tiere erlaubt', (string)$result->getBody());
+        self::assertStringNotContainsString('Tiere erlaubt', (string)$result->getBody());
+
+        self::assertStringNotContainsString('kein freier Eintritt', (string)$result->getBody());
+        self::assertStringNotContainsString('freier Eintritt', (string)$result->getBody());
     }
 
     /**
@@ -177,7 +181,7 @@ class FrontendTest extends FunctionalTestCase
      */
     public function touristAttractionWithPetsFalse(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPets.xml');
 
         $request = new InternalRequest();
         $request = $request->withPageId(4);
@@ -194,7 +198,7 @@ class FrontendTest extends FunctionalTestCase
      */
     public function touristAttractionWithPetsTrue(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPets.xml');
 
         $request = new InternalRequest();
         $request = $request->withPageId(5);
@@ -204,6 +208,40 @@ class FrontendTest extends FunctionalTestCase
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('Tiere erlaubt', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithIsAccessibleForFreeFalse(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(4);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('kein freier Eintritt', (string)$result->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function touristAttractionWithIsAccessibleForFreeTrue(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(5);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('freier Eintritt', (string)$result->getBody());
     }
 
     /**

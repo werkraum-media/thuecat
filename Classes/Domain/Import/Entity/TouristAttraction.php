@@ -80,6 +80,11 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $petsAllowed = '';
 
+    /**
+     * @var string
+     */
+    protected $isAccessibleForFree = '';
+
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -157,6 +162,11 @@ class TouristAttraction extends Place implements MapsToType
     public function getPetsAllowed(): string
     {
         return $this->petsAllowed;
+    }
+
+    public function getIsAccessibleForFree(): string
+    {
+        return $this->isAccessibleForFree;
     }
 
     /**
@@ -301,6 +311,14 @@ class TouristAttraction extends Place implements MapsToType
     public function setPetsAllowed(string $petsAllowed): void
     {
         $this->petsAllowed = $petsAllowed;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setIsAccessibleForFree(string $isAccessibleForFree): void
+    {
+        $this->isAccessibleForFree = $isAccessibleForFree;
     }
 
     public static function getSupportedTypes(): array

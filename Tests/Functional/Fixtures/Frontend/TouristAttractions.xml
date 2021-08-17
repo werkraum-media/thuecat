@@ -22,50 +22,6 @@
         <photography>PhotoLicenceFeeRequired,TakingPicturesPermitted,ZeroPhotography,some free text value for photography</photography>
         <pets_allowed>Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.</pets_allowed>
     </tx_thuecat_tourist_attraction>
-    <tx_thuecat_tourist_attraction>
-        <uid>2</uid>
-        <pid>3</pid>
-        <title>Attraktion mit pets_allowed = false</title>
-        <description></description>
-        <town></town>
-        <media></media>
-        <opening_hours></opening_hours>
-        <address></address>
-        <offers></offers>
-        <slogan></slogan>
-        <start_of_construction></start_of_construction>
-        <sanitation></sanitation>
-        <other_service></other_service>
-        <museum_service></museum_service>
-        <architectural_style></architectural_style>
-        <traffic_infrastructure></traffic_infrastructure>
-        <payment_accepted></payment_accepted>
-        <digital_offer></digital_offer>
-        <photography></photography>
-        <pets_allowed>false</pets_allowed>
-    </tx_thuecat_tourist_attraction>
-    <tx_thuecat_tourist_attraction>
-        <uid>3</uid>
-        <pid>3</pid>
-        <title>Attraktion mit pets_allowed = true</title>
-        <description></description>
-        <town></town>
-        <media></media>
-        <opening_hours></opening_hours>
-        <address></address>
-        <offers></offers>
-        <slogan></slogan>
-        <start_of_construction></start_of_construction>
-        <sanitation></sanitation>
-        <other_service></other_service>
-        <museum_service></museum_service>
-        <architectural_style></architectural_style>
-        <traffic_infrastructure></traffic_infrastructure>
-        <payment_accepted></payment_accepted>
-        <digital_offer></digital_offer>
-        <photography></photography>
-        <pets_allowed>true</pets_allowed>
-    </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>
         <pid>3</pid>
