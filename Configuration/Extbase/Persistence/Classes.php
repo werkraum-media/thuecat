@@ -1,5 +1,6 @@
 <?php
 
+
 return [
     \WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation::class => [
         'tableName' => 'tx_thuecat_organisation',
@@ -9,6 +10,9 @@ return [
     ],
     \WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation::class => [
         'tableName' => 'tx_thuecat_tourist_information',
+    ],
+    WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility::class => [
+        'tableName' => 'tx_thuecat_parking_facility',
     ],
     \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration::class => [
         'tableName' => 'tx_thuecat_import_configuration',
@@ -24,5 +28,8 @@ return [
     ],
     \WerkraumMedia\ThueCat\Domain\Model\Frontend\Town::class => [
         'tableName' => 'tx_thuecat_town',
+    ],
+    WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility::class => [
+        'tableName' => 'tx_thuecat_parking_facility',
     ],
 ];

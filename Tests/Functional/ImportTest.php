@@ -148,21 +148,6 @@ class ImportTest extends TestCase
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
-        self::assertCount(
-            1,
-            $this->getAllRecords('tx_thuecat_organisation'),
-            'Did not create expected number of organisations.'
-        );
-        self::assertCount(
-            1,
-            $this->getAllRecords('tx_thuecat_import_log'),
-            'Did not create expected number of import logs.'
-        );
-        self::assertCount(
-            1,
-            $this->getAllRecords('tx_thuecat_import_log_entry'),
-            'Did not create expected number of import log entries.'
-        );
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFreshOrganization.csv');
     }
 
@@ -210,9 +195,6 @@ class ImportTest extends TestCase
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
-        $towns = $this->getAllRecords('tx_thuecat_town');
-        self::assertCount(1, $towns);
-
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTown.csv');
     }
 
@@ -227,9 +209,6 @@ class ImportTest extends TestCase
 
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
-
-        $towns = $this->getAllRecords('tx_thuecat_town');
-        self::assertCount(1, $towns);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTownWithRelation.csv');
     }
@@ -246,10 +225,7 @@ class ImportTest extends TestCase
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
-        $touristAttractions = $this->getAllRecords('tx_thuecat_tourist_attraction');
-        self::assertCount(8, $touristAttractions);
-
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelationsResult.csv');
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelations.csv');
     }
 
     /**
@@ -264,10 +240,7 @@ class ImportTest extends TestCase
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
-        $touristInformation = $this->getAllRecords('tx_thuecat_tourist_information');
-        self::assertCount(1, $touristInformation);
-
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelationResult.csv');
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelation.csv');
     }
 
     /**
@@ -282,10 +255,23 @@ class ImportTest extends TestCase
         $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
         $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
 
-        $touristAttractions = $this->getAllRecords('tx_thuecat_tourist_attraction');
-        self::assertCount(8, $touristAttractions);
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScope.csv');
+    }
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScopeResult.csv');
+    /**
+     * @test
+     * @testdox Referencing the same thing multiple times only adds it once.
+     */
+    public function importWithMultipleReferencesToSameObject(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportWithMultipleReferencesToSameObject.xml');
+
+        $serverRequest = $this->getServerRequest();
+
+        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
+        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportWithMultipleReferencesToSameObject.csv');
     }
 
     /**

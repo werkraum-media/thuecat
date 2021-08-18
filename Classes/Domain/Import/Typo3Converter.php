@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Converter as Typo3ConcreteConverter;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 
 class Typo3Converter implements Converter
 {
@@ -48,6 +48,10 @@ class Typo3Converter implements Converter
         ImportConfiguration $configuration,
         string $language
     ): ?Entity {
+        if (!$configuration instanceof Typo3ImportConfiguration) {
+            throw new \InvalidArgumentException('Only supports TYPO3 import configuration.', 1629710386);
+        }
+
         $concreteConverter = $this->registry->getConverterBasedOnType($mapped);
         if (!$concreteConverter instanceof Typo3ConcreteConverter) {
             throw new \Exception(
@@ -55,6 +59,7 @@ class Typo3Converter implements Converter
                 1628244329
             );
         }
+
         return $concreteConverter->convert(
             $mapped,
             $configuration,

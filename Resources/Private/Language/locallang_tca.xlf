@@ -163,6 +163,58 @@
                 <source>Unkown</source>
             </trans-unit>
 
+            <trans-unit id="tx_thuecat_parking_facility" xml:space="preserve">
+                <source>Parking Facility</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.sanitation" xml:space="preserve">
+                <source>Sanitation</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.other_service" xml:space="preserve">
+                <source>Other Service</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.traffic_infrastructure" xml:space="preserve">
+                <source>Traffic Infrastructure</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.payment_accepted" xml:space="preserve">
+                <source>Payment Accepted</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.distance_to_public_transport" xml:space="preserve">
+                <source>Distance to Public Transport</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.opening_hours" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.media" xml:space="preserve">
+                <source>Media</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.offers" xml:space="preserve">
+                <source>Offers</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.managed_by" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.palette.language" xml:space="preserve">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.tab.relations" xml:space="preserve">
+                <source>Relations</source>
+            </trans-unit>
+
             <trans-unit id="tx_thuecat_import_configuration" xml:space="preserve">
                 <source>Import Configuration</source>
             </trans-unit>

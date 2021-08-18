@@ -28,6 +28,13 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
+/**
+ * Can be used to resolve foreign references.
+ *
+ * The reference will be resolved and returned as entity.
+ * It will not be imported!
+ * Use Importer instead to import foreign references.
+ */
 class ResolveForeignReference
 {
     /**
@@ -77,5 +84,16 @@ class ResolveForeignReference
                 JsonDecode::ACTIVE_LANGUAGE => $language,
             ]
         );
+    }
+
+    /**
+     * @param ForeignReference[] $foreignReferences
+     * @return string[]
+     */
+    public static function convertToRemoteIds(array $foreignReferences): array
+    {
+        return array_map(function (ForeignReference $reference) {
+            return $reference->getId();
+        }, $foreignReferences);
     }
 }

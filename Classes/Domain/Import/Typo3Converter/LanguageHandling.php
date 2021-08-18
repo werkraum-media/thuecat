@@ -25,8 +25,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 class LanguageHandling implements Languages
 {
@@ -43,6 +43,9 @@ class LanguageHandling implements Languages
 
     public function getAvailable(ImportConfiguration $configuration): array
     {
+        if (method_exists($configuration, 'getStoragePid') === false) {
+            throw new \InvalidArgumentException('Unsupported configuration, need to retrieve storage pid.', 1629710300);
+        }
         return array_map(function (SiteLanguage $language) {
             return $language->getTwoLetterIsoCode();
         }, $this->getLanguages($configuration->getStoragePid()));

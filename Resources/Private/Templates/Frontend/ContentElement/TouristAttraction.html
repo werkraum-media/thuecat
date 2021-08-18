@@ -20,13 +20,7 @@
         </f:for>
 
         <f:if condition="{entity.address}">
-            <p>
-                {entity.address.street}<br>
-                {entity.address.zip} {entity.address.city}<br>
-                {entity.address.email}<br>
-                {entity.address.phone}<br>
-                {entity.address.fax}
-            </p>
+            {f:render(section: 'Address', arguments: {address: entity.address})}
         </f:if>
 
         <f:if condition="{entity.offers}">
@@ -91,5 +85,23 @@
         <f:if condition="{entity.distanceToPublicTransport}">
             {f:translate(id: 'content.distanceToPublicTransport', extensionName: 'thuecat')} {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'thuecat')}
         </f:if>
+
+        <f:if condition="{entity.parkingFacilitiesNearBy}">
+            {f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}
+            <f:for each="{entity.parkingFacilitiesNearBy}" as="parkingFacility">
+                {parkingFacility.title}
+                {f:render(section: 'Address', arguments: {address: parkingFacility.address})}
+            </f:for>
+        </f:if>
     </f:for>
+
+    <f:section name="Address">
+        <p>
+            {address.street}<br>
+            {address.zip} {address.city}<br>
+            {address.email}<br>
+            {address.phone}<br>
+            {address.fax}
+        </p>
+    </f:section>
 </html>

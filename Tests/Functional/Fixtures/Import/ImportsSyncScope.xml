@@ -74,18 +74,4 @@
         <tourist_information>0</tourist_information>
         <title>Erfurt</title>
     </tx_thuecat_town>
-
-    <tx_thuecat_organisation>
-        <uid>1</uid>
-        <pid>10</pid>
-        <tstamp>1613400969</tstamp>
-        <crdate>1613400969</crdate>
-        <cruser_id>1</cruser_id>
-        <disable>0</disable>
-        <remote_id>https://thuecat.org/resources/018132452787-ngbe</remote_id>
-        <title>Erfurt Tourismus und Marketing GmbH</title>
-        <description>Die Erfurt Tourismus &amp; Marketing GmbH (ETMG) wurde 1997 als offizielle Organisation zur Tourismusförderung in der Landeshauptstadt Erfurt gegründet und nahm am 01.0  1.1998 die Geschäftstätigkeit auf.</description>
-        <manages_towns>0</manages_towns>
-        <manages_tourist_information>0</manages_tourist_information>
-    </tx_thuecat_organisation>
 </dataset>

@@ -96,6 +96,9 @@
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_tourist_attraction" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_parking_facility" xml:space="preserve">
+                <source>Parking Facility</source>
+            </trans-unit>
 
             <trans-unit id="controller.backend.import.import.success.title" xml:space="preserve">
                 <source>Import finished</source>
@@ -383,6 +386,50 @@
             </trans-unit>
             <trans-unit id="content.availableLanguage.French">
                 <source>French</source>
+            </trans-unit>
+
+            <trans-unit id="content.distanceToPublicTransport">
+                <source>Distance to Public Transport</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacilitiesNearBy">
+                <source>Parking Facilities near by</source>
+            </trans-unit>
+
+            <trans-unit id="content.unit.ANN">
+                <source>Years</source>
+            </trans-unit>
+            <trans-unit id="content.unit.CEL">
+                <source>Celsius</source>
+            </trans-unit>
+            <trans-unit id="content.unit.CMT">
+                <source>Centimeter</source>
+            </trans-unit>
+            <trans-unit id="content.unit.HAR">
+                <source>Hectare</source>
+            </trans-unit>
+            <trans-unit id="content.unit.HUR">
+                <source>Hours</source>
+            </trans-unit>
+            <trans-unit id="content.unit.KTM">
+                <source>Kilometer</source>
+            </trans-unit>
+            <trans-unit id="content.unit.MIN">
+                <source>Minutes</source>
+            </trans-unit>
+            <trans-unit id="content.unit.MTK">
+                <source>Square Metres</source>
+            </trans-unit>
+            <trans-unit id="content.unit.MTR">
+                <source>Meters</source>
+            </trans-unit>
+            <trans-unit id="content.unit.P1">
+                <source>Percent</source>
+            </trans-unit>
+            <trans-unit id="content.unit.PIX">
+                <source>Pixel</source>
+            </trans-unit>
+            <trans-unit id="content.unit.SEC">
+                <source>Seconds</source>
             </trans-unit>
         </body>
     </file>

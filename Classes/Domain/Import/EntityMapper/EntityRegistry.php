@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
+
 /**
  * Registry with supported entities and their types.
  */
@@ -31,28 +34,47 @@ class EntityRegistry
     /**
      * @var array[]
      */
-    private $entityClassNames = [];
+    private $entities = [];
 
     /**
      * @param string[] $supportedTypes
      */
     public function registerEntityClass(
         string $entityClassName,
+        int $priority,
         array $supportedTypes
     ): void {
-        $this->entityClassNames[$entityClassName] = $supportedTypes;
+        foreach ($supportedTypes as $supportedType) {
+            $this->entities[$supportedType][] = [
+                'priority' => $priority,
+                'entityClassName' => $entityClassName,
+            ];
+        }
     }
 
     public function getEntityByTypes(array $types): string
     {
+        $matches = [];
+
         foreach ($types as $type) {
-            foreach ($this->entityClassNames as $className => $supportedTypes) {
-                if (in_array($type, $supportedTypes)) {
-                    return $className;
-                }
+            if (isset($this->entities[$type]) === false) {
+                continue;
+            }
+
+            foreach ($this->entities[$type] as $entityConfiguration) {
+                $matches[] = $entityConfiguration;
             }
         }
 
-        return '';
+        if ($matches === []) {
+            return '';
+        }
+
+        $matches = ArrayUtility::sortArraysByKey(
+            $matches,
+            'priority'
+        );
+
+        return end($matches)['entityClassName'];
     }
 }

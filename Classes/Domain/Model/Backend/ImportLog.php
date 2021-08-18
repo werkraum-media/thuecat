@@ -121,4 +121,22 @@ class ImportLog extends Typo3AbstractEntity
 
         return $summary;
     }
+
+    public function handledRemoteId(string $remoteId): bool
+    {
+        foreach ($this->logEntries as $entry) {
+            if ($entry->getRemoteId() === $remoteId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function merge(self $importLog): void
+    {
+        foreach ($importLog->getEntries() as $entry) {
+            $this->addEntry($entry);
+        }
+    }
 }

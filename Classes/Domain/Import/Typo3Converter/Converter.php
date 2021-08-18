@@ -29,8 +29,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 interface Converter
 {
-    public function canConvert(MapsToType $entity): bool;
-
     public function convert(
         MapsToType $entity,
         ImportConfiguration $configuration,

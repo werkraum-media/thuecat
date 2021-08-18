@@ -38,4 +38,9 @@ interface MapsToType
      * @return string[]
      */
     public static function getSupportedTypes(): array;
+
+    /**
+     * Priority if multiple entities match
+     */
+    public static function getPriority(): int;
 }

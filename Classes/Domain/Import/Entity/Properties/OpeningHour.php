@@ -26,14 +26,14 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 class OpeningHour
 {
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|null
      */
-    protected $validFrom;
+    protected $validFrom = null;
 
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|null
      */
-    protected $validThrough;
+    protected $validThrough = null;
 
     /**
      * @var \DateTimeImmutable
@@ -50,12 +50,12 @@ class OpeningHour
      */
     protected $daysOfWeek = [];
 
-    public function getValidFrom(): \DateTimeImmutable
+    public function getValidFrom(): ?\DateTimeImmutable
     {
         return $this->validFrom;
     }
 
-    public function getValidThrough(): \DateTimeImmutable
+    public function getValidThrough(): ?\DateTimeImmutable
     {
         return $this->validThrough;
     }

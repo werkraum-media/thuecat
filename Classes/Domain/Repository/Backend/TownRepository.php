@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 
 class TownRepository extends Repository
@@ -48,9 +48,7 @@ class TownRepository extends Repository
             return null;
         }
 
-        $remoteIds = array_map(function (ForeignReference $reference) {
-            return $reference->getId();
-        }, $entity->getContainedInPlaces());
+        $remoteIds = ResolveForeignReference::convertToRemoteIds($entity->getContainedInPlaces());
 
         if ($remoteIds === []) {
             return null;

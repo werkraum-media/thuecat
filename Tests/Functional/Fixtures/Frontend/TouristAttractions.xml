@@ -23,6 +23,7 @@
         <pets_allowed>Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.</pets_allowed>
         <available_languages>German,English,French</available_languages>
         <distance_to_public_transport>250:MTR</distance_to_public_transport>
+        <parking_facility_near_by>1,2</parking_facility_near_by>
     </tx_thuecat_tourist_attraction>
     <tx_thuecat_town>
         <uid>1</uid>
@@ -30,5 +31,17 @@
         <title>Beispielstadt</title>
         <description>Die Beschreibung der Stadt</description>
     </tx_thuecat_town>
+    <tx_thuecat_parking_facility>
+        <uid>1</uid>
+        <pid>3</pid>
+        <title>Parkhaus Domplatz</title>
+        <address>{"street":"Bechtheimer Str. 1","zip":"99084","city":"Erfurt","email":"info@stadtwerke-erfurt.de","phone":"+49 361 5640","fax":"","geo":{"latitude":50.977648905044,"longitude":11.022127985954299}}</address>
+    </tx_thuecat_parking_facility>
+    <tx_thuecat_parking_facility>
+        <uid>2</uid>
+        <pid>3</pid>
+        <title>Q-Park Anger 1 Parkhaus</title>
+        <address>{"street":"Anger 1","zip":"99084","city":"Erfurt","email":"servicecenter@q-park.de","phone":"+49 218 18190290","fax":"","geo":{"latitude":50.977999330565794,"longitude":11.037503264052475}}</address>
+    </tx_thuecat_parking_facility>
 </dataset>
 

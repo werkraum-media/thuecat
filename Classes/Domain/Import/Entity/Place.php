@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Geo;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
@@ -49,6 +51,36 @@ class Place extends Base
      */
     protected $openingHours = [];
 
+    /**
+     * @var ForeignReference[]
+     */
+    protected $parkingFacilitiesNearBy = [];
+
+    /**
+     * @var string[]
+     */
+    protected $sanitations = [];
+
+    /**
+     * @var string[]
+     */
+    protected $otherServices = [];
+
+    /**
+     * @var string[]
+     */
+    protected $trafficInfrastructures = [];
+
+    /**
+     * @var string[]
+     */
+    protected $paymentsAccepted = [];
+
+    /**
+     * @var string
+     */
+    protected $distanceToPublicTransport = '';
+
     public function getAddress(): ?Address
     {
         return $this->address;
@@ -57,6 +89,51 @@ class Place extends Base
     public function getGeo(): ?Geo
     {
         return $this->geo;
+    }
+
+    /**
+     * @return ForeignReference[]
+     */
+    public function getParkingFacilitiesNearBy(): array
+    {
+        return $this->parkingFacilitiesNearBy;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSanitations(): array
+    {
+        return $this->sanitations;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOtherServices(): array
+    {
+        return $this->otherServices;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getTrafficInfrastructures(): array
+    {
+        return $this->trafficInfrastructures;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPaymentsAccepted(): array
+    {
+        return $this->paymentsAccepted;
+    }
+
+    public function getDistanceToPublicTransport(): string
+    {
+        return $this->distanceToPublicTransport;
     }
 
     /**
@@ -97,5 +174,93 @@ class Place extends Base
      */
     public function removeOpeningHoursSpecification(OpeningHour $openingHour): void
     {
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @return ForeignReference[]
+     */
+    public function getParkingFacilityNearBy(): array
+    {
+        return $this->parkingFacilitiesNearBy;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function addParkingFacilityNearBy(ForeignReference $parkingFacilityNearBy): void
+    {
+        $this->parkingFacilitiesNearBy[] = $parkingFacilityNearBy;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function removeParkingFacilityNearBy(ForeignReference $parkingFacilityNearBy): void
+    {
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $sanitation
+     */
+    public function setSanitation($sanitation): void
+    {
+        if (is_string($sanitation)) {
+            $sanitation = [$sanitation];
+        }
+
+        $this->sanitations = PropertyValues::removePrefixFromEntries($sanitation);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $otherService
+     */
+    public function setOtherService($otherService): void
+    {
+        if (is_string($otherService)) {
+            $otherService = [$otherService];
+        }
+
+        $this->otherServices = PropertyValues::removePrefixFromEntries($otherService);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $trafficInfrastructure
+     */
+    public function setTrafficInfrastructure($trafficInfrastructure): void
+    {
+        if (is_string($trafficInfrastructure)) {
+            $trafficInfrastructure = [$trafficInfrastructure];
+        }
+
+        $this->trafficInfrastructures = PropertyValues::removePrefixFromEntries($trafficInfrastructure);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|array $paymentAccepted
+     */
+    public function setPaymentAccepted($paymentAccepted): void
+    {
+        if (is_string($paymentAccepted)) {
+            $paymentAccepted = [$paymentAccepted];
+        }
+
+        $this->paymentsAccepted = PropertyValues::removePrefixFromEntries($paymentAccepted);
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setDistanceToPublicTransport(array $distanceToPublicTransport): void
+    {
+        $unit = $distanceToPublicTransport['unitCode'] ?? '';
+        $value = $distanceToPublicTransport['value'] ?? '';
+        if ($unit && $value) {
+            $this->distanceToPublicTransport = $value . ':' . PropertyValues::removePrefixFromEntry($unit);
+        }
     }
 }

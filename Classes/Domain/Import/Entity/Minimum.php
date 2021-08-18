@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-class Minimum
+abstract class Minimum
 {
     /**
      * URL to the original source at ThüCAT.
@@ -112,5 +112,10 @@ class Minimum
     public function setUrl(string $url): void
     {
         $this->url = $url;
+    }
+
+    public static function getPriority(): int
+    {
+        return 10;
     }
 }

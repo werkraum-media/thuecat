@@ -50,6 +50,7 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     remote_id varchar(255) DEFAULT '' NOT NULL,
     managed_by int(11) unsigned DEFAULT '0' NOT NULL,
     town int(11) unsigned DEFAULT '0' NOT NULL,
+    parking_facility_near_by varchar(255) DEFAULT '' NOT NULL,
     title varchar(255) DEFAULT '' NOT NULL,
     description text DEFAULT '' NOT NULL,
     opening_hours text DEFAULT '' NOT NULL,
@@ -70,5 +71,22 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     is_accessible_for_free text DEFAULT '' NOT NULL,
     public_access text DEFAULT '' NOT NULL,
     available_languages text DEFAULT '' NOT NULL,
+    distance_to_public_transport text DEFAULT '' NOT NULL,
+);
+
+CREATE TABLE tx_thuecat_parking_facility (
+    remote_id varchar(255) DEFAULT '' NOT NULL,
+    managed_by int(11) unsigned DEFAULT '0' NOT NULL,
+    town int(11) unsigned DEFAULT '0' NOT NULL,
+    title varchar(255) DEFAULT '' NOT NULL,
+    description text DEFAULT '' NOT NULL,
+    opening_hours text DEFAULT '' NOT NULL,
+    address text DEFAULT '' NOT NULL,
+    media text DEFAULT '' NOT NULL,
+    offers text DEFAULT '' NOT NULL,
+    sanitation text DEFAULT '' NOT NULL,
+    other_service text DEFAULT '' NOT NULL,
+    traffic_infrastructure text DEFAULT '' NOT NULL,
+    payment_accepted text DEFAULT '' NOT NULL,
     distance_to_public_transport text DEFAULT '' NOT NULL,
 );
