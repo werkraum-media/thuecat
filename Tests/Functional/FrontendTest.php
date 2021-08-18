@@ -183,6 +183,18 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringNotContainsString('Deutsch', (string)$result->getBody());
         self::assertStringNotContainsString('Englisch', (string)$result->getBody());
         self::assertStringNotContainsString('Französisch', (string)$result->getBody());
+
+        self::assertStringContainsString('Parkhäuser in der Nähe', (string)$result->getBody());
+        self::assertStringContainsString('Parkhaus Domplatz', (string)$result->getBody());
+        self::assertStringContainsString('Bechtheimer Str. 1', (string)$result->getBody());
+        self::assertStringContainsString('99084 Erfurt', (string)$result->getBody());
+        self::assertStringContainsString('info@stadtwerke-erfurt.de', (string)$result->getBody());
+        self::assertStringContainsString('+49 361 5640', (string)$result->getBody());
+        self::assertStringContainsString('Q-Park Anger 1 Parkhaus', (string)$result->getBody());
+        self::assertStringContainsString('Anger 1', (string)$result->getBody());
+        self::assertStringContainsString('99084 Erfurt', (string)$result->getBody());
+        self::assertStringContainsString('servicecenter@q-park.de', (string)$result->getBody());
+        self::assertStringContainsString('+49 218 18190290', (string)$result->getBody());
     }
 
     /**

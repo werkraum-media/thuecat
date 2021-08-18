@@ -26,8 +26,11 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration as ImportConfigurationInterface;
+use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
-class ImportConfiguration extends AbstractEntity
+class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
     /**
      * @var string
@@ -48,6 +51,16 @@ class ImportConfiguration extends AbstractEntity
      * @var \DateTimeImmutable|null
      */
     protected $tstamp = null;
+
+    /**
+     * @var string[]|null
+     */
+    protected $urls = null;
+
+    /**
+     * @var string[]
+     */
+    protected $allowedTypes = [];
 
     public function getTitle(): string
     {
@@ -89,6 +102,10 @@ class ImportConfiguration extends AbstractEntity
 
     public function getUrls(): array
     {
+        if ($this->urls !== null) {
+            return $this->urls;
+        }
+
         if ($this->configuration === '') {
             return [];
         }
@@ -100,6 +117,11 @@ class ImportConfiguration extends AbstractEntity
         $entries = array_filter($entries);
 
         return array_values($entries);
+    }
+
+    public function getAllowedTypes(): array
+    {
+        return $this->allowedTypes;
     }
 
     public function getSyncScopeId(): string
@@ -138,5 +160,20 @@ class ImportConfiguration extends AbstractEntity
     private function getConfigurationAsArray(): array
     {
         return GeneralUtility::xml2array($this->configuration);
+    }
+
+    /**
+     * @param ForeignReference[] $foreignReferences
+     */
+    public static function createFromBaseWithForeignReferences(
+        self $base,
+        array $foreignReferences,
+        array $allowedTypes = []
+    ): self {
+        $configuration = clone $base;
+        $configuration->urls = ResolveForeignReference::convertToRemoteIds($foreignReferences);
+        $configuration->type = 'static';
+        $configuration->allowedTypes = $allowedTypes;
+        return $configuration;
     }
 }

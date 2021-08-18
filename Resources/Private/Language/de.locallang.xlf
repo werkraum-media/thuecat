@@ -15,6 +15,38 @@
                 <source>per person</source>
                 <target>pro Person</target>
             </trans-unit>
+            <trans-unit id="content.price.rule.PerBike" xml:space="preserve">
+                <source>per bike</source>
+                <target>pro Krad</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerBus" xml:space="preserve">
+                <source>per bus</source>
+                <target>pro Bus</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerCar" xml:space="preserve">
+                <source>per car</source>
+                <target>pro PKW</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerCarOrBike" xml:space="preserve">
+                <source>per car or bike</source>
+                <target>pro PKW/Krad</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerHour" xml:space="preserve">
+                <source>per hour</source>
+                <target>pro Stunde</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerPersonAndNight" xml:space="preserve">
+                <source>per person and night</source>
+                <target>pro Person und Nacht</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerPiece" xml:space="preserve">
+                <source>per piece</source>
+                <target>pro Stück</target>
+            </trans-unit>
+            <trans-unit id="content.price.rule.PerUnitAndNight" xml:space="preserve">
+                <source>per unit and night</source>
+                <target>pro Einheit und Nacht</target>
+            </trans-unit>
             <trans-unit id="content.sanitation.Toilets" xml:space="preserve">
                 <source>Toilets</source>
                 <target>Toilette</target>
@@ -370,10 +402,58 @@
                 <source>Distance to Public Transport</source>
                 <target>Entfernung zum ÖPNV:</target>
             </trans-unit>
+            <trans-unit id="content.parkingFacilitiesNearBy">
+                <source>Parking Facilities near by</source>
+                <target>Parkhäuser in der Nähe</target>
+            </trans-unit>
 
+            <trans-unit id="content.unit.ANN">
+                <source>Years</source>
+                <target>Jahre</target>
+            </trans-unit>
+            <trans-unit id="content.unit.CEL">
+                <source>Celsius</source>
+                <target>Grad Celsius</target>
+            </trans-unit>
+            <trans-unit id="content.unit.CMT">
+                <source>Centimeter</source>
+                <target>Zentimeter</target>
+            </trans-unit>
+            <trans-unit id="content.unit.HAR">
+                <source>Hectare</source>
+                <target>Hektar</target>
+            </trans-unit>
+            <trans-unit id="content.unit.HUR">
+                <source>Hours</source>
+                <target>Stunden</target>
+            </trans-unit>
+            <trans-unit id="content.unit.KTM">
+                <source>Kilometer</source>
+                <target>Kilometer</target>
+            </trans-unit>
+            <trans-unit id="content.unit.MIN">
+                <source>Minutes</source>
+                <target>Minuten</target>
+            </trans-unit>
+            <trans-unit id="content.unit.MTK">
+                <source>Square Metres</source>
+                <target>Quadratmeter</target>
+            </trans-unit>
             <trans-unit id="content.unit.MTR">
                 <source>Meters</source>
                 <target>Meter</target>
+            </trans-unit>
+            <trans-unit id="content.unit.P1">
+                <source>Percent</source>
+                <target>Prozent</target>
+            </trans-unit>
+            <trans-unit id="content.unit.PIX">
+                <source>Pixel</source>
+                <target>Pixel</target>
+            </trans-unit>
+            <trans-unit id="content.unit.SEC">
+                <source>Seconds</source>
+                <target>Sekunden</target>
             </trans-unit>
         </body>
     </file>

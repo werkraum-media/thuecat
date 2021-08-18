@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
@@ -34,7 +33,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
@@ -76,19 +75,14 @@ class Importer
     private $saveData;
 
     /**
-     * @var ImportLog
-     */
-    private $importLog;
-
-    /**
      * @var ImportLogRepository
      */
     private $importLogRepository;
 
     /**
-     * @var ImportConfiguration
+     * @var Import
      */
-    private $configuration;
+    private $import;
 
     public function __construct(
         UrlProviderRegistry $urls,
@@ -108,29 +102,43 @@ class Importer
         $this->importLogRepository = $importLogRepository;
         $this->fetchData = $fetchData;
         $this->saveData = $saveData;
+        $this->import = new Import();
     }
 
     public function importConfiguration(ImportConfiguration $configuration): ImportLog
     {
-        $this->configuration = $configuration;
+        if (!$configuration instanceof Typo3ImportConfiguration) {
+            throw new \InvalidArgumentException('Currently only can process ImportConfiguration of TYPO3.', 1629708772);
+        }
 
-        $this->importLog = GeneralUtility::makeInstance(ImportLog::class, $this->configuration);
+        $this->import->start($configuration);
+        $this->import();
+        $this->import->end();
 
-        $urlProvider = $this->urls->getProviderForConfiguration($this->configuration);
+        if ($this->import->done()) {
+            $this->importLogRepository->addLog($this->import->getLog());
+        }
+
+        return $this->import->getLog();
+    }
+
+    private function import(): void
+    {
+        $urlProvider = $this->urls->getProviderForConfiguration($this->import->getConfiguration());
         if (!$urlProvider instanceof UrlProvider) {
-            return $this->importLog;
+            throw new \Exception('No URL Provider available for given configuration.', 1629296635);
         }
 
         foreach ($urlProvider->getUrls() as $url) {
             $this->importResourceByUrl($url);
         }
-
-        $this->importLogRepository->addLog($this->importLog);
-        return clone $this->importLog;
     }
 
     private function importResourceByUrl(string $url): void
     {
+        if ($this->import->handledRemoteId($url)) {
+            return;
+        }
         $content = $this->fetchData->jsonLDFromUrl($url);
 
         if ($content === []) {
@@ -144,6 +152,10 @@ class Importer
 
     private function importJsonEntity(array $jsonEntity): void
     {
+        if ($this->entityAllowed($jsonEntity) === false) {
+            return;
+        }
+
         $targetEntity = $this->entityRegistry->getEntityByTypes($jsonEntity['@type']);
         if ($targetEntity === '') {
             return;
@@ -151,7 +163,7 @@ class Importer
 
         $entities = new EntityCollection();
 
-        foreach ($this->languages->getAvailable($this->configuration) as $language) {
+        foreach ($this->languages->getAvailable($this->import->getConfiguration()) as $language) {
             $mappedEntity = $this->entityMapper->mapDataToEntity(
                 $jsonEntity,
                 $targetEntity,
@@ -164,7 +176,7 @@ class Importer
             }
             $convertedEntity = $this->converter->convert(
                 $mappedEntity,
-                $this->configuration,
+                $this->import->getConfiguration(),
                 $language
             );
 
@@ -176,7 +188,22 @@ class Importer
 
         $this->saveData->import(
             $entities,
-            $this->importLog
+            $this->import->getLog()
         );
+    }
+
+    private function entityAllowed(array $jsonEntity): bool
+    {
+        if ($this->import->getConfiguration()->getAllowedTypes() === []) {
+            return true;
+        }
+
+        foreach ($jsonEntity['@type'] as $type) {
+            if (in_array($type, $this->import->getConfiguration()->getAllowedTypes()) === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

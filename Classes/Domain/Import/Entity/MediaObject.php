@@ -105,4 +105,9 @@ class MediaObject extends Minimum implements MapsToType
             'schema:MediaObject',
         ];
     }
+
+    public static function getPriority(): int
+    {
+        return 10;
+    }
 }

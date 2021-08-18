@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
 
 class PriceSpecification extends Minimum
@@ -76,9 +77,7 @@ class PriceSpecification extends Minimum
      */
     public function setPriceCurrency(string $currency): void
     {
-        // TODO: Move to serializer process while decoding json?!
-        // Check for @type and @value, if type is currency …
-        $this->currency = str_replace('thuecat:', '', $currency);
+        $this->currency = PropertyValues::removePrefixFromEntry($currency);
     }
 
     /**
@@ -86,8 +85,6 @@ class PriceSpecification extends Minimum
      */
     public function setCalculationRule(string $calculationRule): void
     {
-        // TODO: Move to serializer process while decoding json?!
-        // Check for @type and @value, if type is currency …
-        $this->calculationRule = str_replace('thuecat:', '', $calculationRule);
+        $this->calculationRule = PropertyValues::removePrefixFromEntry($calculationRule);
     }
 }

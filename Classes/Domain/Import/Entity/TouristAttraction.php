@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
+
 class TouristAttraction extends Place implements MapsToType
 {
     /**
@@ -38,32 +40,12 @@ class TouristAttraction extends Place implements MapsToType
     /**
      * @var string[]
      */
-    protected $sanitations = [];
-
-    /**
-     * @var string[]
-     */
-    protected $otherServices = [];
-
-    /**
-     * @var string[]
-     */
     protected $museumServices = [];
 
     /**
      * @var string[]
      */
     protected $architecturalStyles = [];
-
-    /**
-     * @var string[]
-     */
-    protected $trafficInfrastructures = [];
-
-    /**
-     * @var string[]
-     */
-    protected $paymentsAccepted = [];
 
     /**
      * @var string[]
@@ -95,11 +77,6 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $availableLanguages = [];
 
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
-
     public function getSlogan(): string
     {
         return $this->slogan;
@@ -108,22 +85,6 @@ class TouristAttraction extends Place implements MapsToType
     public function getStartOfConstruction(): string
     {
         return $this->startOfConstruction;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSanitations(): array
-    {
-        return $this->sanitations;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getOtherServices(): array
-    {
-        return $this->otherServices;
     }
 
     /**
@@ -140,22 +101,6 @@ class TouristAttraction extends Place implements MapsToType
     public function getArchitecturalStyles(): array
     {
         return $this->architecturalStyles;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getTrafficInfrastructures(): array
-    {
-        return $this->trafficInfrastructures;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getPaymentsAccepted(): array
-    {
-        return $this->paymentsAccepted;
     }
 
     /**
@@ -197,17 +142,12 @@ class TouristAttraction extends Place implements MapsToType
         return $this->availableLanguages;
     }
 
-    public function getDistanceToPublicTransport(): string
-    {
-        return $this->distanceToPublicTransport;
-    }
-
     /**
      * @internal for mapping via Symfony component.
      */
     public function setSlogan(string $slogan): void
     {
-        $this->slogan = str_replace('thuecat:', '', $slogan);
+        $this->slogan = PropertyValues::removePrefixFromEntry($slogan);
     }
 
     /**
@@ -220,36 +160,6 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
-     * @param string|array $sanitation
-     */
-    public function setSanitation($sanitation): void
-    {
-        if (is_string($sanitation)) {
-            $sanitation = [$sanitation];
-        }
-
-        $this->sanitations = array_map(function (string $sanitation) {
-            return str_replace('thuecat:', '', $sanitation);
-        }, $sanitation);
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     * @param string|array $otherService
-     */
-    public function setOtherService($otherService): void
-    {
-        if (is_string($otherService)) {
-            $otherService = [$otherService];
-        }
-
-        $this->otherServices = array_map(function (string $otherService) {
-            return str_replace('thuecat:', '', $otherService);
-        }, $otherService);
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
      * @param string|array $museumService
      */
     public function setMuseumService($museumService): void
@@ -258,9 +168,7 @@ class TouristAttraction extends Place implements MapsToType
             $museumService = [$museumService];
         }
 
-        $this->museumServices = array_map(function (string $museumService) {
-            return str_replace('thuecat:', '', $museumService);
-        }, $museumService);
+        $this->museumServices = PropertyValues::removePrefixFromEntries($museumService);
     }
 
     /**
@@ -273,39 +181,7 @@ class TouristAttraction extends Place implements MapsToType
             $architecturalStyle = [$architecturalStyle];
         }
 
-        $this->architecturalStyles = array_map(function (string $architecturalStyle) {
-            return str_replace('thuecat:', '', $architecturalStyle);
-        }, $architecturalStyle);
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     * @param string|array $trafficInfrastructure
-     */
-    public function setTrafficInfrastructure($trafficInfrastructure): void
-    {
-        if (is_string($trafficInfrastructure)) {
-            $trafficInfrastructure = [$trafficInfrastructure];
-        }
-
-        $this->trafficInfrastructures = array_map(function (string $trafficInfrastructure) {
-            return str_replace('thuecat:', '', $trafficInfrastructure);
-        }, $trafficInfrastructure);
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     * @param string|array $paymentAccepted
-     */
-    public function setPaymentAccepted($paymentAccepted): void
-    {
-        if (is_string($paymentAccepted)) {
-            $paymentAccepted = [$paymentAccepted];
-        }
-
-        $this->paymentsAccepted = array_map(function (string $paymentAccepted) {
-            return str_replace('thuecat:', '', $paymentAccepted);
-        }, $paymentAccepted);
+        $this->architecturalStyles = PropertyValues::removePrefixFromEntries($architecturalStyle);
     }
 
     /**
@@ -318,9 +194,7 @@ class TouristAttraction extends Place implements MapsToType
             $digitalOffer = [$digitalOffer];
         }
 
-        $this->digitalOffers = array_map(function (string $digitalOffer) {
-            return str_replace('thuecat:', '', $digitalOffer);
-        }, $digitalOffer);
+        $this->digitalOffers = PropertyValues::removePrefixFromEntries($digitalOffer);
     }
 
     /**
@@ -333,9 +207,7 @@ class TouristAttraction extends Place implements MapsToType
             $photography = [$photography];
         }
 
-        $this->photographies = array_map(function (string $photography) {
-            return str_replace('thuecat:', '', $photography);
-        }, $photography);
+        $this->photographies = PropertyValues::removePrefixFromEntries($photography);
     }
 
     /**
@@ -372,21 +244,7 @@ class TouristAttraction extends Place implements MapsToType
             $availableLanguage = [$availableLanguage];
         }
 
-        $this->availableLanguages = array_map(function (string $availableLanguage) {
-            return str_replace('thuecat:', '', $availableLanguage);
-        }, $availableLanguage);
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setDistanceToPublicTransport(array $distanceToPublicTransport): void
-    {
-        $unit = $distanceToPublicTransport['unitCode'] ?? '';
-        $value = $distanceToPublicTransport['value'] ?? '';
-        if ($unit && $value) {
-            $this->distanceToPublicTransport = $value . ':' . str_replace('thuecat:', '', $unit);
-        }
+        $this->availableLanguages = PropertyValues::removePrefixFromEntries($availableLanguage);
     }
 
     public static function getSupportedTypes(): array

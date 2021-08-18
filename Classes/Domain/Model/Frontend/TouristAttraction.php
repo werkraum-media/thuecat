@@ -24,29 +24,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-class TouristAttraction extends AbstractEntity
+class TouristAttraction extends Place
 {
     /**
      * @var string
      */
-    protected $title = '';
-
-    /**
-     * @var string
-     */
-    protected $description = '';
-
-    /**
-     * @var string
-     */
     protected $slogan = '';
-
-    /**
-     * @var OpeningHours|null
-     */
-    protected $openingHours = null;
 
     /**
      * @var Offers|null
@@ -54,34 +38,14 @@ class TouristAttraction extends AbstractEntity
     protected $offers = null;
 
     /**
-     * @var Address|null
-     */
-    protected $address = null;
-
-    /**
      * @var Town|null
      */
     protected $town = null;
 
     /**
-     * @var Media|null
-     */
-    protected $media = null;
-
-    /**
      * @var string
      */
     protected $startOfConstruction = '';
-
-    /**
-     * @var string
-     */
-    protected $sanitation = '';
-
-    /**
-     * @var string
-     */
-    protected $otherService = '';
 
     /**
      * @var string
@@ -92,16 +56,6 @@ class TouristAttraction extends AbstractEntity
      * @var string
      */
     protected $architecturalStyle = '';
-
-    /**
-     * @var string
-     */
-    protected $trafficInfrastructure = '';
-
-    /**
-     * @var string
-     */
-    protected $paymentAccepted = '';
 
     /**
      * @var string
@@ -128,29 +82,9 @@ class TouristAttraction extends AbstractEntity
      */
     protected $publicAccess = '';
 
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
-
     public function getSlogan(): string
     {
         return $this->slogan;
-    }
-
-    public function getOpeningHours(): ?OpeningHours
-    {
-        return $this->openingHours;
     }
 
     public function getOffers(): ?Offers
@@ -158,34 +92,14 @@ class TouristAttraction extends AbstractEntity
         return $this->offers;
     }
 
-    public function getAddress(): ?Address
-    {
-        return $this->address;
-    }
-
     public function getTown(): ?Town
     {
         return $this->town;
     }
 
-    public function getMedia(): ?Media
-    {
-        return $this->media;
-    }
-
     public function getStartOfConstruction(): string
     {
         return $this->startOfConstruction;
-    }
-
-    public function getSanitation(): array
-    {
-        return GeneralUtility::trimExplode(',', $this->sanitation, true);
-    }
-
-    public function getOtherServices(): array
-    {
-        return GeneralUtility::trimExplode(',', $this->otherService, true);
     }
 
     public function getMuseumServices(): array
@@ -196,16 +110,6 @@ class TouristAttraction extends AbstractEntity
     public function getArchitecturalStyles(): array
     {
         return GeneralUtility::trimExplode(',', $this->architecturalStyle, true);
-    }
-
-    public function getTrafficInfrastructures(): array
-    {
-        return GeneralUtility::trimExplode(',', $this->trafficInfrastructure, true);
-    }
-
-    public function getPaymentAccepted(): array
-    {
-        return GeneralUtility::trimExplode(',', $this->paymentAccepted, true);
     }
 
     public function getDigitalOffer(): array
@@ -231,17 +135,5 @@ class TouristAttraction extends AbstractEntity
     public function getPublicAccess(): string
     {
         return $this->publicAccess;
-    }
-
-    public function getDistanceToPublicTransport(): array
-    {
-        $values = GeneralUtility::trimExplode(':', $this->distanceToPublicTransport, true, 2);
-        if ($values === []) {
-            return [];
-        }
-        return [
-            'value' => $values[0] ?? '',
-            'unit' => $values[1] ?? '',
-        ];
     }
 }

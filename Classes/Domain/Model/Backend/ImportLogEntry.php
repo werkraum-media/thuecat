@@ -29,6 +29,11 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 class ImportLogEntry extends Typo3AbstractEntity
 {
     /**
+     * @var string
+     */
+    protected $remoteId = '';
+
+    /**
      * @var bool
      */
     protected $insertion = false;
@@ -62,11 +67,17 @@ class ImportLogEntry extends Typo3AbstractEntity
         Entity $entity,
         array $dataHandlerErrorLog
     ) {
+        $this->remoteId = $entity->getRemoteId();
         $this->insertion = $entity->wasCreated();
         $this->recordUid = $entity->getTypo3Uid();
         $this->recordPid = $entity->getTypo3StoragePid();
         $this->tableName = $entity->getTypo3DatabaseTableName();
         $this->errorsAsArray = $dataHandlerErrorLog;
+    }
+
+    public function getRemoteId(): string
+    {
+        return $this->remoteId;
     }
 
     public function wasInsertion(): bool

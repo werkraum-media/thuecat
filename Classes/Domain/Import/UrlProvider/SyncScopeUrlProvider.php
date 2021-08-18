@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 class SyncScopeUrlProvider implements UrlProvider
 {
@@ -53,6 +53,9 @@ class SyncScopeUrlProvider implements UrlProvider
     public function createWithConfiguration(
         ImportConfiguration $configuration
     ): UrlProvider {
+        if (method_exists($configuration, 'getSyncScopeId') === false) {
+            throw new \InvalidArgumentException('Received incompatible import configuration.', 1629709276);
+        }
         $instance = clone $this;
         $instance->syncScopeId = $configuration->getSyncScopeId();
 

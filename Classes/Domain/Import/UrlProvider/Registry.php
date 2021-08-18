@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 
 /**
  * Central registry of all available url provider.

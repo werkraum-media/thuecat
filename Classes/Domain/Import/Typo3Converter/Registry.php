@@ -27,6 +27,10 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 
 /**
  * Central registry of all available converters.
+ *
+ * Kept for now even if only a single exists.
+ * Necessary to prevent cycle dependency between Importer and Typo3Converter.
+ * Check if we still can reduce used code.
  */
 class Registry
 {
@@ -42,12 +46,6 @@ class Registry
 
     public function getConverterBasedOnType(MapsToType $entity): ?Converter
     {
-        foreach ($this->converters as $converter) {
-            if ($converter->canConvert($entity)) {
-                return $converter;
-            }
-        }
-
-        return null;
+        return $this->converters[0];
     }
 }

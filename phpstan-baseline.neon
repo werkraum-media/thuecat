@@ -1,7 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string\\|null, 'getSupportedTypes'\\) given\\.$#"
+			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string, 'getPriority'\\) given\\.$#"
+			count: 1
+			path: Classes/DependencyInjection/EntityPass.php
+
+		-
+			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string, 'getSupportedTypes'\\) given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
 
@@ -14,6 +19,16 @@ parameters:
 			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLog\\:\\:\\$logEntries \\(iterable\\<WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\>&TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\) does not accept TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\.$#"
 			count: 1
 			path: Classes/Domain/Model/Backend/ImportLog.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Place\\:\\:\\$parkingFacilityNearBy \\(iterable\\<WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility\\>&TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\) does not accept TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Place.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\ParkingFacilityRepository\\:\\:findByEntity\\(\\) should return TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\|null but returns array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
+			count: 1
+			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
 
 		-
 			message: "#^Cannot call method getFirst\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
@@ -34,4 +49,9 @@ parameters:
 			message: "#^Cannot call method getLanguageOverlay\\(\\) on string\\|TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
 			count: 1
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
+
+		-
+			message: "#^Cannot call method format\\(\\) on DateTimeImmutable\\|null\\.$#"
+			count: 4
+			path: Tests/Functional/Import/EntityMapping/PlaceInfosTest.php
 

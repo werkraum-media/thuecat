@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 interface Converter
 {

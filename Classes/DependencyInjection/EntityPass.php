@@ -36,14 +36,18 @@ class EntityPass implements CompilerPassInterface
         $registry = $container->findDefinition(EntityRegistry::class);
         foreach ($container->findTaggedServiceIds(self::TAG) as $id => $tags) {
             $definition = $container->findDefinition($id);
-            if (!$definition->isAutoconfigured() || $definition->isAbstract()) {
+            if (
+                !$definition->isAutoconfigured()
+                || $definition->isAbstract()
+                || $definition->getClass() === null
+            ) {
                 continue;
             }
-
             $registry->addMethodCall(
                 'registerEntityClass',
                 [
                     $definition->getClass(),
+                    call_user_func([$definition->getClass(), 'getPriority']),
                     call_user_func([$definition->getClass(), 'getSupportedTypes']),
                 ]
             );
