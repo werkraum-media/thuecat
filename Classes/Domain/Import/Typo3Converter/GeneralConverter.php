@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MediaObject;
@@ -177,6 +178,8 @@ class GeneralConverter implements Converter
             'is_accessible_for_free' => method_exists($entity, 'getIsAccessibleForFree') ? $entity->getIsAccessibleForFree() : '',
             'public_access' => method_exists($entity, 'getPublicAccess') ? $entity->getPublicAccess() : '',
             'available_languages' => method_exists($entity, 'getAvailableLanguages') ? implode(',', $entity->getAvailableLanguages()) : '',
+
+            'accessibility_specification' => $this->getAccessibilitySpecification($entity, $language),
         ];
     }
 
@@ -238,6 +241,50 @@ class GeneralConverter implements Converter
         return $this->getUids(
             $this->parkingFacilityRepository->findByEntity($entity)
         );
+    }
+
+    private function getAccessibilitySpecification(
+        object $entity,
+        string $language
+    ): string {
+        if (
+            method_exists($entity, 'getAccessibilitySpecification') === false
+            || $entity->getAccessibilitySpecification() === null
+        ) {
+            return '{}';
+        }
+
+        $access = $this->resolveForeignReference->resolve(
+            $entity->getAccessibilitySpecification(),
+            $language
+        );
+        if (!$access instanceof AccessibilitySpecification) {
+            return '{}';
+        }
+
+        $cert = $access->getAccessibilityCertification();
+
+        $result = json_encode(array_filter([
+            'accessibilityCertificationStatus' => $cert ? $cert->getAccessibilityCertificationStatus() : '',
+            'certificationAccessibilityDeaf' => $cert ? $cert->getCertificationAccessibilityDeaf() : '',
+            'certificationAccessibilityMental' => $cert ? $cert->getCertificationAccessibilityMental() : '',
+            'certificationAccessibilityPartiallyDeaf' => $cert ? $cert->getCertificationAccessibilityPartiallyDeaf() : '',
+            'certificationAccessibilityPartiallyVisual' => $cert ? $cert->getCertificationAccessibilityPartiallyVisual() : '',
+            'certificationAccessibilityVisual' => $cert ? $cert->getCertificationAccessibilityVisual() : '',
+            'certificationAccessibilityWalking' => $cert ? $cert->getCertificationAccessibilityWalking() : '',
+            'certificationAccessibilityWheelchair' => $cert ? $cert->getCertificationAccessibilityWheelchair() : '',
+            'accessibilitySearchCriteria' => $access->getAccessibilitySearchCriteria(),
+            'shortDescriptionAccessibilityAllGenerations' => $access->getShortDescriptionAccessibilityAllGenerations(),
+            'shortDescriptionAccessibilityAllergic' => $access->getShortDescriptionAccessibilityAllergic(),
+            'shortDescriptionAccessibilityDeaf' => $access->getShortDescriptionAccessibilityDeaf(),
+            'shortDescriptionAccessibilityMental' => $access->getShortDescriptionAccessibilityMental(),
+            'shortDescriptionAccessibilityVisual' => $access->getShortDescriptionAccessibilityVisual(),
+            'shortDescriptionAccessibilityWalking' => $access->getShortDescriptionAccessibilityWalking(),
+        ]));
+        if ($result === false || $result === '[]') {
+            return '{}';
+        }
+        return $result;
     }
 
     private function getMedia(

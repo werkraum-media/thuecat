@@ -68,6 +68,11 @@ abstract class Place extends Base
      */
     protected $distanceToPublicTransport = '';
 
+    /**
+     * @var AccessiblitySpecification|null
+     */
+    protected $accessibilitySpecification = null;
+
     public function initializeObject(): void
     {
         $this->parkingFacilityNearBy = new ObjectStorage();
@@ -118,5 +123,10 @@ abstract class Place extends Base
             'value' => $values[0] ?? '',
             'unit' => $values[1] ?? '',
         ];
+    }
+
+    public function getAccessibilitySpecification(): ?AccessiblitySpecification
+    {
+        return $this->accessibilitySpecification;
     }
 }

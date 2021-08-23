@@ -93,6 +93,10 @@
                 {f:render(section: 'Address', arguments: {address: parkingFacility.address})}
             </f:for>
         </f:if>
+
+        <f:if condition="{entity.accessibilitySpecification}">
+            {f:render(section: 'AccessiblitySpecification', arguments: {specification: entity.accessibilitySpecification})}
+        </f:if>
     </f:for>
 
     <f:section name="Address">
@@ -103,5 +107,66 @@
             {address.phone}<br>
             {address.fax}
         </p>
+    </f:section>
+
+    <f:section name="AccessiblitySpecification">
+        {f:translate(id: 'content.accessibilitySpecification.certificationStatus.{specification.certificationStatus}', default: specification.certificationStatus, extensionName: 'Thuecat')}
+
+        <f:if condition="{specification.certificationDeaf}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationDeaf}', default: specification.certificationDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.deaf', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationMental}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationMental}', default: specification.certificationMental, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.mental', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationPartiallyDeaf}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyDeaf}', default: specification.certificationPartiallyDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyDeaf', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationPartiallyVisual}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyVisual}', default: specification.certificationPartiallyVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyVisual', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationVisual}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationVisual}', default: specification.certificationVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.visual', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationWalking}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWalking}', default: specification.certificationWalking, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.walking', extensionName: 'Thuecat')}
+        </f:if>
+        <f:if condition="{specification.certificationWheelchair}">
+            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWheelchair}', default: specification.certificationWheelchair, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.wheelchair', extensionName: 'Thuecat')}
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionAllGenerations}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllGenerations', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionAllGenerations -> f:format.nl2br()}</p>
+        </f:if>
+        <f:if condition="{specification.shortDescriptionAllergic}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllergic', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionAllergic -> f:format.nl2br()}</p>
+        </f:if>
+        <f:if condition="{specification.shortDescriptionDeaf}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionDeaf', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionDeaf -> f:format.nl2br()}</p>
+        </f:if>
+        <f:if condition="{specification.shortDescriptionMental}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionMental', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionMental -> f:format.nl2br()}</p>
+        </f:if>
+        <f:if condition="{specification.shortDescriptionVisual}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionVisual', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionVisual -> f:format.nl2br()}</p>
+        </f:if>
+        <f:if condition="{specification.shortDescriptionWalking}">
+            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionWalking', extensionName: 'Thuecat')}
+            <p>{specification.shortDescriptionWalking -> f:format.nl2br()}</p>
+        </f:if>
+
+        <f:if condition="{specification.searchCriteria}">
+            <ul>
+                <f:for each="{specification.searchCriteria}" key="id" as="criterias">
+                    <f:for each="{criterias}" as="criteria">
+                        <li>{f:translate(id: 'content.accessibilitySpecification.searchCriteria.criteria.{criteria}', default: criteria, extensionName: 'Thuecat')}</li>
+                    </f:for>
+                </f:for>
+            </ul>
+        </f:if>
     </f:section>
 </html>

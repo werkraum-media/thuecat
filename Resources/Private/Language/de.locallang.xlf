@@ -455,6 +455,219 @@
                 <source>Seconds</source>
                 <target>Sekunden</target>
             </trans-unit>
+
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.AccessibilityChecked">
+                <source>Accessibility Checked</source>
+                <target>barrierefrei</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.CertificationAccessibilityNoCertification">
+                <source>Certification Accessibility No Certification</source>
+                <target>nicht zertifiziert</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.CertificationInformationAboutAccessibility">
+                <source>Certification Information About Accessibility</source>
+                <target>teilweise barrierefrei</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.deaf">
+                <source>for deaf</source>
+                <target>für taube Menschen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.mental">
+                <source>for mental</source>
+                <target>für Menschen mit kognitiven Beeinträchtigungen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.partiallyDeaf">
+                <source>for partially deaf</source>
+                <target>für Menschen mit Hörbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.partiallyVisual">
+                <source>for partially visual</source>
+                <target>für Menschen mit Sehbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.visual">
+                <source>for visual</source>
+                <target>für blinde Menschen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.walking">
+                <source>for walking</source>
+                <target>für Menschen mit Gehbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.wheelchair">
+                <source>for wheelchair</source>
+                <target>für Rollstuhlfahrer</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.None">
+                <source>not certified</source>
+                <target>nicht zertifiziert</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.Full">
+                <source>accessible</source>
+                <target>barrierefrei</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.Info">
+                <source>partially accessible</source>
+                <target>teilweise barrierefrei</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionAllGenerations">
+                <source>Short Description all Generations</source>
+                <target>Kurzbeschreibung Alle Generationen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionAllergic">
+                <source>Short Description all allergic</source>
+                <target>Kurzbeschreibung Allergiker</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionDeaf">
+                <source>Short Description all deaf</source>
+                <target>Kurzbeschreibung Hörbehinderte / Gehörlos</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionMental">
+                <source>Short Description all mental</source>
+                <target>Kurzbeschreibung Kognitive Beeinträchtigungen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionVisual">
+                <source>Short Description all visual</source>
+                <target>Kurzbeschreibung Sehbehinderung / Blinde</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionWalking">
+                <source>Short Description all walking</source>
+                <target>Kurzbeschreibung Gehbehindert/Rollstuhl</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AudioInductionLoop">
+                <source>Audio Induction Loop</source>
+                <target>Induktive Höranlage/ -schleife</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.FlashingSignalCallWaitingDoor">
+                <source>Flashing Signal Call Waiting Door</source>
+                <target>Blinksignal bei Anklopfen an die Zimmertür</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersDeafPeople">
+                <source>Special Offers Deaf People</source>
+                <target>Spezielle Angebote für gehörlose Menschen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersHearingImpairment">
+                <source>Special Offers Hearing Impairment</source>
+                <target>Spezielle Angbote für Menschen mit Hörbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.VisualConfirmationDistressCallElevator">
+                <source>Visual Confirmation Distress Call Elevator</source>
+                <target>Optische Bestätigung des Notrufs im Aufzug</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ColoredOrPictorialGuidanceSystem">
+                <source>Colored Or Pictorial Guidance System</source>
+                <target>Farbliches oder bildhaftes Leitsystem</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationInEasyLanguage">
+                <source>Information In Easy Language</source>
+                <target>Informationen in leichter Sprache (Führung, Begleitheft o.ä.)</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationWithPictogramsOrPictures">
+                <source>Information With Pictograms Or Pictures</source>
+                <target>Informationen mit Piktogrammen oder Bildern</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AssistanceDogsWelcome">
+                <source>Assistance Dogs Welcome</source>
+                <target>Assistenzhunde willkommen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.GuidanceSystemWithFloorIndicators">
+                <source>Guidance System With Floor Indicators</source>
+                <target>Durchgehendes Leitsystem mit Bodenindikatoren</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationBrailleOrPrismaticFont">
+                <source>Information Braille Or Prismatic Font</source>
+                <target>Informationen in Braille- oder Prismenschrift</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.OffersInPictoralLanguage">
+                <source>Offers In Pictoral Language</source>
+                <target>Angebote in bildhafter Sprache (Führung, Audioguide o.ä.)</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersBlindPeople">
+                <source>Special Offers Blind People</source>
+                <target>Spezielle Angebote für blinde Menschen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersVisualImpairment">
+                <source>Special Offers Visual Impairment</source>
+                <target>Spezielle Angbote für Menschen mit Sehbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.TactileOffers">
+                <source>Tactile Offers</source>
+                <target>Taktile Angebote (Tastmodell, Lageplan o.ä.)</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.VisuallyContrastingStepEdges">
+                <source>Visually ContrastingStep Edges</source>
+                <target>Visuell kontrastierende Stufenkanten</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AllRoomsStepFreeAccess">
+                <source>All Rooms Step Free Access</source>
+                <target>Alle nutzbaren Räume und Einrichtungen stufenlos bzw. über Aufzug erreichbar</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EightyCMWidthPassageWays">
+                <source>Eighty CM Width Passage Ways</source>
+                <target>80 cm Mindestbreite aller Durchgänge / Türen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EntryAidSwimmingPool">
+                <source>Entry Aid Swimming Pool</source>
+                <target>Einstiegshilfe Schwimmbecken</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.GrabRailInShower">
+                <source>Grab Rail In Shower</source>
+                <target>Haltegriff in der Dusche</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.HandrailsOnBothSidesOfAllStaircases">
+                <source>Handrails On Both Sides Of All Staircases</source>
+                <target>Beidseitige Handläufe an allen Treppen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.HingedGrabRailToilet">
+                <source>Hinged Grab Rail Toilet</source>
+                <target>Klappbarer Haltegriff am WC</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.LateralAccessibleToilet">
+                <source>Lateral Accessible Toilet</source>
+                <target>WC seitlich anfahrbar</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.MinumumManoeuvringSpaceShower">
+                <source>Minumum Manoeuvring Space Shower</source>
+                <target>Bewegungsfläche der Dusche min. 1m x 1m</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NinetyCMWidthPassageWays">
+                <source>Ninety CM Width Passage Ways</source>
+                <target>90 cm Mindestbreite aller Durchgänge / Türen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NursingBed">
+                <source>Nursing Bed</source>
+                <target>Pflegebett</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ParkingPeopleWithDisabilities">
+                <source>Parking People With Disabilities</source>
+                <target>Parkplatz für Menschen mit Behinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SeventyCMWidthPassageWays">
+                <source>Seventy CM Width Passage Ways</source>
+                <target>70 cm Mindestbreite aller Durchgänge / Türen</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ShowerSeat">
+                <source>Shower Seat</source>
+                <target>Duschstuhl oder sitz</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWalkingImpairment">
+                <source>Special Offers Walking Impairment</source>
+                <target>Spezielle Angbote für Menschen mit Gehbehinderung</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWheelchairUsers">
+                <source>Special Offers Wheelchair Users</source>
+                <target>Spezielle Angebote für Rollstuhlfahrer</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeAccess">
+                <source>Step Free Access</source>
+                <target>Stufenloser Zugang zum Gebäude/ Objekt/ Gelände</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeShower">
+                <source>Step Free Shower</source>
+                <target>Stufenlose Dusche</target>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ToiletsPeopleWithDisabilities">
+                <source>Toilets People With Disabilities</source>
+                <target>WC für Menschen mit Behinderung</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

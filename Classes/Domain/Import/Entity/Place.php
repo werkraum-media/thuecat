@@ -81,6 +81,11 @@ class Place extends Base
      */
     protected $distanceToPublicTransport = '';
 
+    /**
+     * @var ForeignReference
+     */
+    protected $accessibilitySpecification;
+
     public function getAddress(): ?Address
     {
         return $this->address;
@@ -134,6 +139,11 @@ class Place extends Base
     public function getDistanceToPublicTransport(): string
     {
         return $this->distanceToPublicTransport;
+    }
+
+    public function getAccessibilitySpecification(): ?ForeignReference
+    {
+        return $this->accessibilitySpecification;
     }
 
     /**
@@ -262,5 +272,13 @@ class Place extends Base
         if ($unit && $value) {
             $this->distanceToPublicTransport = $value . ':' . PropertyValues::removePrefixFromEntry($unit);
         }
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setAccessibilitySpecification(ForeignReference $accessibilitySpecification): void
+    {
+        $this->accessibilitySpecification = $accessibilitySpecification;
     }
 }

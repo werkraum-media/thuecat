@@ -431,6 +431,166 @@
             <trans-unit id="content.unit.SEC">
                 <source>Seconds</source>
             </trans-unit>
+
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.AccessibilityChecked">
+                <source>Accessibility Checked</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.CertificationAccessibilityNoCertification">
+                <source>Certification Accessibility No Certification</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certificationStatus.CertificationInformationAboutAccessibility">
+                <source>Certification Information About Accessibility</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.deaf">
+                <source>for deaf</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.mental">
+                <source>for mental</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.partiallyDeaf">
+                <source>for partially deaf</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.partiallyVisual">
+                <source>for partially visual</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.visual">
+                <source>for visual</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.walking">
+                <source>for walking</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.wheelchair">
+                <source>for wheelchair</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.None">
+                <source>not certified</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.Full">
+                <source>accessible</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.certification.Info">
+                <source>partially accessible</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionAllGenerations">
+                <source>Short Description all Generations</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionAllergic">
+                <source>Short Description all allergic</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionDeaf">
+                <source>Short Description all deaf</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionMental">
+                <source>Short Description all mental</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionVisual">
+                <source>Short Description all visual</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.shortDescriptionWalking">
+                <source>Short Description all walking</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AudioInductionLoop">
+                <source>Audio Induction Loop</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.FlashingSignalCallWaitingDoor">
+                <source>Flashing Signal Call Waiting Door</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersDeafPeople">
+                <source>Special Offers Deaf People</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersHearingImpairment">
+                <source>Special Offers Hearing Impairment</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.VisualConfirmationDistressCallElevator">
+                <source>Visual Confirmation Distress Call Elevator</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ColoredOrPictorialGuidanceSystem">
+                <source>Colored Or Pictorial Guidance System</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationInEasyLanguage">
+                <source>Information In Easy Language</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationWithPictogramsOrPictures">
+                <source>Information With Pictograms Or Pictures</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AssistanceDogsWelcome">
+                <source>Assistance Dogs Welcome</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.GuidanceSystemWithFloorIndicators">
+                <source>Guidance System With Floor Indicators</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationBrailleOrPrismaticFont">
+                <source>Information Braille Or Prismatic Font</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.OffersInPictoralLanguage">
+                <source>Offers In Pictoral Language</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersBlindPeople">
+                <source>Special Offers Blind People</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersVisualImpairment">
+                <source>Special Offers Visual Impairment</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.TactileOffers">
+                <source>Tactile Offers</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.VisuallyContrastingStepEdges">
+                <source>Visually ContrastingStep Edges</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AllRoomsStepFreeAccess">
+                <source>All Rooms Step Free Access</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EightyCMWidthPassageWays">
+                <source>Eighty CM Width Passage Ways</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EntryAidSwimmingPool">
+                <source>Entry Aid Swimming Pool</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.GrabRailInShower">
+                <source>Grab Rail In Shower</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.HandrailsOnBothSidesOfAllStaircases">
+                <source>Handrails On Both Sides Of All Staircases</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.HingedGrabRailToilet">
+                <source>Hinged Grab Rail Toilet</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.LateralAccessibleToilet">
+                <source>Lateral Accessible Toilet</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.MinumumManoeuvringSpaceShower">
+                <source>Minumum Manoeuvring Space Shower</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NinetyCMWidthPassageWays">
+                <source>Ninety CM Width Passage Ways</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NursingBed">
+                <source>Nursing Bed</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ParkingPeopleWithDisabilities">
+                <source>Parking People With Disabilities</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SeventyCMWidthPassageWays">
+                <source>Seventy CM Width Passage Ways</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ShowerSeat">
+                <source>Shower Seat</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWalkingImpairment">
+                <source>Special Offers Walking Impairment</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWheelchairUsers">
+                <source>Special Offers Wheelchair Users</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeAccess">
+                <source>Step Free Access</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeShower">
+                <source>Step Free Shower</source>
+            </trans-unit>
+            <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ToiletsPeopleWithDisabilities">
+                <source>Toilets People With Disabilities</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

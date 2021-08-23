@@ -36,6 +36,16 @@ class JsonDecode extends SymfonyJsonDecode
 {
     public const ACTIVE_LANGUAGE = 'active_language';
 
+    /**
+     * @var array[]
+     */
+    private $rulesToKeepTypeInfo = [
+        [
+            'type' => 'beginsWith',
+            'comparisonValue' => 'thuecat:facilityAccessibility',
+        ],
+    ];
+
     public function decode(
         string $data,
         string $format,
@@ -155,9 +165,21 @@ class JsonDecode extends SymfonyJsonDecode
             return $value;
         }
 
+        if (array_key_exists('@language', $value)) {
+            return $value;
+        }
+
+        $type = $value['@type'] ?? null;
+        if (is_string($type)) {
+            foreach ($this->rulesToKeepTypeInfo as $rule) {
+                if ($this->doesRuleMatch($rule, $type)) {
+                    return $value;
+                }
+            }
+        }
+
         $newValue = $value['@value'] ?? null;
-        $language = $value['@language'] ?? null;
-        if (is_string($newValue) && $language === null) {
+        if (is_string($newValue)) {
             return $newValue;
         }
 
@@ -211,5 +233,14 @@ class JsonDecode extends SymfonyJsonDecode
         }
 
         return $key;
+    }
+
+    private function doesRuleMatch(array $rule, string $type): bool
+    {
+        if ($rule['type'] === 'beginsWith') {
+            return StringUtility::beginsWith($type, $rule['comparisonValue']);
+        }
+
+        return false;
     }
 }
