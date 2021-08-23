@@ -89,4 +89,37 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('8,00 EUR', (string)$result->getBody());
         self::assertStringContainsString('pro Person', (string)$result->getBody());
     }
+
+    /**
+     * @test
+     */
+    public function pricesAreSorted(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithPrices.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('Attraktion mit Preisen', (string)$result->getBody());
+
+        self::assertLessThan(
+            mb_strpos((string)$result->getBody(), 'Familienkarte A'),
+            mb_strpos((string)$result->getBody(), 'Erwachsene'),
+            '"Familienkarte A" is rendered before "Erwachsene"'
+        );
+        self::assertLessThan(
+            mb_strpos((string)$result->getBody(), 'Familienkarte B'),
+            mb_strpos((string)$result->getBody(), 'Familienkarte A'),
+            '"Familienkarte B" is rendered before "Familienkarte A"'
+        );
+        self::assertLessThan(
+            mb_strpos((string)$result->getBody(), 'Schulklassen'),
+            mb_strpos((string)$result->getBody(), 'Familienkarte B'),
+            '"Schulklassen" is rendered before "Familienkarte B"'
+        );
+    }
 }

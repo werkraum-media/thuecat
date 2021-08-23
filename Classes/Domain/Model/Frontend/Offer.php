@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+
 class Offer
 {
     /**
@@ -56,7 +58,8 @@ class Offer
     public static function createFromArray(array $rawData)
     {
         $prices = [];
-        foreach ($rawData['prices'] as $price) {
+
+        foreach (ArrayUtility::sortArraysByKey($rawData['prices'], 'title') as $price) {
             $prices[] = Price::createFromArray($price);
         }
 
