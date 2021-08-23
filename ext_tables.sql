@@ -72,6 +72,7 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     public_access text DEFAULT '' NOT NULL,
     available_languages text DEFAULT '' NOT NULL,
     distance_to_public_transport text DEFAULT '' NOT NULL,
+    accessibility_specification text DEFAULT '' NOT NULL,
 );
 
 CREATE TABLE tx_thuecat_parking_facility (

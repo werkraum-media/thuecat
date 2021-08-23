@@ -159,6 +159,32 @@ class JsonDecodingTest extends TestCase
     /**
      * @test
      */
+    public function decodesPropertyWithMultipleLanguagesNotMatchingRequestOne(): void
+    {
+        $subject = new JsonDecode();
+        $result = $subject->decode((string) json_encode([
+            'schema:description' => [
+                0 => [
+                    '@language' => 'en',
+                    '@value' => 'English plain',
+                ],
+                1 => [
+                    '@language' => 'de',
+                    '@value' => 'Deutsch plain',
+                ],
+            ],
+        ]), 'json', [
+            JsonDecode::ACTIVE_LANGUAGE => 'fr',
+        ]);
+
+        self::assertSame([
+            'description' => '',
+        ], $result);
+    }
+
+    /**
+     * @test
+     */
     public function decodesSingleValueNotRelatedToLanguage(): void
     {
         $subject = new JsonDecode();
@@ -341,6 +367,46 @@ class JsonDecodingTest extends TestCase
                     'validFrom' => '2021-11-01',
                     'validThrough' => '2022-04-30',
                 ],
+            ],
+        ], $result);
+    }
+
+    /**
+     * @test
+     */
+    public function keepsArrayOfValueAndTypeIfConfigured(): void
+    {
+        $subject = new JsonDecode();
+        $result = $subject->decode((string) json_encode([
+            'thuecat:AccessibilitySearchCriteria' => [
+                0 => [
+                    '@type' => 'thuecat:facilityAccessibilityWalking',
+                    '@value' => 'thuecat:AllRoomsStepFreeAccess',
+                ],
+                1 => [
+                    '@type' => 'thuecat:facilityAccessibilityVisual',
+                    '@value' => 'thuecat:AssistanceDogsWelcome',
+                ],
+                2 => [
+                    '@type' => 'something else',
+                    '@value' => 'something else',
+                ],
+            ],
+        ]), 'json', [
+            JsonDecode::ACTIVE_LANGUAGE => 'de',
+        ]);
+
+        self::assertSame([
+            'AccessibilitySearchCriteria' => [
+                0 => [
+                    'type' => 'thuecat:facilityAccessibilityWalking',
+                    'value' => 'thuecat:AllRoomsStepFreeAccess',
+                ],
+                1 => [
+                    'type' => 'thuecat:facilityAccessibilityVisual',
+                    'value' => 'thuecat:AssistanceDogsWelcome',
+                ],
+                2 => 'something else',
             ],
         ], $result);
     }

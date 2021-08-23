@@ -180,7 +180,6 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringNotContainsString('nicht öffentlich zugänglich', (string)$result->getBody());
         self::assertStringNotContainsString('öffentlich zugänglich', (string)$result->getBody());
 
-        self::assertStringNotContainsString('Deutsch', (string)$result->getBody());
         self::assertStringNotContainsString('Englisch', (string)$result->getBody());
         self::assertStringNotContainsString('Französisch', (string)$result->getBody());
 
@@ -195,6 +194,63 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('99084 Erfurt', (string)$result->getBody());
         self::assertStringContainsString('servicecenter@q-park.de', (string)$result->getBody());
         self::assertStringContainsString('+49 218 18190290', (string)$result->getBody());
+
+        self::assertStringContainsString('barrierefrei', (string)$result->getBody());
+        self::assertStringContainsString('barrierefrei für taube Menschen', (string)$result->getBody());
+        self::assertStringContainsString('nicht zertifiziert für Menschen mit kognitiven Beeinträchtigungen', (string)$result->getBody());
+        self::assertStringContainsString('nicht zertifiziert für Menschen mit Hörbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('teilweise barrierefrei für Menschen mit Sehbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('nicht zertifiziert für blinde Menschen', (string)$result->getBody());
+        self::assertStringContainsString('teilweise barrierefrei für Menschen mit Gehbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('teilweise barrierefrei für Rollstuhlfahrer', (string)$result->getBody());
+
+        self::assertStringContainsString('Kurzbeschreibung Alle Generationen', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityAllGenerations', (string)$result->getBody());
+        self::assertStringContainsString('Kurzbeschreibung Allergiker', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityAllergic', (string)$result->getBody());
+        self::assertStringContainsString('Kurzbeschreibung Hörbehinderte / Gehörlos', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityDeaf', (string)$result->getBody());
+        self::assertStringContainsString('Kurzbeschreibung Kognitive Beeinträchtigungen', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityMental', (string)$result->getBody());
+        self::assertStringContainsString('Kurzbeschreibung Sehbehinderung / Blinde', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityVisual', (string)$result->getBody());
+        self::assertStringContainsString('Kurzbeschreibung Gehbehindert/Rollstuhl', (string)$result->getBody());
+        self::assertStringContainsString('Deutsche Beschreibung von shortDescriptionAccessibilityWalking', (string)$result->getBody());
+
+        self::assertStringContainsString('Induktive Höranlage/ -schleife', (string)$result->getBody());
+        self::assertStringContainsString('Blinksignal bei Anklopfen an die Zimmertür', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angebote für gehörlose Menschen', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angbote für Menschen mit Hörbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('Optische Bestätigung des Notrufs im Aufzug', (string)$result->getBody());
+        self::assertStringContainsString('Farbliches oder bildhaftes Leitsystem', (string)$result->getBody());
+        self::assertStringContainsString('Informationen in leichter Sprache (Führung, Begleitheft o.ä.)', (string)$result->getBody());
+        self::assertStringContainsString('Informationen mit Piktogrammen oder Bildern', (string)$result->getBody());
+        self::assertStringContainsString('Assistenzhunde willkommen', (string)$result->getBody());
+        self::assertStringContainsString('Durchgehendes Leitsystem mit Bodenindikatoren', (string)$result->getBody());
+        self::assertStringContainsString('Informationen in Braille- oder Prismenschrift', (string)$result->getBody());
+        self::assertStringContainsString('Angebote in bildhafter Sprache (Führung, Audioguide o.ä.)', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angebote für blinde Menschen', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angbote für Menschen mit Sehbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('Taktile Angebote (Tastmodell, Lageplan o.ä.)', (string)$result->getBody());
+        self::assertStringContainsString('Visuell kontrastierende Stufenkanten', (string)$result->getBody());
+        self::assertStringContainsString('Alle nutzbaren Räume und Einrichtungen stufenlos bzw. über Aufzug erreichbar', (string)$result->getBody());
+        self::assertStringContainsString('80 cm Mindestbreite aller Durchgänge / Türen', (string)$result->getBody());
+        self::assertStringContainsString('Einstiegshilfe Schwimmbecken', (string)$result->getBody());
+        self::assertStringContainsString('Haltegriff in der Dusche', (string)$result->getBody());
+        self::assertStringContainsString('Beidseitige Handläufe an allen Treppen', (string)$result->getBody());
+        self::assertStringContainsString('Klappbarer Haltegriff am WC', (string)$result->getBody());
+        self::assertStringContainsString('WC seitlich anfahrbar', (string)$result->getBody());
+        self::assertStringContainsString('Bewegungsfläche der Dusche min. 1m x 1m', (string)$result->getBody());
+        self::assertStringContainsString('90 cm Mindestbreite aller Durchgänge / Türen', (string)$result->getBody());
+        self::assertStringContainsString('Pflegebett', (string)$result->getBody());
+        self::assertStringContainsString('Parkplatz für Menschen mit Behinderung', (string)$result->getBody());
+        self::assertStringContainsString('70 cm Mindestbreite aller Durchgänge / Türen', (string)$result->getBody());
+        self::assertStringContainsString('Duschstuhl oder sitz', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angbote für Menschen mit Gehbehinderung', (string)$result->getBody());
+        self::assertStringContainsString('Spezielle Angebote für Rollstuhlfahrer', (string)$result->getBody());
+        self::assertStringContainsString('Stufenloser Zugang zum Gebäude/ Objekt/ Gelände', (string)$result->getBody());
+        self::assertStringContainsString('Stufenlose Dusche', (string)$result->getBody());
+        self::assertStringContainsString('WC für Menschen mit Behinderung', (string)$result->getBody());
     }
 
     /**
