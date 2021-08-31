@@ -71,12 +71,12 @@ class OpeningHour
     {
         $from = null;
         if (isset($rawData['from'])) {
-            $timeZone = new \DateTimeZone($rawData['from']['timezone']);
+            $timeZone = new \DateTimeZone($rawData['from']['timezone'] ?? 'Europe/Berlin');
             $from = new \DateTimeImmutable($rawData['from']['date'], $timeZone);
         }
         $through = null;
         if (isset($rawData['through'])) {
-            $timeZone = new \DateTimeZone($rawData['through']['timezone']);
+            $timeZone = new \DateTimeZone($rawData['through']['timezone'] ?? 'Europe/Berlin');
             $through = new \DateTimeImmutable($rawData['through']['date'], $timeZone);
         }
 
