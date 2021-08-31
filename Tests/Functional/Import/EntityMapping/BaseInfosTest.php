@@ -68,7 +68,7 @@ class BaseInfosTest extends TestCase
         self::assertSame('', $result->getId());
         self::assertSame('', $result->getName());
         self::assertSame('', $result->getDescription());
-        self::assertSame('', $result->getUrl());
+        self::assertSame([], $result->getUrls());
         self::assertNull($result->getPhoto());
         self::assertSame([], $result->getImages());
         self::assertNull($result->getManagedBy());
@@ -94,7 +94,7 @@ class BaseInfosTest extends TestCase
         self::assertSame('https://thuecat.org/resources/835224016581-dara', $result->getId());
         self::assertSame('The name of the Thing', $result->getName());
         self::assertSame('This is some long description describing this Thing.', $result->getDescription());
-        self::assertSame('https://example.com/the-thing', $result->getUrl());
+        self::assertSame(['https://example.com/the-thing'], $result->getUrls());
     }
 
     /**

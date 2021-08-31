@@ -236,4 +236,55 @@ class PlaceInfosTest extends TestCase
         self::assertSame('', $result->getAddress()->getFaxNumber());
         self::assertSame('dominformation@domberg-erfurt.de', $result->getAddress()->getEmail());
     }
+
+    /**
+     * @test
+     */
+    public function mapsIncomingMultipleUrls(): void
+    {
+        $subject = new EntityMapper();
+
+        $result = $subject->mapDataToEntity([
+            'schema:url' => [
+                0 => [
+                    '@type' => 'schema:URL',
+                    '@value' => 'https://example.com/1',
+                ],
+                1 => [
+                    '@type' => 'schema:URL',
+                    '@value' => 'https://example.com/2',
+                ],
+            ],
+        ], Place::class, [
+            JsonDecode::ACTIVE_LANGUAGE => 'de',
+        ]);
+
+        self::assertInstanceOf(Place::class, $result);
+        self::assertSame([
+            'https://example.com/1',
+            'https://example.com/2',
+        ], $result->getUrls());
+    }
+
+    /**
+     * @test
+     */
+    public function mapsIncomingSingleUrl(): void
+    {
+        $subject = new EntityMapper();
+
+        $result = $subject->mapDataToEntity([
+            'schema:url' => [
+                '@type' => 'schema:URL',
+                '@value' => 'https://example.com/1',
+            ],
+        ], Place::class, [
+            JsonDecode::ACTIVE_LANGUAGE => 'de',
+        ]);
+
+        self::assertInstanceOf(Place::class, $result);
+        self::assertSame([
+            'https://example.com/1',
+        ], $result->getUrls());
+    }
 }

@@ -325,7 +325,7 @@ class GeneralConverter implements Converter
             'type' => $mediaObject->getType(),
             'title' => $mediaObject->getName(),
             'description' => $mediaObject->getDescription(),
-            'url' => $mediaObject->getUrl(),
+            'url' => $mediaObject->getUrls()[0] ?? '',
             'copyrightYear' => $mediaObject->getCopyrightYear(),
             'license' => [
                 'type' => $mediaObject->getLicense(),

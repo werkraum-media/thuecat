@@ -53,9 +53,9 @@ abstract class Minimum
     /**
      * URL to official version of this thing outside of ThüCAT.
      *
-     * @var string
+     * @var string[]
      */
-    protected $url = '';
+    protected $urls = [];
 
     public function getId(): string
     {
@@ -77,9 +77,9 @@ abstract class Minimum
         return $this->description;
     }
 
-    public function getUrl(): string
+    public function getUrls(): array
     {
-        return $this->url;
+        return $this->urls;
     }
 
     /**
@@ -108,10 +108,14 @@ abstract class Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $url
      */
-    public function setUrl(string $url): void
+    public function setUrl($url): void
     {
-        $this->url = $url;
+        if (is_string($url)) {
+            $url = [$url];
+        }
+        $this->urls = $url;
     }
 
     public static function getPriority(): int
