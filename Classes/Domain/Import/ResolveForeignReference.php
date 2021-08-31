@@ -27,6 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
 /**
  * Can be used to resolve foreign references.
@@ -66,7 +67,12 @@ class ResolveForeignReference
         ForeignReference $foreignReference,
         string $language
     ): ?object {
-        $jsonLD = $this->fetchData->jsonLDFromUrl($foreignReference->getId());
+        try {
+            $jsonLD = $this->fetchData->jsonLDFromUrl($foreignReference->getId());
+        } catch (InvalidResponseException $e) {
+            return null;
+        }
+
         $jsonEntity = $jsonLD['@graph'][0] ?? null;
         if ($jsonEntity === null) {
             return null;

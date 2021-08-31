@@ -1,0 +1,19 @@
+HTTP/1.1 404 Not Found
+Date: Wed, 17 Feb 2021 08:03:50 GMT
+Content-Type: application/ld+json; charset=utf-8
+Content-Length: 7366
+Connection: keep-alive
+Set-Cookie: ahSession=3e3e3f03b24a3a9f7eea750ec4c9b99774e2c09e;path=/;expires=Sat, 20 Mar 2021 08:03:50 GMT;httpOnly=true;
+Access-Control-Allow-Methods: HEAD, GET, POST, DELETE, OPTIONS
+Access-Control-Allow-Headers: Authorization, Content-Type
+Strict-Transport-Security: max-age=15724800; includeSubDomains
+Access-Control-Allow-Credentials: true
+X-Frame-Options: deny
+X-XSS-Protection: 1; mode=block
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+Feature-Policy: microphone 'none'; camera 'none'; payment 'none'
+Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-xfTbtWk8kVI65iLJs8LB3lWf2g0g10DS71pDdoutFHc='; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com; img-src 'self' data: blob: *
+Access-Control-Allow-Origin: https://cdb.thuecat.org
+
+{"error":"404"}
