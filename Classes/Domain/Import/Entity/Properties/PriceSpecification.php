@@ -45,9 +45,9 @@ class PriceSpecification extends Minimum
      * E.g. 'PerPerson'
      * ThueCat specific property.
      *
-     * @var string
+     * @var array
      */
-    protected $calculationRule = '';
+    protected $calculationRules = [];
 
     public function getPrice(): float
     {
@@ -59,9 +59,12 @@ class PriceSpecification extends Minimum
         return $this->currency;
     }
 
-    public function getCalculationRule(): string
+    /**
+     * @return string[]
+     */
+    public function getCalculationRules(): array
     {
-        return $this->calculationRule;
+        return $this->calculationRules;
     }
 
     /**
@@ -82,9 +85,13 @@ class PriceSpecification extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $calculationRule
      */
-    public function setCalculationRule(string $calculationRule): void
+    public function setCalculationRule($calculationRule): void
     {
-        $this->calculationRule = PropertyValues::removePrefixFromEntry($calculationRule);
+        if (is_string($calculationRule)) {
+            $calculationRule = [$calculationRule];
+        }
+        $this->calculationRules = PropertyValues::removePrefixFromEntries($calculationRule);
     }
 }
