@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 class Price
 {
     /**
@@ -46,22 +48,22 @@ class Price
     private $currency;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $rule;
+    private $rules;
 
     private function __construct(
         string $title,
         string $description,
         float $price,
         string $currency,
-        string $rule
+        array $rules
     ) {
         $this->title = $title;
         $this->description = $description;
         $this->price = $price;
         $this->currency = $currency;
-        $this->rule = $rule;
+        $this->rules = $rules;
     }
 
     /**
@@ -74,7 +76,7 @@ class Price
             $rawData['description'],
             $rawData['price'],
             $rawData['currency'],
-            $rawData['rule']
+            GeneralUtility::trimExplode(',', $rawData['rule'], true)
         );
     }
 
@@ -98,8 +100,8 @@ class Price
         return $this->currency;
     }
 
-    public function getRule(): string
+    public function getRules(): array
     {
-        return $this->rule;
+        return $this->rules;
     }
 }

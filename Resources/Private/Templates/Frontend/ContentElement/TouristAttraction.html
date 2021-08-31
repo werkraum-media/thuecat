@@ -35,7 +35,9 @@
                         <p>{price.description}</p>
                     </f:if>
                     {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                    {f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}
+                    <f:for each="{price.rules}" as="rule">
+                        {f:translate(id: 'content.price.rule.{rule}', default: rule, extensionName: 'Thuecat')}
+                    </f:for>
                 </f:for>
             </f:for>
         </f:if>

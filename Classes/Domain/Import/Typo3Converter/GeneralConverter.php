@@ -401,7 +401,7 @@ class GeneralConverter implements Converter
             'description' => $priceSpecification->getDescription(),
             'price' => $priceSpecification->getPrice(),
             'currency' => $priceSpecification->getCurrency(),
-            'rule' => $priceSpecification->getCalculationRule(),
+            'rule' => implode(',', $priceSpecification->getCalculationRules()),
         ];
     }
 
