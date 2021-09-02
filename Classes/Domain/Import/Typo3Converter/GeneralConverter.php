@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
@@ -46,8 +48,10 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ParkingFacilityRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
-class GeneralConverter implements Converter
+class GeneralConverter implements Converter, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var ResolveForeignReference
      */
@@ -115,13 +119,13 @@ class GeneralConverter implements Converter
         ImportConfiguration $importConfiguration,
         string $language
     ): ?Entity {
-        $this->importConfiguration = $importConfiguration;
-
-        if (!$entity instanceof Minimum || $entity->hasName() === false) {
+        if ($this->shouldConvert($entity, $importConfiguration, $language) === false) {
             return null;
         }
 
-        return new GenericEntity(
+        $this->importConfiguration = $importConfiguration;
+
+        $converted = new GenericEntity(
             $importConfiguration->getStoragePid(),
             $this->getTableNameByEntityClass(get_class($entity)),
             $this->languageHandling->getLanguageUidForString(
@@ -134,6 +138,53 @@ class GeneralConverter implements Converter
                 $language
             )
         );
+        $this->logger->debug('Converted Entity', [
+            'remoteId' => $entity->getId(),
+            'storagePid' => $converted->getTypo3StoragePid(),
+            'table' => $converted->getTypo3DatabaseTableName(),
+            'language' => $converted->getTypo3SystemLanguageUid(),
+        ]);
+        return $converted;
+    }
+
+    private function shouldConvert(
+        MapsToType $entity,
+        ImportConfiguration $importConfiguration,
+        string $language
+    ): bool {
+        if (!$entity instanceof Minimum) {
+            $this->logger->debug('Skipped conversion of entity, got unexpected type', [
+                'expectedType' => Minimum::class,
+                'actualType' => get_class($entity),
+            ]);
+            return false;
+        }
+        if ($entity->hasName() === false) {
+            $this->logger->debug('Skipped conversion of entity, had no name', [
+                'remoteId' => $entity->getId(),
+            ]);
+            return false;
+        }
+
+        $languageUid = $this->languageHandling->getLanguageUidForString(
+            $importConfiguration->getStoragePid(),
+            $language
+        );
+        $tableName = $this->getTableNameByEntityClass(get_class($entity));
+        if (
+            $languageUid > 0
+            && isset($GLOBALS['TCA'][$tableName]['ctrl']['languageField']) === false
+        ) {
+            $this->logger->debug('Skipped conversion of entity, table does not support translations', [
+                'remoteId' => $entity->getId(),
+                'requestedLanguage' => $language,
+                'resolvedLanguageUid' => $languageUid,
+                'resolvedTableName' => $tableName,
+            ]);
+            return false;
+        }
+
+        return true;
     }
 
     private function getTableNameByEntityClass(string $className): string
