@@ -33,7 +33,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
@@ -107,10 +106,6 @@ class Importer
 
     public function importConfiguration(ImportConfiguration $configuration): ImportLog
     {
-        if (!$configuration instanceof Typo3ImportConfiguration) {
-            throw new \InvalidArgumentException('Currently only can process ImportConfiguration of TYPO3.', 1629708772);
-        }
-
         $this->import->start($configuration);
         $this->import();
         $this->import->end();
