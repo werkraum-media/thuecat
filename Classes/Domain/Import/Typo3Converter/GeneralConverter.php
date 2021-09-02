@@ -390,13 +390,13 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         $data = [];
 
         foreach ($entity->getOpeningHoursSpecification() as $openingHour) {
-            $data[] = [
+            $data[] = array_filter([
                 'opens' => $openingHour->getOpens()->format('H:i:s'),
                 'closes' => $openingHour->getCloses()->format('H:i:s'),
                 'from' => $openingHour->getValidFrom() ?? '',
                 'through' => $openingHour->getValidThrough() ?? '',
                 'daysOfWeek' => $openingHour->getDaysOfWeek(),
-            ];
+            ]);
         }
 
         return json_encode($data) ?: '';
