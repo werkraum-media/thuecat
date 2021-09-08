@@ -22,7 +22,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 4
+			count: 5
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
