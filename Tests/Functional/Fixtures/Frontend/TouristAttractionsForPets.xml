@@ -5,7 +5,7 @@
         <pid>3</pid>
         <title>Attraktion mit pets_allowed = false</title>
         <description></description>
-        <town></town>
+        <town>0</town>
         <media></media>
         <opening_hours></opening_hours>
         <address></address>
@@ -27,7 +27,7 @@
         <pid>3</pid>
         <title>Attraktion mit pets_allowed = true</title>
         <description></description>
-        <town></town>
+        <town>0</town>
         <media></media>
         <opening_hours></opening_hours>
         <address></address>

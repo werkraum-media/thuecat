@@ -167,19 +167,19 @@ class ImportTest extends TestCase
         self::assertCount(1, $organisations);
         self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $organisations[0]['remote_id']);
         self::assertSame('Erfurt Tourismus und Marketing GmbH', $organisations[0]['title']);
-        self::assertSame('1', $organisations[0]['uid']);
+        self::assertSame(1, (int)$organisations[0]['uid']);
 
         $importLogs = $this->getAllRecords('tx_thuecat_import_log');
         self::assertCount(1, $importLogs);
-        self::assertSame('1', $importLogs[0]['configuration']);
-        self::assertSame('1', $importLogs[0]['uid']);
+        self::assertSame(1, (int)$importLogs[0]['configuration']);
+        self::assertSame(1, (int)$importLogs[0]['uid']);
 
         $importLogEntries = $this->getAllRecords('tx_thuecat_import_log_entry');
         self::assertCount(1, $importLogEntries);
-        self::assertSame('1', $importLogEntries[0]['import_log']);
-        self::assertSame('1', $importLogEntries[0]['record_uid']);
+        self::assertSame(1, (int)$importLogEntries[0]['import_log']);
+        self::assertSame(1, (int)$importLogEntries[0]['record_uid']);
         self::assertSame('tx_thuecat_organisation', $importLogEntries[0]['table_name']);
-        self::assertSame('0', $importLogEntries[0]['insertion']);
+        self::assertSame(0, (int)$importLogEntries[0]['insertion']);
         self::assertSame('[]', $importLogEntries[0]['errors']);
     }
 

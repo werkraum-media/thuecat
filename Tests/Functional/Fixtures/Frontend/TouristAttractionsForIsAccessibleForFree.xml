@@ -5,7 +5,7 @@
         <pid>3</pid>
         <title>Attraktion mit false</title>
         <description></description>
-        <town></town>
+        <town>0</town>
         <media></media>
         <opening_hours></opening_hours>
         <address></address>
@@ -28,7 +28,7 @@
         <pid>3</pid>
         <title>Attraktion mit true</title>
         <description></description>
-        <town></town>
+        <town>0</town>
         <media></media>
         <opening_hours></opening_hours>
         <address></address>
