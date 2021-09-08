@@ -119,11 +119,11 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         ImportConfiguration $importConfiguration,
         string $language
     ): ?Entity {
+        $this->importConfiguration = $importConfiguration;
+
         if ($this->shouldConvert($entity, $importConfiguration, $language) === false) {
             return null;
         }
-
-        $this->importConfiguration = $importConfiguration;
 
         $converted = new GenericEntity(
             $importConfiguration->getStoragePid(),
@@ -152,6 +152,8 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         ImportConfiguration $importConfiguration,
         string $language
     ): bool {
+        $tableName = $this->getTableNameByEntityClass(get_class($entity));
+
         if (!$entity instanceof Minimum) {
             $this->logger->debug('Skipped conversion of entity, got unexpected type', [
                 'expectedType' => Minimum::class,
@@ -170,7 +172,6 @@ class GeneralConverter implements Converter, LoggerAwareInterface
             $importConfiguration->getStoragePid(),
             $language
         );
-        $tableName = $this->getTableNameByEntityClass(get_class($entity));
         if (
             $languageUid > 0
             && isset($GLOBALS['TCA'][$tableName]['ctrl']['languageField']) === false
@@ -180,6 +181,13 @@ class GeneralConverter implements Converter, LoggerAwareInterface
                 'requestedLanguage' => $language,
                 'resolvedLanguageUid' => $languageUid,
                 'resolvedTableName' => $tableName,
+            ]);
+            return false;
+        }
+
+        if ($tableName !== 'tx_thuecat_organisation' && $this->getManagerUid($entity) === '') {
+            $this->logger->debug('Skipped conversion of entity, is not an organisation and no manager was available', [
+                'remoteId' => $entity->getId(),
             ]);
             return false;
         }
