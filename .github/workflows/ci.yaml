@@ -25,6 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
+          tools: composer:v2
 
       - name: PHP lint
         run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
@@ -39,6 +40,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.4"
+          tools: composer:v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -51,9 +53,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-plugins
@@ -71,6 +70,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.4"
+          tools: composer:v2
 
       - name: Install xmllint
         run: sudo apt-get install libxml2-utils
@@ -86,9 +86,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -114,6 +111,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.4"
+          tools: composer:v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -126,9 +124,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -146,6 +141,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.4"
+          tools: composer:v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -158,9 +154,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -185,6 +178,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
+          tools: composer:v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -197,9 +191,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -224,6 +215,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "${{ matrix.php-version }}"
+          tools: composer:v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -236,9 +228,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Use expected composer version
-        run: sudo composer selfupdate --2
 
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
