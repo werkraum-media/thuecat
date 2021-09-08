@@ -58,8 +58,7 @@ class ParkingFacilityRepository extends Repository
 
         $query = $this->createQuery();
 
-        $query->in('remoteId', $remoteIds);
-
+        $query->matching($query->in('remoteId', $remoteIds));
         return $query->execute();
     }
 }

@@ -56,7 +56,7 @@ class TownRepository extends Repository
 
         $query = $this->createQuery();
 
-        $query->in('remoteId', $remoteIds);
+        $query->matching($query->in('remoteId', $remoteIds));
         $query->setLimit(1);
 
         return $query->execute()->getFirst();
