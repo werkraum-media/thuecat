@@ -58,6 +58,61 @@
             <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
                 <source>Video Guide</source>
                 <target>Videoguide</target>
+            <trans-unit id="content.address" xml:space="preserve">
+                <source>Address</source>
+                <target>Anschrift</target>
+            </trans-unit>
+            <trans-unit id="content.openingHours" xml:space="preserve">
+                <source>Opening hours</source>
+                <target>Öffnungszeiten</target>
+            </trans-unit>
+            <trans-unit id="content.offers" xml:space="preserve">
+                <source>Offers</source>
+                <target>Preise</target>
+            </trans-unit>
+            <trans-unit id="content.generalInformation" xml:space="preserve">
+                <source>General Information</source>
+                <target>Allgemeine Informationen</target>
+            </trans-unit>
+            <trans-unit id="content.payment" xml:space="preserve">
+                <source>Accepted payment</source>
+                <target>Akzeptierte Bezahlmethoden</target>
+            </trans-unit>
+            <trans-unit id="content.languages" xml:space="preserve">
+                <source>Available languages</source>
+                <target>Angebotene Sprachen</target>
+            </trans-unit>
+            <trans-unit id="content.sanitation" xml:space="preserve">
+                <source>Sanitation</source>
+                <target>Sanitäre Anlagen</target>
+            </trans-unit>
+            <trans-unit id="content.digital" xml:space="preserve">
+                <source>Digital offers</source>
+                <target>Digitale Angebote</target>
+            </trans-unit>
+            <trans-unit id="content.museum" xml:space="preserve">
+                <source>Museum services</source>
+                <target>Museumsangebote</target>
+            </trans-unit>
+            <trans-unit id="content.traffic" xml:space="preserve">
+                <source>Mobility offers</source>
+                <target>Mobilitätsangebote</target>
+            </trans-unit>
+            <trans-unit id="content.photography" xml:space="preserve">
+                <source>Photography</source>
+                <target>Fotografieren</target>
+            </trans-unit>
+            <trans-unit id="content.architecture" xml:space="preserve">
+                <source>Architecture</source>
+                <target>Architektur</target>
+            </trans-unit>
+            <trans-unit id="content.construction" xml:space="preserve">
+                <source>Year of construction</source>
+                <target>Baujahr</target>
+            </trans-unit>
+            <trans-unit id="content.accessibility" xml:space="preserve">
+                <source>Information on accessibility</source>
+                <target>Informationen zur Barrierefreiheit</target>
             </trans-unit>
             <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
                 <source>per package</source>

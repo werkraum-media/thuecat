@@ -113,6 +113,48 @@
                 <source>Imported configuration "%1$s". But had at least one error.</source>
             </trans-unit>
 
+            <trans-unit id="content.address" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="content.openingHours" xml:space="preserve">
+                <source>Opening hours</source>
+            </trans-unit>
+            <trans-unit id="content.offers" xml:space="preserve">
+                <source>Offers</source>
+            </trans-unit>
+            <trans-unit id="content.generalInformation" xml:space="preserve">
+                <source>General Information</source>
+            </trans-unit>
+            <trans-unit id="content.payment" xml:space="preserve">
+                <source>Accepted payment</source>
+            </trans-unit>
+            <trans-unit id="content.languages" xml:space="preserve">
+                <source>Available languages</source>
+            </trans-unit>
+            <trans-unit id="content.sanitation" xml:space="preserve">
+                <source>Sanitation</source>
+            </trans-unit>
+            <trans-unit id="content.digital" xml:space="preserve">
+                <source>Digital offers</source>
+            </trans-unit>
+            <trans-unit id="content.museum" xml:space="preserve">
+                <source>Museum services</source>
+            </trans-unit>
+            <trans-unit id="content.traffic" xml:space="preserve">
+                <source>Mobility offers</source>
+            </trans-unit>
+            <trans-unit id="content.photography" xml:space="preserve">
+                <source>Photography</source>
+            </trans-unit>
+            <trans-unit id="content.architecture" xml:space="preserve">
+                <source>Architecture</source>
+            </trans-unit>
+            <trans-unit id="content.construction" xml:space="preserve">
+                <source>Year of construction</source>
+            </trans-unit>
+            <trans-unit id="content.accessibility" xml:space="preserve">
+                <source>Information on accessibility</source>
+            </trans-unit>
             <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
                 <source>per package</source>
             </trans-unit>

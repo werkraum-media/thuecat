@@ -1,0 +1,108 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="accessibility">
+        <p>
+            {f:translate(id: 'content.accessibilitySpecification.certificationStatus.{specification.certificationStatus}', default: specification.certificationStatus, extensionName: 'Thuecat')}
+        </p>
+
+        <f:if condition="{specification.searchCriteria}">
+            <ul>
+                <f:for each="{specification.searchCriteria}" key="id" as="criterias">
+                    <f:for each="{criterias}" as="criteria">
+                        <li>{f:translate(id: 'content.accessibilitySpecification.searchCriteria.criteria.{criteria}', default: criteria, extensionName: 'Thuecat')}</li>
+                    </f:for>
+                </f:for>
+            </ul>
+        </f:if>
+
+        <f:comment>
+            <f:if condition="{specification.certificationDeaf}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationDeaf}', default: specification.certificationDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.deaf', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationMental}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationMental}', default: specification.certificationMental, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.mental', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationPartiallyDeaf}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyDeaf}', default: specification.certificationPartiallyDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyDeaf', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationPartiallyVisual}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyVisual}', default: specification.certificationPartiallyVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyVisual', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationVisual}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationVisual}', default: specification.certificationVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.visual', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationWalking}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWalking}', default: specification.certificationWalking, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.walking', extensionName: 'Thuecat')}
+            </f:if>
+            <f:if condition="{specification.certificationWheelchair}">
+                {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWheelchair}', default: specification.certificationWheelchair, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.wheelchair', extensionName: 'Thuecat')}
+            </f:if>
+        </f:comment>
+
+        <f:if condition="{specification.shortDescriptionAllGenerations}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionAllGenerations" role="button" aria-expanded="false" aria-controls="shortDescriptionAllGenerations">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllGenerations', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionAllGenerations">
+                    <p>{specification.shortDescriptionAllGenerations -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionAllergic}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionAllergic" role="button" aria-expanded="false" aria-controls="shortDescriptionAllergic">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllergic', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionAllergic">
+                    <p>{specification.shortDescriptionAllergic -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionDeaf}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionDeaf" role="button" aria-expanded="false" aria-controls="shortDescriptionDeaf">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionDeaf', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionDeaf">
+                    <p>{specification.shortDescriptionDeaf -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionMental}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionMental" role="button" aria-expanded="false" aria-controls="shortDescriptionMental">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionMental', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionMental">
+                    <p>{specification.shortDescriptionMental -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionVisual}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionVisual" role="button" aria-expanded="false" aria-controls="shortDescriptionVisual">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionVisual', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionVisual">
+                    <p>{specification.shortDescriptionVisual -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+        <f:if condition="{specification.shortDescriptionWalking}">
+            <div>
+                <a class="btn" data-bs-toggle="collapse" href="#shortDescriptionWalking" role="button" aria-expanded="false" aria-controls="shortDescriptionWalking">
+                    {f:translate(id: 'content.accessibilitySpecification.shortDescriptionWalking', extensionName: 'Thuecat')}
+                </a>
+                <div class="content collapse" id="shortDescriptionWalking">
+                    <p>{specification.shortDescriptionWalking -> f:format.nl2br()}</p>
+                </div>
+            </div>
+        </f:if>
+
+    </div>
+</html>
