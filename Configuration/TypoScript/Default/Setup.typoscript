@@ -6,6 +6,9 @@ module {
             }
         }
         view {
+            partialsRootPaths {
+                0 = EXT:thuecat/Resources/Private/Partials/
+            }
             templateRootPaths {
                 0 = EXT:thuecat/Resources/Private/Templates/
             }

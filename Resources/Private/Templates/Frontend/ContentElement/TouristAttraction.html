@@ -1,103 +1,117 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
-        <h2>{entity.title} ({entity.town.title})</h2>
-        {entity.slogan}
-        {entity.description -> f:format.html()}
-
-        <f:if condition="{entity.media.mainImage}">
-            <f:image src="{entity.media.mainImage.url}" />
-        </f:if>
-
-        <f:for each="{entity.openingHours}" as="openingHour">
-            <p>
-                <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                    {weekday}: {openingHour.opens} - {openingHour.closes}<br>
-                </f:for>
-                {openingHour.from -> f:format.date(format: 'd.m.Y')} -
-                {openingHour.through -> f:format.date(format: 'd.m.Y')}
-            </p>
-        </f:for>
-
-        <f:if condition="{entity.address}">
-            {f:render(section: 'Address', arguments: {address: entity.address})}
-        </f:if>
-
-        <f:if condition="{entity.offers}">
-            <f:for each="{entity.offers}" as="offer">
-                <h3>{offer.title}</h3>
-                <f:if condition="{offer.description}">
-                    <p>{offer.description}</p>
+        <div class="row mb-5">
+            <div class="col-12 col-md-6">
+                <h2>{entity.title} <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if></h2>
+                {entity.description -> f:format.html()}
+            </div>
+            <div class="col-12 col-md-6">
+                <f:if condition="{entity.media.mainImage}">
+                    <f:image src="{entity.media.mainImage.url}" class="img-fluid"/>
                 </f:if>
-                <f:for each="{offer.prices}" as="price">
-                    <h4>{price.title}</h4>
-                    <f:if condition="{price.description}">
-                        <p>{price.description}</p>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12 col-md-3">
+                <f:if condition="{entity.address}">
+                    <h5>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h5>
+                    {f:render(section: 'Address', arguments: {address: entity.address})}
+                </f:if>
+                <f:if condition="{entity.distanceToPublicTransport}">
+                    <h5>{f:translate(id: 'content.distanceToPublicTransport', extensionName: 'thuecat')}</h5>
+                    <p>
+                        {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'thuecat')}
+                    </p>
+                </f:if>
+                <f:if condition="{entity.parkingFacilitiesNearBy}">
+                    <h5>{f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}</h5>
+                    {f:render(section: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
+                </f:if>
+            </div>
+            <div class="col-12 col-md-3">
+                <h5>{f:translate(id: 'content.generalInformation', extensionName: 'thuecat')}</h5>
+                <p>
+                    <f:if condition="{entity.otherServices}">
+                        {f:render(partial: 'Service', arguments: {otherServices: entity.otherServices})}
                     </f:if>
-                    {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                    <f:for each="{price.rules}" as="rule">
-                        {f:translate(id: 'content.price.rule.{rule}', default: rule, extensionName: 'Thuecat')}
+                    <f:if condition="{entity.petsAllowed}">
+                        <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}</span>
+                    </f:if>
+                    <f:if condition="{entity.isAccessibleForFree}">
+                        <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}</span>
+                    </f:if>
+                    <f:if condition="{entity.publicAccess}">
+                        <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}</span>
+                    </f:if>
+                </p>
+
+                <f:if condition="{entity.museumServices}">
+                    <h6>{f:translate(id: 'content.museum', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Museum', arguments: {museumServices: entity.museumServices})}
+                </f:if>
+
+                <f:if condition="{entity.digitalOffer}">
+                    <h6>{f:translate(id: 'content.digital', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Digital', arguments: {digitalOffer: entity.digitalOffer})}
+                </f:if>
+
+                <f:if condition="{entity.trafficInfrastructures}">
+                    <h6>{f:translate(id: 'content.traffic', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Traffic', arguments: {trafficInfrastructures: entity.trafficInfrastructures})}
+                </f:if>
+
+                <f:if condition="{entity.paymentAccepted}">
+                    <h6>{f:translate(id: 'content.payment', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Payment', arguments: {paymentAccepted: entity.paymentAccepted})}
+                </f:if>
+
+                <f:if condition="{entity.availableLanguages}">
+                    <h6>{f:translate(id: 'content.languages', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Payment', arguments: {availableLanguages: entity.availableLanguages})}
+                </f:if>
+
+                <f:if condition="{entity.sanitation}">
+                    <h6>{f:translate(id: 'content.sanitation', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Sanitation', arguments: {sanitation: entity.sanitation})}
+                </f:if>
+
+                <f:if condition="{entity.photography}">
+                    <h6>{f:translate(id: 'content.photography', extensionName: 'thuecat')}</h6>
+                    {f:render(partial: 'Photography', arguments: {photography: entity.photography})}
+                </f:if>
+
+                <f:if condition="{entity.startOfConstruction}">
+                    <h6>{f:translate(id: 'content.construction', extensionName: 'thuecat')}</h6>
+                    {entity.startOfConstruction}
+                </f:if>
+
+                <f:if condition="{entity.architecturalStyles}">
+                    <h6>{f:translate(id: 'content.architecture', extensionName: 'thuecat')}</h6>
+                    <f:for each="{entity.architecturalStyles}" as="style">
+                        {f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}
                     </f:for>
-                </f:for>
-            </f:for>
-        </f:if>
-
-        {entity.startOfConstruction}
-
-        <f:for each="{entity.sanitation}" as="sanitation">
-            {f:translate(id: 'content.sanitation.{sanitation}', default: sanitation, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.otherServices}" as="service">
-            {f:translate(id: 'content.otherService.{service}', default: service, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.museumServices}" as="service">
-            {f:translate(id: 'content.museumService.{service}', default: service, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.architecturalStyles}" as="style">
-            {f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.trafficInfrastructures}" as="trafficInfrastructure">
-            {f:translate(id: 'content.trafficInfrastructure.{trafficInfrastructure}', default: trafficInfrastructure, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.paymentAccepted}" as="payment">
-            {f:translate(id: 'content.paymentAccepted.{payment}', default: payment, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.digitalOffer}" as="offer">
-            {f:translate(id: 'content.digitalOffer.{offer}', default: offer, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:for each="{entity.photography}" as="photography">
-            {f:translate(id: 'content.photography.{photography}', default: photography, extensionName: 'thuecat')}
-        </f:for>
-
-        {f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}
-        {f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}
-        {f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}
-
-        <f:for each="{entity.availableLanguages}" as="language">
-            {f:translate(id: 'content.availableLanguage.{language}', default: language, extensionName: 'thuecat')}
-        </f:for>
-
-        <f:if condition="{entity.distanceToPublicTransport}">
-            {f:translate(id: 'content.distanceToPublicTransport', extensionName: 'thuecat')} {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'thuecat')}
-        </f:if>
-
-        <f:if condition="{entity.parkingFacilitiesNearBy}">
-            {f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}
-            <f:for each="{entity.parkingFacilitiesNearBy}" as="parkingFacility">
-                {parkingFacility.title}
-                {f:render(section: 'Address', arguments: {address: parkingFacility.address})}
-            </f:for>
-        </f:if>
-
+                </f:if>
+            </div>
+            <div class="col-12 col-md-3">
+                <f:if condition="{entity.openingHours}">
+                    <h5>{f:translate(id: 'content.openingHours', extensionName: 'Thuecat')}</h5>
+                    {f:render(partial: 'Opening', arguments: {openingHours: entity.openingHours})}
+                </f:if>
+            </div>
+            <div class="col-12 col-md-3">
+                <f:if condition="{entity.offers}">
+                    <h5>{f:translate(id: 'content.offers', extensionName: 'Thuecat')}</h5>
+                    {f:render(partial: 'Offers', arguments: {offers: entity.offers})}
+                </f:if>
+            </div>
+        </div>
         <f:if condition="{entity.accessibilitySpecification}">
-            {f:render(section: 'AccessiblitySpecification', arguments: {specification: entity.accessibilitySpecification})}
+            <div class="row">
+                <h3>{f:translate(id: 'content.accessibility', extensionName: 'Thuecat')}</h3>
+                {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification})}
+            </div>
         </f:if>
     </f:for>
 
@@ -105,70 +119,19 @@
         <p>
             {address.street}<br>
             {address.zip} {address.city}<br>
-            {address.email}<br>
+            <f:if condition="{address.email}">
+                <f:link.email email="{address.email}">{address.email}</f:link.email><br>
+            </f:if>
             {address.phone}<br>
             {address.fax}
         </p>
     </f:section>
 
-    <f:section name="AccessiblitySpecification">
-        {f:translate(id: 'content.accessibilitySpecification.certificationStatus.{specification.certificationStatus}', default: specification.certificationStatus, extensionName: 'Thuecat')}
-
-        <f:if condition="{specification.certificationDeaf}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationDeaf}', default: specification.certificationDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.deaf', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationMental}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationMental}', default: specification.certificationMental, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.mental', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationPartiallyDeaf}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyDeaf}', default: specification.certificationPartiallyDeaf, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyDeaf', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationPartiallyVisual}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationPartiallyVisual}', default: specification.certificationPartiallyVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.partiallyVisual', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationVisual}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationVisual}', default: specification.certificationVisual, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.visual', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationWalking}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWalking}', default: specification.certificationWalking, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.walking', extensionName: 'Thuecat')}
-        </f:if>
-        <f:if condition="{specification.certificationWheelchair}">
-            {f:translate(id: 'content.accessibilitySpecification.certification.{specification.certificationWheelchair}', default: specification.certificationWheelchair, extensionName: 'Thuecat')} {f:translate(id: 'content.accessibilitySpecification.certification.wheelchair', extensionName: 'Thuecat')}
-        </f:if>
-
-        <f:if condition="{specification.shortDescriptionAllGenerations}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllGenerations', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionAllGenerations -> f:format.nl2br()}</p>
-        </f:if>
-        <f:if condition="{specification.shortDescriptionAllergic}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllergic', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionAllergic -> f:format.nl2br()}</p>
-        </f:if>
-        <f:if condition="{specification.shortDescriptionDeaf}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionDeaf', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionDeaf -> f:format.nl2br()}</p>
-        </f:if>
-        <f:if condition="{specification.shortDescriptionMental}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionMental', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionMental -> f:format.nl2br()}</p>
-        </f:if>
-        <f:if condition="{specification.shortDescriptionVisual}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionVisual', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionVisual -> f:format.nl2br()}</p>
-        </f:if>
-        <f:if condition="{specification.shortDescriptionWalking}">
-            {f:translate(id: 'content.accessibilitySpecification.shortDescriptionWalking', extensionName: 'Thuecat')}
-            <p>{specification.shortDescriptionWalking -> f:format.nl2br()}</p>
-        </f:if>
-
-        <f:if condition="{specification.searchCriteria}">
-            <ul>
-                <f:for each="{specification.searchCriteria}" key="id" as="criterias">
-                    <f:for each="{criterias}" as="criteria">
-                        <li>{f:translate(id: 'content.accessibilitySpecification.searchCriteria.criteria.{criteria}', default: criteria, extensionName: 'Thuecat')}</li>
-                    </f:for>
-                </f:for>
-            </ul>
-        </f:if>
+    <f:section name="Parking">
+        <f:for each="{parkingFacilitiesNearBy}" as="parkingFacility">
+            {parkingFacility.title}
+            {f:render(section: 'Address', arguments: {address: parkingFacility.address})}
+        </f:for>
     </f:section>
+
 </html>
