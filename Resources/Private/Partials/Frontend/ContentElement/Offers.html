@@ -1,0 +1,96 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div class="offers">
+    <f:comment>
+        <f:for each="{offers}" as="offer">
+            <h6>{offer.title}</h6>
+            <f:if condition="{offer.description}">
+                <p>{offer.description}</p>
+            </f:if>
+            <f:for each="{offer.prices}" as="price">
+                <h4>{price.title}</h4>
+                <f:if condition="{price.description}">
+                    <p>{price.description}</p>
+                </f:if>
+                {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                <f:for each="{price.rules}" as="rule">
+                    {f:translate(id: 'content.price.rule.{rule}', default: rule, extensionName: 'Thuecat')}
+                </f:for>
+            </f:for>
+        </f:for>
+    </f:comment>
+
+    <f:if condition="{offers -> f:count()} > 1">
+        <f:then>
+            <f:for each="{offers}" as="offer" key="key">
+                <f:debug>{offer}</f:debug>
+                <div class="offer-group">
+                    <a class="btn" data-bs-toggle="collapse" href="#offerGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
+                        <f:if condition="{offer.title}"><f:then>{offer.title}</f:then><f:else>Preisgruppe</f:else></f:if>
+                    </a>
+                    <div class="content collapse" id="offerGroup{key}">
+                        <f:if condition="{offer.description}">
+                            <div class="description">
+                                <p>{offer.description}</p>
+                            </div>
+                        </f:if>
+                        <table class="table">
+                            <f:for each="{offer.prices}" as="price">
+                                <tr>
+                                    <td>
+                                        <span>{price.title}</span>
+                                    </td>
+                                    <td>
+                                        {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                        <span>{f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}</span>
+                                    </td>
+                                </tr>
+                                    <f:if condition="{price.description}">
+                                    <tr>
+                                        <td colspan="2" class="description">
+                                            <small>{price.description}</small>
+                                        </td>
+                                    </tr>
+                                    </f:if>
+
+                            </f:for>
+                        </table>
+                    </div>
+                </div>
+            </f:for>
+        </f:then>
+        <f:else>
+            <f:for each="{offers}" as="offer" key="key">
+                <div class="offer-group">
+                    <div class="content">
+                        <f:if condition="{offer.description}">
+                            <div class="description">
+                                <p>{offer.description}</p>
+                            </div>
+                        </f:if>
+                        <f:for each="{offer.prices}" as="price">
+                            <div class="offer-item row">
+                                <div class="title">
+                                    <span>{price.title}</span>
+                                </div>
+                                <div class="price">
+                                    <div>
+                                        {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                        <span>{f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}</span>
+                                    </div>
+                                </div>
+                                <f:if condition="{price.description}">
+                                    <div class="description">
+                                        <p>{price.description}</p>
+                                    </div>
+                                </f:if>
+                            </div>
+                        </f:for>
+                    </div>
+                </div>
+            </f:for>
+        </f:else>
+    </f:if>
+
+</div>
+
+</html>
