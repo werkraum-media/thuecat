@@ -35,6 +35,11 @@ class Offer
     /**
      * @var string
      */
+    private $type;
+
+    /**
+     * @var string
+     */
     private $description;
 
     /**
@@ -44,10 +49,12 @@ class Offer
 
     private function __construct(
         string $title,
+        string $type,
         string $description,
         array $prices
     ) {
         $this->title = $title;
+        $this->type = $type;
         $this->description = $description;
         $this->prices = $prices;
     }
@@ -65,6 +72,7 @@ class Offer
 
         return new self(
             $rawData['title'],
+            $rawData['type'] ?? '',
             $rawData['description'],
             $prices
         );
@@ -73,6 +81,11 @@ class Offer
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getDescription(): string

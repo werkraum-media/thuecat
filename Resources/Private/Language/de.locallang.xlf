@@ -3,6 +3,62 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
         <header/>
         <body>
+            <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">
+                <source>Accommodation Offer</source>
+                <target>Unterkunft</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.Application" xml:space="preserve">
+                <source>Application</source>
+                <target>Anwendung</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.AudioGuide" xml:space="preserve">
+                <source>Audio Guide</source>
+                <target>Audioguide</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.Childcare" xml:space="preserve">
+                <source>Childcare</source>
+                <target>Kinderbetreuung</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.CourseOffer" xml:space="preserve">
+                <source>Course Offer</source>
+                <target>Kurs</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.EntryOffer" xml:space="preserve">
+                <source>Entry Offer</source>
+                <target>Eintritt</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.GuidedTourOffer" xml:space="preserve">
+                <source>Guided Tour Offer</source>
+                <target>Führung</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.ParkingFee" xml:space="preserve">
+                <source>Parking Fee</source>
+                <target>Parkgebühr</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.PedagogicalOffer" xml:space="preserve">
+                <source>Pedagogical Offer</source>
+                <target>Pädagogisches Angebot</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.RentingOffer" xml:space="preserve">
+                <source>Renting Offer</source>
+                <target>Vermietung</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.ShowEnuMem" xml:space="preserve">
+                <source>Show Enu Mem</source>
+                <target>Show</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.Tasting" xml:space="preserve">
+                <source>Tasting</source>
+                <target>Verkostung</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.ThuringianForestCard" xml:space="preserve">
+                <source>Thuringian Forest Card</source>
+                <target>Thüringer Wald Card</target>
+            </trans-unit>
+            <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
+                <source>Video Guide</source>
+                <target>Videoguide</target>
+            </trans-unit>
             <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
                 <source>per package</source>
                 <target>pro Paket</target>

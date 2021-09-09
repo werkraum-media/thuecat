@@ -591,6 +591,49 @@
             <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ToiletsPeopleWithDisabilities">
                 <source>Toilets People With Disabilities</source>
             </trans-unit>
+
+            <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">
+                <source>Accommodation Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.Application" xml:space="preserve">
+                <source>Application</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.AudioGuide" xml:space="preserve">
+                <source>Audio Guide</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.Childcare" xml:space="preserve">
+                <source>Childcare</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.CourseOffer" xml:space="preserve">
+                <source>Course Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.EntryOffer" xml:space="preserve">
+                <source>Entry Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.GuidedTourOffer" xml:space="preserve">
+                <source>Guided Tour Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.ParkingFee" xml:space="preserve">
+                <source>Parking Fee</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.PedagogicalOffer" xml:space="preserve">
+                <source>Pedagogical Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.RentingOffer" xml:space="preserve">
+                <source>Renting Offer</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.ShowEnuMem" xml:space="preserve">
+                <source>Show Enu Mem</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.Tasting" xml:space="preserve">
+                <source>Tasting</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.ThuringianForestCard" xml:space="preserve">
+                <source>Thuringian Forest Card</source>
+            </trans-unit>
+            <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
+                <source>Video Guide</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

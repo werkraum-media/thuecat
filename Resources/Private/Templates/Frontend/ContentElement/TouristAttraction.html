@@ -25,7 +25,7 @@
 
         <f:if condition="{entity.offers}">
             <f:for each="{entity.offers}" as="offer">
-                <h3>{offer.title}</h3>
+                <h3>{offer.title} ({f:translate(id: 'content.price.type.{offer.type}', default: offer.type, extensionName: 'Thuecat')})</h3>
                 <f:if condition="{offer.description}">
                     <p>{offer.description}</p>
                 </f:if>

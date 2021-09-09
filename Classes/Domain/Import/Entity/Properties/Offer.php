@@ -23,14 +23,33 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
 
 class Offer extends Minimum
 {
     /**
+     * @var string
+     */
+    protected $offerType = '';
+
+    /**
      * @var PriceSpecification[]
      */
     protected $prices = [];
+
+    public function getOfferType(): string
+    {
+        return $this->offerType;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function setOfferType(string $offerType): void
+    {
+        $this->offerType = PropertyValues::removePrefixFromEntry($offerType);
+    }
 
     /**
      * @return PriceSpecification[]

@@ -85,9 +85,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Monday: 09:30:00 - 18:00:00', (string)$result->getBody());
 
         self::assertStringContainsString('Führungen', (string)$result->getBody());
+        self::assertStringContainsString('(Führung)', (string)$result->getBody());
         self::assertStringContainsString('Immer samstags, um 11:15 Uhr findet eine öffentliche Führung durch das Museum statt. Dauer etwa 90 Minuten', (string)$result->getBody());
 
         self::assertStringContainsString('Erwachsene', (string)$result->getBody());
+        self::assertStringContainsString('(Eintritt)', (string)$result->getBody());
         self::assertStringContainsString('8,00 EUR', (string)$result->getBody());
         self::assertStringContainsString('pro Person', (string)$result->getBody());
 
