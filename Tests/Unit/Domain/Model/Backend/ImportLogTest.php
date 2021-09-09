@@ -23,7 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Backend;
  * 02110-1301, USA.
  */
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use PHPUnit\Framework\TestCase;
@@ -33,8 +32,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ImportLogTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

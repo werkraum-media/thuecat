@@ -24,7 +24,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Model;
  */
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 
@@ -33,8 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
  */
 class EntityCollectionTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

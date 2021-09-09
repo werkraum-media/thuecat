@@ -27,7 +27,7 @@
         }
     },
     "require": {
-        "php": "^7.3",
+        "php": "~7.2.0 || ~7.3.0 || ~7.4.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/http-client": "^1.0",
@@ -49,11 +49,10 @@
         "friendsoftypo3/phpstan-typo3": "^0.6.0",
         "jangregor/phpstan-prophecy": "^0.8.1",
         "maglnet/composer-require-checker": "^2.1",
-        "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.71",
         "phpstan/phpstan-phpunit": "^0.12.21",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^8.5",
         "symplify/easy-coding-standard": "^9.0",
         "typo3/cms-fluid-styled-content": "^10.4",
         "typo3/testing-framework": "^6.6"
