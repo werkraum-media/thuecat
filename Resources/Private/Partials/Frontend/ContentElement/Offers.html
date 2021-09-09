@@ -22,7 +22,6 @@
     <f:if condition="{offers -> f:count()} > 1">
         <f:then>
             <f:for each="{offers}" as="offer" key="key">
-                <f:debug>{offer}</f:debug>
                 <div class="offer-group">
                     <a class="btn" data-bs-toggle="collapse" href="#offerGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
                         <f:if condition="{offer.title}"><f:then>{offer.title}</f:then><f:else>Preisgruppe</f:else></f:if>
