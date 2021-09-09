@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Typo3Converter;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
@@ -44,8 +43,6 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
  */
 class GeneralConverterTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

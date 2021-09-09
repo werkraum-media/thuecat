@@ -24,7 +24,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  */
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
@@ -33,8 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
  */
 class StaticUrlProviderTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

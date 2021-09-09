@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\Import;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -35,8 +34,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
  */
 class ImportTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

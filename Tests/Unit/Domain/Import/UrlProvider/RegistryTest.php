@@ -24,7 +24,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  */
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
@@ -34,8 +33,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
  */
 class RegistryTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

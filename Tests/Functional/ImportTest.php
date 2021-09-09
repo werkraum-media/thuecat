@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Csa\GuzzleHttp\Middleware\Cache\Adapter\MockStorageAdapter;
 use Csa\GuzzleHttp\Middleware\Cache\MockMiddleware;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\Route;
@@ -70,8 +69,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
  */
 class ImportTest extends TestCase
 {
-    use ProphecyTrait;
-
     protected $coreExtensionsToLoad = [
         'core',
         'backend',

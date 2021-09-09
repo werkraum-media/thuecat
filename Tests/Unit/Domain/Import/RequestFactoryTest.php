@@ -24,7 +24,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
  */
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
@@ -34,8 +33,6 @@ use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
  */
 class RequestFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */

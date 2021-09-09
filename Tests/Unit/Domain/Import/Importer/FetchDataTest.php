@@ -24,7 +24,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Importer;
  */
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -38,8 +37,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseExcept
  */
 class FetchDataTest extends TestCase
 {
-    use ProphecyTrait;
-
     /**
      * @test
      */
