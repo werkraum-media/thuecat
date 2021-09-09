@@ -1,9 +1,10 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
+        <f:debug inline="true">{entity}</f:debug>
         <div class="row mb-5">
             <div class="col-12 col-md-6">
-                <h2>{entity.title} <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if></h2>
+                <h2>{entity.title} ({entity.town.title})<f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if></h2>
                 {entity.description -> f:format.html()}
             </div>
             <div class="col-12 col-md-6">
@@ -36,15 +37,10 @@
                     <f:if condition="{entity.otherServices}">
                         {f:render(partial: 'Service', arguments: {otherServices: entity.otherServices})}
                     </f:if>
-                    <f:if condition="{entity.petsAllowed}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}</span>
-                    </f:if>
-                    <f:if condition="{entity.isAccessibleForFree}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}</span>
-                    </f:if>
-                    <f:if condition="{entity.publicAccess}">
-                        <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}</span>
-                    </f:if>
+
+                    <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'thuecat')}</span>
+                    <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'thuecat')}</span>
+                    <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'thuecat')}</span>
                 </p>
 
                 <f:if condition="{entity.museumServices}">
