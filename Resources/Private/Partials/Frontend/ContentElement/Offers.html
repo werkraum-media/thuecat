@@ -29,7 +29,7 @@
                     <div class="content collapse" id="offerGroup{key}">
                         <f:if condition="{offer.description}">
                             <div class="description">
-                                <p>{offer.description}</p>
+                                <p><small>{offer.description}</small></p>
                             </div>
                         </f:if>
                         <table class="table">
@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                                        <span>{f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}</span>
+                                        <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
                                     </td>
                                 </tr>
                                     <f:if condition="{price.description}">
