@@ -1,10 +1,10 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
-        <f:debug inline="true">{entity}</f:debug>
         <div class="row mb-5">
             <div class="col-12 col-md-6">
-                <h2>{entity.title} ({entity.town.title})<f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if></h2>
+                <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if>
+                <h2>{entity.title} ({entity.town.title})</h2>
                 {entity.description -> f:format.html()}
             </div>
             <div class="col-12 col-md-6">
