@@ -21,41 +21,46 @@
 
     <f:if condition="{offers -> f:count()} > 1">
         <f:then>
-            <f:for each="{offers}" as="offer" key="key">
-                <div class="offer-group">
-                    <a class="btn" data-bs-toggle="collapse" href="#offerGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
-                        <f:if condition="{offer.title}"><f:then>{offer.title}</f:then><f:else>Preisgruppe</f:else></f:if>
-                    </a>
-                    <div class="content collapse" id="offerGroup{key}">
-                        <f:if condition="{offer.description}">
-                            <div class="description">
-                                <p><small>{offer.description}</small></p>
+            <div class="accordion" id="accordionOfferPrices">
+                <f:for each="{offers}" as="offer" key="key">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="offerPricesGroup{key}">
+                            <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#offerPriceGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
+                                <f:if condition="{offer.title}"><f:then>{offer.title}</f:then><f:else>Preisgruppe</f:else></f:if>
+                            </button>
+                        </h2>
+                        <div class="accordion-collapse collapse" id="offerPriceGroup{key}">
+                            <div class="accordion-body">
+                                <f:if condition="{offer.description}">
+                                    <div class="description">
+                                        <p><small>{offer.description}</small></p>
+                                    </div>
+                                </f:if>
+                                <table class="table">
+                                    <f:for each="{offer.prices}" as="price">
+                                        <tr>
+                                            <td>
+                                                <span>{price.title}</span>
+                                            </td>
+                                            <td>
+                                                {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                                <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
+                                            </td>
+                                        </tr>
+                                            <f:if condition="{price.description}">
+                                                <tr>
+                                                    <td colspan="2" class="description">
+                                                        <small>{price.description}</small>
+                                                    </td>
+                                                </tr>
+                                            </f:if>
+                                    </f:for>
+                                </table>
                             </div>
-                        </f:if>
-                        <table class="table">
-                            <f:for each="{offer.prices}" as="price">
-                                <tr>
-                                    <td>
-                                        <span>{price.title}</span>
-                                    </td>
-                                    <td>
-                                        {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                                        <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
-                                    </td>
-                                </tr>
-                                    <f:if condition="{price.description}">
-                                    <tr>
-                                        <td colspan="2" class="description">
-                                            <small>{price.description}</small>
-                                        </td>
-                                    </tr>
-                                    </f:if>
-
-                            </f:for>
-                        </table>
+                        </div>
                     </div>
-                </div>
-            </f:for>
+                </f:for>
+            </div>
         </f:then>
         <f:else>
             <f:for each="{offers}" as="offer" key="key">
