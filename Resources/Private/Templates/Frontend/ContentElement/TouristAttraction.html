@@ -98,16 +98,36 @@
                 </f:if>
             </div>
             <div class="col-12 col-md-3">
-                <f:if condition="{entity.offers}">
+                <f:for each="{entity.offers}" as="offer" iteration="iterator">
+                    <f:if condition="{offer.type}=='GuidedTourOffer'">
+                        <f:then>
+                            <f:variable name="GuidedTourOffers" value="true" />
+                        </f:then>
+                        <f:else>
+                            <f:variable name="OtherOffers" value="true" />
+                        </f:else>
+                    </f:if>
+                </f:for>
+                <f:if condition="{OtherOffers}">
                     <h5>{f:translate(id: 'content.offers', extensionName: 'Thuecat')}</h5>
                     {f:render(partial: 'Offers', arguments: {offers: entity.offers})}
                 </f:if>
             </div>
         </div>
+        <f:if condition="{GuidedTourOffers}">
+            <div class="row">
+                <div class="col-12">
+                <h3>{f:translate(id: 'content.tours', extensionName: 'Thuecat')}</h3>
+                    {f:render(partial: 'Tours', arguments: {offers: entity.offers})}
+                </div>
+            </div>
+        </f:if>
         <f:if condition="{entity.accessibilitySpecification.certificationStatus} != ''">
             <div class="row">
+                <div class="col-12">
                 <h3>{f:translate(id: 'content.accessibility', extensionName: 'Thuecat')}</h3>
-                {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification})}
+                    {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification})}
+                </div>
             </div>
         </f:if>
     </f:for>

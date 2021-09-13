@@ -4,7 +4,7 @@
         <f:then>
             <div class="accordion" id="accordionOfferPrices">
                 <f:for each="{offers}" as="offer" key="key">
-                    <f:if condition="{offer.type} != 'GuidedTourOffer'">
+                    <f:if condition="{offer.type} == 'GuidedTourOffer'">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="offerPricesGroup{key}">
                                 <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#offerPriceGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
@@ -47,7 +47,7 @@
         </f:then>
         <f:else>
             <f:for each="{offers}" as="offer" key="key">
-                <f:if condition="{offer.type} != 'GuidedTourOffer'">
+                <f:if condition="{offer.type} == 'GuidedTourOffer'">
                     <div class="offer-group">
                         <div class="content">
                             <f:if condition="{offer.description}">

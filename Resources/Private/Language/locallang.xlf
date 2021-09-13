@@ -113,6 +113,9 @@
                 <source>Imported configuration "%1$s". But had at least one error.</source>
             </trans-unit>
 
+            <trans-unit id="content.tours" xml:space="preserve">
+                <source>Guided tours</source>
+            </trans-unit>
             <trans-unit id="content.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>

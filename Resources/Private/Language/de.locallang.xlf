@@ -58,6 +58,11 @@
             <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
                 <source>Video Guide</source>
                 <target>Videoguide</target>
+            </trans-unit>
+            <trans-unit id="content.tours" xml:space="preserve">
+                <source>Guided tours</source>
+                <target>Führungen</target>
+            </trans-unit>
             <trans-unit id="content.address" xml:space="preserve">
                 <source>Address</source>
                 <target>Anschrift</target>
