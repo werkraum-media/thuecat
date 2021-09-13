@@ -444,6 +444,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         $data = [];
         foreach ($entity->getOffers() as $offer) {
             $data[] = [
+                'type' => $offer->getOfferType(),
                 'title' => $offer->getName(),
                 'description' => $offer->getDescription(),
                 'prices' => array_map([$this, 'getPrice'], $offer->getPrices()),
