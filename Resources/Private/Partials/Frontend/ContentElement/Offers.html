@@ -8,7 +8,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="offerPricesGroup{key}">
                                 <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#offerPriceGroup{key}" role="button" aria-expanded="false" aria-controls="offerGroup{key}">
-                                    <f:if condition="{offer.title}"><f:then>{offer.title}</f:then><f:else>Preisgruppe</f:else></f:if>
+                                    <f:if condition="{offer.title}"><f:then>{offer.title} <small>({f:translate(id: 'content.price.type.{offer.type}', default: offer.type, extensionName: 'Thuecat')})</small></f:then><f:else>Preisgruppe</f:else></f:if>
                                 </button>
                             </h2>
                             <div class="accordion-collapse collapse" id="offerPriceGroup{key}">
@@ -50,6 +50,7 @@
                 <f:if condition="{offer.type} != 'GuidedTourOffer'">
                     <div class="offer-group">
                         <div class="content">
+                            <h4>{offer.title} <small>({f:translate(id: 'content.price.type.{offer.type}', default: offer.type, extensionName: 'Thuecat')})</small></h4>
                             <f:if condition="{offer.description}">
                                 <div class="description">
                                     <p>{offer.description}</p>

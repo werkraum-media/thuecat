@@ -81,14 +81,18 @@
 
                 <f:if condition="{entity.startOfConstruction}">
                     <h6>{f:translate(id: 'content.construction', extensionName: 'thuecat')}</h6>
-                    {entity.startOfConstruction}
+                    <p>
+                        <span class="badge bg-secondary">{entity.startOfConstruction}</span>
+                    </p>
                 </f:if>
 
                 <f:if condition="{entity.architecturalStyles}">
                     <h6>{f:translate(id: 'content.architecture', extensionName: 'thuecat')}</h6>
-                    <f:for each="{entity.architecturalStyles}" as="style">
-                        {f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}
-                    </f:for>
+                    <p>
+                        <f:for each="{entity.architecturalStyles}" as="style">
+                            <span class="badge bg-secondary">{f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'thuecat')}</span>
+                        </f:for>
+                    </p>
                 </f:if>
             </div>
             <div class="col-12 col-md-3">
