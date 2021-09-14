@@ -1,46 +1,15 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-
-<div class="openingHours">
-    <f:for each="{openingHours}" as="openingHour">
-        <h6>
-            {openingHour.from -> f:format.date(format: 'd.m.Y')} -
-            {openingHour.through -> f:format.date(format: 'd.m.Y')}
-        </h6>
-        <p>
-            <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                {weekday}: {openingHour.opens} - {openingHour.closes}<br>
-            </f:for>
-        </p>
-    </f:for>
-</div>
-
-<f:comment>
-    <div class="row">
-        <f:for each="{entity.openingHours}" as="openingHour">
-            <div class="opening-hours-block">
-                <h3>
-                    {openingHour.from -> f:format.date(format: 'd.m.Y')} -
-                    {openingHour.through -> f:format.date(format: 'd.m.Y')}
-                </h3>
-                <div>
-                    <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                        <div class="day-row">
-                            <div class="day">
-                                <span>
-                                    {f:translate(id: 'thuecat.{weekday}', extensionName: 'sitepackage')}:
-                                </span>
-                            </div>
-                            <div class="time">
-                                <span>
-                                    {openingHour.opens -> f:format.date(format: 'H:i')} - {openingHour.closes -> f:format.date(format: 'H:i')} {f:translate(id: 'thuecat.oClock', extensionName: 'sitepackage')}
-                                </span>
-                            </div>
-                        </div>
-                    </f:for>
-                </div>
-            </div>
+    <div class="openingHours">
+        <f:for each="{openingHours}" as="openingHour">
+            <h6>
+                {openingHour.from -> f:format.date(format: 'd.m.Y')} -
+                {openingHour.through -> f:format.date(format: 'd.m.Y')}
+            </h6>
+            <p>
+                <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
+                    {weekday}: {openingHour.opens} - {openingHour.closes}<br>
+                </f:for>
+            </p>
         </f:for>
     </div>
-</div>
-</f:comment>
 </html>
