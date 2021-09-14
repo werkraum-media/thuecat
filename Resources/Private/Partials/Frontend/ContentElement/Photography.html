@@ -1,0 +1,9 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="photography">
+        <p>
+            <f:for each="{photography}" as="photography">
+                <span class="badge bg-secondary">{f:translate(id: 'content.photography.{photography}', default: photography, extensionName: 'thuecat')}</span>
+            </f:for>
+        </p>
+    </div>
+</html>

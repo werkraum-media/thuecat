@@ -1,0 +1,92 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div class="offers">
+    <f:if condition="{offers -> f:count()} > 1">
+        <f:then>
+            <f:render section="MultiOffers" arguments="{offers: offers, uid: uid}" />
+        </f:then>
+        <f:else>
+            <f:render section="SingleOffer" arguments="{offers: offers}" />
+        </f:else>
+    </f:if>
+</div>
+
+<f:section name="MultiOffers">
+    <div class="accordion" id="accordionOfferPrices">
+        <f:for each="{offers}" as="offer" key="key">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#offerPriceGroup-{key}-{uid}" role="button" aria-expanded="false" aria-controls="offerGroup-{key}-{uid}">
+                        <f:if condition="{offer.title}"><f:then>{offer.title} <small>({f:translate(id: 'content.price.type.{offer.type}', default: offer.type, extensionName: 'Thuecat')})</small></f:then><f:else>Preisgruppe</f:else></f:if>
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse" id="offerPriceGroup-{key}-{uid}">
+                    <div class="accordion-body">
+                        <f:if condition="{offer.description}">
+                            <div class="description">
+                                <p><small>{offer.description}</small></p>
+                            </div>
+                        </f:if>
+                        <table class="table">
+                            <f:for each="{offer.prices}" as="price">
+                                <tr>
+                                    <td>
+                                        <span>{price.title}</span>
+                                    </td>
+                                    <td>
+                                        {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                        <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
+                                    </td>
+                                </tr>
+                                <f:if condition="{price.description}">
+                                    <tr>
+                                        <td colspan="2" class="description">
+                                            <small>{price.description}</small>
+                                        </td>
+                                    </tr>
+                                </f:if>
+                            </f:for>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </f:for>
+    </div>
+</f:section>
+
+<f:section name="SingleOffer">
+    <f:for each="{offers}" as="offer" key="key">
+        <div class="offer-group">
+            <div class="content">
+                <h6>{offer.title} <small>({f:translate(id: 'content.price.type.{offer.type}', default: offer.type, extensionName: 'Thuecat')})</small></h6>
+                <f:if condition="{offer.description}">
+                    <div class="description">
+                        <p><small>{offer.description}</small></p>
+                    </div>
+                </f:if>
+                <f:for each="{offer.prices}" as="price">
+                    <table class="table">
+                        <f:for each="{offer.prices}" as="price">
+                            <tr>
+                                <td>
+                                    <span>{price.title}</span>
+                                </td>
+                                <td>
+                                    {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                    <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
+                                </td>
+                            </tr>
+                            <f:if condition="{price.description}">
+                                <tr>
+                                    <td colspan="2" class="description">
+                                        <small>{price.description}</small>
+                                    </td>
+                                </tr>
+                            </f:if>
+                        </f:for>
+                    </table>
+                </f:for>
+            </div>
+        </div>
+    </f:for>
+</f:section>
+</html>
