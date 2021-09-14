@@ -57,22 +57,26 @@
                                 </div>
                             </f:if>
                             <f:for each="{offer.prices}" as="price">
-                                <div class="offer-item row">
-                                    <div class="title">
-                                        <span>{price.title}</span>
-                                    </div>
-                                    <div class="price">
-                                        <div>
-                                            {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
-                                            <span>{f:translate(id: 'content.price.rule.{price.rule}', default: price.rule, extensionName: 'Thuecat')}</span>
-                                        </div>
-                                    </div>
-                                    <f:if condition="{price.description}">
-                                        <div class="description">
-                                            <p>{price.description}</p>
-                                        </div>
-                                    </f:if>
-                                </div>
+                                <table class="table">
+                                    <f:for each="{offer.prices}" as="price">
+                                        <tr>
+                                            <td>
+                                                <span>{price.title}</span>
+                                            </td>
+                                            <td>
+                                                {price.price -> f:format.currency(decimalSeparator: ',', thousandsSeparator: '.', decimals: 2, currencySign: price.currency)}
+                                                <small>{f:translate(id: 'content.price.rule.{price.rules.0}', default: price.rule, extensionName: 'Thuecat')}</small>
+                                            </td>
+                                        </tr>
+                                            <f:if condition="{price.description}">
+                                                <tr>
+                                                    <td colspan="2" class="description">
+                                                        <small>{price.description}</small>
+                                                    </td>
+                                                </tr>
+                                            </f:if>
+                                    </f:for>
+                                </table>
                             </f:for>
                         </div>
                     </div>
