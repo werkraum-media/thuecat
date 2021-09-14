@@ -12,7 +12,7 @@
         <f:for each="{entity.openingHours}" as="openingHour">
             <p>
                 <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                    {weekday}: {openingHour.opens} - {openingHour.closes}<br>
+                    {f:translate(id: 'content.openingHour.weekday.{weekday}', default: weekday, extensionName: 'Thuecat')} {openingHour.opens} - {openingHour.closes}<br>
                 </f:for>
                 {openingHour.from -> f:format.date(format: 'd.m.Y')} -
                 {openingHour.through -> f:format.date(format: 'd.m.Y')}

@@ -82,7 +82,14 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('example@example.com', (string)$result->getBody());
         self::assertStringContainsString('(0)30 23125 000', (string)$result->getBody());
 
-        self::assertStringContainsString('Monday: 09:30:00 - 18:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Montag: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Dienstag: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Mittwoch: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Donnerstag: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Freitag: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Samstag: 09:30:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Sonntag: 13:00:00 - 17:00:00', (string)$result->getBody());
+        self::assertStringContainsString('Feiertags: 13:00:00 - 17:00:00', (string)$result->getBody());
 
         self::assertStringContainsString('Führungen', (string)$result->getBody());
         self::assertStringContainsString('(Führung)', (string)$result->getBody());
