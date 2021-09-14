@@ -1,0 +1,9 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="languages">
+        <p>
+            <f:for each="{availableLanguages}" as="language">
+                <span class="badge bg-secondary">{f:translate(id: 'content.availableLanguage.{language}', default: language, extensionName: 'Thuecat')}</span>
+            </f:for>
+        </p>
+    </div>
+</html>
