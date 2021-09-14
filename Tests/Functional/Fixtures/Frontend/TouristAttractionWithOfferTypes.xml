@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <tx_thuecat_tourist_attraction>
+        <uid>1</uid>
+        <pid>3</pid>
+        <title>Attraktion mit Angebotstypen</title>
+        <offers>[{"description":"","prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"}],"title":"Führungen","type":"GuidedTourOffer"},{"description":"","prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"}],"title":"Verkostung","type":"Tasting"},{"description":"","prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"}],"title":"Eintritt 1","type":"EntryOffer"},{"description":"","prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"}],"title":"Eintritt 2","type":"EntryOffer"},{"description":"","prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"}],"title":"Parkgebühr","type":"ParkingFee"}]</offers>
+    </tx_thuecat_tourist_attraction>
+</dataset>
+
