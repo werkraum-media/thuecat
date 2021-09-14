@@ -3,6 +3,30 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
         <header/>
         <body>
+            <trans-unit id="content.openingHour.weekday.Monday" xml:space="preserve">
+                <source>Monday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Tuesday" xml:space="preserve">
+                <source>Tuesday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Wednesday" xml:space="preserve">
+                <source>Wednesday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Thursday" xml:space="preserve">
+                <source>Thursday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Friday" xml:space="preserve">
+                <source>Friday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Saturday" xml:space="preserve">
+                <source>Saturday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Sunday" xml:space="preserve">
+                <source>Sunday:</source>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.PublicHolidays" xml:space="preserve">
+                <source>Public Holidays:</source>
+            </trans-unit>
             <trans-unit id="module.actions" xml:space="preserve">
                 <source>Actions</source>
             </trans-unit>

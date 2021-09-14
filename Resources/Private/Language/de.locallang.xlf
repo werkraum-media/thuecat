@@ -3,6 +3,38 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
         <header/>
         <body>
+            <trans-unit id="content.openingHour.weekday.Monday" xml:space="preserve">
+                <source>Monday:</source>
+                <target>Montag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Tuesday" xml:space="preserve">
+                <source>Tuesday:</source>
+                <target>Dienstag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Wednesday" xml:space="preserve">
+                <source>Wednesday:</source>
+                <target>Mittwoch:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Thursday" xml:space="preserve">
+                <source>Thursday:</source>
+                <target>Donnerstag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Friday" xml:space="preserve">
+                <source>Friday:</source>
+                <target>Freitag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Saturday" xml:space="preserve">
+                <source>Saturday:</source>
+                <target>Samstag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.Sunday" xml:space="preserve">
+                <source>Sunday:</source>
+                <target>Sonntag:</target>
+            </trans-unit>
+            <trans-unit id="content.openingHour.weekday.PublicHolidays" xml:space="preserve">
+                <source>Public Holidays:</source>
+                <target>Feiertags:</target>
+            </trans-unit>
             <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">
                 <source>Accommodation Offer</source>
                 <target>Unterkunft</target>

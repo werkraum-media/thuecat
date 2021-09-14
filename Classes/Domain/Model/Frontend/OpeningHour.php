@@ -114,6 +114,7 @@ class OpeningHour
             'Friday',
             'Saturday',
             'Sunday',
+            'PublicHolidays',
         ]);
     }
 
