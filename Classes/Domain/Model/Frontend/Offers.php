@@ -48,10 +48,14 @@ class Offers implements TypeInterface, \Iterator, \Countable
     public function __construct(string $serialized)
     {
         $this->serialized = $serialized;
-        $this->array = array_map(
-            [Offer::class, 'createFromArray'],
-            json_decode($serialized, true)
-        );
+        $array = json_decode($serialized, true);
+        if (is_array($array)) {
+            $array = array_map([Offer::class, 'createFromArray'], $array);
+            usort($array, function (Offer $offerA, Offer $offerB) {
+                return $offerA->getType() <=> $offerB->getType();
+            });
+            $this->array = $array;
+        }
     }
 
     public function __toString(): string

@@ -373,20 +373,58 @@ class FrontendTest extends FunctionalTestCase
 
         self::assertStringContainsString('Attraktion mit Preisen', (string)$result->getBody());
 
-        self::assertLessThan(
-            mb_strpos((string)$result->getBody(), 'Familienkarte A'),
+        self::assertGreaterThan(
             mb_strpos((string)$result->getBody(), 'Erwachsene'),
-            '"Familienkarte A" is rendered before "Erwachsene"'
-        );
-        self::assertLessThan(
-            mb_strpos((string)$result->getBody(), 'Familienkarte B'),
             mb_strpos((string)$result->getBody(), 'Familienkarte A'),
-            '"Familienkarte B" is rendered before "Familienkarte A"'
+            '"Erwachsene" is not rendered before "Familienkarte A"'
         );
-        self::assertLessThan(
-            mb_strpos((string)$result->getBody(), 'Schulklassen'),
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Familienkarte A'),
             mb_strpos((string)$result->getBody(), 'Familienkarte B'),
-            '"Schulklassen" is rendered before "Familienkarte B"'
+            '"Familienkarte A" is not rendered before "Familienkarte B"'
+        );
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Familienkarte B'),
+            mb_strpos((string)$result->getBody(), 'Schulklassen'),
+            '"Familienkarte B" is not rendered before "Schulklassen"'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function offersAreSortedByType(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithOfferTypes.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $result = $this->executeFrontendRequest($request);
+
+        self::assertSame(200, $result->getStatusCode());
+
+        self::assertStringContainsString('Attraktion mit Angebotstypen', (string)$result->getBody());
+
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Eintritt 1'),
+            mb_strpos((string)$result->getBody(), 'Eintritt 2'),
+            '"Eintritt 1" is not rendered before "Eintritt 2"'
+        );
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Eintritt 2'),
+            mb_strpos((string)$result->getBody(), 'Führungen'),
+            '"Eintritt 2" is not rendered before "Führungen"'
+        );
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Führungen'),
+            mb_strpos((string)$result->getBody(), 'Parkgebühr'),
+            '"Führungen" is not rendered before "Parkgebühr"'
+        );
+        self::assertGreaterThan(
+            mb_strpos((string)$result->getBody(), 'Parkgebühr'),
+            mb_strpos((string)$result->getBody(), 'Verkostung'),
+            '"Parkgebühr" is not rendered before "Verkostung"'
         );
     }
 }
