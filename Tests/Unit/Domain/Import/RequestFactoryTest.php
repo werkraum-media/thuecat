@@ -26,6 +26,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
+use TYPO3\CMS\Core\Http\UriFactory;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 /**
@@ -39,9 +41,13 @@ class RequestFactoryTest extends TestCase
     public function canBeCreated(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $requestFactory = new Typo3RequestFactory();
+        $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
-            $extensionConfiguration
+            $extensionConfiguration,
+            $requestFactory,
+            $uriFactory
         );
 
         self::assertInstanceOf(RequestFactory::class, $subject);
@@ -53,9 +59,13 @@ class RequestFactoryTest extends TestCase
     public function returnsRequestWithJsonIdFormat(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $requestFactory = new Typo3RequestFactory();
+        $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
-            $extensionConfiguration
+            $extensionConfiguration,
+            $requestFactory,
+            $uriFactory
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
@@ -70,9 +80,13 @@ class RequestFactoryTest extends TestCase
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
+        $requestFactory = new Typo3RequestFactory();
+        $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
-            $extensionConfiguration
+            $extensionConfiguration,
+            $requestFactory,
+            $uriFactory
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
@@ -87,9 +101,13 @@ class RequestFactoryTest extends TestCase
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
+        $requestFactory = new Typo3RequestFactory();
+        $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
-            $extensionConfiguration
+            $extensionConfiguration,
+            $requestFactory,
+            $uriFactory
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');

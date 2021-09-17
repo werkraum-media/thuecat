@@ -23,28 +23,48 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriFactoryInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
-use TYPO3\CMS\Core\Http\Uri;
 
-class RequestFactory extends Typo3RequestFactory
+class RequestFactory implements RequestFactoryInterface
 {
     /**
      * @var ExtensionConfiguration
      */
     private $extensionConfiguration;
 
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $requestFactory;
+
+    /**
+     * @var UriFactoryInterface
+     */
+    private $uriFactory;
+
     public function __construct(
-        ExtensionConfiguration $extensionConfiguration
+        ExtensionConfiguration $extensionConfiguration,
+        RequestFactoryInterface $requestFactory,
+        UriFactoryInterface $uriFactory
     ) {
         $this->extensionConfiguration = $extensionConfiguration;
+        $this->requestFactory = $requestFactory;
+        $this->uriFactory = $uriFactory;
     }
 
+    /**
+     * @param UriInterface|string $uri The URI associated with the request.
+     */
     public function createRequest(string $method, $uri): RequestInterface
     {
-        $uri = new Uri((string) $uri);
+        if (!$uri instanceof UriInterface) {
+            $uri = $this->uriFactory->createUri((string) $uri);
+        }
 
         $query = [];
         parse_str($uri->getQuery(), $query);
@@ -60,6 +80,6 @@ class RequestFactory extends Typo3RequestFactory
 
         $uri = $uri->withQuery(http_build_query($query));
 
-        return parent::createRequest($method, $uri);
+        return $this->requestFactory->createRequest($method, $uri);
     }
 }
