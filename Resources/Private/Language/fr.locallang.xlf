@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+      <file source-language="en" datatype="plaintext" target-language="fr" original="messages" date="2021-10-14T09:00:00Z"  product-name="ThueCat Plugins and Modules">
+            <header />
+
+            <body>
+                  <trans-unit id="content.openingHour.weekday.Monday" xml:space="preserve">
+                        <source>Monday:</source>
+                        <target>Lundi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Tuesday" xml:space="preserve">
+                        <source>Tuesday:</source>
+                        <target>Mardi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Wednesday" xml:space="preserve">
+                        <source>Wednesday:</source>
+                        <target>Mercredi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Thursday" xml:space="preserve">
+                        <source>Thursday:</source>
+                        <target>Jeudi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Friday" xml:space="preserve">
+                        <source>Friday:</source>
+                        <target>Vendredi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Saturday" xml:space="preserve">
+                        <source>Saturday:</source>
+                        <target>Samedi:</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.Sunday" xml:space="preserve">
+                        <source>Sunday:</source>
+                        <target>Dimanche: </target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHour.weekday.PublicHolidays" xml:space="preserve">
+                        <source>Public Holidays:</source>
+                        <target>Jours f&#xE9;ri&#xE9;s: </target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">
+                        <source>Accommodation Offer</source>
+                        <target>L'h&#xE9;bergement</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.Application" xml:space="preserve">
+                        <source>Application</source>
+                        <target>Application</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.AudioGuide" xml:space="preserve">
+                        <source>Audio Guide</source>
+                        <target>L'audioguide</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.Childcare" xml:space="preserve">
+                        <source>Childcare</source>
+                        <target>Garde d'enfant</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.CourseOffer" xml:space="preserve">
+                        <source>Course Offer</source>
+                        <target>Course</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.EntryOffer" xml:space="preserve">
+                        <source>Entry Offer</source>
+                        <target>Entr&#xE9;e</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.GuidedTourOffer" xml:space="preserve">
+                        <source>Guided Tour Offer</source>
+                        <target>Visite guid&#xE9;e</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.ParkingFee" xml:space="preserve">
+                        <source>Parking Fee</source>
+                        <target>Droit de stationnement</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.PedagogicalOffer" xml:space="preserve">
+                        <source>Pedagogical Offer</source>
+                        <target>Offre p&#xE9;dagogique</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.RentingOffer" xml:space="preserve">
+                        <source>Renting Offer</source>
+                        <target>Location</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.ShowEnuMem" xml:space="preserve">
+                        <source>Show Enu Mem</source>
+                        <target>Show</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.Tasting" xml:space="preserve">
+                        <source>Tasting</source>
+                        <target>D&#xE9;gustation</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.ThuringianForestCard" xml:space="preserve">
+                        <source>Thuringian Forest Card</source>
+                        <target>Carte de la For&#xEA;t de la Thuringe</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
+                        <source>Video Guide</source>
+                        <target>Guide vid&#xE9;o</target>
+                  </trans-unit>
+                  <trans-unit id="content.tours" xml:space="preserve">
+                        <source>Guided tours</source>
+                        <target>Visites guid&#xE9;es</target>
+                  </trans-unit>
+                  <trans-unit id="content.address" xml:space="preserve">
+                        <source>Address</source>
+                        <target>Adresse postale</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHours" xml:space="preserve">
+                        <source>Opening hours</source>
+                        <target>Heures d'ouverture</target>
+                  </trans-unit>
+                  <trans-unit id="content.offers" xml:space="preserve">
+                        <source>Offers</source>
+                        <target>Prix</target>
+                  </trans-unit>
+                  <trans-unit id="content.generalInformation" xml:space="preserve">
+                        <source>General Information</source>
+                        <target>Informations g&#xE9;n&#xE9;rales</target>
+                  </trans-unit>
+                  <trans-unit id="content.payment" xml:space="preserve">
+                        <source>Accepted payment</source>
+                        <target>Options de paiement accept&#xE9;es</target>
+                  </trans-unit>
+                  <trans-unit id="content.languages" xml:space="preserve">
+                        <source>Available languages</source>
+                        <target>Langues disponibles</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation" xml:space="preserve">
+                        <source>Sanitation</source>
+                        <target>Installations sanitaires</target>
+                  </trans-unit>
+                  <trans-unit id="content.digital" xml:space="preserve">
+                        <source>Digital offers</source>
+                        <target>Offres digitaux</target>
+                  </trans-unit>
+                  <trans-unit id="content.museum" xml:space="preserve">
+                        <source>Museum services</source>
+                        <target>Offres du mus&#xE9;e</target>
+                  </trans-unit>
+                  <trans-unit id="content.traffic" xml:space="preserve">
+                        <source>Mobility offers</source>
+                        <target>Offres de la mobilit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.photography" xml:space="preserve">
+                        <source>Photography</source>
+                        <target>Photographie</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecture" xml:space="preserve">
+                        <source>Architecture</source>
+                        <target>Architecture</target>
+                  </trans-unit>
+                  <trans-unit id="content.construction" xml:space="preserve">
+                        <source>Year of construction</source>
+                        <target>Ann&#xE9;e de construction</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibility" xml:space="preserve">
+                        <source>Information on accessibility</source>
+                        <target>Informations de 'l accessibilit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
+                        <source>per package</source>
+                        <target>par arrangement</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerGroup" xml:space="preserve">
+                        <source>per group</source>
+                        <target>par groupe</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerPerson" xml:space="preserve">
+                        <source>per person</source>
+                        <target>par personne</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerBike" xml:space="preserve">
+                        <source>per bike</source>
+                        <target>par moto</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerBus" xml:space="preserve">
+                        <source>per bus</source>
+                        <target>par autobus</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerCar" xml:space="preserve">
+                        <source>per car</source>
+                        <target>par voiture</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerCarOrBike" xml:space="preserve">
+                        <source>per car or bike</source>
+                        <target>par voiture/ moto</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerHour" xml:space="preserve">
+                        <source>per hour</source>
+                        <target>par heure</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerPersonAndNight" xml:space="preserve">
+                        <source>per person and night</source>
+                        <target>par personne et nuit</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerPiece" xml:space="preserve">
+                        <source>per piece</source>
+                        <target>par pi&#xE8;ce</target>
+                  </trans-unit>
+                  <trans-unit id="content.price.rule.PerUnitAndNight" xml:space="preserve">
+                        <source>per unit and night</source>
+                        <target>par unit&#xE9; et nuit</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation.Toilets" xml:space="preserve">
+                        <source>Toilets</source>
+                        <target>Toilettes</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation.DisabledToilets" xml:space="preserve">
+                        <source>Disabled Toilets</source>
+                        <target>Toilettes pour personnes handicap&#xE9;s</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation.NappyChangingArea" xml:space="preserve">
+                        <source>Nappy Changing Area</source>
+                        <target>Place &#xE0; langer</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation.FamilyAndChildFriendly" xml:space="preserve">
+                        <source>Family and Child Friendly</source>
+                        <target>Adapt&#xE9; aux familles/ aux enfants</target>
+                  </trans-unit>
+                  <trans-unit id="content.sanitation.ZeroSanitation" xml:space="preserve">
+                        <source>Zero Sanitation</source>
+                        <target>pas d' installations sanitaires</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.BaggageStorage" xml:space="preserve">
+                        <source>Baggage Storage</source>
+                        <target>Consigne</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.ChargingPossibilitiesForMobileDevices" xml:space="preserve">
+                        <source>Charging Possibilities For Mobile Devices</source>
+                        <target>Possibilit&#xE9; de charger pour les appareils mobiles</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.Childcare" xml:space="preserve">
+                        <source>Childcare</source>
+                        <target>Garde d'enfant</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.FreeWlan" xml:space="preserve">
+                        <source>Free Wlan</source>
+                        <target>WIFI gratuit</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.LockBoxes" xml:space="preserve">
+                        <source>Lock Boxes</source>
+                        <target>Consignes automatiques</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.PlayCornerOrPlayArea" xml:space="preserve">
+                        <source>Play Corner Or Play Area</source>
+                        <target>Coin/ place de jeu</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.Playground" xml:space="preserve">
+                        <source>Playground</source>
+                        <target>Terrain de jeux</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.SeatingPossibilitiesRestArea" xml:space="preserve">
+                        <source>Seating Possibilities Rest Area</source>
+                        <target>Zone de repos ou possibilit&#xE9; de s'asseoir</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.SouvenirShop" xml:space="preserve">
+                        <source>Souvenir Shop</source>
+                        <target>Boutique de souvenirs</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.Wardrobe" xml:space="preserve">
+                        <source>Wardrobe</source>
+                        <target>Garde-robe</target>
+                  </trans-unit>
+                  <trans-unit id="content.otherService.ZeroOtherServiceEnumMem" xml:space="preserve">
+                        <source>Zero Other Service</source>
+                        <target>Pas d'autre service </target>
+                  </trans-unit>
+                  <trans-unit id="content.museumService.MuseumShop" xml:space="preserve">
+                        <source>Museum Shop</source>
+                        <target>Boutique du mus&#xE9;e</target>
+                  </trans-unit>
+                  <trans-unit id="content.museumService.PedagogicalOffer" xml:space="preserve">
+                        <source>Pedagogical Offer</source>
+                        <target>Offre p&#xE9;dagogique</target>
+                  </trans-unit>
+                  <trans-unit id="content.museumService.ZeroInformationMuseumService" xml:space="preserve">
+                        <source>Zero Information Museum Service</source>
+                        <target>Pas d'autre service</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.ArchitectureOfHomelandSecurity" xml:space="preserve">
+                        <source>Architecture of Homeland Security</source>
+                        <target>Architecture du pays d'origine proteg&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.ArtDeco" xml:space="preserve">
+                        <source>Art Deco</source>
+                        <target>Art D&#xE9;co</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.ArtNouveau" xml:space="preserve">
+                        <source>Art Nouveau</source>
+                        <target>Art Nouveau</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Baroque" xml:space="preserve">
+                        <source>Baroque</source>
+                        <target>Baroque</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.BauhausStyle" xml:space="preserve">
+                        <source>Bauhaus Style</source>
+                        <target>Style Bauhaus</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Brutalism" xml:space="preserve">
+                        <source>Brutalism</source>
+                        <target>Brutalismus</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Classicism" xml:space="preserve">
+                        <source>Classicism</source>
+                        <target>Classicisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Constructivism" xml:space="preserve">
+                        <source>Constructivism</source>
+                        <target>Constructivisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.CriticalRegionalism" xml:space="preserve">
+                        <source>Critical Regionalism</source>
+                        <target>Regionalisme critiquant</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Deconstructivism" xml:space="preserve">
+                        <source>Deconstructivism</source>
+                        <target>D&#xE9;constructivisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Expressionism" xml:space="preserve">
+                        <source>Expressionism</source>
+                        <target>Expressionisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Functionalism" xml:space="preserve">
+                        <source>Functionalism</source>
+                        <target>Fonctionnalisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.GothicArt" xml:space="preserve">
+                        <source>Gothic Art</source>
+                        <target>Gothique</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.GothicRevival" xml:space="preserve">
+                        <source>Gothic Revival</source>
+                        <target>N&#xE9;ogothique</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.HighTechArchitecture" xml:space="preserve">
+                        <source>High Tech Architecture</source>
+                        <target>Architecture High Tech</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Historicism" xml:space="preserve">
+                        <source>Historicism</source>
+                        <target>Historicisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.InternationalStyle" xml:space="preserve">
+                        <source>International Style</source>
+                        <target>Style international</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Minimalism" xml:space="preserve">
+                        <source>Minimalism</source>
+                        <target>Minimalisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Modernism" xml:space="preserve">
+                        <source>Modernism</source>
+                        <target>Modernit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Neoclassicism" xml:space="preserve">
+                        <source>Neoclassicism</source>
+                        <target>N&#xE9;oclassicisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Neorenaissance" xml:space="preserve">
+                        <source>Neorenaissance</source>
+                        <target>N&#xE9;orenaissance</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.NewBuilding" xml:space="preserve">
+                        <source>New Building</source>
+                        <target>Style 'B&#xE2;timent Nouveau'</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.NewObjectivity" xml:space="preserve">
+                        <source>New Objectivity</source>
+                        <target>R&#xE9;alisme Nouveau</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.OrganicConstruction" xml:space="preserve">
+                        <source>Organic Construction</source>
+                        <target>Architecture organique</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.PostWarModernism" xml:space="preserve">
+                        <source>Post War Modernism</source>
+                        <target>Modernit&#xE9; Apr&#xE8;s-Guerre</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.PostmodernAge" xml:space="preserve">
+                        <source>Postmodern Age</source>
+                        <target>Postmodernit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Rationalism" xml:space="preserve">
+                        <source>Rationalism</source>
+                        <target>Rationalisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Renaissance" xml:space="preserve">
+                        <source>Renaissance</source>
+                        <target>Renaissance</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.Rococo" xml:space="preserve">
+                        <source>Rococo</source>
+                        <target>Rococo</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.RomanesquePeriod" xml:space="preserve">
+                        <source>Romanesque Period</source>
+                        <target>Style Roman</target>
+                  </trans-unit>
+                  <trans-unit id="content.architecturalStyle.ZeroInformationArchitecturalStyle" xml:space="preserve">
+                        <source>Zero Information Architectural Style</source>
+                        <target>pas d'indication</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.BicycleLockersEnumMem" xml:space="preserve">
+                        <source>Bicycle Lockers</source>
+                        <target>Garage &#xE0; v&#xE9;los</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.BicycleStandsBicycleLockersEnumMem"
+                        xml:space="preserve">
+                        <source>Bicycle Stands Bicycle Lockers</source>
+                        <target>Range-v&#xE9;los/ garage &#xE0; v&#xE9;los</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.BicycleStandsEnumMem" xml:space="preserve">
+                        <source>Bicycle Stands</source>
+                        <target>Range-v&#xE9;los</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.BusParkCoachParkEnumMem" xml:space="preserve">
+                        <source>Bus Park Coach Park</source>
+                        <target>Point d'arr&#xEA;t d'autobus (entr&#xE9;e et sortie) disponible</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.EbikeChargingStationEnumMem" xml:space="preserve">
+                        <source>Ebike Charging Station</source>
+                        <target>base de chargement pour v&#xE9;los &#xE9;lectriques</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.ElectricVehicleCarChargingStationEnumMem"
+                        xml:space="preserve">
+                        <source>Electric Vehicle Car Charging Station</source>
+                        <target>Base de chargement pour voitures &#xE9;lectriques</target>
+                  </trans-unit>
+                  <trans-unit id="content.trafficInfrastructure.ZeroSpecialTrafficInfrastructure" xml:space="preserve">
+                        <source>Zero Special Traffic Infrastructure</source>
+                        <target>pas d'indication</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.AliPay">
+                        <source>AliPay</source>
+                        <target>AliPay</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.AmericanExpress">
+                        <source>American Express</source>
+                        <target>American Express</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.ApplePay">
+                        <source>ApplePay</source>
+                        <target>ApplePay</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.CashPayment">
+                        <source>Cash Payment</source>
+                        <target>Paiement au comptant</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.EC">
+                        <source>EC</source>
+                        <target>EC</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.InstantBankTransfer">
+                        <source>Instant Bank Transfer</source>
+                        <target>Virement bancaire instantan&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.Invoice">
+                        <source>Invoice</source>
+                        <target>Facture</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.MasterCard">
+                        <source>MasterCard</source>
+                        <target>MasterCard</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.PayPal">
+                        <source>PayPal</source>
+                        <target>PayPal</target>
+                  </trans-unit>
+                  <trans-unit id="content.paymentAccepted.Visa">
+                        <source>Visa</source>
+                        <target>Visa</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.AppForMobileDevices">
+                        <source>App for Mobile Devices</source>
+                        <target>App pour appareils mobiles</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.AudioGuide">
+                        <source>Audio Guide</source>
+                        <target>Audioguide</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.AugmentedReality">
+                        <source>Augmented Reality</source>
+                        <target>Augmented Reality</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.VideoGuide">
+                        <source>Video Guide</source>
+                        <target>Videoguide</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.VirtuellReality">
+                        <source>Virtuell Reality</source>
+                        <target>Realit&#xE9; virtuelle</target>
+                  </trans-unit>
+                  <trans-unit id="content.digitalOffer.ZeroDigitalOffer">
+                        <source>Zero Digital Offer</source>
+                        <target>pas d'offre digital</target>
+                  </trans-unit>
+                  <trans-unit id="content.photography.PhotoLicenceFeeRequired">
+                        <source>PhotoLicenceFeeRequired</source>
+                        <target>Licence de photos payante</target>
+                  </trans-unit>
+                  <trans-unit id="content.photography.TakingPicturesPermitted">
+                        <source>TakingPicturesPermitted</source>
+                        <target>Photographier autoris&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.photography.ZeroPhotography">
+                        <source>ZeroPhotography</source>
+                        <target>Photographier pas autoris&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.petsAllowed.false">
+                        <source>No Pets Allowed</source>
+                        <target>Animaux pas autoris&#xE9;s</target>
+                  </trans-unit>
+                  <trans-unit id="content.petsAllowed.true">
+                        <source>Pets Allowed</source>
+                        <target>Animaux autoris&#xE9;s</target>
+                  </trans-unit>
+                  <trans-unit id="content.isAccessibleForFree.false">
+                        <source>is not Accessible for Free</source>
+                        <target>Entr&#xE9;e payante</target>
+                  </trans-unit>
+                  <trans-unit id="content.isAccessibleForFree.true">
+                        <source>is Accessible for Free</source>
+                        <target>Entr&#xE9;e libre</target>
+                  </trans-unit>
+                  <trans-unit id="content.publicAccess.false">
+                        <source>no Public Access</source>
+                        <target>pas disponible au public</target>
+                  </trans-unit>
+                  <trans-unit id="content.publicAccess.true">
+                        <source>Public Access</source>
+                        <target>disponible au public</target>
+                  </trans-unit>
+                  <trans-unit id="content.availableLanguage.German">
+                        <source>German</source>
+                        <target>Allemand</target>
+                  </trans-unit>
+                  <trans-unit id="content.availableLanguage.English">
+                        <source>English</source>
+                        <target>Anglais</target>
+                  </trans-unit>
+                  <trans-unit id="content.availableLanguage.French">
+                        <source>French</source>
+                        <target>Fran&#xE7;ais</target>
+                  </trans-unit>
+                  <trans-unit id="content.distanceToPublicTransport">
+                        <source>Distance to Public Transport</source>
+                        <target>Distance au transport public</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacilitiesNearBy">
+                        <source>Parking Facilities near by</source>
+                        <target>Parking &#xE0; proximit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.ANN">
+                        <source>Years</source>
+                        <target>Ann&#xE9;es</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.CEL">
+                        <source>Celsius</source>
+                        <target>degr&#xE9; Celsius</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.CMT">
+                        <source>Centimeter</source>
+                        <target>centim&#xE8;tre</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.HAR">
+                        <source>Hectare</source>
+                        <target>Hectare</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.HUR">
+                        <source>Hours</source>
+                        <target>Heures</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.KTM">
+                        <source>Kilometer</source>
+                        <target>Kilom&#xE8;tres</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.MIN">
+                        <source>Minutes</source>
+                        <target>Minutes</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.MTK">
+                        <source>Square Metres</source>
+                        <target>M&#xE8;tres carr&#xE9;s</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.MTR">
+                        <source>Meters</source>
+                        <target>M&#xE8;tres</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.P1">
+                        <source>Percent</source>
+                        <target>Pour cent</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.PIX">
+                        <source>Pixel</source>
+                        <target>Pixel</target>
+                  </trans-unit>
+                  <trans-unit id="content.unit.SEC">
+                        <source>Seconds</source>
+                        <target>Secondes</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certificationStatus.AccessibilityChecked">
+                        <source>Accessibility Checked</source>
+                        <target>accessible &#xE0; tous</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.certificationStatus.CertificationAccessibilityNoCertification">
+                        <source>Certification Accessibility No Certification</source>
+                        <target>pas certifi&#xE9; a l'accessibilit&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.certificationStatus.CertificationInformationAboutAccessibility">
+                        <source>Certification Information About Accessibility</source>
+                        <target>partiellement accessible aux personnen handicap&#xE9;es</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.deaf">
+                        <source>for deaf</source>
+                        <target>pour les personnes sourdes</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.mental">
+                        <source>for mental</source>
+                        <target>pour les personnes avec d&#xE9;ficiences cognitives</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.partiallyDeaf">
+                        <source>for partially deaf</source>
+                        <target>pour les personnes avec handicap auditif</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.partiallyVisual">
+                        <source>for partially visual</source>
+                        <target>pour les personnes avec d&#xE9;ficience visuelle</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.visual">
+                        <source>for visual</source>
+                        <target>pour les personnes aveugles</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.walking">
+                        <source>for walking</source>
+                        <target>pour les personnes infirmes</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.wheelchair">
+                        <source>for wheelchair</source>
+                        <target>pour les personnes en fauteuil roulant</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.None">
+                        <source>not certified</source>
+                        <target>pas certifi&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.Full">
+                        <source>accessible</source>
+                        <target>accessible &#xE0; tous</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.certification.Info">
+                        <source>partially accessible</source>
+                        <target>partiellement accessible</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionAllGenerations">
+                        <source>Short Description all Generations</source>
+                        <target>Description rapide tous les g&#xE9;n&#xE9;rations</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionAllergic">
+                        <source>Short Description all allergic</source>
+                        <target>Description rapide personnes allergiques</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionDeaf">
+                        <source>Short Description all deaf</source>
+                        <target>Description rapide personnes sourdes/ personnes avec handicap auditif</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionMental">
+                        <source>Short Description all mental</source>
+                        <target>Descritpion rapide d&#xE9;ficiences cognitives</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionVisual">
+                        <source>Short Description all visual</source>
+                        <target>Description rapide d&#xE9;ficiences visuelles/ personnes aveugles</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.shortDescriptionWalking">
+                        <source>Short Description all walking</source>
+                        <target>Description rapide personnes infirmes/ personnes en fauteuil roulant</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AudioInductionLoop">
+                        <source>Audio Induction Loop</source>
+                        <target>boucle magn&#xE9;tique</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.FlashingSignalCallWaitingDoor">
+                        <source>Flashing Signal Call Waiting Door</source>
+                        <target>Signal de scintillement en frappant &#xE0; la porte</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersDeafPeople">
+                        <source>Special Offers Deaf People</source>
+                        <target>Offres sp&#xE9;ciaux pour les personnes sourdes</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersHearingImpairment">
+                        <source>Special Offers Hearing Impairment</source>
+                        <target>Offres sp&#xE9;ciaux pour les personnes avec handicap auditif</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.VisualConfirmationDistressCallElevator">
+                        <source>Visual Confirmation Distress Call Elevator</source>
+                        <target>Signal optique de l'appel d'urgence &#xE0; l'ascenseur</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.ColoredOrPictorialGuidanceSystem">
+                        <source>Colored Or Pictorial Guidance System</source>
+                        <target>Syst&#xE8;me de guidage color&#xE9; ou imag&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.InformationInEasyLanguage">
+                        <source>Information In Easy Language</source>
+                        <target>Information en langue facile (visite guid&#xE9;e, livret compl&#xE9;mentaire, etc.)
+                        </target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.InformationWithPictogramsOrPictures">
+                        <source>Information With Pictograms Or Pictures</source>
+                        <target>Information avec pictogrammes et images</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AssistanceDogsWelcome">
+                        <source>Assistance Dogs Welcome</source>
+                        <target>Chiens d'assistance bienvenus</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.GuidanceSystemWithFloorIndicators">
+                        <source>Guidance System With Floor Indicators</source>
+                        <target>Syst&#xE8;me de guidage sans interruption avec indicateurs au sol</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.InformationBrailleOrPrismaticFont">
+                        <source>Information Braille Or Prismatic Font</source>
+                        <target>Information en langue braille ou prisme</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.OffersInPictoralLanguage">
+                        <source>Offers In Pictoral Language</source>
+                        <target>Offres en langue figurative (visite guid&#xE9;e, audioguide, etc.)</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersBlindPeople">
+                        <source>Special Offers Blind People</source>
+                        <target>Offres sp&#xE9;ciaux pour personnes aveugles</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersVisualImpairment">
+                        <source>Special Offers Visual Impairment</source>
+                        <target>Offres sp&#xE9;ciaux pour personnes avec d&#xE9;ficience visuelle</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.TactileOffers">
+                        <source>Tactile Offers</source>
+                        <target>Offres tactiles (plan de terrain, etc.)</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.VisuallyContrastingStepEdges">
+                        <source>Visually ContrastingStep Edges</source>
+                        <target>Marches contrastant visuellement</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.AllRoomsStepFreeAccess">
+                        <source>All Rooms Step Free Access</source>
+                        <target>Tous les &#xE9;tablissements de plain-pied ou accessible par ascenseur</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EightyCMWidthPassageWays">
+                        <source>Eighty CM Width Passage Ways</source>
+                        <target>Envergure minimal des passages et portes: 80 cm</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.EntryAidSwimmingPool">
+                        <source>Entry Aid Swimming Pool</source>
+                        <target>Aide d'entr&#xE9;e swimming-pool</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.GrabRailInShower">
+                        <source>Grab Rail In Shower</source>
+                        <target>Poignee dans la douche</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.HandrailsOnBothSidesOfAllStaircases">
+                        <source>Handrails On Both Sides Of All Staircases</source>
+                        <target>Main-courante des deux c&#xF4;tes &#xE0; toutes les escaliers</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.HingedGrabRailToilet">
+                        <source>Hinged Grab Rail Toilet</source>
+                        <target>Ploign&#xE9;e pliable &#xE0; la toilette </target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.LateralAccessibleToilet">
+                        <source>Lateral Accessible Toilet</source>
+                        <target>Toilette accessible lat&#xE9;ralement</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.MinumumManoeuvringSpaceShower">
+                        <source>Minumum Manoeuvring Space Shower</source>
+                        <target>Surface en mouvement de la douche: 1 m x 1 m au minimum</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NinetyCMWidthPassageWays">
+                        <source>Ninety CM Width Passage Ways</source>
+                        <target>Envergure des passages et portes au minimum 90 cm</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.NursingBed">
+                        <source>Nursing Bed</source>
+                        <target>Lit m&#xE9;dicalis&#xE9;</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.ParkingPeopleWithDisabilities">
+                        <source>Parking People With Disabilities</source>
+                        <target>Parking pour personnes handicap&#xE9;es</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.SeventyCMWidthPassageWays">
+                        <source>Seventy CM Width Passage Ways</source>
+                        <target>Envergure des passages/ portes au minimum 70 cm</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.ShowerSeat">
+                        <source>Shower Seat</source>
+                        <target>Si&#xE8;ge de douche</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWalkingImpairment">
+                        <source>Special Offers Walking Impairment</source>
+                        <target>Offres sp&#xE9;ciaux pour personnes infirmes</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.SpecialOffersWheelchairUsers">
+                        <source>Special Offers Wheelchair Users</source>
+                        <target>Offres sp&#xE9;ciaux pour personnes en fauteuil roulant</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeAccess">
+                        <source>Step Free Access</source>
+                        <target>Acc&#xE8;s de plain-pied au bat&#xEE;ment/ site</target>
+                  </trans-unit>
+                  <trans-unit id="content.accessibilitySpecification.searchCriteria.criteria.StepFreeShower">
+                        <source>Step Free Shower</source>
+                        <target>Douche de plain-pied</target>
+                  </trans-unit>
+                  <trans-unit
+                        id="content.accessibilitySpecification.searchCriteria.criteria.ToiletsPeopleWithDisabilities">
+                        <source>Toilets People With Disabilities</source>
+                        <target>Toilettes pour personnes handicap&#xE9;es</target>
+                  </trans-unit>
+            </body>
+      </file>
+</xliff>
