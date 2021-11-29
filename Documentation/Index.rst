@@ -12,11 +12,11 @@ Table of Contents
 =================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :titlesonly:
-   :glob:
 
    Features
    Installation
    Configuration
+   Changelog
    Sitemap
