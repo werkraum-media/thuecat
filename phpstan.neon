@@ -9,3 +9,4 @@ parameters:
         - Tests
     checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: true
+    checkGenericClassInNonGenericObjectType: false
