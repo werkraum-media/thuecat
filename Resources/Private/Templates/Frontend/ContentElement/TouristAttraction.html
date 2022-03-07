@@ -1,119 +1,172 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
     <f:for each="{entities}" as="entity">
-        <div class="row mb-5">
+        {f:render(partial: 'Attraction/Breadcrumb', arguments: {title: entity.title})}
+        <div class="row">
             <div class="col-12 col-md-6">
                 <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if>
-                <h2>{entity.title} ({entity.town.title})</h2>
+                <h1>{entity.title} ({entity.town.title})</h1>
                 {entity.description -> f:format.html()}
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-6 order-first order-md-last">
                 <f:if condition="{entity.media.mainImage}">
-                    <f:image src="{entity.media.mainImage.url}" class="img-fluid"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 565 510.82">
+                        <defs>
+                            <pattern id="detailImage" width="100%" height="100%">
+                                <image 
+                                    width="100%" 
+                                    height="100%" 
+                                    x="0" 
+                                    y="0" 
+                                    href="{entity.media.mainImage.url}" 
+                                    preserveAspectRatio="xMidYMid slice"
+                                />
+                            </pattern>
+                          </defs>
+                        <path fill="url(#detailImage)" class="cls-1" d="M313.249,106.462c-137.586-187.725-648.126-39.19-538.418,248,55.632,149.822,385.49,253.73,502.779,112.112,49.672-63.154-2.65-132.524,0-189C279.593,235.312,351.66,158.872,313.249,106.462Z" transform="translate(240.496 -22.927)"/>
+                    </svg>
                 </f:if>
             </div>
         </div>
 
-        <div class="row mb-5">
-            <div class="col-12 col-md-3">
-                <f:if condition="{entity.address}">
-                    <h5>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h5>
-                    {f:render(partial: 'Address', arguments: {address: entity.address})}
-                </f:if>
-                <f:if condition="{entity.distanceToPublicTransport}">
-                    <h5>{f:translate(id: 'content.distanceToPublicTransport', extensionName: 'Thuecat')}</h5>
-                    <p>
-                        {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'Thuecat')}
-                    </p>
-                </f:if>
-                <f:if condition="{entity.parkingFacilitiesNearBy}">
-                    <h5>{f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}</h5>
-                    {f:render(partial: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
-                </f:if>
-            </div>
-            <div class="col-12 col-md-3">
-                <h5>{f:translate(id: 'content.generalInformation', extensionName: 'Thuecat')}</h5>
+        <div class="row">
+            <f:if condition="{entity.parkingFacilitiesNearBy -> f:count()} > 3">
+                <f:then>
+                    <div class="col-md-4">
+                        <f:if condition="{entity.address}">
+                            <img src="{f:uri.resource(path:'Icons/icon-info.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                            <h2>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h2>
+                            {f:render(partial: 'Address', arguments: {address: entity.address})}
+                        </f:if>
+                        <f:if condition="{entity.distanceToPublicTransport}">
+                            <div class="distance-transport mt-5">
+                                <img src="{f:uri.resource(path:'Icons/icon-bus.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                                <h2>{f:translate(id: 'content.distanceToPublicTransport', extensionName: 'Thuecat')}</h2>
+                                <p>
+                                    {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'Thuecat')}
+                                </p>
+                            </div>
+                        </f:if>
+                    </div>
+                    <div class="col-md-8 multiple-parking">
+                        <f:if condition="{entity.parkingFacilitiesNearBy}">
+                            <img src="{f:uri.resource(path:'Icons/icon-parking.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                            <h2>{f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}</h2>
+                            {f:render(partial: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
+                        </f:if>
+                    </div>
+                </f:then>
+                <f:else>
+                    <div class="col-md-4">
+                        <f:if condition="{entity.address}">
+                            <img src="{f:uri.resource(path:'Icons/icon-info.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                            <h2>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h2>
+                            {f:render(partial: 'Address', arguments: {address: entity.address})}
+                        </f:if>
+                    </div>
+                    <div class="col-md-4">
+                        <f:if condition="{entity.distanceToPublicTransport}">
+                            <img src="{f:uri.resource(path:'Icons/icon-bus.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                            <h2>{f:translate(id: 'content.distanceToPublicTransport', extensionName: 'Thuecat')}</h2>
+                            <p>
+                                {entity.distanceToPublicTransport.value} {f:translate(id: 'content.unit.{entity.distanceToPublicTransport.unit}', default: entity.distanceToPublicTransport.unit, extensionName: 'Thuecat')}
+                            </p>
+                        </f:if>
+                    </div>
+                    <div class="col-md-4">
+                        <f:if condition="{entity.parkingFacilitiesNearBy}">
+                            <img src="{f:uri.resource(path:'Icons/icon-parking.svg', extensionName:'sitepackage')}" width="30" class="svg-icon" alt="Address">
+                            <h2>{f:translate(id: 'content.parkingFacilitiesNearBy', extensionName: 'Thuecat')}</h2>
+                            {f:render(partial: 'Parking', arguments: {parkingFacilitiesNearBy: entity.parkingFacilitiesNearBy})}
+                        </f:if>
+                    </div>
+                </f:else>
+            </f:if>   
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>{f:translate(id: 'content.generalInformation', extensionName: 'Thuecat')}</h2>
                 <p>
                     <f:if condition="{entity.otherServices}">
                         {f:render(partial: 'Service', arguments: {otherServices: entity.otherServices})}
                     </f:if>
 
-                    <span class="badge bg-secondary">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'Thuecat')}</span>
-                    <span class="badge bg-secondary">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'Thuecat')}</span>
-                    <span class="badge bg-secondary">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'Thuecat')}</span>
-                    <span class="badge bg-secondary">{f:translate(id: 'content.accessibilitySpecification.certificationStatus.{entity.accessibilitySpecification.certificationStatus}', default: entity.accessibilitySpecification.certificationStatus, extensionName: 'Thuecat')}</span>
+                    <span class="badge bg-light">{f:translate(id: 'content.petsAllowed.{entity.petsAllowed}', default: entity.petsAllowed, extensionName: 'Thuecat')}</span>
+                    <span class="badge bg-light">{f:translate(id: 'content.isAccessibleForFree.{entity.isAccessibleForFree}', default: entity.isAccessibleForFree, extensionName: 'Thuecat')}</span>
+                    <span class="badge bg-light">{f:translate(id: 'content.publicAccess.{entity.publicAccess}', default: entity.publicAccess, extensionName: 'Thuecat')}</span>
+                    <span class="badge bg-light">{f:translate(id: 'content.accessibilitySpecification.certificationStatus.{entity.accessibilitySpecification.certificationStatus}', default: entity.accessibilitySpecification.certificationStatus, extensionName: 'Thuecat')}</span>
                 </p>
 
                 <f:if condition="{entity.museumServices}">
-                    <h6>{f:translate(id: 'content.museum', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.museum', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Museum', arguments: {museumServices: entity.museumServices})}
                 </f:if>
 
                 <f:if condition="{entity.digitalOffer}">
-                    <h6>{f:translate(id: 'content.digital', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.digital', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Digital', arguments: {digitalOffer: entity.digitalOffer})}
                 </f:if>
 
                 <f:if condition="{entity.trafficInfrastructures}">
-                    <h6>{f:translate(id: 'content.traffic', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.traffic', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Traffic', arguments: {trafficInfrastructures: entity.trafficInfrastructures})}
                 </f:if>
 
                 <f:if condition="{entity.paymentAccepted}">
-                    <h6>{f:translate(id: 'content.payment', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.payment', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Payment', arguments: {paymentAccepted: entity.paymentAccepted})}
                 </f:if>
 
                 <f:if condition="{entity.availableLanguages}">
-                    <h6>{f:translate(id: 'content.languages', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.languages', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Payment', arguments: {availableLanguages: entity.availableLanguages})}
                 </f:if>
 
                 <f:if condition="{entity.sanitation}">
-                    <h6>{f:translate(id: 'content.sanitation', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.sanitation', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Sanitation', arguments: {sanitation: entity.sanitation})}
                 </f:if>
 
                 <f:if condition="{entity.photography}">
-                    <h6>{f:translate(id: 'content.photography', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.photography', extensionName: 'Thuecat')}</h3>
                     {f:render(partial: 'Photography', arguments: {photography: entity.photography})}
                 </f:if>
 
                 <f:if condition="{entity.startOfConstruction}">
-                    <h6>{f:translate(id: 'content.construction', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.construction', extensionName: 'Thuecat')}</h3>
                     <p>
-                        <span class="badge bg-secondary">{entity.startOfConstruction}</span>
+                        <span class="badge bg-light">{entity.startOfConstruction}</span>
                     </p>
                 </f:if>
 
                 <f:if condition="{entity.architecturalStyles}">
-                    <h6>{f:translate(id: 'content.architecture', extensionName: 'Thuecat')}</h6>
+                    <h3>{f:translate(id: 'content.architecture', extensionName: 'Thuecat')}</h3>
                     <p>
                         <f:for each="{entity.architecturalStyles}" as="style">
-                            <span class="badge bg-secondary">{f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'Thuecat')}</span>
+                            <span class="badge bg-light">{f:translate(id: 'content.architecturalStyle.{style}', default: style, extensionName: 'Thuecat')}</span>
                         </f:for>
                     </p>
                 </f:if>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-md-6">
                 <f:if condition="{entity.openingHours}">
-                    <h5>{f:translate(id: 'content.openingHours', extensionName: 'Thuecat')}</h5>
+                    <h2>{f:translate(id: 'content.openingHours', extensionName: 'Thuecat')}</h2>
                     {f:render(partial: 'Opening', arguments: {openingHours: entity.openingHours})}
                 </f:if>
             </div>
-            <div class="col-12 col-md-3">
-                <f:if condition="{entity.offers}">
-                    <h5>{f:translate(id: 'content.offers', extensionName: 'Thuecat')}</h5>
-                    {f:render(partial: 'Offers', arguments: {offers: entity.offers, uid: entity.uid})}
-                </f:if>
-            </div>
         </div>
+        
+        <f:if condition="{entity.offers}">
+            <div class="row">
+                    <h2 class="text-center">{f:translate(id: 'content.offers', extensionName: 'Thuecat')}</h2>
+                    {f:render(partial: 'Offers', arguments: {offers: entity.offers, uid: entity.uid})}
+            </div>
+        </f:if>
+
         <f:if condition="{entity.accessibilitySpecification.certificationStatus} != ''">
             <div class="row">
-                <div class="col-12">
-                <h3>{f:translate(id: 'content.accessibility', extensionName: 'Thuecat')}</h3>
-                    {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification, uid: entity.uid})}
-                </div>
+                <h2 class="text-center">{f:translate(id: 'content.accessibility', extensionName: 'Thuecat')}</h2>
+                {f:render(partial: 'Accessibility', arguments: {specification: entity.accessibilitySpecification, uid: entity.uid})}
             </div>
         </f:if>
     </f:for>
