@@ -47,10 +47,10 @@
         "symfony/property-access": "^5.3",
         "symfony/property-info": "^5.3",
         "symfony/serializer": "^5.3",
-        "typo3/cms-backend": "^10.4",
-        "typo3/cms-core": "^10.4",
-        "typo3/cms-extbase": "^10.4",
-        "typo3/cms-frontend": "^10.4"
+        "typo3/cms-backend": "^10.4 | ^11.5",
+        "typo3/cms-core": "^10.4 | ^11.5",
+        "typo3/cms-extbase": "^10.4 | ^11.5",
+        "typo3/cms-frontend": "^10.4 | ^11.5"
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
@@ -62,7 +62,7 @@
         "phpstan/phpstan-phpunit": "^0.12.21",
         "phpunit/phpunit": "^8.5",
         "symplify/easy-coding-standard": "^9.0",
-        "typo3/cms-fluid-styled-content": "^10.4",
+        "typo3/cms-fluid-styled-content": "^10.4 | ^11.5",
         "typo3/testing-framework": "^6.6"
     },
     "scripts": {
