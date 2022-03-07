@@ -1,5 +1,11 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-    data-namespace-typo3-fluid="true">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Start</a></li>
+          <li class="breadcrumb-item"><a href="/sehenswuerdigkeiten">Sehenswürdigkeiten</a></li>
+          <li class="breadcrumb-item active" aria-current="page"> {entities.0.title}</li>
+        </ol>
+    </nav>
     <f:for each="{entities}" as="entity">
         {f:render(partial: 'Attraction/Breadcrumb', arguments: {title: entity.title})}
         <div class="row">
