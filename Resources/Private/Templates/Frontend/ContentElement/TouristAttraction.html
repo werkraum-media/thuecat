@@ -15,21 +15,7 @@
             </div>
             <div class="col-12 col-md-6 order-first order-md-last">
                 <f:if condition="{entity.media.mainImage}">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 565 510.82">
-                        <defs>
-                            <pattern id="detailImage" width="100%" height="100%">
-                                <image 
-                                    width="100%" 
-                                    height="100%" 
-                                    x="0" 
-                                    y="0" 
-                                    href="{entity.media.mainImage.url}" 
-                                    preserveAspectRatio="xMidYMid slice"
-                                />
-                            </pattern>
-                          </defs>
-                        <path fill="url(#detailImage)" class="cls-1" d="M313.249,106.462c-137.586-187.725-648.126-39.19-538.418,248,55.632,149.822,385.49,253.73,502.779,112.112,49.672-63.154-2.65-132.524,0-189C279.593,235.312,351.66,158.872,313.249,106.462Z" transform="translate(240.496 -22.927)"/>
-                    </svg>
+                    <f:image src="{entity.media.mainImage.url}" class="img-fluid"/>
                 </f:if>
             </div>
         </div>
