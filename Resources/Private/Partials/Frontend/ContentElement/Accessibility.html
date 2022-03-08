@@ -39,15 +39,15 @@
             </div>
         </div>
 
-        <div class="accordion" id="accordionShortDescriptions">
+        <div class="row accordion" id="accordionShortDescriptions">
 
             <f:if condition="{specification.shortDescriptionAllGenerations}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAllGenerations">
+                    <h3 class="accordion-header" id="headingAllGenerations">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shortDescriptionAllGenerations-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionAllGenerations-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllGenerations', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionAllGenerations-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionAllGenerations -> f:format.nl2br()}</p>
@@ -58,11 +58,11 @@
 
             <f:if condition="{specification.shortDescriptionAllergic}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAllergic">
+                    <h3 class="accordion-header" id="headingAllergic">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shortDescriptionAllergic-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionAllergic-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionAllergic', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionAllergic-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionAllergic -> f:format.nl2br()}</p>
@@ -73,11 +73,11 @@
 
             <f:if condition="{specification.shortDescriptionDeaf}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingDeaf">
+                    <h3 class="accordion-header" id="headingDeaf">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shortDescriptionDeaf-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionDeaf-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionDeaf', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionDeaf-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionDeaf -> f:format.nl2br()}</p>
@@ -88,11 +88,11 @@
 
             <f:if condition="{specification.shortDescriptionMental}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingMetal">
+                    <h3 class="accordion-header" id="headingMetal">
                         <button class="accordion-button collapsed" type="button"  data-bs-toggle="collapse" href="#shortDescriptionMental-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionMental-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionMental', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionMental-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionMental -> f:format.nl2br()}</p>
@@ -103,11 +103,11 @@
 
             <f:if condition="{specification.shortDescriptionVisual}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingVisual">
+                    <h3 class="accordion-header" id="headingVisual">
                         <button class="accordion-button collapsed" type="button"  data-bs-toggle="collapse" href="#shortDescriptionVisual-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionVisual-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionVisual', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionVisual-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionVisual -> f:format.nl2br()}</p>
@@ -118,11 +118,11 @@
 
             <f:if condition="{specification.shortDescriptionWalking}">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingVisual">
+                    <h3 class="accordion-header" id="headingVisual">
                         <button class="accordion-button collapsed" type="button"  data-bs-toggle="collapse" href="#shortDescriptionWalking-{uid}" role="button" aria-expanded="false" aria-controls="shortDescriptionWalking-{uid}">
                             {f:translate(id: 'content.accessibilitySpecification.shortDescriptionWalking', extensionName: 'Thuecat')}
                         </button>
-                    </h2>
+                    </h3>
                     <div class="accordion-collapse collapse" id="shortDescriptionWalking-{uid}">
                         <div class="accordion-body">
                             <p>{specification.shortDescriptionWalking -> f:format.nl2br()}</p>
