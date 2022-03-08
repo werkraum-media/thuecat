@@ -41,17 +41,7 @@ parameters:
 			path: Classes/Domain/Model/Frontend/Place.php
 
 		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\ParkingFacilityRepository\\:\\:findByEntity\\(\\) should return TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\|null but returns array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
-
-		-
-			message: "#^Cannot call method getFirst\\(\\) on array\\|TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\QueryResultInterface\\.$#"
-			count: 1
-			path: Classes/Domain/Repository/Backend/TownRepository.php
-
-		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByEntity\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByEntity\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\|null\\.$#"
 			count: 1
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 
