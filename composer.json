@@ -64,7 +64,13 @@
         ]
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true,
+            "ocramius/package-versions": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "typo3/cms": {
