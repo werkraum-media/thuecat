@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 interface UrlProvider
 {
     /**
-     * @var string[]
+     * @return string[]
      */
     public function getUrls(): array;
 

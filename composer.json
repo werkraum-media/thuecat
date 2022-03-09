@@ -54,13 +54,13 @@
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
-        "friendsoftypo3/phpstan-typo3": "^0.6.0",
-        "jangregor/phpstan-prophecy": "^0.8.1",
+        "jangregor/phpstan-prophecy": "^1.0",
         "maglnet/composer-require-checker": "^2.1",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.71",
-        "phpstan/phpstan-phpunit": "^0.12.21",
+        "phpstan/phpstan": "1.1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^8.5",
+        "saschaegerer/phpstan-typo3": "^1.1",
         "symplify/easy-coding-standard": "^9.0",
         "typo3/cms-fluid-styled-content": "^10.4 | ^11.5",
         "typo3/testing-framework": "^6.6"

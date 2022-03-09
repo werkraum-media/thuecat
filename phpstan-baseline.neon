@@ -1,14 +1,29 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string, 'getPriority'\\) given\\.$#"
+			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
 
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\(string, 'getSupportedTypes'\\) given\\.$#"
+			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\EntityMapper\\:\\:mapDataToEntity\\(\\) should return object but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Import/EntityMapper.php
+
+		-
+			message: "#^Class WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\EntityMapper\\\\ArrayDenormalizer extends @final class Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\ArrayDenormalizer\\.$#"
+			count: 1
+			path: Classes/Domain/Import/EntityMapper/ArrayDenormalizer.php
+
+		-
+			message: "#^Parameter \\#1 \\$data of method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\EntityMapper\\\\ArrayDenormalizer\\:\\:transformSingleEntryToMultiEntry\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: Classes/Domain/Import/EntityMapper/ArrayDenormalizer.php
 
 		-
 			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
@@ -31,19 +46,224 @@ parameters:
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
-			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLog\\:\\:\\$logEntries \\(iterable\\<WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\>&TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\) does not accept TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getConfigurationAsArray\\(\\) should return array but returns mixed\\.$#"
 			count: 1
-			path: Classes/Domain/Model/Backend/ImportLog.php
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
 
 		-
-			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Place\\:\\:\\$parkingFacilityNearBy \\(iterable\\<WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility\\>&TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\) does not accept TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\ObjectStorage\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getEntries\\(\\) should return array but returns mixed\\.$#"
 			count: 1
-			path: Classes/Domain/Model/Frontend/Place.php
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
 
 		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Repository\\\\Backend\\\\TownRepository\\:\\:findOneByEntity\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\Town\\|null but returns object\\|null\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getSyncScopeId\\(\\) should return string but returns mixed\\.$#"
 			count: 1
-			path: Classes/Domain/Repository/Backend/TownRepository.php
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getUrls\\(\\) should return array\\<string\\> but returns array\\<int, mixed\\>\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ArrayUtility\\:\\:getValueByPath\\(\\) expects array, mixed given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_unique expects array, mixed given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\:\\:\\$errorsAsArray \\(array\\<string\\>\\) does not accept array\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\:\\:\\$errorsAsArray \\(array\\<string\\>\\) does not accept mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationDeaf\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationMental\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationPartiallyDeaf\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationPartiallyVisual\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationStatus\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationVisual\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationWalking\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationWheelchair\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getSearchCriteria\\(\\) should return array but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionAllGenerations\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionAllergic\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionDeaf\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionMental\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionVisual\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getShortDescriptionWalking\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:\\$data \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
+
+		-
+			message: "#^Cannot access offset 'latitude' on mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Cannot access offset 'longitude' on mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getCity\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getEmail\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getFax\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getLatitute\\(\\) should return float but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getLongitude\\(\\) should return float but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getPhone\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getStreet\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:getZip\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Address\\:\\:\\$data \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Address.php
+
+		-
+			message: "#^Cannot access offset 'mainImage' on mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Media.php
+
+		-
+			message: "#^Cannot access offset 'type' on mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Media.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Media\\:\\:getMainImage\\(\\) should return array but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Media.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(mixed\\)\\: mixed, Closure\\(array\\)\\: bool given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Media.php
+
+		-
+			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Media\\:\\:\\$data \\(array\\) does not accept mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Media.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Offers\\:\\:current\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\Offer but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Offers.php
+
+		-
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\OpeningHours\\:\\:current\\(\\) should return WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\OpeningHour but returns mixed\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/OpeningHours.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, array\\{'WerkraumMedia\\\\\\\\ThueCat\\\\\\\\Domain\\\\\\\\Model\\\\\\\\Frontend\\\\\\\\OpeningHour', 'createFromArray'\\} given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/OpeningHours.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/OpeningHours.php
 
 		-
 			message: "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int supplied for foreach, only iterables are supported\\.$#"
@@ -56,7 +276,82 @@ parameters:
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/SiteConfiguration/Overrides/sites.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/Overrides/pages.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/Overrides/sys_template.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/Overrides/tt_content.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/Overrides/tt_content_tourist_attraction.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_import_configuration.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_import_log.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_import_log_entry.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_organisation.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_parking_facility.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_tourist_attraction.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_tourist_information.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 1
+			path: Configuration/TCA/tx_thuecat_town.php
+
+		-
 			message: "#^Cannot call method format\\(\\) on DateTimeImmutable\\|null\\.$#"
 			count: 4
 			path: Tests/Functional/Import/EntityMapping/PlaceInfosTest.php
+
+		-
+			message: "#^Cannot call method handleBackendRequest\\(\\) on mixed\\.$#"
+			count: 8
+			path: Tests/Functional/ImportTest.php
 
