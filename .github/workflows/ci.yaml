@@ -162,7 +162,7 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies with expected TYPO3 version
-        run: composer require --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
+        run: composer require --no-interaction --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
 
       - name: Code Quality (by PHPStan)
         run: ./vendor/bin/phpstan analyse
@@ -197,7 +197,7 @@ jobs:
           tools: composer:v2
 
       - name: Install dependencies
-        run: composer require --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
+        run: composer require --no-interaction --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
 
       - name: PHPUnit Tests
         run: ./vendor/bin/phpunit --testdox
@@ -248,7 +248,7 @@ jobs:
           mysql root password: 'root'
 
       - name: Install dependencies
-        run: composer require --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
+        run: composer require --no-interaction --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
 
       - name: PHPUnit Tests
         run: |-
