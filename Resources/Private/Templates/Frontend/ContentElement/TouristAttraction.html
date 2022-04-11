@@ -74,9 +74,7 @@
                     || entity.sanitation || entity.photography || entity.startOfConstruction || entity.architecturalStyles}"
                 >
                     <div class="col-md-6">
-                        <f:if condition="{entity.generalInformation}">
-                            <h2>{f:translate(id: 'content.generalInformation', extensionName: 'Thuecat')}</h2>
-                        </f:if>
+                        <h2>{f:translate(id: 'content.generalInformation', extensionName: 'Thuecat')}</h2>
                         <p>
                             <f:if condition="{entity.otherServices}">
                                 {f:render(partial: 'Service', arguments: {otherServices: entity.otherServices})}
