@@ -13,11 +13,14 @@
                 {openingHour.from -> f:format.date(format: 'd.m.Y')} -
                 {openingHour.through -> f:format.date(format: 'd.m.Y')}
             </h3>
-            <p>
+            <div>
                 <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
-                    {f:translate(id: 'content.openingHour.weekday.{weekday}', default: weekday, extensionName: 'Thuecat')} {openingHour.opens} - {openingHour.closes}<br>
+                    <div class="day-row">
+                        <div class="day"><span>{f:translate(id: 'content.openingHour.weekday.{weekday}', default: weekday, extensionName: 'Thuecat')}</span></div>
+                        <div class="time"><span>{openingHour.opens} - {openingHour.closes}</span></div>
+                    </div>
                 </f:for>
-            </p>
+            </div>
         </div>
         </f:for>
     </div>
