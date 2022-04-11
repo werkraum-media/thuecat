@@ -13,7 +13,15 @@
     "authors": [
         {
             "name": "Daniel Siepmann",
-            "email": "coding@daniel-siepmann.de"
+            "email": "coding@daniel-siepmann.de",
+            "homepage": "https://daniel-siepmann.de/",
+            "role": "Developer"
+        },
+        {
+            "name": "Carlos Pozo",
+            "email": "carlosricardo.pozo@hotmail.com",
+            "homepage": "https://codebycarlos.com/",
+            "role": "Templater"
         }
     ],
     "autoload": {

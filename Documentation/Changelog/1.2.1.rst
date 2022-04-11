@@ -1,0 +1,43 @@
+1.2.1
+=====
+
+Breaking
+--------
+
+Nothing
+
+Features
+--------
+
+Nothing
+
+Fixes
+-----
+
+* Use proper extension name for translation within templates.
+
+  This was ``sitepackage`` and was changed to ``Thuecat``.
+
+Tasks
+-----
+
+* Changed Fluid templates:
+
+  * Add more CSS classes fore better styling
+
+  * Only render services part if services exist
+    There is a follow up to move the huge condition from template to model: https://github.com/werkraum-media/thuecat/issues/64
+
+* Improved composer authors:
+
+  * Added Carlos
+
+  * Added homepages
+
+  * Added roles
+
+Deprecation
+-----------
+
+Nothing
+
