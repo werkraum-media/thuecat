@@ -42,14 +42,14 @@ class FetchDataTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         self::assertInstanceOf(FetchData::class, $subject);
@@ -60,26 +60,23 @@ class FetchDataTest extends TestCase
      */
     public function returnsParsedJsonLdBasedOnUrl(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
-        $request = $this->prophesize(RequestInterface::class);
-        $response = $this->prophesize(ResponseInterface::class);
+        $request = $this->createStub(RequestInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
-        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
-            ->willReturn($request->reveal());
+        $requestFactory->method('createRequest')->willReturn($request);
+        $httpClient->method('sendRequest')->willReturn($response);
 
-        $httpClient->sendRequest($request->reveal())
-            ->willReturn($response->reveal());
-
-        $response->getStatusCode()->willReturn(200);
-        $response->getBody()->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -97,26 +94,24 @@ class FetchDataTest extends TestCase
      */
     public function returnsEmptyArrayInCaseOfError(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
-        $request = $this->prophesize(RequestInterface::class);
-        $response = $this->prophesize(ResponseInterface::class);
+        $request = $this->createStub(RequestInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
-        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
-            ->willReturn($request->reveal());
+        $requestFactory->method('createRequest')->willReturn($request);
 
-        $httpClient->sendRequest($request->reveal())
-            ->willReturn($response->reveal());
+        $httpClient->method('sendRequest')->willReturn($response);
 
-        $response->getStatusCode()->willReturn(200);
-        $response->getBody()->willReturn('');
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn('');
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -128,11 +123,11 @@ class FetchDataTest extends TestCase
      */
     public function returnsResultFromCacheIfAvailable(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
-        $cache->get('03c8a7eb2a06e47c28883d95f7e834089baf9c3e')->willReturn([
+        $cache->method('get')->willReturn([
             '@graph' => [
                 [
                     '@id' => 'https://example.com/resources/018132452787-ngbe',
@@ -141,9 +136,9 @@ class FetchDataTest extends TestCase
         ]);
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -161,29 +156,26 @@ class FetchDataTest extends TestCase
      */
     public function throwsExceptionOn404(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
-        $request = $this->prophesize(RequestInterface::class);
-        $response = $this->prophesize(ResponseInterface::class);
+        $request = $this->createStub(RequestInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
-        $request->getUri()->willReturn('https://example.com/resources/018132452787-ngbe');
+        $request->method('getUri')->willReturn('https://example.com/resources/018132452787-ngbe');
 
-        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
-            ->willReturn($request->reveal());
+        $requestFactory->method('createRequest')->willReturn($request);
 
-        $httpClient->sendRequest($request->reveal())
-            ->willReturn($response->reveal());
+        $httpClient->method('sendRequest')->willReturn($response);
 
-
-        $response->getStatusCode()->willReturn(404);
-        $response->getBody()->willReturn('{"error":"404"}');
+        $response->method('getStatusCode')->willReturn(404);
+        $response->method('getBody')->willReturn('{"error":"404"}');
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         $this->expectException(InvalidResponseException::class);
@@ -198,25 +190,23 @@ class FetchDataTest extends TestCase
      */
     public function throwsExceptionOn401(): void
     {
-        $requestFactory = $this->prophesize(RequestFactoryInterface::class);
-        $httpClient = $this->prophesize(ClientInterface::class);
-        $cache = $this->prophesize(FrontendInterface::class);
+        $requestFactory = $this->createStub(RequestFactoryInterface::class);
+        $httpClient = $this->createStub(ClientInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
 
-        $request = $this->prophesize(RequestInterface::class);
-        $response = $this->prophesize(ResponseInterface::class);
+        $request = $this->createStub(RequestInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
 
-        $requestFactory->createRequest('GET', 'https://example.com/resources/018132452787-ngbe')
-            ->willReturn($request->reveal());
+        $requestFactory->method('createRequest')->willReturn($request);
 
-        $httpClient->sendRequest($request->reveal())
-            ->willReturn($response->reveal());
+        $httpClient->method('sendRequest')->willReturn($response);
 
-        $response->getStatusCode()->willReturn(401);
+        $response->method('getStatusCode')->willReturn(401);
 
         $subject = new FetchData(
-            $requestFactory->reveal(),
-            $httpClient->reveal(),
-            $cache->reveal()
+            $requestFactory,
+            $httpClient,
+            $cache
         );
 
         $this->expectException(InvalidResponseException::class);

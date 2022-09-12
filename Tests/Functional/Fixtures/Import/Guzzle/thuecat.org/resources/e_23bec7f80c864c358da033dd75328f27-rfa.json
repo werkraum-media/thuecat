@@ -1,0 +1,197 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa",
+            "@type": [
+                "schema:Intangible",
+                "schema:Thing",
+                "thuecat:AccessibilitySpecification",
+                "ttgds:AccessibilitySpecification"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Alte Synagoge Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Old synagogue Erfurt"
+                }
+            ],
+            "thuecat:accessibilityCertification": {
+                "@id": "genid-5215e8f6feb440cda65b5b5735240c68-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:Thing",
+                    "thuecat:AccessibilityCertification"
+                ],
+                "schema:validFrom": {
+                    "@type": "xsd:string",
+                    "@value": "2019-04-01"
+                },
+                "schema:validThrough": {
+                    "@type": "xsd:string",
+                    "@value": "2022-03-31"
+                },
+                "thuecat:accessibilityCertificationStatus": {
+                    "@type": "thuecat:AccessibilityCertificationStatus",
+                    "@value": "thuecat:AccessibilityChecked"
+                },
+                "thuecat:certificationAccessibilityDeaf": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:None"
+                },
+                "thuecat:certificationAccessibilityMental": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:None"
+                },
+                "thuecat:certificationAccessibilityPartiallyDeaf": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:None"
+                },
+                "thuecat:certificationAccessibilityPartiallyVisual": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:Info"
+                },
+                "thuecat:certificationAccessibilityVisual": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:None"
+                },
+                "thuecat:certificationAccessibilityWalking": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:Info"
+                },
+                "thuecat:certificationAccessibilityWheelchair": {
+                    "@type": "thuecat:CertificationLevel",
+                    "@value": "thuecat:Info"
+                }
+            },
+            "thuecat:accessibilitySearchCriteria": [
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:AllRoomsStepFreeAccess"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:AssistanceDogsWelcome"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:HingedGrabRailToilet"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:LateralAccessibleToilet"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:StepFreeAccess"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:ToiletsPeopleWithDisabilities"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:VisuallyContrastingStepEdges"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityDeaf",
+                    "@value": "thuecat:AudioInductionLoop"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityMental",
+                    "@value": "thuecat:InformationWithPictogramsOrPictures"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:NinetyCMWidthPassageWays"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:OffersInPictoralLanguage"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:SpecialOffersBlindPeople"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityDeaf",
+                    "@value": "thuecat:SpecialOffersHearingImpairment"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:SpecialOffersVisualImpairment"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:SpecialOffersWalkingImpairment"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:SpecialOffersWheelchairUsers"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:TactileOffers"
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityDeaf": [
+                {
+                    "@language": "de",
+                    "@value": "Deutsche Beschreibung von shortDescriptionAccessibilityDeaf"
+                },
+                {
+                    "@language": "en",
+                    "@value": "English description of shortDescriptionAccessibilityDeaf"
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityMental": [
+                {
+                    "@language": "de",
+                    "@value": "Deutsche Beschreibung von shortDescriptionAccessibilityMental"
+                },
+                {
+                    "@language": "en",
+                    "@value": "English description of shortDescriptionAccessibilityMental"
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityVisual": [
+                {
+                    "@language": "en",
+                    "@value": "English description of shortDescriptionAccessibilityVisual"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Deutsche Beschreibung von shortDescriptionAccessibilityVisual"
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityWalking": [
+                {
+                    "@language": "en",
+                    "@value": "English description of shortDescriptionAccessibilityWalking"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Deutsche Beschreibung von shortDescriptionAccessibilityWalking"
+                }
+            ]
+        }
+    ]
+}

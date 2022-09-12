@@ -47,10 +47,10 @@ class ImportLogTest extends TestCase
      */
     public function returnsConfigurationIfSet(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $subject = new ImportLog($configuration->reveal());
+        $configuration = new ImportConfiguration();
+        $subject = new ImportLog($configuration);
 
-        self::assertSame($configuration->reveal(), $subject->getConfiguration());
+        self::assertSame($configuration, $subject->getConfiguration());
     }
 
     /**
@@ -68,9 +68,9 @@ class ImportLogTest extends TestCase
      */
     public function returnsConfigurationUidIfSet(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUid()->willReturn(10);
-        $subject = new ImportLog($configuration->reveal());
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('uid', 10);
+        $subject = new ImportLog($configuration);
 
         self::assertSame(10, $subject->getConfigurationUid());
     }

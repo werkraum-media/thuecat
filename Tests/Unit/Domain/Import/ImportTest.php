@@ -52,12 +52,12 @@ class ImportTest extends TestCase
      */
     public function canStart(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration->reveal());
+        $subject->start($configuration);
 
         self::assertSame(
-            $configuration->reveal(),
+            $configuration,
             $subject->getConfiguration()
         );
         self::assertInstanceOf(
@@ -71,13 +71,13 @@ class ImportTest extends TestCase
      */
     public function canEndAfterStart(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration->reveal());
+        $subject->start($configuration);
         $subject->end();
 
         self::assertSame(
-            $configuration->reveal(),
+            $configuration,
             $subject->getConfiguration()
         );
         self::assertInstanceOf(
@@ -91,9 +91,9 @@ class ImportTest extends TestCase
      */
     public function isDoneAfterStartAndEnd(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration->reveal());
+        $subject->start($configuration);
         $subject->end();
 
         self::assertTrue($subject->done());
@@ -104,9 +104,9 @@ class ImportTest extends TestCase
      */
     public function isNotDoneAfterJustStartWithoutEnd(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration->reveal());
+        $subject->start($configuration);
 
         self::assertFalse($subject->done());
     }
@@ -116,15 +116,15 @@ class ImportTest extends TestCase
      */
     public function nestedStartReturnsExpectedConfiguration(): void
     {
-        $configuration1 = $this->prophesize(ImportConfiguration::class);
+        $configuration1 = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration1->reveal());
+        $subject->start($configuration1);
 
-        $configuration2 = $this->prophesize(ImportConfiguration::class);
-        $subject->start($configuration2->reveal());
+        $configuration2 = new ImportConfiguration();
+        $subject->start($configuration2);
 
         self::assertSame(
-            $configuration2->reveal(),
+            $configuration2,
             $subject->getConfiguration()
         );
     }
@@ -134,9 +134,9 @@ class ImportTest extends TestCase
      */
     public function nestedStartReturnsExpectedLog(): void
     {
-        $configuration1 = $this->prophesize(ImportConfiguration::class);
+        $configuration1 = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration1->reveal());
+        $subject->start($configuration1);
 
         $log1 = $subject->getLog();
         self::assertInstanceOf(
@@ -144,8 +144,8 @@ class ImportTest extends TestCase
             $log1
         );
 
-        $configuration2 = $this->prophesize(ImportConfiguration::class);
-        $subject->start($configuration2->reveal());
+        $configuration2 = new ImportConfiguration();
+        $subject->start($configuration2);
 
         $log2 = $subject->getLog();
         self::assertInstanceOf(
@@ -164,16 +164,16 @@ class ImportTest extends TestCase
      */
     public function nestedImportMergesLog(): void
     {
-        $configuration1 = $this->prophesize(ImportConfiguration::class);
+        $configuration1 = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration1->reveal());
+        $subject->start($configuration1);
 
         $log1 = $subject->getLog();
 
-        $configuration2 = $this->prophesize(ImportConfiguration::class);
-        $subject->start($configuration2->reveal());
-        $importLogEntry = $this->prophesize(ImportLogEntry::class);
-        $subject->getLog()->addEntry($importLogEntry->reveal());
+        $configuration2 = new ImportConfiguration();
+        $subject->start($configuration2);
+        $importLogEntry = $this->createStub(ImportLogEntry::class);
+        $subject->getLog()->addEntry($importLogEntry);
         $subject->end();
 
         self::assertSame(
@@ -183,7 +183,7 @@ class ImportTest extends TestCase
 
         self::assertSame(
             [
-                $importLogEntry->reveal()
+                $importLogEntry
             ],
             $log1->getEntries()->toArray()
         );
@@ -194,19 +194,19 @@ class ImportTest extends TestCase
      */
     public function nestedImportReturnsHandledForRemoteId(): void
     {
-        $configuration1 = $this->prophesize(ImportConfiguration::class);
+        $configuration1 = new ImportConfiguration();
         $subject = new Import();
-        $subject->start($configuration1->reveal());
+        $subject->start($configuration1);
 
-        $configuration2 = $this->prophesize(ImportConfiguration::class);
-        $subject->start($configuration2->reveal());
-        $importLogEntry = $this->prophesize(ImportLogEntry::class);
-        $importLogEntry->getRemoteId()->willReturn('https://example.com/remote-id');
-        $subject->getLog()->addEntry($importLogEntry->reveal());
+        $configuration2 = new ImportConfiguration();
+        $subject->start($configuration2);
+        $importLogEntry = $this->createStub(ImportLogEntry::class);
+        $importLogEntry->method('getRemoteId')->willReturn('https://example.com/remote-id');
+        $subject->getLog()->addEntry($importLogEntry);
         $subject->end();
 
-        $configuration3 = $this->prophesize(ImportConfiguration::class);
-        $subject->start($configuration3->reveal());
+        $configuration3 = new ImportConfiguration();
+        $subject->start($configuration3);
         self::assertTrue(
             $subject->handledRemoteId('https://example.com/remote-id')
         );

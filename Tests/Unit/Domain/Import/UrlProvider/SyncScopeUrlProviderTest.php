@@ -38,10 +38,10 @@ class SyncScopeUrlProviderTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $fetchData = $this->prophesize(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
 
         $subject = new SyncScopeUrlProvider(
-            $fetchData->reveal()
+            $fetchData
         );
 
         self::assertInstanceOf(SyncScopeUrlProvider::class, $subject);
@@ -52,16 +52,16 @@ class SyncScopeUrlProviderTest extends TestCase
      */
     public function canProvideForSyncScope(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getType()->willReturn('syncScope');
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('type', 'syncScope');
 
-        $fetchData = $this->prophesize(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
 
         $subject = new SyncScopeUrlProvider(
-            $fetchData->reveal()
+            $fetchData
         );
 
-        $result = $subject->canProvideForConfiguration($configuration->reveal());
+        $result = $subject->canProvideForConfiguration($configuration);
         self::assertTrue($result);
     }
 
@@ -70,11 +70,11 @@ class SyncScopeUrlProviderTest extends TestCase
      */
     public function returnsConcreteProviderForConfiguration(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getSyncScopeId()->willReturn(10);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = $this->prophesize(FetchData::class);
-        $fetchData->updatedNodes(10)->willReturn([
+        $fetchData = $this->createStub(FetchData::class);
+        $fetchData->method('updatedNodes')->willReturn([
             'data' => [
                 'canBeCreated' => [
                     '835224016581-dara',
@@ -84,10 +84,10 @@ class SyncScopeUrlProviderTest extends TestCase
         ]);
 
         $subject = new SyncScopeUrlProvider(
-            $fetchData->reveal()
+            $fetchData
         );
 
-        $result = $subject->createWithConfiguration($configuration->reveal());
+        $result = $subject->createWithConfiguration($configuration);
 
         self::assertInstanceOf(SyncScopeUrlProvider::class, $result);
     }
@@ -97,12 +97,12 @@ class SyncScopeUrlProviderTest extends TestCase
      */
     public function concreteProviderReturnsUrls(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getSyncScopeId()->willReturn(10);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = $this->prophesize(FetchData::class);
-        $fetchData->getResourceEndpoint()->willReturn('https://example.com/api/');
-        $fetchData->updatedNodes(10)->willReturn([
+        $fetchData = $this->createStub(FetchData::class);
+        $fetchData->method('getResourceEndpoint')->willReturn('https://example.com/api/');
+        $fetchData->method('updatedNodes')->willReturn([
             'data' => [
                 'createdOrUpdated' => [
                     '835224016581-dara',
@@ -112,10 +112,10 @@ class SyncScopeUrlProviderTest extends TestCase
         ]);
 
         $subject = new SyncScopeUrlProvider(
-            $fetchData->reveal()
+            $fetchData
         );
 
-        $concreteProvider = $subject->createWithConfiguration($configuration->reveal());
+        $concreteProvider = $subject->createWithConfiguration($configuration);
         $result = $concreteProvider->getUrls();
 
         self::assertSame([

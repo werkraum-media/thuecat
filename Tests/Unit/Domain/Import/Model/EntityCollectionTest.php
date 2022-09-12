@@ -57,18 +57,18 @@ class EntityCollectionTest extends TestCase
      */
     public function returnsFirstEntityForDefaultLanguage(): void
     {
-        $entityWithTranslation = $this->prophesize(Entity::class);
-        $entityWithTranslation->isForDefaultLanguage()->willReturn(false);
+        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation->method('isForDefaultLanguage')->willReturn(false);
 
-        $entityWithDefaultLanguage = $this->prophesize(Entity::class);
-        $entityWithDefaultLanguage->isForDefaultLanguage()->willReturn(true);
+        $entityWithDefaultLanguage = $this->createStub(Entity::class);
+        $entityWithDefaultLanguage->method('isForDefaultLanguage')->willReturn(true);
 
         $subject = new EntityCollection();
-        $subject->add($entityWithTranslation->reveal());
-        $subject->add($entityWithDefaultLanguage->reveal());
+        $subject->add($entityWithTranslation);
+        $subject->add($entityWithDefaultLanguage);
 
         self::assertSame(
-            $entityWithDefaultLanguage->reveal(),
+            $entityWithDefaultLanguage,
             $subject->getDefaultLanguageEntity()
         );
     }
@@ -78,11 +78,11 @@ class EntityCollectionTest extends TestCase
      */
     public function returnsNullIfNoEntityForDefaultLanguageExists(): void
     {
-        $entityWithTranslation = $this->prophesize(Entity::class);
-        $entityWithTranslation->isForDefaultLanguage()->willReturn(false);
+        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation->method('isForDefaultLanguage')->willReturn(false);
 
         $subject = new EntityCollection();
-        $subject->add($entityWithTranslation->reveal());
+        $subject->add($entityWithTranslation);
 
         self::assertNull(
             $subject->getDefaultLanguageEntity()
@@ -94,16 +94,16 @@ class EntityCollectionTest extends TestCase
      */
     public function returnsEntitiesToTranslate(): void
     {
-        $entityWithTranslation = $this->prophesize(Entity::class);
-        $entityWithTranslation->isTranslation()->willReturn(true);
-        $entityWithTranslation->exists()->willReturn(false);
+        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation->method('isTranslation')->willReturn(true);
+        $entityWithTranslation->method('exists')->willReturn(false);
 
         $subject = new EntityCollection();
-        $subject->add($entityWithTranslation->reveal());
+        $subject->add($entityWithTranslation);
 
         self::assertSame(
             [
-                $entityWithTranslation->reveal(),
+                $entityWithTranslation,
             ],
             $subject->getEntitiesToTranslate()
         );
@@ -114,15 +114,15 @@ class EntityCollectionTest extends TestCase
      */
     public function returnsExistingEntities(): void
     {
-        $entityWithTranslation = $this->prophesize(Entity::class);
-        $entityWithTranslation->exists()->willReturn(true);
+        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation->method('exists')->willReturn(true);
 
         $subject = new EntityCollection();
-        $subject->add($entityWithTranslation->reveal());
+        $subject->add($entityWithTranslation);
 
         self::assertSame(
             [
-                $entityWithTranslation->reveal(),
+                $entityWithTranslation,
             ],
             $subject->getExistingEntities()
         );

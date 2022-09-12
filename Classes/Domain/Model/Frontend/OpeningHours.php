@@ -50,7 +50,7 @@ class OpeningHours implements TypeInterface, \Iterator, \Countable
         $this->serialized = $serialized;
         $this->array = array_map(
             [OpeningHour::class, 'createFromArray'],
-            json_decode($serialized, true)
+            json_decode($serialized, true) ?? []
         );
     }
 

@@ -38,10 +38,10 @@ class RequestFactoryTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
 
         $subject = new RequestFactory(
-            $extensionConfiguration->reveal()
+            $extensionConfiguration
         );
 
         self::assertInstanceOf(RequestFactory::class, $subject);
@@ -52,10 +52,10 @@ class RequestFactoryTest extends TestCase
      */
     public function returnsRequestWithJsonIdFormat(): void
     {
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
 
         $subject = new RequestFactory(
-            $extensionConfiguration->reveal()
+            $extensionConfiguration
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
@@ -68,11 +68,11 @@ class RequestFactoryTest extends TestCase
      */
     public function returnsRequestWithApiKeyWhenConfigured(): void
     {
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
-        $extensionConfiguration->get('thuecat', 'apiKey')->willReturn('some-api-key');
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $extensionConfiguration->method('get')->willReturn('some-api-key');
 
         $subject = new RequestFactory(
-            $extensionConfiguration->reveal()
+            $extensionConfiguration
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
@@ -85,11 +85,11 @@ class RequestFactoryTest extends TestCase
      */
     public function returnsRequestWithoutApiKeyWhenUnkown(): void
     {
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
-        $extensionConfiguration->get('thuecat', 'apiKey')->willThrow(new ExtensionConfigurationExtensionNotConfiguredException());
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
 
         $subject = new RequestFactory(
-            $extensionConfiguration->reveal()
+            $extensionConfiguration
         );
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');

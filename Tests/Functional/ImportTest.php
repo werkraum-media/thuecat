@@ -23,19 +23,12 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
-use Csa\GuzzleHttp\Middleware\Cache\Adapter\MockStorageAdapter;
-use Csa\GuzzleHttp\Middleware\Cache\MockMiddleware;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Routing\Route;
-use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Extbase\Core\Bootstrap;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Importer;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 /**
- * @covers \WerkraumMedia\ThueCat\Controller\Backend\AbstractController
- * @covers \WerkraumMedia\ThueCat\Controller\Backend\ImportController
  * @covers \WerkraumMedia\ThueCat\DependencyInjection\ConverterPass
  * @covers \WerkraumMedia\ThueCat\DependencyInjection\UrlProvidersPass
  * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData
@@ -44,7 +37,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
  * @covers \WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository
  * @covers \WerkraumMedia\ThueCat\Extension
  * @covers \WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService
- * @covers \WerkraumMedia\ThueCat\View\Backend\Menu
  *
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
  * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\Registry
@@ -95,40 +87,17 @@ class ImportTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['recorder'] = new MockMiddleware(
-            new MockStorageAdapter(
-                __DIR__ . '/Fixtures/Import/Guzzle/'
-            ),
-            // Set to 'record' to record requests and create fixtures.
-            '',
-            true
-        );
+        GuzzleClientFaker::registerClient();
 
         $this->setUpBackendUserFromFixture(1);
 
         $GLOBALS['LANG'] = $this->getContainer()->get(LanguageService::class);
-
-        // We are NOT in cli (simulate backend request environment)
-        Environment::initialize(
-            Environment::getContext(),
-            false,
-            Environment::isComposerMode(),
-            Environment::getProjectPath(),
-            Environment::getPublicPath(),
-            Environment::getVarPath(),
-            Environment::getConfigPath(),
-            Environment::getCurrentScript(),
-            'UNIX'
-        );
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['LANG']);
-        unset($GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['recorder']);
-        unset($GLOBALS['TYPO3_REQUEST']);
-        $_GET = [];
+        GuzzleClientFaker::tearDown();
 
         parent::tearDown();
     }
@@ -139,11 +108,10 @@ class ImportTest extends TestCase
     public function importsFreshOrganization(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFreshOrganization.csv');
     }
@@ -154,11 +122,10 @@ class ImportTest extends TestCase
     public function updatesExistingOrganization(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/UpdatesExistingOrganization.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $organisations = $this->getAllRecords('tx_thuecat_organisation');
         self::assertCount(1, $organisations);
@@ -186,11 +153,14 @@ class ImportTest extends TestCase
     public function importsTown(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.xml');
+        // TODO: Check why we request both twice.
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTown.csv');
     }
@@ -201,11 +171,11 @@ class ImportTest extends TestCase
     public function importsTownWithRelation(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTownWithRelation.csv');
     }
@@ -216,11 +186,31 @@ class ImportTest extends TestCase
     public function importsTouristAttractionsWithRelations(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithRelations.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/508431710173-wwne.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159216.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159186.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_6486108.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5099196.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/215230952334-yyno.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/052821473718-oxfq.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134362.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134288.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_652340.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelations.csv');
     }
@@ -231,11 +221,14 @@ class ImportTest extends TestCase
     public function importsTouristInformationWithRelation(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/333039283321-xxwg.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/356133173991-cryw.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelation.csv');
     }
@@ -246,11 +239,32 @@ class ImportTest extends TestCase
     public function importsBasedOnSyncScope(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/508431710173-wwne.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159216.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159186.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_6486108.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5099196.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/215230952334-yyno.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/052821473718-oxfq.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134362.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134288.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_652340.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $serverRequest = $this->getServerRequest();
-
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScope.csv');
     }
@@ -263,52 +277,32 @@ class ImportTest extends TestCase
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportWithMultipleReferencesToSameObject.xml');
 
-        $serverRequest = $this->getServerRequest();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/508431710173-wwne.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159216.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159186.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_6486108.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5099196.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/215230952334-yyno.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/052821473718-oxfq.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134362.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134288.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_652340.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $extbaseBootstrap = $this->getContainer()->get(Bootstrap::class);
-        $extbaseBootstrap->handleBackendRequest($serverRequest->reveal());
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportWithMultipleReferencesToSameObject.csv');
-    }
-
-    /**
-     * @return ObjectProphecy<ServerRequestInterface>
-     */
-    private function getServerRequest(): ObjectProphecy
-    {
-        $route = $this->prophesize(Route::class);
-        $route->getOption('moduleConfiguration')->willReturn([
-            'access' => 'user,group',
-            'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod.xlf',
-            'name' => 'site_ThuecatThuecat',
-            'extensionName' => 'Thuecat',
-            'routeTarget' => 'TYPO3\CMS\Extbase\Core\Bootstrap::handleBackendRequest',
-            'iconIdentifier' => 'module-site_ThuecatThuecat',
-        ]);
-        $route->getOption('module')->willReturn(true);
-        $route->getOption('moduleName')->willReturn('site_ThuecatThuecat');
-        $route->getOption('access')->willReturn('user,group');
-        $route->getOption('target')->willReturn('TYPO3\CMS\Extbase\Core\Bootstrap::handleBackendRequest');
-        $route->getOption('_identifier')->willReturn('site_ThuecatThuecat');
-
-        $serverRequest = $this->prophesize(ServerRequestInterface::class);
-        $serverRequest->getAttribute('route')->willReturn($route->reveal());
-        $serverRequest->getAttribute('routing')->willReturn(null);
-        $serverRequest->getAttribute('normalizedParams')->willReturn(null);
-        $serverRequest->getMethod()->willReturn('GET');
-        $serverRequest->getParsedBody()->willReturn([]);
-        $serverRequest->getQueryParams()->willReturn([
-            'tx_thuecat_site_thuecatthuecat' => [
-                'controller' => 'Backend\Import',
-                'action' => 'import',
-                'importConfiguration' => '1',
-            ],
-        ]);
-        $GLOBALS['TYPO3_REQUEST'] = $serverRequest->reveal();
-
-        // As long as extbase uri builder uses GeneralUtility::_GP
-        $_GET['route'] = '/module/site/ThuecatThuecat';
-
-        return $serverRequest;
     }
 }

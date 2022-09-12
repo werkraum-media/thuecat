@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Typo3Converter;
 
-use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
@@ -48,20 +47,20 @@ class GeneralConverterTest extends TestCase
      */
     public function canBeCreated(): void
     {
-        $resolveForeignReference = $this->prophesize(ResolveForeignReference::class);
-        $importer = $this->prophesize(Importer::class);
-        $languageHandling = $this->prophesize(LanguageHandling::class);
-        $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $townRepository = $this->prophesize(TownRepository::class);
-        $parkingFacilityRepository = $this->prophesize(ParkingFacilityRepository::class);
+        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
+        $importer = $this->createStub(Importer::class);
+        $languageHandling = $this->createStub(LanguageHandling::class);
+        $organisationRepository = $this->createStub(OrganisationRepository::class);
+        $townRepository = $this->createStub(TownRepository::class);
+        $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
 
         $subject = new GeneralConverter(
-            $resolveForeignReference->reveal(),
-            $importer->reveal(),
-            $languageHandling->reveal(),
-            $organisationRepository->reveal(),
-            $townRepository->reveal(),
-            $parkingFacilityRepository->reveal()
+            $resolveForeignReference,
+            $importer,
+            $languageHandling,
+            $organisationRepository,
+            $townRepository,
+            $parkingFacilityRepository
         );
 
         self::assertInstanceOf(
@@ -75,25 +74,25 @@ class GeneralConverterTest extends TestCase
      */
     public function skipsWithoutManager(): void
     {
-        $resolveForeignReference = $this->prophesize(ResolveForeignReference::class);
-        $importer = $this->prophesize(Importer::class);
-        $importer->importConfiguration(Argument::any())->willReturn(new ImportLog());
-        $languageHandling = $this->prophesize(LanguageHandling::class);
-        $languageHandling->getLanguageUidForString(10, 'de')->willReturn(0);
-        $organisationRepository = $this->prophesize(OrganisationRepository::class);
-        $townRepository = $this->prophesize(TownRepository::class);
-        $parkingFacilityRepository = $this->prophesize(ParkingFacilityRepository::class);
-        $logger = $this->prophesize(LoggerInterface::class);
+        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
+        $importer = $this->createStub(Importer::class);
+        $importer->method('importConfiguration')->willReturn(new ImportLog());
+        $languageHandling = $this->createStub(LanguageHandling::class);
+        $languageHandling->method('getLanguageUidForString')->willReturn(0);
+        $organisationRepository = $this->createStub(OrganisationRepository::class);
+        $townRepository = $this->createStub(TownRepository::class);
+        $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $subject = new GeneralConverter(
-            $resolveForeignReference->reveal(),
-            $importer->reveal(),
-            $languageHandling->reveal(),
-            $organisationRepository->reveal(),
-            $townRepository->reveal(),
-            $parkingFacilityRepository->reveal()
+            $resolveForeignReference,
+            $importer,
+            $languageHandling,
+            $organisationRepository,
+            $townRepository,
+            $parkingFacilityRepository
         );
-        $subject->setLogger($logger->reveal());
+        $subject->setLogger($logger);
 
         $contentResponsible = new ForeignReference();
         $contentResponsible->setId('https://example.com/content-responsible');
@@ -101,11 +100,11 @@ class GeneralConverterTest extends TestCase
         $entity->setName('Test Name');
         $entity->setContentResponsible($contentResponsible);
 
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getStoragePid()->willReturn(10);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('storagePid', 10);
 
         self::assertNull(
-            $subject->convert($entity, $configuration->reveal(), 'de')
+            $subject->convert($entity, $configuration, 'de')
         );
     }
 }

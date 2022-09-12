@@ -46,12 +46,12 @@ class StaticUrlProviderTest extends TestCase
      */
     public function canProvideForStaticConfiguration(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getType()->willReturn('static');
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('type', 'static');
 
         $subject = new StaticUrlProvider();
 
-        $result = $subject->canProvideForConfiguration($configuration->reveal());
+        $result = $subject->canProvideForConfiguration($configuration);
         self::assertTrue($result);
     }
 
@@ -60,12 +60,12 @@ class StaticUrlProviderTest extends TestCase
      */
     public function returnsConcreteProviderForConfiguration(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUrls()->willReturn(['https://example.com']);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('urls', ['https://example.com']);
 
         $subject = new StaticUrlProvider();
 
-        $result = $subject->createWithConfiguration($configuration->reveal());
+        $result = $subject->createWithConfiguration($configuration);
         self::assertInstanceOf(StaticUrlProvider::class, $result);
     }
 
@@ -74,12 +74,12 @@ class StaticUrlProviderTest extends TestCase
      */
     public function concreteProviderReturnsUrls(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
-        $configuration->getUrls()->willReturn(['https://example.com']);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('urls', ['https://example.com']);
 
         $subject = new StaticUrlProvider();
 
-        $concreteProvider = $subject->createWithConfiguration($configuration->reveal());
+        $concreteProvider = $subject->createWithConfiguration($configuration);
         $result = $concreteProvider->getUrls();
         self::assertSame([
             'https://example.com',

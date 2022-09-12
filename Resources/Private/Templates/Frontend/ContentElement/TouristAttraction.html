@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-12 col-md-6 order-first order-md-last">
                     <f:if condition="{entity.media.mainImage}">
-                        <f:image src="{entity.media.mainImage.url}" class="img-fluid"/>
+                        <img class="img-fluid" src="{entity.media.mainImage.url}" />
                     </f:if>
                 </div>
             </div>
@@ -68,8 +68,8 @@
                 </f:if>
             </div>
             <div class="row thuecat__services">
-                <f:if condition="{entity.generalInformation || entity.otherServices || entity.petsAllowed || entity.isAccessibleForFree 
-                    || entity.publicAccess || entity.accessibilitySpecification.certificationStatus || entity.museumServices 
+                <f:if condition="{entity.generalInformation || entity.otherServices || entity.petsAllowed || entity.isAccessibleForFree
+                    || entity.publicAccess || entity.accessibilitySpecification.certificationStatus || entity.museumServices
                     || entity.digitalOffer || entity.trafficInfrastructures || entity.paymentAccepted || entity.availableLanguages
                     || entity.sanitation || entity.photography || entity.startOfConstruction || entity.architecturalStyles}"
                 >
@@ -135,7 +135,7 @@
                     </div>
                 </f:if>
             </div>
-        
+
             <div class="thuecat__offers">
                 <f:if condition="{entity.offers}">
                     <div class="row">

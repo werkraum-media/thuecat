@@ -1,0 +1,175 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/018132452787-ngbe",
+            "@type": [
+                "schema:Organization",
+                "schema:Thing",
+                "ttgds:Organization",
+                "thuecat:TouristMarketingCompany"
+            ],
+            "schema:address": {
+                "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b74252",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:PostalAddress",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:ContactPoint"
+                ],
+                "schema:addressCountry": {
+                    "@type": "thuecat:AddressCountry",
+                    "@value": "thuecat:Germany"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                "schema:addressRegion": {
+                    "@type": "thuecat:AddressFederalState",
+                    "@value": "thuecat:Thuringia"
+                },
+                "schema:email": {
+                    "@language": "de",
+                    "@value": "management@erfurt-tourismus.de"
+                },
+                "schema:faxNumber": {
+                    "@language": "de",
+                    "@value": "+49 361 66 40 290"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Benediktsplatz 1"
+                },
+                "schema:telephone": {
+                    "@language": "de",
+                    "@value": "+49 361 66 40 200"
+                },
+                "thuecat:typOfAddress": [
+                    {
+                        "@type": "thuecat:TypOfAddress",
+                        "@value": "thuecat:HouseAddress"
+                    },
+                    {
+                        "@type": "thuecat:TypOfAddress",
+                        "@value": "thuecat:PostalAddressEnum"
+                    },
+                    {
+                        "@type": "thuecat:TypOfAddress",
+                        "@value": "thuecat:BillingAddress"
+                    }
+                ]
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Die Erfurt Tourismus & Marketing GmbH (ETMG) wurde 1997 als offizielle Organisation zur Tourismusf\u00f6rderung in der Landeshauptstadt Erfurt gegr\u00fcndet und nahm am 01.01.1998 die Gesch\u00e4ftst\u00e4tigkeit auf.\n\nZu den Aufgaben z\u00e4hlen die kommunale Tourismusf\u00f6rderung als wesentliches Instrument der Wirtschafts- und Stadtentwicklung der Landeshauptstadt Erfurt, die Positionierung der Stadt Erfurt auf dem nationalen und internationalen Tourismusmarkt als dynamische und sympathische Landeshauptstadt, attraktives St\u00e4dtereiseziel und Tagungsstandort, die Vervollkommnung des touristischen Serviceangebotes entsprechend den Bed\u00fcrfnissen der individuellen G\u00e4ste und der Tourismuswirtschaft und das Betreiben der Erfurt Tourist Information.\n\nIm Januar 2009 wurde das Marketing f\u00fcr die Landeshauptstadt Erfurt an die ETMG \u00fcbertragen und neu geordnet. Die Hauptaufgaben im Stadtmarketing liegen darin, die Wahrnehmung der Stadt in folgenden Bereichen zu verst\u00e4rken: traditionsreicher und innovativer Wirtschaftsstandort, lebendiger und kreativer Wissenschaftsstandort, attraktiver Wohnstandort mit Flair und Sportstandort mit exzellenten Bedingungen f\u00fcr Nachwuchs- und Spitzensportler.\n\nGesellschafter: Stadt Erfurt\n\nGesch\u00e4ftsf\u00fchrerin: Frau Dr. Carmen Hildebrandt\n\nAufsichtsratsvorsitzender: Herr Dominik Kordon\n\nMitarbeiter: ca. 30 Angestellte, 4 Auszubildende"
+            },
+            "schema:geo": {
+                "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b74253",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:GeoCoordinates"
+                ],
+                "schema:latitude": {
+                    "@type": "schema:Number",
+                    "@value": "50.978437"
+                },
+                "schema:longitude": {
+                    "@type": "schema:Number",
+                    "@value": "11.029873"
+                }
+            },
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://www.google.de/maps/place/Benediktspl.+1,+99084+Erfurt/@50.9784152,11.0276505,17z/data=!4m13!1m7!3m6!1s0x47a472961021c18b:0xc2d4b6b7eb27d4c1!2sBenediktspl.+1,+99084+Erfurt!3b1!8m2!3d50.9784118!4d11.0298392!3m4!1s0x47a472961021c18b:0xc2d4b6b7eb27d4c1!8m2!3d50.9784118!4d11.0298392?hl=de"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Erfurt Tourismus und Marketing GmbH"
+            },
+            "schema:openingHoursSpecification": {
+                "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b74254",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:OpeningHoursSpecification"
+                ],
+                "schema:closes": {
+                    "@type": "schema:Time",
+                    "@value": "16:00:00"
+                },
+                "schema:dayOfWeek": [
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Friday"
+                    },
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Thursday"
+                    },
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Tuesday"
+                    },
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Monday"
+                    },
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Wednesday"
+                    }
+                ],
+                "schema:opens": {
+                    "@type": "schema:Time",
+                    "@value": "08:30:00"
+                },
+                "schema:validFrom": {
+                    "@type": "schema:Date",
+                    "@value": "2020-12-01"
+                },
+                "schema:validThrough": {
+                    "@type": "schema:Date",
+                    "@value": "2021-12-31"
+                }
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://www.erfurt-tourismus.de/en/"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:managedObjects": [
+                {
+                    "@id": "https://thuecat.org/resources/333039283321-xxwg"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/186583376407-xkwx"
+                }
+            ]
+        }
+    ]
+}
