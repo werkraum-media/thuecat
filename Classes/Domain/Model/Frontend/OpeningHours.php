@@ -84,7 +84,7 @@ class OpeningHours implements TypeInterface, \Iterator, \Countable
         $this->position = 0;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->array);
     }

@@ -4,9 +4,18 @@ parameters:
 			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
+		-
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
+			count: 1
+			path: Classes/DependencyInjection/EntityPass.php
 
 		-
 			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
+			count: 1
+			path: Classes/DependencyInjection/EntityPass.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
 
@@ -24,11 +33,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$data of method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\EntityMapper\\\\ArrayDenormalizer\\:\\:transformSingleEntryToMultiEntry\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: Classes/Domain/Import/EntityMapper/ArrayDenormalizer.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
-			path: Classes/Domain/Import/Importer/SaveData.php
 
 		-
 			message: "#^Call to an undefined method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\Entity\\\\MapsToType\\:\\:getId\\(\\)\\.$#"
@@ -271,6 +275,11 @@ parameters:
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
+			message: "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Result\\|int supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: Classes/Frontend/DataProcessing/ResolveEntities.php
+
+		-
 			message: "#^Cannot call method getLanguageOverlay\\(\\) on string\\|TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
 			count: 1
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
@@ -351,7 +360,12 @@ parameters:
 			path: Tests/Functional/Import/EntityMapping/PlaceInfosTest.php
 
 		-
-			message: "#^Cannot call method handleBackendRequest\\(\\) on mixed\\.$#"
+			message: "#^Cannot call method findByUid\\(\\) on mixed\\.$#"
+			count: 8
+			path: Tests/Functional/ImportTest.php
+
+		-
+			message: "#^Cannot call method importConfiguration\\(\\) on mixed\\.$#"
 			count: 8
 			path: Tests/Functional/ImportTest.php
 

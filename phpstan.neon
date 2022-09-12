@@ -7,5 +7,9 @@ parameters:
         - Configuration
         - Tests
     checkMissingIterableValueType: false
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+      # Depending on TYPO3 version
+      - "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
+      - "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"

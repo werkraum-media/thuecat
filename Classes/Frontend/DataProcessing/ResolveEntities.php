@@ -67,9 +67,9 @@ class ResolveEntities implements DataProcessorInterface
             return $processedData;
         }
 
-        $as = $cObj->stdWrapValue('as', $processorConfiguration, 'entities');
-        $tableName = $cObj->stdWrapValue('table', $processorConfiguration, '');
-        $uids = $cObj->stdWrapValue('uids', $processorConfiguration, '');
+        $as = (string) $cObj->stdWrapValue('as', $processorConfiguration, 'entities');
+        $tableName = (string) $cObj->stdWrapValue('table', $processorConfiguration, '');
+        $uids = (string) $cObj->stdWrapValue('uids', $processorConfiguration, '');
 
         $uids = GeneralUtility::intExplode(',', $uids);
         if ($uids === [] || $tableName === '') {
