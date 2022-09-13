@@ -4,17 +4,8 @@
 Installation
 ============
 
-The extension can be installed via composer,
-see `the package at packagist.org <https://packagist.org/packages/werkraummedia/thuecat>`_.
-Further info is available at :ref:`t3install:install-extension-with-composer` from
-TYPO3 installation guide.
-
-The extension can be installed via file system.
-Download the corresponding version `at GitHub <https://github.com/werkraum-media/thuecat/releases>`_.
-Unpack into :file:`typo3conf/ext/`.
-
-The extension needs to be activated via the "Extension Manager".
-See :ref:`t3gettingstarted:extension-manager`.
+The extension can be installed via composer, see :ref:`t3gettingstarted:extensions_management`.
+The composer package can be found at `packagist.org <https://packagist.org/packages/werkraummedia/thuecat>`_.
 
 Integrators can include and configure TypoScript once it is installed and enabled.
 See :ref:`t3tsref:static-includes`.
