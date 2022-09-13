@@ -1,0 +1,152 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/dms_5159186",
+            "@type": [
+                "schema:CreativeWork",
+                "schema:MediaObject",
+                "schema:Thing",
+                "schema:ImageObject",
+                "http://purl.org/dc/dcmitype/Image"
+            ],
+            "schema:bitrate": {
+                "@type": "xsd:string",
+                "@value": "8"
+            },
+            "schema:copyrightYear": {
+                "@language": "de",
+                "@value": "2020"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Sicht auf Dom St. Marien, St. Severikirche sowie die davor liegenden Klostergeb\u00e4ude und einem Ausschnitt des Biergartens umgeben von einem d\u00e4mmerungsverf\u00e4rten Himmel"
+            },
+            "schema:exifData": {
+                "@id": "genid-2baad45f571f4196811b62a1b4e4027f-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:PropertyValue"
+                ],
+                "schema:name": {
+                    "@type": "xsd:string",
+                    "@value": "tiff:Software"
+                },
+                "schema:value": {
+                    "@type": "xsd:string",
+                    "@value": "Google"
+                }
+            },
+            "schema:height": {
+                "@type": "xsd:string",
+                "@value": "2160"
+            },
+            "schema:identifier": {
+                "@type": "schema:PropertyValue",
+                "@value": "5159186"
+            },
+            "schema:keywords": [
+                {
+                    "@type": "xsd:string",
+                    "@value": "Kultur und Geschichte"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Geb\u00e4ude / Architektur"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Bauwerk"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Erfurt"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Abendd\u00e4mmerung"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Halbtotale"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Gegenlicht"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Herbst"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "domplatz"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Gruppenreisende"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Kennerschaft - Konservativ-Etabliertes Milieu"
+                }
+            ],
+            "schema:license": {
+                "@language": "de",
+                "@value": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Erfurt-Dom-und-Severikirche.jpg"
+            },
+            "schema:sameAs": {
+                "@type": "xsd:anyURI",
+                "@value": "https://wbk.thuecat.org"
+            },
+            "schema:thumbnailUrl": {
+                "@type": "xsd:string",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5159186/Thumbnail-300x300/image"
+            },
+            "schema:url": {
+                "@type": "xsd:anyURI",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5159186/Preview-1280x0/image"
+            },
+            "schema:width": {
+                "@type": "xsd:string",
+                "@value": "3614"
+            },
+            "thuecat:licenseAuthor": {
+                "@language": "de",
+                "@value": ""
+            },
+            "thuecat:licenseLocation": {
+                "@language": "de",
+                "@value": ""
+            },
+            "thuecat:licensePeriod": {
+                "@language": "de",
+                "@value": ""
+            },
+            "thuecat:licensePerson": {
+                "@language": "de",
+                "@value": ""
+            }
+        }
+    ]
+}

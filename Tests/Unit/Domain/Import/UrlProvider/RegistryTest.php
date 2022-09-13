@@ -25,7 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
 
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry;
-use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
+use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**
@@ -49,9 +49,9 @@ class RegistryTest extends TestCase
     public function allowsRegistrationOfUrlProvider(): void
     {
         $subject = new Registry();
-        $provider = $this->prophesize(UrlProvider::class);
+        $provider = new StaticUrlProvider();
 
-        $subject->registerProvider($provider->reveal());
+        $subject->registerProvider($provider);
         self::assertTrue(true);
     }
 
@@ -60,11 +60,11 @@ class RegistryTest extends TestCase
      */
     public function returnsNullIfNoProviderExistsForConfiguration(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
 
         $subject = new Registry();
 
-        $result = $subject->getProviderForConfiguration($configuration->reveal());
+        $result = $subject->getProviderForConfiguration($configuration);
         self::assertNull($result);
     }
 
@@ -73,17 +73,17 @@ class RegistryTest extends TestCase
      */
     public function returnsProviderForConfiguration(): void
     {
-        $configuration = $this->prophesize(ImportConfiguration::class);
+        $configuration = new ImportConfiguration();
+        $configuration->_setProperty('type', 'static');
+        $configuration->_setProperty('urls', ['https://example.com/path/example.json']);
 
         $subject = new Registry();
 
-        $provider = $this->prophesize(UrlProvider::class);
-        $concreteProvider = $this->prophesize(UrlProvider::class);
-        $provider->canProvideForConfiguration($configuration->reveal())->willReturn(true);
-        $provider->createWithConfiguration($configuration->reveal())->willReturn($concreteProvider->reveal());
-        $subject->registerProvider($provider->reveal());
+        $provider = new StaticUrlProvider();
+        $subject->registerProvider($provider);
 
-        $result = $subject->getProviderForConfiguration($configuration->reveal());
-        self::assertSame($concreteProvider->reveal(), $result);
+        $result = $subject->getProviderForConfiguration($configuration);
+        self::assertInstanceOf(StaticUrlProvider::class, $result);
+        self::assertSame(['https://example.com/path/example.json'], $result->getUrls());
     }
 }

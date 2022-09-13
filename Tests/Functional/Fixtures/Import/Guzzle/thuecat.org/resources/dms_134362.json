@@ -1,0 +1,351 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/dms_134362",
+            "@type": [
+                "schema:CreativeWork",
+                "schema:MediaObject",
+                "schema:Thing",
+                "schema:ImageObject",
+                "http://purl.org/dc/dcmitype/Image"
+            ],
+            "schema:author": {
+                "@type": "xsd:string",
+                "@value": "Florian Trykowski"
+            },
+            "schema:bitrate": {
+                "@type": "xsd:string",
+                "@value": "8"
+            },
+            "schema:copyrightYear": {
+                "@language": "de",
+                "@value": "2019"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Kr\u00e4merbr\u00fccke in Erfurt"
+            },
+            "schema:exifData": [
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178480",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Model"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "NIKON D5"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178481",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:ExposureTime"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "0.004"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178482",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:XResolution"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "300.0"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178483",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Software"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "Adobe Photoshop CS6 (Macintosh)"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178484",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Orientation"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "1"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178485",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:ResolutionUnit"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "Inch"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178486",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:SamplesPerPixel"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "3"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178487",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:IsoSpeedRatings"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "560"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178488",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:YResolution"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "300.0"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178489",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Make"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "NIKON CORPORATION"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178490",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:Flash"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "false"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178491",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FocalLength"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "14.0"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178492",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FNumber"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "14.0"
+                    }
+                },
+                {
+                    "@id": "genid-5958021d95614a2193e3f66fdc21fad1-b178493",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:DateTimeOriginal"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "2019-08-16T13:52:38"
+                    }
+                }
+            ],
+            "schema:height": {
+                "@type": "xsd:string",
+                "@value": "3233"
+            },
+            "schema:identifier": {
+                "@type": "schema:PropertyValue",
+                "@value": "134362"
+            },
+            "schema:keywords": [
+                {
+                    "@type": "xsd:string",
+                    "@value": "Sommer"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Vorder- / Frontallicht"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "St\u00e4dte und Architektur"
+                },
+                {
+                    "@type": "xsd:string",
+                    "@value": "Erfurt"
+                }
+            ],
+            "schema:license": {
+                "@language": "de",
+                "@value": "https://creativecommons.org/publicdomain/zero/1.0/deed.de"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Erfurt-Kraemerbruecke-11.jpg"
+            },
+            "schema:sameAs": {
+                "@type": "xsd:anyURI",
+                "@value": "https://wbk.thuecat.org"
+            },
+            "schema:thumbnailUrl": {
+                "@type": "xsd:string",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/134362/Thumbnail-300x300/image"
+            },
+            "schema:url": {
+                "@type": "xsd:anyURI",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/134362/Preview-1280x0/image"
+            },
+            "schema:width": {
+                "@type": "xsd:string",
+                "@value": "4849"
+            },
+            "thuecat:licenseAuthor": {
+                "@language": "de",
+                "@value": "https://home.ttgnet.de/ttg/projekte/10006/90136/Projektdokumente/Vergabe%20Rahmenvertrag%20Fotoproduktion"
+            },
+            "thuecat:licenseLocation": {
+                "@language": "de",
+                "@value": "https://home.ttgnet.de/ttg/projekte/10006/90136/Projektdokumente/Fotoproduktion-Trykowski/2019%2007%20Shooting%20Erfurt%20Panoramabild%20ega%20und%20Innenstadt"
+            },
+            "thuecat:licensePeriod": {
+                "@language": "de",
+                "@value": ""
+            },
+            "thuecat:licensePerson": {
+                "@language": "de",
+                "@value": "https://home.ttgnet.de/ttg/projekte/10006/90136/Projektdokumente/Fotoproduktion-Trykowski/2019%2007%20Shooting%20Erfurt%20Panoramabild%20ega%20und%20Innenstadt"
+            }
+        }
+    ]
+}

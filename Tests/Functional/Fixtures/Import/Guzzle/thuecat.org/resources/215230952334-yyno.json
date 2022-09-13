@@ -1,0 +1,376 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/215230952334-yyno",
+            "@type": [
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Thing",
+                "schema:Bridge",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "thuecat:Building",
+                "thuecat:TechnicalMonument",
+                "thuecat:TrafficBuilding",
+                "thuecat:TrafficHistory"
+            ],
+            "schema:address": {
+                "@id": "genid-a45a5606cd074d86bf242c9464d84171-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:PostalAddress",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:ContactPoint"
+                ],
+                "schema:addressCountry": {
+                    "@type": "thuecat:AddressCountry",
+                    "@value": "thuecat:Germany"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                "schema:addressRegion": {
+                    "@type": "thuecat:AddressFederalState",
+                    "@value": "thuecat:Thuringia"
+                },
+                "schema:email": {
+                    "@language": "de",
+                    "@value": "service@erfurt-tourismus.de"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Benediktsplatz 1"
+                },
+                "schema:telephone": {
+                    "@language": "de",
+                    "@value": "+49 361 66 400"
+                },
+                "thuecat:typOfAddress": {
+                    "@type": "thuecat:TypOfAddress",
+                    "@value": "thuecat:GuestService"
+                }
+            },
+            "schema:audience": [
+                {
+                    "@id": "https://thuecat.org/resources/626826573915-omab"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/799431457224-zhww"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/290287712606-zkwq"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/631158796785-rmet"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/312868368592-wnce"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/168404918510-whfb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/169573689982-ftrx"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/454636296838-aaxo"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/449487802126-gecn"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/301753337945-akzy"
+                }
+            ],
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:French"
+                }
+            ],
+            "schema:containedInPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/043064193523-jcyt"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/052821473718-oxfq"
+                }
+            ],
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/r_18832477-oapoi"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/e_ttg00020050000733686-tomas"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/r_16573254-oapoi"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/109950083644-arqe"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/355818601084-zegp"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/517095953903-gpcn"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/954828840942-orbg"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Ein bekanntes Wahrzeichen Erfurts ist die Kr\u00e4merbr\u00fccke, die l\u00e4ngste bebaute und bewohnte Br\u00fccke Europas.Die Kr\u00e4merbr\u00fccke wurde zu Beginn aus Holz und 1325 aus Stein erbaut. Zun\u00e4chst war die 120 m lange Br\u00fccke mit 62 schmalen H\u00e4usern bebaut. Sp\u00e4ter wurden einige der H\u00e4user auf nun mehr 32 zusammengefasst. An beiden Enden der Br\u00fccke standen zwei Br\u00fcckenkopfkirchen. Heute existiert nur noch eine der beiden, die \u00f6stlich gelegene \u00c4gidienkirche.Auf der Kr\u00e4merbr\u00fccke kann man in Galerien und Boutiquen sehr sch\u00f6n bummeln gehen. Man kann Th\u00fcringer Handwerksmeistern bei ihrer Arbeit \u00fcber die Schulter schauen. Keramik, Porzellan und Holzschnitzereien, Blaudruck und Lauschaer Glas sind beliebte Souvenirs. Caf\u00e8s, Weinh\u00e4ndler und Feinkostgesch\u00e4fte mit Th\u00fcringer Spezialit\u00e4ten laden zum Verweilen ein."
+                },
+                {
+                    "@language": "en",
+                    "@value": "Another Erfurt landmark is the Merchants' Bridge (Kr\u00e4merbr\u00fccke), the longest series of inhabited buildings on any bridge in Europe. The Merchants' Bridge is Erfurts most interesting secular construction, initially in wood but rebuilt in stone in 1325. There were originally 62 narrow buildings along its 120-metre length, but subsequent redevelopment left just 32 buildings. Of what was once a pair of bridgehead churches, only the Church of St. Aegidius remains at the eastern end of the bridge today. The Merchants' Bridge is lined with galleries, caf\u00e9s and boutiques offering traditional crafts, Thuringian blue printed fabrics, hand-painted ceramics, handblown glassware, jewellery, wood carvings, antiques and delicious Thuringian specialities - perfect for browsing."
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Le pont de l\u2019\u00e9picier est un des symboles de la ville d\u2019Erfurt, le plus grand pont habit\u00e9 en continu d\u2019Europe. A l\u2019origine, le pont de l\u2019\u00e9picier faisait 120 m de long et comptait 62 maisons \u00e9troites, qui furent plus tard regroup\u00e9es en 32 maisons. Sur le pont de l\u2019\u00e9picier se trouvent des galeries et des petites \u00e9choppes proposant des \u00e9toffes \u00e0 motifs bleu indigo de Thuringe, des c\u00e9ramiques peintes main, du verre de Lauscha, des bijoux et des sculptures en bois."
+                },
+                {
+                    "@id": "genid-a45a5606cd074d86bf242c9464d84171-b1",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "Ein bekanntes Wahrzeichen Erfurts ist die Kr\u00e4merbr\u00fccke, die l\u00e4ngste bebaute und bewohnte Br\u00fccke Europas.Die Kr\u00e4merbr\u00fccke wurde zu Beginn aus Holz und 1325 aus Stein erbaut. Zun\u00e4chst war die 120 m lange Br\u00fccke mit 62 schmalen H\u00e4usern bebaut. Sp\u00e4ter wurden einige der H\u00e4user auf nun mehr 32 zusammengefasst. An beiden Enden der Br\u00fccke standen zwei Br\u00fcckenkopfkirchen. Heute existiert nur noch eine der beiden, die \u00f6stlich gelegene \u00c4gidienkirche.Auf der Kr\u00e4merbr\u00fccke kann man in Galerien und Boutiquen sehr sch\u00f6n bummeln gehen. Man kann Th\u00fcringer Handwerksmeistern bei ihrer Arbeit \u00fcber die Schulter schauen. Keramik, Porzellan und Holzschnitzereien, Blaudruck und Lauschaer Glas sind beliebte Souvenirs. Caf\u00e8s, Weinh\u00e4ndler und Feinkostgesch\u00e4fte mit Th\u00fcringer Spezialit\u00e4ten laden zum Verweilen ein."
+                    }
+                },
+                {
+                    "@id": "genid-a45a5606cd074d86bf242c9464d84171-b2",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>Another Erfurt landmark is the Merchants' Bridge (Kr\u00e4merbr\u00fccke), the longest series of inhabited buildings on any bridge in Europe. The Merchants' Bridge is Erfurts most interesting secular construction, initially in wood but rebuilt in stone in 1325. There were originally 62 narrow buildings along its 120-metre length, but subsequent redevelopment left just 32 buildings. Of what was once a pair of bridgehead churches, only the Church of St. Aegidius remains at the eastern end of the bridge today. The Merchants' Bridge is lined with galleries, caf\u00e9s and boutiques offering traditional crafts, Thuringian blue printed fabrics, hand-painted ceramics, handblown glassware, jewellery, wood carvings, antiques and delicious Thuringian specialities - perfect for browsing.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-a45a5606cd074d86bf242c9464d84171-b3",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "<p>Le pont de l\u2019\u00e9picier est un des symboles de la ville d\u2019Erfurt, le plus grand pont habit\u00e9 en continu d\u2019Europe. A l\u2019origine, le pont de l\u2019\u00e9picier faisait 120 m de long et comptait 62 maisons \u00e9troites, qui furent plus tard regroup\u00e9es en 32 maisons. Sur le pont de l\u2019\u00e9picier se trouvent des galeries et des petites \u00e9choppes proposant des \u00e9toffes \u00e0 motifs bleu indigo de Thuringe, des c\u00e9ramiques peintes main, du verre de Lauscha, des bijoux et des sculptures en bois.</p>"
+                    }
+                }
+            ],
+            "schema:geo": {
+                "@id": "genid-a45a5606cd074d86bf242c9464d84171-b4",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:GeoCoordinates"
+                ],
+                "schema:latitude": {
+                    "@type": "schema:Number",
+                    "@value": "50.978772"
+                },
+                "schema:longitude": {
+                    "@type": "schema:Number",
+                    "@value": "11.031622"
+                }
+            },
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://www.google.com/maps/search/?api=1&query=50.978772,11.031622"
+            },
+            "schema:identifier": {
+                "@type": "schema:URL",
+                "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/kraemerbruecke-103571.html"
+            },
+            "schema:image": [
+                {
+                    "@id": "https://thuecat.org/resources/dms_134288"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_134362"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_652340"
+                }
+            ],
+            "schema:isAccessibleForFree": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Kr\u00e4merbr\u00fccke"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Merchants' Bridge"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Pont de l'\u00e9picier"
+                }
+            ],
+            "schema:petsAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:photo": {
+                "@id": "https://thuecat.org/resources/dms_134362"
+            },
+            "schema:publicAccess": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:sameAs": [
+                {
+                    "@type": "xsd:string",
+                    "@value": "http://www.kraemerbruecke.de"
+                },
+                {
+                    "@type": "schema:URL",
+                    "@value": "https://www.outdooractive.com/de/51497738"
+                }
+            ],
+            "schema:smokingAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://www.erfurt-tourismus.de/sehenswertes/kraemerbruecke"
+            },
+            "thuecat:architecturalStyle": {
+                "@type": "thuecat:ArchitecturalStyle",
+                "@value": "thuecat:ZeroInformationArchitecturalStyle"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:digitalOffer": {
+                "@type": "thuecat:DigitalOffer",
+                "@value": "thuecat:ZeroDigitalOffer"
+            },
+            "thuecat:distanceToPublicTransport": {
+                "@id": "genid-a45a5606cd074d86bf242c9464d84171-b5",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue",
+                    "schema:Thing"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTR"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "250"
+                }
+            },
+            "thuecat:entrance": {
+                "@type": "thuecat:Entrance",
+                "@value": "thuecat:OutdoorActivities"
+            },
+            "thuecat:gastro": [
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:TakeawayShop"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:Cafe"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:Restaurant"
+                }
+            ],
+            "thuecat:guidedTour": {
+                "@type": "thuecat:EnumGuidedTour",
+                "@value": "thuecat:GuidedTourOnlyWithRegistration"
+            },
+            "thuecat:isRuin": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:monumentEnum": {
+                "@type": "thuecat:MonumentEnum",
+                "@value": "thuecat:ArchitecturalMonumentSingle"
+            },
+            "thuecat:otherService": [
+                {
+                    "@type": "thuecat:OtherService",
+                    "@value": "thuecat:Playground"
+                },
+                {
+                    "@type": "thuecat:OtherService",
+                    "@value": "thuecat:SeatingPossibilitiesRestArea"
+                },
+                {
+                    "@type": "thuecat:OtherService",
+                    "@value": "thuecat:SouvenirShop"
+                },
+                {
+                    "@type": "thuecat:OtherService",
+                    "@value": "thuecat:PlayCornerOrPlayArea"
+                }
+            ],
+            "thuecat:parkingFacilityNearBy": [
+                {
+                    "@id": "https://thuecat.org/resources/396420044896-drzt"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/440055527204-ocar"
+                }
+            ],
+            "thuecat:photography": {
+                "@type": "thuecat:Photography",
+                "@value": "thuecat:TakingPicturesPermitted"
+            },
+            "thuecat:sanitation": {
+                "@type": "thuecat:Sanitation",
+                "@value": "thuecat:ZeroSanitation"
+            },
+            "thuecat:trafficInfrastructure": {
+                "@type": "thuecat:TrafficInfrastructure",
+                "@value": "thuecat:BicycleLockersEnumMem"
+            }
+        }
+    ]
+}

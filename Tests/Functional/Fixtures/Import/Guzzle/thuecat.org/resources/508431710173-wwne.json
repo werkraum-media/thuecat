@@ -1,0 +1,238 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/508431710173-wwne",
+            "@type": [
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:OtherInfraStructure",
+                "thuecat:OtherPOI",
+                "thuecat:StrollingMile"
+            ],
+            "schema:address": {
+                "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:PostalAddress",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:ContactPoint"
+                ],
+                "schema:addressCountry": {
+                    "@type": "thuecat:AddressCountry",
+                    "@value": "thuecat:Germany"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                "schema:addressRegion": {
+                    "@type": "thuecat:AddressFederalState",
+                    "@value": "thuecat:Thuringia"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Domplatz"
+                },
+                "thuecat:typOfAddress": {
+                    "@type": "thuecat:TypOfAddress",
+                    "@value": "thuecat:HouseAddress"
+                }
+            },
+            "schema:containedInPlace": {
+                "@id": "https://thuecat.org/resources/043064193523-jcyt"
+            },
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/396420044896-drzt"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/835224016581-dara"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/363938447400-ammb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/146945912069-xkhb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/772412525329-tjkf"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/056407295912-gtoa"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/173676937638-bjpa"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/133118786105-nhtp"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fu\u00dfe des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz f\u00fcr allerlei Feste und Veranstaltungen. \nMontag bis Samstag findet hier au\u00dferdem der Wochenmarkt statt.\nIm Osten und im S\u00fcden des Domplatzes laden eine Vielzahl Caf\u00e9s und Restaurants zum Verweilen und Genie\u00dfen ein."
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Avec pour toile de fond l\u2019imposante cath\u00e9drale Notre-Dame et l\u2019\u00e9glise Saint-S\u00e9v\u00e8re, la place de la cath\u00e9drale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.\nDes marchands de la r\u00e9gion vous proposent chaque jour, de 7 \u00e0 14h, des produits frais comme des fruits et l\u00e9gumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.\n"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and caf\u00e9s. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.\nFrom Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre."
+                },
+                {
+                    "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b1",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:Thing",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fu\u00dfe des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz f\u00fcr allerlei Feste und Veranstaltungen. </p><p>Montag bis Samstag findet hier au\u00dferdem der Wochenmarkt statt.</p><p>Im Osten und im S\u00fcden des Domplatzes laden eine Vielzahl Caf\u00e9s und Restaurants zum Verweilen und Genie\u00dfen ein.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b2",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:Thing",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "<p>Avec pour toile de fond l\u2019imposante cath\u00e9drale Notre-Dame et l\u2019\u00e9glise Saint-S\u00e9v\u00e8re, la place de la cath\u00e9drale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.<br><br>Des marchands de la r\u00e9gion vous proposent chaque jour, de 7 \u00e0 14h, des produits frais comme des fruits et l\u00e9gumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b3",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:Thing",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and caf\u00e9s. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.</p><p>From Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre.</p>"
+                    }
+                }
+            ],
+            "schema:geo": {
+                "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b4",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:GeoCoordinates"
+                ],
+                "schema:latitude": {
+                    "@type": "schema:Number",
+                    "@value": "50.97694183291915"
+                },
+                "schema:longitude": {
+                    "@type": "schema:Number",
+                    "@value": "11.023886024076779"
+                }
+            },
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://www.google.de/maps/@50.9767896,11.023818,18.25z"
+            },
+            "schema:image": [
+                {
+                    "@id": "https://thuecat.org/resources/dms_5122508"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_5319718"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_5319755"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_5319964"
+                }
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Domplatz Erfurt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Place de la cath\u00e9drale et rue commer\u00e7ante"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Domplatz (Cathedral Square)"
+                }
+            ],
+            "schema:paymentAccepted": {
+                "@language": "de",
+                "@value": "Unterscheidet sich je nach Gesch\u00e4ft."
+            },
+            "schema:petsAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:photo": {
+                "@id": "https://thuecat.org/resources/dms_5319718"
+            },
+            "schema:smokingAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:gastro": [
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:TakeawayShop"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:Cafe"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:BarEnumMem"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:Restaurant"
+                }
+            ],
+            "thuecat:sanitation": {
+                "@type": "thuecat:Sanitation",
+                "@value": "thuecat:Toilets"
+            }
+        }
+    ]
+}
