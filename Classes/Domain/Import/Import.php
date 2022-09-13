@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 
@@ -105,7 +104,7 @@ class Import
     {
         // Tours are not supported yet.
         // So skip them here to save time.
-        if (StringUtility::endsWith($remoteId, '-oatour')) {
+        if (str_ends_with($remoteId, '-oatour')) {
             return true;
         }
 
