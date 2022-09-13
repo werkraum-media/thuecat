@@ -19,4 +19,5 @@ Table of Contents
    Installation
    Configuration
    Changelog
+   Maintenance
    Sitemap
