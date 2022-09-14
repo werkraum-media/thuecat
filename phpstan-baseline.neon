@@ -287,11 +287,6 @@ parameters:
 		-
 			message: "#^Right side of \\|\\| is always false\\.$#"
 			count: 1
-			path: Configuration/SiteConfiguration/Overrides/sites.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
 			path: Configuration/TCA/Overrides/pages.php
 
 		-
