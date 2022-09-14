@@ -19,7 +19,9 @@ Nothing
 Tasks
 -----
 
-Nothing
+Removed API Key from site configuration.
+The key was already moved to extension configuration as documented.
+Still we extended the site configuration, which is now cleaned up, see: https://github.com/werkraum-media/thuecat/issues/55
 
 Deprecation
 -----------
