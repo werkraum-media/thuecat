@@ -31,6 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MediaObject;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Organisation;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
@@ -96,6 +97,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         Town::class => 'tx_thuecat_town',
         TouristInformation::class => 'tx_thuecat_tourist_information',
         TouristMarketingCompany::class => 'tx_thuecat_organisation',
+        Organisation::class => 'tx_thuecat_organisation',
     ];
 
     public function __construct(

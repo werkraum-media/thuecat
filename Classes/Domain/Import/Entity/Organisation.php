@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2022 Daniel Siepmann <coding@daniel-siepmann.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,20 +23,12 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
-class TouristMarketingCompany extends Organisation
+class Organisation extends Minimum implements MapsToType
 {
     public static function getSupportedTypes(): array
     {
         return [
-            'thuecat:TouristMarketingCompany',
+            'ttgds:Organization',
         ];
-    }
-
-    /**
-     * Higher then default 10, as this is also an ttgds:Organization and Organisation would conflict in priority.
-     */
-    public static function getPriority(): int
-    {
-        return 20;
     }
 }
