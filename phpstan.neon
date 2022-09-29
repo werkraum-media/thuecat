@@ -6,6 +6,8 @@ parameters:
         - Classes
         - Configuration
         - Tests
+    excludePaths:
+      - Tests/Acceptance/Support/_generated/
     checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false

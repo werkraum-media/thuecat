@@ -1,4 +1,4 @@
-1.3.0
+2.0.0
 =====
 
 Breaking
@@ -8,10 +8,12 @@ Breaking
   The modules got new identifiers. User permissions need to be adjusted.
   An update wizard is provided that will migrate the permissions.
 
+* Drop support for PHP 7.2 + 7.3.
+
 Features
 --------
 
-* Add support for TYPO3 v11 and PHP 8.0 + 8.1.
+* Add support for TYPO3 v11 and PHP 8.0 + 8.1 + 8.2.
 
 * Last import date is now shown within backend module beside each import configuration.
 
@@ -107,6 +109,8 @@ Tasks
 * Use new icons in streamlined color and UI.
   Provide new icon for storage folders.
   Provide new icon for content element.
+
+* Add first acceptance tests for backend modules.
 
 Deprecation
 -----------

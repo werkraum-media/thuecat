@@ -35,7 +35,7 @@
         }
     },
     "require": {
-        "php": "~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0",
+        "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/http-client": "^1.0",
@@ -54,6 +54,8 @@
         "typo3/cms-frontend": "^10.4 || ^11.5"
     },
     "require-dev": {
+        "codeception/codeception": "^4.2",
+        "codeception/module-webdriver": "^2.0",
         "jangregor/phpstan-prophecy": "^1.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "1.1.0",
