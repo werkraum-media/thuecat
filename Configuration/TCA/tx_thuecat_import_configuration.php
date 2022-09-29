@@ -68,6 +68,15 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            // Configured for usage within Extbase, not TCA itself
+            'logs' => [
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_import_log',
+                    'foreign_field' => 'configuration',
+                    'readOnly' => true,
+                ],
+            ],
         ],
         'types' => [
             '0' => [

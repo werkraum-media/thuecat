@@ -9,7 +9,9 @@ Nothing
 Features
 --------
 
-Add support for TYPO3 v11 and PHP 8.0 + 8.1.
+* Add support for TYPO3 v11 and PHP 8.0 + 8.1.
+
+* Last import date is now shown within backend module beside each import configuration.
 
 Fixes
 -----
@@ -34,9 +36,9 @@ Fixes
 Tasks
 -----
 
-Removed API Key from site configuration.
-The key was already moved to extension configuration as documented.
-Still we extended the site configuration, which is now cleaned up, see: https://github.com/werkraum-media/thuecat/issues/55
+* Removed API Key from site configuration.
+  The key was already moved to extension configuration as documented.
+  Still we extended the site configuration, which is now cleaned up, see: https://github.com/werkraum-media/thuecat/issues/55
 
 Deprecation
 -----------

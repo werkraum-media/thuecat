@@ -46,6 +46,12 @@
             <trans-unit id="module.importConfigurations.lastChanged" xml:space="preserve">
                 <source>Last changed</source>
             </trans-unit>
+            <trans-unit id="module.importConfigurations.lastImported" xml:space="preserve">
+                <source>Last imported</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.lastImported.never" xml:space="preserve">
+                <source>Never</source>
+            </trans-unit>
             <trans-unit id="module.importConfigurations.missing.text" xml:space="preserve">
                 <source><![CDATA[No import configuration is available yet. Please <a href="%1$s">create the first</a> to get started.]]></source>
             </trans-unit>

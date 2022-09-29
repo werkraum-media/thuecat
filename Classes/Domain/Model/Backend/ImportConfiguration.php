@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration as ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
@@ -53,6 +54,11 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     protected $tstamp = null;
 
     /**
+     * @var ObjectStorage<ImportLog>
+     */
+    protected $logs;
+
+    /**
      * @var string[]|null
      */
     protected $urls = null;
@@ -61,6 +67,11 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
      * @var string[]
      */
     protected $allowedTypes = [];
+
+    public function __construct()
+    {
+        $this->logs = new ObjectStorage();
+    }
 
     public function getTitle(): string
     {
@@ -80,6 +91,17 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     public function getLastChanged(): ?\DateTimeImmutable
     {
         return $this->tstamp;
+    }
+
+    public function getLastImported(): ?\DateTimeImmutable
+    {
+        $positionOfLastLog = count($this->logs) - 1;
+        $lastImport = $this->logs->offsetGet((string) $positionOfLastLog);
+        if (!$lastImport instanceof ImportLog) {
+            return null;
+        }
+
+        return $lastImport->getCreated();
     }
 
     public function getStoragePid(): int
