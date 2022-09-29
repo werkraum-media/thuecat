@@ -29,26 +29,37 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
 class Offer extends Minimum
 {
     /**
-     * @var string
+     * @var string[]
      */
-    protected $offerType = '';
+    protected $offerTypes = [];
 
     /**
      * @var PriceSpecification[]
      */
     protected $prices = [];
 
-    public function getOfferType(): string
+    /**
+     * @return string[]
+     */
+    public function getOfferTypes(): array
     {
-        return $this->offerType;
+        return $this->offerTypes;
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $offerType
      */
-    public function setOfferType(string $offerType): void
+    public function setOfferType($offerType): void
     {
-        $this->offerType = PropertyValues::removePrefixFromEntry($offerType);
+        if (is_string($offerType)) {
+            $offerType = [$offerType];
+        }
+
+        $this->offerTypes = array_map(
+            [PropertyValues::class, 'removePrefixFromEntry'],
+            $offerType
+        );
     }
 
     /**

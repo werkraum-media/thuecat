@@ -33,9 +33,9 @@ class Offer
     private $title;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $type;
+    private $types;
 
     /**
      * @var string
@@ -47,14 +47,17 @@ class Offer
      */
     private $prices;
 
+    /**
+     * @param string[] $types
+     */
     private function __construct(
         string $title,
-        string $type,
+        array $types,
         string $description,
         array $prices
     ) {
         $this->title = $title;
-        $this->type = $type;
+        $this->types = $types;
         $this->description = $description;
         $this->prices = $prices;
     }
@@ -70,9 +73,15 @@ class Offer
             $prices[] = Price::createFromArray($price);
         }
 
+        $types = $rawData['types'] ?? $rawData['type'] ?? [];
+        // Handle old legacy saved values which were a single string saves as 'type' instead of 'types'.
+        if (is_string($types)) {
+            $types = [$types];
+        }
+
         return new self(
             $rawData['title'],
-            $rawData['type'] ?? '',
+            $types,
             $rawData['description'],
             $prices
         );
@@ -85,7 +94,17 @@ class Offer
 
     public function getType(): string
     {
-        return $this->type;
+        $offerTypes = array_filter($this->types, function (string $type) {
+            return strpos($type, 'Offer') !== false;
+        });
+        // Ensure clean index
+        $offerTypes = array_values($offerTypes);
+
+        if ($offerTypes !== []) {
+            return $offerTypes[0];
+        }
+
+        return $this->types[0] ?? '';
     }
 
     public function getDescription(): string
