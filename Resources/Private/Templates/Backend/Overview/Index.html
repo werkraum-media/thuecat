@@ -55,6 +55,7 @@
                 <tr>
                     <th>{f:translate(id: 'module.importConfigurations.title')}</th>
                     <th>{f:translate(id: 'module.importConfigurations.lastChanged')}</th>
+                    <th>{f:translate(id: 'module.importConfigurations.lastImported')}</th>
                     <th>{f:translate(id: 'module.actions')}</th>
                 </tr>
             </thead>
@@ -63,6 +64,16 @@
                     <tr>
                         <td>{importConfiguration.title}</td>
                         <td>{importConfiguration.lastChanged -> f:format.date(format: 'd.m.Y H:i')}</td>
+                        <td>
+                            <f:if condition="{importConfiguration.lastImported}">
+                                <f:then>
+                                    {importConfiguration.lastImported -> f:format.date(format: 'd.m.Y H:i')}
+                                </f:then>
+                                <f:else>
+                                    {f:translate(id: 'module.importConfigurations.lastImported.never')}
+                                </f:else>
+                            </f:if>
+                        </td>
                         <td>
                             <f:link.editRecord
                                 uid="{importConfiguration.uid}"
