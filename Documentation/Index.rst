@@ -18,6 +18,7 @@ Table of Contents
    Features
    Installation
    Configuration
+   Integration
    Changelog
    Maintenance
    Sitemap
