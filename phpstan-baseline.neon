@@ -350,17 +350,12 @@ parameters:
 			path: Configuration/TCA/tx_thuecat_town.php
 
 		-
-			message: "#^Cannot call method format\\(\\) on DateTimeImmutable\\|null\\.$#"
-			count: 4
-			path: Tests/Functional/Import/EntityMapping/PlaceInfosTest.php
-
-		-
 			message: "#^Cannot call method findByUid\\(\\) on mixed\\.$#"
-			count: 8
+			count: 9
 			path: Tests/Functional/ImportTest.php
 
 		-
 			message: "#^Cannot call method importConfiguration\\(\\) on mixed\\.$#"
-			count: 8
+			count: 9
 			path: Tests/Functional/ImportTest.php
 

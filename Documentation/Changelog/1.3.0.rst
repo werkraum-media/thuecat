@@ -15,6 +15,13 @@ Features
 
 * Import author of media. This allows to either render the license author or the author.
 
+* Filter and sort opening hours.
+  Filter out opening hours from the past, they are not available to the template anymore.
+  Sort opening hours from early to later based on their end timing.
+
+  This should improve the UX of website visitors.
+  It is not possible yet to sort opening hours by hand within the thuecat backend.
+
 Fixes
 -----
 

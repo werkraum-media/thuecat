@@ -16,6 +16,9 @@ services:
     resource: '../Classes/Frontend/DataProcessing/*'
     public: true
 
+  WerkraumMedia\ThueCat\Service\DateBasedFilter:
+    public: true
+
   'cache.thuecat_fetchdata':
     class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
     factory:
