@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Type\TypeInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 /**
  * @implements \Iterator<int, OpeningHour>
@@ -48,10 +50,29 @@ class OpeningHours implements TypeInterface, \Iterator, \Countable
     public function __construct(string $serialized)
     {
         $this->serialized = $serialized;
-        $this->array = array_map(
+        $this->array = $this->createArray($serialized);
+    }
+
+    private function createArray(string $serialized): array
+    {
+        $array = array_map(
             [OpeningHour::class, 'createFromArray'],
             json_decode($serialized, true) ?? []
         );
+
+        $array = GeneralUtility::makeInstance(DateBasedFilter::class)
+            ->filterOutPreviousDates(
+                $array,
+                function (OpeningHour $hour): ?\DateTimeImmutable {
+                    return $hour->getThrough();
+                }
+            );
+
+        usort($array, function (OpeningHour $hourA, OpeningHour $hourB) {
+            return $hourA->getFrom() <=> $hourB->getFrom();
+        });
+
+        return array_values($array);
     }
 
     public function __toString(): string

@@ -26,9 +26,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-/**
- * @covers \
- */
 class FrontendTest extends FunctionalTestCase
 {
     protected $coreExtensionsToLoad = [
@@ -82,23 +79,6 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Beispielstadt', (string)$result->getBody());
         self::assertStringContainsString('example@example.com', (string)$result->getBody());
         self::assertStringContainsString('(0)30 23125 000', (string)$result->getBody());
-
-        self::assertStringContainsString('Montag:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Dienstag:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Mittwoch:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Donnerstag:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Freitag:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Samstag:', (string)$result->getBody());
-        self::assertStringContainsString('09:30:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Sonntag:', (string)$result->getBody());
-        self::assertStringContainsString('13:00:00 - 17:00:00', (string)$result->getBody());
-        self::assertStringContainsString('Feiertags:', (string)$result->getBody());
-        self::assertStringContainsString('13:00:00 - 17:00:00', (string)$result->getBody());
 
         self::assertStringContainsString('Führungen', (string)$result->getBody());
         self::assertStringContainsString('(Führung)', (string)$result->getBody());
@@ -442,5 +422,143 @@ class FrontendTest extends FunctionalTestCase
             mb_strpos((string)$result->getBody(), 'Verkostung'),
             '"Parkgebühr" is not rendered before "Verkostung"'
         );
+    }
+
+    /**
+     * @test
+     */
+    public function openingHoursAreFilteredByThough(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+
+        $hidden = new \DateTimeImmutable('yesterday');
+        $available = new \DateTimeImmutable('tomorrow');
+
+        $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_tourist_attraction')
+            ->update(
+                'tx_thuecat_tourist_attraction',
+                ['opening_hours' => json_encode([
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                ])],
+                ['uid' => 1]
+            );
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $result = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertStringNotContainsString($hidden->modify('-1 day')->format('d.m.Y'), $result);
+        self::assertStringNotContainsString($hidden->format('d.m.Y'), $result);
+        self::assertStringContainsString($available->modify('-1 day')->format('d.m.Y'), $result);
+        self::assertStringContainsString($available->format('d.m.Y'), $result);
+    }
+
+    /**
+     * @test
+     */
+    public function openingHoursAreSortedByFrom(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+
+        $fromFirstOpening = new \DateTimeImmutable('today');
+        $fromSecondOpening = new \DateTimeImmutable('+2 days');
+        $fromThirdOpening = new \DateTimeImmutable('+7 days');
+
+        $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_tourist_attraction')
+            ->update(
+                'tx_thuecat_tourist_attraction',
+                ['opening_hours' => json_encode([
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $fromThirdOpening->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $fromThirdOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $fromFirstOpening->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $fromFirstOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $fromSecondOpening->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $fromSecondOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                ])],
+                ['uid' => 1]
+            );
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $result = (string)$this->executeFrontendRequest($request)->getBody();
+
+        $positionFirstHour = mb_strpos($result, $fromFirstOpening->format('d.m.Y'));
+        $positionSecondHour = mb_strpos($result, $fromSecondOpening->format('d.m.Y'));
+        $positionThirdHour = mb_strpos($result, $fromThirdOpening->format('d.m.Y'));
+
+        self::assertLessThan($positionThirdHour, $positionSecondHour, 'Third hour does not come after second hour.');
+        self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
     }
 }

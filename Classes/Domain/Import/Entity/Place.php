@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
@@ -30,6 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Geo;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\Organization;
+use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 class Place extends Base
 {
@@ -147,6 +149,28 @@ class Place extends Base
     }
 
     /**
+     * @return OpeningHour[]
+     */
+    public function getOpeningHoursSpecification(): array
+    {
+        return GeneralUtility::makeInstance(DateBasedFilter::class)
+            ->filterOutPreviousDates(
+                $this->openingHours,
+                function (OpeningHour $hour): ?\DateTimeImmutable {
+                    return $hour->getValidThrough();
+                }
+            );
+    }
+
+    /**
+     * @return ForeignReference[]
+     */
+    public function getParkingFacilityNearBy(): array
+    {
+        return $this->parkingFacilitiesNearBy;
+    }
+
+    /**
      * @internal for mapping via Symfony component.
      */
     public function setAddress(Address $address): void
@@ -163,15 +187,6 @@ class Place extends Base
     }
 
     /**
-     * @return OpeningHour[]
-     * @internal for mapping via Symfony component.
-     */
-    public function getOpeningHoursSpecification(): array
-    {
-        return $this->openingHours;
-    }
-
-    /**
      * @internal for mapping via Symfony component.
      */
     public function addOpeningHoursSpecification(OpeningHour $openingHour): void
@@ -184,15 +199,6 @@ class Place extends Base
      */
     public function removeOpeningHoursSpecification(OpeningHour $openingHour): void
     {
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     * @return ForeignReference[]
-     */
-    public function getParkingFacilityNearBy(): array
-    {
-        return $this->parkingFacilitiesNearBy;
     }
 
     /**
