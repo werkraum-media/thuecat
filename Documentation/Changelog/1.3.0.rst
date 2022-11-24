@@ -13,6 +13,8 @@ Features
 
 * Last import date is now shown within backend module beside each import configuration.
 
+* Import author of media. This allows to use either render the license author or the author.
+
 Fixes
 -----
 

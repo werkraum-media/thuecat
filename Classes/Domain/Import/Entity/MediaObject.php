@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+
 class MediaObject extends Minimum implements MapsToType
 {
     /**
@@ -39,6 +41,11 @@ class MediaObject extends Minimum implements MapsToType
      * @var string
      */
     protected $licenseAuthor = '';
+
+    /**
+     * @var string|ForeignReference
+     */
+    protected $author;
 
     /**
      * @var string
@@ -58,6 +65,14 @@ class MediaObject extends Minimum implements MapsToType
     public function getLicenseAuthor(): string
     {
         return $this->licenseAuthor;
+    }
+
+    /**
+     * @return string|ForeignReference
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 
     public function getType(): string
@@ -87,6 +102,15 @@ class MediaObject extends Minimum implements MapsToType
     public function setLicenseAuthor(string $licenseAuthor): void
     {
         $this->licenseAuthor = $licenseAuthor;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     * @param string|ForeignReference $author
+     */
+    public function setAuthor($author): void
+    {
+        $this->author = $author;
     }
 
     /**
