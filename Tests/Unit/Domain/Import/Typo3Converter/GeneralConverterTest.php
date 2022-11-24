@@ -31,6 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\GeneralConverter;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\LanguageHandling;
+use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\NameExtractor;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
@@ -53,6 +54,7 @@ class GeneralConverterTest extends TestCase
         $organisationRepository = $this->createStub(OrganisationRepository::class);
         $townRepository = $this->createStub(TownRepository::class);
         $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
+        $nameExtractor = $this->createStub(NameExtractor::class);
 
         $subject = new GeneralConverter(
             $resolveForeignReference,
@@ -60,7 +62,8 @@ class GeneralConverterTest extends TestCase
             $languageHandling,
             $organisationRepository,
             $townRepository,
-            $parkingFacilityRepository
+            $parkingFacilityRepository,
+            $nameExtractor
         );
 
         self::assertInstanceOf(
@@ -82,6 +85,7 @@ class GeneralConverterTest extends TestCase
         $organisationRepository = $this->createStub(OrganisationRepository::class);
         $townRepository = $this->createStub(TownRepository::class);
         $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
+        $nameExtractor = $this->createStub(NameExtractor::class);
         $logger = $this->createStub(LoggerInterface::class);
 
         $subject = new GeneralConverter(
@@ -90,7 +94,8 @@ class GeneralConverterTest extends TestCase
             $languageHandling,
             $organisationRepository,
             $townRepository,
-            $parkingFacilityRepository
+            $parkingFacilityRepository,
+            $nameExtractor
         );
         $subject->setLogger($logger);
 

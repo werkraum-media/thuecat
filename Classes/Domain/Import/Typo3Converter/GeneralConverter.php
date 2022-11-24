@@ -84,6 +84,11 @@ class GeneralConverter implements Converter, LoggerAwareInterface
     private $parkingFacilityRepository;
 
     /**
+     * @var NameExtractor
+     */
+    private $nameExtractor;
+
+    /**
      * @var ImportConfiguration
      */
     private $importConfiguration;
@@ -106,7 +111,8 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         LanguageHandling $languageHandling,
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository,
-        ParkingFacilityRepository $parkingFacilityRepository
+        ParkingFacilityRepository $parkingFacilityRepository,
+        NameExtractor $nameExtractor
     ) {
         $this->resolveForeignReference = $resolveForeignReference;
         $this->importer = $importer;
@@ -114,6 +120,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         $this->organisationRepository = $organisationRepository;
         $this->townRepository = $townRepository;
         $this->parkingFacilityRepository = $parkingFacilityRepository;
+        $this->nameExtractor = $nameExtractor;
     }
 
     public function convert(
@@ -360,7 +367,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
                 $language
             );
             if ($photo instanceof MediaObject) {
-                $data[] = $this->getSingleMedia($photo, true);
+                $data[] = $this->getSingleMedia($photo, true, $language);
             }
         }
 
@@ -370,7 +377,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
                 $language
             );
             if ($image instanceof MediaObject) {
-                $data[] = $this->getSingleMedia($image, false);
+                $data[] = $this->getSingleMedia($image, false, $language);
             }
         }
 
@@ -379,7 +386,8 @@ class GeneralConverter implements Converter, LoggerAwareInterface
 
     private function getSingleMedia(
         MediaObject $mediaObject,
-        bool $mainImage
+        bool $mainImage,
+        string $language
     ): array {
         return [
             'mainImage' => $mainImage,
@@ -387,6 +395,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
             'title' => $mediaObject->getName(),
             'description' => $mediaObject->getDescription(),
             'url' => $mediaObject->getUrls()[0] ?? '',
+            'author' => $this->nameExtractor->extract($mediaObject->getAuthor(), $language),
             'copyrightYear' => $mediaObject->getCopyrightYear(),
             'license' => [
                 'type' => $mediaObject->getLicense(),

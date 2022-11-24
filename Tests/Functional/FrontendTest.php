@@ -75,6 +75,7 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Highlight', (string)$result->getBody());
 
         self::assertStringContainsString('<img class="img-fluid" src="https://cms.thuecat.org/o/adaptive-media/image/5159216/Preview-1280x0/image" />', (string)$result->getBody());
+        self::assertStringContainsString('ⓒ Image Author', (string)$result->getBody());
 
         self::assertStringContainsString('Beispielstraße 1a', (string)$result->getBody());
         self::assertStringContainsString('99084', (string)$result->getBody());

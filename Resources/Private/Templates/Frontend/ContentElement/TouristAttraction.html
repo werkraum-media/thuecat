@@ -10,6 +10,9 @@
                 <div class="col-12 col-md-6 order-first order-md-last">
                     <f:if condition="{entity.media.mainImage}">
                         <img class="img-fluid" src="{entity.media.mainImage.url}" />
+                        <f:if condition="{entity.media.mainImage.author}">
+                            <p>ⓒ {entity.media.mainImage.author}</p>
+                        </f:if>
                     </f:if>
                 </div>
             </div>
