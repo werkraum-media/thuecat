@@ -22,6 +22,10 @@ Features
   This should improve the UX of website visitors.
   It is not possible yet to sort opening hours by hand within the thuecat backend.
 
+* Support special opening hours.
+  It is possible to define special opening hours, e.g. for holidays.
+  Those are now also imported and provided to the templates.
+
 Fixes
 -----
 

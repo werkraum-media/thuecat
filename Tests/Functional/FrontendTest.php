@@ -561,4 +561,87 @@ class FrontendTest extends FunctionalTestCase
         self::assertLessThan($positionThirdHour, $positionSecondHour, 'Third hour does not come after second hour.');
         self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
     }
+
+    /**
+     * @test
+     */
+    public function specialOpeningHoursAreRendered(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+
+        $hidden = new \DateTimeImmutable('yesterday');
+        $available = new \DateTimeImmutable('tomorrow');
+        $available2 = new \DateTimeImmutable('+3 days');
+
+        $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_tourist_attraction')
+            ->update(
+                'tx_thuecat_tourist_attraction',
+                ['special_opening_hours' => json_encode([
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $available2->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $available2->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                    [
+                        'closes' => '17:00:00',
+                        'opens' => '13:00:00',
+                        'daysOfWeek' => ['Sunday'],
+                        'from' => [
+                            'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                        'through' => [
+                            'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
+                            'timezone' => 'UTC',
+                            'timezone_type' => 3,
+                        ],
+                    ],
+                ])],
+                ['uid' => 1]
+            );
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $result = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertStringNotContainsString($hidden->modify('-1 day')->format('d.m.Y'), $result, 'Filtered date is shown');
+        self::assertStringNotContainsString($hidden->format('d.m.Y'), $result, 'Filtered date is shown');
+        self::assertStringContainsString($available->modify('-1 day')->format('d.m.Y'), $result, 'First special opening hour is missing');
+        self::assertStringContainsString($available->format('d.m.Y'), $result, 'First special opening hour is missing');
+        self::assertStringContainsString($available2->modify('-1 day')->format('d.m.Y'), $result, 'Second special opening hour is missing');
+        self::assertStringContainsString($available2->format('d.m.Y'), $result, 'Second special opening hour is missing');
+
+        $positionFirstHour = mb_strpos($result, $available->format('d.m.Y'));
+        $positionSecondHour = mb_strpos($result, $available2->format('d.m.Y'));
+
+        self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
+    }
 }
