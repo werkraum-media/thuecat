@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
@@ -72,6 +73,9 @@ class ImportController extends AbstractController
         ]);
     }
 
+    /**
+     * @Extbase\IgnoreValidation("importConfiguration")
+     */
     public function importAction(ImportConfiguration $importConfiguration): void
     {
         $importLog = $this->importer->importConfiguration($importConfiguration);
