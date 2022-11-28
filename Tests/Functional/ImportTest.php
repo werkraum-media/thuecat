@@ -233,6 +233,21 @@ class ImportTest extends TestCase
     /**
      * @test
      */
+    public function importsTouristAttractionsWithSpecialOpeningHours(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/special-opening-hours.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithSpecialOpeningHours.csv');
+    }
+
+    /**
+     * @test
+     */
     public function importsTouristInformationWithRelation(): void
     {
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.xml');

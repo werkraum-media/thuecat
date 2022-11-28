@@ -54,6 +54,11 @@ class Place extends Base
     protected $openingHours = [];
 
     /**
+     * @var OpeningHour[]
+     */
+    protected $specialOpeningHours = [];
+
+    /**
      * @var ForeignReference[]
      */
     protected $parkingFacilitiesNearBy = [];
@@ -163,6 +168,20 @@ class Place extends Base
     }
 
     /**
+     * @return OpeningHour[]
+     */
+    public function getSpecialOpeningHoursSpecification(): array
+    {
+        return GeneralUtility::makeInstance(DateBasedFilter::class)
+            ->filterOutPreviousDates(
+                $this->specialOpeningHours,
+                function (OpeningHour $hour): ?\DateTimeImmutable {
+                    return $hour->getValidThrough();
+                }
+            );
+    }
+
+    /**
      * @return ForeignReference[]
      */
     public function getParkingFacilityNearBy(): array
@@ -198,6 +217,21 @@ class Place extends Base
      * @internal for mapping via Symfony component.
      */
     public function removeOpeningHoursSpecification(OpeningHour $openingHour): void
+    {
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function addSpecialOpeningHoursSpecification(OpeningHour $openingHour): void
+    {
+        $this->specialOpeningHours[] = $openingHour;
+    }
+
+    /**
+     * @internal for mapping via Symfony component.
+     */
+    public function removeSpecialOpeningHoursSpecification(OpeningHour $openingHour): void
     {
     }
 

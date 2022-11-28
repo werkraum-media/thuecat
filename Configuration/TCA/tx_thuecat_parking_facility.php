@@ -125,6 +125,14 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'special_opening_hours' => [
+                'label' => $languagePath . '.special_opening_hours',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
             'address' => [
                 'label' => $languagePath . '.address',
                 'l10n_mode' => 'exclude',
@@ -200,7 +208,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, sanitation, other_service, traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
+                'showitem' => '--palette--;;language, title, description, sanitation, other_service, traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, special_opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];

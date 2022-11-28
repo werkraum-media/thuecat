@@ -35,6 +35,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Organisation;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\PriceSpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristInformation;
@@ -228,7 +229,8 @@ class GeneralConverter implements Converter, LoggerAwareInterface
 
             'parking_facility_near_by' => $entity instanceof Base ? implode(',', $this->getParkingFacilitiesNearByUids($entity)) : '',
 
-            'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity) : '',
+            'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getOpeningHoursSpecification()) : '',
+            'special_opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getSpecialOpeningHoursSpecification()) : '',
             'address' => $entity instanceof Place ? $this->getAddress($entity) : '',
             'offers' => $entity instanceof Place ? $this->getOffers($entity) : '',
             'other_service' => method_exists($entity, 'getOtherServices') ? implode(',', $entity->getOtherServices()) : '',
@@ -404,11 +406,14 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         ];
     }
 
-    private function getOpeningHours(Place $entity): string
+    /**
+     * @param OpeningHour[] $openingHours
+     */
+    private function getOpeningHours(array $openingHours): string
     {
         $data = [];
 
-        foreach ($entity->getOpeningHoursSpecification() as $openingHour) {
+        foreach ($openingHours as $openingHour) {
             $data[] = array_filter([
                 'opens' => $openingHour->getOpens()->format('H:i:s'),
                 'closes' => $openingHour->getCloses()->format('H:i:s'),

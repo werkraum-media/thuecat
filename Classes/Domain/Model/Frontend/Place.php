@@ -39,6 +39,11 @@ abstract class Place extends Base
     protected $openingHours = null;
 
     /**
+     * @var OpeningHours|null
+     */
+    protected $specialOpeningHours = null;
+
+    /**
      * @var ObjectStorage<ParkingFacility>
      */
     protected $parkingFacilityNearBy;
@@ -86,6 +91,11 @@ abstract class Place extends Base
     public function getOpeningHours(): ?OpeningHours
     {
         return $this->openingHours;
+    }
+
+    public function getSpecialOpeningHours(): ?OpeningHours
+    {
+        return $this->specialOpeningHours;
     }
 
     public function getParkingFacilitiesNearBy(): ObjectStorage
