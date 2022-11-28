@@ -440,7 +440,7 @@ class FrontendTest extends FunctionalTestCase
                 'tx_thuecat_tourist_attraction',
                 ['opening_hours' => json_encode([
                     [
-                        'closes' => '17:00:00',
+                        'closes' => '14:00:00',
                         'opens' => '13:00:00',
                         'daysOfWeek' => ['Sunday'],
                         'from' => [
@@ -455,8 +455,8 @@ class FrontendTest extends FunctionalTestCase
                         ],
                     ],
                     [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
+                        'closes' => '16:00:00',
+                        'opens' => '15:00:00',
                         'daysOfWeek' => ['Sunday'],
                         'from' => [
                             'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
@@ -477,6 +477,13 @@ class FrontendTest extends FunctionalTestCase
         $request = $request->withPageId(2);
 
         $result = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertStringNotContainsString('14:00', $result);
+        self::assertStringNotContainsString('13:00', $result);
+        self::assertStringNotContainsString('16:00:00', $result);
+        self::assertStringContainsString('16:00', $result);
+        self::assertStringNotContainsString('15:00:00', $result);
+        self::assertStringContainsString('15:00', $result);
 
         self::assertStringNotContainsString($hidden->modify('-1 day')->format('d.m.Y'), $result);
         self::assertStringNotContainsString($hidden->format('d.m.Y'), $result);
@@ -579,8 +586,8 @@ class FrontendTest extends FunctionalTestCase
                 'tx_thuecat_tourist_attraction',
                 ['special_opening_hours' => json_encode([
                     [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
+                        'closes' => '12:00:00',
+                        'opens' => '11:00:00',
                         'daysOfWeek' => ['Sunday'],
                         'from' => [
                             'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
@@ -594,7 +601,7 @@ class FrontendTest extends FunctionalTestCase
                         ],
                     ],
                     [
-                        'closes' => '17:00:00',
+                        'closes' => '14:00:00',
                         'opens' => '13:00:00',
                         'daysOfWeek' => ['Sunday'],
                         'from' => [
@@ -609,8 +616,8 @@ class FrontendTest extends FunctionalTestCase
                         ],
                     ],
                     [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
+                        'closes' => '16:00:00',
+                        'opens' => '15:00:00',
                         'daysOfWeek' => ['Sunday'],
                         'from' => [
                             'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
@@ -631,6 +638,17 @@ class FrontendTest extends FunctionalTestCase
         $request = $request->withPageId(2);
 
         $result = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertStringNotContainsString('11:00', $result);
+        self::assertStringNotContainsString('12:00', $result);
+        self::assertStringNotContainsString('14:00:00', $result);
+        self::assertStringContainsString('14:00', $result);
+        self::assertStringNotContainsString('13:00:00', $result);
+        self::assertStringContainsString('13:00', $result);
+        self::assertStringNotContainsString('16:00:00', $result);
+        self::assertStringContainsString('16:00', $result);
+        self::assertStringNotContainsString('15:00:00', $result);
+        self::assertStringContainsString('15:00', $result);
 
         self::assertStringNotContainsString($hidden->modify('-1 day')->format('d.m.Y'), $result, 'Filtered date is shown');
         self::assertStringNotContainsString($hidden->format('d.m.Y'), $result, 'Filtered date is shown');

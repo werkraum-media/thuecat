@@ -26,6 +26,8 @@ Features
   It is possible to define special opening hours, e.g. for holidays.
   Those are now also imported and provided to the templates.
 
+* Allow to check if an opening hour is valid for a single day.
+
 Fixes
 -----
 
@@ -52,6 +54,8 @@ Tasks
 * Removed API Key from site configuration.
   The key was already moved to extension configuration as documented.
   Still we extended the site configuration, which is now cleaned up, see: https://github.com/werkraum-media/thuecat/issues/55
+
+* Remove seconds from opens and closes of opening hours as we don't expect them to be used.
 
 Deprecation
 -----------

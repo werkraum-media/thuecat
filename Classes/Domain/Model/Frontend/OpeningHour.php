@@ -91,12 +91,12 @@ class OpeningHour
 
     public function getOpens(): string
     {
-        return $this->opens;
+        return $this->formatTiming($this->opens);
     }
 
     public function getCloses(): string
     {
-        return $this->closes;
+        return $this->formatTiming($this->closes);
     }
 
     public function getDaysOfWeek(): array
@@ -128,6 +128,17 @@ class OpeningHour
         return $this->through;
     }
 
+    public function isSingleDay(): bool
+    {
+        $from = $this->getFrom();
+        $through = $this->getThrough();
+
+        return $from instanceof \DateTimeImmutable
+            && $through instanceof \DateTimeImmutable
+            && $from->format('Ymd') === $through->format('Ymd')
+        ;
+    }
+
     private function sortedDaysOfWeek(array $sorting): array
     {
         if ($this->daysOfWeek === []) {
@@ -146,5 +157,36 @@ class OpeningHour
         }
 
         return $days;
+    }
+
+    /**
+     * Returns timing in default format.
+     *
+     * @return string
+     */
+    private function formatTiming(string $timing): string
+    {
+        $parts = $this->getTimingParts($timing);
+
+        if ($parts['hour'] === '' || $parts['minutes'] === '') {
+            return '';
+        }
+
+        return $parts['hour'] . ':' . $parts['minutes'];
+    }
+
+    /**
+     * Converts the string representationg of a time HH:MM:SS into an array.
+     *
+     * @return string[]
+     */
+    private function getTimingParts(string $string): array
+    {
+        $parts = explode(':', $string);
+        return [
+            'hour' => $parts[0] ?? '',
+            'minutes' => $parts[1] ?? '',
+            'seconds' => $parts[2] ?? '',
+        ];
     }
 }
