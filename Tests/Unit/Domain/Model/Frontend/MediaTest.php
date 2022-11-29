@@ -85,4 +85,20 @@ class MediaTest extends TestCase
             ],
         ], $subject->getImages());
     }
+
+    /**
+     * @test
+     */
+    public function returnsExtraImagesAsArray(): void
+    {
+        $subject = new Media('[{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg"},{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg"}]');
+
+        self::assertSame([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+            ],
+        ], $subject->getExtraImages());
+    }
 }

@@ -33,14 +33,15 @@ class Media implements TypeInterface
     private $serialized;
 
     /**
-     * @var mixed[]
+     * @var array[]
      */
     private $data;
 
     public function __construct(string $serialized)
     {
         $this->serialized = $serialized;
-        $this->data = json_decode($serialized, true);
+        $data = json_decode($serialized, true);
+        $this->data = is_array($data) ? $data : [];
     }
 
     public function getMainImage(): array
@@ -59,8 +60,16 @@ class Media implements TypeInterface
 
     public function getImages(): array
     {
-        return array_filter($this->data, function (array $media) {
+        return array_filter($this->data, function (array $media): bool {
             return $media['type'] === 'image';
+        });
+    }
+
+    public function getExtraImages(): array
+    {
+        return array_filter($this->data, function (array $media): bool {
+            return $media['type'] === 'image'
+                && $media['mainImage'] === false;
         });
     }
 
