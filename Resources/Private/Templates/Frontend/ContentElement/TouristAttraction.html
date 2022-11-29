@@ -23,7 +23,7 @@
                             <f:if condition="{entity.address}">
                                 <img src="{f:uri.resource(path:'Icons/icon-info.svg', extensionName:'Thuecat')}" width="30" class="svg-icon" alt="Address">
                                 <h2>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h2>
-                                {f:render(partial: 'Address', arguments: {address: entity.address})}
+                                {f:render(partial: 'Address', arguments: {address: entity.address, url: entity.url})}
                             </f:if>
                             <f:if condition="{entity.distanceToPublicTransport}">
                                 <div class="distance-transport mt-5">
@@ -48,7 +48,7 @@
                             <f:if condition="{entity.address}">
                                 <img src="{f:uri.resource(path:'Icons/icon-info.svg', extensionName:'Thuecat')}" width="30" class="svg-icon" alt="Address">
                                 <h2>{f:translate(id: 'content.address', extensionName: 'Thuecat')}</h2>
-                                {f:render(partial: 'Address', arguments: {address: entity.address})}
+                                {f:render(partial: 'Address', arguments: {address: entity.address, url: entity.url})}
                             </f:if>
                         </div>
                         <div class="col-md-4">

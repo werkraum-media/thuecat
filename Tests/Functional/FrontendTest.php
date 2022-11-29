@@ -79,6 +79,7 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('Beispielstadt', (string)$result->getBody());
         self::assertStringContainsString('example@example.com', (string)$result->getBody());
         self::assertStringContainsString('(0)30 23125 000', (string)$result->getBody());
+        self::assertStringContainsString('https://example.com/attraction', (string)$result->getBody());
 
         self::assertStringContainsString('Führungen', (string)$result->getBody());
         self::assertStringContainsString('(Führung)', (string)$result->getBody());
