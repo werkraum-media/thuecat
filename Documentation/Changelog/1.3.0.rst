@@ -30,6 +30,9 @@ Features
 
 * The URL of attractions is now imported and provided to the template.
 
+* Media has a new method ``getExtraImages()`` which will return everything from
+  ``getImages()`` except the ``getMainImage()``.
+
 Fixes
 -----
 
