@@ -57,6 +57,7 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     opening_hours text,
     special_opening_hours text,
     address text,
+    url text,
     media text,
     offers text,
     slogan text,

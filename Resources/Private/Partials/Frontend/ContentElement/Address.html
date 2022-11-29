@@ -16,6 +16,9 @@
             <f:if condition="{address.fax}">
                 {address.fax}
             </f:if>
+            <f:if condition="{url}">
+                <a href="{url}" referrerpolicy="no-referrer" rel="noreferrer noopener">{url}</a>
+            </f:if>
         </p>
     </div>
 </html>

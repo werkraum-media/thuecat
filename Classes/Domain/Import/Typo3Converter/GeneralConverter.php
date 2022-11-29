@@ -232,6 +232,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
             'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getOpeningHoursSpecification()) : '',
             'special_opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getSpecialOpeningHoursSpecification()) : '',
             'address' => $entity instanceof Place ? $this->getAddress($entity) : '',
+            'url' => $entity->getUrls()[0] ?? '',
             'offers' => $entity instanceof Place ? $this->getOffers($entity) : '',
             'other_service' => method_exists($entity, 'getOtherServices') ? implode(',', $entity->getOtherServices()) : '',
             'traffic_infrastructure' => method_exists($entity, 'getTrafficInfrastructures') ? implode(',', $entity->getTrafficInfrastructures()) : '',

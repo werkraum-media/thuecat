@@ -34,6 +34,11 @@ abstract class Place extends Base
     protected $address = null;
 
     /**
+     * @var string
+     */
+    protected $url = '';
+
+    /**
      * @var OpeningHours|null
      */
     protected $openingHours = null;
@@ -86,6 +91,11 @@ abstract class Place extends Base
     public function getAddress(): ?Address
     {
         return $this->address;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
     }
 
     public function getOpeningHours(): ?OpeningHours
