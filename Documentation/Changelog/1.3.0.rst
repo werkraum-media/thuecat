@@ -53,6 +53,9 @@ Fixes
 
   Existing imported data is still handled.
 
+* Remove trailing ``:`` in German translation of ``content.distanceToPublicTransport``.
+  This was the only label with ``:``.
+
 Tasks
 -----
 
