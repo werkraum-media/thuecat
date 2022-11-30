@@ -506,6 +506,10 @@
                         <source>No Pets Allowed</source>
                         <target>Animaux pas autoris&#xE9;s</target>
                   </trans-unit>
+                  <trans-unit id="content.url">
+                      <source>Website</source>
+                      <target>Site internet</target>
+                  </trans-unit>
                   <trans-unit id="content.petsAllowed.true">
                         <source>Pets Allowed</source>
                         <target>Animaux autoris&#xE9;s</target>

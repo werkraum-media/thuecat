@@ -510,6 +510,11 @@
                 <target>Fotografieren nicht gestattet</target>
             </trans-unit>
 
+            <trans-unit id="content.url">
+                <source>Website</source>
+                <target>Webseite</target>
+            </trans-unit>
+
             <trans-unit id="content.petsAllowed.false">
                 <source>No Pets Allowed</source>
                 <target>Keine Tiere erlaubt</target>
