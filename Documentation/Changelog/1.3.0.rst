@@ -32,6 +32,8 @@ Features
 
 * Media has a new method ``getExtraImages()`` which will return everything from
   ``getImages()`` except the ``getMainImage()``.
+  We now also filter out the main image from other images, it will not exist twice
+  anymore.
 
 Fixes
 -----

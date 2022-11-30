@@ -363,6 +363,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         string $language
     ): string {
         $data = [];
+        $idMainImage = '';
 
         if ($entity->getPhoto() instanceof ForeignReference) {
             $photo = $this->resolveForeignReference->resolve(
@@ -370,6 +371,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
                 $language
             );
             if ($photo instanceof MediaObject) {
+                $idMainImage = $photo->getId();
                 $data[] = $this->getSingleMedia($photo, true, $language);
             }
         }
@@ -379,7 +381,9 @@ class GeneralConverter implements Converter, LoggerAwareInterface
                 $image,
                 $language
             );
-            if ($image instanceof MediaObject) {
+            // Do not import main image again as image.
+            // It is very likely that the same resource is provided as photo and image.
+            if ($image instanceof MediaObject && $image->getId() !== $idMainImage) {
                 $data[] = $this->getSingleMedia($image, false, $language);
             }
         }
