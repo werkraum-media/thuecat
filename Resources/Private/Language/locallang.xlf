@@ -435,6 +435,10 @@
                 <source>ZeroPhotography</source>
             </trans-unit>
 
+            <trans-unit id="content.url">
+                <source>Website</source>
+            </trans-unit>
+
             <trans-unit id="content.petsAllowed.false">
                 <source>No Pets Allowed</source>
             </trans-unit>
