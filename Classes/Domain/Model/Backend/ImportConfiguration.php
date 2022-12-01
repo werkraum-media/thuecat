@@ -95,8 +95,11 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getLastImported(): ?\DateTimeImmutable
     {
-        $positionOfLastLog = count($this->logs) - 1;
-        $lastImport = $this->logs->offsetGet((string) $positionOfLastLog);
+        $lastImport = null;
+        $positionOfLastLog = (string) (count($this->logs) - 1);
+        if ($this->logs->offsetExists($positionOfLastLog)) {
+            $lastImport = $this->logs->offsetGet($positionOfLastLog);
+        }
         if (!$lastImport instanceof ImportLog) {
             return null;
         }
