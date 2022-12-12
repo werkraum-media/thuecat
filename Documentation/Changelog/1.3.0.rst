@@ -80,6 +80,10 @@ Tasks
 
 * Remove seconds from opens and closes of opening hours as we don't expect them to be used.
 
+* Use new icons in streamlined color and UI.
+  Provide new icon for storage folders.
+  Provide new icon for content element.
+
 Deprecation
 -----------
 

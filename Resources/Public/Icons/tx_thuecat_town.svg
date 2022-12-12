@@ -1,1 +1,56 @@
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><polygon points="11.535 15.154 4.516 15.154 4.516 2.858 11.535 0.809 11.535 15.154" fill="#fff" stroke="#b9b9b9" stroke-miterlimit="10" stroke-width="0.5"/><path d="M11.728,15.34707H4.32273V2.71276L11.728.55049Zm-7.01839-.38688h6.6315V1.06659L4.70962,3.00292Z" fill="#b9b9b9" stroke="#b9b9b9" stroke-miterlimit="10" stroke-width="0.5"/><rect x="6.09855" y="4.33894" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="8.73725" y="4.33894" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="6.09855" y="6.52425" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="8.73725" y="6.52425" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="6.09855" y="8.70956" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="8.73725" y="8.70956" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="6.09855" y="10.89487" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="8.73725" y="10.89487" width="1.21507" height="1.21507" fill="#b9b9b9"/><rect x="7.02452" y="13.15182" width="2.00183" height="2.00183" fill="#b9b9b9"/><rect x="13.49923" y="11.49938" width="0.38689" height="3.86284" fill="#b9b9b9" stroke="#b9b9b9" stroke-miterlimit="10" stroke-width="0.5"/><circle cx="13.69273" cy="10.17712" r="1.45083" fill="#79a547"/><path d="M13.69267,11.82144A1.64428,1.64428,0,1,1,15.337,10.17717,1.64623,1.64623,0,0,1,13.69267,11.82144Zm0-2.90166a1.25739,1.25739,0,1,0,1.25739,1.25739A1.25884,1.25884,0,0,0,13.69267,8.91978Z" fill="#79a547"/><circle cx="13.69273" cy="7.49449" r="1.13508" fill="#79a547"/><path d="M13.69267,8.82306a1.32851,1.32851,0,1,1,1.32861-1.32861A1.33007,1.33007,0,0,1,13.69267,8.82306Zm0-2.27014a.94163.94163,0,1,0,.94172.94153A.94264.94264,0,0,0,13.69267,6.55292Z" fill="#79a547"/><rect x="1.84895" y="11.49938" width="0.38689" height="3.86284" fill="#b9b9b9" stroke="#b9b9b9" stroke-miterlimit="10" stroke-width="0.5"/><circle cx="2.04239" cy="10.04855" r="1.45083" fill="#79a547"/><path d="M2.04239,11.69279a1.64428,1.64428,0,1,1,1.64428-1.64427A1.64623,1.64623,0,0,1,2.04239,11.69279Zm0-2.90166a1.25739,1.25739,0,1,0,1.25739,1.25739A1.25884,1.25884,0,0,0,2.04239,8.79113Z" fill="#79a547"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14.03">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #eee;
+      }
+
+      .cls-3, .cls-4 {
+        fill: #989898;
+      }
+
+      .cls-5 {
+        fill: #8b8b8b;
+      }
+
+      .cls-4 {
+        stroke: #4d4d4d;
+        stroke-width: 1px;
+      }
+
+      .cls-4, .cls-2 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke: #ffd400;
+      }
+    </style>
+  </defs>
+  <g id="Ebene_1-2" data-name="Ebene 1">
+    <g>
+      <g>
+        <g>
+          <rect class="cls-1" x="1.5" y=".5" width="9" height="13"/>
+          <path class="cls-3" d="m10,1v12H2V1h8m.8-1H1.2c-.11,0-.2.09-.2.2v13.8h10V.2c0-.11-.09-.2-.2-.2h0Z"/>
+        </g>
+        <line class="cls-2" x1="3" y1="2.43" x2="9" y2="2.43"/>
+        <line class="cls-2" x1="3" y1="4.46" x2="9" y2="4.46"/>
+        <line class="cls-2" x1="3" y1="6.48" x2="9" y2="6.48"/>
+        <line class="cls-2" x1="3" y1="8.5" x2="9" y2="8.5"/>
+        <path class="cls-5" d="m4,11.02h2v2h-2v-2Z"/>
+      </g>
+      <g>
+        <g>
+          <rect class="cls-1" x="8.5" y="4.5" width="4" height="9"/>
+          <path class="cls-3" d="m12,5v8h-3V5h3m.8-1h-4.6c-.11,0-.2.09-.2.2v9.8h5V4.2c0-.11-.09-.2-.2-.2h0Z"/>
+        </g>
+        <line class="cls-2" x1="10" y1="6.55" x2="11" y2="6.55"/>
+        <line class="cls-2" x1="10" y1="8.5" x2="11" y2="8.5"/>
+        <path class="cls-5" d="m10,11.02h1v2h-1v-2Z"/>
+      </g>
+      <line class="cls-4" y1="13.53" x2="14" y2="13.53"/>
+    </g>
+  </g>
+</svg>

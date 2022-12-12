@@ -1,1 +1,55 @@
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8,14.45957A6.45957,6.45957,0,1,1,14.45957,8h0A6.45957,6.45957,0,0,1,8,14.45957Zm0,.9228A7.38237,7.38237,0,1,0,.61763,8,7.38237,7.38237,0,0,0,8,15.38237Z" fill="#b8b8b8"/><circle cx="8" cy="8" r="6.45957" fill="#fff"/><rect x="7.22511" y="6.41709" width="1.54977" height="6.56249" rx="0.14599" fill="#79a547"/><circle cx="8" cy="4.58497" r="1.15244" fill="#79a547"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #eee;
+      }
+
+      .cls-2 {
+        fill: #edb026;
+      }
+
+      .cls-3 {
+        fill: #ffd400;
+      }
+
+      .cls-4 {
+        fill: #989898;
+      }
+
+      .cls-5 {
+        fill: #8b8b8b;
+      }
+
+      .cls-6, .cls-7 {
+        fill: #515151;
+      }
+
+      .cls-7 {
+        font-family: JosefinSans-Bold, 'Josefin Sans';
+        font-size: 6px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <g id="Ebene_1-2" data-name="Ebene 1">
+    <g>
+      <g>
+        <g>
+          <rect class="cls-1" x="1.42" y="4.42" width="11.15" height="9.15"/>
+          <path class="cls-4" d="m12.15,4.85v8.31H1.85V4.85h10.31m.55-.85H1.2c-.1,0-.2.07-.2.14v9.86h12V4.14c0-.07-.1-.14-.3-.14h0Z"/>
+        </g>
+        <path class="cls-6" d="m0,13h14v1H0v-1Z"/>
+        <path class="cls-5" d="m5,10.02h4v2.98h-4v-2.98Z"/>
+      </g>
+      <g>
+        <g>
+          <circle class="cls-3" cx="7" cy="4" r="3.5"/>
+          <path class="cls-2" d="m7,1c1.65,0,3,1.35,3,3s-1.35,3-3,3-3-1.35-3-3,1.35-3,3-3m0-1C4.79,0,3,1.79,3,4s1.79,4,4,4,4-1.79,4-4S9.21,0,7,0h0Z"/>
+        </g>
+        <text class="cls-7" transform="translate(6.15 5.89)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

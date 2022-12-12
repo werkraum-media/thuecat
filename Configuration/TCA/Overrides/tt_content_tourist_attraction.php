@@ -9,7 +9,7 @@ defined('TYPO3') or die();
     \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
         'ctrl' => [
             'typeicon_classes' => [
-                $cType => 'tx_' . $cType,
+                $cType => 'tt_content_' . $cType,
             ],
         ],
         'types' => [
@@ -54,7 +54,7 @@ defined('TYPO3') or die();
         [
             $languagePath,
             $cType,
-            \WerkraumMedia\ThueCat\Extension::getIconPath() . 'tx_' . $cType . '.svg',
+            \WerkraumMedia\ThueCat\Extension::getIconPath() . 'tt_content_' . $cType . '.svg',
             \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
         ]
     );
