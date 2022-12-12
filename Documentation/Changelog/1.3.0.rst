@@ -68,6 +68,9 @@ Fixes
 * Remove trailing ``:`` in German translation of ``content.distanceToPublicTransport``.
   This was the only label with ``:``.
 
+* Keep editorial sorting of tourist attractions within content element.
+  This was not the case yet, the records were sorted by dbms, e.g. by uid.
+
 Tasks
 -----
 

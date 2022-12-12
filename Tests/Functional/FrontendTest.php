@@ -255,6 +255,33 @@ class FrontendTest extends FunctionalTestCase
     /**
      * @test
      */
+    public function touristAttractionContentElementRespectsEditorialSorting(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/SecondTouristAttraction.xml');
+
+        $this->getConnectionPool()->getConnectionForTable('tt_content')->update(
+            'tt_content',
+            [
+                'records' => '2,1',
+            ],
+            ['uid' => 2]
+        );
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $html = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertGreaterThan(
+            stripos($html, 'Eine weitere Attraktion'),
+            stripos($html, 'Erste Attraktion')
+        );
+    }
+
+    /**
+     * @test
+     */
     public function touristAttractionWithPetsFalse(): void
     {
         $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPets.xml');

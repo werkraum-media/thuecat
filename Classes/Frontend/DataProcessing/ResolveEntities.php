@@ -100,6 +100,10 @@ class ResolveEntities implements DataProcessorInterface
             }
         }
 
+        usort($rows, function (array $rowA, array $rowB) use($uids) {
+            return array_search($rowA['uid'], $uids) <=> array_search($rowB['uid'], $uids);
+        });
+
         return $this->dataMapper->map($targetType, $rows);
     }
 
