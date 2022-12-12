@@ -113,6 +113,16 @@ abstract class Place extends Base
         return $this->parkingFacilityNearBy;
     }
 
+    public function getParkingFacilitiesNearBySortedByAlphabet(): array
+    {
+        $facilities = $this->parkingFacilityNearBy->toArray();
+        usort($facilities, function (ParkingFacility $a, ParkingFacility $b) {
+            return $a->getTitle() <=> $b->getTitle();
+        });
+
+        return $facilities;
+    }
+
     public function getSanitation(): array
     {
         return GeneralUtility::trimExplode(',', $this->sanitation, true);

@@ -37,6 +37,9 @@ Features
 
 * Allow to hide parking facilities.
 
+* Parking facilities can now be rendered sorted by alphabet.
+  Use new method ``getParkingFacilitiesNearBySortedByAlphabet()``.
+
 Fixes
 -----
 
