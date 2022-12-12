@@ -35,6 +35,8 @@ Features
   We now also filter out the main image from other images, it will not exist twice
   anymore.
 
+* Allow to hide parking facilities.
+
 Fixes
 -----
 

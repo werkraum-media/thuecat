@@ -58,6 +58,21 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'passthrough',
                 ],
             ],
+            'disable' => [
+                'exclude' => true,
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.enabled',
+                'config' => [
+                    'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'items' => [
+                        [
+                            0 => '',
+                            1 => '',
+                            'invertStateDisplay' => true
+                        ]
+                    ],
+                ]
+            ],
 
             'title' => [
                 'label' => $languagePath . '.title',
@@ -208,7 +223,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, sanitation, other_service, traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, special_opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
+                'showitem' => '--palette--;;language, disable, title, description, sanitation, other_service, traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, special_opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];
