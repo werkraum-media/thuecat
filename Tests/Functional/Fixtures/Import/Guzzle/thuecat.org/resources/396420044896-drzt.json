@@ -428,7 +428,13 @@
                 "schema:value": {
                     "@type": "schema:Number",
                     "@value": "240"
-                }
+                },
+                "thuecat:meansOfTransport": [
+                    {
+                        "@type": "thuecat:MeansOfTransport",
+                        "@value": "thuecat:CityBus"
+                    }
+                ]
             },
             "thuecat:entryHeight": {
                 "@id": "genid-2c9c8a1b44cc404ebe32e34cdbb87884-b16",

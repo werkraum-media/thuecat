@@ -59,4 +59,37 @@ class TouristAttractionTest extends TestCase
 
         return $facility;
     }
+
+    /**
+     * @test
+     */
+    public function returnsDistanceToPublicTransportArrayWithoutTypes(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('distanceToPublicTransport', '300:MTR');
+
+        self::assertSame([
+            'value' => '300',
+            'unit' => 'MTR',
+            'types' => [],
+        ], $subject->getDistanceToPublicTransport());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsDistanceToPublicTransportArrayWithTwoTypes(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('distanceToPublicTransport', '300:MTR:Streetcar:CityBus');
+
+        self::assertSame([
+            'value' => '300',
+            'unit' => 'MTR',
+            'types' => [
+                'Streetcar',
+                'CityBus',
+            ],
+        ], $subject->getDistanceToPublicTransport());
+    }
 }
