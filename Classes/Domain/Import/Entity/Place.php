@@ -309,8 +309,17 @@ class Place extends Base
     {
         $unit = $distanceToPublicTransport['unitCode'] ?? '';
         $value = $distanceToPublicTransport['value'] ?? '';
+
+        $types = [];
+        foreach ($distanceToPublicTransport['meansOfTransport'] ?? [] as $meansOfTransport) {
+            $types[] = PropertyValues::removePrefixFromEntry($meansOfTransport);
+        }
+
         if ($unit && $value) {
             $this->distanceToPublicTransport = $value . ':' . PropertyValues::removePrefixFromEntry($unit);
+            if ($types !== []) {
+                $this->distanceToPublicTransport .= ':' . implode(':', $types);
+            }
         }
     }
 

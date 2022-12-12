@@ -40,6 +40,11 @@ Features
 * Parking facilities can now be rendered sorted by alphabet.
   Use new method ``getParkingFacilitiesNearBySortedByAlphabet()``.
 
+* Support types of public transport when returning distance to public transport.
+  A new array key ``types`` was added. This is an array of types, e.g. ``CityBus`` or
+  ``Streetcar``.
+  These can be used with ``f:translate`` ViewHelper to provide proper none technical labels.
+
 Fixes
 -----
 

@@ -145,13 +145,14 @@ abstract class Place extends Base
 
     public function getDistanceToPublicTransport(): array
     {
-        $values = GeneralUtility::trimExplode(':', $this->distanceToPublicTransport, true, 2);
+        $values = GeneralUtility::trimExplode(':', $this->distanceToPublicTransport, true, 3);
         if ($values === []) {
             return [];
         }
         return [
             'value' => $values[0] ?? '',
             'unit' => $values[1] ?? '',
+            'types' => GeneralUtility::trimExplode(':', $values[2] ?? '', true),
         ];
     }
 

@@ -439,7 +439,17 @@
                 "schema:value": {
                     "@type": "schema:Number",
                     "@value": "350"
-                }
+                },
+                "thuecat:meansOfTransport": [
+                    {
+                        "@type": "thuecat:MeansOfTransport",
+                        "@value": "thuecat:Streetcar"
+                    },
+                    {
+                        "@type": "thuecat:MeansOfTransport",
+                        "@value": "thuecat:CityBus"
+                    }
+                ]
             },
             "thuecat:entrance": {
                 "@type": "thuecat:Entrance",
