@@ -91,7 +91,7 @@ class Extension
                     thuecat_tourist_attraction{
                         title = ' . $languagePath . '.thuecat_tourist_attraction
                         description =  ' . $languagePath . '.thuecat_tourist_attraction.description
-                        iconIdentifier = tx_thuecat_tourist_attraction
+                        iconIdentifier = tt_content_thuecat_tourist_attraction
                         tt_content_defValues {
                             CType = thuecat_tourist_attraction
                         }

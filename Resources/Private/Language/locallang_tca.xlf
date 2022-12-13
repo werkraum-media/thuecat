@@ -309,6 +309,9 @@
             <trans-unit id="pages.tx_thuecat_flexform" xml:space="preserve">
                 <source>Configuration</source>
             </trans-unit>
+            <trans-unit id="pages.module.thuecat" xml:space="preserve">
+                <source>ThÜCAT</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

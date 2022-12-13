@@ -7,6 +7,11 @@ defined('TYPO3') or die();
         . 'locallang_tca.xlf:' . $tableName;
 
     \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
+        'ctrl' => [
+            'typeicon_classes' => [
+                'contains-thuecat' => 'pages_module_thuecat',
+            ],
+        ],
         'columns' => [
             'tx_thuecat_flexform' => [
                 'label' => $languagePath . '.tx_thuecat_flexform',
@@ -32,6 +37,16 @@ defined('TYPO3') or die();
         'doktype',
         \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
         $languagePath . '.group'
+    );
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+        $tableName,
+        'module',
+        [
+            0 => $languagePath . '.module.thuecat',
+            1 => 'thuecat',
+            2 => 'pages_module_thuecat',
+        ]
     );
 })(
     \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY,

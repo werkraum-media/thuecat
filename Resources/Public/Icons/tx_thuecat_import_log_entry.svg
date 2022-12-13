@@ -1,1 +1,56 @@
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0,0H16V16H0Z" fill="#fff"/><path d="M.74957,5.28109H15.25043V7.0937H.74957Zm0,3.62521H15.25043v1.81261H.74957Zm0,3.62522H15.25043v1.81261H.74957Z" fill="#b9b9b9"/><rect x="0.74957" y="1.63189" width="14.50087" height="1.81261" fill="#79a547"/><rect x="4.94931" y="8.21784" width="11.02422" height="6.86717" fill="#79a547"/><rect x="6.35569" y="9.77913" width="0.46275" height="3.74458" fill="#fff"/><rect x="6.35569" y="13.12191" width="2.02734" height="0.4154" fill="#fff"/><rect x="9.12867" y="9.9433" width="2.17081" height="3.38907" fill="none" stroke="#fff" stroke-miterlimit="10" stroke-width="0.4"/><rect x="12.04513" y="9.76554" width="0.4811" height="3.74458" fill="#fff"/><rect x="12.04513" y="13.12191" width="2.57226" height="0.4154" fill="#fff"/><rect x="12.04512" y="9.76167" width="2.33172" height="0.4154" fill="#fff"/><rect x="14.1363" y="11.99393" width="0.4811" height="1.50282" fill="#fff"/><rect x="13.76082" y="11.97561" width="0.85657" height="0.4811" fill="#fff"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14.01">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4d4d4d;
+        font-family: Arial-Black, 'Arial Black';
+        font-size: 3px;
+        font-weight: 800;
+      }
+
+      .cls-2 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        fill: #edb026;
+      }
+
+      .cls-5 {
+        fill: #ffd400;
+      }
+
+      .cls-6 {
+        fill: #989898;
+      }
+
+      .cls-7 {
+        fill: #b8b8b8;
+      }
+
+      .cls-8 {
+        fill: #666;
+      }
+    </style>
+  </defs>
+  <g id="Ebene_1-2" data-name="Ebene 1">
+    <g>
+      <path class="cls-3" d="m0,0h14v14H0V0Z"/>
+      <path class="cls-6" d="m0,0v14h14V0H0Zm1,1h12v12H1V1Z"/>
+      <path class="cls-8" d="m2,2h10v2H2v-2Z"/>
+      <path class="cls-7" d="m2,5h10v1H2v-1Zm0,2h10v1H2v-1Zm0,2h3.53v1h-3.53v-1Zm0,2h3.53v1h-3.53v-1Z"/>
+      <g>
+        <g>
+          <rect class="cls-5" x="4.64" y="8.25" width="9.11" height="5.51"/>
+          <path class="cls-4" d="m13.5,8.5v5.01H4.89v-5.01h8.61m.5-.5H4.39v6.01h9.61v-6.01h0Z"/>
+        </g>
+        <text class="cls-1" transform="translate(5.78 12.19)"><tspan class="cls-2" x="0" y="0">L</tspan><tspan x="1.95" y="0">OG</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
