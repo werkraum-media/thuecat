@@ -1,0 +1,16 @@
+"tx_thuecat_tourist_attraction",,,,,
+,"uid","pid","sys_language_uid","remote_id","title"
+,1,10,0,"https://thuecat.org/resources/835224016581-dara","Dom St. Marien"
+,2,10,1,"https://thuecat.org/resources/835224016581-dara","Cathedral of St. Mary"
+,3,10,0,"https://thuecat.org/resources/165868194223-zmqf","Alte Synagoge"
+,4,10,1,"https://thuecat.org/resources/165868194223-zmqf","Old Synagogue"
+,5,10,2,"https://thuecat.org/resources/165868194223-zmqf","La vieille synagogue"
+,6,10,0,"https://thuecat.org/resources/215230952334-yyno","Krämerbrücke"
+,7,10,1,"https://thuecat.org/resources/215230952334-yyno","Merchants' Bridge"
+,8,10,2,"https://thuecat.org/resources/215230952334-yyno","Pont de l'épicier"
+"tx_thuecat_organisation",,,,,
+,"uid","pid","remote_id","title",
+,1,10,"https://thuecat.org/resources/018132452787-ngbe","Erfurt Tourismus und Marketing GmbH",
+"tx_thuecat_town",,,,,
+,"uid","pid","remote_id","title",
+,1,10,"https://thuecat.org/resources/043064193523-jcyt","Erfurt",

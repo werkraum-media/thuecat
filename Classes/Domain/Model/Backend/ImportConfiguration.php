@@ -106,14 +106,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getStoragePid(): int
     {
-        if ($this->configuration === '') {
-            return 0;
-        }
-
-        $storagePid = ArrayUtility::getValueByPath(
-            GeneralUtility::xml2array($this->configuration),
-            'data/sDEF/lDEF/storagePid/vDEF'
-        );
+        $storagePid = $this->getConfigurationValueFromFlexForm('storagePid');
 
         if (is_numeric($storagePid) && $storagePid > 0) {
             return intval($storagePid);
@@ -148,21 +141,16 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getSyncScopeId(): string
     {
-        if ($this->configuration === '') {
-            return '';
+        return $this->getConfigurationValueFromFlexForm('syncScopeId');
+    }
+
+    public function getContainsPlaceId(): string
+    {
+        $containsPlaceId = $this->getConfigurationValueFromFlexForm('containsPlaceId');
+        if (!is_string($containsPlaceId)) {
+            throw new \Exception('Could not fetch containsPlaceId.', 1671027015);
         }
-
-        $configurationAsArray = $this->getConfigurationAsArray();
-        $arrayPath = 'data/sDEF/lDEF/syncScopeId/vDEF';
-
-        if (ArrayUtility::isValidPath($configurationAsArray, $arrayPath) === false) {
-            return '';
-        }
-
-        return ArrayUtility::getValueByPath(
-            $configurationAsArray,
-            $arrayPath
-        );
+        return $containsPlaceId;
     }
 
     private function getEntries(): array
@@ -197,5 +185,27 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         $configuration->type = 'static';
         $configuration->allowedTypes = $allowedTypes;
         return $configuration;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getConfigurationValueFromFlexForm(string $fieldName)
+    {
+        if ($this->configuration === '') {
+            return '';
+        }
+
+        $configurationAsArray = $this->getConfigurationAsArray();
+        $arrayPath = 'data/sDEF/lDEF/' . $fieldName . '/vDEF';
+
+        if (ArrayUtility::isValidPath($configurationAsArray, $arrayPath) === false) {
+            return '';
+        }
+
+        return ArrayUtility::getValueByPath(
+            $configurationAsArray,
+            $arrayPath
+        );
     }
 }

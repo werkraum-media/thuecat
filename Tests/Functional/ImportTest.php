@@ -301,6 +301,50 @@ class ImportTest extends TestCase
 
     /**
      * @test
+     */
+    public function importsBasedOnContainsPlace(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsContainsPlace.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-contains.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/508431710173-wwne.json');
+        for ($i = 1; $i <= 4; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
+        for ($i = 1; $i <= 10; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+        for ($i = 1; $i <= 2; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        for ($i = 1; $i <= 4; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/215230952334-yyno.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/052821473718-oxfq.json');
+        for ($i = 1; $i <= 4; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
+        for ($i = 1; $i <= 14; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsContainsPlace.csv');
+    }
+
+    /**
+     * @test
      * @testdox Referencing the same thing multiple times only adds it once.
      */
     public function importWithMultipleReferencesToSameObject(): void

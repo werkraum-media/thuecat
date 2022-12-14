@@ -76,6 +76,11 @@ class FetchData
         );
     }
 
+    public function getFullResourceUrl(string $id): string
+    {
+        return $this->getResourceEndpoint() . ltrim($id, '/');
+    }
+
     public function jsonLDFromUrl(string $url): array
     {
         $cacheIdentifier = sha1($url);
@@ -98,7 +103,7 @@ class FetchData
         return [];
     }
 
-    public function getResourceEndpoint(): string
+    private function getResourceEndpoint(): string
     {
         return $this->urlPrefix . '/resources/';
     }

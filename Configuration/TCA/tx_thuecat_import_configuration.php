@@ -45,6 +45,10 @@ return (static function (string $extensionKey, string $tableName) {
                             $languagePath . '.type.syncScope',
                             'syncScope',
                         ],
+                        [
+                            $languagePath . '.type.containsPlace',
+                            'containsPlace',
+                        ],
                     ],
                 ],
             ],
@@ -57,6 +61,7 @@ return (static function (string $extensionKey, string $tableName) {
                         'default' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
                         'static' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
                         'syncScope' => $flexFormConfigurationPath . 'ImportConfiguration/SyncScope.xml',
+                        'containsPlace' => $flexFormConfigurationPath . 'ImportConfiguration/ContainsPlace.xml',
                     ],
                 ],
             ],

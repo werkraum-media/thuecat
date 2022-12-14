@@ -13,6 +13,10 @@ Features
 
 * Last import date is now shown within backend module beside each import configuration.
 
+* New import configuration type "Contains Place".
+  This allows to provide a single entity, e.g. a Town that has multiple ``schema:containsPlace`` entries.
+  Each of them will be imported.
+
 * Import author of media. This allows to either render the license author or the author.
 
 * Filter and sort opening hours.

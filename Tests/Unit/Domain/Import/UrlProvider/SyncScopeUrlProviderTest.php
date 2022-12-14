@@ -101,7 +101,10 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration->_setProperty('syncScopeId', 10);
 
         $fetchData = $this->createStub(FetchData::class);
-        $fetchData->method('getResourceEndpoint')->willReturn('https://example.com/api/');
+        $fetchData->method('getFullResourceUrl')->willReturnOnConsecutiveCalls(
+            'https://example.com/api/835224016581-dara',
+            'https://example.com/api/165868194223-zmqf'
+        );
         $fetchData->method('updatedNodes')->willReturn([
             'data' => [
                 'createdOrUpdated' => [
