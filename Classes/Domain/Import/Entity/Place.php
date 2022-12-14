@@ -51,7 +51,7 @@ class Place extends Base
     /**
      * @var OpeningHour[]
      */
-    protected $openingHours = [];
+    protected $openingHoursSpecifications = [];
 
     /**
      * @var OpeningHour[]
@@ -160,7 +160,7 @@ class Place extends Base
     {
         return GeneralUtility::makeInstance(DateBasedFilter::class)
             ->filterOutPreviousDates(
-                $this->openingHours,
+                $this->openingHoursSpecifications,
                 function (OpeningHour $hour): ?\DateTimeImmutable {
                     return $hour->getValidThrough();
                 }
@@ -210,7 +210,7 @@ class Place extends Base
      */
     public function addOpeningHoursSpecification(OpeningHour $openingHour): void
     {
-        $this->openingHours[] = $openingHour;
+        $this->openingHoursSpecifications[] = $openingHour;
     }
 
     /**
