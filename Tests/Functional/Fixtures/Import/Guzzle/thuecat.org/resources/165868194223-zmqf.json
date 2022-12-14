@@ -547,7 +547,8 @@
                 "schema:value": {
                     "@type": "schema:Number",
                     "@value": "200"
-                }
+                },
+                "thuecat:meansOfTransport": "thuecat:CityBus"
             },
             "thuecat:endOfConstruction": [
                 {

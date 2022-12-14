@@ -311,8 +311,12 @@ class Place extends Base
         $value = $distanceToPublicTransport['value'] ?? '';
 
         $types = [];
-        foreach ($distanceToPublicTransport['meansOfTransport'] ?? [] as $meansOfTransport) {
-            $types[] = PropertyValues::removePrefixFromEntry($meansOfTransport);
+        $meansOfTransport = $distanceToPublicTransport['meansOfTransport'] ?? [];
+        if (is_string($meansOfTransport)) {
+            $meansOfTransport = [$meansOfTransport];
+        }
+        foreach ($meansOfTransport as $type) {
+            $types[] = PropertyValues::removePrefixFromEntry($type);
         }
 
         if ($unit && $value) {
