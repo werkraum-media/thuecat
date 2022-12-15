@@ -8,10 +8,11 @@ return (static function (string $extensionKey, string $tableName) {
 
     return [
         'ctrl' => [
-            'label' => 'table_name',
-            'label_alt' => 'record_uid',
+            'label' => 'type',
+            'label_alt' => 'remote_id, table_name, record_uid',
             'label_alt_force' => true,
             'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'type' => 'type',
             'default_sortby' => 'crdate',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -24,6 +25,30 @@ return (static function (string $extensionKey, string $tableName) {
             'hideTable' => true,
         ],
         'columns' => [
+            'type' => [
+                'label' => $languagePath . '.type',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [
+                            $languagePath . '.type.savingEntity',
+                            'savingEntity',
+                        ],
+                        [
+                            $languagePath . '.type.mappingError',
+                            'mappingError',
+                        ],
+                    ],
+                ],
+            ],
+            'remote_id' => [
+                'label' => $languagePath . '.remote_id',
+                'config' => [
+                    'type' => 'input',
+                    'readOnly' => true,
+                ],
+            ],
             'insertion' => [
                 'label' => $languagePath . '.insertion',
                 'config' => [
@@ -80,9 +105,18 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
         ],
+        'palettes' => [
+            'always' => [
+                'label' => $languagePath . '.palette.always',
+                'showitem' => 'type, remote_id, import_log, crdate',
+            ],
+        ],
         'types' => [
-            '0' => [
-                'showitem' => 'table_name, record_uid, insertion, errors, import_log, crdate',
+            'savingEntity' => [
+                'showitem' => '--palette--;;always, table_name, record_uid, insertion, errors',
+            ],
+            'mappingError' => [
+                'showitem' => '--palette--;;always, errors',
             ],
         ],
     ];

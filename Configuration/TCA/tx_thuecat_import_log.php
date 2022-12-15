@@ -9,8 +9,10 @@ return (static function (string $extensionKey, string $tableName) {
     return [
         'ctrl' => [
             'label' => 'crdate',
+            'label_alt' => 'configuration',
+            'label_alt_force' => true,
             'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
-            'default_sortby' => 'crdate',
+            'default_sortby' => 'crdate desc',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'cruser_id' => 'cruser_id',
@@ -51,7 +53,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'crdate, log_entries, configuration',
+                'showitem' => 'crdate, configuration, log_entries',
             ],
         ],
     ];

@@ -77,14 +77,16 @@ class ImportLogRepository extends Repository
         foreach ($log->getEntries() as $entry) {
             $number++;
 
-            $entries['NEW' . $number] = [
-                'pid' => 0,
-                'import_log' => 'NEW0',
-                'insertion' => (int) $entry->wasInsertion(),
-                'record_uid' => $entry->getRecordUid(),
-                'table_name' => $entry->getRecordDatabaseTableName(),
-                'errors' => json_encode($entry->getErrors()),
-            ];
+            $entries['NEW' . $number] = array_merge(
+                $entry->getInsertion(),
+                [
+                    'pid' => 0,
+                    'import_log' => 'NEW0',
+                    'type' => $entry->getType(),
+                    'remote_id' => $entry->getRemoteId(),
+                    'errors' => json_encode($entry->getErrors()),
+                ]
+            );
         }
 
         return $entries;

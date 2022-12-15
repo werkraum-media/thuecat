@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Log\Logger;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
@@ -36,6 +37,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
@@ -180,17 +182,29 @@ class Importer
 
         foreach ($this->languages->getAvailable($this->import->getConfiguration()) as $language) {
             $this->logger->info('Process entity for language.', ['language' => $language, 'targetEntity' => $targetEntity]);
-            $mappedEntity = $this->entityMapper->mapDataToEntity(
-                $jsonEntity,
-                $targetEntity,
-                [
-                    JsonDecode::ACTIVE_LANGUAGE => $language,
-                ]
-            );
-            if (!$mappedEntity instanceof MapsToType) {
-                $this->logger->alert('Mapping did not result in an MapsToType instance.', ['class' => get_class($mappedEntity)]);
+            try {
+                $mappedEntity = $this->entityMapper->mapDataToEntity(
+                    $jsonEntity,
+                    $targetEntity,
+                    [
+                        JsonDecode::ACTIVE_LANGUAGE => $language,
+                    ]
+                );
+            } catch (MappingException $e) {
+                $this->logger->error('Could not map data to entity.', [
+                    'url' => $e->getUrl(),
+                    'language' => $language,
+                    'mappingError' => $e->getMessage(),
+                ]);
+                $this->import->getLog()->addEntry(new MappingError($e));
                 continue;
             }
+
+            if (!$mappedEntity instanceof MapsToType) {
+                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => get_class($mappedEntity)]);
+                continue;
+            }
+
             $convertedEntity = $this->converter->convert(
                 $mappedEntity,
                 $this->import->getConfiguration(),
@@ -198,7 +212,7 @@ class Importer
             );
 
             if ($convertedEntity === null) {
-                $this->logger->alert('Could not convert entity.', ['language' => $language, 'targetEntity' => $targetEntity]);
+                $this->logger->error('Could not convert entity.', ['language' => $language, 'targetEntity' => $targetEntity]);
                 continue;
             }
             $entities->add($convertedEntity);

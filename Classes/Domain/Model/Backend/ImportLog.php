@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
 class ImportLog extends Typo3AbstractEntity
 {
@@ -88,7 +89,11 @@ class ImportLog extends Typo3AbstractEntity
 
         foreach ($this->getEntries() as $entry) {
             if ($entry->hasErrors()) {
-                $errors = array_merge($errors, $entry->getErrors());
+                $entryErrors = array_map(function (string $error) use ($entry) {
+                    return 'Resource: ' . $entry->getRemoteId() . ' Error: ' . $error;
+                }, $entry->getErrors());
+
+                $errors = array_merge($errors, $entryErrors);
                 $errors = array_unique($errors);
             }
         }
@@ -111,7 +116,7 @@ class ImportLog extends Typo3AbstractEntity
     {
         $summary = [];
 
-        foreach ($this->getEntries() as $entry) {
+        foreach ($this->getSavingEntries() as $entry) {
             if (isset($summary[$entry->getRecordDatabaseTableName()])) {
                 ++$summary[$entry->getRecordDatabaseTableName()];
                 continue;
@@ -138,5 +143,15 @@ class ImportLog extends Typo3AbstractEntity
         foreach ($importLog->getEntries() as $entry) {
             $this->addEntry($entry);
         }
+    }
+
+    /**
+     * @return SavingEntity[]
+     */
+    private function getSavingEntries(): array
+    {
+        return array_filter($this->logEntries->getArray(), function (ImportLogEntry $entry) {
+            return $entry instanceof SavingEntity;
+        });
     }
 }

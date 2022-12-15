@@ -77,6 +77,17 @@ class ImportTest extends TestCase
     ];
 
     protected $configurationToUseInTestInstance = [
+        'LOG' => [
+            'WerkraumMedia' => [
+                'writerConfiguration' => [
+                    \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
+                        \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+                            'logFileInfix' => 'debug',
+                        ],
+                    ],
+                ],
+            ],
+        ],
         'EXTENSIONS' => [
             'thuecat' => [
                 'apiKey' => null,
@@ -341,6 +352,32 @@ class ImportTest extends TestCase
         $this->get(Importer::class)->importConfiguration($configuration);
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsContainsPlace.csv');
+    }
+
+    /**
+     * @test
+     */
+    public function importsFollowingRecordsInCaseOfAnMappingException(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.xml');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/mapping-exception.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+        for ($i = 1; $i <= 9; $i++) {
+            GuzzleClientFaker::appendNotFoundResponse();
+        }
+
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
+
+        if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+            $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingExceptionOldPhp.csv');
+        } else {
+            $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.csv');
+        }
     }
 
     /**

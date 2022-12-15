@@ -28,7 +28,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
 class SaveData
 {
@@ -65,7 +65,7 @@ class SaveData
         $this->updateEntities($entityCollection);
 
         foreach ($entityCollection->getEntities() as $entity) {
-            $log->addEntry(new ImportLogEntry($entity, $this->errorLog));
+            $log->addEntry(new SavingEntity($entity, $this->errorLog));
         }
     }
 
