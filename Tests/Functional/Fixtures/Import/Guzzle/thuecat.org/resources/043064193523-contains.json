@@ -1,0 +1,182 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/043064193523-contains",
+            "@type": [
+                "schema:AdministrativeArea",
+                "schema:Place",
+                "schema:Thing",
+                "schema:City",
+                "ttgds:Destination",
+                "thuecat:Town"
+            ],
+            "schema:address": {
+                "@id": "genid-c3843c2db4f74da2bc4a1785b63143b2-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:PostalAddress",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:ContactPoint"
+                ],
+                "schema:addressCountry": {
+                    "@type": "thuecat:AddressCountry",
+                    "@value": "thuecat:Germany"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                "schema:addressRegion": {
+                    "@type": "thuecat:AddressFederalState",
+                    "@value": "thuecat:Thuringia"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                }
+            },
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/835224016581-dara"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/165868194223-zmqf"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/215230952334-yyno"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Kr\u00e4merbr\u00fccke, Dom, Alte Synagoge \u2013 die Th\u00fcringer Landeshauptstadt Erfurt hat viele Kultursch\u00e4tze. Und ein wunderbar junges, studentisches Flair.Eine gute Mischung f\u00fcr alle, die beim Schlendern und Bummeln gerne St\u00e4dte entdecken: Denn in Erfurt findet man einen wunderbaren mittelalterlichen Stadtkern \u2013 mit vielen netten L\u00e4den, Caf\u00e8s und Restaurants. Urlauber wie Einheimische bummeln durch die Gassen der Altstadt, aus allen Ecken wispern Geschichte und alte Geschichten. Stolze historische B\u00fcgerh\u00e4user bilden eine der sch\u00f6nsten Altst\u00e4dte Europas, mittendrin das neugotische Rathaus aus den 1870er-Jahren am Fischmarkt, die spitzt\u00fcrmige St. Severikirche und der m\u00e4chtige Dom, 1117 erstmals urkundlich erw\u00e4hnt \u2013 auf seiner schier endlosen, kaskadenf\u00f6rmigen Freitreppe chillen Jung und Alt gern in der Abendsonne. Ehe sie weiter ziehen zum Tagesausklang in eine der coolen Kneipen und Bars (Tipp: Oma Lilo oder Caf\u00e8 Hilgenfeld), in die Wein-Destille am benachbarten Petersberg oder in eins der l\u00e4ssigen Restaurants (Tipp: Mathilda oder Ballenberger), wo zum freundlichen Miteinander eine frische und moderne K\u00fcche serviert wird.In Erfurt pulsiert das Leben, lassen Sie sich einfach treiben. Von Ihrer Neugierde ..."
+                },
+                {
+                    "@id": "genid-c3843c2db4f74da2bc4a1785b63143b2-b1",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "Kr\u00e4merbr\u00fccke, Dom, Alte Synagoge \u2013 die Th\u00fcringer Landeshauptstadt Erfurt hat viele Kultursch\u00e4tze. Und ein wunderbar junges, studentisches Flair.Eine gute Mischung f\u00fcr alle, die beim Schlendern und Bummeln gerne St\u00e4dte entdecken: Denn in Erfurt findet man einen wunderbaren mittelalterlichen Stadtkern \u2013 mit vielen netten L\u00e4den, Caf\u00e8s und Restaurants. Urlauber wie Einheimische bummeln durch die Gassen der Altstadt, aus allen Ecken wispern Geschichte und alte Geschichten. Stolze historische B\u00fcgerh\u00e4user bilden eine der sch\u00f6nsten Altst\u00e4dte Europas, mittendrin das neugotische Rathaus aus den 1870er-Jahren am Fischmarkt, die spitzt\u00fcrmige St. Severikirche und der m\u00e4chtige Dom, 1117 erstmals urkundlich erw\u00e4hnt \u2013 auf seiner schier endlosen, kaskadenf\u00f6rmigen Freitreppe chillen Jung und Alt gern in der Abendsonne. Ehe sie weiter ziehen zum Tagesausklang in eine der coolen Kneipen und Bars (Tipp: Oma Lilo oder Caf\u00e8 Hilgenfeld), in die Wein-Destille am benachbarten Petersberg oder in eins der l\u00e4ssigen Restaurants (Tipp: Mathilda oder Ballenberger), wo zum freundlichen Miteinander eine frische und moderne K\u00fcche serviert wird.In Erfurt pulsiert das Leben, lassen Sie sich einfach treiben. Von Ihrer Neugierde ..."
+                    }
+                }
+            ],
+            "schema:geo": {
+                "@id": "genid-c3843c2db4f74da2bc4a1785b63143b2-b2",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:GeoCoordinates"
+                ],
+                "schema:latitude": {
+                    "@type": "schema:Number",
+                    "@value": "50.97658847089682"
+                },
+                "schema:longitude": {
+                    "@type": "schema:Number",
+                    "@value": "11.02752685546875"
+                }
+            },
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://www.google.com/maps/search/?api=1&query=11.02752685546875,11.02752685546875"
+            },
+            "schema:identifier": [
+                {
+                    "@type": "schema:URL",
+                    "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/erfurt-102097.html"
+                },
+                {
+                    "@id": "genid-c3843c2db4f74da2bc4a1785b63143b2-b3",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:name": {
+                        "@language": "de",
+                        "@value": "TOMASID"
+                    },
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "TTG00020050000218774"
+                    }
+                }
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Erfurt"
+            },
+            "schema:sameAs": {
+                "@type": "schema:URL",
+                "@value": "http://www.erfurt-tourismus.de"
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "http://www.erfurt-tourismus.de"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:destinationManagementOrganisation": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:managedBy": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "thuecat:monumentEnum": {
+                "@type": "thuecat:MonumentEnum",
+                "@value": "thuecat:ZeroInformationMemorialClass"
+            },
+            "thuecat:regionalKey": {
+                "@language": "de",
+                "@value": "160510000000"
+            },
+            "thuecat:tomasLocationID": {
+                "@language": "de",
+                "@value": "TTG00020050000218774"
+            },
+            "thuecat:trafficConnection": [
+                {
+                    "@type": "thuecat:TrafficConnection",
+                    "@value": "thuecat:BusRoute"
+                },
+                {
+                    "@type": "thuecat:TrafficConnection",
+                    "@value": "thuecat:RoadConnection"
+                },
+                {
+                    "@type": "thuecat:TrafficConnection",
+                    "@value": "thuecat:RailwayStationEnuMem"
+                },
+                {
+                    "@type": "thuecat:TrafficConnection",
+                    "@value": "thuecat:MotorwayConnection"
+                },
+                {
+                    "@type": "thuecat:TrafficConnection",
+                    "@value": "thuecat:Airport"
+                }
+            ]
+        }
+    ]
+}

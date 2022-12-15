@@ -1,0 +1,36 @@
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.sheetTitle</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <storagePid>
+                        <TCEforms>
+                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.storagePid</label>
+                            <config>
+                                <type>input</type>
+                                <eval>int,required</eval>
+                            </config>
+                        </TCEforms>
+                    </storagePid>
+                    <containsPlaceId>
+                        <TCEforms>
+                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId</label>
+                            <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId.description</description>
+                            <config>
+                                <type>input</type>
+                                <eval>trim,required</eval>
+                            </config>
+                        </TCEforms>
+                    </containsPlaceId>
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

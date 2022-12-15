@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2022 Daniel Siepmann <coding@daniel-siepmann.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
-class SyncScopeUrlProvider implements UrlProvider
+class ContainsPlaceUrlProvider implements UrlProvider
 {
     /**
      * @var FetchData
@@ -36,7 +36,7 @@ class SyncScopeUrlProvider implements UrlProvider
     /**
      * @var string
      */
-    private $syncScopeId = '';
+    private $containsPlaceId = '';
 
     public function __construct(
         FetchData $fetchData
@@ -47,28 +47,30 @@ class SyncScopeUrlProvider implements UrlProvider
     public function canProvideForConfiguration(
         ImportConfiguration $configuration
     ): bool {
-        return $configuration->getType() === 'syncScope';
+        return $configuration->getType() === 'containsPlace';
     }
 
     public function createWithConfiguration(
         ImportConfiguration $configuration
     ): UrlProvider {
-        if (method_exists($configuration, 'getSyncScopeId') === false) {
+        if (method_exists($configuration, 'getContainsPlaceId') === false) {
             throw new \InvalidArgumentException('Received incompatible import configuration.', 1629709276);
         }
         $instance = clone $this;
-        $instance->syncScopeId = $configuration->getSyncScopeId();
+        $instance->containsPlaceId = $configuration->getContainsPlaceId();
 
         return $instance;
     }
 
     public function getUrls(): array
     {
-        $response = $this->fetchData->updatedNodes($this->syncScopeId);
-        $resourceIds = array_values($response['data']['createdOrUpdated'] ?? []);
+        $response = $this->fetchData->jsonLDFromUrl(
+            $this->fetchData->getFullResourceUrl($this->containsPlaceId)
+        );
+        $resources = array_values($response['@graph'][0]['schema:containsPlace'] ?? []);
 
-        return array_map(function (string $id) {
-            return $this->fetchData->getFullResourceUrl($id);
-        }, $resourceIds);
+        return array_map(function (array $resource) {
+            return $resource['@id'] ?? '';
+        }, $resources);
     }
 }

@@ -28,6 +28,20 @@
                 <source>syncScopeId</source>
             </trans-unit>
 
+            <!-- Contains Place Import Configuration -->
+            <trans-unit id="importConfiguration.containsPlace.sheetTitle" xml:space="preserve">
+                <source>Contains place import configuration</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.containsPlace.storagePid" xml:space="preserve">
+                <source>Storage Page UID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.containsPlace.containsPlaceId" xml:space="preserve">
+                <source>Contains Place ID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.containsPlace.containsPlaceId.description" xml:space="preserve">
+                <source>Only ID, not full URL e.g. 043064193523-jcyt</source>
+            </trans-unit>
+
             <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>

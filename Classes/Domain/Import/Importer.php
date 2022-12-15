@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Log\Logger;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
@@ -79,6 +81,11 @@ class Importer
     private $importLogRepository;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var Import
      */
     private $import;
@@ -91,7 +98,8 @@ class Importer
         Languages $languages,
         ImportLogRepository $importLogRepository,
         FetchData $fetchData,
-        SaveData $saveData
+        SaveData $saveData,
+        LogManager $logManager
     ) {
         $this->urls = $urls;
         $this->converter = $converter;
@@ -101,6 +109,7 @@ class Importer
         $this->importLogRepository = $importLogRepository;
         $this->fetchData = $fetchData;
         $this->saveData = $saveData;
+        $this->logger = $logManager->getLogger(__CLASS__);
         $this->import = new Import();
     }
 
@@ -111,6 +120,13 @@ class Importer
         $this->import->end();
 
         if ($this->import->done()) {
+            $this->logger->info(
+                'Finished import.',
+                [
+                    'errors' => $this->import->getLog()->getListOfErrors(),
+                    'summary' => $this->import->getLog()->getSummaryOfEntries(),
+                ]
+            );
             $this->importLogRepository->addLog($this->import->getLog());
         }
 
@@ -131,12 +147,15 @@ class Importer
 
     private function importResourceByUrl(string $url): void
     {
+        $this->logger->info('Process url.', ['url' => $url]);
         if ($this->import->handledRemoteId($url)) {
+            $this->logger->notice('Skip Url as we already handled it during import.', ['url' => $url]);
             return;
         }
         $content = $this->fetchData->jsonLDFromUrl($url);
 
         if ($content === []) {
+            $this->logger->notice('Skip Url as we did not receive any content.', ['url' => $url]);
             return;
         }
 
@@ -153,12 +172,14 @@ class Importer
 
         $targetEntity = $this->entityRegistry->getEntityByTypes($jsonEntity['@type']);
         if ($targetEntity === '') {
+            $this->logger->notice('Skip entity, no target entity found.', ['types' => $jsonEntity['@type']]);
             return;
         }
 
         $entities = new EntityCollection();
 
         foreach ($this->languages->getAvailable($this->import->getConfiguration()) as $language) {
+            $this->logger->info('Process entity for language.', ['language' => $language, 'targetEntity' => $targetEntity]);
             $mappedEntity = $this->entityMapper->mapDataToEntity(
                 $jsonEntity,
                 $targetEntity,
@@ -167,6 +188,7 @@ class Importer
                 ]
             );
             if (!$mappedEntity instanceof MapsToType) {
+                $this->logger->alert('Mapping did not result in an MapsToType instance.', ['class' => get_class($mappedEntity)]);
                 continue;
             }
             $convertedEntity = $this->converter->convert(
@@ -176,6 +198,7 @@ class Importer
             );
 
             if ($convertedEntity === null) {
+                $this->logger->alert('Could not convert entity.', ['language' => $language, 'targetEntity' => $targetEntity]);
                 continue;
             }
             $entities->add($convertedEntity);
@@ -199,6 +222,7 @@ class Importer
             }
         }
 
+        $this->logger->notice('Deny entity as type is not allowed.', ['types' => $jsonEntity['@type']]);
         return false;
     }
 }
