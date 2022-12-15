@@ -51,6 +51,6 @@ class MappingException extends \Exception
 
     public function getUrl(): string
     {
-        return $this->jsonLD['@id'] ?? 'unkown';
+        return $this->jsonLD['@id'] ?? 'unknown';
     }
 }
