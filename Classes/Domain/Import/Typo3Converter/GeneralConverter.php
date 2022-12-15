@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
@@ -50,10 +50,8 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ParkingFacilityRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
-class GeneralConverter implements Converter, LoggerAwareInterface
+class GeneralConverter implements Converter
 {
-    use LoggerAwareTrait;
-
     /**
      * @var ResolveForeignReference
      */
@@ -90,6 +88,11 @@ class GeneralConverter implements Converter, LoggerAwareInterface
     private $nameExtractor;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var ImportConfiguration
      */
     private $importConfiguration;
@@ -113,7 +116,8 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         OrganisationRepository $organisationRepository,
         TownRepository $townRepository,
         ParkingFacilityRepository $parkingFacilityRepository,
-        NameExtractor $nameExtractor
+        NameExtractor $nameExtractor,
+        LogManager $logManager
     ) {
         $this->resolveForeignReference = $resolveForeignReference;
         $this->importer = $importer;
@@ -122,6 +126,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         $this->townRepository = $townRepository;
         $this->parkingFacilityRepository = $parkingFacilityRepository;
         $this->nameExtractor = $nameExtractor;
+        $this->logger = $logManager->getLogger(__CLASS__);
     }
 
     public function convert(
@@ -165,14 +170,14 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         $tableName = $this->getTableNameByEntityClass(get_class($entity));
 
         if (!$entity instanceof Minimum) {
-            $this->logger->debug('Skipped conversion of entity, got unexpected type', [
+            $this->logger->info('Skipped conversion of entity, got unexpected type', [
                 'expectedType' => Minimum::class,
                 'actualType' => get_class($entity),
             ]);
             return false;
         }
         if ($entity->hasName() === false) {
-            $this->logger->debug('Skipped conversion of entity, had no name', [
+            $this->logger->info('Skipped conversion of entity, had no name', [
                 'remoteId' => $entity->getId(),
             ]);
             return false;
@@ -186,7 +191,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
             $languageUid > 0
             && isset($GLOBALS['TCA'][$tableName]['ctrl']['languageField']) === false
         ) {
-            $this->logger->debug('Skipped conversion of entity, table does not support translations', [
+            $this->logger->info('Skipped conversion of entity, table does not support translations', [
                 'remoteId' => $entity->getId(),
                 'requestedLanguage' => $language,
                 'resolvedLanguageUid' => $languageUid,
@@ -196,7 +201,7 @@ class GeneralConverter implements Converter, LoggerAwareInterface
         }
 
         if ($tableName !== 'tx_thuecat_organisation' && $this->getManagerUid($entity) === '') {
-            $this->logger->debug('Skipped conversion of entity, is not an organisation and no manager was available', [
+            $this->logger->info('Skipped conversion of entity, is not an organisation and no manager was available', [
                 'remoteId' => $entity->getId(),
             ]);
             return false;

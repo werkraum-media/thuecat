@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Typo3Converter;
 
-use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Log\Logger;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
@@ -55,6 +56,7 @@ class GeneralConverterTest extends TestCase
         $townRepository = $this->createStub(TownRepository::class);
         $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
         $nameExtractor = $this->createStub(NameExtractor::class);
+        $logManager = $this->createStub(LogManager::class);
 
         $subject = new GeneralConverter(
             $resolveForeignReference,
@@ -63,7 +65,8 @@ class GeneralConverterTest extends TestCase
             $organisationRepository,
             $townRepository,
             $parkingFacilityRepository,
-            $nameExtractor
+            $nameExtractor,
+            $logManager
         );
 
         self::assertInstanceOf(
@@ -86,7 +89,8 @@ class GeneralConverterTest extends TestCase
         $townRepository = $this->createStub(TownRepository::class);
         $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
         $nameExtractor = $this->createStub(NameExtractor::class);
-        $logger = $this->createStub(LoggerInterface::class);
+        $logManager = $this->createStub(LogManager::class);
+        $logManager->method('getLogger')->willReturn($this->createStub(Logger::class));
 
         $subject = new GeneralConverter(
             $resolveForeignReference,
@@ -95,9 +99,9 @@ class GeneralConverterTest extends TestCase
             $organisationRepository,
             $townRepository,
             $parkingFacilityRepository,
-            $nameExtractor
+            $nameExtractor,
+            $logManager
         );
-        $subject->setLogger($logger);
 
         $contentResponsible = new ForeignReference();
         $contentResponsible->setId('https://example.com/content-responsible');

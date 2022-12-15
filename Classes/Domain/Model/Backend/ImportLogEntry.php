@@ -23,90 +23,25 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-class ImportLogEntry extends Typo3AbstractEntity
+abstract class ImportLogEntry extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    abstract public function getRemoteId(): string;
+
+    abstract public function getErrors(): array;
+
+    abstract public function hasErrors(): bool;
 
     /**
-     * @var bool
+     * The type as defined within TCA.
      */
-    protected $insertion = false;
+    abstract public function getType(): string;
 
     /**
-     * @var int
+     * Return an column -> value array used for insertion into the database.
+     * Only return special for the concrete instance, or empty array.
+     * Defaults inherited by this class are already handled.
      */
-    protected $recordUid = 0;
-
-    /**
-     * @var int
-     */
-    protected $recordPid = 0;
-
-    /**
-     * @var string
-     */
-    protected $tableName = '';
-
-    /**
-     * @var string
-     */
-    protected $errors = '';
-
-    /**
-     * @var string[]
-     */
-    protected $errorsAsArray = [];
-
-    public function __construct(
-        Entity $entity,
-        array $dataHandlerErrorLog
-    ) {
-        $this->remoteId = $entity->getRemoteId();
-        $this->insertion = $entity->wasCreated();
-        $this->recordUid = $entity->getTypo3Uid();
-        $this->recordPid = $entity->getTypo3StoragePid();
-        $this->tableName = $entity->getTypo3DatabaseTableName();
-        $this->errorsAsArray = $dataHandlerErrorLog;
-    }
-
-    public function getRemoteId(): string
-    {
-        return $this->remoteId;
-    }
-
-    public function wasInsertion(): bool
-    {
-        return $this->insertion;
-    }
-
-    public function getRecordUid(): int
-    {
-        return $this->recordUid;
-    }
-
-    public function getRecordDatabaseTableName(): string
-    {
-        return $this->tableName;
-    }
-
-    public function getErrors(): array
-    {
-        if ($this->errorsAsArray === [] && $this->errors !== '') {
-            $this->errorsAsArray = json_decode($this->errors, true);
-            $this->errorsAsArray = array_unique($this->errorsAsArray);
-        }
-
-        return $this->errorsAsArray;
-    }
-
-    public function hasErrors(): bool
-    {
-        return $this->getErrors() !== [];
-    }
+    abstract public function getInsertion(): array;
 }

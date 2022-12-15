@@ -22,6 +22,18 @@ return [
     ],
     \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
+        'subclasses' => [
+            'savingEntity' => \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity::class,
+            'mappingError' => \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError::class,
+        ],
+    ],
+    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'savingEntity',
+    ],
+    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'mappingError',
     ],
     \WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',

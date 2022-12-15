@@ -1,0 +1,195 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/mapping-exception",
+            "@type": [
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:PlaceOfWorship",
+                "schema:Thing",
+                "schema:Museum",
+                "schema:TouristAttraction",
+                "schema:Synagogue",
+                "ttgds:PointOfInterest",
+                "thuecat:Building",
+                "thuecat:ReligiousBuilding",
+                "thuecat:CultureHistoricalMuseum"
+            ],
+            "schema:address": {
+                "@id": "genid-28b33237f71b41e3ad54a99e1da769b9-b0",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:PostalAddress",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:ContactPoint"
+                ],
+                "schema:addressCountry": {
+                    "@type": "thuecat:AddressCountry",
+                    "@value": "thuecat:Germany"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                "schema:addressRegion": {
+                    "@type": "thuecat:AddressFederalState",
+                    "@value": "thuecat:Thuringia"
+                },
+                "schema:email": {
+                    "@language": "de",
+                    "@value": "altesynagoge@erfurt.de"
+                },
+                "schema:faxNumber": {
+                    "@language": "de",
+                    "@value": "+49 361 6551669"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Waagegasse 8"
+                },
+                "schema:telephone": {
+                    "@language": "de",
+                    "@value": "+49 361 6551520"
+                },
+                "thuecat:typOfAddress": {
+                    "@type": "thuecat:TypOfAddress",
+                    "@value": "thuecat:HouseAddress"
+                }
+            },
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:French"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "fr",
+                    "@value": "La vieille synagogue (datant des ann\u00e9es 1100) est la synagogue la plus vieille d\u2019Europe totalement conserv\u00e9e, dans laquelle est expos\u00e9 un tr\u00e9sor datant des 13/14\u00e8mes si\u00e8cles avec une alliance juive unique et des \u00e9critures h\u00e9bra\u00efques (datant des 12\u00e8me, 13\u00e8me et 14\u00e8mes si\u00e8cles). Apr\u00e8s la red\u00e9couverte du Mikw\u00e9, Erfurt abrite des t\u00e9moins uniques et fascinants d\u2019une communaut\u00e9 juive m\u00e9di\u00e9vale. "
+                },
+                {
+                    "@language": "en",
+                    "@value": "The Old Synagogue is one of very few preserved medieval synagogues in Europe. Thanks to the extensive preservation of the original structure, it has a special place in the history of art and architecture and is among the most impressive and highly rated architectural monuments in Erfurt and Thuringia. The synagogue was constructed during the Middle Ages on the \"via regia\", one of the major European trade routes, at the heart of the historical old quarter very close to the Merchants Bridge and the town hall. Many parts of the structure still remain today, including all four thick outer walls, the Roman\u00adesque gemel window, the Gothic rose window and the entrance to the synagogue room. "
+                },
+                {
+                    "@language": "de",
+                    "@value": "Beispiel Beschreibung"
+                },
+                {
+                    "@id": "genid-28b33237f71b41e3ad54a99e1da769b9-b1",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "Mit der Alten Synagoge weist Erfurt die \u00e4lteste bis zum Dach erhaltene Synagoge in Mitteleuropa vor. Hier waren bis Ende der 90er Jahre nur die Spitzen zweier Giebel sichtbar, welche aus einem Gewirr von Anbauten herausragten. Nach dem Abriss einiger Bauten ringsum konnte ein Bauforscher klar vier Bauphasen der Synagoge unterscheiden, dessen \u00e4lteste um 1100 zu datieren ist. \n\nDer Bau von 1270, mit der heute sichtbaren Westfassade samt Ma\u00dfwerkrosette, wurde nach Norden erweitert. Brandspuren am Mauerwerk verweisen auf einen Vorg\u00e4ngerbau, der wahrscheinlich einem Pogrom zum Opfer fiel. Die Synagoge diente bis 1349 als Gotteshaus. In diesem Jahr l\u00f6schte ein barbarisches Pestpogrom die erste j\u00fcdische Gemeinde Erfurts aus. Die Stadt verkaufte das Geb\u00e4ude an einen H\u00e4ndler, der es zum Speicher umbauen lie\u00df. Dabei wurde der hohe Raum von Balkendecken unterteilt, ein breiterer Eingang an Stelle des Thoraschreins geschaffen und die Synagoge unterkellert. Im Erdgeschoss zeugen noch einige Spuren von der Erstnutzung, wie bspw. ein Lichtergesims. \n\nDas Erdgeschoss mit der wuchtigen gotischen Balkendecke und der Keller werden ebenso wie das Obergeschoss, welches von der Festkultur des 19. Jahrhunderts zeugt, museal genutzt. Wer heute den Saal betritt, der f\u00fchlt sich in die vergangene Welt von Tango und Foxtrott unter Gouvernantenaufsicht zur\u00fcckversetzt. Schablonenmalerei sowie einige Tapetenreste schm\u00fccken die W\u00e4nde. \nIm Erdgeschoss wird die Baugeschichte thematisiert, der Keller ist dem Erfurter Schatz aus M\u00fcnzen, Gef\u00e4\u00dfen, gotischem Schmuck und dem j\u00fcdischen Hochzeitsring vorbehalten. \n\nIm Saal zeigt das Haus eine Sammlung von hebr\u00e4ischen Handschriften, welche der Erfurter Gemeinde geh\u00f6rten. Diese Hebraica werden heute in der Staatsbibliothek Berlin aufbewahrt. Abwechselnd k\u00f6nnen sie in Erfurt als Original oder Faksimile bestaunt werden. \n\nMit der Alten Synagoge und einer 2007 an der Kr\u00e4merbr\u00fccke gefundenen Mikwe aus der Gotik, deren wissenschaftliche Erforschung noch andauert, kann Erfurt einmalige und faszinierende Zeugnisse der noch wenig bekannten Geschichte einer mittelalterlichen Gemeinde vorweisen."
+                    }
+                },
+                {
+                    "@id": "genid-28b33237f71b41e3ad54a99e1da769b9-b2",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "La vieille synagogue (datant des ann\u00e9es 1100) est la synagogue la plus vieille d\u2019Europe totalement conserv\u00e9e, dans laquelle est expos\u00e9 un tr\u00e9sor datant des 13/14\u00e8mes si\u00e8cles avec une alliance juive unique et des \u00e9critures h\u00e9bra\u00efques (datant des 12\u00e8me, 13\u00e8me et 14\u00e8mes si\u00e8cles). Apr\u00e8s la red\u00e9couverte du Mikw\u00e9, Erfurt abrite des t\u00e9moins uniques et fascinants d\u2019une communaut\u00e9 juive m\u00e9di\u00e9vale. "
+                    }
+                },
+                {
+                    "@id": "genid-28b33237f71b41e3ad54a99e1da769b9-b3",
+                    "@type": [
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "The Old Synagogue is one of very few preserved medieval synagogues in Europe. Thanks to the extensive preservation of the original structure, it has a special place in the history of art and architecture and is among the most impressive and highly rated architectural monuments in Erfurt and Thuringia. The synagogue was constructed during the Middle Ages on the \"via regia\", one of the major European trade routes, at the heart of the historical old quarter very close to the Merchants Bridge and the town hall. Many parts of the structure still remain today, including all four thick outer walls, the Roman\u00adesque gemel window, the Gothic rose window and the entrance to the synagogue room. "
+                    }
+                }
+            ],
+            "schema:identifier": {
+                "@type": "schema:URL",
+                "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/alte-synagoge-erfurt-115157.html"
+            },
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Alte Synagoge"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "La vieille synagogue"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Old Synagogue"
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "http://www.alte-synagoge.erfurt.de"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "schema:openingHoursSpecification": {
+                "@id": "genid-28b33237f71b41e3ad54a99e1da769b9-b13",
+                "@type": [
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:Thing",
+                    "schema:OpeningHoursSpecification"
+                ],
+                "schema:closes": {
+                    "@type": "schema:Time",
+                    "@value": "18:00: 00"
+                },
+                "schema:dayOfWeek": [
+                    {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Wednesday"
+                    }
+                ],
+                "schema:opens": {
+                    "@type": "schema:Time",
+                    "@value": "10:00:00"
+                },
+                "schema:validFrom": {
+                    "@type": "schema:Date",
+                    "@value": "2021-03-01"
+                },
+                "schema:validThrough": {
+                    "@type": "schema:Date",
+                    "@value": "2099-12-31"
+                }
+            }
+        }
+    ]
+}

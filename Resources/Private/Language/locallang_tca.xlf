@@ -265,6 +265,18 @@
             <trans-unit id="tx_thuecat_import_log_entry" xml:space="preserve">
                 <source>Import Log Entry</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type" xml:space="preserve">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.savingEntity" xml:space="preserve">
+                <source>Saved Entity</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.mappingError" xml:space="preserve">
+                <source>Mapping Error</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.remote_id" xml:space="preserve">
+                <source>Remote ID (URL)</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.insertion" xml:space="preserve">
                 <source>Was inserted or updated</source>
             </trans-unit>

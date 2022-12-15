@@ -48,4 +48,9 @@ class MappingException extends \Exception
         $this->jsonLD = $jsonLD;
         $this->targetClassName = $targetClassName;
     }
+
+    public function getUrl(): string
+    {
+        return $this->jsonLD['@id'] ?? 'unknown';
+    }
 }

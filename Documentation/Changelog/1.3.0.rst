@@ -17,6 +17,11 @@ Features
   This allows to provide a single entity, e.g. a Town that has multiple ``schema:containsPlace`` entries.
   Each of them will be imported.
 
+* Import will no longer break on mapping issues.
+  Those will be logged and are available within the existing backend module.
+  This allows to skip some objects which can not be handled yet.
+  The log can be used to open issues. We then can improve the mapping.
+
 * Import author of media. This allows to either render the license author or the author.
 
 * Filter and sort opening hours.
