@@ -42,6 +42,10 @@ class TouristAttractionTest extends TestCase
         $unsortedFacilities->attach($this->parkingFacilityWithTitle('P+R Anlage Zoopark'));
         $unsortedFacilities->attach($this->parkingFacilityWithTitle('Parkhaus Domplatz'));
         $unsortedFacilities->attach($this->parkingFacilityWithTitle('007 Parking'));
+        $unsortedFacilities->attach($this->parkingFacilityWithTitle('Parkplatz Forum 4'));
+        $unsortedFacilities->attach($this->parkingFacilityWithTitle('Parkplatz Forum 2/3'));
+        $unsortedFacilities->attach($this->parkingFacilityWithTitle('Parkplatz Forum 1'));
+        $unsortedFacilities->attach($this->parkingFacilityWithTitle('Parkplatz Forum 2'));
 
         $subject = new TouristAttraction();
         $subject->_setProperty('parkingFacilityNearBy', $unsortedFacilities);
@@ -50,6 +54,10 @@ class TouristAttractionTest extends TestCase
         self::assertSame('007 Parking', $result[0]->getTitle());
         self::assertSame('P+R Anlage Zoopark', $result[1]->getTitle());
         self::assertSame('Parkhaus Domplatz', $result[2]->getTitle());
+        self::assertSame('Parkplatz Forum 1', $result[3]->getTitle());
+        self::assertSame('Parkplatz Forum 2', $result[4]->getTitle());
+        self::assertSame('Parkplatz Forum 2/3', $result[5]->getTitle());
+        self::assertSame('Parkplatz Forum 4', $result[6]->getTitle());
     }
 
     private function parkingFacilityWithTitle(string $title): ParkingFacility
