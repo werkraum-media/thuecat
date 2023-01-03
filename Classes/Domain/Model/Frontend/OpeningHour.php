@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use WerkraumMedia\ThueCat\Domain\TimingFormat;
+
 class OpeningHour
 {
     /**
@@ -91,12 +93,12 @@ class OpeningHour
 
     public function getOpens(): string
     {
-        return $this->formatTiming($this->opens);
+        return TimingFormat::format($this->opens);
     }
 
     public function getCloses(): string
     {
-        return $this->formatTiming($this->closes);
+        return TimingFormat::format($this->closes);
     }
 
     public function getDaysOfWeek(): array
@@ -157,36 +159,5 @@ class OpeningHour
         }
 
         return $days;
-    }
-
-    /**
-     * Returns timing in default format.
-     *
-     * @return string
-     */
-    private function formatTiming(string $timing): string
-    {
-        $parts = $this->getTimingParts($timing);
-
-        if ($parts['hour'] === '' || $parts['minutes'] === '') {
-            return '';
-        }
-
-        return $parts['hour'] . ':' . $parts['minutes'];
-    }
-
-    /**
-     * Converts the string representationg of a time HH:MM:SS into an array.
-     *
-     * @return string[]
-     */
-    private function getTimingParts(string $string): array
-    {
-        $parts = explode(':', $string);
-        return [
-            'hour' => $parts[0] ?? '',
-            'minutes' => $parts[1] ?? '',
-            'seconds' => $parts[2] ?? '',
-        ];
     }
 }

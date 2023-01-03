@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHour;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHours;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 /**
  * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction
@@ -99,5 +104,191 @@ class TouristAttractionTest extends TestCase
                 'CityBus',
             ],
         ], $subject->getDistanceToPublicTransport());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsMergedOpeningHours(): void
+    {
+        GeneralUtility::addInstance(DateBasedFilter::class, new class implements DateBasedFilter {
+            public function filterOutPreviousDates(
+                array $listToFilter,
+                callable $provideDate
+            ): array {
+                return $listToFilter;
+            }
+        });
+
+        $openingHours = new OpeningHours(json_encode([
+            [
+                'opens' => '12:00',
+                'closes' => '14:00',
+                'daysOfWeek' => [
+                    'Sunday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                ],
+            ],
+            [
+                'opens' => '10:00',
+                'closes' => '16:00',
+                'daysOfWeek' => [
+                    'Monday',
+                    'Tuesday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                ],
+            ],
+            [
+                'opens' => '13:00',
+                'closes' => '15:00',
+                'daysOfWeek' => [
+                    'Saturday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+3 days')->format('U'),
+                ],
+            ],
+        ]) ?: '');
+
+        $subject = new TouristAttraction();
+        $subject->_setProperty('openingHours', $openingHours);
+
+        $result = $subject->getMergedOpeningHours();
+        self::assertInstanceOf(MergedOpeningHours::class, $result);
+        self::assertCount(2, $result);
+        foreach ($result as $index => $mergedHour) {
+            self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
+            $today = (new \DateTimeImmutable())->format('Y-m-d');
+            $inTwoDays = (new \DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
+            $inThreeDays = (new \DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
+
+            if ($index === 0) {
+                self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');
+                self::assertSame($inTwoDays, $mergedHour->getThrough() ? $mergedHour->getThrough()->format('Y-m-d') : '');
+                self::assertCount(3, $mergedHour->getWeekDays());
+                self::assertSame('Sunday', $mergedHour->getWeekDays()[0]->getDayOfWeek());
+                self::assertSame('12:00', $mergedHour->getWeekDays()[0]->getOpens());
+                self::assertSame('14:00', $mergedHour->getWeekDays()[0]->getCloses());
+                self::assertSame('Monday', $mergedHour->getWeekDays()[1]->getDayOfWeek());
+                self::assertSame('10:00', $mergedHour->getWeekDays()[1]->getOpens());
+                self::assertSame('16:00', $mergedHour->getWeekDays()[1]->getCloses());
+                self::assertSame('Tuesday', $mergedHour->getWeekDays()[2]->getDayOfWeek());
+                self::assertSame('10:00', $mergedHour->getWeekDays()[2]->getOpens());
+                self::assertSame('16:00', $mergedHour->getWeekDays()[2]->getCloses());
+            } elseif ($index === 1) {
+                self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');
+                self::assertSame($inThreeDays, $mergedHour->getThrough() ? $mergedHour->getThrough()->format('Y-m-d') : '');
+                self::assertCount(1, $mergedHour->getWeekDays());
+                self::assertSame('Saturday', $mergedHour->getWeekDays()[0]->getDayOfWeek());
+                self::assertSame('13:00', $mergedHour->getWeekDays()[0]->getOpens());
+                self::assertSame('15:00', $mergedHour->getWeekDays()[0]->getCloses());
+            }
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function returnsMergedSpecialOpeningHours(): void
+    {
+        GeneralUtility::addInstance(DateBasedFilter::class, new class implements DateBasedFilter {
+            public function filterOutPreviousDates(
+                array $listToFilter,
+                callable $provideDate
+            ): array {
+                return $listToFilter;
+            }
+        });
+
+        $openingHours = new OpeningHours(json_encode([
+            [
+                'opens' => '12:00',
+                'closes' => '14:00',
+                'daysOfWeek' => [
+                    'Sunday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                ],
+            ],
+            [
+                'opens' => '10:00',
+                'closes' => '16:00',
+                'daysOfWeek' => [
+                    'Monday',
+                    'Tuesday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                ],
+            ],
+            [
+                'opens' => '13:00',
+                'closes' => '15:00',
+                'daysOfWeek' => [
+                    'Saturday',
+                ],
+                'from' => [
+                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                ],
+                'through' => [
+                    'date' => '@' . (new \DateTimeImmutable())->modify('+3 days')->format('U'),
+                ],
+            ],
+        ]) ?: '');
+
+        $subject = new TouristAttraction();
+        $subject->_setProperty('specialOpeningHours', $openingHours);
+
+        $result = $subject->getMergedSpecialOpeningHours();
+        self::assertInstanceOf(MergedOpeningHours::class, $result);
+        self::assertCount(2, $result);
+        foreach ($result as $index => $mergedHour) {
+            self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
+            $today = (new \DateTimeImmutable())->format('Y-m-d');
+            $inTwoDays = (new \DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
+            $inThreeDays = (new \DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
+
+            if ($index === 0) {
+                self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');
+                self::assertSame($inTwoDays, $mergedHour->getThrough() ? $mergedHour->getThrough()->format('Y-m-d') : '');
+                self::assertCount(3, $mergedHour->getWeekDaysWithMondayFirstWeekDay());
+                self::assertSame('Monday', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getDayOfWeek());
+                self::assertSame('10:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getOpens());
+                self::assertSame('16:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getCloses());
+                self::assertSame('Tuesday', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[1]->getDayOfWeek());
+                self::assertSame('10:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[1]->getOpens());
+                self::assertSame('16:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[1]->getCloses());
+                self::assertSame('Sunday', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[2]->getDayOfWeek());
+                self::assertSame('12:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[2]->getOpens());
+                self::assertSame('14:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[2]->getCloses());
+            } elseif ($index === 1) {
+                self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');
+                self::assertSame($inThreeDays, $mergedHour->getThrough() ? $mergedHour->getThrough()->format('Y-m-d') : '');
+                self::assertCount(1, $mergedHour->getWeekDaysWithMondayFirstWeekDay());
+                self::assertSame('Saturday', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getDayOfWeek());
+                self::assertSame('13:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getOpens());
+                self::assertSame('15:00', $mergedHour->getWeekDaysWithMondayFirstWeekDay()[0]->getCloses());
+            }
+        }
     }
 }

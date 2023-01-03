@@ -21,17 +21,38 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Service;
+namespace WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
-interface DateBasedFilter
+use TYPO3\CMS\Core\Context\Context;
+use WerkraumMedia\ThueCat\Service\DateBasedFilter;
+
+class FilterBasedOnTypo3Context implements DateBasedFilter
 {
+    /**
+     * @var Context
+     */
+    private $context;
+
+    public function __construct(
+        Context $context
+    ) {
+        $this->context = $context;
+    }
+
     /**
      * Filters out all objects where the date is prior the reference date.
      *
-     * The reference date depends on implementation.
+     * The reference date is now.
      */
     public function filterOutPreviousDates(
         array $listToFilter,
         callable $provideDate
-    ): array;
+    ): array {
+        $referenceDate = $this->context->getPropertyFromAspect('date', 'full', new \DateTimeImmutable());
+
+        return array_filter($listToFilter, function($elementToFilter) use ($referenceDate, $provideDate) {
+            $objectDate = $provideDate($elementToFilter);
+            return $objectDate === null || $objectDate >= $referenceDate;
+        });
+    }
 }
