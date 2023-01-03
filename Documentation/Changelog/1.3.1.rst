@@ -1,0 +1,29 @@
+1.3.1
+=====
+
+Breaking
+--------
+
+Nothing
+
+Features
+--------
+
+* Configure EXT:scheduler table garbage collection task to clean up import records.
+  It is now possible to select the tables within the TYPO3 scheduler task to be cleaned up.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+
