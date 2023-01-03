@@ -1,0 +1,57 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/image-with-foreign-author",
+            "@type": [
+                "schema:CreativeWork",
+                "schema:MediaObject",
+                "schema:Thing",
+                "schema:ImageObject",
+                "http://purl.org/dc/dcmitype/Image"
+            ],
+            "schema:license": {
+                "@language": "de",
+                "@value": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Bild mit license author"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Image with license author"
+                }
+            ],
+            "schema:url": {
+                "@type": "xsd:anyURI",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image"
+            },
+            "thuecat:licenseAuthor": [
+                {
+                    "@language": "de",
+                    "@value": "Autor aus Lizenz"
+                },
+                {
+                    "@language": "en",
+                    "@value": "License Author"
+                }
+            ]
+        }
+    ]
+}

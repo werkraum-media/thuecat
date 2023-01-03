@@ -41,7 +41,7 @@ class Media implements TypeInterface
     {
         $this->serialized = $serialized;
         $data = json_decode($serialized, true);
-        $this->data = is_array($data) ? $data : [];
+        $this->data = $this->prepareData(is_array($data) ? $data : []);
     }
 
     public function getMainImage(): array
@@ -76,5 +76,17 @@ class Media implements TypeInterface
     public function __toString(): string
     {
         return $this->serialized;
+    }
+
+    private function prepareData(array $data): array
+    {
+        return array_map(function (array $media) {
+            $copyrightAuthor = $media['author'] ?? $media['license']['author'] ?? '';
+
+            if ($copyrightAuthor) {
+                $media['copyrightAuthor'] = $copyrightAuthor;
+            }
+            return $media;
+        }, $data);
     }
 }

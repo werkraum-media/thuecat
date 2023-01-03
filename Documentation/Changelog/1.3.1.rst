@@ -12,6 +12,12 @@ Features
 * Configure EXT:scheduler table garbage collection task to clean up import records.
   It is now possible to select the tables within the TYPO3 scheduler task to be cleaned up.
 
+* Respect ``schema:givenName`` and ``schema:familyName`` of ``schema:author`` for media.
+  We only respected ``schema:name`` until now.
+
+* Provide new key ``copyrightAuthor`` holding the actual author for convenience.
+  It will pick the ``author`` value falling back to ``license.author``.
+
 Fixes
 -----
 
