@@ -101,4 +101,132 @@ class MediaTest extends TestCase
             ],
         ], $subject->getExtraImages());
     }
+
+    /**
+     * @test
+     */
+    public function doesNotAddCopyrightAuthorIfItDoesntExist(): void
+    {
+        $subject = new Media(json_encode([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom und Severikirche-beleuchtet.jpg',
+            ],
+        ]) ?: '');
+
+        self::assertArrayNotHasKey(
+            'copyrightAuthor',
+            $subject->getExtraImages()[0]
+        );
+        self::assertArrayNotHasKey(
+            'copyrightAuthor',
+            $subject->getExtraImages()[1]
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addsCopyrightAuthorFromLicenseAuthor(): void
+    {
+        $subject = new Media(json_encode([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+                'license' => [
+                    'author' => 'Full Name 1',
+                ],
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom und Severikirche-beleuchtet.jpg',
+                'license' => [
+                    'author' => 'Full Name 2',
+                ],
+            ],
+        ]) ?: '');
+
+        self::assertSame(
+            'Full Name 1',
+            $subject->getExtraImages()[0]['copyrightAuthor']
+        );
+        self::assertSame(
+            'Full Name 2',
+            $subject->getExtraImages()[1]['copyrightAuthor']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addsCopyrightAuthorFromAuthor(): void
+    {
+        $subject = new Media(json_encode([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+                'author' => 'Full Name 1',
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom und Severikirche-beleuchtet.jpg',
+                'author' => 'Full Name 2',
+            ],
+        ]) ?: '');
+
+        self::assertSame(
+            'Full Name 1',
+            $subject->getExtraImages()[0]['copyrightAuthor']
+        );
+        self::assertSame(
+            'Full Name 2',
+            $subject->getExtraImages()[1]['copyrightAuthor']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function addsCopyrightAuthorFromAuthorWithHigherPrio(): void
+    {
+        $subject = new Media(json_encode([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+                'author' => 'Full Name 1',
+                'license' => [
+                    'author' => 'Full Name 1 license',
+                ],
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom und Severikirche-beleuchtet.jpg',
+                'author' => 'Full Name 2',
+                'license' => [
+                    'author' => 'Full Name 2 license',
+                ],
+            ],
+        ]) ?: '');
+
+        self::assertSame(
+            'Full Name 1',
+            $subject->getExtraImages()[0]['copyrightAuthor']
+        );
+        self::assertSame(
+            'Full Name 2',
+            $subject->getExtraImages()[1]['copyrightAuthor']
+        );
+    }
 }

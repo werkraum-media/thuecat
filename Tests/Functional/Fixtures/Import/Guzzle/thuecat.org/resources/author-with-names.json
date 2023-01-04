@@ -1,0 +1,54 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/author-with-names",
+            "@type": [
+                "schema:Thing",
+                "schema:Person",
+                "foaf:Person",
+                "thuecat:Author",
+                "ttgds:Author"
+            ],
+            "schema:familyName": {
+                "@language": "de",
+                "@value": "FamilyName"
+            },
+            "schema:givenName": {
+                "@language": "de",
+                "@value": "GivenName"
+            },
+            "schema:honorificPrefix": {
+                "@type": "thuecat:HonorificPrefix",
+                "@value": "thuecat:Mr"
+            },
+            "schema:jobTitle": {
+                "@type": "thuecat:Profession",
+                "@value": "thuecat:Photographer"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Name"
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://www.example.com/"
+            }
+        }
+    ]
+}

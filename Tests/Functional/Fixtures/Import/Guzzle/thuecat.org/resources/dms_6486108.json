@@ -26,7 +26,8 @@
                 "http://purl.org/dc/dcmitype/Image"
             ],
             "schema:author": {
-                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+                "@type": "xsd:string",
+                "@value": "Florian Trykowski"
             },
             "schema:bitrate": {
                 "@type": "xsd:string",

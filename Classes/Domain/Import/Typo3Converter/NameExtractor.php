@@ -50,13 +50,24 @@ class NameExtractor
             return $foreignReference;
         }
 
-        if ($foreignReference instanceof ForeignReference) {
-            $remote = $this->resolveForeignReference->resolve($foreignReference, $language);
-            if (is_object($remote) && method_exists($remote, 'getName')) {
-                return $remote->getName();
-            }
+        if (!$foreignReference instanceof ForeignReference) {
+            return '';
         }
 
-        return '';
+        $remote = $this->resolveForeignReference->resolve($foreignReference, $language);
+        if (is_object($remote) === false) {
+            return '';
+        }
+
+        $name = '';
+        if (method_exists($remote, 'getGivenName') && method_exists($remote, 'getFamilyName')) {
+            $name = trim($remote->getGivenName() . ' ' . $remote->getFamilyName());
+        }
+
+        if ($name === '' && method_exists($remote, 'getName')) {
+            $name = trim($remote->getName());
+        }
+
+        return $name;
     }
 }
