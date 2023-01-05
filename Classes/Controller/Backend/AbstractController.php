@@ -25,8 +25,6 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
-use WerkraumMedia\ThueCat\View\Backend\Menu;
 
 abstract class AbstractController extends ActionController
 {
@@ -43,17 +41,4 @@ abstract class AbstractController extends ActionController
      * @var string
      */
     protected $defaultViewObjectName = BackendTemplateView::class;
-
-    protected function initializeView(ViewInterface $view): void
-    {
-        if ($view instanceof BackendTemplateView) {
-            $this->getMenu()->addMenu(
-                $view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry(),
-                $this->uriBuilder,
-                get_class($this)
-            );
-        }
-    }
-
-    abstract protected function getMenu(): Menu;
 }

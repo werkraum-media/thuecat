@@ -51,17 +51,43 @@ class Extension
     {
         ExtensionUtility::registerModule(
             self::EXTENSION_NAME,
-            'site',
             'thuecat',
+            '',
+            '',
+            [],
+            [
+                'access' => 'user,group',
+                'icon' => self::getIconPath() . 'ModuleGroup.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
+            ]
+        );
+        ExtensionUtility::registerModule(
+            self::EXTENSION_NAME,
+            'thuecat',
+            'configurations',
             '',
             [
                 OverviewController::class => 'index',
-                ImportController::class => 'import, index',
+                ImportController::class => 'import',
             ],
             [
                 'access' => 'user,group',
-                'icon' => self::getIconPath() . 'Extension.svg',
-                'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
+                'icon' => self::getIconPath() . 'ModuleConfigurations.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod_configurations.xlf',
+            ]
+        );
+        ExtensionUtility::registerModule(
+            self::EXTENSION_NAME,
+            'thuecat',
+            'imports',
+            '',
+            [
+                ImportController::class => 'index',
+            ],
+            [
+                'access' => 'user,group',
+                'icon' => self::getIconPath() . 'ModuleImports.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod_imports.xlf',
             ]
         );
     }

@@ -4,7 +4,9 @@
 Breaking
 --------
 
-Nothing
+* Permissions of backend modules.
+  The modules got new identifiers. User permissions need to be adjusted.
+  An update wizard is provided that will migrate the permissions.
 
 Features
 --------

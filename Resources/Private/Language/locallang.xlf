@@ -31,7 +31,7 @@
                 <source>Actions</source>
             </trans-unit>
             <trans-unit id="module.overview.headline" xml:space="preserve">
-                <source>ThüCAT - Overview</source>
+                <source>ThüCAT - Configurations</source>
             </trans-unit>
 
             <trans-unit id="module.importConfigurations.headline" xml:space="preserve">

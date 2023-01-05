@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
-use WerkraumMedia\ThueCat\View\Backend\Menu;
 
 class OverviewController extends AbstractController
 {
@@ -39,19 +38,12 @@ class OverviewController extends AbstractController
      */
     private $importConfigurationRepository;
 
-    /**
-     * @var Menu
-     */
-    private $menu;
-
     public function __construct(
         OrganisationRepository $organisationRepository,
-        ImportConfigurationRepository $importConfigurationRepository,
-        Menu $menu
+        ImportConfigurationRepository $importConfigurationRepository
     ) {
         $this->organisationRepository = $organisationRepository;
         $this->importConfigurationRepository = $importConfigurationRepository;
-        $this->menu = $menu;
     }
 
     public function indexAction(): void
@@ -60,10 +52,5 @@ class OverviewController extends AbstractController
             'importConfigurations' => $this->importConfigurationRepository->findAll(),
             'organisations' => $this->organisationRepository->findAll(),
         ]);
-    }
-
-    protected function getMenu(): Menu
-    {
-        return $this->menu;
     }
 }
