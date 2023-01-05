@@ -54,6 +54,19 @@ Features
   ``Streetcar``.
   These can be used with ``f:translate`` ViewHelper to provide proper none technical labels.
 
+* Configure EXT:scheduler table garbage collection task to clean up import records.
+  It is now possible to select the tables within the TYPO3 scheduler task to be cleaned up.
+
+* Respect ``schema:givenName`` and ``schema:familyName`` of ``schema:author`` for media.
+  We only respected ``schema:name`` until now.
+
+* Provide new key ``copyrightAuthor`` holding the actual author for convenience.
+  It will pick the ``author`` value falling back to ``license.author``.
+
+* Provide new method to retrieve merged opening hours and merged special opening hours.
+  The merge happens on the valid time span of each.
+  The data structure is a bit different as different hours will be merged.
+
 Fixes
 -----
 

@@ -75,6 +75,53 @@ class OpeningHours implements TypeInterface, \Iterator, \Countable
         return array_values($array);
     }
 
+    public function getMerged(): MergedOpeningHours
+    {
+        $weekDaysPerTimeSpan = [];
+        foreach ($this as $hour) {
+            $key = $this->buildKey($hour);
+            if (isset($weekDaysPerTimeSpan[$key]) === false) {
+                $weekDaysPerTimeSpan[$key] = [
+                    'from' => $hour->getFrom(),
+                    'through' => $hour->getThrough(),
+                    'weekDays' => [],
+                ];
+            }
+
+            $weekDays = array_map(function (string $dayOfWeek) use ($hour) {
+                return new MergedOpeningHourWeekDay(
+                    $hour->getOpens(),
+                    $hour->getCloses(),
+                    $dayOfWeek
+                );
+            }, $hour->getDaysOfWeek());
+            $weekDaysPerTimeSpan[$key]['weekDays'] = array_merge($weekDaysPerTimeSpan[$key]['weekDays'], $weekDays);
+        }
+
+        $mergedOpeningHours = array_map(function (array $timeSpan) {
+            return new MergedOpeningHour(
+                $timeSpan['weekDays'],
+                $timeSpan['from'],
+                $timeSpan['through']
+            );
+        }, $weekDaysPerTimeSpan);
+
+        return new MergedOpeningHours($mergedOpeningHours);
+    }
+
+    private function buildKey(OpeningHour $hour): string
+    {
+        $start = '';
+        if ($hour->getFrom()) {
+            $start = $hour->getFrom()->format('d.m.Y');
+        }
+        $end = '';
+        if ($hour->getThrough()) {
+            $end = $hour->getThrough()->format('d.m.Y');
+        }
+        return $start . '-' . $end;
+    }
+
     public function __toString(): string
     {
         return $this->serialized;

@@ -103,9 +103,25 @@ abstract class Place extends Base
         return $this->openingHours;
     }
 
+    public function getMergedOpeningHours(): ?MergedOpeningHours
+    {
+        if ($this->openingHours === null) {
+            return null;
+        }
+        return $this->openingHours->getMerged();
+    }
+
     public function getSpecialOpeningHours(): ?OpeningHours
     {
         return $this->specialOpeningHours;
+    }
+
+    public function getMergedSpecialOpeningHours(): ?MergedOpeningHours
+    {
+        if ($this->specialOpeningHours === null) {
+            return null;
+        }
+        return $this->specialOpeningHours->getMerged();
     }
 
     public function getParkingFacilitiesNearBy(): ObjectStorage

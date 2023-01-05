@@ -17,6 +17,7 @@ services:
     public: true
 
   WerkraumMedia\ThueCat\Service\DateBasedFilter:
+    class: 'WerkraumMedia\ThueCat\Service\DateBasedFilter\FilterBasedOnTypo3Context'
     public: true
 
   'cache.thuecat_fetchdata':
