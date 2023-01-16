@@ -66,11 +66,22 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     /**
      * @var string[]
      */
-    protected $allowedTypes = [];
+    private $allowedTypes = [];
+
+    /**
+     * @var RequestedImportType
+     */
+    private $requestedImportType = null;
 
     public function __construct()
     {
+        $this->initializeObject();
+    }
+
+    public function initializeObject(): void
+    {
         $this->logs = new ObjectStorage();
+        $this->requestedImportType = new RequestedImportType();
     }
 
     public function getTitle(): string
@@ -142,6 +153,11 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return $this->allowedTypes;
     }
 
+    public function getRequestedImportType(): RequestedImportType
+    {
+        return $this->requestedImportType;
+    }
+
     public function getSyncScopeId(): string
     {
         return $this->getConfigurationValueFromFlexForm('syncScopeId');
@@ -181,12 +197,14 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     public static function createFromBaseWithForeignReferences(
         self $base,
         array $foreignReferences,
-        array $allowedTypes = []
+        array $allowedTypes = [],
+        string $requestedImportType = ''
     ): self {
         $configuration = clone $base;
         $configuration->urls = ResolveForeignReference::convertToRemoteIds($foreignReferences);
         $configuration->type = 'static';
         $configuration->allowedTypes = $allowedTypes;
+        $configuration->requestedImportType = new RequestedImportType($requestedImportType);
         return $configuration;
     }
 

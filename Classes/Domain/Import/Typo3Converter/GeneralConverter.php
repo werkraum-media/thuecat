@@ -46,6 +46,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\RequestedImportType;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ParkingFacilityRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
@@ -107,6 +108,14 @@ class GeneralConverter implements Converter
         TouristInformation::class => 'tx_thuecat_tourist_information',
         TouristMarketingCompany::class => 'tx_thuecat_organisation',
         Organisation::class => 'tx_thuecat_organisation',
+    ];
+
+    /**
+     * @var string[]
+     */
+    private $tablesAllowedWithoutManager = [
+        'tx_thuecat_organisation',
+        'tx_thuecat_town',
     ];
 
     public function __construct(
@@ -200,8 +209,11 @@ class GeneralConverter implements Converter
             return false;
         }
 
-        if ($tableName !== 'tx_thuecat_organisation' && $this->getManagerUid($entity) === '') {
-            $this->logger->info('Skipped conversion of entity, is not an organisation and no manager was available', [
+        if (
+            in_array($tableName, $this->tablesAllowedWithoutManager) === false
+            && $this->getManagerUid($entity) === ''
+        ) {
+            $this->logger->info('Skipped conversion of entity, is not an record type that is allowed without manager and no manager was available', [
                 'remoteId' => $entity->getId(),
             ]);
             return false;
@@ -259,19 +271,28 @@ class GeneralConverter implements Converter
         ];
     }
 
-    private function getManagerUid(object $entity): string
+    private function getManagerUid(Minimum $entity): string
     {
+        if ($this->importConfiguration->getRequestedImportType()->equals(RequestedImportType::MANAGER)) {
+            $this->logger->info('Skipped fetching manager uid. We already try to import a manager and do not import managers for managers.', ['url' => $entity->getId()]);
+            return '';
+        }
+
         if (
             method_exists($entity, 'getManagedBy') === false
             || !$entity->getManagedBy() instanceof ForeignReference
         ) {
+            $this->logger->info('Skipped fetching manager uid. The entity did not provide a getManagedBy method or the method did not return a ForeignReference.', ['url' => $entity->getId()]);
             return '';
         }
 
+        $this->logger->info('Start import for manager.', ['urls' => ResolveForeignReference::convertToRemoteIds([$entity->getManagedBy()])]);
         $this->importer->importConfiguration(
             ImportConfiguration::createFromBaseWithForeignReferences(
                 $this->importConfiguration,
-                [$entity->getManagedBy()]
+                [$entity->getManagedBy()],
+                [],
+                RequestedImportType::MANAGER
             )
         );
         $manager = $this->organisationRepository->findOneByRemoteId(
@@ -281,20 +302,27 @@ class GeneralConverter implements Converter
         return $manager ? (string)$manager->getUid() : '';
     }
 
-    private function getTownUid(object $entity): string
+    private function getTownUid(Minimum $entity): string
     {
+        if ($this->importConfiguration->getRequestedImportType()->equals(RequestedImportType::TOWN)) {
+            $this->logger->info('Skipped fetching town uid. We already try to import a town and do not import town for town.', ['url' => $entity->getId()]);
+            return '';
+        }
         if (
             $entity instanceof Town
             || method_exists($entity, 'getContainedInPlaces') === false
         ) {
+            $this->logger->info('Skipped fetching town uid. The entity did not provide a getContainedInPlaces method or was a town itself.', ['url' => $entity->getId()]);
             return '';
         }
 
+        $this->logger->info('Start import for town.', ['urls' => ResolveForeignReference::convertToRemoteIds($entity->getContainedInPlaces())]);
         $this->importer->importConfiguration(
             ImportConfiguration::createFromBaseWithForeignReferences(
                 $this->importConfiguration,
                 $entity->getContainedInPlaces(),
-                ['thuecat:Town']
+                ['thuecat:Town'],
+                RequestedImportType::TOWN
             )
         );
         $town = $this->townRepository->findOneByEntity($entity);
@@ -307,6 +335,7 @@ class GeneralConverter implements Converter
             return [];
         }
 
+        $this->logger->info('Start import for parking facilities near by.', ['urls' => ResolveForeignReference::convertToRemoteIds($entity->getParkingFacilitiesNearBy())]);
         $this->importer->importConfiguration(
             ImportConfiguration::createFromBaseWithForeignReferences(
                 $this->importConfiguration,
@@ -320,7 +349,7 @@ class GeneralConverter implements Converter
     }
 
     private function getAccessibilitySpecification(
-        object $entity,
+        Minimum $entity,
         string $language
     ): string {
         if (

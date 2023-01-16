@@ -1,0 +1,13 @@
+TYPO3 11.5
+==========
+
+Changes that should happen once we drop TYPO3 11.5.
+
+Remove ``initializeObject()`` methods
+-------------------------------------
+
+Those are necessary prior v12 in order to properly initialize none re-constructed
+data within Extbase models.
+This vanished with v12 where ``makeInstance()`` is used which will call the ``__construct()`` method.
+
+The content of the method should move to ``__construct()`` and the method should be removed.

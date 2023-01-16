@@ -143,13 +143,14 @@ class Importer
         }
 
         foreach ($urlProvider->getUrls() as $url) {
+            $this->logger->info('Process url.', ['url' => $url]);
             $this->importResourceByUrl($url);
+            $this->logger->info('Finished url.', ['url' => $url]);
         }
     }
 
     private function importResourceByUrl(string $url): void
     {
-        $this->logger->info('Process url.', ['url' => $url]);
         if ($this->import->handledRemoteId($url)) {
             $this->logger->notice('Skip Url as we already handled it during import.', ['url' => $url]);
             return;
