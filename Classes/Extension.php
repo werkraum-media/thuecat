@@ -29,8 +29,8 @@ use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use WerkraumMedia\ThueCat\Controller\Backend\ConfigurationController;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
-use WerkraumMedia\ThueCat\Controller\Backend\OverviewController;
 
 class Extension
 {
@@ -67,7 +67,7 @@ class Extension
             'configurations',
             '',
             [
-                OverviewController::class => 'index',
+                ConfigurationController::class => 'index',
                 ImportController::class => 'import',
             ],
             [
@@ -82,7 +82,7 @@ class Extension
             'imports',
             '',
             [
-                ImportController::class => 'index',
+                ImportController::class => 'index,import',
             ],
             [
                 'access' => 'user,group',

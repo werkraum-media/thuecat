@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
-class OverviewController extends AbstractController
+class ConfigurationController extends AbstractController
 {
     /**
      * @var OrganisationRepository

@@ -78,7 +78,7 @@ class ImportController extends AbstractController
             $this->createImportDoneFlashMessage($importConfiguration);
         }
 
-        $this->redirect('index', 'Backend\Overview');
+        $this->redirect('index', 'Backend\Configuration');
     }
 
     private function createImportErrorFlashMessage(ImportConfiguration $importConfiguration): void
