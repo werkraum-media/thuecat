@@ -30,7 +30,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
-use WerkraumMedia\ThueCat\View\Backend\Menu;
 
 class ImportController extends AbstractController
 {
@@ -49,21 +48,14 @@ class ImportController extends AbstractController
      */
     private $translation;
 
-    /**
-     * @var Menu
-     */
-    private $menu;
-
     public function __construct(
         Importer $importer,
         ImportLogRepository $repository,
-        TranslationService $translation,
-        Menu $menu
+        TranslationService $translation
     ) {
         $this->importer = $importer;
         $this->repository = $repository;
         $this->translation = $translation;
-        $this->menu = $menu;
     }
 
     public function indexAction(): void
@@ -86,12 +78,7 @@ class ImportController extends AbstractController
             $this->createImportDoneFlashMessage($importConfiguration);
         }
 
-        $this->redirect('index', 'Backend\Overview');
-    }
-
-    protected function getMenu(): Menu
-    {
-        return $this->menu;
+        $this->redirect('index', 'Backend\Configuration');
     }
 
     private function createImportErrorFlashMessage(ImportConfiguration $importConfiguration): void

@@ -29,8 +29,8 @@ use TYPO3\CMS\Core\Imaging\IconRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use WerkraumMedia\ThueCat\Controller\Backend\ConfigurationController;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
-use WerkraumMedia\ThueCat\Controller\Backend\OverviewController;
 
 class Extension
 {
@@ -51,17 +51,43 @@ class Extension
     {
         ExtensionUtility::registerModule(
             self::EXTENSION_NAME,
-            'site',
             'thuecat',
             '',
+            '',
+            [],
             [
-                OverviewController::class => 'index',
-                ImportController::class => 'import, index',
+                'access' => 'user,group',
+                'icon' => self::getIconPath() . 'ModuleGroup.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
+            ]
+        );
+        ExtensionUtility::registerModule(
+            self::EXTENSION_NAME,
+            'thuecat',
+            'configurations',
+            '',
+            [
+                ConfigurationController::class => 'index',
+                ImportController::class => 'import',
             ],
             [
                 'access' => 'user,group',
-                'icon' => self::getIconPath() . 'Extension.svg',
-                'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
+                'icon' => self::getIconPath() . 'ModuleConfigurations.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod_configurations.xlf',
+            ]
+        );
+        ExtensionUtility::registerModule(
+            self::EXTENSION_NAME,
+            'thuecat',
+            'imports',
+            '',
+            [
+                ImportController::class => 'index,import',
+            ],
+            [
+                'access' => 'user,group',
+                'icon' => self::getIconPath() . 'ModuleImports.svg',
+                'labels' => self::getLanguagePath() . 'locallang_mod_imports.xlf',
             ]
         );
     }
