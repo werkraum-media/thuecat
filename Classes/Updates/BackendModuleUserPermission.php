@@ -35,10 +35,9 @@ class BackendModuleUserPermission implements UpgradeWizardInterface
      */
     private $connectionPool;
 
-    public function __construct(
-        ConnectionPool $connectionPool
-    ) {
-        $this->connectionPool = $connectionPool;
+    public function __construct()
+    {
+        $this->connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
     }
 
     public function getIdentifier(): string
