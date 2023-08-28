@@ -334,3 +334,7 @@ parameters:
 			count: 13
 			path: Tests/Functional/ImportTest.php
 
+		-
+			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(TEntity, TEntity\\)\\: int, Closure\\(WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility, WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility\\)\\: int\\<\\-1, 1\\> given\\.$#"
+			count: 1
+			path: Classes/Domain/Model/Frontend/Place.php
