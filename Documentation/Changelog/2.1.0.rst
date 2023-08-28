@@ -1,0 +1,31 @@
+2.1.0
+=====
+
+Breaking
+--------
+
+Nothing
+
+Features
+--------
+
+* Add command to allow import of a single configuration.
+  The command is also available as scheduler task.
+  This finally allows to regularly execute imports.
+  This also allows to import from CLI context with differently configured timeouts.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+

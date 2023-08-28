@@ -23,8 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
@@ -59,60 +57,8 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
  *
  * @testdox The import
  */
-class ImportTest extends TestCase
+class ImportTest extends AbstractImportTest
 {
-    protected $coreExtensionsToLoad = [
-        'core',
-        'backend',
-        'extbase',
-        'frontend',
-    ];
-
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/thuecat/',
-    ];
-
-    protected $pathsToLinkInTestInstance = [
-        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
-    ];
-
-    protected $configurationToUseInTestInstance = [
-        'LOG' => [
-            'WerkraumMedia' => [
-                'writerConfiguration' => [
-                    \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
-                        \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                            'logFileInfix' => 'debug',
-                        ],
-                    ],
-                ],
-            ],
-        ],
-        'EXTENSIONS' => [
-            'thuecat' => [
-                'apiKey' => null,
-            ],
-        ],
-    ];
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        GuzzleClientFaker::registerClient();
-
-        $this->setUpBackendUserFromFixture(1);
-
-        $GLOBALS['LANG'] = $this->getContainer()->get(LanguageService::class);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['LANG']);
-        GuzzleClientFaker::tearDown();
-
-        parent::tearDown();
-    }
-
     /**
      * @test
      */

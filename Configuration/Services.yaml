@@ -7,6 +7,11 @@ services:
   WerkraumMedia\ThueCat\:
     resource: '../Classes/*'
 
+  WerkraumMedia\ThueCat\Command\ImportConfigurationCommand:
+    tags:
+      - name: 'console.command'
+        command: 'thuecat:importviaconfiguration'
+
   WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData:
     arguments:
       $requestFactory: '@WerkraumMedia\ThueCat\Domain\Import\RequestFactory'
