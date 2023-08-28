@@ -1,14 +1,27 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
+  php = pkgs.php82.buildEnv {
+    extensions = { enabled, all }: enabled ++ (with all; [
+      xdebug
+    ]);
+
+    extraConfig = ''
+      xdebug.mode = debug
+      memory_limit = 4G
+    '';
+  };
+  inherit(pkgs.php82Packages) composer;
+
   projectInstall = pkgs.writeShellApplication {
     name = "project-install";
     runtimeInputs = [
-      pkgs.php82
-      pkgs.php82Packages.composer
+      php
+      composer
     ];
     text = ''
-      composer install --prefer-dist --no-progress --working-dir="$PROJECT_ROOT"
+      rm -rf .Build/ vendor/ composer.lock
+      composer update --prefer-dist --no-progress --working-dir="$PROJECT_ROOT"
     '';
   };
   projectTestAcceptance = pkgs.writeShellApplication {
@@ -18,7 +31,7 @@ let
       pkgs.sqlite
       pkgs.firefox
       pkgs.geckodriver
-      pkgs.php82
+      php
     ];
     text = ''
       project-install
@@ -34,6 +47,9 @@ let
 in pkgs.mkShell {
   name = "TYPO3 Extension ThüCAT";
   buildInputs = [
+    php
+    composer
+    projectInstall
     projectTestAcceptance
   ];
 
