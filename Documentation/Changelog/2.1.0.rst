@@ -17,12 +17,16 @@ Features
 Fixes
 -----
 
-Nothing
+* Catch mapping exceptions during converting entities.
+  Those are handled the same way, the entity is skipped and errors are logged.
+  That way further entities can be imported while only none working entities are skipped.
 
 Tasks
 -----
 
-Nothing
+* Converted log entry for none converted entity from error to notice.
+  As this might hint at an issue but most probably is okay, e.g. due to none active
+  language, missing name, etc.
 
 Deprecation
 -----------

@@ -162,11 +162,11 @@ class Importer
         }
 
         foreach ($content['@graph'] as $jsonEntity) {
-            $this->importJsonEntity($jsonEntity);
+            $this->importJsonEntity($jsonEntity, $url);
         }
     }
 
-    private function importJsonEntity(array $jsonEntity): void
+    private function importJsonEntity(array $jsonEntity, string $url): void
     {
         if ($this->entityAllowed($jsonEntity) === false) {
             return;
@@ -191,12 +191,7 @@ class Importer
                     ]
                 );
             } catch (MappingException $e) {
-                $this->logger->error('Could not map data to entity.', [
-                    'url' => $e->getUrl(),
-                    'language' => $language,
-                    'mappingError' => $e->getMessage(),
-                ]);
-                $this->import->getLog()->addEntry(new MappingError($e));
+                $this->handleMappingException($e, $language);
                 continue;
             }
 
@@ -205,14 +200,25 @@ class Importer
                 continue;
             }
 
-            $convertedEntity = $this->converter->convert(
-                $mappedEntity,
-                $this->import->getConfiguration(),
-                $language
-            );
+            try {
+                $convertedEntity = $this->converter->convert(
+                    $mappedEntity,
+                    $this->import->getConfiguration(),
+                    $language
+                );
+            } catch (MappingException $e) {
+                $this->handleMappingException($e, $language);
+                $convertedEntity = null;
+            }
 
             if ($convertedEntity === null) {
-                $this->logger->error('Could not convert entity.', ['language' => $language, 'targetEntity' => $targetEntity]);
+                $this->logger->notice(
+                    'Could not convert entity.',
+                    [
+                        'url' => $url,
+                        'language' => $language,
+                        'targetEntity' => $targetEntity,
+                    ]);
                 continue;
             }
             $entities->add($convertedEntity);
@@ -238,5 +244,15 @@ class Importer
 
         $this->logger->notice('Deny entity as type is not allowed.', ['types' => $jsonEntity['@type']]);
         return false;
+    }
+
+    private function handleMappingException(MappingException $exception, string $language): void
+    {
+        $this->logger->error('Could not map data to entity.', [
+            'url' => $exception->getUrl(),
+            'language' => $language,
+            'mappingError' => $exception->getMessage(),
+        ]);
+        $this->import->getLog()->addEntry(new MappingError($exception));
     }
 }
