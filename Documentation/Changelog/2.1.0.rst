@@ -30,6 +30,10 @@ Fixes
   Those are handled the same way, the entity is skipped and errors are logged.
   That way further entities can be imported while only none working entities are skipped.
 
+* Fix broken check of logged errors within functional tests.
+  The logging is now adjusted to only log errors.
+  The file will be checked for each test that does not expect errors to happen.
+
 Tasks
 -----
 

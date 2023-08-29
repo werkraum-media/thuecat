@@ -305,6 +305,7 @@ class ImportTest extends AbstractImportTest
      */
     public function importsFollowingRecordsInCaseOfAnMappingException(): void
     {
+        $this->expectErrors = true;
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.xml');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/mapping-exception.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');

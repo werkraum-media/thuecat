@@ -28,6 +28,13 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractImportTest extends FunctionalTestCase
 {
+    /**
+     * Whether to expect errors to be logged.
+     * Will check for no errors if set to false.
+     * @var bool
+     */
+    protected $expectErrors = false;
+
     protected function setUp(): void
     {
         $this->coreExtensionsToLoad = array_merge($this->coreExtensionsToLoad, [
@@ -49,9 +56,9 @@ abstract class AbstractImportTest extends FunctionalTestCase
             'LOG' => [
                 'WerkraumMedia' => [
                     'writerConfiguration' => [
-                        \TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
+                        \TYPO3\CMS\Core\Log\LogLevel::ERROR => [
                             \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                                'logFileInfix' => 'debug',
+                                'logFileInfix' => 'error',
                             ],
                         ],
                     ],
@@ -70,23 +77,44 @@ abstract class AbstractImportTest extends FunctionalTestCase
         $this->setUpBackendUserFromFixture(1);
 
         $GLOBALS['LANG'] = $this->getContainer()->get(LanguageService::class);
+
+        foreach ($this->getLogFiles() as $logFile) {
+            file_put_contents($logFile, '');
+        }
     }
 
     protected function assertPostConditions(): void
     {
-        $path = self::getInstancePath() . '/typo3temp/var/log/typo3_0493d91d8e.log';
-        $this->assertSame(
-            '',
-            file_get_contents($path),
-            'The TYPO3 log file contained content while expecting to be empty.'
-        );
+        if ($this->expectErrors === true) {
+            return;
+        }
+
+        foreach ($this->getLogFiles() as $file) {
+            $this->assertSame(
+                '',
+                file_get_contents($file),
+                'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.'
+            );
+        }
     }
 
     protected function tearDown(): void
     {
+        $this->expectErrors = false;
         unset($GLOBALS['LANG']);
         GuzzleClientFaker::tearDown();
 
         parent::tearDown();
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getLogFiles(): array
+    {
+        return [
+            self::getInstancePath() . '/typo3temp/var/log/typo3_0493d91d8e.log',
+            self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log',
+        ];
     }
 }
