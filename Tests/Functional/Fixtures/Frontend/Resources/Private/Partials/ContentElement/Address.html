@@ -1,0 +1,24 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="address">
+        <p>
+            <f:if condition="{address.street}">
+                {address.street}<br>
+            </f:if>
+            <f:if condition="{address.zip} && {address.city}">
+                {address.zip} {address.city}<br>
+            </f:if>
+            <f:if condition="{address.email}">
+                <f:link.email email="{address.email}">{address.email}</f:link.email><br>
+            </f:if>
+            <f:if condition="{address.phone}">
+                <a href="tel:{address.phone}">{address.phone}</a><br>
+            </f:if>
+            <f:if condition="{address.fax}">
+                {address.fax}
+            </f:if>
+            <f:if condition="{url}">
+                <a href="{url}" referrerpolicy="no-referrer" rel="noreferrer noopener">{f:translate(id: 'content.url', extensionName: 'Thuecat')}</a>
+            </f:if>
+        </p>
+    </div>
+</html>

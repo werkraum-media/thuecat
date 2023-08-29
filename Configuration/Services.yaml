@@ -25,6 +25,11 @@ services:
     class: 'WerkraumMedia\ThueCat\Service\DateBasedFilter\FilterBasedOnTypo3Context'
     public: true
 
+  WerkraumMedia\ThueCat\Typo3\Extbase\DataMapping\AfterObjectThawedHandler:
+    tags:
+      - name: 'event.listener'
+        event: 'TYPO3\CMS\Extbase\Event\Persistence\AfterObjectThawedEvent'
+
   'cache.thuecat_fetchdata':
     class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
     factory:

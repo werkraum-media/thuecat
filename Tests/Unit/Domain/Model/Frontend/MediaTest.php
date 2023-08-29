@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  */
 
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Resource\FileReference;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
 
 /**
@@ -227,6 +228,100 @@ class MediaTest extends TestCase
         self::assertSame(
             'Full Name 2',
             $subject->getExtraImages()[1]['copyrightAuthor']
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function returnsEmptyArrayAsDefaultForEditorialImages(): void
+    {
+        $subject = new Media('');
+        self::assertSame(
+            [],
+            $subject->getEditorialImages()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function returnsSetEditorialImages(): void
+    {
+        $subject = new Media('');
+        $reference1 = $this->createStub(FileReference::class);
+        $reference2 = $this->createStub(FileReference::class);
+        $subject->setEditorialImages([
+            $reference1,
+            $reference2,
+        ]);
+
+        $images = $subject->getEditorialImages();
+
+        self::assertCount(2, $images);
+        self::assertSame($reference1, $images[0]);
+        self::assertSame($reference2, $images[1]);
+    }
+
+    /**
+     * @test
+     */
+    public function returnsEmptyArrayAsDefaultForAllImages(): void
+    {
+        $subject = new Media('');
+        self::assertSame(
+            [],
+            $subject->getAllImages()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function returnsAllImages(): void
+    {
+        $subject = new Media(json_encode([
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom-und-Severikirche.jpg',
+                'author' => 'Full Name 1',
+                'license' => [
+                    'author' => 'Full Name 1 license',
+                ],
+            ],
+            [
+                'mainImage' => false,
+                'type' => 'image',
+                'title' => 'Erfurt-Dom und Severikirche-beleuchtet.jpg',
+                'author' => 'Full Name 2',
+                'license' => [
+                    'author' => 'Full Name 2 license',
+                ],
+            ],
+        ]) ?: '');
+        $reference1 = $this->createStub(FileReference::class);
+        $reference2 = $this->createStub(FileReference::class);
+        $subject->setEditorialImages([
+            $reference1,
+            $reference2,
+        ]);
+
+        self::assertSame(
+            $reference1,
+            $subject->getAllImages()[0]
+        );
+        self::assertSame(
+            $reference2,
+            $subject->getAllImages()[1]
+        );
+        self::assertSame(
+            'Full Name 1',
+            $subject->getAllImages()[2]['copyrightAuthor']
+        );
+        self::assertSame(
+            'Full Name 2',
+            $subject->getAllImages()[3]['copyrightAuthor']
         );
     }
 }

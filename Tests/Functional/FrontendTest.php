@@ -28,27 +28,27 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class FrontendTest extends FunctionalTestCase
 {
-    protected $coreExtensionsToLoad = [
-        'fluid_styled_content',
-    ];
-
-    protected $testExtensionsToLoad = [
-        'typo3conf/ext/thuecat/',
-    ];
-
-    protected $pathsToLinkInTestInstance = [
-        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',
-    ];
-
     protected function setUp(): void
     {
+        $this->coreExtensionsToLoad = [
+            'fluid_styled_content',
+        ];
+
+        $this->testExtensionsToLoad = [
+            'typo3conf/ext/thuecat/',
+        ];
+
+        $this->pathsToLinkInTestInstance = [
+            'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',
+        ];
+
         parent::setUp();
 
         $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/Content.xml');
         $this->setUpFrontendRootPage(1, [
-            'EXT:thuecat/Tests/Functional/Fixtures/Frontend/Rendering.typoscript',
             'EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript',
             'EXT:thuecat/Configuration/TypoScript/ContentElements/setup.typoscript',
+            'EXT:thuecat/Tests/Functional/Fixtures/Frontend/Rendering.typoscript',
         ]);
     }
 
@@ -689,5 +689,27 @@ class FrontendTest extends FunctionalTestCase
         $positionSecondHour = mb_strpos($result, $available2->format('d.m.Y'));
 
         self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
+    }
+
+    /**
+     * @test
+     */
+    public function editorialImagesOfTouristAttractionAreRenderedForDefaultLanguage(): void
+    {
+        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithEditorialImages.xml');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+
+        $html = (string)$this->executeFrontendRequest($request)->getBody();
+
+        self::assertStringContainsString(
+            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/parks_gaerten/hirschgarten/2998_Spielplaetze_Hirschgarten.jpg" width="" height="" alt="" />',
+            $html
+        );
+        self::assertStringContainsString(
+            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/sehenswuerdigkeiten/Petersberg/20_Erfurt-Schriftzug_Petersberg_2021__c_Stadtverwaltung_Erfurt_CC-BY-NC-SA.JPG" width="" height="" alt="" />',
+            $html,
+        );
     }
 }

@@ -1,0 +1,9 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="payment">
+        <p>
+            <f:for each="{paymentAccepted}" as="payment">
+                <span class="badge bg-light">{f:translate(id: 'content.paymentAccepted.{payment}', default: payment, extensionName: 'Thuecat')}</span>
+            </f:for>
+        </p>
+    </div>
+</html>

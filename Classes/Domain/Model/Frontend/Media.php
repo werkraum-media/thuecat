@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Type\TypeInterface;
 
 class Media implements TypeInterface
@@ -36,6 +37,11 @@ class Media implements TypeInterface
      * @var array[]
      */
     private $data;
+
+    /**
+     * @var FileReference[]
+     */
+    protected $editorialImages = [];
 
     public function __construct(string $serialized)
     {
@@ -71,6 +77,28 @@ class Media implements TypeInterface
             return $media['type'] === 'image'
                 && $media['mainImage'] === false;
         });
+    }
+
+    public function getAllImages(): array
+    {
+        return array_merge($this->getEditorialImages(), $this->getImages());
+    }
+
+    /**
+     * @return FileReference[]
+     */
+    public function getEditorialImages(): array
+    {
+        return $this->editorialImages;
+    }
+
+    /**
+     * @internal Only used to set the values while mapping objects.
+     * @see: AfterObjectThawedHandler
+     */
+    public function setEditorialImages(array $images): void
+    {
+        $this->editorialImages = $images;
     }
 
     public function __toString(): string
