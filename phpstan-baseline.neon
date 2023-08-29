@@ -326,12 +326,12 @@ parameters:
 
 		-
 			message: "#^Cannot call method findByUid\\(\\) on mixed\\.$#"
-			count: 13
+			count: 14
 			path: Tests/Functional/ImportTest.php
 
 		-
 			message: "#^Cannot call method importConfiguration\\(\\) on mixed\\.$#"
-			count: 13
+			count: 14
 			path: Tests/Functional/ImportTest.php
 
 		-

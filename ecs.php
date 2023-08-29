@@ -33,6 +33,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $parameters->set(Option::SKIP, [
+        __DIR__ . '/Classes/Domain/Import/EntityMapper/CustomAnnotationExtractor.php',
         DeclareStrictTypesFixer::class => [
             __DIR__ . '/Configuration/',
             __DIR__ . '/ext_emconf.php',

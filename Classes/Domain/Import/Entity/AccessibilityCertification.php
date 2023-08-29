@@ -109,65 +109,97 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $accessibilityCertificationStatus
      */
-    public function setAccessibilityCertificationStatus(string $accessibilityCertificationStatus): void
+    public function setAccessibilityCertificationStatus($accessibilityCertificationStatus): void
     {
+        if (is_array($accessibilityCertificationStatus)) {
+            $accessibilityCertificationStatus = $accessibilityCertificationStatus['value'] ?? '';
+        }
         $this->accessibilityCertificationStatus = PropertyValues::removePrefixFromEntry($accessibilityCertificationStatus);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityDeaf
      */
-    public function setCertificationAccessibilityDeaf(string $certificationAccessibilityDeaf): void
+    public function setCertificationAccessibilityDeaf($certificationAccessibilityDeaf): void
     {
+        if (is_array($certificationAccessibilityDeaf)) {
+            $certificationAccessibilityDeaf = $certificationAccessibilityDeaf['value'] ?? '';
+        }
         $this->certificationAccessibilityDeaf = PropertyValues::removePrefixFromEntry($certificationAccessibilityDeaf);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityMental
      */
-    public function setCertificationAccessibilityMental(string $certificationAccessibilityMental): void
+    public function setCertificationAccessibilityMental($certificationAccessibilityMental): void
     {
+        if (is_array($certificationAccessibilityMental)) {
+            $certificationAccessibilityMental = $certificationAccessibilityMental['value'] ?? '';
+        }
         $this->certificationAccessibilityMental = PropertyValues::removePrefixFromEntry($certificationAccessibilityMental);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityPartiallyDeaf
      */
-    public function setCertificationAccessibilityPartiallyDeaf(string $certificationAccessibilityPartiallyDeaf): void
+    public function setCertificationAccessibilityPartiallyDeaf($certificationAccessibilityPartiallyDeaf): void
     {
+        if (is_array($certificationAccessibilityPartiallyDeaf)) {
+            $certificationAccessibilityPartiallyDeaf = $certificationAccessibilityPartiallyDeaf['value'] ?? '';
+        }
         $this->certificationAccessibilityPartiallyDeaf = PropertyValues::removePrefixFromEntry($certificationAccessibilityPartiallyDeaf);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityPartiallyVisual
      */
-    public function setCertificationAccessibilityPartiallyVisual(string $certificationAccessibilityPartiallyVisual): void
+    public function setCertificationAccessibilityPartiallyVisual($certificationAccessibilityPartiallyVisual): void
     {
+        if (is_array($certificationAccessibilityPartiallyVisual)) {
+            $certificationAccessibilityPartiallyVisual = $certificationAccessibilityPartiallyVisual['value'] ?? '';
+        }
         $this->certificationAccessibilityPartiallyVisual = PropertyValues::removePrefixFromEntry($certificationAccessibilityPartiallyVisual);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityVisual
      */
-    public function setCertificationAccessibilityVisual(string $certificationAccessibilityVisual): void
+    public function setCertificationAccessibilityVisual($certificationAccessibilityVisual): void
     {
+        if (is_array($certificationAccessibilityVisual)) {
+            $certificationAccessibilityVisual = $certificationAccessibilityVisual['value'] ?? '';
+        }
         $this->certificationAccessibilityVisual = PropertyValues::removePrefixFromEntry($certificationAccessibilityVisual);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityWalking
      */
-    public function setCertificationAccessibilityWalking(string $certificationAccessibilityWalking): void
+    public function setCertificationAccessibilityWalking($certificationAccessibilityWalking): void
     {
+        if (is_array($certificationAccessibilityWalking)) {
+            $certificationAccessibilityWalking = $certificationAccessibilityWalking['value'] ?? '';
+        }
         $this->certificationAccessibilityWalking = PropertyValues::removePrefixFromEntry($certificationAccessibilityWalking);
     }
 
     /**
      * @internal for mapping via Symfony component.
+     * @param string|array $certificationAccessibilityWheelchair
      */
-    public function setCertificationAccessibilityWheelchair(string $certificationAccessibilityWheelchair): void
+    public function setCertificationAccessibilityWheelchair($certificationAccessibilityWheelchair): void
     {
+        if (is_array($certificationAccessibilityWheelchair)) {
+            $certificationAccessibilityWheelchair = $certificationAccessibilityWheelchair['value'] ?? '';
+        }
         $this->certificationAccessibilityWheelchair = PropertyValues::removePrefixFromEntry($certificationAccessibilityWheelchair);
     }
 

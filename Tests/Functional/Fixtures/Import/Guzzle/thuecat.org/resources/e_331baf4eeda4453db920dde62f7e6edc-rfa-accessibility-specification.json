@@ -1,0 +1,767 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "thuecat:AccessibilitySpecification",
+                "ttgds:AccessibilitySpecification"
+            ],
+            "schema:name": [
+                {
+                    "@language": "en",
+                    "@value": "Attraction with accessibility specification"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Attraktion mit accessibility specification"
+                }
+            ],
+            "thuecat:accessibilityCertification": {
+                "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b0",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "thuecat:AccessibilityCertification"
+                ],
+                "schema:image": [
+                    {
+                        "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b1",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:CreativeWork",
+                            "schema:MediaObject",
+                            "schema:ImageObject",
+                            "http://purl.org/dc/dcmitype/Image"
+                        ],
+                        "schema:inLanguage": {
+                            "@type": "http://www.w3.org/2001/XMLSchema#string",
+                            "@value": "de"
+                        },
+                        "schema:url": {
+                            "@type": "http://schema.org/URL",
+                            "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/certified_accessibility_de.svg"
+                        }
+                    },
+                    {
+                        "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b2",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:CreativeWork",
+                            "schema:MediaObject",
+                            "schema:ImageObject",
+                            "http://purl.org/dc/dcmitype/Image"
+                        ],
+                        "schema:inLanguage": {
+                            "@type": "http://www.w3.org/2001/XMLSchema#string",
+                            "@value": "en"
+                        },
+                        "schema:url": {
+                            "@type": "http://schema.org/URL",
+                            "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/certified_accessibility_en.svg"
+                        }
+                    }
+                ],
+                "schema:logo": [
+                    {
+                        "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b1",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:CreativeWork",
+                            "schema:MediaObject",
+                            "schema:ImageObject",
+                            "http://purl.org/dc/dcmitype/Image"
+                        ],
+                        "schema:inLanguage": {
+                            "@type": "http://www.w3.org/2001/XMLSchema#string",
+                            "@value": "de"
+                        },
+                        "schema:url": {
+                            "@type": "http://schema.org/URL",
+                            "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/certified_accessibility_de.svg"
+                        }
+                    },
+                    {
+                        "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b2",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:CreativeWork",
+                            "schema:MediaObject",
+                            "schema:ImageObject",
+                            "http://purl.org/dc/dcmitype/Image"
+                        ],
+                        "schema:inLanguage": {
+                            "@type": "http://www.w3.org/2001/XMLSchema#string",
+                            "@value": "en"
+                        },
+                        "schema:url": {
+                            "@type": "http://schema.org/URL",
+                            "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/certified_accessibility_en.svg"
+                        }
+                    }
+                ],
+                "schema:validFrom": {
+                    "@type": "xsd:string",
+                    "@value": "2023-03-01"
+                },
+                "schema:validThrough": {
+                    "@type": "xsd:string",
+                    "@value": "2026-02-28"
+                },
+                "thuecat:accessibilityCertificationStatus": {
+                    "@type": "thuecat:AccessibilityCertificationStatus",
+                    "@value": "thuecat:AccessibilityChecked"
+                },
+                "thuecat:certificationAccessibilityDeaf": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b3",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:None"
+                    }
+                },
+                "thuecat:certificationAccessibilityMental": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b4",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:None"
+                    }
+                },
+                "thuecat:certificationAccessibilityPartiallyDeaf": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b5",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:image": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/partially_deaf.svg"
+                    },
+                    "schema:logo": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/partially_deaf.svg"
+                    },
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:Full"
+                    }
+                },
+                "thuecat:certificationAccessibilityPartiallyVisual": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b6",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:image": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/partially_visual_info.svg"
+                    },
+                    "schema:logo": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/partially_visual_info.svg"
+                    },
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:Info"
+                    }
+                },
+                "thuecat:certificationAccessibilityVisual": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b7",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:image": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/visual_info.svg"
+                    },
+                    "schema:logo": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/visual_info.svg"
+                    },
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:Info"
+                    }
+                },
+                "thuecat:certificationAccessibilityWalking": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b8",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:image": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/walking.svg"
+                    },
+                    "schema:logo": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/walking.svg"
+                    },
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:Full"
+                    }
+                },
+                "thuecat:certificationAccessibilityWheelchair": {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b9",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "schema:image": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/wheelchair.svg"
+                    },
+                    "schema:logo": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/barrierefrei/assets/icons/certificates/wheelchair.svg"
+                    },
+                    "schema:value": {
+                        "@type": "thuecat:CertificationLevel",
+                        "@value": "thuecat:Full"
+                    }
+                }
+            },
+            "thuecat:accessibilitySearchCriteria": [
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:AllRoomsStepFreeAccess"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:AssistanceDogsWelcome"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:EightyCMWidthPassageWays"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:HingedGrabRailToilet"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:LateralAccessibleToilet"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:ParkingPeopleWithDisabilities"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:SeventyCMWidthPassageWays"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:StepFreeAccess"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:ToiletsPeopleWithDisabilities"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityWalking",
+                    "@value": "thuecat:NinetyCMWidthPassageWays"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityVisual",
+                    "@value": "thuecat:VisuallyContrastingStepEdges"
+                },
+                {
+                    "@type": "thuecat:facilityAccessibilityDeaf",
+                    "@value": "thuecat:AudioInductionLoop"
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityAllGenerations": [
+                {
+                    "@language": "de",
+                    "@value": "Einige \nHinweise zur Barrierefreiheit haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht. \nParkm\u00f6glichkeiten im Parkhaus am Domplatz. \nIn 150 m Entfernung befindet sich die Bushaltestelle auf dem Petersberg. Die Stra\u00dfenbahnhaltestelle Domplatz (Linie 2, 3, 6) ist etwa 800 Meter entfernt. Zum Petersberg f\u00fchrt ein Panoramaweg von 600 m L\u00e4nge und max. 6 % Steigung sowie ein Aufzug. Die Rampe vom Domplatz zum Panoramaweg hat eine maximale Neigung von 6 % und eine Gesamtl\u00e4nge von 24 m (Zwischenpodeste vorhanden). Die Aufzugkabine vom Panoramaweg zur Zitadelle ist 160 cm x 240 cm gro\u00df. \nDie Wege zum Eingang sind leicht begeh- und befahrbar und haben eine maximale L\u00e4ngsneigung von 6 %. \nDer Eingang ist visuell kontrastreich gestaltet.\nDas Geb\u00e4ude ist stufenlos zug\u00e4nglich.\nAlle f\u00fcr den Gast nutzbaren und erhobenen R\u00e4ume und Einrichtungen sind stufenlos oder \u00fcber Aufz\u00fcge oder eine Rampe zug\u00e4nglich. Die Aufzugkabine im Geb\u00e4ude ist 110 cm x 220 cm gro\u00df. Ein abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. Alternativ sind Treppen vorhanden. Treppen im Geb\u00e4ude weisen mindestens an der ersten und letzten Stufe visuell kontrastreiche Kanten auf, die Treppen vom Domplatz zur Zitadelle auf dem Petersberg jedoch nicht. Treppen haben beidseitigen Handlauf.\nAlle f\u00fcr den Gast nutzbaren und erhobenen T\u00fcren/Durchg\u00e4nge sind mindestens 90 cm breit. Es gibt Glast\u00fcren ohne Sicherheitsmarkierungen. \nAlle erhobenen und f\u00fcr den Gast nutzbaren Bereiche sind gut, d.h. hell und blendfrei, ausgeleuchtet.\nEs gibt eine induktive H\u00f6ranlage.\nDie Exponate sind allgemein gut ausgeleuchtet. Die Informationen zu den Exponaten werden schriftlich vermittelt und sind visuell kontrastreich gestaltet. Es gibt teilweise akustische und fotorealistische Informationen zu den Exponaten.\n\u00d6ffentliche Toiletten vorhanden.\nEs werden F\u00fchrungen f\u00fcr Menschen mit Gehbehinderung angeboten. Die gesamte Route der F\u00fchrung ist stufenlos befahrbar. Es stehen mobile oder feste Sitzgelegenheiten zur Verf\u00fcgung, die w\u00e4hrend der F\u00fchrung benutzt werden k\u00f6nnen. F\u00fcr Menschen mit H\u00f6rbehinderung werden F\u00fchrungen mit FM-Anlagen erm\u00f6glicht (z.B. Kopfh\u00f6rer, Halsringschleifen). Es werden F\u00fchrungen f\u00fcr Menschen mit Sehbehinderung und blinde Menschen angeboten. W\u00e4hrend der F\u00fchrungen werden Exponate zum Tasten integriert. F\u00fcr alle F\u00fchrungen ist eine Voranmeldung notwendig.\n"
+                },
+                {
+                    "@language": "en",
+                    "@value": "We have compiled some information on accessibility below. Detailed information can be found in the test report. \nParking is available in the parking garage on Domplatz. \nThe bus stop on Petersberg is 150 meters away. The Domplatz streetcar stop (lines 2, 3, 6) is about 800 meters away. A panoramic path 600 meters long with a maximum gradient of 6% and an elevator lead to the Petersberg. The ramp from Domplatz to the Panoramaweg has a maximum incline of 6% and a total length of 24 meters (intermediate landings available). The elevator cabin from the Panoramaweg to the Zitadelle is 160 cm x 240 cm. \nThe paths to the entrance are easy to walk and drive on and have a maximum longitudinal slope of 6%. \nThe entrance is visually contrasting.\nThe building is accessible without steps.\nAll rooms and facilities that can be used and elevated for guests are accessible without steps or via elevators or a ramp. The elevator cabin in the building is 110 cm x 220 cm. An outgoing emergency call in the elevators is confirmed acoustically. Alternatively, stairs are available. Stairs in the building have visually contrasting edges at least on the first and last steps, but the stairs from Domplatz to the Zitadelle on Petersberg do not. Stairs have handrails on both sides.\nAll doors/passages that can be used by guests and are raised are at least 90 cm wide. There are glass doors without safety markings. \nAll raised and usable areas for the guest are well lit, i.e. bright and glare-free.\nThere is an inductive hearing system.\nExhibits are generally well lit. Exhibit information is provided in writing and is visually contrasting. There is partial audio and photorealistic information about the exhibits.\nPublic restrooms available.\nGuided tours are available for people with walking disabilities. The entire tour route is accessible without steps. Mobile or fixed seating is available for use during the tour. Guided tours with FM equipment are made possible for people with hearing disabilities (e.g. headphones, neck ring loops). Guided tours are provided for people with visual impairments and blind people. Touch exhibits will be integrated during the tours. Pre-registration is required for all tours.\n"
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b10",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>&nbsp;Einige <strong>Hinweise zur Barrierefreiheit</strong> haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.&nbsp;</p>\n<ul>\n <li>Parkm\u00f6glichkeiten im Parkhaus am Domplatz.&nbsp;</li>\n <li>In 150 m Entfernung befindet sich die Bushaltestelle auf dem Petersberg. Die Stra\u00dfenbahnhaltestelle Domplatz (Linie 2, 3, 6) ist etwa 800 Meter entfernt.&nbsp;Zum Petersberg f\u00fchrt ein Panoramaweg von 600 m L\u00e4nge und max. 6 % Steigung sowie ein Aufzug. Die Rampe vom Domplatz zum Panoramaweg hat eine maximale Neigung von 6 % und eine Gesamtl\u00e4nge von 24 m (Zwischenpodeste vorhanden). Die Aufzugkabine vom Panoramaweg zur Zitadelle ist 160 cm x 240 cm gro\u00df. &nbsp;</li>\n <li>Die Wege zum Eingang sind leicht begeh- und befahrbar und haben eine maximale L\u00e4ngsneigung von 6 %.&nbsp;</li>\n <li>Der Eingang ist visuell kontrastreich gestaltet.</li>\n <li>Das Geb\u00e4ude ist stufenlos zug\u00e4nglich.</li>\n <li>Alle f\u00fcr den Gast nutzbaren und erhobenen R\u00e4ume und Einrichtungen sind stufenlos oder \u00fcber Aufz\u00fcge oder eine Rampe zug\u00e4nglich. Die Aufzugkabine im Geb\u00e4ude ist 110 cm x 220 cm gro\u00df. Ein abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. Alternativ sind Treppen vorhanden.&nbsp;Treppen im Geb\u00e4ude weisen mindestens an der ersten und letzten Stufe visuell kontrastreiche Kanten auf, die Treppen vom Domplatz zur Zitadelle auf dem Petersberg jedoch nicht. Treppen haben beidseitigen Handlauf.</li>\n <li>Alle f\u00fcr den Gast nutzbaren und erhobenen T\u00fcren/Durchg\u00e4nge sind mindestens 90 cm breit. Es gibt Glast\u00fcren ohne Sicherheitsmarkierungen.&nbsp;</li>\n <li>Alle erhobenen und f\u00fcr den Gast nutzbaren Bereiche sind gut, d.h. hell und blendfrei, ausgeleuchtet.</li>\n <li>Es gibt eine induktive H\u00f6ranlage.</li>\n <li>Die Exponate sind allgemein gut ausgeleuchtet.&nbsp; Die Informationen zu den Exponaten werden schriftlich vermittelt und sind visuell kontrastreich gestaltet. Es gibt teilweise akustische und fotorealistische Informationen zu den Exponaten.</li>\n <li>\u00d6ffentliche Toiletten vorhanden.</li>\n <li>Es werden F\u00fchrungen f\u00fcr Menschen mit Gehbehinderung angeboten. Die gesamte Route der F\u00fchrung ist stufenlos befahrbar. Es stehen mobile oder feste Sitzgelegenheiten zur Verf\u00fcgung, die w\u00e4hrend der F\u00fchrung benutzt werden k\u00f6nnen. F\u00fcr Menschen mit H\u00f6rbehinderung werden F\u00fchrungen mit FM-Anlagen erm\u00f6glicht (z.B. Kopfh\u00f6rer, Halsringschleifen). Es werden F\u00fchrungen f\u00fcr Menschen mit Sehbehinderung und blinde Menschen angeboten. W\u00e4hrend der F\u00fchrungen werden Exponate zum Tasten integriert. &nbsp;F\u00fcr alle F\u00fchrungen ist eine Voranmeldung notwendig.</li>\n</ul>"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b11",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>We have compiled some information on accessibility below. Detailed information can be found in the test report.&nbsp;</p>\n<ul>\n <li>Parking is available in the parking garage on Domplatz.&nbsp;</li>\n <li>The bus stop on Petersberg is 150 meters away. The Domplatz streetcar stop (lines 2, 3, 6) is about 800 meters away. A panoramic path 600 meters long with a maximum gradient of 6% and an elevator lead to the Petersberg. The ramp from Domplatz to the Panoramaweg has a maximum incline of 6% and a total length of 24 meters (intermediate landings available). The elevator cabin from the Panoramaweg to the Zitadelle is 160 cm x 240 cm. &nbsp;</li>\n <li>The paths to the entrance are easy to walk and drive on and have a maximum longitudinal slope of 6%.&nbsp;</li>\n <li>The entrance is visually contrasting.</li>\n <li>The building is accessible without steps.</li>\n <li>All rooms and facilities that can be used and elevated for guests are accessible without steps or via elevators or a ramp. The elevator cabin in the building is 110 cm x 220 cm. An outgoing emergency call in the elevators is confirmed acoustically. Alternatively, stairs are available. Stairs in the building have visually contrasting edges at least on the first and last steps, but the stairs from Domplatz to the Zitadelle on Petersberg do not. Stairs have handrails on both sides.</li>\n <li>All doors/passages that can be used by guests and are raised are at least 90 cm wide. There are glass doors without safety markings.&nbsp;</li>\n <li>All raised and usable areas for the guest are well lit, i.e. bright and glare-free.</li>\n <li>There is an inductive hearing system.</li>\n <li>Exhibits are generally well lit. &nbsp;Exhibit information is provided in writing and is visually contrasting. There is partial audio and photorealistic information about the exhibits.</li>\n <li>Public restrooms available.</li>\n <li>Guided tours are available for people with walking disabilities. The entire tour route is accessible without steps. Mobile or fixed seating is available for use during the tour. Guided tours with FM equipment are made possible for people with hearing disabilities (e.g. headphones, neck ring loops). Guided tours are provided for people with visual impairments and blind people. Touch exhibits will be integrated during the tours. Pre-registration is required for all tours.</li>\n</ul>"
+                    }
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityDeaf": [
+                {
+                    "@language": "en",
+                    "@value": "All areas relevant for testing meet the quality criteria of the label \"\nAccessibility certified - accessible for people with hearing impairment\".\nSome \ninformation on accessibility are listed below. For detailed information please see the evaluation report. \nThe alarm is clearly visible at the counter and in the WCs.\nThere is an audio induction loop system. \nAn outgoing emergency call in the elevators is confirmed acoustically. Alternatively, stairs are available.\nInformation about the exhibits is provided in writing. There is partial audio and photorealistic information about the exhibits.\nGuided tours are available for people with hearing disabilities, but not for deaf people. Advance reservations are required.\nGuided tours with FM systems (e.g. headphones, neck loops) are available for people with hearing impairments. \n"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung \u201e\nBarrierefreiheit gepr\u00fcft \u2013 barrierefrei f\u00fcr Menschen mit H\u00f6rbehinderung\u201c.\nEinige \nHinweise zur Barrierefreiheit haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.\nDer Alarm ist am Tresen und in den WCs optisch deutlich wahrnehmbar.\nEs gibt eine induktive H\u00f6ranlage.\nEin abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. Alternativ sind Treppen vorhanden.\nDie Informationen zu den Exponaten werden schriftlich vermittelt. Es gibt teilweise akustische und fotorealistische Informationen zu den Exponaten.\nEs werden F\u00fchrungen f\u00fcr Menschen mit H\u00f6rbehinderung angeboten, jedoch nicht f\u00fcr geh\u00f6rlose Menschen. Es ist eine Voranmeldung notwendig.\nEs werden f\u00fcr Menschen mit H\u00f6rbehinderung F\u00fchrungen mit FM-Anlagen erm\u00f6glicht (z.B. Kopfh\u00f6rer, Halsringschleifen).\n"
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b12",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung \u201e<strong>Barrierefreiheit gepr\u00fcft \u2013 barrierefrei f\u00fcr Menschen mit H\u00f6rbehinderung</strong>\u201c.</p>\n<p>Einige <strong>Hinweise zur Barrierefreiheit</strong> haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.</p>\n<ul>\n <li>Der Alarm ist am Tresen und in den WCs optisch deutlich wahrnehmbar.</li>\n <li>Es gibt eine induktive H\u00f6ranlage.</li>\n <li>Ein abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. Alternativ sind Treppen vorhanden.</li>\n <li>Die Informationen zu den Exponaten werden schriftlich vermittelt. Es gibt teilweise akustische und fotorealistische Informationen zu den Exponaten.</li>\n <li>Es werden F\u00fchrungen f\u00fcr Menschen mit H\u00f6rbehinderung angeboten, jedoch nicht f\u00fcr geh\u00f6rlose Menschen. &nbsp;Es ist eine Voranmeldung notwendig.</li>\n <li>Es werden f\u00fcr Menschen mit H\u00f6rbehinderung F\u00fchrungen mit FM-Anlagen erm\u00f6glicht (z.B. Kopfh\u00f6rer, Halsringschleifen).</li>\n</ul>"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b13",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>All areas relevant for testing meet the quality criteria of the label \"<strong>Accessibility certified - accessible for people with hearing impairment</strong>\".</p>\n<p>Some <strong>information on accessibility</strong> are listed below. For detailed information please see the evaluation report.&nbsp;</p>\n<ul>\n <li>The alarm is clearly visible at the counter and in the WCs.</li>\n <li>There is an audio induction loop system.&nbsp;</li>\n <li>An outgoing emergency call in the elevators is confirmed acoustically. Alternatively, stairs are available.</li>\n <li>Information about the exhibits is provided in writing. There is partial audio and photorealistic information about the exhibits.</li>\n <li>Guided tours are available for people with hearing disabilities, but not for deaf people. &nbsp;Advance reservations are required.</li>\n <li>Guided tours with FM systems (e.g. headphones, neck loops) are available for people with hearing impairments.&nbsp;</li>\n</ul>"
+                    }
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityMental": [
+                {
+                    "@language": "de",
+                    "@value": "Einige \nHinweise zur Barrierefreiheit haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.\nName bzw. Logo des Betriebs sind von au\u00dfen klar erkennbar.\nDie Ziele der Wege sind in Sichtweite oder es sind Wegezeichen in st\u00e4ndig sichtbarem Abstand vorhanden.\nInformationen zu den Exponaten werden teilweise in Leichter Sprache bereitgestellt.\nEs werden F\u00fchrungen f\u00fcr Menschen mit kognitiven Beeintr\u00e4chtigungen angeboten. Es ist eine Voranmeldung notwendig.\nDie F\u00fchrung f\u00fcr Menschen mit kognitiven Beeintr\u00e4chtigungen angeboten.\n"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Some \ninformation on accessibility are listed below. For detailed information please see the evaluation report. \nThe name or logo of the operation is clearly visible from the outside.\nThe destinations of the paths are within sight or there are path signs at a constantly visible distance.\nInformation about exhibits is provided in plain language in some cases.\nGuided tours are provided for people with cognitive impairments. Advance registration is required.\nThe guided tour for people with cognitive impairments offered.\n"
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b14",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Einige <strong>Hinweise zur Barrierefreiheit</strong> haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.</p>\n<ul>\n <li>Name bzw. Logo des Betriebs sind von au\u00dfen klar erkennbar.</li>\n <li>Die Ziele der Wege sind in Sichtweite oder es sind Wegezeichen in st\u00e4ndig sichtbarem Abstand vorhanden.</li>\n <li>Informationen zu den Exponaten werden teilweise in Leichter Sprache bereitgestellt.</li>\n <li>Es werden F\u00fchrungen f\u00fcr Menschen mit kognitiven Beeintr\u00e4chtigungen angeboten. Es ist eine Voranmeldung notwendig.</li>\n <li>Die F\u00fchrung f\u00fcr Menschen mit kognitiven Beeintr\u00e4chtigungen angeboten.</li>\n</ul>"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b15",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>Some <strong>information on accessibility</strong> are listed below. For detailed information please see the evaluation report. &nbsp;&nbsp;</p>\n<ul>\n <li>The name or logo of the operation is clearly visible from the outside.</li>\n <li>The destinations of the paths are within sight or there are path signs at a constantly visible distance.</li>\n <li>Information about exhibits is provided in plain language in some cases.</li>\n <li>Guided tours are provided for people with cognitive impairments. Advance registration is required.</li>\n <li>The guided tour for people with cognitive impairments offered.</li>\n</ul>"
+                    }
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityVisual": [
+                {
+                    "@language": "en",
+                    "@value": "All areas relevant for testing meet the quality criteria of the label \"\nAccessibility certified - partially accessible for people with visual impairments and blind people\".\nSome \ninformation on accessibility are listed below. For detailed information please see the evaluation report. \nAssistance dogs may be brought into all relevant areas/rooms.\nThe entrance is visually contrasting.\nThere are glass doors without security markings. \nAll raised areas that can be used by the guest are well lit, i.e. bright and glare-free.\nThere are visually contrasting and tactile floor indicators in the entrance area.\nSignage is designed in easy-to-read, high-contrast lettering.\nAn outgoing emergency call in the elevators is confirmed acoustically. In the elevator in the visitor center, the stop position is announced by voice. The elevator from Domplatz to the Citadel has only 2 floors. The controls in both elevators are visually contrasting and tactilely detectable.\nStairs in the building have visually contrasting edges at least on the first and last steps, but the stairs from Domplatz to the Citadel on Petersberg do not.\nStairs have handrails on both sides.\nExhibits are generally well lit. \nInformation about the exhibits is predominantly provided in writing and is visually contrasting. There is some audio information about the exhibits. \nGuided tours are offered for people with visual impairments and blind people. Advance reservations are required.\nDuring the tours, exhibits are integrated for touching.\n"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung \u201e\nBarrierefreiheit gepr\u00fcft \u2013 teilweise barrierefrei f\u00fcr Menschen mit Sehbehinderung und f\u00fcr blinde Menschen\u201c.\nEinige \nHinweise zur Barrierefreiheit haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.\nAssistenzhunde d\u00fcrfen in alle relevanten Bereiche/R\u00e4ume mitgebracht werden.\nDer Eingang ist visuell kontrastreich gestaltet.\nEs gibt Glast\u00fcren ohne Sicherheitsmarkierungen. \nAlle erhobenen und f\u00fcr den Gast nutzbaren Bereiche sind gut, d.h. hell und blendfrei, ausgeleuchtet.\nIm Eingangsbereich sind visuell kontrastreiche und taktil erfassbare Bodenindikatoren vorhanden.\nDie Beschilderung ist in gut lesbarer und kontrastreicher Schrift gestaltet.\nEin abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. Im Aufzug im Besucherzentrum wird die Halteposition durch Sprache angesagt. Der Aufzug vom Domplatz zur Zitadelle f\u00fchrt \u00fcber nur 2 Etagen. Die Bedienelemente in beiden Aufz\u00fcgen sind visuell kontrastreich gestaltet und taktil erfassbar.\nTreppen im Geb\u00e4ude weisen mindestens an der ersten und letzten Stufe visuell kontrastreiche Kanten auf, die Treppen vom Domplatz zur Zitadelle auf dem Petersberg jedoch nicht.\nTreppen haben beidseitigen Handlauf.\nDie Exponate sind allgemein gut ausgeleuchtet. \nDie Informationen zu den Exponaten werden \u00fcberwiegend schriftlich vermittelt und sind visuell kontrastreich gestaltet. Es gibt teilweise akustische Informationen zu den Exponaten. \nEs werden F\u00fchrungen f\u00fcr Menschen mit Sehbehinderung und blinde Menschen angeboten. Es ist eine Voranmeldung notwendig.\nW\u00e4hrend der F\u00fchrungen werden Exponate zum Tasten integriert. \n"
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b16",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung \u201e<strong>Barrierefreiheit gepr\u00fcft \u2013 teilweise barrierefrei f\u00fcr Menschen mit Sehbehinderung und f\u00fcr blinde Menschen</strong>\u201c.</p>\n<p>Einige <strong>Hinweise zur Barrierefreiheit</strong> haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.</p>\n<ul>\n <li>Assistenzhunde d\u00fcrfen in alle relevanten Bereiche/R\u00e4ume mitgebracht werden.</li>\n <li>Der Eingang ist visuell kontrastreich gestaltet.</li>\n <li>Es gibt Glast\u00fcren ohne Sicherheitsmarkierungen.&nbsp;</li>\n <li>Alle erhobenen und f\u00fcr den Gast nutzbaren Bereiche sind gut, d.h. hell und blendfrei, ausgeleuchtet.</li>\n <li>Im Eingangsbereich sind visuell kontrastreiche und taktil erfassbare Bodenindikatoren vorhanden.</li>\n <li>Die Beschilderung ist in gut lesbarer und kontrastreicher Schrift gestaltet.</li>\n <li>Ein abgehender Notruf in den Aufz\u00fcgen wird akustisch best\u00e4tigt. &nbsp;Im Aufzug im Besucherzentrum wird die Halteposition durch Sprache angesagt. Der Aufzug vom Domplatz zur Zitadelle f\u00fchrt \u00fcber nur 2 Etagen. Die Bedienelemente in beiden Aufz\u00fcgen sind visuell kontrastreich gestaltet und taktil erfassbar.</li>\n <li>Treppen im Geb\u00e4ude weisen mindestens an der ersten und letzten Stufe visuell kontrastreiche Kanten auf, die Treppen vom Domplatz zur Zitadelle auf dem Petersberg jedoch nicht.</li>\n <li>Treppen haben beidseitigen Handlauf.</li>\n <li>Die Exponate sind allgemein gut ausgeleuchtet.&nbsp;</li>\n <li>Die Informationen zu den Exponaten werden \u00fcberwiegend schriftlich vermittelt und sind visuell kontrastreich gestaltet. Es gibt teilweise akustische Informationen zu den Exponaten.&nbsp;</li>\n <li>Es werden F\u00fchrungen f\u00fcr Menschen mit Sehbehinderung und blinde Menschen angeboten. Es ist eine Voranmeldung notwendig.</li>\n <li>W\u00e4hrend der F\u00fchrungen werden Exponate zum Tasten integriert.&nbsp;</li>\n</ul>"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b17",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>All areas relevant for testing meet the quality criteria of the label \"<strong>Accessibility certified - partially accessible for people with visual impairments and blind people</strong>\".</p>\n<p>Some <strong>information on accessibility</strong> are listed below. For detailed information please see the evaluation report.&nbsp;</p>\n<ul>\n <li>Assistance dogs may be brought into all relevant areas/rooms.</li>\n <li>The entrance is visually contrasting.</li>\n <li>There are glass doors without security markings.&nbsp;</li>\n <li>All raised areas that can be used by the guest are well lit, i.e. bright and glare-free.</li>\n <li>There are visually contrasting and tactile floor indicators in the entrance area.</li>\n <li>Signage is designed in easy-to-read, high-contrast lettering.</li>\n <li>An outgoing emergency call in the elevators is confirmed acoustically. &nbsp;In the elevator in the visitor center, the stop position is announced by voice. The elevator from Domplatz to the Citadel has only 2 floors. The controls in both elevators are visually contrasting and tactilely detectable.</li>\n <li>Stairs in the building have visually contrasting edges at least on the first and last steps, but the stairs from Domplatz to the Citadel on Petersberg do not.</li>\n <li>Stairs have handrails on both sides.</li>\n <li>Exhibits are generally well lit.&nbsp;</li>\n <li>Information about the exhibits is predominantly provided in writing and is visually contrasting. There is some audio information about the exhibits.&nbsp;</li>\n <li>Guided tours are offered for people with visual impairments and blind people. Advance reservations are required.</li>\n <li>During the tours, exhibits are integrated for touching.</li>\n</ul>"
+                    }
+                }
+            ],
+            "thuecat:shortDescriptionAccessibilityWalking": [
+                {
+                    "@language": "en",
+                    "@value": "All areas relevant for testing meet the quality criteria of the label \"\nAccessibility certified - accessible for people with walking disabilities and wheelchair users\".\nSome \ninformation on accessibility are listed below. For detailed information please see the evaluation report. \nThere are three marked parking spaces for people with disabilities (parking space size: 350 cm x 500 cm, 100 m distance from the entrance). \nThe bus stop on Petersberg is 150 m away. The streetcar stop Domplatz (line 2, 3, 6) is about 800 m away. You can get to the citadel from Domplatz via the panorama path and an elevator. \nThe paths to the entrance are easy to walk and drive on and have a maximum longitudinal gradient of 6%. \nThe building is accessible without steps.\nAll rooms and facilities that can be used and elevated for guests are accessible without steps or via elevators or a ramp.\nThe elevator cabin in the building is 110 cm x 220 cm. \nThe elevator cabin from the panoramic path to the citadel is 160 cm x 240 cm. \nThe ramp from the cathedral square to the Panoramaweg has a maximum slope of 6% and a total length of 24 m (intermediate landings available).\nAll doors/passages that can be used by guests and are raised are at least 90 cm wide.\nThe cash counter is 73 cm high at the lowest point. \nThe exhibits are predominantly visible while seated. Exhibit information is predominantly legible while seated. \nGuided tours are available for people with walking disabilities and wheelchair users. Advance reservations are required.\nMobile or fixed seating is available for people with walking disabilities to use during the tour.\nThe entire route of the guided tour is step-free for wheelchair users.\nPublic toilet for people with disabilities (basement)\nThe manoeuvring spaces are: \nin front of/behind the door, in front of the WC and in front of the washbasin at least 150 cm x 150 cm;\nto the left and right of the WC at least 90 cm x 70 cm. \nGrab rails are provided to the left and right of the WC. The grab rails are flipped up.\nThe sink is wheelchair compatible. \nThe mirror can be viewed while standing or sitting.\nThere is an alarm trigger.\n"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung \n\"Barrierefreiheit gepr\u00fcft - barrierefrei f\u00fcr Menschen mit Gehbehinderung und Rollstuhlfahrer\".\nEinige \nHinweise zur Barrierefreiheit haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht. \nEs sind drei gekennzeichnete Parkpl\u00e4tze f\u00fcr Menschen mit Behinderung vorhanden (Stellplatzgr\u00f6\u00dfe: 350 cm x 500 cm, 100 m Entfernung zum Eingang). \nIn 150 m Entfernung befindet sich die Bushaltestelle auf dem Petersberg. Die Stra\u00dfenbahnhaltestelle Domplatz (Linie 2, 3, 6) ist etwa 800 m entfernt. Zur Zitadelle gelangt man vom Domplatz \u00fcber den Panoramaweg und einen Aufzug. \nDie Wege zum Eingang sind leicht begeh- und befahrbar und haben eine maximale L\u00e4ngsneigung von 6 %. \nDas Geb\u00e4ude ist stufenlos zug\u00e4nglich.\nAlle f\u00fcr den Gast nutzbaren und erhobenen R\u00e4ume und Einrichtungen sind stufenlos oder \u00fcber Aufz\u00fcge oder eine Rampe zug\u00e4nglich.\nDie Aufzugkabine im Geb\u00e4ude ist 110 cm x 220 cm gro\u00df. \nDie Aufzugkabine vom Panoramaweg zur Zitadelle ist 160 cm x 240 cm gro\u00df. \nDie Rampe vom Domplatz zum Panoramaweg hat eine maximale Neigung von 6 % und eine Gesamtl\u00e4nge von 24 m (Zwischenpodeste vorhanden).\nAlle f\u00fcr den Gast nutzbaren und erhobenen T\u00fcren/Durchg\u00e4nge sind mindestens 90 cm breit.\nDer Kassentresen ist an der niedrigsten Stelle 73 cm hoch. \nDie Exponate sind \u00fcberwiegend im Sitzen sichtbar. Die Informationen zu den Exponaten sind \u00fcberwiegend im Sitzen lesbar. \nEs werden F\u00fchrungen f\u00fcr Menschen mit Gehbehinderung und Rollstuhlfahrer angeboten. Es ist eine Voranmeldung notwendig.\nEs stehen f\u00fcr Menschen mit Gehbehinderung mobile oder feste Sitzgelegenheiten zur Verf\u00fcgung, die w\u00e4hrend der F\u00fchrung benutzt werden k\u00f6nnen.\nDie gesamte Route der F\u00fchrung ist f\u00fcr Rollstuhlfahrer stufenlos befahrbar.\n\u00d6ffentliches WC f\u00fcr Menschen mit Behinderung (Untergeschoss)\nDie Bewegungsfl\u00e4chen betragen:\nvor/hinter der T\u00fcr, vor dem WC und vor dem Waschbecken mindestens 150 cm x 150 cm;\nlinks und rechts neben dem WC mindestens 90 cm x 70 cm. \nEs sind links und rechts vom WC Haltegriffe vorhanden. Die Haltegriffe sind hochklappbar.\nDas Waschbecken ist unterfahrbar.\nDer Spiegel ist im Stehen und Sitzen einsehbar.\nEs ist ein Alarmausl\u00f6ser vorhanden.\n"
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b18",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Alle pr\u00fcfrelevanten Bereiche erf\u00fcllen die Qualit\u00e4tskriterien der Kennzeichnung <strong>\"Barrierefreiheit gepr\u00fcft - barrierefrei f\u00fcr Menschen mit Gehbehinderung und Rollstuhlfahrer\".</strong></p>\n<p>Einige <strong>Hinweise zur Barrierefreiheit</strong> haben wir nachfolgend zusammengestellt. Detaillierte Angaben finden Sie im Pr\u00fcfbericht.&nbsp;</p>\n<ul>\n <li>Es sind drei gekennzeichnete Parkpl\u00e4tze f\u00fcr Menschen mit Behinderung &nbsp;vorhanden (Stellplatzgr\u00f6\u00dfe: 350 cm x 500 cm, 100 m Entfernung zum Eingang).&nbsp;</li>\n <li>In 150 m Entfernung befindet sich die Bushaltestelle auf dem Petersberg. Die Stra\u00dfenbahnhaltestelle Domplatz (Linie 2, 3, 6) ist etwa 800 m entfernt. Zur Zitadelle gelangt man vom Domplatz \u00fcber den Panoramaweg und einen Aufzug.&nbsp;</li>\n <li>Die Wege zum Eingang sind leicht begeh- und befahrbar und haben eine maximale L\u00e4ngsneigung von 6 %.&nbsp;</li>\n <li>Das Geb\u00e4ude ist stufenlos zug\u00e4nglich.</li>\n <li>Alle f\u00fcr den Gast nutzbaren und erhobenen R\u00e4ume und Einrichtungen sind stufenlos oder \u00fcber Aufz\u00fcge oder eine Rampe zug\u00e4nglich.</li>\n <li>Die Aufzugkabine im Geb\u00e4ude ist 110 cm x 220 cm gro\u00df. &nbsp;</li>\n <li>Die Aufzugkabine vom Panoramaweg zur Zitadelle ist 160 cm x 240 cm gro\u00df. &nbsp;</li>\n <li>Die Rampe vom Domplatz zum Panoramaweg hat eine maximale Neigung von 6 % und eine Gesamtl\u00e4nge von 24 m (Zwischenpodeste vorhanden).</li>\n <li>Alle f\u00fcr den Gast nutzbaren und erhobenen T\u00fcren/Durchg\u00e4nge sind mindestens 90 cm breit.</li>\n <li>Der Kassentresen ist an der niedrigsten Stelle 73 cm hoch.&nbsp;</li>\n <li>Die Exponate sind \u00fcberwiegend im Sitzen sichtbar. Die Informationen zu den Exponaten sind \u00fcberwiegend im Sitzen lesbar.&nbsp;</li>\n <li>Es werden F\u00fchrungen f\u00fcr Menschen mit Gehbehinderung und Rollstuhlfahrer angeboten. Es ist eine Voranmeldung notwendig.</li>\n <li>Es stehen f\u00fcr Menschen mit Gehbehinderung mobile oder feste Sitzgelegenheiten zur Verf\u00fcgung, die w\u00e4hrend der F\u00fchrung benutzt werden k\u00f6nnen.</li>\n <li>Die gesamte Route der F\u00fchrung ist f\u00fcr Rollstuhlfahrer stufenlos befahrbar.</li>\n</ul>\n<h4><strong>\u00d6ffentliches WC f\u00fcr Menschen mit Behinderung (Untergeschoss)</strong></h4>\n<ul>\n <li>Die Bewegungsfl\u00e4chen betragen:<br>\nvor/hinter der T\u00fcr, vor dem WC und vor dem Waschbecken mindestens 150 cm x 150 cm;<br>\nlinks und rechts neben dem WC mindestens 90 cm x 70 cm.&nbsp;</li>\n <li>Es sind links und rechts vom WC Haltegriffe vorhanden. Die Haltegriffe sind hochklappbar.</li>\n <li>Das Waschbecken ist unterfahrbar.</li>\n <li>Der Spiegel ist im Stehen und Sitzen einsehbar.</li>\n <li>Es ist ein Alarmausl\u00f6ser vorhanden.</li>\n</ul>"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b19",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>All areas relevant for testing meet the quality criteria of the label \"<strong>Accessibility certified - accessible for people with walking disabilities and wheelchair users</strong>\".</p>\n<p>Some <strong>information on accessibility</strong> are listed below. For detailed information please see the evaluation report.&nbsp;</p>\n<ul>\n <li>There are three marked parking spaces for people with disabilities (parking space size: 350 cm x 500 cm, 100 m distance from the entrance).&nbsp;</li>\n <li>The bus stop on Petersberg is 150 m away. The streetcar stop Domplatz (line 2, 3, 6) is about 800 m away. You can get to the citadel from Domplatz via the panorama path and an elevator.&nbsp;</li>\n <li>The paths to the entrance are easy to walk and drive on and have a maximum longitudinal gradient of 6%.&nbsp;</li>\n <li>The building is accessible without steps.</li>\n <li>All rooms and facilities that can be used and elevated for guests are accessible without steps or via elevators or a ramp.</li>\n <li>The elevator cabin in the building is 110 cm x 220 cm. &nbsp;</li>\n <li>The elevator cabin from the panoramic path to the citadel is 160 cm x 240 cm. &nbsp;</li>\n <li>The ramp from the cathedral square to the Panoramaweg has a maximum slope of 6% and a total length of 24 m (intermediate landings available).</li>\n <li>All doors/passages that can be used by guests and are raised are at least 90 cm wide.</li>\n <li>The cash counter is 73 cm high at the lowest point.&nbsp;</li>\n <li>The exhibits are predominantly visible while seated. Exhibit information is predominantly legible while seated.&nbsp;</li>\n <li>Guided tours are available for people with walking disabilities and wheelchair users. Advance reservations are required.</li>\n <li>Mobile or fixed seating is available for people with walking disabilities to use during the tour.</li>\n <li>The entire route of the guided tour is step-free for wheelchair users.</li>\n</ul>\n<h4><strong>Public toilet for people with disabilities (basement)</strong></h4>\n<ul>\n <li>The manoeuvring spaces are: &nbsp;<br>\nin front of/behind the door, in front of the WC and in front of the washbasin at least 150 cm x 150 cm;<br>\nto the left and right of the WC at least 90 cm x 70 cm.&nbsp;</li>\n <li>Grab rails are provided to the left and right of the WC. The grab rails are flipped up.</li>\n <li>The sink is wheelchair compatible.&nbsp;</li>\n <li>The mirror can be viewed while standing or sitting.</li>\n <li>There is an alarm trigger.</li>\n</ul>"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityAllGenerations": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b20",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Generationen_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b21",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Generations_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityAllergic": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b22",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Allergien_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b23",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Allergic_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityDeaf": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b24",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Hoeren_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b25",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Deaf_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityMental": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b26",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Kognitiv_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b27",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Mental_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilitySummary": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b28",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Kurzbericht_Kommandantenhaus_Ausstellung_und_Besucherzentrum_PA-13326-2022_de.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b29",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Short_Report_Commandant_s_house_-_exhibition_and_visitor_center_PA-13326-2022_en.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityVisual": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b30",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Sehen_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b31",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Visual_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityWalking": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b32",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Gehen_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b33",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Walking_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ],
+            "thuecat:urlDescriptionAccessibilityWheelchair": [
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b34",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "de"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Rollstuhl_Kommandantenhaus__Ausstellung_und_Besucherzentrum.pdf"
+                    }
+                },
+                {
+                    "@id": "genid-9d018924d60a4c65b2f8aabc404b7eeb955032-b35",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:DigitalDocument"
+                    ],
+                    "schema:inLanguage": {
+                        "@type": "xsd:string",
+                        "@value": "en"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://partner-api.reisen-fuer-alle.de/bfdbpdfs/service_provider/6594/Wheelchair_Commandants_house_-_exhibition_and_visitor_center.pdf"
+                    }
+                }
+            ]
+        }
+    ]
+}

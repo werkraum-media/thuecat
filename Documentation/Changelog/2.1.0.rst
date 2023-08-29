@@ -34,6 +34,9 @@ Fixes
   The logging is now adjusted to only log errors.
   The file will be checked for each test that does not expect errors to happen.
 
+* Handle incoming array instead of string for ``AccessibilityCertification``.
+  That prevents mapping exceptions for objects containing the corresponding certification with more info than a single value.
+
 Tasks
 -----
 
