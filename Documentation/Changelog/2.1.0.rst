@@ -14,6 +14,15 @@ Features
   This finally allows to regularly execute imports.
   This also allows to import from CLI context with differently configured timeouts.
 
+* Add support for additional images added via TYPO3.
+  Some installations might need to add further images to records imported from ThüCAT.
+  The records are now extended to support adding images by editors.
+  The images are not touched during import.
+  The images are also ignored during clean ups, the editor is in full control.
+
+  This feature for now is only added to tourist attractions by default.
+  The feature is implemented in a way that all objects extending the ``WerkraumMedia\ThueCat\Domain\Model\Frontend\Base`` class are usable by adding an ``editorial_images`` field to their table.
+
 Fixes
 -----
 
@@ -27,6 +36,11 @@ Tasks
 * Converted log entry for none converted entity from error to notice.
   As this might hint at an issue but most probably is okay, e.g. due to none active
   language, missing name, etc.
+
+* Separate default templates from templates for testing.
+  That way we no longer test the delivered templates, but they should not be used anyway.
+  Also we can now use templates only for testing to ensure that frontend rendering works as expected, without worrying about sites using the templates.
+  The templates were copied and extended for editorial images.
 
 Deprecation
 -----------

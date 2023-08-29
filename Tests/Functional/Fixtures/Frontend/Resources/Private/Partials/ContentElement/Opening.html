@@ -1,0 +1,27 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+    <div class="openingHours row">
+        <f:for each="{openingHours}" as="openingHour">
+            <f:if condition="{openingHours -> f:count()} == 1">
+                <f:then>
+                    <div class="col-12">
+                </f:then>
+                <f:else>
+                    <div class="col-md-6">
+                </f:else>
+            </f:if>
+            <h3>
+                {openingHour.from -> f:format.date(format: 'd.m.Y')} -
+                {openingHour.through -> f:format.date(format: 'd.m.Y')}
+            </h3>
+            <div>
+                <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
+                    <div class="day-row">
+                        <div class="day"><span>{f:translate(id: 'content.openingHour.weekday.{weekday}', default: weekday, extensionName: 'Thuecat')}</span></div>
+                        <div class="time"><span>{openingHour.opens} - {openingHour.closes}</span></div>
+                    </div>
+                </f:for>
+            </div>
+        </div>
+        </f:for>
+    </div>
+</html>

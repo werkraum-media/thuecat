@@ -1,2 +1,11 @@
 page = PAGE
 page.10 < styles.content.get
+
+lib.thuecatContentElement {
+    partialRootPaths {
+        0 = EXT:thuecat/Tests/Functional/Fixtures/Frontend/Resources/Private/Partials/ContentElement/
+    }
+    templateRootPaths {
+        0 = EXT:thuecat/Tests/Functional/Fixtures/Frontend/Resources/Private/Templates/ContentElement/
+    }
+}
