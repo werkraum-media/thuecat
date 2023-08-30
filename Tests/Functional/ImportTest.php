@@ -384,4 +384,24 @@ class ImportTest extends AbstractImportTest
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithMedia.csv');
     }
+
+    /**
+     * @test
+     */
+    public function importsTouristAttractionWithAccessibilitySpecification(): void
+    {
+        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.xml');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-accessibility-specification.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
+
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        $this->get(Importer::class)->importConfiguration($configuration);
+
+        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.csv');
+        $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
+        self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
+        self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
+    }
 }

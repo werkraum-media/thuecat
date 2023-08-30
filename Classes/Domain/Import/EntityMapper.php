@@ -31,6 +31,7 @@ use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\ArrayDenormalizer;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\CustomAnnotationExtractor;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
 
@@ -70,16 +71,22 @@ class EntityMapper
                     null,
                     null,
                     // We enforce following behaviour:
-                    // 1. Try to fetch info via reflection (e.g. by methods or property)
-                    // 2. Use php doc as fallback
+                    // 1. Try our own extractor to check for annotations on setter method.
+                    // 2. Try to fetch info via reflection (e.g. by methods or property)
+                    // 3. Use php doc as fallback
                     // We do this because of:
                     //  Most of the time we can just use the TypeHint of setter or add/remove for collections
                     //  Sometimes we have to deal with multiple types (e.g. string and array)
                     //  We then can have a different property name and no type hint, reflection will fail
                     //  But we can use PHPDoc to define all supported
+                    //  And we can overrule the symfony behaviour first of all with our own extractor taking precedence.
+                    //
+                    // The reflection will first check mutator, then getter followed from properties.
+                    // The phpdoc will first check the property itself.
                     new PropertyInfoExtractor(
                         [],
                         [
+                            new CustomAnnotationExtractor(),
                             new ReflectionExtractor(),
                             new PhpDocExtractor(),
                         ]
