@@ -239,7 +239,6 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'offers' => [
                 'label' => $languagePath . '.offers',
-                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,

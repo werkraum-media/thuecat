@@ -23,6 +23,9 @@ Features
   This feature for now is only added to tourist attractions by default.
   The feature is implemented in a way that all objects extending the ``WerkraumMedia\ThueCat\Domain\Model\Frontend\Base`` class are usable by adding an ``editorial_images`` field to their table.
 
+* Support translated offers.
+  The translation for offers of tourist attractions got added.
+
 Fixes
 -----
 
