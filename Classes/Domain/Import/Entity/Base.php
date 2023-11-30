@@ -65,6 +65,7 @@ class Base extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @return ForeignReference[]
      */
     public function getImage(): array

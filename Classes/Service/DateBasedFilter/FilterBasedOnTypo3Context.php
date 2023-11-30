@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
+use DateTimeImmutable;
 use TYPO3\CMS\Core\Context\Context;
 use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
@@ -48,9 +49,9 @@ class FilterBasedOnTypo3Context implements DateBasedFilter
         array $listToFilter,
         callable $provideDate
     ): array {
-        $referenceDate = $this->context->getPropertyFromAspect('date', 'full', new \DateTimeImmutable());
+        $referenceDate = $this->context->getPropertyFromAspect('date', 'full', new DateTimeImmutable());
 
-        return array_filter($listToFilter, function($elementToFilter) use ($referenceDate, $provideDate) {
+        return array_filter($listToFilter, function ($elementToFilter) use ($referenceDate, $provideDate) {
             $objectDate = $provideDate($elementToFilter);
             return $objectDate === null || $objectDate >= $referenceDate;
         });

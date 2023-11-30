@@ -23,23 +23,16 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import\EntityMapping;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 
-
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Converter\ObjectMapping
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Entity\Base
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Entity\Properies\ForeignReference
- */
 class BaseInfosTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function instanceOfBaseIsReturnedIfRequestes(): void
     {
         $subject = new EntityMapper();
@@ -52,9 +45,7 @@ class BaseInfosTest extends TestCase
         self::assertInstanceOf(Base::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsDefaultValuesIfNotProvidedForMapping(): void
     {
         $subject = new EntityMapper();
@@ -74,9 +65,7 @@ class BaseInfosTest extends TestCase
         self::assertNull($result->getManagedBy());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingDataToProperties(): void
     {
         $subject = new EntityMapper();
@@ -97,9 +86,7 @@ class BaseInfosTest extends TestCase
         self::assertSame(['https://example.com/the-thing'], $result->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingPhoto(): void
     {
         $subject = new EntityMapper();
@@ -117,9 +104,7 @@ class BaseInfosTest extends TestCase
         self::assertSame('https://thuecat.org/resources/835224016581-dara', $result->getPhoto()->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingImages(): void
     {
         $subject = new EntityMapper();
@@ -146,9 +131,7 @@ class BaseInfosTest extends TestCase
         self::assertSame('https://thuecat.org/resources/835224016581-2nd', $result->getImages()[1]->getId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingManagedBy(): void
     {
         $subject = new EntityMapper();

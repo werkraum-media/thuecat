@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
+use Exception;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
@@ -100,7 +101,7 @@ class SavingEntity extends ImportLogEntry
         if ($this->errorsAsArray === [] && $this->errors !== '') {
             $errorsAsArray = json_decode($this->errors, true);
             if (is_array($errorsAsArray) === false) {
-                throw new \Exception('Could not parse errors.', 1671097690);
+                throw new Exception('Could not parse errors.', 1671097690);
             }
             $this->errorsAsArray = array_unique($errorsAsArray);
         }
@@ -121,7 +122,7 @@ class SavingEntity extends ImportLogEntry
     public function getInsertion(): array
     {
         return [
-            'insertion' => (int) $this->wasInsertion(),
+            'insertion' => (int)$this->wasInsertion(),
             'record_uid' => $this->getRecordUid(),
             'table_name' => $this->getRecordDatabaseTableName(),
         ];

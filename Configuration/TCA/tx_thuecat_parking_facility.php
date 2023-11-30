@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
 
     return [
         'ctrl' => [
             'label' => 'title',
-            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'title' => $languagePath,
             'enablecolumns' => [
                 'disabled' => 'disable',
@@ -27,19 +30,7 @@ return (static function (string $extensionKey, string $tableName) {
             'sys_language_uid' => [
                 'exclude' => true,
                 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'special' => 'languages',
-                    'items' => [
-                        [
-                            'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.allLanguages',
-                            -1,
-                            'flags-multiple',
-                        ],
-                    ],
-                    'default' => 0,
-                ],
+                'config' => ['type' => 'language'],
             ],
             'l18n_parent' => [
                 'displayCond' => 'FIELD:sys_language_uid:>:0',
@@ -47,7 +38,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
-                    'items' => [['', 0]],
+                    'items' => [['label' => '', 'value' => 0]],
                     'foreign_table' => $tableName,
                     'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',
                     'default' => 0,
@@ -66,12 +57,12 @@ return (static function (string $extensionKey, string $tableName) {
                     'renderType' => 'checkboxToggle',
                     'items' => [
                         [
-                            0 => '',
+                            'label' => '',
                             1 => '',
-                            'invertStateDisplay' => true
-                        ]
+                            'invertStateDisplay' => true,
+                        ],
                     ],
-                ]
+                ],
             ],
 
             'title' => [
@@ -190,8 +181,8 @@ return (static function (string $extensionKey, string $tableName) {
                     'default' => '0',
                     'items' => [
                         [
-                            $languagePath . '.town.unkown',
-                            0,
+                            'label' => $languagePath . '.town.unkown',
+                            'value' => 0,
                         ],
                     ],
                     'readOnly' => true,
@@ -207,8 +198,8 @@ return (static function (string $extensionKey, string $tableName) {
                     'default' => '0',
                     'items' => [
                         [
-                            $languagePath . '.managed_by.unkown',
-                            0,
+                            'label' => $languagePath . '.managed_by.unkown',
+                            'value' => 0,
                         ],
                     ],
                     'readOnly' => true,
@@ -227,4 +218,4 @@ return (static function (string $extensionKey, string $tableName) {
             ],
         ],
     ];
-})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY, 'tx_thuecat_parking_facility');
+})(Extension::EXTENSION_KEY, 'tx_thuecat_parking_facility');

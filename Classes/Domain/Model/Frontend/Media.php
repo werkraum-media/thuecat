@@ -94,6 +94,7 @@ class Media implements TypeInterface
 
     /**
      * @internal Only used to set the values while mapping objects.
+     *
      * @see: AfterObjectThawedHandler
      */
     public function setEditorialImages(array $images): void

@@ -34,26 +34,14 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 class ResolveEntities implements DataProcessorInterface
 {
     /**
-     * @var ConnectionPool
-     */
-    private $connectionPool;
-
-    /**
-     * @var DataMapper
-     */
-    private $dataMapper;
-
-    /**
      * @var TypoScriptFrontendController
      */
     private $tsfe;
 
     public function __construct(
-        ConnectionPool $connectionPool,
-        DataMapper $dataMapper
+        private readonly ConnectionPool $connectionPool,
+        private readonly DataMapper $dataMapper
     ) {
-        $this->connectionPool = $connectionPool;
-        $this->dataMapper = $dataMapper;
         $this->tsfe = $GLOBALS['TSFE'];
     }
 
@@ -67,9 +55,9 @@ class ResolveEntities implements DataProcessorInterface
             return $processedData;
         }
 
-        $as = (string) $cObj->stdWrapValue('as', $processorConfiguration, 'entities');
-        $tableName = (string) $cObj->stdWrapValue('table', $processorConfiguration, '');
-        $uids = (string) $cObj->stdWrapValue('uids', $processorConfiguration, '');
+        $as = (string)$cObj->stdWrapValue('as', $processorConfiguration, 'entities');
+        $tableName = (string)$cObj->stdWrapValue('table', $processorConfiguration, '');
+        $uids = (string)$cObj->stdWrapValue('uids', $processorConfiguration, '');
 
         $uids = GeneralUtility::intExplode(',', $uids);
         if ($uids === [] || $tableName === '') {
@@ -93,14 +81,14 @@ class ResolveEntities implements DataProcessorInterface
         ));
 
         $rows = [];
-        foreach ($queryBuilder->execute() as $row) {
+        foreach ($queryBuilder->executeQuery()->iterateAssociative() as $row) {
             $row = $this->tsfe->sys_page->getLanguageOverlay($tableName, $row);
             if (is_array($row)) {
                 $rows[] = $row;
             }
         }
 
-        usort($rows, function (array $rowA, array $rowB) use($uids) {
+        usort($rows, function (array $rowA, array $rowB) use ($uids) {
             return array_search($rowA['uid'], $uids) <=> array_search($rowB['uid'], $uids);
         });
 

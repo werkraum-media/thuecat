@@ -23,17 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offer;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Offer
- */
 class OfferTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreatedWithLegacyTypeAsString(): void
     {
         $subject = Offer::createFromArray([
@@ -51,9 +47,7 @@ class OfferTest extends TestCase
         self::assertSame('LegacyType', $subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreatedWithSingleType(): void
     {
         $subject = Offer::createFromArray([
@@ -71,9 +65,7 @@ class OfferTest extends TestCase
         self::assertSame('ParkingFee', $subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreatedWithMultipleTypes(): void
     {
         $subject = Offer::createFromArray([
@@ -91,9 +83,7 @@ class OfferTest extends TestCase
         self::assertSame('CourseOffer', $subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreatedWithoutType(): void
     {
         $subject = Offer::createFromArray([

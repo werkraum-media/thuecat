@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -32,10 +31,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 class ParkingFacilityRepository extends Repository
 {
     public function __construct(
-        ObjectManagerInterface $objectManager,
         Typo3QuerySettings $querySettings
     ) {
-        parent::__construct($objectManager);
+        parent::__construct();
 
         $querySettings->setRespectStoragePage(false);
 

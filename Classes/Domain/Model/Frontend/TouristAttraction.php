@@ -35,12 +35,12 @@ class TouristAttraction extends Place
     /**
      * @var Offers|null
      */
-    protected $offers = null;
+    protected $offers;
 
     /**
      * @var Town|null
      */
-    protected $town = null;
+    protected $town;
 
     /**
      * @var string

@@ -34,24 +34,11 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 
 class ImportConfigurationCommand extends Command
 {
-    /**
-     * @var ImportConfigurationRepository
-     */
-    private $importConfigurationRepository;
-
-    /**
-     * @var Importer
-     */
-    private $importer;
-
     public function __construct(
-        ImportConfigurationRepository $importConfigurationRepository,
-        Importer $importer
+        private readonly ImportConfigurationRepository $importConfigurationRepository,
+        private readonly Importer $importer
     ) {
         parent::__construct();
-
-        $this->importConfigurationRepository = $importConfigurationRepository;
-        $this->importer = $importer;
     }
 
     protected function configure(): void

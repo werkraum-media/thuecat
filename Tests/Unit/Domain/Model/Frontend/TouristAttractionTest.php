@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHour;
@@ -30,17 +33,11 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHours;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction
- */
 class TouristAttractionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsParkingFacilitiesNearBySorted(): void
     {
         $unsortedFacilities = new ObjectStorage();
@@ -73,9 +70,7 @@ class TouristAttractionTest extends TestCase
         return $facility;
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsDistanceToPublicTransportArrayWithoutTypes(): void
     {
         $subject = new TouristAttraction();
@@ -88,9 +83,7 @@ class TouristAttractionTest extends TestCase
         ], $subject->getDistanceToPublicTransport());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsDistanceToPublicTransportArrayWithTwoTypes(): void
     {
         $subject = new TouristAttraction();
@@ -106,12 +99,10 @@ class TouristAttractionTest extends TestCase
         ], $subject->getDistanceToPublicTransport());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsMergedOpeningHours(): void
     {
-        GeneralUtility::addInstance(DateBasedFilter::class, new class implements DateBasedFilter {
+        GeneralUtility::addInstance(DateBasedFilter::class, new class() implements DateBasedFilter {
             public function filterOutPreviousDates(
                 array $listToFilter,
                 callable $provideDate
@@ -128,10 +119,10 @@ class TouristAttractionTest extends TestCase
                     'Sunday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+2 days')->format('U'),
                 ],
             ],
             [
@@ -142,10 +133,10 @@ class TouristAttractionTest extends TestCase
                     'Tuesday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+2 days')->format('U'),
                 ],
             ],
             [
@@ -155,10 +146,10 @@ class TouristAttractionTest extends TestCase
                     'Saturday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+3 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+3 days')->format('U'),
                 ],
             ],
         ]) ?: '');
@@ -171,9 +162,9 @@ class TouristAttractionTest extends TestCase
         self::assertCount(2, $result);
         foreach ($result as $index => $mergedHour) {
             self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
-            $today = (new \DateTimeImmutable())->format('Y-m-d');
-            $inTwoDays = (new \DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
-            $inThreeDays = (new \DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
+            $today = (new DateTimeImmutable())->format('Y-m-d');
+            $inTwoDays = (new DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
+            $inThreeDays = (new DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
 
             if ($index === 0) {
                 self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');
@@ -199,12 +190,10 @@ class TouristAttractionTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsMergedSpecialOpeningHours(): void
     {
-        GeneralUtility::addInstance(DateBasedFilter::class, new class implements DateBasedFilter {
+        GeneralUtility::addInstance(DateBasedFilter::class, new class() implements DateBasedFilter {
             public function filterOutPreviousDates(
                 array $listToFilter,
                 callable $provideDate
@@ -221,10 +210,10 @@ class TouristAttractionTest extends TestCase
                     'Sunday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+2 days')->format('U'),
                 ],
             ],
             [
@@ -235,10 +224,10 @@ class TouristAttractionTest extends TestCase
                     'Tuesday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+2 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+2 days')->format('U'),
                 ],
             ],
             [
@@ -248,10 +237,10 @@ class TouristAttractionTest extends TestCase
                     'Saturday',
                 ],
                 'from' => [
-                    'date' => '@' . (new \DateTimeImmutable())->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->format('U'),
                 ],
                 'through' => [
-                    'date' => '@' . (new \DateTimeImmutable())->modify('+3 days')->format('U'),
+                    'date' => '@' . (new DateTimeImmutable())->modify('+3 days')->format('U'),
                 ],
             ],
         ]) ?: '');
@@ -264,9 +253,9 @@ class TouristAttractionTest extends TestCase
         self::assertCount(2, $result);
         foreach ($result as $index => $mergedHour) {
             self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
-            $today = (new \DateTimeImmutable())->format('Y-m-d');
-            $inTwoDays = (new \DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
-            $inThreeDays = (new \DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
+            $today = (new DateTimeImmutable())->format('Y-m-d');
+            $inTwoDays = (new DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
+            $inThreeDays = (new DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
 
             if ($index === 0) {
                 self::assertSame($today, $mergedHour->getFrom() ? $mergedHour->getFrom()->format('Y-m-d') : '');

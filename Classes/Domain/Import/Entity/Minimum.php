@@ -108,6 +108,7 @@ abstract class Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $url
      */
     public function setUrl($url): void

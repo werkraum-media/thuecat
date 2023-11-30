@@ -85,7 +85,7 @@ class MediaObject extends Minimum implements MapsToType
      */
     public function setCopyrightYear(string $copyrightYear): void
     {
-        $this->copyrightYear = (int) $copyrightYear;
+        $this->copyrightYear = (int)$copyrightYear;
     }
 
     /**
@@ -106,6 +106,7 @@ class MediaObject extends Minimum implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|ForeignReference $author
      */
     public function setAuthor($author): void

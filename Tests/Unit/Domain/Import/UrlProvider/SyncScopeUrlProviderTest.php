@@ -23,19 +23,15 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider
- */
 class SyncScopeUrlProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $fetchData = $this->createStub(FetchData::class);
@@ -47,9 +43,7 @@ class SyncScopeUrlProviderTest extends TestCase
         self::assertInstanceOf(SyncScopeUrlProvider::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canProvideForSyncScope(): void
     {
         $configuration = new ImportConfiguration();
@@ -65,9 +59,7 @@ class SyncScopeUrlProviderTest extends TestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsConcreteProviderForConfiguration(): void
     {
         $configuration = new ImportConfiguration();
@@ -92,9 +84,7 @@ class SyncScopeUrlProviderTest extends TestCase
         self::assertInstanceOf(SyncScopeUrlProvider::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function concreteProviderReturnsUrls(): void
     {
         $configuration = new ImportConfiguration();

@@ -23,22 +23,16 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
+use Countable;
+use Iterator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers
- *
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Frontend\Offer
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Frontend\Price
- *
- * @testdox Frontend model for offers
- */
 class OffersTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new Offers('{}');
@@ -46,31 +40,24 @@ class OffersTest extends TestCase
         self::assertInstanceOf(Offers::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isCountable(): void
     {
         $subject = new Offers('{}');
 
-        self::assertInstanceOf(\Countable::class, $subject);
+        self::assertInstanceOf(Countable::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isIterator(): void
     {
         $subject = new Offers('{}');
 
-        self::assertInstanceOf(\Iterator::class, $subject);
+        self::assertInstanceOf(Iterator::class, $subject);
     }
 
-    /**
-     * @test
-     * @dataProvider forCount
-     * @testdox returns $expected for count
-     */
+    #[Test]
+    #[DataProvider('forCount')]
     public function returnsExpectedCount(string $serialized, int $expected): void
     {
         $subject = new Offers($serialized);
@@ -78,7 +65,7 @@ class OffersTest extends TestCase
         self::assertCount($expected, $subject);
     }
 
-    public function forCount(): array
+    public static function forCount(): array
     {
         return [
             'zero' => [

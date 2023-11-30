@@ -32,29 +32,11 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 class RequestFactory implements RequestFactoryInterface
 {
-    /**
-     * @var ExtensionConfiguration
-     */
-    private $extensionConfiguration;
-
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $requestFactory;
-
-    /**
-     * @var UriFactoryInterface
-     */
-    private $uriFactory;
-
     public function __construct(
-        ExtensionConfiguration $extensionConfiguration,
-        RequestFactoryInterface $requestFactory,
-        UriFactoryInterface $uriFactory
+        private readonly ExtensionConfiguration $extensionConfiguration,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly UriFactoryInterface $uriFactory
     ) {
-        $this->extensionConfiguration = $extensionConfiguration;
-        $this->requestFactory = $requestFactory;
-        $this->uriFactory = $uriFactory;
     }
 
     /**
@@ -63,7 +45,7 @@ class RequestFactory implements RequestFactoryInterface
     public function createRequest(string $method, $uri): RequestInterface
     {
         if (!$uri instanceof UriInterface) {
-            $uri = $this->uriFactory->createUri((string) $uri);
+            $uri = $this->uriFactory->createUri((string)$uri);
         }
 
         $query = [];

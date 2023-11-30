@@ -23,18 +23,14 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Model;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
- */
 class EntityCollectionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new EntityCollection();
@@ -42,9 +38,7 @@ class EntityCollectionTest extends TestCase
         self::assertInstanceOf(EntityCollection::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsDefaultEntities(): void
     {
         $subject = new EntityCollection();
@@ -52,9 +46,7 @@ class EntityCollectionTest extends TestCase
         self::assertSame([], $subject->getEntities());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsFirstEntityForDefaultLanguage(): void
     {
         $entityWithTranslation = $this->createStub(Entity::class);
@@ -73,9 +65,7 @@ class EntityCollectionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsNullIfNoEntityForDefaultLanguageExists(): void
     {
         $entityWithTranslation = $this->createStub(Entity::class);
@@ -89,9 +79,7 @@ class EntityCollectionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEntitiesToTranslate(): void
     {
         $entityWithTranslation = $this->createStub(Entity::class);
@@ -109,9 +97,7 @@ class EntityCollectionTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsExistingEntities(): void
     {
         $entityWithTranslation = $this->createStub(Entity::class);

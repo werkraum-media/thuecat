@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class Offer extends Minimum
 {
@@ -48,6 +48,7 @@ class Offer extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $offerType
      */
     public function setOfferType($offerType): void
@@ -72,6 +73,7 @@ class Offer extends Minimum
 
     /**
      * @return PriceSpecification[]
+     *
      * @internal for mapping via Symfony component.
      */
     public function getPriceSpecification(): array

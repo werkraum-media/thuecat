@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use Countable;
+use DateTimeImmutable;
+use Iterator;
 use TYPO3\CMS\Core\Type\TypeInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Service\DateBasedFilter;
@@ -30,7 +33,7 @@ use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 /**
  * @implements \Iterator<int, OpeningHour>
  */
-class OpeningHours implements TypeInterface, \Iterator, \Countable
+class OpeningHours implements TypeInterface, Iterator, Countable
 {
     /**
      * @var string
@@ -63,10 +66,11 @@ class OpeningHours implements TypeInterface, \Iterator, \Countable
         $array = GeneralUtility::makeInstance(DateBasedFilter::class)
             ->filterOutPreviousDates(
                 $array,
-                function (OpeningHour $hour): ?\DateTimeImmutable {
+                function (OpeningHour $hour): ?DateTimeImmutable {
                     return $hour->getThrough();
                 }
-            );
+            )
+        ;
 
         usort($array, function (OpeningHour $hourA, OpeningHour $hourB) {
             return $hourA->getFrom() <=> $hourB->getFrom();

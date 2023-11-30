@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Acceptance\Support;
 
+use Codappix\Typo3PhpDatasets\TestingFramework;
+use Codeception\Event\SuiteEvent;
 use TYPO3\TestingFramework\Core\Acceptance\Extension\BackendEnvironment;
 
 /**
@@ -30,6 +32,8 @@ use TYPO3\TestingFramework\Core\Acceptance\Extension\BackendEnvironment;
  */
 class Environment extends BackendEnvironment
 {
+    use TestingFramework;
+
     protected $localConfig = [
         'coreExtensionsToLoad' => [
             'install',
@@ -40,13 +44,17 @@ class Environment extends BackendEnvironment
             'fluid',
         ],
         'testExtensionsToLoad' => [
-            'typo3conf/ext/thuecat',
-        ],
-        'csvDatabaseFixtures' => [
-            __DIR__ . '/../Data/BasicDatabase.csv',
+            'werkraummedia/thuecat',
         ],
         'pathsToLinkInTestInstance' => [
             '/../../../../../../Tests/Acceptance/Data/Sites/' => 'typo3conf/sites',
         ],
     ];
+
+    public function bootstrapTypo3Environment(SuiteEvent $suiteEvent)
+    {
+        parent::bootstrapTypo3Environment($suiteEvent);
+
+        $this->importPHPDataSet(__DIR__ . '/../Data/BasicDatabase.php');
+    }
 }

@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
-class MergedOpeningHours implements \Iterator, \Countable
+use Countable;
+use Iterator;
+
+class MergedOpeningHours implements Iterator, Countable
 {
     /**
      * @var MergedOpeningHour[]

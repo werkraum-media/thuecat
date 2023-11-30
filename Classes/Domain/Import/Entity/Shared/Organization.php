@@ -46,6 +46,7 @@ trait Organization
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @return Offer[]
      */
     public function getMakesOffer(): array

@@ -23,8 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use Exception;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
@@ -53,41 +54,6 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 class GeneralConverter implements Converter
 {
     /**
-     * @var ResolveForeignReference
-     */
-    private $resolveForeignReference;
-
-    /**
-     * @var Importer
-     */
-    private $importer;
-
-    /**
-     * @var LanguageHandling
-     */
-    private $languageHandling;
-
-    /**
-     * @var OrganisationRepository
-     */
-    private $organisationRepository;
-
-    /**
-     * @var TownRepository
-     */
-    private $townRepository;
-
-    /**
-     * @var ParkingFacilityRepository
-     */
-    private $parkingFacilityRepository;
-
-    /**
-     * @var NameExtractor
-     */
-    private $nameExtractor;
-
-    /**
      * @var Logger
      */
     private $logger;
@@ -110,22 +76,15 @@ class GeneralConverter implements Converter
     ];
 
     public function __construct(
-        ResolveForeignReference $resolveForeignReference,
-        Importer $importer,
-        LanguageHandling $languageHandling,
-        OrganisationRepository $organisationRepository,
-        TownRepository $townRepository,
-        ParkingFacilityRepository $parkingFacilityRepository,
-        NameExtractor $nameExtractor,
+        private readonly ResolveForeignReference $resolveForeignReference,
+        private readonly Importer $importer,
+        private readonly LanguageHandling $languageHandling,
+        private readonly OrganisationRepository $organisationRepository,
+        private readonly TownRepository $townRepository,
+        private readonly ParkingFacilityRepository $parkingFacilityRepository,
+        private readonly NameExtractor $nameExtractor,
         LogManager $logManager
     ) {
-        $this->resolveForeignReference = $resolveForeignReference;
-        $this->importer = $importer;
-        $this->languageHandling = $languageHandling;
-        $this->organisationRepository = $organisationRepository;
-        $this->townRepository = $townRepository;
-        $this->parkingFacilityRepository = $parkingFacilityRepository;
-        $this->nameExtractor = $nameExtractor;
         $this->logger = $logManager->getLogger(__CLASS__);
     }
 
@@ -214,7 +173,7 @@ class GeneralConverter implements Converter
     {
         $tableName = $this->classToTableMapping[$className] ?? '';
         if ($tableName == '') {
-            throw new \Exception('No table name configured for class ' . $className, 1629376990);
+            throw new Exception('No table name configured for class ' . $className, 1629376990);
         }
 
         return $tableName;
@@ -298,7 +257,7 @@ class GeneralConverter implements Converter
             )
         );
         $town = $this->townRepository->findOneByEntity($entity);
-        return $town ? (string) $town->getUid() : '';
+        return $town ? (string)$town->getUid() : '';
     }
 
     private function getParkingFacilitiesNearByUids(Base $entity): array

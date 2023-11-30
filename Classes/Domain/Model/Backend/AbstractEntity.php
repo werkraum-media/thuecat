@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
+use DateTimeImmutable;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
 
 class AbstractEntity extends Typo3AbstractEntity
@@ -43,9 +44,9 @@ class AbstractEntity extends Typo3AbstractEntity
     protected $description = '';
 
     /**
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
-    protected $tstamp = null;
+    protected $tstamp;
 
     public function getRemoteId(): string
     {
@@ -62,7 +63,7 @@ class AbstractEntity extends Typo3AbstractEntity
         return $this->description;
     }
 
-    public function getLastImported(): ?\DateTimeImmutable
+    public function getLastImported(): ?DateTimeImmutable
     {
         return $this->tstamp;
     }

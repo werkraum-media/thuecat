@@ -23,18 +23,14 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Resource\FileReference;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Media
- */
 class MediaTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new Media('[]');
@@ -42,9 +38,7 @@ class MediaTest extends TestCase
         self::assertInstanceOf(Media::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsMainImageIfPresent(): void
     {
         $subject = new Media('[{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg"},{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg"}]');
@@ -56,9 +50,7 @@ class MediaTest extends TestCase
         ], $subject->getMainImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsMainImageFallback(): void
     {
         $subject = new Media('[]');
@@ -66,9 +58,7 @@ class MediaTest extends TestCase
         self::assertSame([], $subject->getMainImage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsImagesAsArray(): void
     {
         $subject = new Media('[{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg"},{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg"}]');
@@ -87,9 +77,7 @@ class MediaTest extends TestCase
         ], $subject->getImages());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsExtraImagesAsArray(): void
     {
         $subject = new Media('[{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg"},{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg"}]');
@@ -103,9 +91,7 @@ class MediaTest extends TestCase
         ], $subject->getExtraImages());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function doesNotAddCopyrightAuthorIfItDoesntExist(): void
     {
         $subject = new Media(json_encode([
@@ -131,9 +117,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsCopyrightAuthorFromLicenseAuthor(): void
     {
         $subject = new Media(json_encode([
@@ -165,9 +149,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsCopyrightAuthorFromAuthor(): void
     {
         $subject = new Media(json_encode([
@@ -195,9 +177,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function addsCopyrightAuthorFromAuthorWithHigherPrio(): void
     {
         $subject = new Media(json_encode([
@@ -231,9 +211,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsDefaultForEditorialImages(): void
     {
         $subject = new Media('');
@@ -243,9 +221,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsSetEditorialImages(): void
     {
         $subject = new Media('');
@@ -263,9 +239,7 @@ class MediaTest extends TestCase
         self::assertSame($reference2, $images[1]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsDefaultForAllImages(): void
     {
         $subject = new Media('');
@@ -275,9 +249,7 @@ class MediaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsAllImages(): void
     {
         $subject = new Media(json_encode([

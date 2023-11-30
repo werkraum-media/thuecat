@@ -23,18 +23,14 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Backend;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog
- */
 class ImportLogTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new ImportLog();
@@ -42,9 +38,7 @@ class ImportLogTest extends TestCase
         self::assertInstanceOf(ImportLog::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsConfigurationIfSet(): void
     {
         $configuration = new ImportConfiguration();
@@ -53,9 +47,7 @@ class ImportLogTest extends TestCase
         self::assertSame($configuration, $subject->getConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsNullForConfigurationIfNotSet(): void
     {
         $subject = new ImportLog();
@@ -63,9 +55,7 @@ class ImportLogTest extends TestCase
         self::assertNull($subject->getConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsConfigurationUidIfSet(): void
     {
         $configuration = new ImportConfiguration();
@@ -75,9 +65,7 @@ class ImportLogTest extends TestCase
         self::assertSame(10, $subject->getConfigurationUid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroForConfigurationIfNotSet(): void
     {
         $subject = new ImportLog();

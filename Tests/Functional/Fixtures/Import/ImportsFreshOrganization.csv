@@ -1,9 +1,0 @@
-tx_thuecat_organisation
-,"uid","pid","remote_id","title"
-,1,11,"https://thuecat.org/resources/018132452787-ngbe","Erfurt Tourismus und Marketing GmbH"
-tx_thuecat_import_log
-,"uid","pid","configuration"
-,1,0,1
-tx_thuecat_import_log_entry
-,"uid","pid","import_log","record_uid","table_name","insertion","errors"
-,1,0,1,1,"tx_thuecat_organisation",1,"[]"

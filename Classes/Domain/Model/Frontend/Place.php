@@ -31,7 +31,7 @@ abstract class Place extends Base
     /**
      * @var Address|null
      */
-    protected $address = null;
+    protected $address;
 
     /**
      * @var string
@@ -41,12 +41,12 @@ abstract class Place extends Base
     /**
      * @var OpeningHours|null
      */
-    protected $openingHours = null;
+    protected $openingHours;
 
     /**
      * @var OpeningHours|null
      */
-    protected $specialOpeningHours = null;
+    protected $specialOpeningHours;
 
     /**
      * @var ObjectStorage<ParkingFacility>
@@ -81,7 +81,7 @@ abstract class Place extends Base
     /**
      * @var AccessiblitySpecification|null
      */
-    protected $accessibilitySpecification = null;
+    protected $accessibilitySpecification;
 
     public function initializeObject(): void
     {

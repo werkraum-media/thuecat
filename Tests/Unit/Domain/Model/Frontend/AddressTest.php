@@ -23,17 +23,13 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Frontend\Address
- */
 class AddressTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new Address('[]');
@@ -41,9 +37,7 @@ class AddressTest extends TestCase
         self::assertInstanceOf(Address::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsProperDefaults(): void
     {
         $subject = new Address('[]');
@@ -56,9 +50,7 @@ class AddressTest extends TestCase
         self::assertSame('', $subject->getFax());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsStreet(): void
     {
         $subject = new Address('{"street": "Example Street 10"}');
@@ -66,9 +58,7 @@ class AddressTest extends TestCase
         self::assertSame('Example Street 10', $subject->getStreet());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZip(): void
     {
         $subject = new Address('{"zip": "09084"}');
@@ -76,9 +66,7 @@ class AddressTest extends TestCase
         self::assertSame('09084', $subject->getZip());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsCity(): void
     {
         $subject = new Address('{"city": "Erfurt"}');
@@ -86,9 +74,7 @@ class AddressTest extends TestCase
         self::assertSame('Erfurt', $subject->getCity());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmail(): void
     {
         $subject = new Address('{"email": "example@example.com"}');
@@ -96,9 +82,7 @@ class AddressTest extends TestCase
         self::assertSame('example@example.com', $subject->getEmail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsPhone(): void
     {
         $subject = new Address('{"phone": "+49 361 99999"}');
@@ -106,9 +90,7 @@ class AddressTest extends TestCase
         self::assertSame('+49 361 99999', $subject->getPhone());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsFax(): void
     {
         $subject = new Address('{"fax": "+49 361 99998"}');
@@ -116,9 +98,7 @@ class AddressTest extends TestCase
         self::assertSame('+49 361 99998', $subject->getFax());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsLatitude(): void
     {
         $subject = new Address('{"geo": {"latitude": 50.978765}}');
@@ -126,9 +106,7 @@ class AddressTest extends TestCase
         self::assertSame(50.978765, $subject->getLatitute());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsLongitude(): void
     {
         $subject = new Address('{"geo": {"longitude": 11.029133}}');
@@ -136,13 +114,11 @@ class AddressTest extends TestCase
         self::assertSame(11.029133, $subject->getLongitude());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsSerializedString(): void
     {
         $subject = new Address('{"street": "Example Street 10"}');
 
-        self::assertSame('{"street": "Example Street 10"}', (string) $subject);
+        self::assertSame('{"street": "Example Street 10"}', (string)$subject);
     }
 }

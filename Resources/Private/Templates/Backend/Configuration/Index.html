@@ -3,130 +3,138 @@
     xmlns:f="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <h1>{f:translate(id: 'module.overview.headline')}</h1>
+    {f:layout(name: 'Module')}
 
-    <f:flashMessages />
+    <f:section name="Content">
+        <h1>{f:translate(id: 'module.overview.headline')}</h1>
 
-    <h2>
-        {f:translate(id: 'module.importConfigurations.headline')}
-        <f:link.newRecord
-            table="tx_thuecat_import_configuration"
-            pid="{settings.newRecordPid.tx_thuecat_import_configuration}"
-            title="{f:translate(id: 'module.importConfigurations.actions.new')}"
-        >
-            {f:icon(identifier: 'actions-document-add')}
-        </f:link.newRecord>
-    </h2>
-    <f:if condition="{importConfigurations}">
-        <f:then>
-            {f:render(section: 'ImportConfigurations', arguments: {importConfigurations: importConfigurations})}
-        </f:then>
-        <f:else>
-            <f:be.infobox
-                title="{f:translate(id: 'module.importConfigurations.missing.title')}"
-                state="1"
+        <f:flashMessages />
+
+        <h2>
+            {f:translate(id: 'module.importConfigurations.headline')}
+            <f:link.newRecord
+                table="tx_thuecat_import_configuration"
+                pid="{settings.newRecordPid.tx_thuecat_import_configuration}"
+                title="{f:translate(id: 'module.importConfigurations.actions.new')}"
             >
-                {f:translate(
-                    id: 'module.importConfigurations.missing.text',
-                    arguments: {
-                        0: "{f:uri.newRecord(table: 'tx_thuecat_import_configuration', pid: settings.newRecordPid.tx_thuecat_import_configuration)}"
-                    }
-                ) -> f:format.raw()}
-            </f:be.infobox>
-        </f:else>
-    </f:if>
+                {f:icon(identifier: 'actions-document-add')}
+            </f:link.newRecord>
+        </h2>
+        <f:if condition="{importConfigurations}">
+            <f:then>
+                {f:render(section: 'ImportConfigurations', arguments: {importConfigurations: importConfigurations})}
+            </f:then>
+            <f:else>
+                <f:be.infobox
+                    title="{f:translate(id: 'module.importConfigurations.missing.title')}"
+                    state="1"
+                >
+                    {f:translate(
+                        id: 'module.importConfigurations.missing.text',
+                        arguments: {
+                            0: "{f:uri.newRecord(table: 'tx_thuecat_import_configuration', pid: settings.newRecordPid.tx_thuecat_import_configuration)}"
+                        }
+                    ) -> f:format.raw()}
+                </f:be.infobox>
+            </f:else>
+        </f:if>
 
-    <h2>{f:translate(id: 'module.organisations.headline')}</h2>
-    <f:if condition="{organisations}">
-        <f:then>
-            {f:render(section: 'Organisations', arguments: {organisations: organisations})}
-        </f:then>
-        <f:else>
-            <f:be.infobox
-                title="{f:translate(id: 'module.organisations.missing.title')}"
-                state="1"
-            >{f:translate(id: 'module.organisations.missing.text')}</f:be.infobox>
-        </f:else>
-    </f:if>
+        <h2>{f:translate(id: 'module.organisations.headline')}</h2>
+        <f:if condition="{organisations}">
+            <f:then>
+                {f:render(section: 'Organisations', arguments: {organisations: organisations})}
+            </f:then>
+            <f:else>
+                <f:be.infobox
+                    title="{f:translate(id: 'module.organisations.missing.title')}"
+                    state="1"
+                >{f:translate(id: 'module.organisations.missing.text')}</f:be.infobox>
+            </f:else>
+        </f:if>
+    </f:section>
 
     <f:section name="ImportConfigurations">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>{f:translate(id: 'module.importConfigurations.title')}</th>
-                    <th>{f:translate(id: 'module.importConfigurations.lastChanged')}</th>
-                    <th>{f:translate(id: 'module.importConfigurations.lastImported')}</th>
-                    <th>{f:translate(id: 'module.actions')}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <f:for each="{importConfigurations}" as="importConfiguration">
+        <div class="panel panel-default">
+            <table class="table table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>{importConfiguration.title}</td>
-                        <td>{importConfiguration.lastChanged -> f:format.date(format: 'd.m.Y H:i')}</td>
-                        <td>
-                            <f:if condition="{importConfiguration.lastImported}">
-                                <f:then>
-                                    {importConfiguration.lastImported -> f:format.date(format: 'd.m.Y H:i')}
-                                </f:then>
-                                <f:else>
-                                    {f:translate(id: 'module.importConfigurations.lastImported.never')}
-                                </f:else>
-                            </f:if>
-                        </td>
-                        <td>
-                            <f:link.editRecord
-                                uid="{importConfiguration.uid}"
-                                table="{importConfiguration.tableName}"
-                                title="{f:translate(id: 'module.importConfigurations.actions.edit')}"
-                            >
-                                {f:icon(identifier: 'actions-document-edit')}
-                            </f:link.editRecord>
-                            <f:link.action
-                                action="import"
-                                controller="Backend\Import"
-                                arguments="{importConfiguration: importConfiguration}"
-                                title="{f:translate(id: 'module.importConfigurations.actions.import')}"
-                            >
-                                {f:icon(identifier: 'actions-download')}
-                            </f:link.action>
-                        </td>
+                        <th>{f:translate(id: 'module.importConfigurations.title')}</th>
+                        <th>{f:translate(id: 'module.importConfigurations.lastChanged')}</th>
+                        <th>{f:translate(id: 'module.importConfigurations.lastImported')}</th>
+                        <th>{f:translate(id: 'module.actions')}</th>
                     </tr>
-                </f:for>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <f:for each="{importConfigurations}" as="importConfiguration">
+                        <tr>
+                            <td>{importConfiguration.title}</td>
+                            <td>{importConfiguration.lastChanged -> f:format.date(format: 'd.m.Y H:i')}</td>
+                            <td>
+                                <f:if condition="{importConfiguration.lastImported}">
+                                    <f:then>
+                                        {importConfiguration.lastImported -> f:format.date(format: 'd.m.Y H:i')}
+                                    </f:then>
+                                    <f:else>
+                                        {f:translate(id: 'module.importConfigurations.lastImported.never')}
+                                    </f:else>
+                                </f:if>
+                            </td>
+                            <td>
+                                <f:link.editRecord
+                                    uid="{importConfiguration.uid}"
+                                    table="{importConfiguration.tableName}"
+                                    title="{f:translate(id: 'module.importConfigurations.actions.edit')}"
+                                >
+                                    {f:icon(identifier: 'actions-document-edit')}
+                                </f:link.editRecord>
+                                <f:link.action
+                                    action="import"
+                                    controller="Backend\Import"
+                                    arguments="{importConfiguration: importConfiguration}"
+                                    title="{f:translate(id: 'module.importConfigurations.actions.import')}"
+                                >
+                                    {f:icon(identifier: 'actions-download')}
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </div>
     </f:section>
 
     <f:section name="Organisations">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>{f:translate(id: 'module.organisation.title')}</th>
-                    <th>{f:translate(id: 'module.organisation.towns')}</th>
-                    <th>{f:translate(id: 'module.organisation.lastImported')}</th>
-                    <th>{f:translate(id: 'module.actions')}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <f:for each="{organisations}" as="organisation">
+        <div class="panel panel-default">
+            <table class="table table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>{organisation.title}</td>
-                        <td>
-                            {f:render(section: 'Towns', arguments: {towns: organisation.managesTowns})}
-                        </td>
-                        <td>{organisation.lastImported -> f:format.date(format: 'd.m.Y H:i')}</td>
-                        <td>
-                            <f:link.editRecord
-                                uid="{organisation.uid}"
-                                table="{organisation.tableName}"
-                            >
-                                {f:icon(identifier: 'actions-document-edit')}
-                            </f:link.editRecord>
-                        </td>
+                        <th>{f:translate(id: 'module.organisation.title')}</th>
+                        <th>{f:translate(id: 'module.organisation.towns')}</th>
+                        <th>{f:translate(id: 'module.organisation.lastImported')}</th>
+                        <th>{f:translate(id: 'module.actions')}</th>
                     </tr>
-                </f:for>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <f:for each="{organisations}" as="organisation">
+                        <tr>
+                            <td>{organisation.title}</td>
+                            <td>
+                                {f:render(section: 'Towns', arguments: {towns: organisation.managesTowns})}
+                            </td>
+                            <td>{organisation.lastImported -> f:format.date(format: 'd.m.Y H:i')}</td>
+                            <td>
+                                <f:link.editRecord
+                                    uid="{organisation.uid}"
+                                    table="{organisation.tableName}"
+                                >
+                                    {f:icon(identifier: 'actions-document-edit')}
+                                </f:link.editRecord>
+                            </td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </div>
     </f:section>
 
     <f:section name="Towns">

@@ -23,17 +23,14 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Backend;
  * 02110-1301, USA.
  */
 
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration
- */
 class ImportConfigurationTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new ImportConfiguration();
@@ -41,9 +38,7 @@ class ImportConfigurationTest extends TestCase
         self::assertInstanceOf(ImportConfiguration::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsTitle(): void
     {
         $subject = new ImportConfiguration();
@@ -52,9 +47,7 @@ class ImportConfigurationTest extends TestCase
         self::assertSame('Example Title', $subject->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsType(): void
     {
         $subject = new ImportConfiguration();
@@ -63,9 +56,7 @@ class ImportConfigurationTest extends TestCase
         self::assertSame('static', $subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsTableName(): void
     {
         $subject = new ImportConfiguration();
@@ -73,12 +64,10 @@ class ImportConfigurationTest extends TestCase
         self::assertSame('tx_thuecat_import_configuration', $subject->getTableName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsLastChanged(): void
     {
-        $lastChanged = new \DateTimeImmutable();
+        $lastChanged = new DateTimeImmutable();
 
         $subject = new ImportConfiguration();
 
@@ -87,23 +76,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame($lastChanged, $subject->getLastChanged());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsStoragePidWhenSet(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">20</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">20</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -114,9 +101,7 @@ class ImportConfigurationTest extends TestCase
         self::assertSame(20, $subject->getStoragePid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroAsStoragePidWhenNoConfigurationExists(): void
     {
         $flexForm = '';
@@ -128,23 +113,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame(0, $subject->getStoragePid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroAsStoragePidWhenNegativePidIsConfigured(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">-1</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">-1</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -155,23 +138,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame(0, $subject->getStoragePid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroAsStoragePidWhenNoneNumericPidIsConfigured(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">abc</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">abc</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -182,34 +163,32 @@ class ImportConfigurationTest extends TestCase
         self::assertSame(0, $subject->getStoragePid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsUrlsWhenSet(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="urls">',
-                                '<el index="el">',
-                                    '<field index="6098e0b6d3fff074555176">',
-                                        '<value index="url">',
-                                            '<el>',
-                                                '<field index="url">',
-                                                    '<value index="vDEF">https://thuecat.org/resources/942302009360-jopp</value>',
-                                                '</field>',
-                                            '</el>',
-                                        '</value>',
-                                        '<value index="_TOGGLE">0</value>',
-                                    '</field>',
-                                '</el>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="urls">',
+            '<el index="el">',
+            '<field index="6098e0b6d3fff074555176">',
+            '<value index="url">',
+            '<el>',
+            '<field index="url">',
+            '<value index="vDEF">https://thuecat.org/resources/942302009360-jopp</value>',
+            '</field>',
+            '</el>',
+            '</value>',
+            '<value index="_TOGGLE">0</value>',
+            '</field>',
+            '</el>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -222,9 +201,7 @@ class ImportConfigurationTest extends TestCase
         ], $subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsUrlsWhenNoConfigurationExists(): void
     {
         $flexForm = '';
@@ -236,23 +213,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame([], $subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayAsUrlsWhenNoUrlsAreConfigured(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">10</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -263,23 +238,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame([], $subject->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsSyncScopeIdWhenSet(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="syncScopeId">',
-                                '<value index="vDEF">dd4639dc-58a7-4648-a6ce-4950293a06db</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="syncScopeId">',
+            '<value index="vDEF">dd4639dc-58a7-4648-a6ce-4950293a06db</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -290,9 +263,7 @@ class ImportConfigurationTest extends TestCase
         self::assertSame('dd4639dc-58a7-4648-a6ce-4950293a06db', $subject->getSyncScopeId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyStringAsSyncScopeIdWhenNoConfigurationExists(): void
     {
         $flexForm = '';
@@ -304,23 +275,21 @@ class ImportConfigurationTest extends TestCase
         self::assertSame('', $subject->getSyncScopeId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyStringAsSyncScopeIdWhenNoSyncScopeIdAreConfigured(): void
     {
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">10</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 

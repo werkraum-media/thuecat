@@ -24,6 +24,31 @@ let
       composer update --prefer-dist --no-progress --working-dir="$PROJECT_ROOT"
     '';
   };
+
+  projectCgl = pkgs.writeShellApplication {
+    name = "project-cgl";
+
+    runtimeInputs = [
+      php
+    ];
+
+    text = ''
+      PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --dry-run --diff
+    '';
+  };
+
+  projectCglFix = pkgs.writeShellApplication {
+    name = "project-cgl-fix";
+
+    runtimeInputs = [
+      php
+    ];
+
+    text = ''
+      PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix
+    '';
+  };
+
   projectTestAcceptance = pkgs.writeShellApplication {
     name = "project-test-acceptance";
     runtimeInputs = [
@@ -50,6 +75,8 @@ in pkgs.mkShell {
     php
     composer
     projectInstall
+    projectCgl
+    projectCglFix
     projectTestAcceptance
   ];
 

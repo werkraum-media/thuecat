@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
-    $flexFormConfigurationPath = 'FILE:EXT:' . \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
+    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
 
     return [
         'ctrl' => [
             'label' => 'title',
-            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
             'type' => 'type',
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'title' => $languagePath,
             'enablecolumns' => [
                 'disabled' => 'disable',
@@ -28,7 +31,8 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'max' => 255,
-                    'eval' => 'required,trim,unique',
+                    'eval' => 'trim,unique',
+                    'required' => true,
                 ],
             ],
             'type' => [
@@ -38,16 +42,16 @@ return (static function (string $extensionKey, string $tableName) {
                     'renderType' => 'selectSingle',
                     'items' => [
                         [
-                            $languagePath . '.type.static',
-                            'static',
+                            'label' => $languagePath . '.type.static',
+                            'value' => 'static',
                         ],
                         [
-                            $languagePath . '.type.syncScope',
-                            'syncScope',
+                            'label' => $languagePath . '.type.syncScope',
+                            'value' => 'syncScope',
                         ],
                         [
-                            $languagePath . '.type.containsPlace',
-                            'containsPlace',
+                            'label' => $languagePath . '.type.containsPlace',
+                            'value' => 'containsPlace',
                         ],
                     ],
                 ],
@@ -67,9 +71,8 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'tstamp' => [
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime',
+                    'type' => 'datetime',
+                    'format' => 'datetime',
                     'readOnly' => true,
                 ],
             ],
@@ -89,4 +92,4 @@ return (static function (string $extensionKey, string $tableName) {
             ],
         ],
     ];
-})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY, 'tx_thuecat_import_configuration');
+})(Extension::EXTENSION_KEY, 'tx_thuecat_import_configuration');

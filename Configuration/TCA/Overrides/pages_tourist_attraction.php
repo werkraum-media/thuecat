@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 (static function (string $extensionKey, string $tableName, int $doktype, string $pageIdentifier) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath()
+    $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName . '.' . $pageIdentifier;
 
-    \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
+    ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
         'ctrl' => [
             'typeicon_classes' => [
                 $doktype => $tableName . '_' . $pageIdentifier,
@@ -54,19 +60,19 @@ defined('TYPO3') or die();
         ],
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+    ExtensionManagementUtility::addTcaSelectItem(
         $tableName,
         'doktype',
         [
-            $languagePath,
-            $doktype,
-            \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '_' . $pageIdentifier . '.svg',
-            \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
+            'label' => $languagePath,
+            'value' => $doktype,
+            'icon' => Extension::getIconPath() . $tableName . '_' . $pageIdentifier . '.svg',
+            'group' => Extension::TCA_SELECT_GROUP_IDENTIFIER,
         ]
     );
 })(
-    \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY,
+    Extension::EXTENSION_KEY,
     'pages',
-    \WerkraumMedia\ThueCat\Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION,
+    Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION,
     'tourist_attraction'
 );
