@@ -78,7 +78,7 @@ class SaveData
 
             $identifier = $this->getIdentifier($entity);
             if (is_numeric($identifier)) {
-                $entity->setExistingTypo3Uid((int) $identifier);
+                $entity->setExistingTypo3Uid((int)$identifier);
             }
         }
     }
@@ -155,7 +155,7 @@ class SaveData
         $existingUid = $this->getExistingUid($entity);
 
         if ($existingUid > 0) {
-            return (string) $existingUid;
+            return (string)$existingUid;
         }
 
         $identifier = 'NEW_' . sha1($entity->getRemoteId() . $entity->getTypo3SystemLanguageUid());
@@ -176,7 +176,8 @@ class SaveData
         $tableColumns = $this->connectionPool
             ->getConnectionForTable($entity->getTypo3DatabaseTableName())
             ->getSchemaManager()
-            ->listTableColumns($entity->getTypo3DatabaseTableName());
+            ->listTableColumns($entity->getTypo3DatabaseTableName())
+        ;
 
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($entity->getTypo3DatabaseTableName());
         $queryBuilder->getRestrictions()->removeAll();
@@ -193,9 +194,9 @@ class SaveData
             ));
         }
 
-        $result = $queryBuilder->execute()->fetchColumn();
+        $result = $queryBuilder->executeQuery()->fetchOne();
         if (is_numeric($result)) {
-            return (int) $result;
+            return (int)$result;
         }
 
         return 0;
@@ -216,9 +217,9 @@ class SaveData
             $queryBuilder->createNamedParameter(0)
         ));
 
-        $result = $queryBuilder->execute()->fetchColumn();
+        $result = $queryBuilder->executeQuery()->fetchOne();
         if (is_numeric($result)) {
-            return (int) $result;
+            return (int)$result;
         }
 
         return 0;

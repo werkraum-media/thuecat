@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use DateTimeImmutable;
+
 class MergedOpeningHour
 {
     /**
@@ -31,19 +33,19 @@ class MergedOpeningHour
     private $weekDays = [];
 
     /**
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     private $from;
 
     /**
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     private $through;
 
     public function __construct(
         array $weekDays,
-        ?\DateTimeImmutable $from,
-        ?\DateTimeImmutable $through
+        ?DateTimeImmutable $from,
+        ?DateTimeImmutable $through
     ) {
         $this->weekDays = array_values($weekDays);
         $this->from = $from;
@@ -72,12 +74,12 @@ class MergedOpeningHour
         ]);
     }
 
-    public function getFrom(): ?\DateTimeImmutable
+    public function getFrom(): ?DateTimeImmutable
     {
         return $this->from;
     }
 
-    public function getThrough(): ?\DateTimeImmutable
+    public function getThrough(): ?DateTimeImmutable
     {
         return $this->through;
     }

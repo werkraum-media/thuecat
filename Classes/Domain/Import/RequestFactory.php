@@ -63,7 +63,7 @@ class RequestFactory implements RequestFactoryInterface
     public function createRequest(string $method, $uri): RequestInterface
     {
         if (!$uri instanceof UriInterface) {
-            $uri = $this->uriFactory->createUri((string) $uri);
+            $uri = $this->uriFactory->createUri((string)$uri);
         }
 
         $query = [];

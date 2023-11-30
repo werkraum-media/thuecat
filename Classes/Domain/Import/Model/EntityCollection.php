@@ -61,8 +61,7 @@ class EntityCollection
     {
         return array_filter($this->entities, function (Entity $entity) {
             return $entity->isTranslation()
-                && $entity->exists() === false
-                ;
+                && $entity->exists() === false;
         });
     }
 

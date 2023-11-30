@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Typo3Converter;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\GeneralConverter;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
+use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\GeneralConverter;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\LanguageHandling;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\NameExtractor;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;

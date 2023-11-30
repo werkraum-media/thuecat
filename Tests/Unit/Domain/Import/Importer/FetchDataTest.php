@@ -28,6 +28,8 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
@@ -70,8 +72,11 @@ class FetchDataTest extends TestCase
         $requestFactory->method('createRequest')->willReturn($request);
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
+
         $response->method('getStatusCode')->willReturn(200);
-        $response->method('getBody')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,
@@ -105,8 +110,11 @@ class FetchDataTest extends TestCase
 
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('');
+
         $response->method('getStatusCode')->willReturn(200);
-        $response->method('getBody')->willReturn('');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,
@@ -163,14 +171,19 @@ class FetchDataTest extends TestCase
         $request = $this->createStub(RequestInterface::class);
         $response = $this->createStub(ResponseInterface::class);
 
-        $request->method('getUri')->willReturn('https://example.com/resources/018132452787-ngbe');
+        $uri = $this->createStub(UriInterface::class);
+        $uri->method('__toString')->willReturn('https://example.com/resources/018132452787-ngbe');
+        $request->method('getUri')->willReturn($uri);
 
         $requestFactory->method('createRequest')->willReturn($request);
 
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"error":"404"}');
+
         $response->method('getStatusCode')->willReturn(404);
-        $response->method('getBody')->willReturn('{"error":"404"}');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,

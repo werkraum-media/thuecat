@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Backend;
  * 02110-1301, USA.
  */
 
+use DateTimeImmutable;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
@@ -78,7 +79,7 @@ class ImportConfigurationTest extends TestCase
      */
     public function returnsLastChanged(): void
     {
-        $lastChanged = new \DateTimeImmutable();
+        $lastChanged = new DateTimeImmutable();
 
         $subject = new ImportConfiguration();
 
@@ -95,15 +96,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">20</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">20</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -136,15 +137,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">-1</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">-1</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -163,15 +164,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">abc</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">abc</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -190,26 +191,26 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="urls">',
-                                '<el index="el">',
-                                    '<field index="6098e0b6d3fff074555176">',
-                                        '<value index="url">',
-                                            '<el>',
-                                                '<field index="url">',
-                                                    '<value index="vDEF">https://thuecat.org/resources/942302009360-jopp</value>',
-                                                '</field>',
-                                            '</el>',
-                                        '</value>',
-                                        '<value index="_TOGGLE">0</value>',
-                                    '</field>',
-                                '</el>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="urls">',
+            '<el index="el">',
+            '<field index="6098e0b6d3fff074555176">',
+            '<value index="url">',
+            '<el>',
+            '<field index="url">',
+            '<value index="vDEF">https://thuecat.org/resources/942302009360-jopp</value>',
+            '</field>',
+            '</el>',
+            '</value>',
+            '<value index="_TOGGLE">0</value>',
+            '</field>',
+            '</el>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -244,15 +245,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">10</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -271,15 +272,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="syncScopeId">',
-                                '<value index="vDEF">dd4639dc-58a7-4648-a6ce-4950293a06db</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="syncScopeId">',
+            '<value index="vDEF">dd4639dc-58a7-4648-a6ce-4950293a06db</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 
@@ -312,15 +313,15 @@ class ImportConfigurationTest extends TestCase
         $flexForm = implode(PHP_EOL, [
             '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
             '<T3FlexForms>',
-                '<data>',
-                    '<sheet index="sDEF">',
-                        '<language index="lDEF">',
-                            '<field index="storagePid">',
-                                '<value index="vDEF">10</value>',
-                            '</field>',
-                        '</language>',
-                    '</sheet>',
-                '</data>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
             '</T3FlexForms>',
         ]);
 

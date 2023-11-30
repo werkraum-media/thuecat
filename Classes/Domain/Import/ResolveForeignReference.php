@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
@@ -94,6 +94,7 @@ class ResolveForeignReference
 
     /**
      * @param ForeignReference[] $foreignReferences
+     *
      * @return string[]
      */
     public static function convertToRemoteIds(array $foreignReferences): array

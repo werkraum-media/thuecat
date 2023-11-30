@@ -109,6 +109,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $accessibilityCertificationStatus
      */
     public function setAccessibilityCertificationStatus($accessibilityCertificationStatus): void
@@ -121,6 +122,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityDeaf
      */
     public function setCertificationAccessibilityDeaf($certificationAccessibilityDeaf): void
@@ -133,6 +135,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityMental
      */
     public function setCertificationAccessibilityMental($certificationAccessibilityMental): void
@@ -145,6 +148,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityPartiallyDeaf
      */
     public function setCertificationAccessibilityPartiallyDeaf($certificationAccessibilityPartiallyDeaf): void
@@ -157,6 +161,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityPartiallyVisual
      */
     public function setCertificationAccessibilityPartiallyVisual($certificationAccessibilityPartiallyVisual): void
@@ -169,6 +174,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityVisual
      */
     public function setCertificationAccessibilityVisual($certificationAccessibilityVisual): void
@@ -181,6 +187,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityWalking
      */
     public function setCertificationAccessibilityWalking($certificationAccessibilityWalking): void
@@ -193,6 +200,7 @@ class AccessibilityCertification implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $certificationAccessibilityWheelchair
      */
     public function setCertificationAccessibilityWheelchair($certificationAccessibilityWheelchair): void

@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use Exception;
+use InvalidArgumentException;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
@@ -49,12 +51,12 @@ class Typo3Converter implements Converter
         string $language
     ): ?Entity {
         if (!$configuration instanceof Typo3ImportConfiguration) {
-            throw new \InvalidArgumentException('Only supports TYPO3 import configuration.', 1629710386);
+            throw new InvalidArgumentException('Only supports TYPO3 import configuration.', 1629710386);
         }
 
         $concreteConverter = $this->registry->getConverterBasedOnType($mapped);
         if (!$concreteConverter instanceof Typo3ConcreteConverter) {
-            throw new \Exception(
+            throw new Exception(
                 'No TYPO3 Converter registered for given Entity "' . get_class($mapped) . '".',
                 1628244329
             );

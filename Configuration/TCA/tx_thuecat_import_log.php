@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
-    $flexFormConfigurationPath = 'FILE:EXT:' . \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
+    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
 
     return [
         'ctrl' => [
             'label' => 'crdate',
             'label_alt' => 'configuration',
             'label_alt_force' => true,
-            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
             'default_sortby' => 'crdate desc',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'title' => $languagePath,
             'enablecolumns' => [
                 'disabled' => 'disable',
@@ -44,9 +47,8 @@ return (static function (string $extensionKey, string $tableName) {
             'crdate' => [
                 'label' => $languagePath . '.crdate',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime',
+                    'type' => 'datetime',
+                    'format' => 'datetime',
                     'readOnly' => true,
                 ],
             ],
@@ -57,4 +59,4 @@ return (static function (string $extensionKey, string $tableName) {
             ],
         ],
     ];
-})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY, 'tx_thuecat_import_log');
+})(Extension::EXTENSION_KEY, 'tx_thuecat_import_log');

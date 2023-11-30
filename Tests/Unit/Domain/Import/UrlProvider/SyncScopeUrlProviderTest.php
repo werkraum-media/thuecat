@@ -23,9 +23,9 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 /**

@@ -23,6 +23,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
+use Countable;
+use Iterator;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers;
 
@@ -53,7 +55,7 @@ class OffersTest extends TestCase
     {
         $subject = new Offers('{}');
 
-        self::assertInstanceOf(\Countable::class, $subject);
+        self::assertInstanceOf(Countable::class, $subject);
     }
 
     /**
@@ -63,12 +65,14 @@ class OffersTest extends TestCase
     {
         $subject = new Offers('{}');
 
-        self::assertInstanceOf(\Iterator::class, $subject);
+        self::assertInstanceOf(Iterator::class, $subject);
     }
 
     /**
      * @test
+     *
      * @dataProvider forCount
+     *
      * @testdox returns $expected for count
      */
     public function returnsExpectedCount(string $serialized, int $expected): void
@@ -78,7 +82,7 @@ class OffersTest extends TestCase
         self::assertCount($expected, $subject);
     }
 
-    public function forCount(): array
+    public static function forCount(): array
     {
         return [
             'zero' => [

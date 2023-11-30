@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
+use InvalidArgumentException;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
@@ -54,7 +55,7 @@ class ContainsPlaceUrlProvider implements UrlProvider
         ImportConfiguration $configuration
     ): UrlProvider {
         if (method_exists($configuration, 'getContainsPlaceId') === false) {
-            throw new \InvalidArgumentException('Received incompatible import configuration.', 1629709276);
+            throw new InvalidArgumentException('Received incompatible import configuration.', 1629709276);
         }
         $instance = clone $this;
         $instance->containsPlaceId = $configuration->getContainsPlaceId();

@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use Exception;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
@@ -139,7 +140,7 @@ class Importer
     {
         $urlProvider = $this->urls->getProviderForConfiguration($this->import->getConfiguration());
         if (!$urlProvider instanceof UrlProvider) {
-            throw new \Exception('No URL Provider available for given configuration.', 1629296635);
+            throw new Exception('No URL Provider available for given configuration.', 1629296635);
         }
 
         foreach ($urlProvider->getUrls() as $url) {
@@ -218,7 +219,8 @@ class Importer
                         'url' => $url,
                         'language' => $language,
                         'targetEntity' => $targetEntity,
-                    ]);
+                    ]
+                );
                 continue;
             }
             $entities->add($convertedEntity);

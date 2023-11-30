@@ -1,4 +1,0 @@
-"tx_thuecat_tourist_attraction",,,,,,,,
-,"uid","pid","sys_language_uid","l18n_parent","l10n_source","remote_id","title","special_opening_hours"
-,1,10,0,0,0,"https://thuecat.org/resources/835224016581-dara","Dom St. Marien","[{""opens"":""10:00:00"",""closes"":""14:00:00"",""from"":{""date"":""2050-12-31 00:00:00.000000"",""timezone_type"":3,""timezone"":""UTC""},""through"":{""date"":""2050-12-31 00:00:00.000000"",""timezone_type"":3,""timezone"":""UTC""},""daysOfWeek"":[""Saturday""]}]"
-,2,10,1,1,1,"https://thuecat.org/resources/835224016581-dara","Cathedral of St. Mary","[{""opens"":""10:00:00"",""closes"":""14:00:00"",""from"":{""date"":""2050-12-31 00:00:00.000000"",""timezone_type"":3,""timezone"":""UTC""},""through"":{""date"":""2050-12-31 00:00:00.000000"",""timezone_type"":3,""timezone"":""UTC""},""daysOfWeek"":[""Saturday""]}]"

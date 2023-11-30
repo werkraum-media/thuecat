@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 (static function (string $extensionKey, string $tableName) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath()
+    $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName;
 
-    \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
+    ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
         'ctrl' => [
             'typeicon_classes' => [
                 'contains-thuecat' => 'pages_module_thuecat',
@@ -32,23 +38,23 @@ defined('TYPO3') or die();
         ],
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItemGroup(
+    ExtensionManagementUtility::addTcaSelectItemGroup(
         $tableName,
         'doktype',
-        \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
+        Extension::TCA_SELECT_GROUP_IDENTIFIER,
         $languagePath . '.group'
     );
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+    ExtensionManagementUtility::addTcaSelectItem(
         $tableName,
         'module',
         [
-            0 => $languagePath . '.module.thuecat',
-            1 => 'thuecat',
-            2 => 'pages_module_thuecat',
+            'label' => $languagePath . '.module.thuecat',
+            'value' => 'thuecat',
+            'icon' => 'pages_module_thuecat',
         ]
     );
 })(
-    \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY,
+    Extension::EXTENSION_KEY,
     'pages'
 );

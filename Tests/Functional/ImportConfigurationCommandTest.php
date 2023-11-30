@@ -24,37 +24,30 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Command\ImportConfigurationCommand
- * @testdox The 'thuecat:importviaconfiguration' command
- */
-final class ImportConfigurationCommandTest extends AbstractImportTest
+final class ImportConfigurationCommandTest extends AbstractImportTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canImport(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
         self::assertInstanceOf(Command::class, $subject);
 
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
         $tester = new CommandTester($subject);
         $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFreshOrganization.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throwsExceptionOnNoneExistingConfiguration(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
@@ -69,9 +62,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTest
         $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throwsExceptionOnMissingArgument(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
@@ -86,9 +77,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTest
         $tester->execute([], ['capture_stderr_separately' => true]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throwsExceptionOnNoneNumericConfigurationArgument(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);

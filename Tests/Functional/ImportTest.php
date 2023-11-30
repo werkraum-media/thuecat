@@ -23,66 +23,31 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
-/**
- * @covers \WerkraumMedia\ThueCat\DependencyInjection\ConverterPass
- * @covers \WerkraumMedia\ThueCat\DependencyInjection\UrlProvidersPass
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData
- * @covers \WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository
- * @covers \WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository
- * @covers \WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository
- * @covers \WerkraumMedia\ThueCat\Extension
- * @covers \WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService
- *
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\Organisation
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\Registry
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\TouristAttraction
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\TouristInformation
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Converter\Town
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Importer\LanguageHandling
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
- * @uses \WerkraumMedia\ThueCat\Domain\Import\RequestFactory
- * @uses \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry
- * @uses \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider
- * @uses \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\SyncScopeUrlProvider
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry
- * @uses \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry
- *
- * @testdox The import
- */
-class ImportTest extends AbstractImportTest
+class ImportTest extends AbstractImportTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function importsFreshOrganization(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFreshOrganization.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function updatesExistingOrganization(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/UpdatesExistingOrganization.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/UpdatesExistingOrganization.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $organisations = $this->getAllRecords('tx_thuecat_organisation');
         self::assertCount(1, $organisations);
@@ -104,45 +69,37 @@ class ImportTest extends AbstractImportTest
         self::assertSame('[]', $importLogEntries[0]['errors']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTown(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.php');
         // TODO: Check why we request both twice.
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTown.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTown.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTownWithRelation(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTownWithRelation.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithRelation.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristAttractionsWithRelations(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithRelations.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithRelations.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
@@ -166,66 +123,54 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelations.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithRelations.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristAttractionsWithFilteredOpeningHours(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFilteredOpeningHours.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFilteredOpeningHours.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/opening-hours-to-filter.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithFilteredOpeningHours.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithFilteredOpeningHours.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristAttractionsWithSpecialOpeningHours(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/special-opening-hours.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithSpecialOpeningHours.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithSpecialOpeningHours.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristInformationWithRelation(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/333039283321-xxwg.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/356133173991-cryw.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelation.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristInformationWithRelation.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsBasedOnSyncScope(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -250,18 +195,15 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScope.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsBasedOnContainsPlace(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsContainsPlace.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsContainsPlace.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-contains.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -294,19 +236,16 @@ class ImportTest extends AbstractImportTest
             GuzzleClientFaker::appendNotFoundResponse();
         }
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsContainsPlace.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsContainsPlace.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsFollowingRecordsInCaseOfAnMappingException(): void
     {
         $this->expectErrors = true;
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/mapping-exception.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -317,23 +256,19 @@ class ImportTest extends AbstractImportTest
             GuzzleClientFaker::appendNotFoundResponse();
         }
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         if (version_compare(PHP_VERSION, '8.1.0', '<')) {
-            $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingExceptionOldPhp.csv');
+            $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFollowingRecordsInCaseOfAnMappingExceptionOldPhp.php');
         } else {
-            $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingException.csv');
+            $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFollowingRecordsInCaseOfAnMappingException.php');
         }
     }
 
-    /**
-     * @test
-     * @testdox Referencing the same thing multiple times only adds it once.
-     */
+    #[Test]
     public function importWithMultipleReferencesToSameObject(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportWithMultipleReferencesToSameObject.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportWithMultipleReferencesToSameObject.php');
 
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -358,18 +293,15 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportWithMultipleReferencesToSameObject.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportWithMultipleReferencesToSameObject.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristAttractionWithMedia(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.php');
 
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-media.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -379,29 +311,32 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-license-author.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-and-license-author.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithMedia.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function importsTouristAttractionWithAccessibilitySpecification(): void
     {
-        $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
 
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-accessibility-specification.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
-        $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.csv');
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
+    }
+
+    private function importConfiguration(): void
+    {
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        self::assertInstanceOf(ImportConfiguration::class, $configuration);
+        $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

@@ -23,8 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use Exception;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
@@ -214,7 +215,7 @@ class GeneralConverter implements Converter
     {
         $tableName = $this->classToTableMapping[$className] ?? '';
         if ($tableName == '') {
-            throw new \Exception('No table name configured for class ' . $className, 1629376990);
+            throw new Exception('No table name configured for class ' . $className, 1629376990);
         }
 
         return $tableName;
@@ -298,7 +299,7 @@ class GeneralConverter implements Converter
             )
         );
         $town = $this->townRepository->findOneByEntity($entity);
-        return $town ? (string) $town->getUid() : '';
+        return $town ? (string)$town->getUid() : '';
     }
 
     private function getParkingFacilitiesNearByUids(Base $entity): array

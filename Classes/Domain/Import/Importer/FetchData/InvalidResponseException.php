@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
-class InvalidResponseException extends \RuntimeException
+use RuntimeException;
+
+class InvalidResponseException extends RuntimeException
 {
 }

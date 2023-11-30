@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
+use Psr\Http\Message\ResponseInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
@@ -46,11 +47,13 @@ class ConfigurationController extends AbstractController
         $this->importConfigurationRepository = $importConfigurationRepository;
     }
 
-    public function indexAction(): void
+    public function indexAction(): ResponseInterface
     {
-        $this->view->assignMultiple([
+        $this->moduleTemplate->assignMultiple([
             'importConfigurations' => $this->importConfigurationRepository->findAll(),
             'organisations' => $this->organisationRepository->findAll(),
         ]);
+
+        return $this->htmlResponse();
     }
 }

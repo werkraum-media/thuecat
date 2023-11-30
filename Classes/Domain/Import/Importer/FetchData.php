@@ -94,7 +94,7 @@ class FetchData
 
         $this->handleInvalidResponse($response, $request);
 
-        $jsonLD = json_decode((string) $response->getBody(), true);
+        $jsonLD = json_decode((string)$response->getBody(), true);
         if (is_array($jsonLD)) {
             $this->cache->set($cacheIdentifier, $jsonLD);
             return $jsonLD;

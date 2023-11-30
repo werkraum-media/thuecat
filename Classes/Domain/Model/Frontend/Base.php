@@ -40,7 +40,7 @@ abstract class Base extends AbstractEntity
     /**
      * @var Media|null
      */
-    protected $media = null;
+    protected $media;
 
     public function getTitle(): string
     {

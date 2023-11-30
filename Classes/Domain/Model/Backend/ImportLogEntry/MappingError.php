@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
+use Exception;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
@@ -54,7 +55,7 @@ class MappingError extends ImportLogEntry
     {
         $errors = json_decode($this->errors, true);
         if (is_array($errors) === false) {
-            throw new \Exception('Could not parse errors.', 1671097690);
+            throw new Exception('Could not parse errors.', 1671097690);
         }
         return $errors;
     }

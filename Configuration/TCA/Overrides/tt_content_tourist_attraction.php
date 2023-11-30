@@ -1,12 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ArrayUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 (static function (string $extensionKey, string $tableName, string $cType) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath()
+    $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName . '.' . $cType;
 
-    \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
+    ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
         'ctrl' => [
             'typeicon_classes' => [
                 $cType => 'tt_content_' . $cType,
@@ -48,18 +54,18 @@ defined('TYPO3') or die();
         ],
     ]);
 
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+    ExtensionManagementUtility::addTcaSelectItem(
         $tableName,
         'CType',
         [
-            $languagePath,
-            $cType,
-            \WerkraumMedia\ThueCat\Extension::getIconPath() . 'tt_content_' . $cType . '.svg',
-            \WerkraumMedia\ThueCat\Extension::TCA_SELECT_GROUP_IDENTIFIER,
+            'label' => $languagePath,
+            'value' => $cType,
+            'icon' => Extension::getIconPath() . 'tt_content_' . $cType . '.svg',
+            'group' => Extension::TCA_SELECT_GROUP_IDENTIFIER,
         ]
     );
 })(
-    \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY,
+    Extension::EXTENSION_KEY,
     'tt_content',
     'thuecat_tourist_attraction'
 );

@@ -30,6 +30,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Throwable;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\ArrayDenormalizer;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\CustomAnnotationExtractor;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
@@ -55,7 +56,7 @@ class EntityMapper
                 'json',
                 $context
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new MappingException($jsonLD, $targetClassName, $e);
         }
     }

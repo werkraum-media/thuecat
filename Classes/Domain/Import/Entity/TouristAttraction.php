@@ -160,6 +160,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $museumService
      */
     public function setMuseumService($museumService): void
@@ -173,6 +174,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $architecturalStyle
      */
     public function setArchitecturalStyle($architecturalStyle): void
@@ -186,6 +188,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $digitalOffer
      */
     public function setDigitalOffer($digitalOffer): void
@@ -199,6 +202,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $photography
      */
     public function setPhotography($photography): void
@@ -236,6 +240,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $availableLanguage
      */
     public function setAvailableLanguage($availableLanguage): void

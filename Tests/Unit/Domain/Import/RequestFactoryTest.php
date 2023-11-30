@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Http\Client\GuzzleClientFactory;
 use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
 use TYPO3\CMS\Core\Http\UriFactory;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
@@ -41,7 +42,7 @@ class RequestFactoryTest extends TestCase
     public function canBeCreated(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = $this->createStub(Typo3RequestFactory::class);
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -59,7 +60,7 @@ class RequestFactoryTest extends TestCase
     public function returnsRequestWithJsonIdFormat(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -80,7 +81,7 @@ class RequestFactoryTest extends TestCase
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -101,7 +102,7 @@ class RequestFactoryTest extends TestCase
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(

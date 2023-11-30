@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class PriceSpecification extends Minimum
 {
@@ -85,6 +85,7 @@ class PriceSpecification extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $calculationRule
      */
     public function setCalculationRule($calculationRule): void

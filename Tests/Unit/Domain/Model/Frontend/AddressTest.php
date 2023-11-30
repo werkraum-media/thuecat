@@ -143,6 +143,6 @@ class AddressTest extends TestCase
     {
         $subject = new Address('{"street": "Example Street 10"}');
 
-        self::assertSame('{"street": "Example Street 10"}', (string) $subject);
+        self::assertSame('{"street": "Example Street 10"}', (string)$subject);
     }
 }

@@ -23,11 +23,16 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use Codappix\Typo3PhpDatasets\TestingFramework;
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class FrontendTest extends FunctionalTestCase
 {
+    use TestingFramework;
+
     protected function setUp(): void
     {
         $this->coreExtensionsToLoad = [
@@ -44,7 +49,7 @@ class FrontendTest extends FunctionalTestCase
 
         parent::setUp();
 
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/Content.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/Content.php');
         $this->setUpFrontendRootPage(1, [
             'EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript',
             'EXT:thuecat/Configuration/TypoScript/ContentElements/setup.typoscript',
@@ -52,17 +57,15 @@ class FrontendTest extends FunctionalTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionContentElementIsRendered(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractions.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
@@ -252,13 +255,11 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString('WC für Menschen mit Behinderung', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionContentElementRespectsEditorialSorting(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractions.xml');
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/SecondTouristAttraction.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractions.php');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/SecondTouristAttraction.php');
 
         $this->getConnectionPool()->getConnectionForTable('tt_content')->update(
             'tt_content',
@@ -271,7 +272,7 @@ class FrontendTest extends FunctionalTestCase
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $html = (string)$this->executeFrontendRequest($request)->getBody();
+        $html = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         self::assertGreaterThan(
             stripos($html, 'Eine weitere Attraktion'),
@@ -279,119 +280,105 @@ class FrontendTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithPetsFalse(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPets.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForPets.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(4);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('Keine Tiere erlaubt', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithPetsTrue(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPets.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForPets.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(5);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('Tiere erlaubt', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithIsAccessibleForFreeFalse(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(4);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('kein freier Eintritt', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithIsAccessibleForFreeTrue(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForIsAccessibleForFree.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(5);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('freier Eintritt', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithPublicAccessFalse(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPublicAccess.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForPublicAccess.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(4);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('nicht öffentlich zugänglich', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function touristAttractionWithPublicAccessTrue(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsForPublicAccess.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsForPublicAccess.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(5);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
         self::assertStringContainsString('öffentlich zugänglich', (string)$result->getBody());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function pricesAreSorted(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithPrices.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionWithPrices.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
@@ -414,17 +401,15 @@ class FrontendTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function offersAreSortedByType(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithOfferTypes.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionWithOfferTypes.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = $this->executeFrontendRequest($request);
+        $result = $this->executeFrontendSubRequest($request);
 
         self::assertSame(200, $result->getStatusCode());
 
@@ -452,15 +437,13 @@ class FrontendTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function openingHoursAreFilteredByThough(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsOpeningHours.php');
 
-        $hidden = new \DateTimeImmutable('yesterday');
-        $available = new \DateTimeImmutable('tomorrow');
+        $hidden = new DateTimeImmutable('yesterday');
+        $available = new DateTimeImmutable('tomorrow');
 
         $this->getConnectionPool()
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
@@ -499,12 +482,13 @@ class FrontendTest extends FunctionalTestCase
                     ],
                 ])],
                 ['uid' => 1]
-            );
+            )
+        ;
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = (string)$this->executeFrontendRequest($request)->getBody();
+        $result = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         self::assertStringNotContainsString('14:00', $result);
         self::assertStringNotContainsString('13:00', $result);
@@ -519,16 +503,14 @@ class FrontendTest extends FunctionalTestCase
         self::assertStringContainsString($available->format('d.m.Y'), $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function openingHoursAreSortedByFrom(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsOpeningHours.php');
 
-        $fromFirstOpening = new \DateTimeImmutable('today');
-        $fromSecondOpening = new \DateTimeImmutable('+2 days');
-        $fromThirdOpening = new \DateTimeImmutable('+7 days');
+        $fromFirstOpening = new DateTimeImmutable('today');
+        $fromSecondOpening = new DateTimeImmutable('+2 days');
+        $fromThirdOpening = new DateTimeImmutable('+7 days');
 
         $this->getConnectionPool()
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
@@ -582,12 +564,13 @@ class FrontendTest extends FunctionalTestCase
                     ],
                 ])],
                 ['uid' => 1]
-            );
+            )
+        ;
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = (string)$this->executeFrontendRequest($request)->getBody();
+        $result = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         $positionFirstHour = mb_strpos($result, $fromFirstOpening->format('d.m.Y'));
         $positionSecondHour = mb_strpos($result, $fromSecondOpening->format('d.m.Y'));
@@ -597,16 +580,14 @@ class FrontendTest extends FunctionalTestCase
         self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function specialOpeningHoursAreRendered(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionsOpeningHours.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionsOpeningHours.php');
 
-        $hidden = new \DateTimeImmutable('yesterday');
-        $available = new \DateTimeImmutable('tomorrow');
-        $available2 = new \DateTimeImmutable('+3 days');
+        $hidden = new DateTimeImmutable('yesterday');
+        $available = new DateTimeImmutable('tomorrow');
+        $available2 = new DateTimeImmutable('+3 days');
 
         $this->getConnectionPool()
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
@@ -660,12 +641,13 @@ class FrontendTest extends FunctionalTestCase
                     ],
                 ])],
                 ['uid' => 1]
-            );
+            )
+        ;
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $result = (string)$this->executeFrontendRequest($request)->getBody();
+        $result = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         self::assertStringNotContainsString('11:00', $result);
         self::assertStringNotContainsString('12:00', $result);
@@ -691,17 +673,15 @@ class FrontendTest extends FunctionalTestCase
         self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function editorialImagesOfTouristAttractionAreRenderedForDefaultLanguage(): void
     {
-        $this->importDataSet('EXT:thuecat/Tests/Functional/Fixtures/Frontend/TouristAttractionWithEditorialImages.xml');
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractionWithEditorialImages.php');
 
         $request = new InternalRequest();
         $request = $request->withPageId(2);
 
-        $html = (string)$this->executeFrontendRequest($request)->getBody();
+        $html = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         self::assertStringContainsString(
             '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/parks_gaerten/hirschgarten/2998_Spielplaetze_Hirschgarten.jpg" width="" height="" alt="" />',

@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 
-use WerkraumMedia\ThueCat\Domain\Import\Import;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Import;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
@@ -183,7 +183,7 @@ class ImportTest extends TestCase
 
         self::assertSame(
             [
-                $importLogEntry
+                $importLogEntry,
             ],
             $log1->getEntries()->toArray()
         );

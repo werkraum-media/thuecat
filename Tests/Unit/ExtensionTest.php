@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Extension;
 
 /**
  * @covers \WerkraumMedia\ThueCat\Extension
+ *
  * @testdox The extension class
  */
 class ExtensionTest extends TestCase

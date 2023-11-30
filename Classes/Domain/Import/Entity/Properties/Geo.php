@@ -50,7 +50,7 @@ class Geo
      */
     public function setLongitude(string $longitude): void
     {
-        $this->longitude = (float) $longitude;
+        $this->longitude = (float)$longitude;
     }
 
     /**
@@ -58,6 +58,6 @@ class Geo
      */
     public function setLatitude(string $latitude): void
     {
-        $this->latitude = (float) $latitude;
+        $this->latitude = (float)$latitude;
     }
 }

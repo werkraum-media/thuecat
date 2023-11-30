@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
+use InvalidArgumentException;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
@@ -44,22 +45,22 @@ class LanguageHandling implements Languages
     public function getAvailable(ImportConfiguration $configuration): array
     {
         if (method_exists($configuration, 'getStoragePid') === false) {
-            throw new \InvalidArgumentException('Unsupported configuration, need to retrieve storage pid.', 1629710300);
+            throw new InvalidArgumentException('Unsupported configuration, need to retrieve storage pid.', 1629710300);
         }
         return array_map(function (SiteLanguage $language) {
-            return $language->getTwoLetterIsoCode();
+            return $language->getLocale()->getLanguageCode();
         }, $this->getLanguages($configuration->getStoragePid()));
     }
 
     public function getLanguageUidForString(int $pageUid, string $isoCode): int
     {
         foreach ($this->getLanguages($pageUid) as $language) {
-            if ($language->getTwoLetterIsoCode() === $isoCode) {
+            if ($language->getLocale()->getLanguageCode() === $isoCode) {
                 return $language->getLanguageId();
             }
         }
 
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             sprintf(
                 'Could not find language for combination of page "%d" and iso code "%s".',
                 $pageUid,

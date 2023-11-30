@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use Countable;
+use Iterator;
 use TYPO3\CMS\Core\Type\TypeInterface;
 
 /**
  * @implements \Iterator<int, Offer>
  */
-class Offers implements TypeInterface, \Iterator, \Countable
+class Offers implements TypeInterface, Iterator, Countable
 {
     /**
      * @var string
