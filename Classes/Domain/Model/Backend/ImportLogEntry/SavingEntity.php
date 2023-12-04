@@ -29,40 +29,22 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class SavingEntity extends ImportLogEntry
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    protected string $remoteId = '';
 
-    /**
-     * @var bool
-     */
-    protected $insertion = false;
+    protected bool $insertion = false;
 
-    /**
-     * @var int
-     */
-    protected $recordUid = 0;
+    protected int $recordUid = 0;
 
-    /**
-     * @var int
-     */
-    protected $recordPid = 0;
+    protected int $recordPid = 0;
 
-    /**
-     * @var string
-     */
-    protected $tableName = '';
+    protected string $tableName = '';
 
-    /**
-     * @var string
-     */
-    protected $errors = '';
+    protected string $errors = '';
 
     /**
      * @var string[]
      */
-    protected $errorsAsArray = [];
+    protected array $errorsAsArray = [];
 
     public function __construct(
         Entity $entity,

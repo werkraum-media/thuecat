@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
 use InvalidArgumentException;
-use function str_starts_with;
 use Symfony\Component\Serializer\Encoder\JsonDecode as SymfonyJsonDecode;
 
 /**
@@ -39,7 +38,7 @@ class JsonDecode extends SymfonyJsonDecode
     /**
      * @var array[]
      */
-    private $rulesToKeepTypeInfo = [
+    private array $rulesToKeepTypeInfo = [
         [
             'type' => 'beginsWith',
             'comparisonValue' => 'thuecat:facilityAccessibility',

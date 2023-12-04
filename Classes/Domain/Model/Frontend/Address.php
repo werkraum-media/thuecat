@@ -27,15 +27,12 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 
 class Address implements TypeInterface
 {
-    /**
-     * @var string
-     */
-    private $serialized;
+    private string $serialized;
 
     /**
      * @var mixed[]
      */
-    private $data;
+    private array $data;
 
     public function __construct(string $serialized)
     {

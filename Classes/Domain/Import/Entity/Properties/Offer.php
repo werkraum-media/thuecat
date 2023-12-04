@@ -31,12 +31,12 @@ class Offer extends Minimum
     /**
      * @var string[]
      */
-    protected $offerTypes = [];
+    protected array $offerTypes = [];
 
     /**
      * @var PriceSpecification[]
      */
-    protected $prices = [];
+    protected array $prices = [];
 
     /**
      * @return string[]

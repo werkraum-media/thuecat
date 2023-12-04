@@ -29,10 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
 class SyncScopeUrlProvider implements UrlProvider
 {
-    /**
-     * @var string
-     */
-    private $syncScopeId = '';
+    private string $syncScopeId = '';
 
     public function __construct(
         private readonly FetchData $fetchData

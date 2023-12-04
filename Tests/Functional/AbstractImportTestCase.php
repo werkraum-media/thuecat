@@ -33,10 +33,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     /**
      * Whether to expect errors to be logged.
      * Will check for no errors if set to false.
-     *
-     * @var bool
      */
-    protected $expectErrors = false;
+    protected bool $expectErrors = false;
 
     protected function setUp(): void
     {
@@ -88,7 +86,11 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             return;
         }
         foreach ($this->getLogFiles() as $file) {
-            self::assertSame('', file_get_contents($file), 'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.');
+            self::assertSame(
+                '',
+                file_get_contents($file),
+                'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.'
+            );
         }
     }
 

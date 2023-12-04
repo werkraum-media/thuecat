@@ -25,15 +25,9 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
 class Person extends Base implements MapsToType
 {
-    /**
-     * @var string
-     */
-    protected $givenName = '';
+    protected string $givenName = '';
 
-    /**
-     * @var string
-     */
-    protected $familyName = '';
+    protected string $familyName = '';
 
     public function getGivenName(): string
     {

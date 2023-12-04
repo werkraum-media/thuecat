@@ -29,30 +29,18 @@ use WerkraumMedia\ThueCat\Domain\TimingFormat;
 
 class OpeningHour
 {
-    /**
-     * @var string
-     */
-    private $opens;
+    private string $opens;
 
-    /**
-     * @var string
-     */
-    private $closes;
+    private string $closes;
 
     /**
      * @var mixed[]
      */
-    private $daysOfWeek;
+    private array $daysOfWeek;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    private $from;
+    private ?DateTimeImmutable $from;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    private $through;
+    private ?DateTimeImmutable $through;
 
     private function __construct(
         string $opens,

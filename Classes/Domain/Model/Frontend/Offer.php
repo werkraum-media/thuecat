@@ -27,25 +27,19 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 
 class Offer
 {
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
     /**
      * @var string[]
      */
-    private $types;
+    private array $types;
 
-    /**
-     * @var string
-     */
-    private $description;
+    private string $description;
 
     /**
      * @var mixed[]
      */
-    private $prices;
+    private array $prices;
 
     /**
      * @param string[] $types

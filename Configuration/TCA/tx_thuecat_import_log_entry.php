@@ -59,8 +59,6 @@ return (static function (string $extensionKey, string $tableName) {
                     'renderType' => 'checkboxLabeledToggle',
                     'items' => [
                         [
-                            'label' => '',
-                            1 => '',
                             'labelChecked' => $languagePath . '.insertion.yes',
                             'labelUnchecked' => $languagePath . '.insertion.no',
                         ],

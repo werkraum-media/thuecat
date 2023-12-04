@@ -25,35 +25,17 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
 class Address
 {
-    /**
-     * @var string
-     */
-    protected $streetAddress = '';
+    protected string $streetAddress = '';
 
-    /**
-     * @var string
-     */
-    protected $addressLocality = '';
+    protected string $addressLocality = '';
 
-    /**
-     * @var string
-     */
-    protected $postalCode = '';
+    protected string $postalCode = '';
 
-    /**
-     * @var string
-     */
-    protected $telephone = '';
+    protected string $telephone = '';
 
-    /**
-     * @var string
-     */
-    protected $faxNumber = '';
+    protected string $faxNumber = '';
 
-    /**
-     * @var string
-     */
-    protected $email = '';
+    protected string $email = '';
 
     public function getStreetAddress(): string
     {

@@ -53,20 +53,14 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 class GeneralConverter implements Converter
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private Logger $logger;
 
-    /**
-     * @var ImportConfiguration
-     */
-    private $importConfiguration;
+    private ImportConfiguration $importConfiguration;
 
     /**
      * @var string[]
      */
-    private $classToTableMapping = [
+    private array $classToTableMapping = [
         TouristAttraction::class => 'tx_thuecat_tourist_attraction',
         ParkingFacility::class => 'tx_thuecat_parking_facility',
         Town::class => 'tx_thuecat_town',

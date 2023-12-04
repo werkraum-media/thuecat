@@ -43,15 +43,9 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private Logger $logger;
 
-    /**
-     * @var Import
-     */
-    private $import;
+    private Import $import;
 
     public function __construct(
         private readonly UrlProviderRegistry $urls,

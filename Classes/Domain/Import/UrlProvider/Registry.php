@@ -33,7 +33,7 @@ class Registry
     /**
      * @var UrlProvider[]
      */
-    private $provider = [];
+    private array $provider = [];
 
     public function registerProvider(UrlProvider $provider): void
     {

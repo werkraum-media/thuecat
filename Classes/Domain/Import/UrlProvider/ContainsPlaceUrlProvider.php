@@ -29,10 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
 class ContainsPlaceUrlProvider implements UrlProvider
 {
-    /**
-     * @var string
-     */
-    private $containsPlaceId = '';
+    private string $containsPlaceId = '';
 
     public function __construct(
         private readonly FetchData $fetchData

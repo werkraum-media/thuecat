@@ -27,30 +27,18 @@ use DateTimeImmutable;
 
 class OpeningHour
 {
-    /**
-     * @var DateTimeImmutable|null
-     */
-    protected $validFrom;
+    protected ?DateTimeImmutable $validFrom;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    protected $validThrough;
+    protected ?DateTimeImmutable $validThrough;
 
-    /**
-     * @var DateTimeImmutable
-     */
-    protected $opens;
+    protected DateTimeImmutable $opens;
 
-    /**
-     * @var DateTimeImmutable
-     */
-    protected $closes;
+    protected DateTimeImmutable $closes;
 
     /**
      * @var string[]
      */
-    protected $daysOfWeek = [];
+    protected array $daysOfWeek = [];
 
     public function getValidFrom(): ?DateTimeImmutable
     {

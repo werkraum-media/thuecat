@@ -27,55 +27,40 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class TouristAttraction extends Place implements MapsToType
 {
-    /**
-     * @var string
-     */
-    protected $slogan = '';
+    protected string $slogan = '';
 
-    /**
-     * @var string
-     */
-    protected $startOfConstruction = '';
+    protected string $startOfConstruction = '';
 
     /**
      * @var string[]
      */
-    protected $museumServices = [];
+    protected array $museumServices = [];
 
     /**
      * @var string[]
      */
-    protected $architecturalStyles = [];
+    protected array $architecturalStyles = [];
 
     /**
      * @var string[]
      */
-    protected $digitalOffers = [];
+    protected array $digitalOffers = [];
 
     /**
      * @var string[]
      */
-    protected $photographies = [];
+    protected array $photographies = [];
 
-    /**
-     * @var string
-     */
-    protected $petsAllowed = '';
+    protected string $petsAllowed = '';
 
-    /**
-     * @var string
-     */
-    protected $isAccessibleForFree = '';
+    protected string $isAccessibleForFree = '';
 
-    /**
-     * @var string
-     */
-    protected $publicAccess = '';
+    protected string $publicAccess = '';
 
     /**
      * @var string[]
      */
-    protected $availableLanguages = [];
+    protected array $availableLanguages = [];
 
     public function getSlogan(): string
     {

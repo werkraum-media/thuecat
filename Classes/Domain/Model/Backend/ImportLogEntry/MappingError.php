@@ -29,15 +29,9 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class MappingError extends ImportLogEntry
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    protected string $remoteId = '';
 
-    /**
-     * @var string
-     */
-    protected $errors = '';
+    protected string $errors = '';
 
     public function __construct(
         MappingException $exception

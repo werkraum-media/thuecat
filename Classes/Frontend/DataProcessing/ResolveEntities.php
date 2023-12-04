@@ -33,10 +33,7 @@ use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class ResolveEntities implements DataProcessorInterface
 {
-    /**
-     * @var TypoScriptFrontendController
-     */
-    private $tsfe;
+    private TypoScriptFrontendController $tsfe;
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,

@@ -27,45 +27,21 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class AccessibilityCertification implements MapsToType
 {
-    /**
-     * @var string
-     */
-    protected $accessibilityCertificationStatus = '';
+    protected string $accessibilityCertificationStatus = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityDeaf = '';
+    protected string $certificationAccessibilityDeaf = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityMental = '';
+    protected string $certificationAccessibilityMental = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityPartiallyDeaf = '';
+    protected string $certificationAccessibilityPartiallyDeaf = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityPartiallyVisual = '';
+    protected string $certificationAccessibilityPartiallyVisual = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityVisual = '';
+    protected string $certificationAccessibilityVisual = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityWalking = '';
+    protected string $certificationAccessibilityWalking = '';
 
-    /**
-     * @var string
-     */
-    protected $certificationAccessibilityWheelchair = '';
+    protected string $certificationAccessibilityWheelchair = '';
 
     public function getAccessibilityCertificationStatus(): string
     {

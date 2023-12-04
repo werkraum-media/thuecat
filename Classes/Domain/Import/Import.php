@@ -38,22 +38,16 @@ class Import
     /**
      * @var ImportLog[]
      */
-    private $importLogStack = [];
+    private array $importLogStack = [];
 
     /**
      * @var ImportConfiguration[]
      */
-    private $configurationStack = [];
+    private array $configurationStack = [];
 
-    /**
-     * @var ImportLog
-     */
-    private $currentImportLog;
+    private ImportLog $currentImportLog;
 
-    /**
-     * @var ImportConfiguration
-     */
-    private $currentConfiguration;
+    private ImportConfiguration $currentConfiguration;
 
     public function start(ImportConfiguration $configuration): void
     {

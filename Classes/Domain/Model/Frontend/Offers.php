@@ -28,24 +28,18 @@ use Iterator;
 use TYPO3\CMS\Core\Type\TypeInterface;
 
 /**
- * @implements \Iterator<int, Offer>
+ * @implements Iterator<int, Offer>
  */
 class Offers implements TypeInterface, Iterator, Countable
 {
-    /**
-     * @var string
-     */
-    private $serialized = '';
+    private string $serialized = '';
 
     /**
      * @var mixed[]
      */
-    private $array = [];
+    private array $array = [];
 
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
     public function __construct(string $serialized)
     {

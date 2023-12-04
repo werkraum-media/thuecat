@@ -35,7 +35,7 @@ class SaveData
     /**
      * @var mixed[]
      */
-    private $errorLog;
+    private array $errorLog;
 
     public function __construct(
         private readonly DataHandler $dataHandler,

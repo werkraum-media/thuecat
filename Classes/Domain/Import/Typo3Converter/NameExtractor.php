@@ -28,10 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
 class NameExtractor
 {
-    /**
-     * @var ResolveForeignReference
-     */
-    private $resolveForeignReference;
+    private ResolveForeignReference $resolveForeignReference;
 
     public function __construct(
         ResolveForeignReference $resolveForeignReference

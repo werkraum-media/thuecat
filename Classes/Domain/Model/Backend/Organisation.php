@@ -30,12 +30,12 @@ class Organisation extends AbstractEntity
     /**
      * @var ObjectStorage<Town>
      */
-    protected $managesTowns;
+    protected ObjectStorage $managesTowns;
 
     /**
      * @var ObjectStorage<TouristInformation>
      */
-    protected $managesTouristInformation;
+    protected ObjectStorage $managesTouristInformation;
 
     public function getManagesTowns(): ObjectStorage
     {

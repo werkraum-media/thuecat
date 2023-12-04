@@ -37,7 +37,7 @@ class Registry
     /**
      * @var Converter[]
      */
-    private $converters = [];
+    private array $converters = [];
 
     public function registerConverter(Converter $converter): void
     {

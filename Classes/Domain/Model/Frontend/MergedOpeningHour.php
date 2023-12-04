@@ -30,17 +30,11 @@ class MergedOpeningHour
     /**
      * @var MergedOpeningHourWeekDay[]
      */
-    private $weekDays = [];
+    private array $weekDays = [];
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    private $from;
+    private ?DateTimeImmutabl $from;
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    private $through;
+    private ?DateTimeImmutabl $through;
 
     public function __construct(
         array $weekDays,

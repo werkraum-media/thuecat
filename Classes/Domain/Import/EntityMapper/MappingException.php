@@ -28,15 +28,9 @@ use Throwable;
 
 class MappingException extends Exception
 {
-    /**
-     * @var array
-     */
-    protected $jsonLD = [];
+    protected array $jsonLD = [];
 
-    /**
-     * @var string
-     */
-    protected $targetClassName = '';
+    protected string $targetClassName = '';
 
     public function __construct(
         array $jsonLD,

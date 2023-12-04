@@ -28,25 +28,13 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
 
 class AbstractEntity extends Typo3AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    protected string $remoteId = '';
 
-    /**
-     * @var string
-     */
-    protected $title = '';
+    protected string $title = '';
 
-    /**
-     * @var string
-     */
-    protected $description = '';
+    protected string $description = '';
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    protected $tstamp;
+    protected ?DateTimeImmutable $tstamp;
 
     public function getRemoteId(): string
     {

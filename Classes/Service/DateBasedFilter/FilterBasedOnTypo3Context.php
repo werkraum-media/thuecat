@@ -29,15 +29,9 @@ use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 class FilterBasedOnTypo3Context implements DateBasedFilter
 {
-    /**
-     * @var Context
-     */
-    private $context;
-
     public function __construct(
-        Context $context
+        private readonly Context $context
     ) {
-        $this->context = $context;
     }
 
     /**

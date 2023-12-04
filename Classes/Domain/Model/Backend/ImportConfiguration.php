@@ -35,40 +35,28 @@ use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
 class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
-    /**
-     * @var string
-     */
-    protected $title = '';
+    protected string $title = '';
 
-    /**
-     * @var string
-     */
-    protected $type = '';
+    protected string $type = '';
 
-    /**
-     * @var string
-     */
-    protected $configuration = '';
+    protected string $configuration = '';
 
-    /**
-     * @var DateTimeImmutable|null
-     */
-    protected $tstamp;
+    protected ?DateTimeImmutable $tstamp;
 
     /**
      * @var ObjectStorage<ImportLog>
      */
-    protected $logs;
+    protected ObjectStorage $logs;
 
     /**
      * @var string[]|null
      */
-    protected $urls;
+    protected ?array $urls;
 
     /**
      * @var string[]
      */
-    protected $allowedTypes = [];
+    protected array $allowedTypes = [];
 
     public function __construct()
     {
@@ -98,7 +86,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     public function getLastImported(): ?DateTimeImmutable
     {
         $lastImport = null;
-        $positionOfLastLog = (count($this->logs) - 1);
+        $positionOfLastLog = count($this->logs) - 1;
         if ($this->logs->offsetExists($positionOfLastLog)) {
             $lastImport = $this->logs->offsetGet($positionOfLastLog);
         }

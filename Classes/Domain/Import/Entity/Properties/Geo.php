@@ -25,15 +25,9 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
 class Geo
 {
-    /**
-     * @var float
-     */
-    protected $longitude = 0.00;
+    protected float $longitude = 0.00;
 
-    /**
-     * @var float
-     */
-    protected $latitude = 0.00;
+    protected float $latitude = 0.00;
 
     public function getLongitude(): float
     {

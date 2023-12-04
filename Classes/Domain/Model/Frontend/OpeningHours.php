@@ -35,20 +35,14 @@ use WerkraumMedia\ThueCat\Service\DateBasedFilter;
  */
 class OpeningHours implements TypeInterface, Iterator, Countable
 {
-    /**
-     * @var string
-     */
-    private $serialized = '';
+    private string $serialized = '';
 
     /**
      * @var mixed[]
      */
-    private $array = [];
+    private array $array = [];
 
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
     public function __construct(string $serialized)
     {

@@ -28,26 +28,19 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class PriceSpecification extends Minimum
 {
-    /**
-     * @var float
-     */
-    protected $price = 0.00;
+    protected float $price = 0.00;
 
     /**
      * E.g. 'EUR'
      * ThueCat specific format.
-     *
-     * @var string
      */
-    protected $currency = '';
+    protected string $currency = '';
 
     /**
      * E.g. 'PerPerson'
      * ThueCat specific property.
-     *
-     * @var array
      */
-    protected $calculationRules = [];
+    protected array $calculationRules = [];
 
     public function getPrice(): float
     {

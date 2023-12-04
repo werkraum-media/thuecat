@@ -31,7 +31,7 @@ class EntityRegistry
     /**
      * @var array[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     /**
      * @param string[] $supportedTypes

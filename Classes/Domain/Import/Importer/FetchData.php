@@ -32,15 +32,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseExcept
 
 class FetchData
 {
-    /**
-     * @var string
-     */
-    private $databaseUrlPrefix = 'https://cdb.thuecat.org';
+    private string $databaseUrlPrefix = 'https://cdb.thuecat.org';
 
-    /**
-     * @var string
-     */
-    private $urlPrefix = 'https://thuecat.org';
+    private string $urlPrefix = 'https://thuecat.org';
 
     public function __construct(
         private readonly RequestFactoryInterface $requestFactory,

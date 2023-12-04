@@ -30,17 +30,14 @@ class Base extends Minimum
 {
     use ManagedBy;
 
-    /**
-     * @var ForeignReference
-     */
-    protected $photo;
+    protected ForeignReference $photo;
 
     /**
      * Images of this Thing.
      *
      * @var ForeignReference[]
      */
-    protected $images = [];
+    protected array $images = [];
 
     public function getPhoto(): ?ForeignReference
     {

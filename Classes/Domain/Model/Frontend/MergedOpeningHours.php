@@ -31,12 +31,9 @@ class MergedOpeningHours implements Iterator, Countable
     /**
      * @var MergedOpeningHour[]
      */
-    private $openingHours = [];
+    private array $openingHours = [];
 
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
     /**
      * @param MergedOpeningHour[] $openingHours

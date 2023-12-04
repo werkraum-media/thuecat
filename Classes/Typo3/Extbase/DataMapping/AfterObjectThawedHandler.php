@@ -36,22 +36,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
  */
 class AfterObjectThawedHandler
 {
-    /**
-     * @var FileRepository
-     */
-    private $fileRepository;
-
-    /**
-     * @var DataMapFactory
-     */
-    private $dataMapFactory;
-
     public function __construct(
-        FileRepository $fileRepository,
-        DataMapFactory $dataMapFactory
+        private readonly FileRepository $fileRepository,
+        private readonly DataMapFactory $dataMapFactory
     ) {
-        $this->fileRepository = $fileRepository;
-        $this->dataMapFactory = $dataMapFactory;
     }
 
     public function __invoke(AfterObjectThawedEvent $event): void

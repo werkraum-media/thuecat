@@ -39,60 +39,48 @@ class Place extends Base
     use Organization;
     use ContainedInPlace;
 
-    /**
-     * @var Address
-     */
-    protected $address;
+    protected Address $address;
 
-    /**
-     * @var Geo
-     */
-    protected $geo;
+    protected Geo $geo;
 
     /**
      * @var OpeningHour[]
      */
-    protected $openingHoursSpecifications = [];
+    protected array $openingHoursSpecifications = [];
 
     /**
      * @var OpeningHour[]
      */
-    protected $specialOpeningHours = [];
+    protected array $specialOpeningHours = [];
 
     /**
      * @var ForeignReference[]
      */
-    protected $parkingFacilitiesNearBy = [];
+    protected array $parkingFacilitiesNearBy = [];
 
     /**
      * @var string[]
      */
-    protected $sanitations = [];
+    protected array $sanitations = [];
 
     /**
      * @var string[]
      */
-    protected $otherServices = [];
+    protected array $otherServices = [];
 
     /**
      * @var string[]
      */
-    protected $trafficInfrastructures = [];
+    protected array $trafficInfrastructures = [];
 
     /**
      * @var string[]
      */
-    protected $paymentsAccepted = [];
+    protected array $paymentsAccepted = [];
 
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
+    protected string $distanceToPublicTransport = '';
 
-    /**
-     * @var ForeignReference
-     */
-    protected $accessibilitySpecification;
+    protected ForeignReference $accessibilitySpecification;
 
     public function getAddress(): ?Address
     {

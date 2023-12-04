@@ -34,7 +34,7 @@ trait Organization
     /**
      * @var Offer[]
      */
-    protected $offers = [];
+    protected array $offers = [];
 
     /**
      * @return Offer[]

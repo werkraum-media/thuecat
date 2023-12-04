@@ -27,20 +27,11 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 abstract class Base extends AbstractEntity
 {
-    /**
-     * @var string
-     */
-    protected $title = '';
+    protected string $title = '';
 
-    /**
-     * @var string
-     */
-    protected $description = '';
+    protected string $description = '';
 
-    /**
-     * @var Media|null
-     */
-    protected $media;
+    protected ?Media $media;
 
     public function getTitle(): string
     {

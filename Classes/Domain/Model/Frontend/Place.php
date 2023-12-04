@@ -28,60 +28,30 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class Place extends Base
 {
-    /**
-     * @var Address|null
-     */
-    protected $address;
+    protected ?Address $address;
 
-    /**
-     * @var string
-     */
-    protected $url = '';
+    protected string $url = '';
 
-    /**
-     * @var OpeningHours|null
-     */
-    protected $openingHours;
+    protected ?OpeningHours $openingHours;
 
-    /**
-     * @var OpeningHours|null
-     */
-    protected $specialOpeningHours;
+    protected ?OpeningHours $specialOpeningHours;
 
     /**
      * @var ObjectStorage<ParkingFacility>
      */
-    protected $parkingFacilityNearBy;
+    protected ObjectStorage $parkingFacilityNearBy;
 
-    /**
-     * @var string
-     */
-    protected $sanitation = '';
+    protected string $sanitation = '';
 
-    /**
-     * @var string
-     */
-    protected $otherService = '';
+    protected string $otherService = '';
 
-    /**
-     * @var string
-     */
-    protected $trafficInfrastructure = '';
+    protected string $trafficInfrastructure = '';
 
-    /**
-     * @var string
-     */
-    protected $paymentAccepted = '';
+    protected string $paymentAccepted = '';
 
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
+    protected string $distanceToPublicTransport = '';
 
-    /**
-     * @var AccessiblitySpecification|null
-     */
-    protected $accessibilitySpecification;
+    protected ?AccessiblitySpecification $accessibilitySpecification;
 
     public function initializeObject(): void
     {

@@ -50,10 +50,4 @@ return [
     TouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Frontend\Town::class => [
-        'tableName' => 'tx_thuecat_town',
-    ],
-    WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility::class => [
-        'tableName' => 'tx_thuecat_parking_facility',
-    ],
 ];

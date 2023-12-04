@@ -28,20 +28,17 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 
 class Media implements TypeInterface
 {
-    /**
-     * @var string
-     */
-    private $serialized;
+    private string $serialized;
 
     /**
      * @var array[]
      */
-    private $data;
+    private array $data;
 
     /**
      * @var FileReference[]
      */
-    protected $editorialImages = [];
+    protected array $editorialImages = [];
 
     public function __construct(string $serialized)
     {
