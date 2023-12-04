@@ -449,39 +449,43 @@ class FrontendTest extends FunctionalTestCase
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
             ->update(
                 'tx_thuecat_tourist_attraction',
-                ['opening_hours' => json_encode([
-                    [
-                        'closes' => '14:00:00',
-                        'opens' => '13:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                [
+                    'opening_hours' => [
+                        [
+                            'closes' => '14:00:00',
+                            'opens' => '13:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
-                        'through' => [
-                            'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                        [
+                            'closes' => '16:00:00',
+                            'opens' => '15:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
                     ],
-                    [
-                        'closes' => '16:00:00',
-                        'opens' => '15:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                        'through' => [
-                            'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                    ],
-                ])],
-                ['uid' => 1]
+                ],
+                [
+                    'uid' => 1,
+                ]
             )
         ;
 
@@ -516,54 +520,58 @@ class FrontendTest extends FunctionalTestCase
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
             ->update(
                 'tx_thuecat_tourist_attraction',
-                ['opening_hours' => json_encode([
-                    [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $fromThirdOpening->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                [
+                    'opening_hours' => [
+                        [
+                            'closes' => '17:00:00',
+                            'opens' => '13:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $fromThirdOpening->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $fromThirdOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
-                        'through' => [
-                            'date' => $fromThirdOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                        [
+                            'closes' => '17:00:00',
+                            'opens' => '13:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $fromFirstOpening->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $fromFirstOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                        ],
+                        [
+                            'closes' => '17:00:00',
+                            'opens' => '13:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $fromSecondOpening->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $fromSecondOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
                     ],
-                    [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $fromFirstOpening->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                        'through' => [
-                            'date' => $fromFirstOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                    ],
-                    [
-                        'closes' => '17:00:00',
-                        'opens' => '13:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $fromSecondOpening->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                        'through' => [
-                            'date' => $fromSecondOpening->modify('+1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                    ],
-                ])],
-                ['uid' => 1]
+                ],
+                [
+                    'uid' => 1,
+                ]
             )
         ;
 
@@ -593,54 +601,58 @@ class FrontendTest extends FunctionalTestCase
             ->getConnectionForTable('tx_thuecat_tourist_attraction')
             ->update(
                 'tx_thuecat_tourist_attraction',
-                ['special_opening_hours' => json_encode([
-                    [
-                        'closes' => '12:00:00',
-                        'opens' => '11:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                [
+                    'special_opening_hours' => [
+                        [
+                            'closes' => '12:00:00',
+                            'opens' => '11:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $hidden->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
-                        'through' => [
-                            'date' => $hidden->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
+                        [
+                            'closes' => '14:00:00',
+                            'opens' => '13:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $available2->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $available2->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                        ],
+                        [
+                            'closes' => '16:00:00',
+                            'opens' => '15:00:00',
+                            'daysOfWeek' => ['Sunday'],
+                            'from' => [
+                                'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
+                            'through' => [
+                                'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
+                                'timezone' => 'UTC',
+                                'timezone_type' => 3,
+                            ],
                         ],
                     ],
-                    [
-                        'closes' => '14:00:00',
-                        'opens' => '13:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $available2->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                        'through' => [
-                            'date' => $available2->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                    ],
-                    [
-                        'closes' => '16:00:00',
-                        'opens' => '15:00:00',
-                        'daysOfWeek' => ['Sunday'],
-                        'from' => [
-                            'date' => $available->modify('-1 day')->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                        'through' => [
-                            'date' => $available->format('Y-m-d') . ' 00:00:00.000000',
-                            'timezone' => 'UTC',
-                            'timezone_type' => 3,
-                        ],
-                    ],
-                ])],
-                ['uid' => 1]
+                ],
+                [
+                    'uid' => 1,
+                ]
             )
         ;
 

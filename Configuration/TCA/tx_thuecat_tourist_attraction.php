@@ -192,7 +192,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.opening_hours',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],
@@ -200,7 +200,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.special_opening_hours',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],
@@ -208,7 +208,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.address',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],
@@ -224,21 +224,21 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.media',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],
             'offers' => [
                 'label' => $languagePath . '.offers',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],
             'accessibility_specification' => [
                 'label' => $languagePath . '.accessibility_specification',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],

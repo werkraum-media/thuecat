@@ -23,7 +23,8 @@ Nothing
 Tasks
 -----
 
-Nothing
+* Use new TYPO3 JSON types.
+  That way TYPO3 backend will properly render the stored JSON of those fields.
 
 Deprecation
 -----------

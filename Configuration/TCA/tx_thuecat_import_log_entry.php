@@ -85,7 +85,7 @@ return (static function (string $extensionKey, string $tableName) {
             'errors' => [
                 'label' => $languagePath . '.errors',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'json',
                     'readOnly' => true,
                 ],
             ],

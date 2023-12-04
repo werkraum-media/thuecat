@@ -8,7 +8,43 @@ return  [
             'uid' => '1',
             'pid' => '3',
             'title' => 'Attraktion mit Preisen',
-            'offers' => '[{"prices":[{"currency":"EUR","description":"","price":8,"rule":"PerGroup","title":"Schulklassen"},{"currency":"EUR","description":"","price":8,"rule":"PerPerson","title":"Erwachsene"},{"currency":"EUR","description":"","price":5,"rule":"PerPerson","title":"Familienkarte B"},{"currency":"EUR","description":"","price":5,"rule":"PerPerson","title":"Familienkarte A"}],"description":"","title":"Führungen","type":"GuidedTourOffer"}]',
+            'offers' =>  [
+                0 => (object)[
+                    'prices' => [
+                        0 => (object)[
+                            'currency' => 'EUR',
+                            'description' => '',
+                            'price' => 8,
+                            'rule' => 'PerGroup',
+                            'title' => 'Schulklassen',
+                        ],
+                        1 => (object)[
+                            'currency' => 'EUR',
+                            'description' => '',
+                            'price' => 8,
+                            'rule' => 'PerPerson',
+                            'title' => 'Erwachsene',
+                        ],
+                        2 => (object)[
+                            'currency' => 'EUR',
+                            'description' => '',
+                            'price' => 5,
+                            'rule' => 'PerPerson',
+                            'title' => 'Familienkarte B',
+                        ],
+                        3 => (object)[
+                            'currency' => 'EUR',
+                            'description' => '',
+                            'price' => 5,
+                            'rule' => 'PerPerson',
+                            'title' => 'Familienkarte A',
+                        ],
+                    ],
+                    'description' => '',
+                    'title' => 'Führungen',
+                    'type' => 'GuidedTourOffer',
+                ],
+            ],
         ],
     ],
 ];
