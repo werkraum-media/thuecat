@@ -43,9 +43,9 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
 {
-    private Logger $logger;
+    private readonly Logger $logger;
 
-    private Import $import;
+    private readonly Import $import;
 
     public function __construct(
         private readonly UrlProviderRegistry $urls,
@@ -58,7 +58,7 @@ class Importer
         private readonly SaveData $saveData,
         LogManager $logManager
     ) {
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
         $this->import = new Import();
     }
 
@@ -143,7 +143,7 @@ class Importer
             }
 
             if (!$mappedEntity instanceof MapsToType) {
-                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => get_class($mappedEntity)]);
+                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => $mappedEntity::class]);
                 continue;
             }
 

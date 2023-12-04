@@ -37,7 +37,7 @@ class MappingError extends ImportLogEntry
         MappingException $exception
     ) {
         $this->remoteId = $exception->getUrl();
-        $this->errors = json_encode([$exception->getMessage()]) ?: '';
+        $this->errors = json_encode([$exception->getMessage()], JSON_THROW_ON_ERROR) ?: '';
     }
 
     public function getRemoteId(): string
@@ -47,7 +47,7 @@ class MappingError extends ImportLogEntry
 
     public function getErrors(): array
     {
-        $errors = json_decode($this->errors, true);
+        $errors = json_decode($this->errors, true, 512, JSON_THROW_ON_ERROR);
         if (is_array($errors) === false) {
             throw new Exception('Could not parse errors.', 1671097690);
         }

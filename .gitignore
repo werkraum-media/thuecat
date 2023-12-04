@@ -1,4 +1,5 @@
 /.Build/
-/.phpunit.cache
 /composer.lock
+/.phpunit.cache
+/Tests/Acceptance/Support/_generated
 /vendor/

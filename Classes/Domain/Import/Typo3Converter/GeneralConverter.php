@@ -53,7 +53,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 class GeneralConverter implements Converter
 {
-    private Logger $logger;
+    private readonly Logger $logger;
 
     private ImportConfiguration $importConfiguration;
 
@@ -79,7 +79,7 @@ class GeneralConverter implements Converter
         private readonly NameExtractor $nameExtractor,
         LogManager $logManager
     ) {
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
     }
 
     public function convert(
@@ -95,7 +95,7 @@ class GeneralConverter implements Converter
 
         $converted = new GenericEntity(
             $importConfiguration->getStoragePid(),
-            $this->getTableNameByEntityClass(get_class($entity)),
+            $this->getTableNameByEntityClass($entity::class),
             $this->languageHandling->getLanguageUidForString(
                 $importConfiguration->getStoragePid(),
                 $language
@@ -120,12 +120,12 @@ class GeneralConverter implements Converter
         ImportConfiguration $importConfiguration,
         string $language
     ): bool {
-        $tableName = $this->getTableNameByEntityClass(get_class($entity));
+        $tableName = $this->getTableNameByEntityClass($entity::class);
 
         if (!$entity instanceof Minimum) {
             $this->logger->info('Skipped conversion of entity, got unexpected type', [
                 'expectedType' => Minimum::class,
-                'actualType' => get_class($entity),
+                'actualType' => $entity::class,
             ]);
             return false;
         }
@@ -313,6 +313,7 @@ class GeneralConverter implements Converter
         if ($result === false || $result === '[]') {
             return '{}';
         }
+
         return $result;
     }
 
@@ -346,7 +347,7 @@ class GeneralConverter implements Converter
             }
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getSingleMedia(
@@ -386,7 +387,7 @@ class GeneralConverter implements Converter
             ]);
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getAddress(Place $entity): string
@@ -415,7 +416,7 @@ class GeneralConverter implements Converter
             ];
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getOffers(Place $entity): string
@@ -426,11 +427,11 @@ class GeneralConverter implements Converter
                 'types' => $offer->getOfferTypes(),
                 'title' => $offer->getName(),
                 'description' => $offer->getDescription(),
-                'prices' => array_map([$this, 'getPrice'], $offer->getPrices()),
+                'prices' => array_map($this->getPrice(...), $offer->getPrices()),
             ];
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getPrice(PriceSpecification $priceSpecification): array

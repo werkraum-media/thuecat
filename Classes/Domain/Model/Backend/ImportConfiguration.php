@@ -41,7 +41,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     protected string $configuration = '';
 
-    protected ?DateTimeImmutable $tstamp;
+    protected ?DateTimeImmutable $tstamp = null;
 
     /**
      * @var ObjectStorage<ImportLog>
@@ -51,7 +51,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     /**
      * @var string[]|null
      */
-    protected ?array $urls;
+    protected ?array $urls = null;
 
     /**
      * @var string[]

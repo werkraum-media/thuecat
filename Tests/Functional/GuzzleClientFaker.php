@@ -11,10 +11,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class GuzzleClientFaker
 {
-    /**
-     * @var MockHandler
-     */
-    private static $mockHandler;
+    private static ?MockHandler $mockHandler = null;
 
     public static function registerClient(): void
     {

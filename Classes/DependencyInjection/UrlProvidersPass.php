@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry;
 
 class UrlProvidersPass implements CompilerPassInterface
 {
-    public const TAG = 'thuecat:urlprovider';
+    final public const TAG = 'thuecat:urlprovider';
 
     public function process(ContainerBuilder $container): void
     {

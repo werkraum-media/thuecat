@@ -34,7 +34,7 @@ class AbstractEntity extends Typo3AbstractEntity
 
     protected string $description = '';
 
-    protected ?DateTimeImmutable $tstamp;
+    protected ?DateTimeImmutable $tstamp = null;
 
     public function getRemoteId(): string
     {

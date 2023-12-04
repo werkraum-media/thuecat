@@ -30,13 +30,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extension
 {
-    public const EXTENSION_KEY = 'thuecat';
+    final public const EXTENSION_KEY = 'thuecat';
 
-    public const EXTENSION_NAME = 'Thuecat';
+    final public const EXTENSION_NAME = 'Thuecat';
 
-    public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
+    final public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
 
-    public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
+    final public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
 
     public static function getLanguagePath(): string
     {

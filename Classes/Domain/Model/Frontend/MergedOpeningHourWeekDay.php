@@ -27,20 +27,11 @@ use WerkraumMedia\ThueCat\Domain\TimingFormat;
 
 class MergedOpeningHourWeekDay
 {
-    private string $opens;
-
-    private string $closes;
-
-    private string $dayOfWeek;
-
     public function __construct(
-        string $opens,
-        string $closes,
-        string $dayOfWeek
+        private readonly string $opens,
+        private readonly string $closes,
+        private readonly string $dayOfWeek
     ) {
-        $this->opens = $opens;
-        $this->closes = $closes;
-        $this->dayOfWeek = $dayOfWeek;
     }
 
     public function getOpens(): string

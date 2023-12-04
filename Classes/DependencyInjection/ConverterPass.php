@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
 
 class ConverterPass implements CompilerPassInterface
 {
-    public const TAG = 'thuecat.typo3.converter';
+    final public const TAG = 'thuecat.typo3.converter';
 
     public function process(ContainerBuilder $container): void
     {

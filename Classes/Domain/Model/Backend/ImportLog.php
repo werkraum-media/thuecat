@@ -35,15 +35,12 @@ class ImportLog extends Typo3AbstractEntity
      */
     protected ObjectStorage $logEntries;
 
-    protected ?ImportConfiguration $configuration;
-
-    protected ?DateTimeImmutable $crdate;
+    protected ?DateTimeImmutable $crdate = null;
 
     public function __construct(
-        ?ImportConfiguration $configuration = null
+        protected ?ImportConfiguration $configuration = null
     ) {
         $this->logEntries = new ObjectStorage();
-        $this->configuration = $configuration;
     }
 
     public function addEntry(ImportLogEntry $entry): void

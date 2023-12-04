@@ -27,17 +27,15 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 
 class Address implements TypeInterface
 {
-    private string $serialized;
-
     /**
      * @var mixed[]
      */
     private array $data;
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
-        $this->data = json_decode($serialized, true);
+    public function __construct(
+        private readonly string $serialized
+    ) {
+        $this->data = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function getStreet(): string

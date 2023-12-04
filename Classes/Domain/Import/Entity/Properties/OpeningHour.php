@@ -27,9 +27,9 @@ use DateTimeImmutable;
 
 class OpeningHour
 {
-    protected ?DateTimeImmutable $validFrom;
+    protected ?DateTimeImmutable $validFrom = null;
 
-    protected ?DateTimeImmutable $validThrough;
+    protected ?DateTimeImmutable $validThrough = null;
 
     protected DateTimeImmutable $opens;
 

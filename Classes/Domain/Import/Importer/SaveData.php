@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 class SaveData
 {
     /**
-     * @var mixed[]
+     * @var string[]
      */
     private array $errorLog;
 

@@ -32,9 +32,9 @@ class MergedOpeningHour
      */
     private array $weekDays = [];
 
-    private ?DateTimeImmutabl $from;
+    private readonly ?DateTimeImmutable $from;
 
-    private ?DateTimeImmutabl $through;
+    private readonly ?DateTimeImmutable $through;
 
     public function __construct(
         array $weekDays,

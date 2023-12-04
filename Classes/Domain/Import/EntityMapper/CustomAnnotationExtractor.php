@@ -54,26 +54,26 @@ use Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper;
  */
 class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface, PropertyTypeExtractorInterface, ConstructorArgumentTypeExtractorInterface
 {
-    public const PROPERTY = 0;
-    public const ACCESSOR = 1;
-    public const MUTATOR = 2;
+    final public const PROPERTY = 0;
+    final public const ACCESSOR = 1;
+    final public const MUTATOR = 2;
 
     /**
      * @var array<string, array{DocBlock|null, int|null, string|null}>
      */
-    private $docBlocks = [];
+    private array $docBlocks = [];
 
     /**
      * @var Context[]
      */
-    private $contexts = [];
+    private array $contexts = [];
 
-    private $docBlockFactory;
-    private $contextFactory;
-    private $phpDocTypeHelper;
-    private $mutatorPrefixes;
-    private $accessorPrefixes;
-    private $arrayMutatorPrefixes;
+    private readonly \phpDocumentor\Reflection\DocBlockFactoryInterface $docBlockFactory;
+    private readonly \phpDocumentor\Reflection\Types\ContextFactory $contextFactory;
+    private readonly \Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper $phpDocTypeHelper;
+    private readonly array $mutatorPrefixes;
+    private readonly array $accessorPrefixes;
+    private readonly array $arrayMutatorPrefixes;
 
     /**
      * @param string[]|null $mutatorPrefixes
@@ -83,7 +83,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     public function __construct(DocBlockFactoryInterface $docBlockFactory = null, array $mutatorPrefixes = null, array $accessorPrefixes = null, array $arrayMutatorPrefixes = null)
     {
         if (!class_exists(DocBlockFactory::class)) {
-            throw new LogicException(sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', __CLASS__));
+            throw new LogicException(sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', self::class));
         }
 
         $this->docBlockFactory = $docBlockFactory ?: DocBlockFactory::createInstance();
@@ -246,7 +246,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
             $docBlock = $this->docBlockFactory->create($reflectionConstructor, $this->contextFactory->createFromReflector($reflectionConstructor));
 
             return $this->filterDocBlockParams($docBlock, $property);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             return null;
         }
     }
@@ -320,7 +320,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
 
         try {
             return $this->docBlockFactory->create($reflectionProperty, $this->createFromReflector($reflector));
-        } catch (InvalidArgumentException|RuntimeException $e) {
+        } catch (InvalidArgumentException|RuntimeException) {
             return null;
         }
     }
@@ -348,7 +348,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
                 ) {
                     break;
                 }
-            } catch (ReflectionException $e) {
+            } catch (ReflectionException) {
                 // Try the next prefix if the method doesn't exist
             }
         }
@@ -367,7 +367,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
 
         try {
             return [$this->docBlockFactory->create($reflectionMethod, $this->createFromReflector($reflector)), $prefix];
-        } catch (InvalidArgumentException|RuntimeException $e) {
+        } catch (InvalidArgumentException|RuntimeException) {
             return null;
         }
     }

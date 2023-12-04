@@ -42,20 +42,17 @@ class SavingEntity extends ImportLogEntry
     protected string $errors = '';
 
     /**
-     * @var string[]
+     * @param string[] $errorsAsArray
      */
-    protected array $errorsAsArray = [];
-
     public function __construct(
         Entity $entity,
-        array $dataHandlerErrorLog
+        protected array $errorsAsArray
     ) {
         $this->remoteId = $entity->getRemoteId();
         $this->insertion = $entity->wasCreated();
         $this->recordUid = $entity->getTypo3Uid();
         $this->recordPid = $entity->getTypo3StoragePid();
         $this->tableName = $entity->getTypo3DatabaseTableName();
-        $this->errorsAsArray = $dataHandlerErrorLog;
     }
 
     public function getRemoteId(): string
@@ -81,7 +78,7 @@ class SavingEntity extends ImportLogEntry
     public function getErrors(): array
     {
         if ($this->errorsAsArray === [] && $this->errors !== '') {
-            $errorsAsArray = json_decode($this->errors, true);
+            $errorsAsArray = json_decode($this->errors, true, 512, JSON_THROW_ON_ERROR);
             if (is_array($errorsAsArray) === false) {
                 throw new Exception('Could not parse errors.', 1671097690);
             }

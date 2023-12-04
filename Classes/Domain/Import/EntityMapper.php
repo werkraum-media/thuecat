@@ -51,7 +51,7 @@ class EntityMapper
 
         try {
             return $serializer->deserialize(
-                json_encode($jsonLD),
+                json_encode($jsonLD, JSON_THROW_ON_ERROR),
                 $targetClassName,
                 'json',
                 $context

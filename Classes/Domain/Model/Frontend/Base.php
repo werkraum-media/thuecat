@@ -31,7 +31,7 @@ abstract class Base extends AbstractEntity
 
     protected string $description = '';
 
-    protected ?Media $media;
+    protected ?Media $media = null;
 
     public function getTitle(): string
     {

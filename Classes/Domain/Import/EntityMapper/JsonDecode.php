@@ -33,7 +33,7 @@ use Symfony\Component\Serializer\Encoder\JsonDecode as SymfonyJsonDecode;
  */
 class JsonDecode extends SymfonyJsonDecode
 {
-    public const ACTIVE_LANGUAGE = 'active_language';
+    final public const ACTIVE_LANGUAGE = 'active_language';
 
     /**
      * @var array[]
@@ -92,12 +92,11 @@ class JsonDecode extends SymfonyJsonDecode
      *
      * This decode will resolve the list to a single value based on current language settings from context.
      *
-     * @param mixed $value
      *
      * @return mixed
      */
     private function decodeLanguageSpecificValue(
-        &$value,
+        mixed &$value,
         string $activeLanguage
     ) {
         if (is_array($value) === false) {
@@ -154,12 +153,11 @@ class JsonDecode extends SymfonyJsonDecode
      *
      * This decode will resolve single values wrapped in array with extra info.
      *
-     * @param mixed $value
      *
      * @return mixed
      */
     private function decodeSingleValues(
-        &$value
+        mixed &$value
     ) {
         if (is_array($value) === false) {
             return $value;
@@ -189,12 +187,11 @@ class JsonDecode extends SymfonyJsonDecode
     /**
      * Prepare data structure for PHP \DateTimeImmutable.
      *
-     * @param mixed $value
      *
      * @return mixed
      */
     private function decodeDateTime(
-        &$value
+        mixed &$value
     ) {
         $supportedTypes = [
             'schema:Time',
@@ -214,11 +211,9 @@ class JsonDecode extends SymfonyJsonDecode
     }
 
     /**
-     * @param mixed $key
-     *
      * @return mixed
      */
-    private function mapKey($key)
+    private function mapKey(mixed $key)
     {
         if (is_string($key) === false) {
             return $key;
@@ -240,7 +235,7 @@ class JsonDecode extends SymfonyJsonDecode
     private function doesRuleMatch(array $rule, string $type): bool
     {
         if ($rule['type'] === 'beginsWith') {
-            return str_starts_with($type, $rule['comparisonValue']);
+            return str_starts_with($type, (string) $rule['comparisonValue']);
         }
 
         return false;

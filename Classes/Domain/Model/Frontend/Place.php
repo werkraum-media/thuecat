@@ -28,13 +28,13 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class Place extends Base
 {
-    protected ?Address $address;
+    protected ?Address $address = null;
 
     protected string $url = '';
 
-    protected ?OpeningHours $openingHours;
+    protected ?OpeningHours $openingHours = null;
 
-    protected ?OpeningHours $specialOpeningHours;
+    protected ?OpeningHours $specialOpeningHours = null;
 
     /**
      * @var ObjectStorage<ParkingFacility>
@@ -51,7 +51,7 @@ abstract class Place extends Base
 
     protected string $distanceToPublicTransport = '';
 
-    protected ?AccessiblitySpecification $accessibilitySpecification;
+    protected ?AccessiblitySpecification $accessibilitySpecification = null;
 
     public function initializeObject(): void
     {

@@ -32,8 +32,6 @@ use TYPO3\CMS\Core\Type\TypeInterface;
  */
 class Offers implements TypeInterface, Iterator, Countable
 {
-    private string $serialized = '';
-
     /**
      * @var mixed[]
      */
@@ -41,10 +39,10 @@ class Offers implements TypeInterface, Iterator, Countable
 
     private int $position = 0;
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
-        $array = json_decode($serialized, true);
+    public function __construct(
+        private readonly string $serialized
+    ) {
+        $array = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
         if (is_array($array)) {
             $array = array_map([Offer::class, 'createFromArray'], $array);
             usort($array, function (Offer $offerA, Offer $offerB) {

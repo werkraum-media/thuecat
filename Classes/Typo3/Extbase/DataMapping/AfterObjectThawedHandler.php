@@ -77,7 +77,7 @@ class AfterObjectThawedHandler
     private function getTableNameForObject(Base $object): string
     {
         return $this->dataMapFactory
-            ->buildDataMap(get_class($object))
+            ->buildDataMap($object::class)
             ->getTableName()
         ;
     }

@@ -75,7 +75,7 @@ class ImportLogRepository extends Repository
                     'import_log' => 'NEW0',
                     'type' => $entry->getType(),
                     'remote_id' => $entry->getRemoteId(),
-                    'errors' => json_encode($entry->getErrors()),
+                    'errors' => json_encode($entry->getErrors(), JSON_THROW_ON_ERROR),
                 ]
             );
         }

@@ -56,7 +56,7 @@ class RequestFactory implements RequestFactoryInterface
 
         try {
             $query['api_key'] = $this->extensionConfiguration->get('thuecat', 'apiKey');
-        } catch (ExtensionConfigurationExtensionNotConfiguredException $e) {
+        } catch (ExtensionConfigurationExtensionNotConfiguredException) {
             // Nothing todo, not configured, don't add.
         }
 

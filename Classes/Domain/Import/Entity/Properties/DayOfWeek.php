@@ -25,11 +25,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
 class DayOfWeek
 {
-    protected string $dayOfWeek = '';
-
     public function __construct(
-        string $dayOfWeek
+        protected string $dayOfWeek
     ) {
-        $this->dayOfWeek = $dayOfWeek;
     }
 }

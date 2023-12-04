@@ -58,7 +58,7 @@ class Offer extends Minimum
         }
 
         $this->offerTypes = array_map(
-            [PropertyValues::class, 'removePrefixFromEntry'],
+            PropertyValues::removePrefixFromEntry(...),
             $offerType
         );
     }

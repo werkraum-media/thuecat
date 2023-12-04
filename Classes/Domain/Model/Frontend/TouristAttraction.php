@@ -29,9 +29,9 @@ class TouristAttraction extends Place
 {
     protected string $slogan = '';
 
-    protected ?Offers $offers;
+    protected ?Offers $offers = null;
 
-    protected ?Town $town;
+    protected ?Town $town = null;
 
     protected string $startOfConstruction = '';
 

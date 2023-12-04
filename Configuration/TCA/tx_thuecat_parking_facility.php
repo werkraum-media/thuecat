@@ -44,7 +44,7 @@ return (static function (string $extensionKey, string $tableName) {
                         [
                             'label' => '',
                             'value' => 0,
-                        ]
+                        ],
                     ],
                     'foreign_table' => $tableName,
                     'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',

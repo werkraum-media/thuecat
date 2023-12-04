@@ -28,13 +28,9 @@ use Throwable;
 
 class MappingException extends Exception
 {
-    protected array $jsonLD = [];
-
-    protected string $targetClassName = '';
-
     public function __construct(
-        array $jsonLD,
-        string $targetClassName,
+        protected array $jsonLD,
+        protected string $targetClassName,
         Throwable $previous
     ) {
         parent::__construct(
@@ -42,8 +38,6 @@ class MappingException extends Exception
             1628157659,
             $previous
         );
-        $this->jsonLD = $jsonLD;
-        $this->targetClassName = $targetClassName;
     }
 
     public function getUrl(): string

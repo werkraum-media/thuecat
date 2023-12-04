@@ -51,7 +51,7 @@ class ResolveForeignReference
     ): ?object {
         try {
             $jsonLD = $this->fetchData->jsonLDFromUrl($foreignReference->getId());
-        } catch (InvalidResponseException $e) {
+        } catch (InvalidResponseException) {
             return null;
         }
 

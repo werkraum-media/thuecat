@@ -31,12 +31,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 /**
- * @implements \Iterator<int, OpeningHour>
+ * @implements Iterator<int, OpeningHour>
  */
 class OpeningHours implements TypeInterface, Iterator, Countable
 {
-    private string $serialized = '';
-
     /**
      * @var mixed[]
      */
@@ -44,9 +42,9 @@ class OpeningHours implements TypeInterface, Iterator, Countable
 
     private int $position = 0;
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
+    public function __construct(
+        private readonly string $serialized
+    ) {
         $this->array = $this->createArray($serialized);
     }
 
@@ -54,7 +52,7 @@ class OpeningHours implements TypeInterface, Iterator, Countable
     {
         $array = array_map(
             [OpeningHour::class, 'createFromArray'],
-            json_decode($serialized, true) ?? []
+            json_decode($serialized, true, 512, JSON_THROW_ON_ERROR) ?? []
         );
 
         $array = GeneralUtility::makeInstance(DateBasedFilter::class)
