@@ -103,7 +103,7 @@ class FetchDataTest extends TestCase
         $httpClient->method('sendRequest')->willReturn($response);
 
         $body = $this->createStub(StreamInterface::class);
-        $body->method('__toString')->willReturn('');
+        $body->method('__toString')->willReturn('[]');
 
         $response->method('getStatusCode')->willReturn(200);
         $response->method('getBody')->willReturn($body);

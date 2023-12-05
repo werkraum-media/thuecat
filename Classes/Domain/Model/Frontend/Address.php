@@ -35,7 +35,7 @@ class Address implements TypeInterface
     public function __construct(
         private readonly string $serialized
     ) {
-        $this->data = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
+        $this->data = json_decode($serialized, true) ?? [];
     }
 
     public function getStreet(): string

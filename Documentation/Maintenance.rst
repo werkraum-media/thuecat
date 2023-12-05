@@ -14,4 +14,4 @@ Those changes are documented so we know what to do once we drop an older version
    :glob:
    :reversed:
 
-   Maintenance/PHP/*
+   Maintenance/*

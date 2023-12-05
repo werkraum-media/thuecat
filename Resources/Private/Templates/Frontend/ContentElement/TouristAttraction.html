@@ -71,10 +71,10 @@
                 </f:if>
             </div>
             <div class="row thuecat__services">
-                <f:if condition="{entity.generalInformation || entity.otherServices || entity.petsAllowed || entity.isAccessibleForFree
-                    || entity.publicAccess || entity.accessibilitySpecification.certificationStatus || entity.museumServices
-                    || entity.digitalOffer || entity.trafficInfrastructures || entity.paymentAccepted || entity.availableLanguages
-                    || entity.sanitation || entity.photography || entity.startOfConstruction || entity.architecturalStyles}"
+                <f:if condition="{entity.generalInformation} || {entity.otherServices} || {entity.petsAllowed} || {entity.isAccessibleForFree}
+                    || {entity.publicAccess} || {entity.accessibilitySpecification.certificationStatus} || {entity.museumServices}
+                    || {entity.digitalOffer} || {entity.trafficInfrastructures} || {entity.paymentAccepted} || {entity.availableLanguages}
+                    || {entity.sanitation} || {entity.photography} || {entity.startOfConstruction} || {entity.architecturalStyles}"
                 >
                     <div class="col-md-6">
                         <h2>{f:translate(id: 'content.generalInformation', extensionName: 'Thuecat')}</h2>
@@ -109,6 +109,7 @@
                         </f:if>
                         <f:if condition="{entity.sanitation}">
                             <h3>{f:translate(id: 'content.sanitation', extensionName: 'Thuecat')}</h3>
+                            sanitation
                             {f:render(partial: 'Sanitation', arguments: {sanitation: entity.sanitation})}
                         </f:if>
                         <f:if condition="{entity.photography}">

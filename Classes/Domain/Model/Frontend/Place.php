@@ -41,14 +41,29 @@ abstract class Place extends Base
      */
     protected ObjectStorage $parkingFacilityNearBy;
 
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
     protected string $sanitation = '';
 
     protected string $otherService = '';
 
     protected string $trafficInfrastructure = '';
 
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
     protected string $paymentAccepted = '';
 
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
     protected string $distanceToPublicTransport = '';
 
     protected ?AccessiblitySpecification $accessibilitySpecification = null;

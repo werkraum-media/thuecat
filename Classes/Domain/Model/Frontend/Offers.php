@@ -42,7 +42,7 @@ class Offers implements TypeInterface, Iterator, Countable
     public function __construct(
         private readonly string $serialized
     ) {
-        $array = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
+        $array = json_decode($serialized, true);
         if (is_array($array)) {
             $array = array_map([Offer::class, 'createFromArray'], $array);
             usort($array, function (Offer $offerA, Offer $offerB) {

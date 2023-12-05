@@ -53,6 +53,7 @@ class GeneralConverterTest extends TestCase
         $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
         $nameExtractor = $this->createStub(NameExtractor::class);
         $logManager = $this->createStub(LogManager::class);
+        $logManager->method('getLogger')->willReturn($this->createStub(Logger::class));
 
         $subject = new GeneralConverter(
             $resolveForeignReference,

@@ -31,7 +31,12 @@ class MappingError extends ImportLogEntry
 {
     protected string $remoteId = '';
 
-    protected string $errors = '';
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
+    protected string $errors = '[]';
 
     public function __construct(
         MappingException $exception
@@ -47,7 +52,7 @@ class MappingError extends ImportLogEntry
 
     public function getErrors(): array
     {
-        $errors = json_decode($this->errors, true, 512, JSON_THROW_ON_ERROR);
+        $errors = json_decode($this->errors, true);
         if (is_array($errors) === false) {
             throw new Exception('Could not parse errors.', 1671097690);
         }

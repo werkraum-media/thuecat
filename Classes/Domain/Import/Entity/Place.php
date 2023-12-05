@@ -39,9 +39,9 @@ class Place extends Base
     use Organization;
     use ContainedInPlace;
 
-    protected Address $address;
+    protected ?Address $address = null;
 
-    protected Geo $geo;
+    protected ?Geo $geo = null;
 
     /**
      * @var OpeningHour[]
@@ -80,7 +80,7 @@ class Place extends Base
 
     protected string $distanceToPublicTransport = '';
 
-    protected ForeignReference $accessibilitySpecification;
+    protected ?ForeignReference $accessibilitySpecification = null;
 
     public function getAddress(): ?Address
     {

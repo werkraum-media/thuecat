@@ -41,7 +41,7 @@ class Media implements TypeInterface
     public function __construct(
         private readonly string $serialized
     ) {
-        $data = json_decode($serialized, true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode($serialized, true);
         $this->data = $this->prepareData(is_array($data) ? $data : []);
     }
 

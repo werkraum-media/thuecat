@@ -235,7 +235,7 @@ class JsonDecode extends SymfonyJsonDecode
     private function doesRuleMatch(array $rule, string $type): bool
     {
         if ($rule['type'] === 'beginsWith') {
-            return str_starts_with($type, (string) $rule['comparisonValue']);
+            return str_starts_with($type, (string)$rule['comparisonValue']);
         }
 
         return false;

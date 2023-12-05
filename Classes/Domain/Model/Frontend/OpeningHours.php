@@ -52,7 +52,7 @@ class OpeningHours implements TypeInterface, Iterator, Countable
     {
         $array = array_map(
             [OpeningHour::class, 'createFromArray'],
-            json_decode($serialized, true, 512, JSON_THROW_ON_ERROR) ?? []
+            json_decode($serialized, true) ?? []
         );
 
         $array = GeneralUtility::makeInstance(DateBasedFilter::class)

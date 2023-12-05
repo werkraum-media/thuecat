@@ -30,7 +30,7 @@ class Base extends Minimum
 {
     use ManagedBy;
 
-    protected ForeignReference $photo;
+    protected ?ForeignReference $photo = null;
 
     /**
      * Images of this Thing.

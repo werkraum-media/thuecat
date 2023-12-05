@@ -11,7 +11,9 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParkingFacility;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction as FrontendTouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town as FrontendTown;
 
 return [
     Organisation::class => [
@@ -47,7 +49,14 @@ return [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'mappingError',
     ],
-    TouristAttraction::class => [
+
+    FrontendTouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
+    ],
+    FrontendTown::class => [
+        'tableName' => 'tx_thuecat_town',
+    ],
+    FrontendParkingFacility::class => [
+        'tableName' => 'tx_thuecat_parking_facility',
     ],
 ];

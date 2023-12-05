@@ -59,7 +59,7 @@ class NameExtractor
         }
 
         if ($name === '' && method_exists($remote, 'getName')) {
-            $name = trim((string) $remote->getName());
+            $name = trim((string)$remote->getName());
         }
 
         return $name;

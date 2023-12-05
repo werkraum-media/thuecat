@@ -39,8 +39,18 @@ class TouristAttraction extends Place
 
     protected string $architecturalStyle = '';
 
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
     protected string $digitalOffer = '';
 
+    /**
+     * Necessary for Extbase/Symfony.
+     *
+     * @var string
+     */
     protected string $photography = '';
 
     protected string $petsAllowed = '';

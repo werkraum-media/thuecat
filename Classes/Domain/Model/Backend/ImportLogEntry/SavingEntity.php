@@ -42,17 +42,23 @@ class SavingEntity extends ImportLogEntry
     protected string $errors = '';
 
     /**
+     * @var string[]
+     */
+    protected array $errorsAsArray = [];
+
+    /**
      * @param string[] $errorsAsArray
      */
     public function __construct(
         Entity $entity,
-        protected array $errorsAsArray
+        array $errorsAsArray
     ) {
         $this->remoteId = $entity->getRemoteId();
         $this->insertion = $entity->wasCreated();
         $this->recordUid = $entity->getTypo3Uid();
         $this->recordPid = $entity->getTypo3StoragePid();
         $this->tableName = $entity->getTypo3DatabaseTableName();
+        $this->errorsAsArray = $errorsAsArray;
     }
 
     public function getRemoteId(): string
