@@ -23,27 +23,21 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider
- */
 class StaticUrlProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new StaticUrlProvider();
         self::assertInstanceOf(StaticUrlProvider::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canProvideForStaticConfiguration(): void
     {
         $configuration = new ImportConfiguration();
@@ -55,9 +49,7 @@ class StaticUrlProviderTest extends TestCase
         self::assertTrue($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsConcreteProviderForConfiguration(): void
     {
         $configuration = new ImportConfiguration();
@@ -69,9 +61,7 @@ class StaticUrlProviderTest extends TestCase
         self::assertInstanceOf(StaticUrlProvider::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function concreteProviderReturnsUrls(): void
     {
         $configuration = new ImportConfiguration();

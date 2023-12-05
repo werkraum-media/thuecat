@@ -36,22 +36,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
  */
 class AfterObjectThawedHandler
 {
-    /**
-     * @var FileRepository
-     */
-    private $fileRepository;
-
-    /**
-     * @var DataMapFactory
-     */
-    private $dataMapFactory;
-
     public function __construct(
-        FileRepository $fileRepository,
-        DataMapFactory $dataMapFactory
+        private readonly FileRepository $fileRepository,
+        private readonly DataMapFactory $dataMapFactory
     ) {
-        $this->fileRepository = $fileRepository;
-        $this->dataMapFactory = $dataMapFactory;
     }
 
     public function __invoke(AfterObjectThawedEvent $event): void
@@ -89,7 +77,7 @@ class AfterObjectThawedHandler
     private function getTableNameForObject(Base $object): string
     {
         return $this->dataMapFactory
-            ->buildDataMap(get_class($object))
+            ->buildDataMap($object::class)
             ->getTableName()
         ;
     }

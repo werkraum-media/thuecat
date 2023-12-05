@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use InvalidArgumentException;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 
@@ -37,27 +38,21 @@ class Import
     /**
      * @var ImportLog[]
      */
-    private $importLogStack = [];
+    private array $importLogStack = [];
 
     /**
      * @var ImportConfiguration[]
      */
-    private $configurationStack = [];
+    private array $configurationStack = [];
 
-    /**
-     * @var ImportLog
-     */
-    private $currentImportLog;
+    private ImportLog $currentImportLog;
 
-    /**
-     * @var ImportConfiguration
-     */
-    private $currentConfiguration;
+    private ImportConfiguration $currentConfiguration;
 
     public function start(ImportConfiguration $configuration): void
     {
         if (!$configuration instanceof Typo3ImportConfiguration) {
-            throw new \InvalidArgumentException('Currently only can process ImportConfiguration of TYPO3.', 1629708772);
+            throw new InvalidArgumentException('Currently only can process ImportConfiguration of TYPO3.', 1629708772);
         }
 
         $this->currentConfiguration = $configuration;

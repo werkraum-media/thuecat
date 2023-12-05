@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
+use DateTimeImmutable;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
@@ -32,23 +33,14 @@ class ImportLog extends Typo3AbstractEntity
     /**
      * @var ObjectStorage<ImportLogEntry>
      */
-    protected $logEntries;
+    protected ObjectStorage $logEntries;
 
-    /**
-     * @var ImportConfiguration|null
-     */
-    protected $configuration = null;
-
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    protected $crdate;
+    protected ?DateTimeImmutable $crdate = null;
 
     public function __construct(
-        ?ImportConfiguration $configuration = null
+        protected ?ImportConfiguration $configuration = null
     ) {
         $this->logEntries = new ObjectStorage();
-        $this->configuration = $configuration;
     }
 
     public function addEntry(ImportLogEntry $entry): void
@@ -78,7 +70,7 @@ class ImportLog extends Typo3AbstractEntity
         return $this->logEntries;
     }
 
-    public function getCreated(): ?\DateTimeImmutable
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->crdate;
     }

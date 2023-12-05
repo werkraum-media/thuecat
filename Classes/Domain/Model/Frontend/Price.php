@@ -27,43 +27,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Price
 {
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var float
-     */
-    private $price;
-
-    /**
-     * @var string
-     */
-    private $currency;
-
-    /**
-     * @var string[]
-     */
-    private $rules;
-
     private function __construct(
-        string $title,
-        string $description,
-        float $price,
-        string $currency,
-        array $rules
+        private readonly string $title,
+        private readonly string $description,
+        private readonly float $price,
+        private readonly string $currency,
+        private readonly array $rules
     ) {
-        $this->title = $title;
-        $this->description = $description;
-        $this->price = $price;
-        $this->currency = $currency;
-        $this->rules = $rules;
     }
 
     /**

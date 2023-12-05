@@ -23,22 +23,30 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
-use TYPO3\CMS\Backend\View\BackendTemplateView;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
 abstract class AbstractController extends ActionController
 {
-    /**
-     * BackendTemplateContainer
-     *
-     * @var BackendTemplateView
-     */
-    protected $view;
+    private ModuleTemplateFactory $moduleTemplateFactory;
 
-    /**
-     * Backend Template Container
-     *
-     * @var string
-     */
-    protected $defaultViewObjectName = BackendTemplateView::class;
+    protected ModuleTemplate $moduleTemplate;
+
+    public function injectModuleTemplateFactory(ModuleTemplateFactory $moduleTemplateFactory): void
+    {
+        $this->moduleTemplateFactory = $moduleTemplateFactory;
+    }
+
+    protected function initializeView(): void
+    {
+        $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $this->moduleTemplate->assign('settings', $this->settings);
+    }
+
+    protected function htmlResponse(?string $html = null): ResponseInterface
+    {
+        return parent::htmlResponse($html ?? $this->moduleTemplate->render());
+    }
 }

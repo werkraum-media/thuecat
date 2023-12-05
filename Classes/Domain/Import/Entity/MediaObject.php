@@ -27,30 +27,18 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 
 class MediaObject extends Minimum implements MapsToType
 {
-    /**
-     * @var int
-     */
-    protected $copyrightYear = 0;
+    protected int $copyrightYear = 0;
 
-    /**
-     * @var string
-     */
-    protected $license = '';
+    protected string $license = '';
 
-    /**
-     * @var string
-     */
-    protected $licenseAuthor = '';
+    protected string $licenseAuthor = '';
 
     /**
      * @var string|ForeignReference
      */
     protected $author;
 
-    /**
-     * @var string
-     */
-    protected $type = '';
+    protected string $type = '';
 
     public function getCopyrightYear(): int
     {
@@ -85,7 +73,7 @@ class MediaObject extends Minimum implements MapsToType
      */
     public function setCopyrightYear(string $copyrightYear): void
     {
-        $this->copyrightYear = (int) $copyrightYear;
+        $this->copyrightYear = (int)$copyrightYear;
     }
 
     /**
@@ -106,6 +94,7 @@ class MediaObject extends Minimum implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|ForeignReference $author
      */
     public function setAuthor($author): void

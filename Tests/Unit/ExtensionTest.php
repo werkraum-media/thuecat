@@ -23,18 +23,13 @@ namespace WerkraumMedia\ThueCat\Tests\Unit;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Extension;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Extension
- * @testdox The extension class
- */
 class ExtensionTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsLanguagePath(): void
     {
         self::assertSame('LLL:EXT:thuecat/Resources/Private/Language/', Extension::getLanguagePath());

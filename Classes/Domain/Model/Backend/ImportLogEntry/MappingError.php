@@ -23,26 +23,26 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
+use Exception;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class MappingError extends ImportLogEntry
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    protected string $remoteId = '';
 
     /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $errors = '';
+    protected string $errors = '[]';
 
     public function __construct(
         MappingException $exception
     ) {
         $this->remoteId = $exception->getUrl();
-        $this->errors = json_encode([$exception->getMessage()]) ?: '';
+        $this->errors = json_encode([$exception->getMessage()], JSON_THROW_ON_ERROR) ?: '';
     }
 
     public function getRemoteId(): string
@@ -54,7 +54,7 @@ class MappingError extends ImportLogEntry
     {
         $errors = json_decode($this->errors, true);
         if (is_array($errors) === false) {
-            throw new \Exception('Could not parse errors.', 1671097690);
+            throw new Exception('Could not parse errors.', 1671097690);
         }
         return $errors;
     }

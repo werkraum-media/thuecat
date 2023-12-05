@@ -1,47 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParkingFacility;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction as FrontendTouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town as FrontendTown;
 
 return [
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation::class => [
+    Organisation::class => [
         'tableName' => 'tx_thuecat_organisation',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\Town::class => [
+    Town::class => [
         'tableName' => 'tx_thuecat_town',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation::class => [
+    TouristInformation::class => [
         'tableName' => 'tx_thuecat_tourist_information',
     ],
-    WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility::class => [
+    ParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration::class => [
+    ImportConfiguration::class => [
         'tableName' => 'tx_thuecat_import_configuration',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog::class => [
+    ImportLog::class => [
         'tableName' => 'tx_thuecat_import_log',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry::class => [
+    ImportLogEntry::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'subclasses' => [
-            'savingEntity' => \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity::class,
-            'mappingError' => \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError::class,
+            'savingEntity' => SavingEntity::class,
+            'mappingError' => MappingError::class,
         ],
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity::class => [
+    SavingEntity::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'savingEntity',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError::class => [
+    MappingError::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'mappingError',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction::class => [
+
+    FrontendTouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
     ],
-    \WerkraumMedia\ThueCat\Domain\Model\Frontend\Town::class => [
+    FrontendTown::class => [
         'tableName' => 'tx_thuecat_town',
     ],
-    WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility::class => [
+    FrontendParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',
     ],
 ];

@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use Exception;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
@@ -42,76 +43,22 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
 {
-    /**
-     * @var UrlProviderRegistry
-     */
-    private $urls;
+    private readonly Logger $logger;
 
-    /**
-     * @var Converter
-     */
-    private $converter;
-
-    /**
-     * @var EntityRegistry
-     */
-    private $entityRegistry;
-
-    /**
-     * @var EntityMapper
-     */
-    private $entityMapper;
-
-    /**
-     * @var Languages
-     */
-    private $languages;
-
-    /**
-     * @var FetchData
-     */
-    private $fetchData;
-
-    /**
-     * @var SaveData
-     */
-    private $saveData;
-
-    /**
-     * @var ImportLogRepository
-     */
-    private $importLogRepository;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
-     * @var Import
-     */
-    private $import;
+    private readonly Import $import;
 
     public function __construct(
-        UrlProviderRegistry $urls,
-        Converter $converter,
-        EntityRegistry $entityRegistry,
-        EntityMapper $entityMapper,
-        Languages $languages,
-        ImportLogRepository $importLogRepository,
-        FetchData $fetchData,
-        SaveData $saveData,
+        private readonly UrlProviderRegistry $urls,
+        private readonly Converter $converter,
+        private readonly EntityRegistry $entityRegistry,
+        private readonly EntityMapper $entityMapper,
+        private readonly Languages $languages,
+        private readonly ImportLogRepository $importLogRepository,
+        private readonly FetchData $fetchData,
+        private readonly SaveData $saveData,
         LogManager $logManager
     ) {
-        $this->urls = $urls;
-        $this->converter = $converter;
-        $this->entityRegistry = $entityRegistry;
-        $this->entityMapper = $entityMapper;
-        $this->languages = $languages;
-        $this->importLogRepository = $importLogRepository;
-        $this->fetchData = $fetchData;
-        $this->saveData = $saveData;
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
         $this->import = new Import();
     }
 
@@ -139,7 +86,7 @@ class Importer
     {
         $urlProvider = $this->urls->getProviderForConfiguration($this->import->getConfiguration());
         if (!$urlProvider instanceof UrlProvider) {
-            throw new \Exception('No URL Provider available for given configuration.', 1629296635);
+            throw new Exception('No URL Provider available for given configuration.', 1629296635);
         }
 
         foreach ($urlProvider->getUrls() as $url) {
@@ -196,7 +143,7 @@ class Importer
             }
 
             if (!$mappedEntity instanceof MapsToType) {
-                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => get_class($mappedEntity)]);
+                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => $mappedEntity::class]);
                 continue;
             }
 
@@ -218,7 +165,8 @@ class Importer
                         'url' => $url,
                         'language' => $language,
                         'targetEntity' => $targetEntity,
-                    ]);
+                    ]
+                );
                 continue;
             }
             $entities->add($convertedEntity);

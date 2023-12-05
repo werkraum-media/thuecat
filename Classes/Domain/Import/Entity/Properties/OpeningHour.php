@@ -23,49 +23,39 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
+use DateTimeImmutable;
+
 class OpeningHour
 {
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    protected $validFrom = null;
+    protected ?DateTimeImmutable $validFrom = null;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    protected $validThrough = null;
+    protected ?DateTimeImmutable $validThrough = null;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $opens;
+    protected DateTimeImmutable $opens;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    protected $closes;
+    protected DateTimeImmutable $closes;
 
     /**
      * @var string[]
      */
-    protected $daysOfWeek = [];
+    protected array $daysOfWeek = [];
 
-    public function getValidFrom(): ?\DateTimeImmutable
+    public function getValidFrom(): ?DateTimeImmutable
     {
         return $this->validFrom;
     }
 
-    public function getValidThrough(): ?\DateTimeImmutable
+    public function getValidThrough(): ?DateTimeImmutable
     {
         return $this->validThrough;
     }
 
-    public function getOpens(): \DateTimeImmutable
+    public function getOpens(): DateTimeImmutable
     {
         return $this->opens;
     }
 
-    public function getCloses(): \DateTimeImmutable
+    public function getCloses(): DateTimeImmutable
     {
         return $this->closes;
     }
@@ -81,7 +71,7 @@ class OpeningHour
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setValidFrom(\DateTimeImmutable $validFrom): void
+    public function setValidFrom(DateTimeImmutable $validFrom): void
     {
         $this->validFrom = $validFrom;
     }
@@ -89,7 +79,7 @@ class OpeningHour
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setValidThrough(\DateTimeImmutable $validThrough): void
+    public function setValidThrough(DateTimeImmutable $validThrough): void
     {
         $this->validThrough = $validThrough;
     }
@@ -97,7 +87,7 @@ class OpeningHour
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setOpens(\DateTimeImmutable $opens): void
+    public function setOpens(DateTimeImmutable $opens): void
     {
         $this->opens = $opens;
     }
@@ -105,7 +95,7 @@ class OpeningHour
     /**
      * @internal for mapping via Symfony component.
      */
-    public function setCloses(\DateTimeImmutable $closes): void
+    public function setCloses(DateTimeImmutable $closes): void
     {
         $this->closes = $closes;
     }

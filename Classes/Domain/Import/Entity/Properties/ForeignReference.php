@@ -33,10 +33,8 @@ class ForeignReference
      * URL to the original source at ThüCAT.
      * Not unique within our system. We have one entity per language,
      * while ThüCAT has a single entity containing all languages.
-     *
-     * @var string
      */
-    protected $id = '';
+    protected string $id = '';
 
     public function getId(): string
     {

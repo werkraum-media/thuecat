@@ -30,7 +30,7 @@ class Town extends AbstractEntity
     /**
      * @var ObjectStorage<TouristInformation>
      */
-    protected $touristInformation;
+    protected ObjectStorage $touristInformation;
 
     public function getTouristInformation(): ObjectStorage
     {

@@ -29,33 +29,27 @@ abstract class Minimum
      * URL to the original source at ThüCAT.
      * Not unique within our system. We have one entity per language,
      * while ThüCAT has a single entity containing all languages.
-     *
-     * @var string
      */
-    protected $id = '';
+    protected string $id = '';
 
     /**
      * Short name of the thing.
      * Can be translated.
-     *
-     * @var string
      */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Long text describing the thing.
      * Can be translated.
-     *
-     * @var string
      */
-    protected $description = '';
+    protected string $description = '';
 
     /**
      * URL to official version of this thing outside of ThüCAT.
      *
      * @var string[]
      */
-    protected $urls = [];
+    protected array $urls = [];
 
     public function getId(): string
     {
@@ -108,6 +102,7 @@ abstract class Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $url
      */
     public function setUrl($url): void

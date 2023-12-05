@@ -32,39 +32,15 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseExcept
 
 class FetchData
 {
-    /**
-     * @var RequestFactoryInterface
-     */
-    private $requestFactory;
+    private string $databaseUrlPrefix = 'https://cdb.thuecat.org';
 
-    /**
-     * @var ClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var CacheFrontendInterface
-     */
-    private $cache;
-
-    /**
-     * @var string
-     */
-    private $databaseUrlPrefix = 'https://cdb.thuecat.org';
-
-    /**
-     * @var string
-     */
-    private $urlPrefix = 'https://thuecat.org';
+    private string $urlPrefix = 'https://thuecat.org';
 
     public function __construct(
-        RequestFactoryInterface $requestFactory,
-        ClientInterface $httpClient,
-        CacheFrontendInterface $cache
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly ClientInterface $httpClient,
+        private readonly CacheFrontendInterface $cache
     ) {
-        $this->requestFactory = $requestFactory;
-        $this->httpClient = $httpClient;
-        $this->cache = $cache;
     }
 
     public function updatedNodes(string $scopeId): array
@@ -94,7 +70,7 @@ class FetchData
 
         $this->handleInvalidResponse($response, $request);
 
-        $jsonLD = json_decode((string) $response->getBody(), true);
+        $jsonLD = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         if (is_array($jsonLD)) {
             $this->cache->set($cacheIdentifier, $jsonLD);
             return $jsonLD;

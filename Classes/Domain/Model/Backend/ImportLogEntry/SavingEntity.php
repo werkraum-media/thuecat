@@ -23,56 +23,42 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
+use Exception;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class SavingEntity extends ImportLogEntry
 {
-    /**
-     * @var string
-     */
-    protected $remoteId = '';
+    protected string $remoteId = '';
 
-    /**
-     * @var bool
-     */
-    protected $insertion = false;
+    protected bool $insertion = false;
 
-    /**
-     * @var int
-     */
-    protected $recordUid = 0;
+    protected int $recordUid = 0;
 
-    /**
-     * @var int
-     */
-    protected $recordPid = 0;
+    protected int $recordPid = 0;
 
-    /**
-     * @var string
-     */
-    protected $tableName = '';
+    protected string $tableName = '';
 
-    /**
-     * @var string
-     */
-    protected $errors = '';
+    protected string $errors = '';
 
     /**
      * @var string[]
      */
-    protected $errorsAsArray = [];
+    protected array $errorsAsArray = [];
 
+    /**
+     * @param string[] $errorsAsArray
+     */
     public function __construct(
         Entity $entity,
-        array $dataHandlerErrorLog
+        array $errorsAsArray
     ) {
         $this->remoteId = $entity->getRemoteId();
         $this->insertion = $entity->wasCreated();
         $this->recordUid = $entity->getTypo3Uid();
         $this->recordPid = $entity->getTypo3StoragePid();
         $this->tableName = $entity->getTypo3DatabaseTableName();
-        $this->errorsAsArray = $dataHandlerErrorLog;
+        $this->errorsAsArray = $errorsAsArray;
     }
 
     public function getRemoteId(): string
@@ -98,9 +84,9 @@ class SavingEntity extends ImportLogEntry
     public function getErrors(): array
     {
         if ($this->errorsAsArray === [] && $this->errors !== '') {
-            $errorsAsArray = json_decode($this->errors, true);
+            $errorsAsArray = json_decode($this->errors, true, 512, JSON_THROW_ON_ERROR);
             if (is_array($errorsAsArray) === false) {
-                throw new \Exception('Could not parse errors.', 1671097690);
+                throw new Exception('Could not parse errors.', 1671097690);
             }
             $this->errorsAsArray = array_unique($errorsAsArray);
         }
@@ -121,7 +107,7 @@ class SavingEntity extends ImportLogEntry
     public function getInsertion(): array
     {
         return [
-            'insertion' => (int) $this->wasInsertion(),
+            'insertion' => (int)$this->wasInsertion(),
             'record_uid' => $this->getRecordUid(),
             'table_name' => $this->getRecordDatabaseTableName(),
         ];

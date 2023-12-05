@@ -23,17 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHour;
 
-/**
- * @covers \WerkraumMedia\Domain\Model\Frontend\OpeningHour
- */
 class OpeningHourTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsReducedOpens(): void
     {
         $subject = OpeningHour::createFromArray([
@@ -46,9 +42,7 @@ class OpeningHourTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsOpensForEmptyString(): void
     {
         $subject = OpeningHour::createFromArray([]);
@@ -59,9 +53,7 @@ class OpeningHourTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsReducedCloses(): void
     {
         $subject = OpeningHour::createFromArray([
@@ -74,9 +66,7 @@ class OpeningHourTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsClosesForEmptyString(): void
     {
         $subject = OpeningHour::createFromArray([]);
@@ -87,9 +77,7 @@ class OpeningHourTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsThatThisIsOnlyASingleDay(): void
     {
         $subject = OpeningHour::createFromArray([
@@ -108,9 +96,7 @@ class OpeningHourTest extends TestCase
         self::assertTrue($subject->isSingleDay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsThatThisIsATimeframe(): void
     {
         $subject = OpeningHour::createFromArray([

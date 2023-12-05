@@ -23,31 +23,25 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use Countable;
+use Iterator;
 use TYPO3\CMS\Core\Type\TypeInterface;
 
 /**
- * @implements \Iterator<int, Offer>
+ * @implements Iterator<int, Offer>
  */
-class Offers implements TypeInterface, \Iterator, \Countable
+class Offers implements TypeInterface, Iterator, Countable
 {
-    /**
-     * @var string
-     */
-    private $serialized = '';
-
     /**
      * @var mixed[]
      */
-    private $array = [];
+    private array $array = [];
 
-    /**
-     * @var int
-     */
-    private $position = 0;
+    private int $position = 0;
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
+    public function __construct(
+        private readonly string $serialized
+    ) {
         $array = json_decode($serialized, true);
         if (is_array($array)) {
             $array = array_map([Offer::class, 'createFromArray'], $array);

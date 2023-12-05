@@ -23,25 +23,22 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Http\Client\GuzzleClientFactory;
 use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
 use TYPO3\CMS\Core\Http\UriFactory;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\RequestFactory
- */
 class RequestFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = $this->createStub(Typo3RequestFactory::class);
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -53,13 +50,11 @@ class RequestFactoryTest extends TestCase
         self::assertInstanceOf(RequestFactory::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsRequestWithJsonIdFormat(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -73,14 +68,12 @@ class RequestFactoryTest extends TestCase
         self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsRequestWithApiKeyWhenConfigured(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -94,14 +87,12 @@ class RequestFactoryTest extends TestCase
         self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsRequestWithoutApiKeyWhenUnkown(): void
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
-        $requestFactory = new Typo3RequestFactory();
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(

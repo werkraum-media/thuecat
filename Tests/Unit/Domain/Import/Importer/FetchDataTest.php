@@ -23,23 +23,21 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Importer;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData
- */
 class FetchDataTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);
@@ -55,9 +53,7 @@ class FetchDataTest extends TestCase
         self::assertInstanceOf(FetchData::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsParsedJsonLdBasedOnUrl(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);
@@ -70,8 +66,11 @@ class FetchDataTest extends TestCase
         $requestFactory->method('createRequest')->willReturn($request);
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
+
         $response->method('getStatusCode')->willReturn(200);
-        $response->method('getBody')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,
@@ -89,9 +88,7 @@ class FetchDataTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsEmptyArrayInCaseOfError(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);
@@ -105,8 +102,11 @@ class FetchDataTest extends TestCase
 
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('[]');
+
         $response->method('getStatusCode')->willReturn(200);
-        $response->method('getBody')->willReturn('');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,
@@ -118,9 +118,7 @@ class FetchDataTest extends TestCase
         self::assertSame([], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsResultFromCacheIfAvailable(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);
@@ -151,9 +149,7 @@ class FetchDataTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throwsExceptionOn404(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);
@@ -163,14 +159,19 @@ class FetchDataTest extends TestCase
         $request = $this->createStub(RequestInterface::class);
         $response = $this->createStub(ResponseInterface::class);
 
-        $request->method('getUri')->willReturn('https://example.com/resources/018132452787-ngbe');
+        $uri = $this->createStub(UriInterface::class);
+        $uri->method('__toString')->willReturn('https://example.com/resources/018132452787-ngbe');
+        $request->method('getUri')->willReturn($uri);
 
         $requestFactory->method('createRequest')->willReturn($request);
 
         $httpClient->method('sendRequest')->willReturn($response);
 
+        $body = $this->createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"error":"404"}');
+
         $response->method('getStatusCode')->willReturn(404);
-        $response->method('getBody')->willReturn('{"error":"404"}');
+        $response->method('getBody')->willReturn($body);
 
         $subject = new FetchData(
             $requestFactory,
@@ -185,9 +186,7 @@ class FetchDataTest extends TestCase
         $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throwsExceptionOn401(): void
     {
         $requestFactory = $this->createStub(RequestFactoryInterface::class);

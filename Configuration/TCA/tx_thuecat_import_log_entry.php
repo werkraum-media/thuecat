@@ -1,22 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
-    $languagePath = \WerkraumMedia\ThueCat\Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
-    $flexFormConfigurationPath = 'FILE:EXT:' . \WerkraumMedia\ThueCat\Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
+    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
 
     return [
         'ctrl' => [
             'label' => 'type',
             'label_alt' => 'remote_id, table_name, record_uid',
             'label_alt_force' => true,
-            'iconfile' => \WerkraumMedia\ThueCat\Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
             'type' => 'type',
             'default_sortby' => 'crdate',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'title' => $languagePath,
             'enablecolumns' => [
                 'disabled' => 'disable',
@@ -32,12 +35,12 @@ return (static function (string $extensionKey, string $tableName) {
                     'renderType' => 'selectSingle',
                     'items' => [
                         [
-                            $languagePath . '.type.savingEntity',
-                            'savingEntity',
+                            'label' => $languagePath . '.type.savingEntity',
+                            'value' => 'savingEntity',
                         ],
                         [
-                            $languagePath . '.type.mappingError',
-                            'mappingError',
+                            'label' => $languagePath . '.type.mappingError',
+                            'value' => 'mappingError',
                         ],
                     ],
                 ],
@@ -56,8 +59,6 @@ return (static function (string $extensionKey, string $tableName) {
                     'renderType' => 'checkboxLabeledToggle',
                     'items' => [
                         [
-                            0 => '',
-                            1 => '',
                             'labelChecked' => $languagePath . '.insertion.yes',
                             'labelUnchecked' => $languagePath . '.insertion.no',
                         ],
@@ -98,9 +99,8 @@ return (static function (string $extensionKey, string $tableName) {
             'crdate' => [
                 'label' => $languagePath . '.crdate',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
-                    'eval' => 'datetime',
+                    'type' => 'datetime',
+                    'format' => 'datetime',
                     'readOnly' => true,
                 ],
             ],
@@ -120,4 +120,4 @@ return (static function (string $extensionKey, string $tableName) {
             ],
         ],
     ];
-})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY, 'tx_thuecat_import_log_entry');
+})(Extension::EXTENSION_KEY, 'tx_thuecat_import_log_entry');

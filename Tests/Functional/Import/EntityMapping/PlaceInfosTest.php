@@ -21,25 +21,18 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Tests\Functional\ObjectMapping;
+namespace WerkraumMedia\ThueCat\Tests\Functional\Import\EntityMapping;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\EntityMapper
- * @covers \WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Entity\Place
- * @uses \WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address
- */
 class PlaceInfosTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function instanceOfPlaceIsReturnedIfRequestes(): void
     {
         $subject = new EntityMapper();
@@ -52,9 +45,7 @@ class PlaceInfosTest extends TestCase
         self::assertInstanceOf(Place::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsDefaultValuesIfNotProvidedForMapping(): void
     {
         $subject = new EntityMapper();
@@ -68,9 +59,7 @@ class PlaceInfosTest extends TestCase
         self::assertSame([], $result->getOpeningHoursSpecification());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingAddress(): void
     {
         $subject = new EntityMapper();
@@ -136,9 +125,7 @@ class PlaceInfosTest extends TestCase
         self::assertSame('dominformation@domberg-erfurt.de', $result->getAddress()->getEmail());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingMultipleUrls(): void
     {
         $subject = new EntityMapper();
@@ -165,9 +152,7 @@ class PlaceInfosTest extends TestCase
         ], $result->getUrls());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function mapsIncomingSingleUrl(): void
     {
         $subject = new EntityMapper();

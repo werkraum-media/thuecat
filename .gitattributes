@@ -1,0 +1,10 @@
+codeception.dist.yml export-ignore
+.gitattributes export-ignore
+.github export-ignore
+.gitignore export-ignore
+.php-cs-fixer.dist.php export-ignore
+phpstan-baseline.neon export-ignore
+phpstan.neon export-ignore
+phpunit.xml.dist export-ignore
+shell.nix export-ignore
+Tests export-ignore

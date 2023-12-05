@@ -42,6 +42,7 @@ trait ContainedInPlace
 
     /**
      * @return ForeignReference[]
+     *
      * @internal for mapping via Symfony component.
      */
     public function getContainedInPlace(): array

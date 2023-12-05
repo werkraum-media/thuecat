@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Typo3Converter;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Person;
@@ -31,14 +32,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\NameExtractor;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\NameExtractor
- */
 class NameExtractorTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
@@ -53,9 +49,7 @@ class NameExtractorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractsNameFromString(): void
     {
         $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
@@ -70,9 +64,7 @@ class NameExtractorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractsNameFromForeignReference(): void
     {
         $place = $this->createStub(Place::class);
@@ -91,9 +83,7 @@ class NameExtractorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractsCombinedNameFromForeignReference(): void
     {
         $person = $this->createStub(Person::class);
@@ -113,9 +103,7 @@ class NameExtractorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function extractsCombinedNameFromForeignReferenceInsteadOfName(): void
     {
         $person = $this->createStub(Person::class);

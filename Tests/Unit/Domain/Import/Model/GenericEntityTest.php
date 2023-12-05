@@ -23,17 +23,13 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Model;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity
- */
 class GenericEntityTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new GenericEntity(
@@ -46,9 +42,7 @@ class GenericEntityTest extends TestCase
         self::assertInstanceOf(GenericEntity::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsTypo3StoragePid(): void
     {
         $subject = new GenericEntity(
@@ -61,9 +55,7 @@ class GenericEntityTest extends TestCase
         self::assertSame(10, $subject->getTypo3StoragePid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsTypo3DatabaseTableName(): void
     {
         $subject = new GenericEntity(
@@ -76,9 +68,7 @@ class GenericEntityTest extends TestCase
         self::assertSame('tx_thuecat_entity', $subject->getTypo3DatabaseTableName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsTypo3SystemLanguageUid(): void
     {
         $subject = new GenericEntity(
@@ -91,9 +81,7 @@ class GenericEntityTest extends TestCase
         self::assertSame(10, $subject->getTypo3SystemLanguageUid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function claimsIsForDefaultLanguage(): void
     {
         $subject = new GenericEntity(
@@ -106,9 +94,7 @@ class GenericEntityTest extends TestCase
         self::assertTrue($subject->isForDefaultLanguage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function claimsIsTranslation(): void
     {
         $subject = new GenericEntity(
@@ -121,9 +107,7 @@ class GenericEntityTest extends TestCase
         self::assertTrue($subject->isTranslation());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsRemoteId(): void
     {
         $subject = new GenericEntity(
@@ -139,9 +123,7 @@ class GenericEntityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsData(): void
     {
         $subject = new GenericEntity(
@@ -163,9 +145,7 @@ class GenericEntityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsNotCreatedByDefault(): void
     {
         $subject = new GenericEntity(
@@ -180,9 +160,7 @@ class GenericEntityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsNotExistingByDefault(): void
     {
         $subject = new GenericEntity(
@@ -197,9 +175,7 @@ class GenericEntityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsZeroAsDefaultTypo3Uid(): void
     {
         $subject = new GenericEntity(
@@ -215,9 +191,7 @@ class GenericEntityTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeMarkedAsImported(): void
     {
         $subject = new GenericEntity(
@@ -234,9 +208,7 @@ class GenericEntityTest extends TestCase
         self::assertSame(10, $subject->getTypo3Uid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeMarkedAsExisting(): void
     {
         $subject = new GenericEntity(

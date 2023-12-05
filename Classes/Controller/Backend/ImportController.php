@@ -23,8 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
-use TYPO3\CMS\Extbase\Annotation as Extbase;
+use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use TYPO3\CMS\Extbase\Annotation\IgnoreValidation;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
@@ -33,42 +34,24 @@ use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 class ImportController extends AbstractController
 {
-    /**
-     * @var Importer
-     */
-    private $importer;
-
-    /**
-     * @var ImportLogRepository
-     */
-    private $repository;
-
-    /**
-     * @var TranslationService
-     */
-    private $translation;
-
     public function __construct(
-        Importer $importer,
-        ImportLogRepository $repository,
-        TranslationService $translation
+        private readonly Importer $importer,
+        private readonly ImportLogRepository $repository,
+        private readonly TranslationService $translation
     ) {
-        $this->importer = $importer;
-        $this->repository = $repository;
-        $this->translation = $translation;
     }
 
-    public function indexAction(): void
+    public function indexAction(): ResponseInterface
     {
-        $this->view->assignMultiple([
+        $this->moduleTemplate->assignMultiple([
             'imports' => $this->repository->findAll(),
         ]);
+
+        return $this->htmlResponse();
     }
 
-    /**
-     * @Extbase\IgnoreValidation("importConfiguration")
-     */
-    public function importAction(ImportConfiguration $importConfiguration): void
+    #[IgnoreValidation(['argumentName' => 'importConfiguration'])]
+    public function importAction(ImportConfiguration $importConfiguration): ResponseInterface
     {
         $importLog = $this->importer->importConfiguration($importConfiguration);
 
@@ -78,7 +61,7 @@ class ImportController extends AbstractController
             $this->createImportDoneFlashMessage($importConfiguration);
         }
 
-        $this->redirect('index', 'Backend\Configuration');
+        return $this->redirect('index', 'Backend\Configuration');
     }
 
     private function createImportErrorFlashMessage(ImportConfiguration $importConfiguration): void
@@ -93,7 +76,7 @@ class ImportController extends AbstractController
                 'controller.backend.import.import.error.title',
                 Extension::EXTENSION_NAME
             ),
-            AbstractMessage::ERROR
+            ContextualFeedbackSeverity::ERROR
         );
     }
 
@@ -109,7 +92,7 @@ class ImportController extends AbstractController
                 'controller.backend.import.import.success.title',
                 Extension::EXTENSION_NAME
             ),
-            AbstractMessage::OK
+            ContextualFeedbackSeverity::OK
         );
     }
 }

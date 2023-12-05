@@ -23,13 +23,21 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
+use function in_array;
+use InvalidArgumentException;
 use LogicException;
 use phpDocumentor\Reflection\DocBlock;
+use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
-use phpDocumentor\Reflection\DocBlock\Tags\InvalidTag;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\ContextFactory;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionProperty;
+use RuntimeException;
 use Symfony\Component\PropertyInfo\Extractor\ConstructorArgumentTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyDescriptionExtractorInterface;
@@ -46,26 +54,26 @@ use Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper;
  */
 class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface, PropertyTypeExtractorInterface, ConstructorArgumentTypeExtractorInterface
 {
-    public const PROPERTY = 0;
-    public const ACCESSOR = 1;
-    public const MUTATOR = 2;
+    final public const PROPERTY = 0;
+    final public const ACCESSOR = 1;
+    final public const MUTATOR = 2;
 
     /**
      * @var array<string, array{DocBlock|null, int|null, string|null}>
      */
-    private $docBlocks = [];
+    private array $docBlocks = [];
 
     /**
      * @var Context[]
      */
-    private $contexts = [];
+    private array $contexts = [];
 
-    private $docBlockFactory;
-    private $contextFactory;
-    private $phpDocTypeHelper;
-    private $mutatorPrefixes;
-    private $accessorPrefixes;
-    private $arrayMutatorPrefixes;
+    private readonly \phpDocumentor\Reflection\DocBlockFactoryInterface $docBlockFactory;
+    private readonly \phpDocumentor\Reflection\Types\ContextFactory $contextFactory;
+    private readonly \Symfony\Component\PropertyInfo\Util\PhpDocTypeHelper $phpDocTypeHelper;
+    private readonly array $mutatorPrefixes;
+    private readonly array $accessorPrefixes;
+    private readonly array $arrayMutatorPrefixes;
 
     /**
      * @param string[]|null $mutatorPrefixes
@@ -75,7 +83,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     public function __construct(DocBlockFactoryInterface $docBlockFactory = null, array $mutatorPrefixes = null, array $accessorPrefixes = null, array $arrayMutatorPrefixes = null)
     {
         if (!class_exists(DocBlockFactory::class)) {
-            throw new \LogicException(sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', __CLASS__));
+            throw new LogicException(sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', self::class));
         }
 
         $this->docBlockFactory = $docBlockFactory ?: DocBlockFactory::createInstance();
@@ -129,7 +137,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
 
         $contents = $docBlock->getDescription()->render();
 
-        return '' === $contents ? null : $contents;
+        return $contents === '' ? null : $contents;
     }
 
     /**
@@ -161,7 +169,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
         $types = [];
         /** @var DocBlock\Tags\Var_|DocBlock\Tags\Return_|DocBlock\Tags\Param $tag */
         foreach ($docBlock->getTagsByName($tag) as $tag) {
-            if ($tag && !$tag instanceof InvalidTag && null !== $tag->getType()) {
+            if ($tag && !$tag instanceof InvalidTag && $tag->getType() !== null) {
                 foreach ($this->phpDocTypeHelper->getTypes($tag->getType()) as $type) {
                     switch ($type->getClassName()) {
                         case 'self':
@@ -189,7 +197,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
             return null;
         }
 
-        if (!\in_array($prefix, $this->arrayMutatorPrefixes)) {
+        if (!in_array($prefix, $this->arrayMutatorPrefixes)) {
             return $types;
         }
 
@@ -210,12 +218,12 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
         $types = [];
         /** @var DocBlock\Tags\Var_|DocBlock\Tags\Return_|DocBlock\Tags\Param $tag */
         foreach ($docBlock->getTagsByName('param') as $tag) {
-            if ($tag && null !== $tag->getType()) {
+            if ($tag && $tag->getType() !== null) {
                 $types[] = $this->phpDocTypeHelper->getTypes($tag->getType());
             }
         }
 
-        if (!isset($types[0]) || [] === $types[0]) {
+        if (!isset($types[0]) || $types[0] === []) {
             return null;
         }
 
@@ -225,8 +233,8 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     private function getDocBlockFromConstructor(string $class, string $property): ?DocBlock
     {
         try {
-            $reflectionClass = new \ReflectionClass($class);
-        } catch (\ReflectionException $e) {
+            $reflectionClass = new ReflectionClass($class);
+        } catch (ReflectionException $e) {
             return null;
         }
         $reflectionConstructor = $reflectionClass->getConstructor();
@@ -238,7 +246,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
             $docBlock = $this->docBlockFactory->create($reflectionConstructor, $this->contextFactory->createFromReflector($reflectionConstructor));
 
             return $this->filterDocBlockParams($docBlock, $property);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             return null;
         }
     }
@@ -246,11 +254,18 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     private function filterDocBlockParams(DocBlock $docBlock, string $allowedParam): DocBlock
     {
         $tags = array_values(array_filter($docBlock->getTagsByName('param'), function ($tag) use ($allowedParam) {
-            return $tag instanceof DocBlock\Tags\Param && $allowedParam === $tag->getVariableName();
+            return $tag instanceof Param && $allowedParam === $tag->getVariableName();
         }));
 
-        return new DocBlock($docBlock->getSummary(), $docBlock->getDescription(), $tags, $docBlock->getContext(),
-            $docBlock->getLocation(), $docBlock->isTemplateStart(), $docBlock->isTemplateEnd());
+        return new DocBlock(
+            $docBlock->getSummary(),
+            $docBlock->getDescription(),
+            $tags,
+            $docBlock->getContext(),
+            $docBlock->getLocation(),
+            $docBlock->isTemplateStart(),
+            $docBlock->isTemplateEnd()
+        );
     }
 
     /**
@@ -290,8 +305,8 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     {
         // Use a ReflectionProperty instead of $class to get the parent class if applicable
         try {
-            $reflectionProperty = new \ReflectionProperty($class, $property);
-        } catch (\ReflectionException $e) {
+            $reflectionProperty = new ReflectionProperty($class, $property);
+        } catch (ReflectionException $e) {
             return null;
         }
 
@@ -305,7 +320,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
 
         try {
             return $this->docBlockFactory->create($reflectionProperty, $this->createFromReflector($reflector));
-        } catch (\InvalidArgumentException|\RuntimeException $e) {
+        } catch (InvalidArgumentException|RuntimeException) {
             return null;
         }
     }
@@ -315,25 +330,25 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
      */
     private function getDocBlockFromMethod(string $class, string $ucFirstProperty, int $type): ?array
     {
-        $prefixes = self::ACCESSOR === $type ? $this->accessorPrefixes : $this->mutatorPrefixes;
+        $prefixes = $type === self::ACCESSOR ? $this->accessorPrefixes : $this->mutatorPrefixes;
         $prefix = null;
 
         foreach ($prefixes as $prefix) {
-            $methodName = $prefix.$ucFirstProperty;
+            $methodName = $prefix . $ucFirstProperty;
 
             try {
-                $reflectionMethod = new \ReflectionMethod($class, $methodName);
+                $reflectionMethod = new ReflectionMethod($class, $methodName);
                 if ($reflectionMethod->isStatic()) {
                     continue;
                 }
 
                 if (
-                    (self::ACCESSOR === $type && 0 === $reflectionMethod->getNumberOfRequiredParameters()) ||
-                    (self::MUTATOR === $type && $reflectionMethod->getNumberOfParameters() >= 1)
+                    ($type === self::ACCESSOR && $reflectionMethod->getNumberOfRequiredParameters() === 0) ||
+                    ($type === self::MUTATOR && $reflectionMethod->getNumberOfParameters() >= 1)
                 ) {
                     break;
                 }
-            } catch (\ReflectionException $e) {
+            } catch (ReflectionException) {
                 // Try the next prefix if the method doesn't exist
             }
         }
@@ -352,7 +367,7 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
 
         try {
             return [$this->docBlockFactory->create($reflectionMethod, $this->createFromReflector($reflector)), $prefix];
-        } catch (\InvalidArgumentException|\RuntimeException $e) {
+        } catch (InvalidArgumentException|RuntimeException) {
             return null;
         }
     }
@@ -360,9 +375,9 @@ class CustomAnnotationExtractor implements PropertyDescriptionExtractorInterface
     /**
      * Prevents a lot of redundant calls to ContextFactory::createForNamespace().
      */
-    private function createFromReflector(\ReflectionClass $reflector): Context
+    private function createFromReflector(ReflectionClass $reflector): Context
     {
-        $cacheKey = $reflector->getNamespaceName().':'.$reflector->getFileName();
+        $cacheKey = $reflector->getNamespaceName() . ':' . $reflector->getFileName();
 
         if (isset($this->contexts[$cacheKey])) {
             return $this->contexts[$cacheKey];

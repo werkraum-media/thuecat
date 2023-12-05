@@ -15,10 +15,9 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - 7.4
-          - 8.0
           - 8.1
           - 8.2
+          - 8.3
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,7 +40,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.4"
+          php-version: "8.2"
           tools: composer:v2
 
       - name: Install xmllint
@@ -70,14 +69,14 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.4"
+          php-version: "8.2"
           tools: composer:v2
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Coding Guideline
-        run: ./vendor/bin/ecs check
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
   code-quality:
     runs-on: ubuntu-latest
@@ -86,16 +85,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: '7.4'
-            typo3-version: '^10.4'
-          - php-version: '7.4'
-            typo3-version: '^11.5'
-          - php-version: '8.0'
-            typo3-version: '^11.5'
           - php-version: '8.1'
-            typo3-version: '^11.5'
+            typo3-version: '^12.4'
           - php-version: '8.2'
-            typo3-version: '^11.5'
+            typo3-version: '^12.4'
+          - php-version: '8.3'
+            typo3-version: '^12.4'
     steps:
       - uses: actions/checkout@v3
 
@@ -121,23 +116,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: '7.4'
-            typo3-version: '^10.4'
-            db-version: '5.6'
-          - php-version: '7.4'
-            typo3-version: '^10.4'
-            db-version: '8'
-          - php-version: '7.4'
-            typo3-version: '^11.5'
-            db-version: '8'
-          - php-version: '8.0'
-            typo3-version: '^11.5'
-            db-version: '8'
           - php-version: '8.1'
-            typo3-version: '^11.5'
+            typo3-version: '^12.4'
             db-version: '8'
           - php-version: '8.2'
-            typo3-version: '^11.5'
+            typo3-version: '^12.4'
+            db-version: '8'
+          - php-version: '8.3'
+            typo3-version: '^12.4'
             db-version: '8'
     steps:
       - uses: actions/checkout@v3
@@ -151,9 +137,15 @@ jobs:
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-          mysql version: '5.7'
+          mysql version: "${{ matrix.db-version }}"
           mysql database: 'typo3'
           mysql root password: 'root'
+
+      - name: Wait for MySQL
+        run: |
+          while ! mysqladmin ping --host=127.0.0.1 --password=root --silent; do
+            sleep 1
+          done
 
       - name: Install dependencies
         run: composer require --no-interaction --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"
@@ -165,4 +157,16 @@ jobs:
           export typo3DatabaseHost="127.0.0.1"
           export typo3DatabaseUsername="root"
           export typo3DatabasePassword="root"
-          ./vendor/bin/phpunit --testdox
+          ./vendor/bin/phpunit
+
+  tests-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: cachix/install-nix-action@v24
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Run Acceptance Tests
+        run: nix-shell --run project-test-acceptance

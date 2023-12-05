@@ -30,17 +30,14 @@ class Base extends Minimum
 {
     use ManagedBy;
 
-    /**
-     * @var ForeignReference
-     */
-    protected $photo;
+    protected ?ForeignReference $photo = null;
 
     /**
      * Images of this Thing.
      *
      * @var ForeignReference[]
      */
-    protected $images = [];
+    protected array $images = [];
 
     public function getPhoto(): ?ForeignReference
     {
@@ -65,6 +62,7 @@ class Base extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @return ForeignReference[]
      */
     public function getImage(): array

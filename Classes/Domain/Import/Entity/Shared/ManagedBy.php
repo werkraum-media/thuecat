@@ -29,10 +29,8 @@ trait ManagedBy
 {
     /**
      * The Thing responsible for the data within this Thing.
-     *
-     * @var ForeignReference
      */
-    protected $managedBy;
+    protected ?ForeignReference $managedBy = null;
 
     public function getManagedBy(): ?ForeignReference
     {

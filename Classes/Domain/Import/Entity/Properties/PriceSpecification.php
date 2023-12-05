@@ -23,31 +23,24 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class PriceSpecification extends Minimum
 {
-    /**
-     * @var float
-     */
-    protected $price = 0.00;
+    protected float $price = 0.00;
 
     /**
      * E.g. 'EUR'
      * ThueCat specific format.
-     *
-     * @var string
      */
-    protected $currency = '';
+    protected string $currency = '';
 
     /**
      * E.g. 'PerPerson'
      * ThueCat specific property.
-     *
-     * @var array
      */
-    protected $calculationRules = [];
+    protected array $calculationRules = [];
 
     public function getPrice(): float
     {
@@ -85,6 +78,7 @@ class PriceSpecification extends Minimum
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $calculationRule
      */
     public function setCalculationRule($calculationRule): void

@@ -28,18 +28,13 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 class AccessiblitySpecification implements TypeInterface
 {
     /**
-     * @var string
-     */
-    private $serialized;
-
-    /**
      * @var mixed[]
      */
-    private $data;
+    private array $data;
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
+    public function __construct(
+        private readonly string $serialized
+    ) {
         $this->data = json_decode($serialized, true);
     }
 

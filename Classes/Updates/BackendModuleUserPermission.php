@@ -25,19 +25,16 @@ namespace WerkraumMedia\ThueCat\Updates;
 
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
+#[UpgradeWizard('thuecat_backendmoduleuserpermission_v12')]
 class BackendModuleUserPermission implements UpgradeWizardInterface
 {
-    /**
-     * @var ConnectionPool
-     */
-    private $connectionPool;
-
-    public function __construct()
-    {
-        $this->connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+    public function __construct(
+        private readonly ConnectionPool $connectionPool
+    ) {
     }
 
     public function getIdentifier(): string
@@ -62,8 +59,9 @@ class BackendModuleUserPermission implements UpgradeWizardInterface
         $qb->count('*');
         $qb->from('be_users');
         $qb->where($qb->expr()->like('userMods', $qb->createNamedParameter('%site_ThuecatThuecat%')));
+        $qb->orWhere($qb->expr()->like('userMods', $qb->createNamedParameter('%ThuecatThuecat%')));
 
-        return $qb->execute()->fetchOne() > 0;
+        return $qb->executeQuery()->fetchOne() > 0;
     }
 
     public function executeUpdate(): bool
@@ -73,14 +71,15 @@ class BackendModuleUserPermission implements UpgradeWizardInterface
         $qb->select('uid', 'userMods');
         $qb->from('be_users');
         $qb->where($qb->expr()->like('userMods', $qb->createNamedParameter('%site_ThuecatThuecat%')));
-        $result = $qb->execute();
+        $qb->orWhere($qb->expr()->like('userMods', $qb->createNamedParameter('%ThuecatThuecat%')));
+        $result = $qb->executeQuery()->iterateAssociative();
 
         foreach ($result as $backendUser) {
             $qb = $this->connectionPool->getQueryBuilderForTable('be_users');
             $qb->update('be_users');
             $qb->set('userMods', $this->updateMods($backendUser['userMods']));
             $qb->where($qb->expr()->eq('uid', $qb->createNamedParameter($backendUser['uid'])));
-            $qb->execute();
+            $qb->executeStatement();
         }
 
         return true;
@@ -90,11 +89,15 @@ class BackendModuleUserPermission implements UpgradeWizardInterface
     {
         $mods = GeneralUtility::trimExplode(',', $mods, true);
 
-        unset($mods[array_search('site_ThuecatThuecat', $mods)]);
+        unset(
+            $mods[array_search('site_ThuecatThuecat', $mods)],
+            $mods[array_search('ThuecatThuecat', $mods)],
+            $mods[array_search('ThuecatThuecat_ThuecatConfigurations', $mods)],
+            $mods[array_search('ThuecatThuecat_ThuecatImports', $mods)],
+        );
 
-        $mods[] = 'ThuecatThuecat';
-        $mods[] = 'ThuecatThuecat_ThuecatConfigurations';
-        $mods[] = 'ThuecatThuecat_ThuecatImports';
+        $mods[] = 'thuecat_configurations';
+        $mods[] = 'thuecat_imports';
 
         return implode(',', $mods);
     }
@@ -104,10 +107,5 @@ class BackendModuleUserPermission implements UpgradeWizardInterface
         return [
             DatabaseUpdatedPrerequisite::class,
         ];
-    }
-
-    public static function register(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/install']['update'][self::class] = self::class;
     }
 }

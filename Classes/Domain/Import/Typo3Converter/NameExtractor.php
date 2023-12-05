@@ -28,15 +28,9 @@ use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
 class NameExtractor
 {
-    /**
-     * @var ResolveForeignReference
-     */
-    private $resolveForeignReference;
-
     public function __construct(
-        ResolveForeignReference $resolveForeignReference
+        private readonly ResolveForeignReference $resolveForeignReference
     ) {
-        $this->resolveForeignReference = $resolveForeignReference;
     }
 
     /**
@@ -65,7 +59,7 @@ class NameExtractor
         }
 
         if ($name === '' && method_exists($remote, 'getName')) {
-            $name = trim($remote->getName());
+            $name = trim((string)$remote->getName());
         }
 
         return $name;

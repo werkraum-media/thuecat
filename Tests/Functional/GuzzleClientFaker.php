@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use Exception;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class GuzzleClientFaker
 {
-    /**
-     * @var MockHandler
-     */
-    private static $mockHandler;
+    private static ?MockHandler $mockHandler = null;
 
     public static function registerClient(): void
     {
@@ -21,7 +19,6 @@ class GuzzleClientFaker
         $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = function (callable $handler) {
             return self::getMockHandler();
         };
-
     }
 
     /**
@@ -40,7 +37,7 @@ class GuzzleClientFaker
     {
         $fileContent = file_get_contents($fileName);
         if ($fileContent === false) {
-            throw new \Exception('Could not load file: ' . $fileName, 1656485162);
+            throw new Exception('Could not load file: ' . $fileName, 1656485162);
         }
 
         self::appendResponseFromContent($fileContent);

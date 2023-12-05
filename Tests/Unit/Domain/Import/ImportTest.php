@@ -23,20 +23,16 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 
-use WerkraumMedia\ThueCat\Domain\Import\Import;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Import;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\Import
- */
 class ImportTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new Import();
@@ -47,9 +43,7 @@ class ImportTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canStart(): void
     {
         $configuration = new ImportConfiguration();
@@ -66,9 +60,7 @@ class ImportTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function canEndAfterStart(): void
     {
         $configuration = new ImportConfiguration();
@@ -86,9 +78,7 @@ class ImportTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isDoneAfterStartAndEnd(): void
     {
         $configuration = new ImportConfiguration();
@@ -99,9 +89,7 @@ class ImportTest extends TestCase
         self::assertTrue($subject->done());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isNotDoneAfterJustStartWithoutEnd(): void
     {
         $configuration = new ImportConfiguration();
@@ -111,9 +99,7 @@ class ImportTest extends TestCase
         self::assertFalse($subject->done());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function nestedStartReturnsExpectedConfiguration(): void
     {
         $configuration1 = new ImportConfiguration();
@@ -129,9 +115,7 @@ class ImportTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function nestedStartReturnsExpectedLog(): void
     {
         $configuration1 = new ImportConfiguration();
@@ -159,9 +143,7 @@ class ImportTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function nestedImportMergesLog(): void
     {
         $configuration1 = new ImportConfiguration();
@@ -183,15 +165,13 @@ class ImportTest extends TestCase
 
         self::assertSame(
             [
-                $importLogEntry
+                $importLogEntry,
             ],
             $log1->getEntries()->toArray()
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function nestedImportReturnsHandledForRemoteId(): void
     {
         $configuration1 = new ImportConfiguration();

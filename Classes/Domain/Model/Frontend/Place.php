@@ -28,60 +28,45 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class Place extends Base
 {
-    /**
-     * @var Address|null
-     */
-    protected $address = null;
+    protected ?Address $address = null;
 
-    /**
-     * @var string
-     */
-    protected $url = '';
+    protected string $url = '';
 
-    /**
-     * @var OpeningHours|null
-     */
-    protected $openingHours = null;
+    protected ?OpeningHours $openingHours = null;
 
-    /**
-     * @var OpeningHours|null
-     */
-    protected $specialOpeningHours = null;
+    protected ?OpeningHours $specialOpeningHours = null;
 
     /**
      * @var ObjectStorage<ParkingFacility>
      */
-    protected $parkingFacilityNearBy;
+    protected ObjectStorage $parkingFacilityNearBy;
 
     /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $sanitation = '';
+    protected string $sanitation = '';
+
+    protected string $otherService = '';
+
+    protected string $trafficInfrastructure = '';
 
     /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $otherService = '';
+    protected string $paymentAccepted = '';
 
     /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $trafficInfrastructure = '';
+    protected string $distanceToPublicTransport = '';
 
-    /**
-     * @var string
-     */
-    protected $paymentAccepted = '';
-
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
-
-    /**
-     * @var AccessiblitySpecification|null
-     */
-    protected $accessibilitySpecification = null;
+    protected ?AccessiblitySpecification $accessibilitySpecification = null;
 
     public function initializeObject(): void
     {

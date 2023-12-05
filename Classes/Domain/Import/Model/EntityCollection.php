@@ -28,7 +28,7 @@ class EntityCollection
     /**
      * @var Entity[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function add(Entity $entity): void
     {
@@ -61,8 +61,7 @@ class EntityCollection
     {
         return array_filter($this->entities, function (Entity $entity) {
             return $entity->isTranslation()
-                && $entity->exists() === false
-                ;
+                && $entity->exists() === false;
         });
     }
 

@@ -29,23 +29,18 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 class Media implements TypeInterface
 {
     /**
-     * @var string
-     */
-    private $serialized;
-
-    /**
      * @var array[]
      */
-    private $data;
+    private readonly array $data;
 
     /**
      * @var FileReference[]
      */
-    protected $editorialImages = [];
+    protected array $editorialImages = [];
 
-    public function __construct(string $serialized)
-    {
-        $this->serialized = $serialized;
+    public function __construct(
+        private readonly string $serialized
+    ) {
         $data = json_decode($serialized, true);
         $this->data = $this->prepareData(is_array($data) ? $data : []);
     }
@@ -94,6 +89,7 @@ class Media implements TypeInterface
 
     /**
      * @internal Only used to set the values while mapping objects.
+     *
      * @see: AfterObjectThawedHandler
      */
     public function setEditorialImages(array $images): void

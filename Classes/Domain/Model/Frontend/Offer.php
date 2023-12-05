@@ -28,44 +28,18 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 class Offer
 {
     /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string[]
-     */
-    private $types;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var mixed[]
-     */
-    private $prices;
-
-    /**
      * @param string[] $types
+     * @param mixed[] $prices
      */
     private function __construct(
-        string $title,
-        array $types,
-        string $description,
-        array $prices
+        private readonly string $title,
+        private array $types,
+        private readonly string $description,
+        private readonly array $prices
     ) {
-        $this->title = $title;
-        $this->types = $types;
-        $this->description = $description;
-        $this->prices = $prices;
     }
 
-    /**
-     * @return Offer
-     */
-    public static function createFromArray(array $rawData)
+    public static function createFromArray(array $rawData): Offer
     {
         $prices = [];
 
@@ -95,7 +69,7 @@ class Offer
     public function getType(): string
     {
         $offerTypes = array_filter($this->types, function (string $type) {
-            return strpos($type, 'Offer') !== false;
+            return str_contains($type, 'Offer');
         });
         // Ensure clean index
         $offerTypes = array_values($offerTypes);

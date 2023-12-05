@@ -23,8 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
-use TYPO3\CMS\Core\Log\LogManager;
+use Exception;
 use TYPO3\CMS\Core\Log\Logger;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
@@ -52,55 +53,14 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 
 class GeneralConverter implements Converter
 {
-    /**
-     * @var ResolveForeignReference
-     */
-    private $resolveForeignReference;
+    private readonly Logger $logger;
 
-    /**
-     * @var Importer
-     */
-    private $importer;
-
-    /**
-     * @var LanguageHandling
-     */
-    private $languageHandling;
-
-    /**
-     * @var OrganisationRepository
-     */
-    private $organisationRepository;
-
-    /**
-     * @var TownRepository
-     */
-    private $townRepository;
-
-    /**
-     * @var ParkingFacilityRepository
-     */
-    private $parkingFacilityRepository;
-
-    /**
-     * @var NameExtractor
-     */
-    private $nameExtractor;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
-     * @var ImportConfiguration
-     */
-    private $importConfiguration;
+    private ImportConfiguration $importConfiguration;
 
     /**
      * @var string[]
      */
-    private $classToTableMapping = [
+    private array $classToTableMapping = [
         TouristAttraction::class => 'tx_thuecat_tourist_attraction',
         ParkingFacility::class => 'tx_thuecat_parking_facility',
         Town::class => 'tx_thuecat_town',
@@ -110,23 +70,16 @@ class GeneralConverter implements Converter
     ];
 
     public function __construct(
-        ResolveForeignReference $resolveForeignReference,
-        Importer $importer,
-        LanguageHandling $languageHandling,
-        OrganisationRepository $organisationRepository,
-        TownRepository $townRepository,
-        ParkingFacilityRepository $parkingFacilityRepository,
-        NameExtractor $nameExtractor,
+        private readonly ResolveForeignReference $resolveForeignReference,
+        private readonly Importer $importer,
+        private readonly LanguageHandling $languageHandling,
+        private readonly OrganisationRepository $organisationRepository,
+        private readonly TownRepository $townRepository,
+        private readonly ParkingFacilityRepository $parkingFacilityRepository,
+        private readonly NameExtractor $nameExtractor,
         LogManager $logManager
     ) {
-        $this->resolveForeignReference = $resolveForeignReference;
-        $this->importer = $importer;
-        $this->languageHandling = $languageHandling;
-        $this->organisationRepository = $organisationRepository;
-        $this->townRepository = $townRepository;
-        $this->parkingFacilityRepository = $parkingFacilityRepository;
-        $this->nameExtractor = $nameExtractor;
-        $this->logger = $logManager->getLogger(__CLASS__);
+        $this->logger = $logManager->getLogger(self::class);
     }
 
     public function convert(
@@ -142,7 +95,7 @@ class GeneralConverter implements Converter
 
         $converted = new GenericEntity(
             $importConfiguration->getStoragePid(),
-            $this->getTableNameByEntityClass(get_class($entity)),
+            $this->getTableNameByEntityClass($entity::class),
             $this->languageHandling->getLanguageUidForString(
                 $importConfiguration->getStoragePid(),
                 $language
@@ -167,12 +120,12 @@ class GeneralConverter implements Converter
         ImportConfiguration $importConfiguration,
         string $language
     ): bool {
-        $tableName = $this->getTableNameByEntityClass(get_class($entity));
+        $tableName = $this->getTableNameByEntityClass($entity::class);
 
         if (!$entity instanceof Minimum) {
             $this->logger->info('Skipped conversion of entity, got unexpected type', [
                 'expectedType' => Minimum::class,
-                'actualType' => get_class($entity),
+                'actualType' => $entity::class,
             ]);
             return false;
         }
@@ -214,7 +167,7 @@ class GeneralConverter implements Converter
     {
         $tableName = $this->classToTableMapping[$className] ?? '';
         if ($tableName == '') {
-            throw new \Exception('No table name configured for class ' . $className, 1629376990);
+            throw new Exception('No table name configured for class ' . $className, 1629376990);
         }
 
         return $tableName;
@@ -298,7 +251,7 @@ class GeneralConverter implements Converter
             )
         );
         $town = $this->townRepository->findOneByEntity($entity);
-        return $town ? (string) $town->getUid() : '';
+        return $town ? (string)$town->getUid() : '';
     }
 
     private function getParkingFacilitiesNearByUids(Base $entity): array
@@ -360,6 +313,7 @@ class GeneralConverter implements Converter
         if ($result === false || $result === '[]') {
             return '{}';
         }
+
         return $result;
     }
 
@@ -393,7 +347,7 @@ class GeneralConverter implements Converter
             }
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getSingleMedia(
@@ -433,7 +387,7 @@ class GeneralConverter implements Converter
             ]);
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getAddress(Place $entity): string
@@ -462,7 +416,7 @@ class GeneralConverter implements Converter
             ];
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getOffers(Place $entity): string
@@ -473,11 +427,11 @@ class GeneralConverter implements Converter
                 'types' => $offer->getOfferTypes(),
                 'title' => $offer->getName(),
                 'description' => $offer->getDescription(),
-                'prices' => array_map([$this, 'getPrice'], $offer->getPrices()),
+                'prices' => array_map($this->getPrice(...), $offer->getPrices()),
             ];
         }
 
-        return json_encode($data) ?: '';
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     private function getPrice(PriceSpecification $priceSpecification): array

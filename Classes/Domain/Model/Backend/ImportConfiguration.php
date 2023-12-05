@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
+use DateTimeImmutable;
+use Exception;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -33,40 +35,28 @@ use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
 class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
-    /**
-     * @var string
-     */
-    protected $title = '';
+    protected string $title = '';
 
-    /**
-     * @var string
-     */
-    protected $type = '';
+    protected string $type = '';
 
-    /**
-     * @var string
-     */
-    protected $configuration = '';
+    protected string $configuration = '';
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    protected $tstamp = null;
+    protected ?DateTimeImmutable $tstamp = null;
 
     /**
      * @var ObjectStorage<ImportLog>
      */
-    protected $logs;
+    protected ObjectStorage $logs;
 
     /**
      * @var string[]|null
      */
-    protected $urls = null;
+    protected ?array $urls = null;
 
     /**
      * @var string[]
      */
-    protected $allowedTypes = [];
+    protected array $allowedTypes = [];
 
     public function __construct()
     {
@@ -88,15 +78,15 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return 'tx_thuecat_import_configuration';
     }
 
-    public function getLastChanged(): ?\DateTimeImmutable
+    public function getLastChanged(): ?DateTimeImmutable
     {
         return $this->tstamp;
     }
 
-    public function getLastImported(): ?\DateTimeImmutable
+    public function getLastImported(): ?DateTimeImmutable
     {
         $lastImport = null;
-        $positionOfLastLog = (string) (count($this->logs) - 1);
+        $positionOfLastLog = count($this->logs) - 1;
         if ($this->logs->offsetExists($positionOfLastLog)) {
             $lastImport = $this->logs->offsetGet($positionOfLastLog);
         }
@@ -112,7 +102,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         $storagePid = $this->getConfigurationValueFromFlexForm('storagePid');
 
         if (is_numeric($storagePid) && $storagePid > 0) {
-            return intval($storagePid);
+            return (int)$storagePid;
         }
 
         return 0;
@@ -151,7 +141,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     {
         $containsPlaceId = $this->getConfigurationValueFromFlexForm('containsPlaceId');
         if (!is_string($containsPlaceId)) {
-            throw new \Exception('Could not fetch containsPlaceId.', 1671027015);
+            throw new Exception('Could not fetch containsPlaceId.', 1671027015);
         }
         return $containsPlaceId;
     }

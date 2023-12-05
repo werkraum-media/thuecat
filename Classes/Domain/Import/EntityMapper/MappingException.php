@@ -23,30 +23,21 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
-class MappingException extends \Exception
+use Exception;
+use Throwable;
+
+class MappingException extends Exception
 {
-    /**
-     * @var array
-     */
-    protected $jsonLD = [];
-
-    /**
-     * @var string
-     */
-    protected $targetClassName = '';
-
     public function __construct(
-        array $jsonLD,
-        string $targetClassName,
-        \Throwable $previous
+        protected array $jsonLD,
+        protected string $targetClassName,
+        Throwable $previous
     ) {
         parent::__construct(
             'Could not map incoming JSON-LD to target object: ' . $previous->getMessage(),
             1628157659,
             $previous
         );
-        $this->jsonLD = $jsonLD;
-        $this->targetClassName = $targetClassName;
     }
 
     public function getUrl(): string

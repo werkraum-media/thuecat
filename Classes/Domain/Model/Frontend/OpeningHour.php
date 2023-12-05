@@ -23,63 +23,35 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use WerkraumMedia\ThueCat\Domain\TimingFormat;
 
 class OpeningHour
 {
     /**
-     * @var string
+     * @param mixed[] $daysOfWeek
      */
-    private $opens;
-
-    /**
-     * @var string
-     */
-    private $closes;
-
-    /**
-     * @var mixed[]
-     */
-    private $daysOfWeek;
-
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $from;
-
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $through;
-
     private function __construct(
-        string $opens,
-        string $closes,
-        array $daysOfWeek,
-        ?\DateTimeImmutable $from,
-        ?\DateTimeImmutable $through
+        private readonly string $opens,
+        private readonly string $closes,
+        private array $daysOfWeek,
+        private readonly ?DateTimeImmutable $from,
+        private readonly ?DateTimeImmutable $through
     ) {
-        $this->opens = $opens;
-        $this->closes = $closes;
-        $this->daysOfWeek = $daysOfWeek;
-        $this->from = $from;
-        $this->through = $through;
     }
 
-    /**
-     * @return OpeningHour
-     */
-    public static function createFromArray(array $rawData)
+    public static function createFromArray(array $rawData): OpeningHour
     {
         $from = null;
         if (isset($rawData['from'])) {
-            $timeZone = new \DateTimeZone($rawData['from']['timezone'] ?? 'Europe/Berlin');
-            $from = new \DateTimeImmutable($rawData['from']['date'], $timeZone);
+            $timeZone = new DateTimeZone($rawData['from']['timezone'] ?? 'Europe/Berlin');
+            $from = new DateTimeImmutable($rawData['from']['date'], $timeZone);
         }
         $through = null;
         if (isset($rawData['through'])) {
-            $timeZone = new \DateTimeZone($rawData['through']['timezone'] ?? 'Europe/Berlin');
-            $through = new \DateTimeImmutable($rawData['through']['date'], $timeZone);
+            $timeZone = new DateTimeZone($rawData['through']['timezone'] ?? 'Europe/Berlin');
+            $through = new DateTimeImmutable($rawData['through']['date'], $timeZone);
         }
 
         return new self(
@@ -120,12 +92,12 @@ class OpeningHour
         ]);
     }
 
-    public function getFrom(): ?\DateTimeImmutable
+    public function getFrom(): ?DateTimeImmutable
     {
         return $this->from;
     }
 
-    public function getThrough(): ?\DateTimeImmutable
+    public function getThrough(): ?DateTimeImmutable
     {
         return $this->through;
     }
@@ -135,10 +107,9 @@ class OpeningHour
         $from = $this->getFrom();
         $through = $this->getThrough();
 
-        return $from instanceof \DateTimeImmutable
-            && $through instanceof \DateTimeImmutable
-            && $from->format('Ymd') === $through->format('Ymd')
-        ;
+        return $from instanceof DateTimeImmutable
+            && $through instanceof DateTimeImmutable
+            && $from->format('Ymd') === $through->format('Ymd');
     }
 
     private function sortedDaysOfWeek(array $sorting): array

@@ -36,7 +36,7 @@ class PropertyValues
     public static function removePrefixFromEntries(array $entriesWithPrefix): array
     {
         return array_map(
-            [PropertyValues::class, 'removePrefixFromEntry'],
+            PropertyValues::removePrefixFromEntry(...),
             $entriesWithPrefix
         );
     }

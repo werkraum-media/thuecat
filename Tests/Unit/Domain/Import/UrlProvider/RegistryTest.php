@@ -23,19 +23,15 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\UrlProvider;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\StaticUrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry
- */
 class RegistryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new Registry();
@@ -43,9 +39,7 @@ class RegistryTest extends TestCase
         self::assertInstanceOf(Registry::class, $subject);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function allowsRegistrationOfUrlProvider(): void
     {
         $subject = new Registry();
@@ -55,9 +49,7 @@ class RegistryTest extends TestCase
         self::assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsNullIfNoProviderExistsForConfiguration(): void
     {
         $configuration = new ImportConfiguration();
@@ -68,9 +60,7 @@ class RegistryTest extends TestCase
         self::assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function returnsProviderForConfiguration(): void
     {
         $configuration = new ImportConfiguration();

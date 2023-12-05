@@ -1,0 +1,32 @@
+3.0.0
+=====
+
+Breaking
+--------
+
+* Drop support for TYPO3 10.4 and 11.5.
+
+* Drop support for PHP 7.4 and 8.0.
+
+Features
+--------
+
+* Add support for TYPO3 12.4.
+
+* Add support for PHP 8.3.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+

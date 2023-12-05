@@ -24,72 +24,23 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat;
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
-use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
-use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use WerkraumMedia\ThueCat\Controller\Backend\ConfigurationController;
-use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
 
 class Extension
 {
-    public const EXTENSION_KEY = 'thuecat';
+    final public const EXTENSION_KEY = 'thuecat';
 
-    public const EXTENSION_NAME = 'Thuecat';
+    final public const EXTENSION_NAME = 'Thuecat';
 
-    public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
+    final public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
 
-    public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
+    final public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
 
     public static function getLanguagePath(): string
     {
         return 'LLL:EXT:' . self::EXTENSION_KEY . '/Resources/Private/Language/';
-    }
-
-    public static function registerBackendModules(): void
-    {
-        ExtensionUtility::registerModule(
-            self::EXTENSION_NAME,
-            'thuecat',
-            '',
-            '',
-            [],
-            [
-                'access' => 'user,group',
-                'icon' => self::getIconPath() . 'ModuleGroup.svg',
-                'labels' => self::getLanguagePath() . 'locallang_mod.xlf',
-            ]
-        );
-        ExtensionUtility::registerModule(
-            self::EXTENSION_NAME,
-            'thuecat',
-            'configurations',
-            '',
-            [
-                ConfigurationController::class => 'index',
-                ImportController::class => 'import',
-            ],
-            [
-                'access' => 'user,group',
-                'icon' => self::getIconPath() . 'ModuleConfigurations.svg',
-                'labels' => self::getLanguagePath() . 'locallang_mod_configurations.xlf',
-            ]
-        );
-        ExtensionUtility::registerModule(
-            self::EXTENSION_NAME,
-            'thuecat',
-            'imports',
-            '',
-            [
-                ImportController::class => 'index,import',
-            ],
-            [
-                'access' => 'user,group',
-                'icon' => self::getIconPath() . 'ModuleImports.svg',
-                'labels' => self::getLanguagePath() . 'locallang_mod_imports.xlf',
-            ]
-        );
     }
 
     public static function registerConfig(): void
@@ -97,7 +48,6 @@ class Extension
         self::addCaching();
         self::addContentElements();
         self::addPageTypes();
-        self::addIcons();
     }
 
     public static function getIconPath(): string
@@ -129,26 +79,18 @@ class Extension
 
     private static function addPageTypes(): void
     {
+        $registry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
+        $registry->add(
+            self::PAGE_DOKTYPE_TOURIST_ATTRACTION,
+            [
+                'type' => 'web',
+                'allowedTables' => '*',
+            ]
+        );
+
         ExtensionManagementUtility::addUserTSConfig(
             "@import 'EXT:" . self::EXTENSION_KEY . "/Configuration/TSconfig/User/All.tsconfig'"
         );
-    }
-
-    private static function addIcons(): void
-    {
-        $iconFiles = GeneralUtility::getFilesInDir(GeneralUtility::getFileAbsFileName(self::getIconPath()));
-        if (is_array($iconFiles) === false) {
-            return;
-        }
-
-        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
-        foreach ($iconFiles as $iconFile) {
-            $iconRegistry->registerIcon(
-                str_replace('.svg', '', $iconFile),
-                SvgIconProvider::class,
-                ['source' => self::getIconPath() . $iconFile]
-            );
-        }
     }
 
     private static function addCaching(): void

@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
+use WerkraumMedia\ThueCat\Extension;
+
 defined('TYPO3') or die();
 
-\WerkraumMedia\ThueCat\Extension::registerConfig();
-
-\WerkraumMedia\ThueCat\Updates\BackendModuleUserPermission::register();
+Extension::registerConfig();
 
 (static function (string $extensionKey) {
-    TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+    ExtensionManagementUtility::addTypoScriptSetup(
         '@import "EXT:' . $extensionKey . '/Configuration/TypoScript/Default/Setup.typoscript"'
     );
 
@@ -17,9 +21,9 @@ defined('TYPO3') or die();
     ];
 
     foreach ($tablesForCleanup as $tableName) {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][\TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask::class]['options']['tables'][$tableName] = [
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][TableGarbageCollectionTask::class]['options']['tables'][$tableName] = [
             'dateField' => 'crdate',
             'expirePeriod' => '180',
         ];
     }
-})(\WerkraumMedia\ThueCat\Extension::EXTENSION_KEY);
+})(Extension::EXTENSION_KEY);

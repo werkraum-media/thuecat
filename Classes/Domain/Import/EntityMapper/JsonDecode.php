@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
+use InvalidArgumentException;
 use Symfony\Component\Serializer\Encoder\JsonDecode as SymfonyJsonDecode;
-use TYPO3\CMS\Core\Utility\StringUtility;
-
 
 /**
  * Used to add further necessary normalization on decoding incoming JSON structure.
@@ -34,12 +33,12 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class JsonDecode extends SymfonyJsonDecode
 {
-    public const ACTIVE_LANGUAGE = 'active_language';
+    final public const ACTIVE_LANGUAGE = 'active_language';
 
     /**
      * @var array[]
      */
-    private $rulesToKeepTypeInfo = [
+    private array $rulesToKeepTypeInfo = [
         [
             'type' => 'beginsWith',
             'comparisonValue' => 'thuecat:facilityAccessibility',
@@ -50,14 +49,13 @@ class JsonDecode extends SymfonyJsonDecode
         string $data,
         string $format,
         array $context = []
-    ) {
+    ): mixed {
         $context[self::ASSOCIATIVE] = true;
         $result = parent::decode($data, $format, $context);
 
-
         $activeLanguage = $context[self::ACTIVE_LANGUAGE] ?? '';
         if ($activeLanguage === '') {
-            throw new \InvalidArgumentException('Provide active language: ' . self::ACTIVE_LANGUAGE);
+            throw new InvalidArgumentException('Provide active language: ' . self::ACTIVE_LANGUAGE);
         }
 
         return $this->process(
@@ -94,11 +92,11 @@ class JsonDecode extends SymfonyJsonDecode
      *
      * This decode will resolve the list to a single value based on current language settings from context.
      *
-     * @param mixed $value
+     *
      * @return mixed
      */
     private function decodeLanguageSpecificValue(
-        &$value,
+        mixed &$value,
         string $activeLanguage
     ) {
         if (is_array($value) === false) {
@@ -155,11 +153,11 @@ class JsonDecode extends SymfonyJsonDecode
      *
      * This decode will resolve single values wrapped in array with extra info.
      *
-     * @param mixed $value
+     *
      * @return mixed
      */
     private function decodeSingleValues(
-        &$value
+        mixed &$value
     ) {
         if (is_array($value) === false) {
             return $value;
@@ -189,11 +187,11 @@ class JsonDecode extends SymfonyJsonDecode
     /**
      * Prepare data structure for PHP \DateTimeImmutable.
      *
-     * @param mixed $value
+     *
      * @return mixed
      */
     private function decodeDateTime(
-        &$value
+        mixed &$value
     ) {
         $supportedTypes = [
             'schema:Time',
@@ -213,22 +211,21 @@ class JsonDecode extends SymfonyJsonDecode
     }
 
     /**
-     * @param mixed $key
      * @return mixed
      */
-    private function mapKey($key)
+    private function mapKey(mixed $key)
     {
         if (is_string($key) === false) {
             return $key;
         }
 
-        if (StringUtility::beginsWith($key, '@')) {
+        if (str_starts_with($key, '@')) {
             return mb_substr($key, 1);
         }
-        if (StringUtility::beginsWith($key, 'schema:')) {
+        if (str_starts_with($key, 'schema:')) {
             return mb_substr($key, 7);
         }
-        if (StringUtility::beginsWith($key, 'thuecat:')) {
+        if (str_starts_with($key, 'thuecat:')) {
             return mb_substr($key, 8);
         }
 
@@ -238,7 +235,7 @@ class JsonDecode extends SymfonyJsonDecode
     private function doesRuleMatch(array $rule, string $type): bool
     {
         if ($rule['type'] === 'beginsWith') {
-            return StringUtility::beginsWith($type, $rule['comparisonValue']);
+            return str_starts_with($type, (string)$rule['comparisonValue']);
         }
 
         return false;

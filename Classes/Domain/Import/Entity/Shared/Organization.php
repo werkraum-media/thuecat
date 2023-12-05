@@ -34,7 +34,7 @@ trait Organization
     /**
      * @var Offer[]
      */
-    protected $offers = [];
+    protected array $offers = [];
 
     /**
      * @return Offer[]
@@ -46,6 +46,7 @@ trait Organization
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @return Offer[]
      */
     public function getMakesOffer(): array

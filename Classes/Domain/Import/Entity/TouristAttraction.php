@@ -27,55 +27,40 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 
 class TouristAttraction extends Place implements MapsToType
 {
-    /**
-     * @var string
-     */
-    protected $slogan = '';
+    protected string $slogan = '';
 
-    /**
-     * @var string
-     */
-    protected $startOfConstruction = '';
+    protected string $startOfConstruction = '';
 
     /**
      * @var string[]
      */
-    protected $museumServices = [];
+    protected array $museumServices = [];
 
     /**
      * @var string[]
      */
-    protected $architecturalStyles = [];
+    protected array $architecturalStyles = [];
 
     /**
      * @var string[]
      */
-    protected $digitalOffers = [];
+    protected array $digitalOffers = [];
 
     /**
      * @var string[]
      */
-    protected $photographies = [];
+    protected array $photographies = [];
 
-    /**
-     * @var string
-     */
-    protected $petsAllowed = '';
+    protected string $petsAllowed = '';
 
-    /**
-     * @var string
-     */
-    protected $isAccessibleForFree = '';
+    protected string $isAccessibleForFree = '';
 
-    /**
-     * @var string
-     */
-    protected $publicAccess = '';
+    protected string $publicAccess = '';
 
     /**
      * @var string[]
      */
-    protected $availableLanguages = [];
+    protected array $availableLanguages = [];
 
     public function getSlogan(): string
     {
@@ -160,6 +145,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $museumService
      */
     public function setMuseumService($museumService): void
@@ -173,6 +159,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $architecturalStyle
      */
     public function setArchitecturalStyle($architecturalStyle): void
@@ -186,6 +173,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $digitalOffer
      */
     public function setDigitalOffer($digitalOffer): void
@@ -199,6 +187,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $photography
      */
     public function setPhotography($photography): void
@@ -236,6 +225,7 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $availableLanguage
      */
     public function setAvailableLanguage($availableLanguage): void

@@ -35,6 +35,7 @@ interface MapsToType
      * - thuecat:TouristInformation
      * - thuecat:Town
      * - …
+     *
      * @return string[]
      */
     public static function getSupportedTypes(): array;

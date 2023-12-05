@@ -23,14 +23,15 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity;
 
+use DateTimeImmutable;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Geo;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\Organization;
+use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 class Place extends Base
@@ -38,60 +39,48 @@ class Place extends Base
     use Organization;
     use ContainedInPlace;
 
-    /**
-     * @var Address
-     */
-    protected $address;
+    protected ?Address $address = null;
 
-    /**
-     * @var Geo
-     */
-    protected $geo;
+    protected ?Geo $geo = null;
 
     /**
      * @var OpeningHour[]
      */
-    protected $openingHoursSpecifications = [];
+    protected array $openingHoursSpecifications = [];
 
     /**
      * @var OpeningHour[]
      */
-    protected $specialOpeningHours = [];
+    protected array $specialOpeningHours = [];
 
     /**
      * @var ForeignReference[]
      */
-    protected $parkingFacilitiesNearBy = [];
+    protected array $parkingFacilitiesNearBy = [];
 
     /**
      * @var string[]
      */
-    protected $sanitations = [];
+    protected array $sanitations = [];
 
     /**
      * @var string[]
      */
-    protected $otherServices = [];
+    protected array $otherServices = [];
 
     /**
      * @var string[]
      */
-    protected $trafficInfrastructures = [];
+    protected array $trafficInfrastructures = [];
 
     /**
      * @var string[]
      */
-    protected $paymentsAccepted = [];
+    protected array $paymentsAccepted = [];
 
-    /**
-     * @var string
-     */
-    protected $distanceToPublicTransport = '';
+    protected string $distanceToPublicTransport = '';
 
-    /**
-     * @var ForeignReference
-     */
-    protected $accessibilitySpecification;
+    protected ?ForeignReference $accessibilitySpecification = null;
 
     public function getAddress(): ?Address
     {
@@ -161,10 +150,11 @@ class Place extends Base
         return GeneralUtility::makeInstance(DateBasedFilter::class)
             ->filterOutPreviousDates(
                 $this->openingHoursSpecifications,
-                function (OpeningHour $hour): ?\DateTimeImmutable {
+                function (OpeningHour $hour): ?DateTimeImmutable {
                     return $hour->getValidThrough();
                 }
-            );
+            )
+        ;
     }
 
     /**
@@ -175,10 +165,11 @@ class Place extends Base
         return GeneralUtility::makeInstance(DateBasedFilter::class)
             ->filterOutPreviousDates(
                 $this->specialOpeningHours,
-                function (OpeningHour $hour): ?\DateTimeImmutable {
+                function (OpeningHour $hour): ?DateTimeImmutable {
                     return $hour->getValidThrough();
                 }
-            );
+            )
+        ;
     }
 
     /**
@@ -252,6 +243,7 @@ class Place extends Base
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $sanitation
      */
     public function setSanitation($sanitation): void
@@ -265,6 +257,7 @@ class Place extends Base
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $otherService
      */
     public function setOtherService($otherService): void
@@ -278,6 +271,7 @@ class Place extends Base
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $trafficInfrastructure
      */
     public function setTrafficInfrastructure($trafficInfrastructure): void
@@ -291,6 +285,7 @@ class Place extends Base
 
     /**
      * @internal for mapping via Symfony component.
+     *
      * @param string|array $paymentAccepted
      */
     public function setPaymentAccepted($paymentAccepted): void

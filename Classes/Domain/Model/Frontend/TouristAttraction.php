@@ -27,60 +27,37 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TouristAttraction extends Place
 {
+    protected string $slogan = '';
+
+    protected ?Offers $offers = null;
+
+    protected ?Town $town = null;
+
+    protected string $startOfConstruction = '';
+
+    protected string $museumService = '';
+
+    protected string $architecturalStyle = '';
+
     /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $slogan = '';
+    protected string $digitalOffer = '';
 
     /**
-     * @var Offers|null
-     */
-    protected $offers = null;
-
-    /**
-     * @var Town|null
-     */
-    protected $town = null;
-
-    /**
+     * Necessary for Extbase/Symfony.
+     *
      * @var string
      */
-    protected $startOfConstruction = '';
+    protected string $photography = '';
 
-    /**
-     * @var string
-     */
-    protected $museumService = '';
+    protected string $petsAllowed = '';
 
-    /**
-     * @var string
-     */
-    protected $architecturalStyle = '';
+    protected string $isAccessibleForFree = '';
 
-    /**
-     * @var string
-     */
-    protected $digitalOffer = '';
-
-    /**
-     * @var string
-     */
-    protected $photography = '';
-
-    /**
-     * @var string
-     */
-    protected $petsAllowed = '';
-
-    /**
-     * @var string
-     */
-    protected $isAccessibleForFree = '';
-
-    /**
-     * @var string
-     */
-    protected $publicAccess = '';
+    protected string $publicAccess = '';
 
     public function getSlogan(): string
     {

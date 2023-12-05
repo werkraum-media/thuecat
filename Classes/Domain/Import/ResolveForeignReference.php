@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 
@@ -38,29 +38,11 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseExcept
  */
 class ResolveForeignReference
 {
-    /**
-     * @var FetchData
-     */
-    private $fetchData;
-
-    /**
-     * @var EntityRegistry
-     */
-    private $entityRegistry;
-
-    /**
-     * @var EntityMapper
-     */
-    private $entityMapper;
-
     public function __construct(
-        FetchData $fetchData,
-        EntityRegistry $entityRegistry,
-        EntityMapper $entityMapper
+        private readonly FetchData $fetchData,
+        private readonly EntityRegistry $entityRegistry,
+        private readonly EntityMapper $entityMapper
     ) {
-        $this->fetchData = $fetchData;
-        $this->entityRegistry = $entityRegistry;
-        $this->entityMapper = $entityMapper;
     }
 
     public function resolve(
@@ -69,7 +51,7 @@ class ResolveForeignReference
     ): ?object {
         try {
             $jsonLD = $this->fetchData->jsonLDFromUrl($foreignReference->getId());
-        } catch (InvalidResponseException $e) {
+        } catch (InvalidResponseException) {
             return null;
         }
 
@@ -94,6 +76,7 @@ class ResolveForeignReference
 
     /**
      * @param ForeignReference[] $foreignReferences
+     *
      * @return string[]
      */
     public static function convertToRemoteIds(array $foreignReferences): array

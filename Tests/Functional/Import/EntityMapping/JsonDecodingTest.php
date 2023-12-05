@@ -23,17 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import\EntityMapping;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 
-/**
- * @covers \WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
- */
 class JsonDecodingTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function canBeCreated(): void
     {
         $subject = new JsonDecode();
@@ -44,13 +40,11 @@ class JsonDecodingTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesPropertyWithMultipleLanguagesProvidingActiveOne(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:name' => [
                 [
                     '@language' => 'de',
@@ -70,13 +64,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesPropertyWithSingleLanguageMatchingActive(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:name' => [
                 '@language' => 'en',
                 '@value' => 'English Text',
@@ -90,13 +82,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesPropertyWithSingleLanguageNotMatchingActive(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:name' => [
                 '@language' => 'de',
                 '@value' => 'German Text',
@@ -110,13 +100,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesPropertyWithMultipleLanguagesAndFormatsProvidingActiveLanguage(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:description' => [
                 0 => [
                     '@language' => 'en',
@@ -156,13 +144,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesPropertyWithMultipleLanguagesNotMatchingRequestOne(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:description' => [
                 0 => [
                     '@language' => 'en',
@@ -182,13 +168,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesSingleValueNotRelatedToLanguage(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:geo' => [
                 'schema:latitude' => [
                     '@type' => 'schema:Number',
@@ -211,13 +195,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesNestedObjectStructures(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             '@id' => 'https://thuecat.org/resources/835224016581-dara',
             'schema:name' => [
                 '@language' => 'en',
@@ -261,13 +243,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function decodesOpeningHours(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'schema:openingHoursSpecification' => [
                 0 => [
                     '@id' => 'genid-7bb7d92bd6624bdf84634c86e8acdbb4-b4',
@@ -371,13 +351,11 @@ class JsonDecodingTest extends TestCase
         ], $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function keepsArrayOfValueAndTypeIfConfigured(): void
     {
         $subject = new JsonDecode();
-        $result = $subject->decode((string) json_encode([
+        $result = $subject->decode((string)json_encode([
             'thuecat:AccessibilitySearchCriteria' => [
                 0 => [
                     '@type' => 'thuecat:facilityAccessibilityWalking',

@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
 
 class EntityPass implements CompilerPassInterface
 {
-    public const TAG = 'thuecat.entity';
+    final public const TAG = 'thuecat.entity';
 
     public function process(ContainerBuilder $container): void
     {

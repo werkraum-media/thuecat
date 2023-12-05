@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -32,19 +31,11 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 
 class ImportLogRepository extends Repository
 {
-    /**
-     * @var DataHandler
-     */
-    private $dataHandler;
-
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        DataHandler $dataHandler,
+        private readonly DataHandler $dataHandler,
         Typo3QuerySettings $querySettings
     ) {
-        parent::__construct($objectManager);
-
-        $this->dataHandler = $dataHandler;
+        parent::__construct();
 
         $querySettings->setRespectStoragePage(false);
         $this->setDefaultQuerySettings($querySettings);
@@ -84,7 +75,7 @@ class ImportLogRepository extends Repository
                     'import_log' => 'NEW0',
                     'type' => $entry->getType(),
                     'remote_id' => $entry->getRemoteId(),
-                    'errors' => json_encode($entry->getErrors()),
+                    'errors' => json_encode($entry->getErrors(), JSON_THROW_ON_ERROR),
                 ]
             );
         }

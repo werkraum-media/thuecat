@@ -1,21 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
-			count: 1
-			path: Classes/DependencyInjection/EntityPass.php
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{class\\-string, 'getPriority'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
 
 		-
-			message: "#^Parameter \\#1 \\$function of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
-			count: 1
-			path: Classes/DependencyInjection/EntityPass.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{class\\-string, 'getSupportedTypes'\\} given\\.$#"
 			count: 1
 			path: Classes/DependencyInjection/EntityPass.php
 
@@ -40,8 +31,8 @@ parameters:
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
-			message: "#^Cannot call method debug\\(\\) on Psr\\\\Log\\\\LoggerInterface\\|null\\.$#"
-			count: 5
+			message: "#^Cannot call method getUid\\(\\) on mixed\\.$#"
+			count: 1
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
@@ -68,26 +59,6 @@ parameters:
 			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getUrls\\(\\) should return array\\<string\\> but returns array\\<int, mixed\\>\\.$#"
 			count: 1
 			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of static method TYPO3\\\\CMS\\\\Core\\\\Utility\\\\ArrayUtility\\:\\:getValueByPath\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_unique expects array, mixed given\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry.php
-
-		-
-			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\:\\:\\$errorsAsArray \\(array\\<string\\>\\) does not accept array\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry.php
-
-		-
-			message: "#^Property WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportLogEntry\\:\\:\\$errorsAsArray \\(array\\<string\\>\\) does not accept mixed\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry.php
 
 		-
 			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\AccessiblitySpecification\\:\\:getCertificationDeaf\\(\\) should return string but returns mixed\\.$#"
@@ -245,96 +216,26 @@ parameters:
 			path: Classes/Domain/Model/Frontend/OpeningHours.php
 
 		-
-			message: "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
-			message: "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Result\\|int supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
 			message: "#^Cannot call method getLanguageOverlay\\(\\) on string\\|TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
 			count: 1
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
+			message: "#^Parameter \\#1 \\$className of method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\Mapper\\\\DataMapper\\:\\:map\\(\\) expects class\\-string\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>, string given\\.$#"
 			count: 1
-			path: Configuration/TCA/Overrides/pages.php
+			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
+			message: "#^Unable to resolve the template type T in call to method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\Mapper\\\\DataMapper\\:\\:map\\(\\)$#"
 			count: 1
-			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
+			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
+			message: "#^Parameter \\#1 \\$mods of method WerkraumMedia\\\\ThueCat\\\\Updates\\\\BackendModuleUserPermission\\:\\:updateMods\\(\\) expects string, mixed given\\.$#"
 			count: 1
-			path: Configuration/TCA/Overrides/sys_template.php
+			path: Classes/Updates/BackendModuleUserPermission.php
 
 		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
+			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Tests\\\\Acceptance\\\\Support\\\\Environment\\:\\:bootstrapTypo3Environment\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: Configuration/TCA/Overrides/tt_content.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/Overrides/tt_content_tourist_attraction.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_import_configuration.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_import_log.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_import_log_entry.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_organisation.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_parking_facility.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_tourist_attraction.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_tourist_information.php
-
-		-
-			message: "#^Right side of \\|\\| is always false\\.$#"
-			count: 1
-			path: Configuration/TCA/tx_thuecat_town.php
-
-		-
-			message: "#^Cannot call method findByUid\\(\\) on mixed\\.$#"
-			count: 14
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: "#^Cannot call method importConfiguration\\(\\) on mixed\\.$#"
-			count: 14
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function usort expects callable\\(TEntity, TEntity\\)\\: int, Closure\\(WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility, WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\ParkingFacility\\)\\: int\\<\\-1, 1\\> given\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Frontend/Place.php
+			path: Tests/Acceptance/Support/Environment.php

@@ -10,13 +10,5 @@ parameters:
       - Tests/Acceptance/Support/_generated/
       - Classes/Domain/Import/EntityMapper/CustomAnnotationExtractor.php
     checkMissingIterableValueType: false
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
     checkGenericClassInNonGenericObjectType: false
-    ignoreErrors:
-      # Depending on TYPO3 version
-      - "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int supplied for foreach, only iterables are supported\\.$#"
-      - "#^Argument of an invalid type Doctrine\\\\DBAL\\\\Result\\|int supplied for foreach, only iterables are supported\\.$#"
-      - "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-      - "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"
-      - "#^Cannot call method fetchOne\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-      - "#^Cannot call method fetchOne\\(\\) on Doctrine\\\\DBAL\\\\Result\\|int\\.$#"

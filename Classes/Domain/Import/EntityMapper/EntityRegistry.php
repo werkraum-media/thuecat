@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
 
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-
-
 /**
  * Registry with supported entities and their types.
  */
@@ -34,7 +31,7 @@ class EntityRegistry
     /**
      * @var array[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     /**
      * @param string[] $supportedTypes
@@ -70,10 +67,9 @@ class EntityRegistry
             return '';
         }
 
-        $matches = ArrayUtility::sortArraysByKey(
-            $matches,
-            'priority'
-        );
+        usort($matches, static function (array $configA, array $configB): int {
+            return $configA['priority'] <=> $configB['priority'];
+        });
 
         return end($matches)['entityClassName'];
     }
