@@ -54,6 +54,7 @@
         "typo3/cms-frontend": "^10.4 || ^11.5"
     },
     "require-dev": {
+        "codappix/typo3-php-datasets": "^1.4",
         "codeception/codeception": "^4.2",
         "codeception/module-webdriver": "^2.0",
         "jangregor/phpstan-prophecy": "^1.0",

@@ -24,6 +24,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  */
 
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 /**
@@ -67,8 +68,7 @@ class ImportTest extends AbstractImportTest
         $this->importDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.xml');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFreshOrganization.csv');
     }
@@ -81,8 +81,7 @@ class ImportTest extends AbstractImportTest
         $this->importDataSet(__DIR__ . '/Fixtures/Import/UpdatesExistingOrganization.xml');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $organisations = $this->getAllRecords('tx_thuecat_organisation');
         self::assertCount(1, $organisations);
@@ -116,8 +115,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTown.csv');
     }
@@ -131,8 +129,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTownWithRelation.csv');
     }
@@ -166,8 +163,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithRelations.csv');
     }
@@ -181,8 +177,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/opening-hours-to-filter.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithFilteredOpeningHours.csv');
     }
@@ -196,8 +191,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/special-opening-hours.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionsWithSpecialOpeningHours.csv');
     }
@@ -214,8 +208,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/356133173991-cryw.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristInformationWithRelation.csv');
     }
@@ -250,8 +243,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsSyncScope.csv');
     }
@@ -294,8 +286,7 @@ class ImportTest extends AbstractImportTest
             GuzzleClientFaker::appendNotFoundResponse();
         }
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsContainsPlace.csv');
     }
@@ -317,8 +308,7 @@ class ImportTest extends AbstractImportTest
             GuzzleClientFaker::appendNotFoundResponse();
         }
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         if (version_compare(PHP_VERSION, '8.1.0', '<')) {
             $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsFollowingRecordsInCaseOfAnMappingExceptionOldPhp.csv');
@@ -358,8 +348,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/440055527204-ocar.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5197164.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportWithMultipleReferencesToSameObject.csv');
     }
@@ -379,8 +368,7 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-license-author.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-and-license-author.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithMedia.csv');
     }
@@ -396,12 +384,48 @@ class ImportTest extends AbstractImportTest
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
 
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration();
 
         $this->assertCSVDataSet('EXT:thuecat/Tests/Functional/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.csv');
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
+    }
+
+    /**
+     * @test
+     */
+    public function importsTouristAttractionWithSloganArray(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSloganArray.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSloganArray.php');
+    }
+
+    /**
+     * @test
+     */
+    public function importsTouristAttractionWithSingleSlogan(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSingleSlogan.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSingleSlogan.php');
+    }
+
+    private function importConfiguration(): void
+    {
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        self::assertInstanceOf(ImportConfiguration::class, $configuration);
+        $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

@@ -1,0 +1,31 @@
+2.2.0
+=====
+
+Breaking
+--------
+
+Nothing
+
+Features
+--------
+
+* Add support for multiple slogans (array within slogan).
+  The existing API will return the first slogan.
+  A new method `getSlogans` is added which will return the array of slogans.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+* Add PHP data for testing framework to ease backports.
+  As we have migrated on current main already.
+
+Deprecation
+-----------
+
+Nothing
+

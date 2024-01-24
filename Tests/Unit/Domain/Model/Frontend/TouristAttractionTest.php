@@ -291,4 +291,28 @@ class TouristAttractionTest extends TestCase
             }
         }
     }
+
+    /**
+     * @test
+     */
+    public function returnsSingleSlogan(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('slogan', 'Some text');
+
+        self::assertSame('Some text', $subject->getSlogan());
+        self::assertSame(['Some text'], $subject->getSlogans());
+    }
+
+    /**
+     * @test
+     */
+    public function returnsMultipleSlogans(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('slogan', 'Some text,Highlight');
+
+        self::assertSame('Some text', $subject->getSlogan());
+        self::assertSame(['Some text', 'Highlight'], $subject->getSlogans());
+    }
 }
