@@ -15,6 +15,10 @@ Features
 
 * Add support for PHP 8.3.
 
+* Add support for multiple slogans (array within slogan).
+  The existing API will return the first slogan.
+  A new method `getSlogans` is added which will return the array of slogans.
+
 Fixes
 -----
 

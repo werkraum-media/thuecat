@@ -280,4 +280,24 @@ class TouristAttractionTest extends TestCase
             }
         }
     }
+
+    #[Test]
+    public function returnsSingleSlogan(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('slogan', 'Some text');
+
+        self::assertSame('Some text', $subject->getSlogan());
+        self::assertSame(['Some text'], $subject->getSlogans());
+    }
+
+    #[Test]
+    public function returnsMultipleSlogans(): void
+    {
+        $subject = new TouristAttraction();
+        $subject->_setProperty('slogan', 'Some text,Highlight');
+
+        self::assertSame('Some text', $subject->getSlogan());
+        self::assertSame(['Some text', 'Highlight'], $subject->getSlogans());
+    }
 }
