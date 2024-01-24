@@ -333,6 +333,32 @@ class ImportTest extends AbstractImportTestCase
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
     }
 
+    #[Test]
+    public function importsTouristAttractionWithSloganArray(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSloganArray.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSloganArray.php');
+    }
+
+    #[Test]
+    public function importsTouristAttractionWithSingleSlogan(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSingleSlogan.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSingleSlogan.php');
+    }
+
     private function importConfiguration(): void
     {
         $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
