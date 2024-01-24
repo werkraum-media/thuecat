@@ -23,11 +23,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use Codappix\Typo3PhpDatasets\TestingFramework;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 abstract class AbstractImportTest extends FunctionalTestCase
 {
+    use TestingFramework;
+
     /**
      * Whether to expect errors to be logged.
      * Will check for no errors if set to false.

@@ -28,9 +28,9 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
 class TouristAttraction extends Place implements MapsToType
 {
     /**
-     * @var string
+     * @var string[]
      */
-    protected $slogan = '';
+    protected $slogan = [];
 
     /**
      * @var string
@@ -77,7 +77,7 @@ class TouristAttraction extends Place implements MapsToType
      */
     protected $availableLanguages = [];
 
-    public function getSlogan(): string
+    public function getSlogan(): array
     {
         return $this->slogan;
     }
@@ -144,10 +144,15 @@ class TouristAttraction extends Place implements MapsToType
 
     /**
      * @internal for mapping via Symfony component.
+     *
+     * @param string|array $slogan
      */
-    public function setSlogan(string $slogan): void
+    public function setSlogan($slogan): void
     {
-        $this->slogan = PropertyValues::removePrefixFromEntry($slogan);
+        if (is_string($slogan)) {
+            $slogan = [$slogan];
+        }
+        $this->slogan = PropertyValues::removePrefixFromEntries($slogan);
     }
 
     /**

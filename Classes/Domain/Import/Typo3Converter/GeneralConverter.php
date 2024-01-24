@@ -244,7 +244,7 @@ class GeneralConverter implements Converter
             'payment_accepted' => method_exists($entity, 'getPaymentsAccepted') ? implode(',', $entity->getPaymentsAccepted()) : '',
             'distance_to_public_transport' => method_exists($entity, 'getDistanceToPublicTransport') ? $entity->getDistanceToPublicTransport() : '',
 
-            'slogan' => method_exists($entity, 'getSlogan') ? $entity->getSlogan() : '',
+            'slogan' => method_exists($entity, 'getSlogan') ? implode(',', $entity->getSlogan()) : '',
             'start_of_construction' => method_exists($entity, 'getStartOfConstruction') ? $entity->getStartOfConstruction() : '',
             'museum_service' => method_exists($entity, 'getMuseumServices') ? implode(',', $entity->getMuseumServices()) : '',
             'architectural_style' => method_exists($entity, 'getArchitecturalStyles') ? implode(',', $entity->getArchitecturalStyles()) : '',
