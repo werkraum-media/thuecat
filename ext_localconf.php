@@ -8,7 +8,7 @@ use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') or die();
 
-Extension::registerConfig();
+Extension::registerExtLocalconfConfigConfig();
 
 (static function (string $extensionKey) {
     ExtensionManagementUtility::addTypoScriptSetup(

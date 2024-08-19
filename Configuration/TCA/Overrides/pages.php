@@ -25,7 +25,7 @@ defined('TYPO3') or die();
                     'type' => 'flex',
                     'ds_pointerField' => 'doktype',
                     'ds' => [
-                        'default' => '<T3DataStructure> <ROOT> <type>array</type> <el> <!-- Repeat an element like "xmlTitle" beneath for as many elements you like. Remember to name them uniquely --> <xmlTitle> <TCEforms> <label>The Title:</label> <config> <type>input</type> <size>48</size> </config> </TCEforms> </xmlTitle> </el> </ROOT> </T3DataStructure>',
+                        'default' => '<T3DataStructure> <ROOT> <type>array</type> <el> <!-- Repeat an element like "xmlTitle" beneath for as many elements you like. Remember to name them uniquely --> <xmlTitle> <label>The Title:</label> <config> <type>input</type> <size>48</size> </config> </xmlTitle> </el> </ROOT> </T3DataStructure>',
                     ],
                 ],
             ],

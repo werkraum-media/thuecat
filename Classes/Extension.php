@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat;
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -43,11 +44,16 @@ class Extension
         return 'LLL:EXT:' . self::EXTENSION_KEY . '/Resources/Private/Language/';
     }
 
-    public static function registerConfig(): void
+    public static function registerExtLocalconfConfigConfig(): void
     {
         self::addCaching();
         self::addContentElements();
-        self::addPageTypes();
+        self::addPageTypesExtLocalconf();
+    }
+
+    public static function registerExtTablesConfig(): void
+    {
+        self::addPageTypesExtTables();
     }
 
     public static function getIconPath(): string
@@ -59,25 +65,28 @@ class Extension
     {
         $languagePath = self::getLanguagePath() . 'locallang_tca.xlf:tt_content';
 
-        ExtensionManagementUtility::addPageTSConfig('
-            mod.wizards.newContentElement.wizardItems.thuecat {
-                header = ' . $languagePath . '.group
-                show = *
-                elements {
-                    thuecat_tourist_attraction{
-                        title = ' . $languagePath . '.thuecat_tourist_attraction
-                        description =  ' . $languagePath . '.thuecat_tourist_attraction.description
-                        iconIdentifier = tt_content_thuecat_tourist_attraction
-                        tt_content_defValues {
-                            CType = thuecat_tourist_attraction
+        // TODO: typo3/cms-core:14.0 Remove this code block as CEs are auto registered.
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->__toString(), '13.0', '<')) {
+            ExtensionManagementUtility::addPageTSConfig('
+                mod.wizards.newContentElement.wizardItems.thuecat {
+                    header = ' . $languagePath . '.group
+                    show = *
+                    elements {
+                        thuecat_tourist_attraction{
+                            title = ' . $languagePath . '.thuecat_tourist_attraction
+                            description =  ' . $languagePath . '.thuecat_tourist_attraction.description
+                            iconIdentifier = tt_content_thuecat_tourist_attraction
+                            tt_content_defValues {
+                                CType = thuecat_tourist_attraction
+                            }
                         }
                     }
                 }
-            }
-        ');
+            ');
+        }
     }
 
-    private static function addPageTypes(): void
+    private static function addPageTypesExtTables(): void
     {
         $registry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
         $registry->add(
@@ -87,10 +96,16 @@ class Extension
                 'allowedTables' => '*',
             ]
         );
+    }
 
-        ExtensionManagementUtility::addUserTSConfig(
-            "@import 'EXT:" . self::EXTENSION_KEY . "/Configuration/TSconfig/User/All.tsconfig'"
-        );
+    private static function addPageTypesExtLocalconf(): void
+    {
+        // TODO: typo3/cms-core:14.0 Remove this code block as Configuration/user.tsconfig will be loaded since 13.x
+        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->__toString(), '13.0', '<')) {
+            ExtensionManagementUtility::addUserTSConfig(
+                "@import 'EXT:" . self::EXTENSION_KEY . '/Configuration/user.tsconfig'
+            );
+        }
     }
 
     private static function addCaching(): void

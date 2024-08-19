@@ -2,6 +2,9 @@
 $finder = (new PhpCsFixer\Finder())
     ->ignoreVCSIgnored(true)
     ->in(realpath(__DIR__))
+    ->notPath([
+        'Classes/Domain/Import/EntityMapper/CustomAnnotationExtractor.php',
+    ]);
 ;
 
 return (new \PhpCsFixer\Config())

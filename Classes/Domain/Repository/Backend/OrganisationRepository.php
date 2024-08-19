@@ -25,11 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 
-/**
- * @method Organisation|null findOneByRemoteId(string $remoteId)
- */
 class OrganisationRepository extends Repository
 {
     public function __construct(

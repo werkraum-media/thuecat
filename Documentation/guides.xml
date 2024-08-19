@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guides
+    xmlns="https://www.phpdoc.org/guides"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://www.phpdoc.org/guides ../vendor/phpdocumentor/guides-cli/resources/schema/guides.xsd"
+    links-are-relative="true"
+>
+    <extension
+        class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
+        project-home="https://github.com/werkraum-media/thuecat"
+        project-contact="coding@daniel-siepmann.de"
+        project-repository="https://github.com/werkraum-media/thuecat"
+        project-issues="https://github.com/werkraum-media/thuecat/issues"
+        edit-on-github-branch="main"
+        edit-on-github="werkraum-media/thuecat"
+        typo3-core-preferred="stable"
+    />
+    <project
+        title="TYPO3 EXT:thuecat"
+        release="latest"
+        copyright="2020 by werkraum-media"
+    />
+    <inventory
+        id="t3install"
+        url="https://docs.typo3.org/m/typo3/guide-installation/main/en-us/"
+    />
+    <inventory
+        id="t3gettingstarted"
+        url="https://docs.typo3.org/m/typo3/tutorial-getting-started/main/en-us/"
+    />
+    <inventory
+        id="t3tsref"
+        url="https://docs.typo3.org/m/typo3/reference-typoscript/main/en-us/"
+    />
+</guides>

@@ -20,4 +20,5 @@ Table of Contents
    Configuration
    Integration
    Changelog
+   Maintenance
    Sitemap

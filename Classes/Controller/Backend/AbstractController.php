@@ -47,6 +47,11 @@ abstract class AbstractController extends ActionController
 
     protected function htmlResponse(?string $html = null): ResponseInterface
     {
-        return parent::htmlResponse($html ?? $this->moduleTemplate->render());
+        $action = sprintf(
+            '%s/%s',
+            str_replace('\\', '/', $this->request->getControllerName()),
+            ucfirst($this->request->getControllerActionName()),
+        );
+        return parent::htmlResponse($html ?? $this->moduleTemplate->render($action));
     }
 }
