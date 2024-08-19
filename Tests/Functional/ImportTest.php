@@ -23,7 +23,11 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
@@ -387,6 +391,15 @@ class ImportTest extends AbstractImportTestCase
 
     private function importConfiguration(): void
     {
+        $this->workaroundExtbaseConfiguration();
+
+        $this->get(Context::class)->setAspect(
+            'date',
+            new DateTimeAspect(
+                new DateTimeImmutable('2024-03-03 00:00:00', new DateTimeZone('UTC'))
+            )
+        );
+
         $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
         self::assertInstanceOf(ImportConfiguration::class, $configuration);
         $this->get(Importer::class)->importConfiguration($configuration);

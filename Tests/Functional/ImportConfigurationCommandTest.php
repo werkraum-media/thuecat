@@ -35,6 +35,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
     #[Test]
     public function canImport(): void
     {
+        $this->workaroundExtbaseConfiguration();
+
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
         self::assertInstanceOf(Command::class, $subject);
 
@@ -50,6 +52,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
     #[Test]
     public function throwsExceptionOnNoneExistingConfiguration(): void
     {
+        $this->workaroundExtbaseConfiguration();
+
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
         self::assertInstanceOf(Command::class, $subject);
 

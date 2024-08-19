@@ -5,28 +5,23 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.sheetTitle</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.sheetTitle</sheetTitle>
                 <type>array</type>
                 <el>
                     <storagePid>
-                        <TCEforms>
-                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.storagePid</label>
-                            <config>
-                                <type>input</type>
-                                <eval>int,required</eval>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.storagePid</label>
+                        <config>
+                            <type>number</type>
+                            <required type="boolean">1</required>
+                        </config>
                     </storagePid>
                     <syncScopeId>
-                        <TCEforms>
-                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.syncScopeId</label>
-                            <config>
-                                <type>input</type>
-                                <eval>trim,required</eval>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.syncScopeId</label>
+                        <config>
+                            <type>input</type>
+                            <eval>trim</eval>
+                            <required type="boolean">1</required>
+                        </config>
                     </syncScopeId>
                 </el>
             </ROOT>

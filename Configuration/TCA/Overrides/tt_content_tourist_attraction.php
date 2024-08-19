@@ -60,7 +60,7 @@ defined('TYPO3') or die();
         [
             'label' => $languagePath,
             'value' => $cType,
-            'icon' => Extension::getIconPath() . 'tt_content_' . $cType . '.svg',
+            'icon' => 'tt_content_' . $cType,
             'group' => Extension::TCA_SELECT_GROUP_IDENTIFIER,
         ]
     );

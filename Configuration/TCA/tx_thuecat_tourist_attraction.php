@@ -56,6 +56,20 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'passthrough',
                 ],
             ],
+            'disable' => [
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.enabled',
+                'config' => [
+                    'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                    'default' => 0,
+                    'items' => [
+                        [
+                            'label' => '',
+                            'invertStateDisplay' => true,
+                        ],
+                    ],
+                ],
+            ],
 
             'title' => [
                 'label' => $languagePath . '.title',

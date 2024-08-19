@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
 use DateTimeImmutable;
 use Exception;
+use RuntimeException;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
@@ -162,7 +163,13 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     private function getConfigurationAsArray(): array
     {
-        return GeneralUtility::xml2array($this->configuration);
+        $asArray = GeneralUtility::xml2array($this->configuration);
+
+        if (is_array($asArray) === false) {
+            throw new RuntimeException('Could not parse the configuration: ' . $asArray, 1729148214);
+        }
+
+        return $asArray;
     }
 
     /**

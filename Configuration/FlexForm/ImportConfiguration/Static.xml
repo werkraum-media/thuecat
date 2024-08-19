@@ -5,19 +5,15 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.sheetTitle</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.sheetTitle</sheetTitle>
                 <type>array</type>
                 <el>
                     <storagePid>
-                        <TCEforms>
-                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.storagePid</label>
-                            <config>
-                                <type>input</type>
-                                <eval>int,required</eval>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.storagePid</label>
+                        <config>
+                            <type>number</type>
+                            <required type="boolean">1</required>
+                        </config>
                     </storagePid>
                     <urls>
                         <title>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.urls</title>
@@ -29,13 +25,12 @@
                                 <type>array</type>
                                 <el>
                                     <url>
-                                        <TCEforms>
-                                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url</label>
-                                            <config>
-                                                <type>input</type>
-                                                <eval>required,trim</eval>
-                                            </config>
-                                        </TCEforms>
+                                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url</label>
+                                        <config>
+                                            <type>input</type>
+                                            <eval>trim</eval>
+                                            <required type="boolean">1</required>
+                                        </config>
                                     </url>
                                 </el>
                             </url>

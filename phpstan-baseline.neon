@@ -41,11 +41,6 @@ parameters:
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getConfigurationAsArray\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
 			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Backend\\\\ImportConfiguration\\:\\:getEntries\\(\\) should return array but returns mixed\\.$#"
 			count: 1
 			path: Classes/Domain/Model/Backend/ImportConfiguration.php
@@ -216,11 +211,6 @@ parameters:
 			path: Classes/Domain/Model/Frontend/OpeningHours.php
 
 		-
-			message: "#^Cannot call method getLanguageOverlay\\(\\) on string\\|TYPO3\\\\CMS\\\\Core\\\\Domain\\\\Repository\\\\PageRepository\\.$#"
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
 			message: "#^Parameter \\#1 \\$className of method TYPO3\\\\CMS\\\\Extbase\\\\Persistence\\\\Generic\\\\Mapper\\\\DataMapper\\:\\:map\\(\\) expects class\\-string\\<TYPO3\\\\CMS\\\\Extbase\\\\DomainObject\\\\DomainObjectInterface\\>, string given\\.$#"
 			count: 1
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
@@ -234,8 +224,3 @@ parameters:
 			message: "#^Parameter \\#1 \\$mods of method WerkraumMedia\\\\ThueCat\\\\Updates\\\\BackendModuleUserPermission\\:\\:updateMods\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: Classes/Updates/BackendModuleUserPermission.php
-
-		-
-			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Tests\\\\Acceptance\\\\Support\\\\Environment\\:\\:bootstrapTypo3Environment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Tests/Acceptance/Support/Environment.php

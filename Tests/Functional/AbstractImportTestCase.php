@@ -28,7 +28,10 @@ use DateTimeImmutable;
 use TypeError;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
@@ -134,5 +137,22 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
 
         $aspect = new DateTimeAspect($dateTime);
         $context->setAspect('date', $aspect);
+    }
+
+    /**
+     * Workaround ConfigurationManager requiring request
+     */
+    protected function workaroundExtbaseConfiguration(): void
+    {
+        $fakeRequest = new ServerRequest();
+        $fakeRequest = $fakeRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+        $configurationManager = $this->get(ConfigurationManagerInterface::class);
+
+        // TODO: typo3/cms-core:14.0 Remove condition, the method should always be available
+        if (method_exists($configurationManager, 'setRequest') === false) {
+            return;
+        }
+
+        $configurationManager->setRequest($fakeRequest);
     }
 }

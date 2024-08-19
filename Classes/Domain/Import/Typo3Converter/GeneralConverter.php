@@ -228,9 +228,9 @@ class GeneralConverter implements Converter
                 [$entity->getManagedBy()]
             )
         );
-        $manager = $this->organisationRepository->findOneByRemoteId(
-            $entity->getManagedBy()->getId()
-        );
+        $manager = $this->organisationRepository->findOneBy([
+            'remoteId' => $entity->getManagedBy()->getId(),
+        ]);
 
         return $manager ? (string)$manager->getUid() : '';
     }

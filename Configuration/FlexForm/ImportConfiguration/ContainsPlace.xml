@@ -5,29 +5,24 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.sheetTitle</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.sheetTitle</sheetTitle>
                 <type>array</type>
                 <el>
                     <storagePid>
-                        <TCEforms>
-                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.storagePid</label>
-                            <config>
-                                <type>input</type>
-                                <eval>int,required</eval>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.storagePid</label>
+                        <config>
+                            <type>number</type>
+                            <required type="boolean">1</required>
+                        </config>
                     </storagePid>
                     <containsPlaceId>
-                        <TCEforms>
-                            <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId</label>
-                            <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId.description</description>
-                            <config>
-                                <type>input</type>
-                                <eval>trim,required</eval>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.containsPlace.containsPlaceId.description</description>
+                        <config>
+                            <type>input</type>
+                            <eval>trim</eval>
+                            <required type="boolean">1</required>
+                        </config>
                     </containsPlaceId>
                 </el>
             </ROOT>

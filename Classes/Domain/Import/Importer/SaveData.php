@@ -161,10 +161,10 @@ class SaveData
 
     private function getExistingUid(Entity $entity): int
     {
-        $tableColumns = $this->connectionPool
+        $table = $this->connectionPool
             ->getConnectionForTable($entity->getTypo3DatabaseTableName())
-            ->getSchemaManager()
-            ->listTableColumns($entity->getTypo3DatabaseTableName())
+            ->getSchemaInformation()
+            ->introspectTable($entity->getTypo3DatabaseTableName())
         ;
 
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($entity->getTypo3DatabaseTableName());
@@ -175,7 +175,7 @@ class SaveData
             'remote_id',
             $queryBuilder->createNamedParameter($entity->getRemoteId())
         ));
-        if (isset($tableColumns['sys_language_uid'])) {
+        if ($table->hasColumn('sys_language_uid')) {
             $queryBuilder->andWhere($queryBuilder->expr()->eq(
                 'sys_language_uid',
                 $queryBuilder->createNamedParameter($entity->getTypo3SystemLanguageUid())

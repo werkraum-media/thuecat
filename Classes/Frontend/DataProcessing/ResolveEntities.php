@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Frontend\DataProcessing;
 
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -79,6 +80,11 @@ class ResolveEntities implements DataProcessorInterface
 
         $rows = [];
         foreach ($queryBuilder->executeQuery()->iterateAssociative() as $row) {
+            // TODO: typo3/cms-core:14.0 Remove this condition, should always be an instance now.
+            if (!$this->tsfe->sys_page instanceof PageRepository) {
+                continue;
+            }
+
             $row = $this->tsfe->sys_page->getLanguageOverlay($tableName, $row);
             if (is_array($row)) {
                 $rows[] = $row;
