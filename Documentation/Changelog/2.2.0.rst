@@ -16,7 +16,9 @@ Features
 Fixes
 -----
 
-Nothing
+* Handle broken opening hours.
+  Those are skipped during import and written as error to TYPO3 logs.
+  That way entries with broken opening hours can still be imported.
 
 Tasks
 -----

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <doktype>4</doktype>
+        <title>Rootpage</title>
+        <is_siteroot>1</is_siteroot>
+    </pages>
+    <pages>
+        <uid>10</uid>
+        <pid>1</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <doktype>254</doktype>
+        <title>Storage folder</title>
+    </pages>
+
+    <sys_language>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>English</title>
+        <flag>en-us-gb</flag>
+        <language_isocode>en</language_isocode>
+    </sys_language>
+
+    <tx_thuecat_import_configuration>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1613400587</tstamp>
+        <crdate>1613400558</crdate>
+        <cruser_id>1</cruser_id>
+        <disable>0</disable>
+        <title>Tourist Attraction</title>
+        <type>static</type>
+        <configuration><![CDATA[<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+            <T3FlexForms>
+                <data>
+                    <sheet index="sDEF">
+                        <language index="lDEF">
+                            <field index="storagePid">
+                                <value index="vDEF">10</value>
+                            </field>
+                            <field index="urls">
+                                <el index="el">
+                                    <field index="602a89f54d694654233086">
+                                        <value index="url">
+                                            <el>
+                                                <field index="url">
+                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-broken-opening-hour</value>
+                                                </field>
+                                            </el>
+                                        </value>
+                                        <value index="_TOGGLE">0</value>
+                                    </field>
+                                </el>
+                            </field>
+                        </language>
+                    </sheet>
+                </data>
+            </T3FlexForms>
+        ]]></configuration>
+    </tx_thuecat_import_configuration>
+</dataset>

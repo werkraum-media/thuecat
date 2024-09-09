@@ -1,0 +1,97 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-broken-opening-hour",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "One specialOpeningHoursSpecification misses opens and closes, leading to type error"
+            },
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                }
+            ],
+            "schema:specialOpeningHoursSpecification": [
+                {
+                    "@id": "genid-1dccaefc0e06401c93068c8081b7ea8c294892-b11",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Thursday"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-19"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-19"
+                    }
+                },
+                {
+                    "@id": "genid-1dccaefc0e06401c93068c8081b7ea8c294892-b12",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:opens": {
+                        "@type": "schema:Time",
+                        "@value": "09:30:00"
+                    },
+                    "schema:closes": {
+                        "@type": "schema:Time",
+                        "@value": "18:00:00"
+                    },
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Thursday"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-19"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-19"
+                    }
+                }
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            }
+        }
+    ]
+}
