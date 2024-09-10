@@ -108,7 +108,12 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     {
         return [
             self::getInstancePath() . '/typo3temp/var/log/typo3_0493d91d8e.log',
-            self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log',
+            $this->getErrorLogFile(),
         ];
+    }
+
+    protected function getErrorLogFile(): string
+    {
+        return self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log';
     }
 }

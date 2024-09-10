@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
 
 use DateTimeImmutable;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\InvalidDataException;
 
 class OpeningHour
 {
@@ -31,9 +32,9 @@ class OpeningHour
 
     protected ?DateTimeImmutable $validThrough = null;
 
-    protected DateTimeImmutable $opens;
+    protected ?DateTimeImmutable $opens = null;
 
-    protected DateTimeImmutable $closes;
+    protected ?DateTimeImmutable $closes = null;
 
     /**
      * @var string[]
@@ -52,11 +53,19 @@ class OpeningHour
 
     public function getOpens(): DateTimeImmutable
     {
+        if ($this->opens === null) {
+            throw new InvalidDataException('Opens was empty for opening hour.');
+        }
+
         return $this->opens;
     }
 
     public function getCloses(): DateTimeImmutable
     {
+        if ($this->closes === null) {
+            throw new InvalidDataException('Closes was empty for opening hour.');
+        }
+
         return $this->closes;
     }
 

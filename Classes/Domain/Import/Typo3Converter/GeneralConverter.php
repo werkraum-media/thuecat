@@ -29,6 +29,7 @@ use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\AccessibilitySpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Base;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\InvalidDataException;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MediaObject;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
@@ -378,13 +379,21 @@ class GeneralConverter implements Converter
         $data = [];
 
         foreach ($openingHours as $openingHour) {
-            $data[] = array_filter([
-                'opens' => $openingHour->getOpens()->format('H:i:s'),
-                'closes' => $openingHour->getCloses()->format('H:i:s'),
-                'from' => $openingHour->getValidFrom() ?? '',
-                'through' => $openingHour->getValidThrough() ?? '',
-                'daysOfWeek' => $openingHour->getDaysOfWeek(),
-            ]);
+            try {
+                $data[] = array_filter([
+                    'opens' => $openingHour->getOpens()->format('H:i:s'),
+                    'closes' => $openingHour->getCloses()->format('H:i:s'),
+                    'from' => $openingHour->getValidFrom() ?? '',
+                    'through' => $openingHour->getValidThrough() ?? '',
+                    'daysOfWeek' => $openingHour->getDaysOfWeek(),
+                ]);
+            } catch (InvalidDataException $e) {
+                $this->logger->error('Could not import opening hour due to type error: {errorMessage}', [
+                    'errorMessage' => $e->getMessage(),
+                    'openingHour' => var_export($openingHour, true),
+                ]);
+                continue;
+            }
         }
 
         return json_encode($data, JSON_THROW_ON_ERROR) ?: '';

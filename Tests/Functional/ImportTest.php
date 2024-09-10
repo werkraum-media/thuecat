@@ -359,6 +359,32 @@ class ImportTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSingleSlogan.php');
     }
 
+    #[Test]
+    public function importsWithBrokenOpeningHour(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsWithBrokenOpeningHour.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-broken-opening-hour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
+        self::assertCount(1, $this->getAllRecords('tx_thuecat_tourist_attraction'));
+        $specialOpeningHours = json_decode($records[0]['special_opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($specialOpeningHours);
+        self::assertCount(1, $specialOpeningHours);
+
+        $this->expectErrors = true;
+        $loggedErrors = file_get_contents($this->getErrorLogFile());
+        self::assertIsString($loggedErrors);
+        self::assertStringContainsString(
+            'Could not import opening hour due to type error: Opens was empty for opening hour.',
+            $loggedErrors
+        );
+        self::assertStringContainsString('\'closes\' => NULL,', $loggedErrors);
+    }
+
     private function importConfiguration(): void
     {
         $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
