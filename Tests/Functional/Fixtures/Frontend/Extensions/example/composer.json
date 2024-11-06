@@ -1,0 +1,28 @@
+{
+    "name": "werkraummedia/example",
+    "description": "Example extension for functional tests",
+    "type": "typo3-cms-extension",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/werkraum-media/thuecat",
+    "authors": [
+        {
+            "name": "Daniel Siepmann",
+            "email": "coding@daniel-siepmann.de",
+            "homepage": "https://daniel-siepmann.de/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "WerkraumMedia\\Example\\": "Classes/"
+        }
+    },
+    "require": {
+        "werkraummedia/thuecat": "*"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "example"
+        }
+    }
+}

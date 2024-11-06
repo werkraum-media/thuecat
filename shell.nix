@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
-  php = pkgs.php82.buildEnv {
+  php = pkgs.php83.buildEnv {
     extensions = { enabled, all }: enabled ++ (with all; [
       xdebug
     ]);
@@ -11,7 +11,7 @@ let
       memory_limit = 4G
     '';
   };
-  inherit(pkgs.php82Packages) composer;
+  inherit(php.packages) composer;
 
   projectInstall = pkgs.writeShellApplication {
     name = "project-install";
@@ -49,7 +49,7 @@ let
     '';
   };
 
-in pkgs.mkShell {
+in pkgs.mkShellNoCC {
   name = "TYPO3 Extension ThüCAT";
   buildInputs = [
     php

@@ -47,7 +47,6 @@ class Extension
     public static function registerExtLocalconfConfigConfig(): void
     {
         self::addCaching();
-        self::addContentElements();
         self::addPageTypesExtLocalconf();
     }
 
@@ -59,31 +58,6 @@ class Extension
     public static function getIconPath(): string
     {
         return 'EXT:' . self::EXTENSION_KEY . '/Resources/Public/Icons/';
-    }
-
-    private static function addContentElements(): void
-    {
-        $languagePath = self::getLanguagePath() . 'locallang_tca.xlf:tt_content';
-
-        // TODO: typo3/cms-core:14.0 Remove this code block as CEs are auto registered.
-        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->__toString(), '13.0', '<')) {
-            ExtensionManagementUtility::addPageTSConfig('
-                mod.wizards.newContentElement.wizardItems.thuecat {
-                    header = ' . $languagePath . '.group
-                    show = *
-                    elements {
-                        thuecat_tourist_attraction{
-                            title = ' . $languagePath . '.thuecat_tourist_attraction
-                            description =  ' . $languagePath . '.thuecat_tourist_attraction.description
-                            iconIdentifier = tt_content_thuecat_tourist_attraction
-                            tt_content_defValues {
-                                CType = thuecat_tourist_attraction
-                            }
-                        }
-                    }
-                }
-            ');
-        }
     }
 
     private static function addPageTypesExtTables(): void

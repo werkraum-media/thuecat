@@ -1,11 +1,23 @@
 page = PAGE
 page.10 < styles.content.get
 
-lib.thuecatContentElement {
+tt_content.thuecat_tourist_attraction =< lib.contentElement
+tt_content.thuecat_tourist_attraction {
+    templateName = TouristAttraction
+    dataProcessing {
+        10 = WerkraumMedia\ThueCat\Frontend\DataProcessing\ResolveEntities
+        10 {
+            table = tx_thuecat_tourist_attraction
+            uids.data = field:records
+        }
+    }
+}
+
+lib.contentElement {
     partialRootPaths {
-        0 = EXT:thuecat/Tests/Functional/Fixtures/Frontend/Resources/Private/Partials/ContentElement/
+        10 = EXT:example/Resources/Private/Partials/ContentElement/
     }
     templateRootPaths {
-        0 = EXT:thuecat/Tests/Functional/Fixtures/Frontend/Resources/Private/Templates/ContentElement/
+        10 = EXT:example/Resources/Private/Templates/ContentElement/
     }
 }
