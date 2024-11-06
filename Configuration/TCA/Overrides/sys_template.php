@@ -10,11 +10,6 @@ defined('TYPO3') or die();
 (static function (string $extensionKey, string $tableName) {
     ExtensionManagementUtility::addStaticFile(
         $extensionKey,
-        'Configuration/TypoScript/ContentElements',
-        'ThüCAT - Content Elements'
-    );
-    ExtensionManagementUtility::addStaticFile(
-        $extensionKey,
         'Configuration/TypoScript/PageTypes',
         'ThüCAT - Page Types'
     );

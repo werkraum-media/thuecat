@@ -311,12 +311,6 @@
             <trans-unit id="tt_content.group" xml:space="preserve">
                 <source>ThüCAT</source>
             </trans-unit>
-            <trans-unit id="tt_content.thuecat_tourist_attraction" xml:space="preserve">
-                <source>Tourist Attraction</source>
-            </trans-unit>
-            <trans-unit id="tt_content.thuecat_tourist_attraction.description" xml:space="preserve">
-                <source>Renders selected tourist attractions</source>
-            </trans-unit>
 
             <trans-unit id="pages.group" xml:space="preserve">
                 <source>ThüCAT</source>

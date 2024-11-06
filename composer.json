@@ -74,6 +74,12 @@
             "phpstan/extension-installer": true
         }
     },
+    "scripts": {
+        "post-autoload-dump": [
+            "mkdir -p .Build/web/typo3conf/ext/",
+            "[ -L .Build/web/typo3conf/ext/thuecat ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/thuecat"
+        ]
+    },
     "extra": {
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",

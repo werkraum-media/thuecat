@@ -1,9 +1,0 @@
-lib.thuecatContentElement =< lib.contentElement
-lib.thuecatContentElement {
-    partialRootPaths {
-        0 = EXT:thuecat/Resources/Private/Partials/Frontend/ContentElement/
-    }
-    templateRootPaths {
-        0 = EXT:thuecat/Resources/Private/Templates/Frontend/ContentElement/
-    }
-}
