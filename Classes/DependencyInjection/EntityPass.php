@@ -47,8 +47,8 @@ class EntityPass implements CompilerPassInterface
                 'registerEntityClass',
                 [
                     $definition->getClass(),
-                    call_user_func([$definition->getClass(), 'getPriority']),
-                    call_user_func([$definition->getClass(), 'getSupportedTypes']),
+                    $definition->getClass()::getPriority(),
+                    $definition->getClass()::getSupportedTypes(),
                 ]
             );
         }
