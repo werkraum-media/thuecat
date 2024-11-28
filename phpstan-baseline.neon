@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getPriority'\\} given\\.$#"
-			count: 1
-			path: Classes/DependencyInjection/EntityPass.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{string, 'getSupportedTypes'\\} given\\.$#"
-			count: 1
-			path: Classes/DependencyInjection/EntityPass.php
-
-		-
 			message: "#^Method WerkraumMedia\\\\ThueCat\\\\Domain\\\\Import\\\\EntityMapper\\:\\:mapDataToEntity\\(\\) should return object but returns mixed\\.$#"
 			count: 1
 			path: Classes/Domain/Import/EntityMapper.php
