@@ -45,15 +45,15 @@ class GeneralConverterTest extends TestCase
     #[Test]
     public function canBeCreated(): void
     {
-        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
-        $importer = $this->createStub(Importer::class);
-        $languageHandling = $this->createStub(LanguageHandling::class);
-        $organisationRepository = $this->createStub(OrganisationRepository::class);
-        $townRepository = $this->createStub(TownRepository::class);
-        $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
-        $nameExtractor = $this->createStub(NameExtractor::class);
-        $logManager = $this->createStub(LogManager::class);
-        $logManager->method('getLogger')->willReturn($this->createStub(Logger::class));
+        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
+        $importer = self::createStub(Importer::class);
+        $languageHandling = self::createStub(LanguageHandling::class);
+        $organisationRepository = self::createStub(OrganisationRepository::class);
+        $townRepository = self::createStub(TownRepository::class);
+        $parkingFacilityRepository = self::createStub(ParkingFacilityRepository::class);
+        $nameExtractor = self::createStub(NameExtractor::class);
+        $logManager = self::createStub(LogManager::class);
+        $logManager->method('getLogger')->willReturn(self::createStub(Logger::class));
 
         $subject = new GeneralConverter(
             $resolveForeignReference,
@@ -75,17 +75,17 @@ class GeneralConverterTest extends TestCase
     #[Test]
     public function skipsWithoutManager(): void
     {
-        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
-        $importer = $this->createStub(Importer::class);
+        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
+        $importer = self::createStub(Importer::class);
         $importer->method('importConfiguration')->willReturn(new ImportLog());
-        $languageHandling = $this->createStub(LanguageHandling::class);
+        $languageHandling = self::createStub(LanguageHandling::class);
         $languageHandling->method('getLanguageUidForString')->willReturn(0);
-        $organisationRepository = $this->createStub(OrganisationRepository::class);
-        $townRepository = $this->createStub(TownRepository::class);
-        $parkingFacilityRepository = $this->createStub(ParkingFacilityRepository::class);
-        $nameExtractor = $this->createStub(NameExtractor::class);
-        $logManager = $this->createStub(LogManager::class);
-        $logManager->method('getLogger')->willReturn($this->createStub(Logger::class));
+        $organisationRepository = self::createStub(OrganisationRepository::class);
+        $townRepository = self::createStub(TownRepository::class);
+        $parkingFacilityRepository = self::createStub(ParkingFacilityRepository::class);
+        $nameExtractor = self::createStub(NameExtractor::class);
+        $logManager = self::createStub(LogManager::class);
+        $logManager->method('getLogger')->willReturn(self::createStub(Logger::class));
 
         $subject = new GeneralConverter(
             $resolveForeignReference,

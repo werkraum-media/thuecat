@@ -37,7 +37,7 @@ class NameExtractorTest extends TestCase
     #[Test]
     public function canBeCreated(): void
     {
-        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
+        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
 
         $subject = new NameExtractor(
             $resolveForeignReference
@@ -52,7 +52,7 @@ class NameExtractorTest extends TestCase
     #[Test]
     public function extractsNameFromString(): void
     {
-        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
+        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
 
         $subject = new NameExtractor(
             $resolveForeignReference
@@ -67,11 +67,11 @@ class NameExtractorTest extends TestCase
     #[Test]
     public function extractsNameFromForeignReference(): void
     {
-        $place = $this->createStub(Place::class);
+        $place = self::createStub(Place::class);
         $place->method('getName')->willReturn('Full Name');
         $resolveForeignReference = $this->createResolverForObject($place);
 
-        $foreignReference = $this->createStub(ForeignReference::class);
+        $foreignReference = self::createStub(ForeignReference::class);
 
         $subject = new NameExtractor(
             $resolveForeignReference
@@ -86,12 +86,12 @@ class NameExtractorTest extends TestCase
     #[Test]
     public function extractsCombinedNameFromForeignReference(): void
     {
-        $person = $this->createStub(Person::class);
+        $person = self::createStub(Person::class);
         $person->method('getGivenName')->willReturn('Full');
         $person->method('getFamilyName')->willReturn('Name');
         $resolveForeignReference = $this->createResolverForObject($person);
 
-        $foreignReference = $this->createStub(ForeignReference::class);
+        $foreignReference = self::createStub(ForeignReference::class);
 
         $subject = new NameExtractor(
             $resolveForeignReference
@@ -106,13 +106,13 @@ class NameExtractorTest extends TestCase
     #[Test]
     public function extractsCombinedNameFromForeignReferenceInsteadOfName(): void
     {
-        $person = $this->createStub(Person::class);
+        $person = self::createStub(Person::class);
         $person->method('getName')->willReturn('Low Priority');
         $person->method('getGivenName')->willReturn('Full');
         $person->method('getFamilyName')->willReturn('Name');
         $resolveForeignReference = $this->createResolverForObject($person);
 
-        $foreignReference = $this->createStub(ForeignReference::class);
+        $foreignReference = self::createStub(ForeignReference::class);
 
         $subject = new NameExtractor(
             $resolveForeignReference
@@ -129,7 +129,7 @@ class NameExtractorTest extends TestCase
      */
     private function createResolverForObject(object $object): Stub
     {
-        $resolveForeignReference = $this->createStub(ResolveForeignReference::class);
+        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
         $resolveForeignReference->method('resolve')->willReturn($object);
 
         return $resolveForeignReference;

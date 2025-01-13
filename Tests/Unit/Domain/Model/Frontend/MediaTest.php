@@ -225,8 +225,8 @@ class MediaTest extends TestCase
     public function returnsSetEditorialImages(): void
     {
         $subject = new Media('');
-        $reference1 = $this->createStub(FileReference::class);
-        $reference2 = $this->createStub(FileReference::class);
+        $reference1 = self::createStub(FileReference::class);
+        $reference2 = self::createStub(FileReference::class);
         $subject->setEditorialImages([
             $reference1,
             $reference2,
@@ -272,8 +272,8 @@ class MediaTest extends TestCase
                 ],
             ],
         ]) ?: '');
-        $reference1 = $this->createStub(FileReference::class);
-        $reference2 = $this->createStub(FileReference::class);
+        $reference1 = self::createStub(FileReference::class);
+        $reference2 = self::createStub(FileReference::class);
         $subject->setEditorialImages([
             $reference1,
             $reference2,

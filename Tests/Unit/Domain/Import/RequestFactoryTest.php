@@ -37,8 +37,8 @@ class RequestFactoryTest extends TestCase
     #[Test]
     public function canBeCreated(): void
     {
-        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = $this->createStub(Typo3RequestFactory::class);
+        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $requestFactory = self::createStub(Typo3RequestFactory::class);
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -53,8 +53,8 @@ class RequestFactoryTest extends TestCase
     #[Test]
     public function returnsRequestWithJsonIdFormat(): void
     {
-        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
+        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -71,9 +71,9 @@ class RequestFactoryTest extends TestCase
     #[Test]
     public function returnsRequestWithApiKeyWhenConfigured(): void
     {
-        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
-        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
+        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -90,9 +90,9 @@ class RequestFactoryTest extends TestCase
     #[Test]
     public function returnsRequestWithoutApiKeyWhenUnkown(): void
     {
-        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
-        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
+        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
