@@ -154,7 +154,7 @@ class ImportTest extends TestCase
 
         $configuration2 = new ImportConfiguration();
         $subject->start($configuration2);
-        $importLogEntry = $this->createStub(ImportLogEntry::class);
+        $importLogEntry = self::createStub(ImportLogEntry::class);
         $subject->getLog()->addEntry($importLogEntry);
         $subject->end();
 
@@ -180,7 +180,7 @@ class ImportTest extends TestCase
 
         $configuration2 = new ImportConfiguration();
         $subject->start($configuration2);
-        $importLogEntry = $this->createStub(ImportLogEntry::class);
+        $importLogEntry = self::createStub(ImportLogEntry::class);
         $importLogEntry->method('getRemoteId')->willReturn('https://example.com/remote-id');
         $subject->getLog()->addEntry($importLogEntry);
         $subject->end();

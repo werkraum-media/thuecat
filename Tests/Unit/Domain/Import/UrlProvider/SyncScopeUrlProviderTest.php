@@ -34,7 +34,7 @@ class SyncScopeUrlProviderTest extends TestCase
     #[Test]
     public function canBeCreated(): void
     {
-        $fetchData = $this->createStub(FetchData::class);
+        $fetchData = self::createStub(FetchData::class);
 
         $subject = new SyncScopeUrlProvider(
             $fetchData
@@ -49,7 +49,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('type', 'syncScope');
 
-        $fetchData = $this->createStub(FetchData::class);
+        $fetchData = self::createStub(FetchData::class);
 
         $subject = new SyncScopeUrlProvider(
             $fetchData
@@ -65,7 +65,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = $this->createStub(FetchData::class);
+        $fetchData = self::createStub(FetchData::class);
         $fetchData->method('updatedNodes')->willReturn([
             'data' => [
                 'canBeCreated' => [
@@ -90,7 +90,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = $this->createStub(FetchData::class);
+        $fetchData = self::createStub(FetchData::class);
         $fetchData->method('getFullResourceUrl')->willReturnOnConsecutiveCalls(
             'https://example.com/api/835224016581-dara',
             'https://example.com/api/165868194223-zmqf'

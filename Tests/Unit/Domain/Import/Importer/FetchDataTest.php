@@ -40,9 +40,9 @@ class FetchDataTest extends TestCase
     #[Test]
     public function canBeCreated(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
         $subject = new FetchData(
             $requestFactory,
@@ -56,17 +56,17 @@ class FetchDataTest extends TestCase
     #[Test]
     public function returnsParsedJsonLdBasedOnUrl(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
-        $request = $this->createStub(RequestInterface::class);
-        $response = $this->createStub(ResponseInterface::class);
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
 
         $requestFactory->method('createRequest')->willReturn($request);
         $httpClient->method('sendRequest')->willReturn($response);
 
-        $body = $this->createStub(StreamInterface::class);
+        $body = self::createStub(StreamInterface::class);
         $body->method('__toString')->willReturn('{"@graph":[{"@id":"https://example.com/resources/018132452787-ngbe"}]}');
 
         $response->method('getStatusCode')->willReturn(200);
@@ -91,18 +91,18 @@ class FetchDataTest extends TestCase
     #[Test]
     public function returnsEmptyArrayInCaseOfError(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
-        $request = $this->createStub(RequestInterface::class);
-        $response = $this->createStub(ResponseInterface::class);
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
 
         $requestFactory->method('createRequest')->willReturn($request);
 
         $httpClient->method('sendRequest')->willReturn($response);
 
-        $body = $this->createStub(StreamInterface::class);
+        $body = self::createStub(StreamInterface::class);
         $body->method('__toString')->willReturn('[]');
 
         $response->method('getStatusCode')->willReturn(200);
@@ -121,9 +121,9 @@ class FetchDataTest extends TestCase
     #[Test]
     public function returnsResultFromCacheIfAvailable(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
         $cache->method('get')->willReturn([
             '@graph' => [
@@ -152,14 +152,14 @@ class FetchDataTest extends TestCase
     #[Test]
     public function throwsExceptionOn404(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
-        $request = $this->createStub(RequestInterface::class);
-        $response = $this->createStub(ResponseInterface::class);
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
 
-        $uri = $this->createStub(UriInterface::class);
+        $uri = self::createStub(UriInterface::class);
         $uri->method('__toString')->willReturn('https://example.com/resources/018132452787-ngbe');
         $request->method('getUri')->willReturn($uri);
 
@@ -167,7 +167,7 @@ class FetchDataTest extends TestCase
 
         $httpClient->method('sendRequest')->willReturn($response);
 
-        $body = $this->createStub(StreamInterface::class);
+        $body = self::createStub(StreamInterface::class);
         $body->method('__toString')->willReturn('{"error":"404"}');
 
         $response->method('getStatusCode')->willReturn(404);
@@ -189,12 +189,12 @@ class FetchDataTest extends TestCase
     #[Test]
     public function throwsExceptionOn401(): void
     {
-        $requestFactory = $this->createStub(RequestFactoryInterface::class);
-        $httpClient = $this->createStub(ClientInterface::class);
-        $cache = $this->createStub(FrontendInterface::class);
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ClientInterface::class);
+        $cache = self::createStub(FrontendInterface::class);
 
-        $request = $this->createStub(RequestInterface::class);
-        $response = $this->createStub(ResponseInterface::class);
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
 
         $requestFactory->method('createRequest')->willReturn($request);
 

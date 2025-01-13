@@ -49,10 +49,10 @@ class EntityCollectionTest extends TestCase
     #[Test]
     public function returnsFirstEntityForDefaultLanguage(): void
     {
-        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation = self::createStub(Entity::class);
         $entityWithTranslation->method('isForDefaultLanguage')->willReturn(false);
 
-        $entityWithDefaultLanguage = $this->createStub(Entity::class);
+        $entityWithDefaultLanguage = self::createStub(Entity::class);
         $entityWithDefaultLanguage->method('isForDefaultLanguage')->willReturn(true);
 
         $subject = new EntityCollection();
@@ -68,7 +68,7 @@ class EntityCollectionTest extends TestCase
     #[Test]
     public function returnsNullIfNoEntityForDefaultLanguageExists(): void
     {
-        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation = self::createStub(Entity::class);
         $entityWithTranslation->method('isForDefaultLanguage')->willReturn(false);
 
         $subject = new EntityCollection();
@@ -82,7 +82,7 @@ class EntityCollectionTest extends TestCase
     #[Test]
     public function returnsEntitiesToTranslate(): void
     {
-        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation = self::createStub(Entity::class);
         $entityWithTranslation->method('isTranslation')->willReturn(true);
         $entityWithTranslation->method('exists')->willReturn(false);
 
@@ -100,7 +100,7 @@ class EntityCollectionTest extends TestCase
     #[Test]
     public function returnsExistingEntities(): void
     {
-        $entityWithTranslation = $this->createStub(Entity::class);
+        $entityWithTranslation = self::createStub(Entity::class);
         $entityWithTranslation->method('exists')->willReturn(true);
 
         $subject = new EntityCollection();
