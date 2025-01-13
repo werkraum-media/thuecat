@@ -24,8 +24,12 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
+use DateTimeImmutable;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use TypeError;
 
 abstract class AbstractImportTest extends FunctionalTestCase
 {
@@ -77,6 +81,8 @@ abstract class AbstractImportTest extends FunctionalTestCase
         parent::setUp();
         GuzzleClientFaker::registerClient();
 
+        $this->setDateAspect(new DateTimeImmutable('2024-09-19T00:00:00+00:00'));
+
         $this->setUpBackendUserFromFixture(1);
 
         $GLOBALS['LANG'] = $this->getContainer()->get(LanguageService::class);
@@ -124,5 +130,19 @@ abstract class AbstractImportTest extends FunctionalTestCase
     protected function getErrorLogFile(): string
     {
         return self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log';
+    }
+
+    /**
+     * @api Actual tests can use this method to define the actual date of "now".
+     */
+    protected function setDateAspect(DateTimeImmutable $dateTime): void
+    {
+        $context = $this->getContainer()->get(Context::class);
+        if (!$context instanceof Context) {
+            throw new TypeError('Retrieved context was of unexpected type.', 1638182021);
+        }
+
+        $aspect = new DateTimeAspect($dateTime);
+        $context->setAspect('date', $aspect);
     }
 }
