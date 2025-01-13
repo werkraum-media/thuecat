@@ -444,7 +444,7 @@ class ImportTest extends AbstractImportTest
         $loggedErrors = file_get_contents($this->getErrorLogFile());
         self::assertIsString($loggedErrors);
         self::assertStringContainsString(
-            'Could not import opening hour due to type error: Opens was empty for opening hour.',
+            'Could not import opening hour of entity "https://thuecat.org/resources/attraction-with-broken-opening-hour" due to type error: Opens was empty for opening hour.',
             $loggedErrors
         );
         self::assertStringContainsString('\'closes\' => NULL,', $loggedErrors);
