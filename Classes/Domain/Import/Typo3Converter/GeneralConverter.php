@@ -188,8 +188,8 @@ class GeneralConverter implements Converter
 
             'parking_facility_near_by' => $entity instanceof Base ? implode(',', $this->getParkingFacilitiesNearByUids($entity)) : '',
 
-            'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getOpeningHoursSpecification()) : '',
-            'special_opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getSpecialOpeningHoursSpecification()) : '',
+            'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getOpeningHoursSpecification(), $entity) : '',
+            'special_opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getSpecialOpeningHoursSpecification(), $entity) : '',
             'address' => $entity instanceof Place ? $this->getAddress($entity) : '',
             'url' => $entity->getUrls()[0] ?? '',
             'offers' => $entity instanceof Place ? $this->getOffers($entity) : '',
@@ -374,7 +374,7 @@ class GeneralConverter implements Converter
     /**
      * @param OpeningHour[] $openingHours
      */
-    private function getOpeningHours(array $openingHours): string
+    private function getOpeningHours(array $openingHours, Minimum $entity): string
     {
         $data = [];
 
@@ -388,8 +388,9 @@ class GeneralConverter implements Converter
                     'daysOfWeek' => $openingHour->getDaysOfWeek(),
                 ]);
             } catch (InvalidDataException $e) {
-                $this->logger->error('Could not import opening hour due to type error: {errorMessage}', [
+                $this->logger->error('Could not import opening hour of entity "{entityId}" due to type error: {errorMessage}', [
                     'errorMessage' => $e->getMessage(),
+                    'entityId' => $entity->getId(),
                     'openingHour' => var_export($openingHour, true),
                 ]);
                 continue;
