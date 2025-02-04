@@ -12,6 +12,9 @@ Features
 * Add TYPO3 wizard to select pages in configuration.
   That should ease live of editors, compared to manually inserting proper page uid.
 
+* Add title to static import configuration.
+  This title is auto filled on save with the titles of provided URLs.
+
 Fixes
 -----
 
