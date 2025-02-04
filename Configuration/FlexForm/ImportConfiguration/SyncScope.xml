@@ -11,8 +11,16 @@
                     <storagePid>
                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.storagePid</label>
                         <config>
-                            <type>number</type>
-                            <required type="boolean">1</required>
+                            <type>group</type>
+                            <allowed>pages</allowed>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
+                            <size>1</size>
+                            <suggestOptions>
+                                <default>
+                                    <addWhere>AND pages.doktype = 254</addWhere>
+                                </default>
+                            </suggestOptions>
                         </config>
                     </storagePid>
                     <syncScopeId>

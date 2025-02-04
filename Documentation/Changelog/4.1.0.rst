@@ -1,0 +1,29 @@
+4.1.0
+=====
+
+Breaking
+--------
+
+Nothing
+
+Features
+--------
+
+* Add TYPO3 wizard to select pages in configuration.
+  That should ease live of editors, compared to manually inserting proper page uid.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+
