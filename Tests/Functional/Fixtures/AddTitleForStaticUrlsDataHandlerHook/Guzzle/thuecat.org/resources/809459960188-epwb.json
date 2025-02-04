@@ -1,0 +1,25 @@
+{
+  "@graph": [
+    {
+      "@type": [
+        "schema:Thing",
+        "schema:Place",
+        "schema:Organization",
+        "schema:LocalBusiness",
+        "schema:TouristAttraction",
+        "thuecat:Building",
+        "ttgds:PointOfInterest"
+      ],
+      "schema:name": [
+        {
+          "@language": "de",
+          "@value": "Titel Zwei"
+        },
+        {
+          "@language": "en",
+          "@value": "Title Two"
+        }
+      ]
+    }
+  ]
+}

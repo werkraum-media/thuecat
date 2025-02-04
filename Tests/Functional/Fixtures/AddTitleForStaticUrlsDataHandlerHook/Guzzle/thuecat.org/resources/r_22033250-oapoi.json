@@ -1,0 +1,29 @@
+{
+  "@graph": [
+    {
+      "@type": [
+        "schema:Thing",
+        "schema:Place",
+        "schema:CivicStructure",
+        "schema:Organization",
+        "schema:LocalBusiness",
+        "schema:Museum",
+        "schema:TouristAttraction",
+        "thuecat:MuseumOfScienceMuseumOfNaturalScience",
+        "thuecat:CultureHistoricalMuseum",
+        "thuecat:SpecialExhibition",
+        "ttgds:PointOfInterest"
+      ],
+      "schema:name": [
+        {
+          "@language": "de",
+          "@value": "Titel Eins"
+        },
+        {
+          "@language": "en",
+          "@value": "Title One"
+        }
+      ]
+    }
+  ]
+}

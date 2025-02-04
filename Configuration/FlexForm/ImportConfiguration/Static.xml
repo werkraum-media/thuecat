@@ -32,6 +32,15 @@
                                 <title>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url</title>
                                 <type>array</type>
                                 <el>
+                                    <title>
+                                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url.title.label</label>
+                                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url.title.description</description>
+                                        <config>
+                                            <type>input</type>
+                                            <eval>trim</eval>
+                                            <readOnly type="boolean">1</readOnly>
+                                        </config>
+                                    </title>
                                     <url>
                                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.url</label>
                                         <config>

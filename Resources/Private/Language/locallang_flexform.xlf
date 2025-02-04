@@ -13,6 +13,12 @@
             <trans-unit id="importConfiguration.static.urls" xml:space="preserve">
                 <source>URLs</source>
             </trans-unit>
+            <trans-unit id="importConfiguration.static.url.title.label" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.static.url.title.description" xml:space="preserve">
+                <source>Will be auto updated on save, based on given URL.</source>
+            </trans-unit>
             <trans-unit id="importConfiguration.static.url" xml:space="preserve">
                 <source>URL</source>
             </trans-unit>
