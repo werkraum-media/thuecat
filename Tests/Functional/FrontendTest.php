@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -672,6 +673,22 @@ class FrontendTest extends FunctionalTestCase
         $positionSecondHour = mb_strpos($result, $available2->format('d.m.Y'));
 
         self::assertLessThan($positionSecondHour, $positionFirstHour, 'Second hour does not come after first hour.');
+    }
+
+    #[Test]
+    public function closingDaysAreRendered(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/ClosingDays.php');
+
+        $request = new InternalRequest();
+        $request = $request->withPageId(2);
+        $request = $request->withAttribute('testingDateAspect', new DateTimeAspect(new DateTimeImmutable('2024-09-21')));
+
+        $result = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertStringContainsString('18.09.2024 - 25.09.2024', $result);
+        self::assertStringContainsString('Freitag: geschlossen', $result);
+        self::assertStringContainsString('Sonntag: geschlossen', $result);
     }
 
     #[Test]

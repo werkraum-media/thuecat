@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Address;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\Geo;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHourWithRequiredTiming;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\ContainedInPlace;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Shared\Organization;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\PropertyValues;
@@ -44,7 +45,7 @@ class Place extends Base
     protected ?Geo $geo = null;
 
     /**
-     * @var OpeningHour[]
+     * @var OpeningHourWithRequiredTiming[]
      */
     protected array $openingHoursSpecifications = [];
 
@@ -143,14 +144,14 @@ class Place extends Base
     }
 
     /**
-     * @return OpeningHour[]
+     * @return OpeningHourWithRequiredTiming[]
      */
     public function getOpeningHoursSpecification(): array
     {
         return GeneralUtility::makeInstance(DateBasedFilter::class)
             ->filterOutPreviousDates(
                 $this->openingHoursSpecifications,
-                function (OpeningHour $hour): ?DateTimeImmutable {
+                function (OpeningHourWithRequiredTiming $hour): ?DateTimeImmutable {
                     return $hour->getValidThrough();
                 }
             )
@@ -201,7 +202,7 @@ class Place extends Base
      */
     public function addOpeningHoursSpecification(OpeningHour $openingHour): void
     {
-        $this->openingHoursSpecifications[] = $openingHour;
+        $this->openingHoursSpecifications[] = OpeningHourWithRequiredTiming::fromOpeningHour($openingHour);
     }
 
     /**

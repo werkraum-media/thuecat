@@ -12,3 +12,6 @@ parameters:
     checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: true
     checkGenericClassInNonGenericObjectType: false
+    typo3:
+      requestGetAttributeMapping:
+        testingDateAspect: 'TYPO3\CMS\Core\Context\DateTimeAspect'

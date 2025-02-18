@@ -36,6 +36,8 @@ abstract class Place extends Base
 
     protected ?OpeningHours $specialOpeningHours = null;
 
+    protected ?OpeningHours $closingDays = null;
+
     /**
      * @var ObjectStorage<ParkingFacility>
      */
@@ -107,6 +109,14 @@ abstract class Place extends Base
             return null;
         }
         return $this->specialOpeningHours->getMerged();
+    }
+
+    public function getMergedClosingDays(): ?MergedOpeningHours
+    {
+        if ($this->closingDays === null) {
+            return null;
+        }
+        return $this->closingDays->getMerged();
     }
 
     public function getParkingFacilitiesNearBy(): ObjectStorage

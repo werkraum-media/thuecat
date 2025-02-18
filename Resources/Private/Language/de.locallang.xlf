@@ -35,6 +35,10 @@
                 <source>Public Holidays:</source>
                 <target>Feiertags:</target>
             </trans-unit>
+            <trans-unit id="content.openingHour.closed" xml:space="preserve">
+                <source>Closed</source>
+                <target>geschlossen</target>
+            </trans-unit>
             <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">
                 <source>Accommodation Offer</source>
                 <target>Unterkunft</target>

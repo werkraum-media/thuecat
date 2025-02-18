@@ -27,6 +27,9 @@
             <trans-unit id="content.openingHour.weekday.PublicHolidays" xml:space="preserve">
                 <source>Public Holidays:</source>
             </trans-unit>
+            <trans-unit id="content.openingHour.closed" xml:space="preserve">
+                <source>Closed</source>
+            </trans-unit>
             <trans-unit id="module.actions" xml:space="preserve">
                 <source>Actions</source>
             </trans-unit>

@@ -34,6 +34,11 @@ class MergedOpeningHourWeekDay
     ) {
     }
 
+    public function isClosed(): bool
+    {
+        return $this->opens === '' && $this->closes === '';
+    }
+
     public function getOpens(): string
     {
         return TimingFormat::format($this->opens);

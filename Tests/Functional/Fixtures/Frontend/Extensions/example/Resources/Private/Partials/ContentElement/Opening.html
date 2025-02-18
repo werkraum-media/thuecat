@@ -10,14 +10,29 @@
                 </f:else>
             </f:if>
             <h3>
-                {openingHour.from -> f:format.date(format: 'd.m.Y')} -
-                {openingHour.through -> f:format.date(format: 'd.m.Y')}
+                {openingHour.from -> f:format.date(format: 'd.m.Y')} - {openingHour.through -> f:format.date(format: 'd.m.Y')}
             </h3>
             <div>
                 <f:for each="{openingHour.daysOfWeekWithMondayFirstWeekDay}" as="weekday">
                     <div class="day-row">
                         <div class="day"><span>{f:translate(id: 'content.openingHour.weekday.{weekday}', default: weekday, extensionName: 'Thuecat')}</span></div>
-                        <div class="time"><span>{openingHour.opens} - {openingHour.closes}</span></div>
+                        <div class="time">
+                            <span>{openingHour.opens} - {openingHour.closes}</span>
+                        </div>
+                    </div>
+                </f:for>
+
+                <f:for each="{openingHour.weekDaysWithMondayFirstWeekDay}" as="day">
+                    <div class="day-row">
+                        {f:translate(
+                            id: 'content.openingHour.weekday.{day.dayOfWeek}',
+                            default: day.dayOfWeek,
+                            extensionName: 'Thuecat'
+                        )} {f:if(
+                            condition: day.closed,
+                            then: '{f:translate(id: "content.openingHour.closed", extensionName: "Thuecat")}',
+                            else: '{day.opens} - {day.closes}'
+                        )}
                     </div>
                 </f:for>
             </div>

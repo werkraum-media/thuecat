@@ -147,6 +147,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.special_opening_hours" xml:space="preserve">
                 <source>Special Opening Hours</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.closing_days" xml:space="preserve">
+                <source>Closing Days</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>

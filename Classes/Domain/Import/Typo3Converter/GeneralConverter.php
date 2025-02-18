@@ -38,6 +38,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Place;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHour;
+use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\OpeningHourWithRequiredTiming;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\PriceSpecification;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristInformation;
@@ -190,6 +191,7 @@ class GeneralConverter implements Converter
 
             'opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getOpeningHoursSpecification(), $entity) : '',
             'special_opening_hours' => $entity instanceof Place ? $this->getOpeningHours($entity->getSpecialOpeningHoursSpecification(), $entity) : '',
+            'closing_days' => $entity instanceof Place ? $this->getClosingDays($entity->getSpecialOpeningHoursSpecification(), $entity) : '',
             'address' => $entity instanceof Place ? $this->getAddress($entity) : '',
             'url' => $entity->getUrls()[0] ?? '',
             'offers' => $entity instanceof Place ? $this->getOffers($entity) : '',
@@ -372,7 +374,7 @@ class GeneralConverter implements Converter
     }
 
     /**
-     * @param OpeningHour[] $openingHours
+     * @param array<OpeningHour|OpeningHourWithRequiredTiming> $openingHours
      */
     private function getOpeningHours(array $openingHours, Minimum $entity): string
     {
@@ -380,9 +382,13 @@ class GeneralConverter implements Converter
 
         foreach ($openingHours as $openingHour) {
             try {
+                if ($openingHour->isClosingDay()) {
+                    continue;
+                }
+
                 $data[] = array_filter([
-                    'opens' => $openingHour->getOpens()->format('H:i:s'),
-                    'closes' => $openingHour->getCloses()->format('H:i:s'),
+                    'opens' => $openingHour->getOpens()?->format('H:i:s'),
+                    'closes' => $openingHour->getCloses()?->format('H:i:s'),
                     'from' => $openingHour->getValidFrom() ?? '',
                     'through' => $openingHour->getValidThrough() ?? '',
                     'daysOfWeek' => $openingHour->getDaysOfWeek(),
@@ -395,6 +401,28 @@ class GeneralConverter implements Converter
                 ]);
                 continue;
             }
+        }
+
+        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
+    }
+
+    /**
+     * @param OpeningHour[] $openingHours
+     */
+    private function getClosingDays(array $openingHours, Minimum $entity): string
+    {
+        $data = [];
+
+        foreach ($openingHours as $openingHour) {
+            if ($openingHour->isClosingDay() === false) {
+                continue;
+            }
+
+            $data[] = array_filter([
+                'from' => $openingHour->getValidFrom(),
+                'through' => $openingHour->getValidThrough(),
+                'daysOfWeek' => $openingHour->getDaysOfWeek(),
+            ]);
         }
 
         return json_encode($data, JSON_THROW_ON_ERROR) ?: '';

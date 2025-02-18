@@ -31,7 +31,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "WerkraumMedia\\ThueCat\\Tests\\": "Tests/"
+            "WerkraumMedia\\ThueCat\\Tests\\": "Tests/",
+            "WerkraumMedia\\Example\\": "Tests/Functional/Fixtures/Frontend/Extensions/example/Classes/"
         }
     },
     "require": {

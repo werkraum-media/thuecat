@@ -225,6 +225,14 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'closing_days' => [
+                'label' => $languagePath . '.closing_days',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
             'address' => [
                 'label' => $languagePath . '.address',
                 'l10n_mode' => 'exclude',
@@ -338,7 +346,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, slogan, start_of_construction, sanitation, other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, opening_hours, special_opening_hours, offers, accessibility_specification, address, url, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, parking_facility_near_by, --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
+                'showitem' => '--palette--;;language, title, description, slogan, start_of_construction, sanitation, other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, opening_hours, special_opening_hours, closing_days, offers, accessibility_specification, address, url, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, parking_facility_near_by, --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],
         ],
     ];

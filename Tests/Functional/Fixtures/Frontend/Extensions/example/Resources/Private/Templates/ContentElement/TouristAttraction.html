@@ -149,6 +149,13 @@
                         {f:render(partial: 'Opening', arguments: {openingHours: entity.specialOpeningHours})}
                     </div>
                 </f:if>
+
+                <f:if condition="{entity.mergedClosingDays}">
+                    <div class="col-md-6">
+                        <h2>{f:translate(id: 'content.closingDays', extensionName: 'Thuecat')}</h2>
+                        {f:render(partial: 'Opening', arguments: {openingHours: entity.mergedClosingDays})}
+                    </div>
+                </f:if>
             </div>
 
             <div class="thuecat__offers">
