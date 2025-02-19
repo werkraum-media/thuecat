@@ -29,7 +29,7 @@ Nothing
 Tasks
 -----
 
-Nothing
+* Change label `content.specialOpeningHours`.
 
 Deprecation
 -----------
