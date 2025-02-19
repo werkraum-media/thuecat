@@ -1,0 +1,88 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-close-days",
+            "@type": [
+                "schema:TouristAttraction"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Contains specialOpeningHoursSpecification with close days"
+            },
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                }
+            ],
+            "schema:specialOpeningHoursSpecification": [
+                {
+                    "@type": [
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Friday"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-20"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-22"
+                    }
+                },
+                {
+                    "@type": [
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Sunday"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-20"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-22"
+                    }
+                },
+                {
+                    "@type": [
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:opens": {
+                        "@type": "schema:Time",
+                        "@value": "09:30:00"
+                    },
+                    "schema:closes": {
+                        "@type": "schema:Time",
+                        "@value": "18:00:00"
+                    },
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Saturday"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-21"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2024-09-21"
+                    }
+                }
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            }
+        }
+    ]
+}

@@ -375,9 +375,9 @@ class ImportTest extends AbstractImportTestCase
 
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
         self::assertCount(1, $this->getAllRecords('tx_thuecat_tourist_attraction'));
-        $specialOpeningHours = json_decode($records[0]['special_opening_hours'], true, 512, JSON_THROW_ON_ERROR);
-        self::assertIsArray($specialOpeningHours);
-        self::assertCount(1, $specialOpeningHours);
+        $openingHours = json_decode($records[0]['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($openingHours);
+        self::assertCount(1, $openingHours);
 
         $this->expectErrors = true;
         $loggedErrors = file_get_contents($this->getErrorLogFile());
@@ -387,6 +387,19 @@ class ImportTest extends AbstractImportTestCase
             $loggedErrors
         );
         self::assertStringContainsString('\'closes\' => NULL,', $loggedErrors);
+    }
+
+    #[Test]
+    public function importsWithSpecialOpeningHoursContainingCloseDays(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsWithBrokenOpeningHour.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-close-days.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsWithSpecialOpeningHoursContainingCloseDays.php');
     }
 
     private function importConfiguration(): void

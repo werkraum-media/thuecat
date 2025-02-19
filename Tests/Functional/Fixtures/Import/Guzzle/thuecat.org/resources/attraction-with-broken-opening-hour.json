@@ -37,7 +37,7 @@
                     "@value": "thuecat:English"
                 }
             ],
-            "schema:specialOpeningHoursSpecification": [
+            "schema:openingHoursSpecification": [
                 {
                     "@id": "genid-1dccaefc0e06401c93068c8081b7ea8c294892-b11",
                     "@type": [

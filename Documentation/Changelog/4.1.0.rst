@@ -15,6 +15,12 @@ Features
 * Add title to static import configuration.
   This title is auto filled on save with the titles of provided URLs.
 
+* Add closing days.
+  Special opening hours without actual hours are now respected as closing days.
+  Those are imported in a dedicated field.
+
+  The closing days are exposed as new property `mergedClosingDays` in Fluid.
+
 Fixes
 -----
 
@@ -23,7 +29,7 @@ Nothing
 Tasks
 -----
 
-Nothing
+* Change label `content.specialOpeningHours`.
 
 Deprecation
 -----------
