@@ -18,7 +18,12 @@ Features
 Fixes
 -----
 
-Nothing
+* Prevent `Error: Call to undefined method TYPO3\CMS\Core\Database\Schema\SchemaInformation::introspectTable()` with newer TYPO3 v13 versions.
+  We now check for the old API, falling back to the new.
+  All of this is still `@internal` TYPO3 API.
+
+  The corresponding core change was commit `45a50e455955c78f6baa2aec3af3865101ee06b9`.
+  We also need to update `codappix/typo3-php-datasets` dev dependency for the same reason.
 
 Tasks
 -----

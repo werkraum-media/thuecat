@@ -54,7 +54,7 @@
         "typo3/cms-install": "^12.4 || ^13.4"
     },
     "require-dev": {
-        "codappix/typo3-php-datasets": "^1.4",
+        "codappix/typo3-php-datasets": "^1.4 || ^2.0",
         "friendsofphp/php-cs-fixer": "^3.40",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "1.10.46",

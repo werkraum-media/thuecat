@@ -92,9 +92,13 @@ jobs:
           - php-version: '8.3'
             typo3-version: '^12.4'
           - php-version: '8.2'
-            typo3-version: '^13.4'
+            typo3-version: '^13.4.18'
           - php-version: '8.3'
-            typo3-version: '^13.4'
+            typo3-version: '^13.4.18'
+          - php-version: '8.2'
+            typo3-version: '^13.4.19'
+          - php-version: '8.3'
+            typo3-version: '^13.4.19'
     steps:
       - uses: actions/checkout@v3
 
@@ -129,10 +133,16 @@ jobs:
             typo3-version: '^12.4'
             db-version: '8'
           - php-version: '8.2'
-            typo3-version: '^13.4'
+            typo3-version: '^13.4.18'
             db-version: '8'
           - php-version: '8.3'
-            typo3-version: '^13.4'
+            typo3-version: '^13.4.18'
+            db-version: '8'
+          - php-version: '8.2'
+            typo3-version: '^13.4.19'
+            db-version: '8'
+          - php-version: '8.3'
+            typo3-version: '^13.4.19'
             db-version: '8'
     steps:
       - uses: actions/checkout@v3

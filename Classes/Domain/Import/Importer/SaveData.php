@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 
+use RuntimeException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
@@ -161,12 +162,6 @@ class SaveData
 
     private function getExistingUid(Entity $entity): int
     {
-        $table = $this->connectionPool
-            ->getConnectionForTable($entity->getTypo3DatabaseTableName())
-            ->getSchemaInformation()
-            ->introspectTable($entity->getTypo3DatabaseTableName())
-        ;
-
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($entity->getTypo3DatabaseTableName());
         $queryBuilder->getRestrictions()->removeAll();
         $queryBuilder->select('uid');
@@ -175,7 +170,7 @@ class SaveData
             'remote_id',
             $queryBuilder->createNamedParameter($entity->getRemoteId())
         ));
-        if ($table->hasColumn('sys_language_uid')) {
+        if ($this->hasTableSysLanguageUidColumn($entity->getTypo3DatabaseTableName())) {
             $queryBuilder->andWhere($queryBuilder->expr()->eq(
                 'sys_language_uid',
                 $queryBuilder->createNamedParameter($entity->getTypo3SystemLanguageUid())
@@ -211,5 +206,32 @@ class SaveData
         }
 
         return 0;
+    }
+
+    private function hasTableSysLanguageUidColumn(string $tableName): bool
+    {
+        // Should probably be migrated to TCASchema (Factory) once we drop TYPO3 v12
+        $schemaInfo = $this->connectionPool
+            ->getConnectionForTable($tableName)
+            ->getSchemaInformation()
+        ;
+
+        // Old way prior TYPO3 v13.4.19
+        if (method_exists($schemaInfo, 'introspectTable')) {
+            return $schemaInfo
+                ->introspectTable($tableName)
+                ->hasColumn('sys_language_uid')
+            ;
+        }
+
+        // New since TYPO3 v13.4.19
+        if (method_exists($schemaInfo, 'getTableInfo')) {
+            return $schemaInfo
+                ->getTableInfo($tableName)
+                ->hasColumnInfo('sys_language_uid')
+            ;
+        }
+
+        throw new RuntimeException('Situation where we can not detect sys_language_uid behaviour.', 1762868185);
     }
 }

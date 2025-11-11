@@ -12,3 +12,5 @@ parameters:
   checkMissingIterableValueType: false
   reportUnmatchedIgnoredErrors: true
   checkGenericClassInNonGenericObjectType: false
+  ignoreErrors:
+    - message: "#^Call to function method_exists\\(\\) with .* will always evaluate to false\\.$#"
