@@ -25,6 +25,10 @@ Fixes
   The corresponding core change was commit `45a50e455955c78f6baa2aec3af3865101ee06b9`.
   We also need to update `codappix/typo3-php-datasets` dev dependency for the same reason.
 
+* Handle 404 during import.
+  Imports that would import a no longer existing resource resulted in a 503 Server Error.
+  Those are now properly catched and logged. Those errors will no longer fail.
+
 Tasks
 -----
 

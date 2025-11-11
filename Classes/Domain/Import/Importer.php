@@ -32,12 +32,14 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
 use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
@@ -101,7 +103,18 @@ class Importer
             $this->logger->notice('Skip Url as we already handled it during import.', ['url' => $url]);
             return;
         }
-        $content = $this->fetchData->jsonLDFromUrl($url);
+
+        try {
+            $content = $this->fetchData->jsonLDFromUrl($url);
+        } catch (InvalidResponseException $e) {
+            $this->logger->error('Skip Url as we could not fetch content of entity "{entityId}" due to error: {errorMessage}.', [
+                'entityId' => $url,
+                'errorMessage' => $e->getMessage(),
+                'exception' => $e,
+            ]);
+            $this->import->getLog()->addEntry(new FetchingError($url, $e));
+            return;
+        }
 
         if ($content === []) {
             $this->logger->notice('Skip Url as we did not receive any content.', ['url' => $url]);

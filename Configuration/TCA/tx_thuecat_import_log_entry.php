@@ -42,6 +42,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.mappingError',
                             'value' => 'mappingError',
                         ],
+                        [
+                            'label' => $languagePath . '.type.fetchingError',
+                            'value' => 'fetchingError',
+                        ],
                     ],
                 ],
             ],
@@ -116,6 +120,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, record_uid, insertion, errors',
             ],
             'mappingError' => [
+                'showitem' => '--palette--;;always, errors',
+            ],
+            'fetchingError' => [
                 'showitem' => '--palette--;;always, errors',
             ],
         ],

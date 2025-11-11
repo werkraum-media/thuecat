@@ -280,6 +280,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.mappingError" xml:space="preserve">
                 <source>Mapping Error</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.fetchingError" xml:space="preserve">
+                <source>Fetching Error</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.remote_id" xml:space="preserve">
                 <source>Remote ID (URL)</source>
             </trans-unit>

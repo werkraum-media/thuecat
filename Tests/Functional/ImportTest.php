@@ -389,6 +389,34 @@ class ImportTest extends AbstractImportTestCase
         self::assertStringContainsString('\'closes\' => NULL,', $loggedErrors);
     }
 
+    #[Test]
+    public function import404Resource(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/Import404Resource.php');
+
+        GuzzleClientFaker::appendNotFoundResponse();
+
+        $this->importConfiguration();
+
+        self::assertCount(0, $this->getAllRecords('tx_thuecat_tourist_attraction'));
+
+        $importLogEntries = $this->getAllRecords('tx_thuecat_import_log_entry');
+        self::assertCount(1, $importLogEntries);
+        self::assertSame(1, (int)$importLogEntries[0]['import_log']);
+        self::assertSame(0, (int)$importLogEntries[0]['record_uid']);
+        self::assertSame('', $importLogEntries[0]['table_name']);
+        self::assertSame(0, (int)$importLogEntries[0]['insertion']);
+        self::assertSame('["Not found, given resource could not be found: \"https:\/\/thuecat.org\/resources\/831770160143-anfc?format=jsonld\"."]', $importLogEntries[0]['errors']);
+
+        $this->expectErrors = true;
+        $loggedErrors = file_get_contents($this->getErrorLogFile());
+        self::assertIsString($loggedErrors);
+        self::assertStringContainsString(
+            'Skip Url as we could not fetch content of entity "https://thuecat.org/resources/831770160143-anfc" due to error: Not found, given resource could not be found: "https://thuecat.org/resources/831770160143-anfc?format=jsonld".',
+            $loggedErrors
+        );
+    }
+
     private function importConfiguration(): void
     {
         $this->workaroundExtbaseConfiguration();
