@@ -5,6 +5,7 @@ declare(strict_types=1);
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
@@ -39,6 +40,7 @@ return [
         'subclasses' => [
             'savingEntity' => SavingEntity::class,
             'mappingError' => MappingError::class,
+            'fetchingError' => FetchingError::class,
         ],
     ],
     SavingEntity::class => [
@@ -48,6 +50,10 @@ return [
     MappingError::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'mappingError',
+    ],
+    FetchingError::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'fetchingError',
     ],
 
     FrontendTouristAttraction::class => [
