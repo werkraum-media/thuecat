@@ -27,6 +27,8 @@ Tasks
   As this is an extension without a lock state.
   We have different TYPO3 versions as supported versions and it should be easy to switch between them for testing and development.
 
+* Streamline `phpstan.neon` formatting.
+
 Deprecation
 -----------
 
