@@ -30,7 +30,7 @@ class TranslationService
     public function translate(
         string $id,
         string $extensionName,
-        array $arguments = null
+        ?array $arguments = null
     ): string {
         return LocalizationUtility::translate($id, $extensionName, $arguments) ?? '';
     }
