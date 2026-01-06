@@ -9,8 +9,8 @@ parameters:
   excludePaths:
     - 'Tests/Acceptance/Support/_generated/'
     - 'Classes/Domain/Import/EntityMapper/CustomAnnotationExtractor.php'
-  checkMissingIterableValueType: false
   reportUnmatchedIgnoredErrors: true
-  checkGenericClassInNonGenericObjectType: false
   ignoreErrors:
+    - identifier: 'missingType.generics'
+    - identifier: 'missingType.iterableValue'
     - message: "#^Call to function method_exists\\(\\) with .* will always evaluate to false\\.$#"

@@ -495,7 +495,7 @@ if (class_exists(TypeContextFactory::class)) {
         * @param string[]|null $accessorPrefixes
         * @param string[]|null $arrayMutatorPrefixes
         */
-        public function __construct(DocBlockFactoryInterface $docBlockFactory = null, array $mutatorPrefixes = null, array $accessorPrefixes = null, array $arrayMutatorPrefixes = null)
+        public function __construct(?DocBlockFactoryInterface $docBlockFactory = null, ?array $mutatorPrefixes = null, ?array $accessorPrefixes = null, ?array $arrayMutatorPrefixes = null)
         {
             if (!class_exists(DocBlockFactory::class)) {
                 throw new LogicException(sprintf('Unable to use the "%s" class as the "phpdocumentor/reflection-docblock" package is not installed. Try running composer require "phpdocumentor/reflection-docblock".', self::class));

@@ -30,7 +30,7 @@ class ArrayDenormalizer extends SymfonyArrayDenormalizer
     public function denormalize(
         $data,
         string $type,
-        string $format = null,
+        ?string $format = null,
         array $context = []
     ): array {
         return parent::denormalize(
