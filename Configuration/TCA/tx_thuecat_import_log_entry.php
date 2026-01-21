@@ -24,6 +24,9 @@ return (static function (string $extensionKey, string $tableName) {
             'enablecolumns' => [
                 'disabled' => 'disable',
             ],
+            'security' => [
+                'ignoreRootLevelRestriction' => true,
+            ],
             'rootLevel' => 1,
             'hideTable' => true,
         ],

@@ -23,6 +23,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'disabled' => 'disable',
             ],
             'searchFields' => 'title',
+            'security' => [
+                'ignoreRootLevelRestriction' => true,
+            ],
             'rootLevel' => -1,
         ],
         'columns' => [
