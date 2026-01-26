@@ -16,7 +16,7 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/image-with-foreign-author",
+            "@id": "https://thuecat.org/resources/image-with-license-author",
             "@type": [
                 "schema:CreativeWork",
                 "schema:MediaObject",

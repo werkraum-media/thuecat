@@ -153,8 +153,8 @@
             <trans-unit id="tx_thuecat_tourist_attraction.url" xml:space="preserve">
                 <source>Url</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.media" xml:space="preserve">
-                <source>Media</source>
+            <trans-unit id="tx_thuecat_tourist_attraction.images" xml:space="preserve">
+                <source>Images</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.offers" xml:space="preserve">
                 <source>Offers</source>
@@ -211,8 +211,8 @@
             <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.media" xml:space="preserve">
-                <source>Media</source>
+            <trans-unit id="tx_thuecat_parking_facility.images" xml:space="preserve">
+                <source>Images</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.offers" xml:space="preserve">
                 <source>Offers</source>

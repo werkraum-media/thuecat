@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use DateTimeImmutable;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TypeError;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
@@ -50,6 +51,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             'backend',
             'extbase',
             'frontend',
+            'filelist',
+            'filemetadata',
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
@@ -86,6 +89,7 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         foreach ($this->getLogFiles() as $logFile) {
             file_put_contents($logFile, '');
         }
+        GeneralUtility::rmdir($this->getInstancePath() . '/fileadmin/editors', true);
     }
 
     protected function assertPostConditions(): void

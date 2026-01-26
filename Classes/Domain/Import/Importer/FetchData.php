@@ -79,6 +79,16 @@ class FetchData
         return [];
     }
 
+    public function loadFile(string $url): string
+    {
+        $request = $this->requestFactory->createRequest('GET', $url);
+        $response = $this->httpClient->sendRequest($request);
+
+        $this->handleInvalidResponse($response, $request);
+
+        return $response->getBody()->__toString();
+    }
+
     private function getResourceEndpoint(): string
     {
         return $this->urlPrefix . '/resources/';

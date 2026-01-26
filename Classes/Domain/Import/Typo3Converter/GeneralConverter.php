@@ -48,6 +48,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\FileRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ParkingFacilityRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
@@ -59,7 +60,7 @@ class GeneralConverter implements Converter
     private ImportConfiguration $importConfiguration;
 
     /**
-     * @var string[]
+     * @var array<class-string, string>
      */
     private array $classToTableMapping = [
         TouristAttraction::class => 'tx_thuecat_tourist_attraction',
@@ -76,11 +77,17 @@ class GeneralConverter implements Converter
         private readonly LanguageHandling $languageHandling,
         private readonly OrganisationRepository $organisationRepository,
         private readonly TownRepository $townRepository,
+        private readonly FileRepository $fileRepository,
         private readonly ParkingFacilityRepository $parkingFacilityRepository,
         private readonly NameExtractor $nameExtractor,
         LogManager $logManager
     ) {
         $this->logger = $logManager->getLogger(self::class);
+    }
+
+    public function getSupportedEntities(): array
+    {
+        return array_keys($this->classToTableMapping);
     }
 
     public function convert(
@@ -106,7 +113,15 @@ class GeneralConverter implements Converter
                 $entity,
                 $language
             )
+            // TODO: Add new thing: Relations
+            // Add images relation, import images / get file uids, create file relations and attach to entity.
         );
+
+        $images = [];
+        if ($entity instanceof Base) {
+            $images = $this->getImages($entity, $language);
+        }
+
         $this->logger->debug('Converted Entity', [
             'remoteId' => $entity->getId(),
             'storagePid' => $converted->getTypo3StoragePid(),
@@ -184,7 +199,6 @@ class GeneralConverter implements Converter
             'sanitation' => method_exists($entity, 'getSanitations') ? implode(',', $entity->getSanitations()) : '',
             'managed_by' => $this->getManagerUid($entity),
             'town' => $this->getTownUid($entity),
-            'media' => $entity instanceof Base ? $this->getMedia($entity, $language) : '',
 
             'parking_facility_near_by' => $entity instanceof Base ? implode(',', $this->getParkingFacilitiesNearByUids($entity)) : '',
 
@@ -318,11 +332,14 @@ class GeneralConverter implements Converter
         return $result;
     }
 
-    private function getMedia(
+    /**
+     * @return int[]
+     */
+    private function getImages(
         Base $entity,
         string $language
-    ): string {
-        $data = [];
+    ): array {
+        $sysFileUids = [];
         $idMainImage = '';
 
         if ($entity->getPhoto() instanceof ForeignReference) {
@@ -332,7 +349,7 @@ class GeneralConverter implements Converter
             );
             if ($photo instanceof MediaObject) {
                 $idMainImage = $photo->getId();
-                $data[] = $this->getSingleMedia($photo, true, $language);
+                $sysFileUids[] = $this->getSingleMedia($photo, true, $language);
             }
         }
 
@@ -344,31 +361,26 @@ class GeneralConverter implements Converter
             // Do not import main image again as image.
             // It is very likely that the same resource is provided as photo and image.
             if ($image instanceof MediaObject && $image->getId() !== $idMainImage) {
-                $data[] = $this->getSingleMedia($image, false, $language);
+                $sysFileUids[] = $this->getSingleMedia($image, false, $language);
             }
         }
 
-        return json_encode($data, JSON_THROW_ON_ERROR) ?: '';
+        return array_filter($sysFileUids);
     }
 
     private function getSingleMedia(
         MediaObject $mediaObject,
         bool $mainImage,
         string $language
-    ): array {
-        return [
-            'mainImage' => $mainImage,
-            'type' => $mediaObject->getType(),
-            'title' => $mediaObject->getName(),
-            'description' => $mediaObject->getDescription(),
-            'url' => $mediaObject->getUrls()[0] ?? '',
-            'author' => $this->nameExtractor->extract($mediaObject->getAuthor(), $language),
-            'copyrightYear' => $mediaObject->getCopyrightYear(),
-            'license' => [
-                'type' => $mediaObject->getLicense(),
-                'author' => $mediaObject->getLicenseAuthor(),
-            ],
-        ];
+    ): ?int {
+        $this->importer->importConfiguration(
+            ImportConfiguration::createFromBaseWithForeignReferences(
+                $this->importConfiguration,
+                [ForeignReference::fromString($mediaObject->getId())]
+            )
+        );
+
+        return $this->fileRepository->getFileUidBasedOnEntityId($mediaObject->getId());
     }
 
     /**

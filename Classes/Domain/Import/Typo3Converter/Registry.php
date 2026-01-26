@@ -35,17 +35,23 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 class Registry
 {
     /**
-     * @var Converter[]
+     * @var array<class-string, Converter>
      */
     private array $converters = [];
 
     public function registerConverter(Converter $converter): void
     {
-        $this->converters[] = $converter;
+        foreach ($converter->getSupportedEntities() as $supportedEntity) {
+            $this->converters[$supportedEntity] = $converter;
+        }
     }
 
     public function getConverterBasedOnType(MapsToType $entity): ?Converter
     {
-        return $this->converters[0];
+        if (array_key_exists($entity::class, $this->converters)) {
+            return $this->converters[$entity::class];
+        }
+
+        return null;
     }
 }

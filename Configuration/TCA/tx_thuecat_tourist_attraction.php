@@ -241,11 +241,12 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
-            'media' => [
-                'label' => $languagePath . '.media',
+            'images' => [
+                'label' => $languagePath . '.images',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'text',
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
                     'readOnly' => true,
                 ],
             ],

@@ -1,0 +1,37 @@
+5.0.0
+=====
+
+Breaking
+--------
+
+* Media is no longer stored.
+  Instead images are now properly stored as TYPO3 files.
+  There is no upgrade wizard. Please migrate the database and re import the data to
+  migrate existing imported data.
+
+  TODO: Check this statement:
+  The Templates also need adjustments, as the models have changed.
+
+Features
+--------
+
+* Store referenced images within TYPO3.
+  That way they can be combined with TYPO3 cropping features.
+  Also the system does no longer need to load data from foreign sites, being more
+  compliant without user consent.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+

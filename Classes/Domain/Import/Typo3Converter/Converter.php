@@ -29,6 +29,11 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 interface Converter
 {
+    /**
+     * @return class-string[]
+     */
+    public function getSupportedEntities(): array;
+
     public function convert(
         MapsToType $entity,
         ImportConfiguration $configuration,

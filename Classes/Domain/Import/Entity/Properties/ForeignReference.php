@@ -48,4 +48,11 @@ class ForeignReference
     {
         $this->id = $id;
     }
+
+    public static function fromString(string $id): self
+    {
+        $instance = new self();
+        $instance->setId($id);
+        return $instance;
+    }
 }

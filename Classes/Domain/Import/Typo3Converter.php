@@ -49,7 +49,7 @@ class Typo3Converter implements Converter
         }
 
         $concreteConverter = $this->registry->getConverterBasedOnType($mapped);
-        if (!$concreteConverter instanceof Typo3ConcreteConverter) {
+        if ($concreteConverter === null) {
             throw new Exception(
                 'No TYPO3 Converter registered for given Entity "' . $mapped::class . '".',
                 1628244329
