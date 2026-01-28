@@ -45,7 +45,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristMarketingCompany;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\FileRelation;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\Relations;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\FileRepository;
@@ -79,7 +81,6 @@ class GeneralConverter implements Converter
         private readonly TownRepository $townRepository,
         private readonly FileRepository $fileRepository,
         private readonly ParkingFacilityRepository $parkingFacilityRepository,
-        private readonly NameExtractor $nameExtractor,
         LogManager $logManager
     ) {
         $this->logger = $logManager->getLogger(self::class);
@@ -101,6 +102,11 @@ class GeneralConverter implements Converter
             return null;
         }
 
+        $relations = new Relations();
+        if ($entity instanceof Base) {
+            $relations = $this->createRelations($entity, $language);
+        }
+
         $converted = new GenericEntity(
             $importConfiguration->getStoragePid(),
             $this->getTableNameByEntityClass($entity::class),
@@ -112,15 +118,9 @@ class GeneralConverter implements Converter
             $this->buildDataArrayFromEntity(
                 $entity,
                 $language
-            )
-            // TODO: Add new thing: Relations
-            // Add images relation, import images / get file uids, create file relations and attach to entity.
+            ),
+            $relations,
         );
-
-        $images = [];
-        if ($entity instanceof Base) {
-            $images = $this->getImages($entity, $language);
-        }
 
         $this->logger->debug('Converted Entity', [
             'remoteId' => $entity->getId(),
@@ -225,6 +225,21 @@ class GeneralConverter implements Converter
 
             'accessibility_specification' => $this->getAccessibilitySpecification($entity, $language),
         ];
+    }
+
+    private function createRelations(Base $entity, string $language): Relations
+    {
+        $relations = [];
+
+        foreach ($this->getImages($entity, $language) as $imageUid) {
+            $relations[] = FileRelation::createFileRelationFromFileUid(
+                $imageUid,
+                'images',
+                $this->getTableNameByEntityClass($entity::class),
+            );
+        }
+
+        return new Relations(... $relations);
     }
 
     private function getManagerUid(object $entity): string

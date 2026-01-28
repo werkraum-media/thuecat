@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
+// TODO: Keep usage to extract author of media/images
 class NameExtractor
 {
     public function __construct(

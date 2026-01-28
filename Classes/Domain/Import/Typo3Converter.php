@@ -28,7 +28,6 @@ use InvalidArgumentException;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
-use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Converter as Typo3ConcreteConverter;
 use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\Registry;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration as Typo3ImportConfiguration;
 

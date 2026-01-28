@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
 use Exception;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior as OldDuplicationBehavior;
 use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
@@ -20,6 +18,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\MediaObject;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\Relations;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 final class FileConverter implements Converter
@@ -45,7 +44,7 @@ final class FileConverter implements Converter
         string $language
     ): ?Entity {
         if (!$entity instanceof MediaObject) {
-            throw new \Exception('Got entity of unexpected type.', 1769412725);
+            throw new Exception('Got entity of unexpected type.', 1769412725);
         }
 
         // TODO: Handle languages, this is only for now during development
@@ -76,7 +75,8 @@ final class FileConverter implements Converter
             'sys_file',
             0,
             $entity->getId(),
-            []
+            [],
+            new Relations(),
         );
 
         // TODO: Make depend on whether it already existed.
@@ -101,6 +101,9 @@ final class FileConverter implements Converter
     {
         // TODO: Use configuration to fetch storage
         $storage = $this->storageRepository->getDefaultStorage();
+        if ($storage === null) {
+            throw new \RuntimeException('Could not fetch TYPO3 storage for files.', 1771222968);
+        }
         // TODO: Use configuration to fetch folder
         $folderPath = '/editors/thuecat/';
 

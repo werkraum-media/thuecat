@@ -37,7 +37,8 @@ class GenericEntity implements Entity
         private readonly string $typo3DatabaseTableName,
         private readonly int $typo3SystemLanguageUid,
         private readonly string $remoteId,
-        private readonly array $data
+        private readonly array $data,
+        private readonly Relations $relations,
     ) {
     }
 
@@ -73,7 +74,12 @@ class GenericEntity implements Entity
 
     public function getData(): array
     {
-        return $this->data;
+        return array_merge($this->data, $this->dataOfRelations());
+    }
+
+    public function getRelations(): Relations
+    {
+        return $this->relations;
     }
 
     public function setImportedTypo3Uid(int $uid): void
@@ -101,5 +107,25 @@ class GenericEntity implements Entity
     public function wasCreated(): bool
     {
         return $this->created;
+    }
+
+    private function dataOfRelations(): array
+    {
+        $columns = [];
+
+        foreach ($this->relations->getInlineRelations() as $relation) {
+            $column = $relation->getInlineColumnName();
+            $value = $relation->getInlineColumnValue();
+            if (array_key_exists($column, $columns) === false) {
+                $columns[$column] = [];
+            }
+            $columns[$column][] = $value;
+        }
+
+        foreach ($columns as $column => $values) {
+            $columns[$column] = implode(',', $values);
+        }
+
+        return $columns;
     }
 }

@@ -45,6 +45,8 @@ interface Entity
      */
     public function getData(): array;
 
+    public function getRelations(): Relations;
+
     /**
      * Might be called during import.
      * Only in case entitiy already existed.

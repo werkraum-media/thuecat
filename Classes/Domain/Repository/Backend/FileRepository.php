@@ -31,7 +31,7 @@ final class FileRepository
 
         $fileUid = $queryBuilder->executeQuery()->fetchOne();
         if (is_numeric($fileUid)) {
-            return (int) $fileUid;
+            return (int)$fileUid;
         }
 
         return null;

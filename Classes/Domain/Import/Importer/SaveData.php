@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
-// TODO: Handle relations, added to entity
+// TODO: Handle existing relations / updates
 class SaveData
 {
     /**
@@ -39,10 +39,18 @@ class SaveData
      */
     private array $errorLog;
 
+    /**
+     * @var string[]
+     */
+    private array $tablesToIgnore;
+
     public function __construct(
         private readonly DataHandler $dataHandler,
         private readonly ConnectionPool $connectionPool
     ) {
+        $this->tablesToIgnore = [
+            'sys_file',
+        ];
     }
 
     public function import(EntityCollection $entityCollection, ImportLog $log): void
@@ -89,6 +97,13 @@ class SaveData
         }
         $identifier = $this->getIdentifier($entity);
         $identifierMapping[spl_object_id($entity)] = $identifier;
+
+        foreach ($entity->getRelations() as $relation) {
+            $dataArray[$relation->getTableName()][$relation->getIdentifier()] = $relation->getData(
+                $identifier,
+                (string)$entity->getTypo3StoragePid()
+            );
+        }
         $dataArray[$entity->getTypo3DatabaseTableName()][$identifier] = $this->getEntityData($entity);
 
         $dataHandler = clone $this->dataHandler;
@@ -102,6 +117,12 @@ class SaveData
                 && isset($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]])
             ) {
                 $entity->setImportedTypo3Uid($dataHandler->substNEWwithIDs[$identifierMapping[spl_object_id($entity)]]);
+            }
+
+            foreach ($entity->getRelations() as $relation) {
+                if (isset($dataHandler->substNEWwithIDs[$relation->getIdentifier()])) {
+                    $relation->setImportedTypo3Uid($dataHandler->substNEWwithIDs[$relation->getIdentifier()]);
+                }
             }
         }
     }
@@ -131,7 +152,15 @@ class SaveData
         $dataArray = [];
 
         foreach ($entities->getExistingEntities() as $entity) {
+            if (in_array($entity->getTypo3DatabaseTableName(), $this->tablesToIgnore)) {
+                continue;
+            }
+
             $dataArray[$entity->getTypo3DatabaseTableName()][$entity->getTypo3Uid()] = $this->getEntityData($entity);
+        }
+
+        if ($dataArray === []) {
+            return;
         }
 
         $dataHandler = clone $this->dataHandler;
