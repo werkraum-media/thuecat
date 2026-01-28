@@ -45,7 +45,9 @@ use WerkraumMedia\ThueCat\Domain\Import\Entity\TouristMarketingCompany;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\Town;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\FileRelation;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Model\Relation;
 use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\FileRepository;
@@ -112,15 +114,9 @@ class GeneralConverter implements Converter
             $this->buildDataArrayFromEntity(
                 $entity,
                 $language
-            )
-            // TODO: Add new thing: Relations
-            // Add images relation, import images / get file uids, create file relations and attach to entity.
+            ),
+            $this->createRelations($entity, $language)
         );
-
-        $images = [];
-        if ($entity instanceof Base) {
-            $images = $this->getImages($entity, $language);
-        }
 
         $this->logger->debug('Converted Entity', [
             'remoteId' => $entity->getId(),
@@ -225,6 +221,24 @@ class GeneralConverter implements Converter
 
             'accessibility_specification' => $this->getAccessibilitySpecification($entity, $language),
         ];
+    }
+
+    /**
+     * @return Relation[]
+     */
+    private function createRelations(Entity $entity, string $language): array
+    {
+        $relations = [];
+
+        if ($entity instanceof Base) {
+            foreach ($this->getImages($entity, $language) as $imageUid) {
+                $relations[] = FileRelation::createFileRelationFromFileUid(
+                    $imageUid,
+                    'images',
+                    $this->getTableNameByEntityClass($entity::class),
+                );
+            }
+        }
     }
 
     private function getManagerUid(object $entity): string

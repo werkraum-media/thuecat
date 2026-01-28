@@ -31,13 +31,15 @@ class GenericEntity implements Entity
 
     /**
      * @param mixed[] $data
+     * @param Relation[] $relations
      */
     public function __construct(
         private readonly int $typo3StoragePid,
         private readonly string $typo3DatabaseTableName,
         private readonly int $typo3SystemLanguageUid,
         private readonly string $remoteId,
-        private readonly array $data
+        private readonly array $data,
+        private readonly array $relations
     ) {
     }
 
@@ -74,6 +76,11 @@ class GenericEntity implements Entity
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getRelations(): array
+    {
+        return $this->relations;
     }
 
     public function setImportedTypo3Uid(int $uid): void

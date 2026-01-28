@@ -46,6 +46,11 @@ interface Entity
     public function getData(): array;
 
     /**
+     * @return Relation[]
+     */
+    public function getRelations(): array;
+
+    /**
      * Might be called during import.
      * Only in case entitiy already existed.
      * Is then called with existing UID from system.

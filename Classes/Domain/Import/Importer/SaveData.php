@@ -32,6 +32,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
 // TODO: Handle relations, added to entity
+// TODO: Handle existing relations / updates
 class SaveData
 {
     /**
@@ -90,6 +91,13 @@ class SaveData
         $identifier = $this->getIdentifier($entity);
         $identifierMapping[spl_object_id($entity)] = $identifier;
         $dataArray[$entity->getTypo3DatabaseTableName()][$identifier] = $this->getEntityData($entity);
+
+        // TODO: Add relations
+        foreach ($entity->getRelations() as $relation) {
+            $dataArray[$relation->getTableName()][$relation->getIdentifier()] = $relation->getData($identifier);
+        }
+
+        \xdebug_break();
 
         $dataHandler = clone $this->dataHandler;
         $dataHandler->start($dataArray, []);
