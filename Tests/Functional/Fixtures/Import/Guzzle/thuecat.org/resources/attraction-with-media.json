@@ -64,7 +64,10 @@
                 {
                     "@id": "https://thuecat.org/resources/image-with-author-and-license-author"
                 }
-            ]
+            ],
+            "schema:photo": {
+                "@id": "https://thuecat.org/resources/image-used-as-main-image"
+            }
         }
     ]
 }

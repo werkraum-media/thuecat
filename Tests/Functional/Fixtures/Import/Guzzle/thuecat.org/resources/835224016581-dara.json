@@ -165,17 +165,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/place/Erfurter+Dom/@50.9759889,11.0202592,995m/data=!3m1!1e3!4m5!3m4!1s0x47a472947dc34709:0xc571fc7f144f9dd5!8m2!3d50.9758057!4d11.0232903"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_5713563"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5159186"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5159216"
-                }
-            ],
             "schema:isAccessibleForFree": {
                 "@type": "schema:Boolean",
                 "@value": "true"
@@ -355,9 +344,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "false"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5159216"
             },
             "schema:publicAccess": {
                 "@type": "schema:Boolean",
