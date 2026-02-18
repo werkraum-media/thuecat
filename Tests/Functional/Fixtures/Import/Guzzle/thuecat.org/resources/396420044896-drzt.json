@@ -144,9 +144,6 @@
                     "@value": "11.022127985954299"
                 }
             },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_6486108"
-            },
             "schema:makesOffer": [
                 {
                     "@id": "genid-2c9c8a1b44cc404ebe32e34cdbb87884-b11",
@@ -398,9 +395,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_6486108"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

@@ -151,9 +151,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/place/Q-Park+Anger+1+Parkhaus/@50.9777795,11.036599,18.5z/data=!4m12!1m6!3m5!1s0x47a47295932dd6c5:0x619ce72e7a54f805!2sPredigerkirche!8m2!3d50.976505!4d11.0289217!3m4!1s0x47a472bc3ecf3a5d:0x88cb2943674c2ea2!8m2!3d50.978002!4d11.0375074"
             },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_5197164"
-            },
             "schema:isAccessibleForFree": {
                 "@type": "schema:Boolean",
                 "@value": "false"
@@ -340,9 +337,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5197164"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

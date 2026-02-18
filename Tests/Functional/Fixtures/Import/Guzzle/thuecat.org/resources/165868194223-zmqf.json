@@ -187,9 +187,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/alte-synagoge-erfurt-115157.html"
             },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_5099196"
-            },
             "schema:isAccessibleForFree": {
                 "@type": "schema:Boolean",
                 "@value": "false"
@@ -482,9 +479,6 @@
             "schema:petsAllowed": {
                 "@language": "de",
                 "@value": "Tiere sind im Geb\u00e4ude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde."
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5099196"
             },
             "schema:publicAccess": {
                 "@type": "schema:Boolean",
