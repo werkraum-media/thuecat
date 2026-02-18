@@ -46,6 +46,7 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
 
     protected function setUp(): void
     {
+        $this->expectErrors = false;
         $this->coreExtensionsToLoad = array_merge($this->coreExtensionsToLoad, [
             'core',
             'backend',

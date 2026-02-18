@@ -106,16 +106,26 @@ class ImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithRelations.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/835224016581-dara.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/508431710173-wwne.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159216.json');
-        GuzzleClientFaker::appendNotFoundResponse();
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159186.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_6486108.json');
         GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
+
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5099196.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
@@ -185,13 +195,18 @@ class ImportTest extends AbstractImportTestCase
         GuzzleClientFaker::appendNotFoundResponse();
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5159186.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/396420044896-drzt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_6486108.json');
+        GuzzleClientFaker::appendNotFoundResponse();
         GuzzleClientFaker::appendNotFoundResponse();
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/165868194223-zmqf.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
+
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_5099196.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/497839263245-edbm.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/215230952334-yyno.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/052821473718-oxfq.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134362.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/dms_134288.json');
@@ -321,6 +336,47 @@ class ImportTest extends AbstractImportTestCase
         $this->importConfiguration();
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
+    }
+
+    #[Test]
+    public function importsTouristAttractionWithNotFoundMedia(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.php');
+
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-media.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-foreign-author.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-string.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-license-author.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-and-license-author.json');
+        GuzzleClientFaker::appendNotFoundResponse();
+
+        // Previously not found images, not in English.
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+        GuzzleClientFaker::appendNotFoundResponse();
+
+        $this->importConfiguration();
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithNotFoundMedia.php');
+
+        $this->expectErrors = true;
+        $loggedErrors = file_get_contents($this->getErrorLogFile());
+        self::assertIsString($loggedErrors);
+        self::assertStringContainsString(
+            'Could not fetch file via url "https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image" for entity "https://thuecat.org/resources/image-with-foreign-author" due to type error: Not found, given resource could not be found: "https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image?format=jsonld".',
+            $loggedErrors
+        );
+    }
+
+    #[Test]
+    public function importsTouristAttractionWithPhoto(): void
+    {
+        self::markTestIncomplete('Implement this test case.');
     }
 
     #[Test]

@@ -231,6 +231,7 @@ class GeneralConverter implements Converter
     {
         $relations = [];
 
+        \xdebug_break();
         foreach ($this->getImages($entity, $language) as $imageUid) {
             $relations[] = FileRelation::createFileRelationFromFileUid(
                 $imageUid,

@@ -65,6 +65,7 @@ class FetchData
             return $cacheEntry;
         }
 
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($url, 'debug_backtrace()', 8, true);
         $request = $this->requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 
@@ -81,6 +82,7 @@ class FetchData
 
     public function loadFile(string $url): string
     {
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($url, 'debug_backtrace()', 8, true);
         $request = $this->requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 

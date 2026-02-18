@@ -6,6 +6,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
 use Exception;
 use TYPO3\CMS\Core\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Log\LogManager;
+use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Resource\DuplicationBehavior as OldDuplicationBehavior;
 use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\File;
@@ -16,6 +18,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
 use WerkraumMedia\ThueCat\Domain\Import\Entity\MediaObject;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Model\Relations;
@@ -23,12 +26,16 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
 final class FileConverter implements Converter
 {
+    private readonly Logger $logger;
+
     public function __construct(
         private readonly StorageRepository $storageRepository,
         private readonly MetaDataRepository $metaDataRepository,
         private readonly ConfigurationManager $typo3ConfigurationManager,
         private readonly FetchData $fetchData,
+        LogManager $logManager
     ) {
+        $this->logger = $logManager->getLogger(self::class);
     }
 
     public function getSupportedEntities(): array
@@ -53,7 +60,18 @@ final class FileConverter implements Converter
         }
 
         $url = $entity->getUrls()[0];
-        $localFilePath = $this->storeTempFile($this->fetchData->loadFile($url));
+
+        try {
+            $fileContent = $this->fetchData->loadFile($url);
+        } catch (InvalidResponseException $e) {
+            $this->logger->error('Could not fetch file via url "{url}" for entity "{entityId}" due to type error: {errorMessage}', [
+                'url' => $url,
+                'entityId' => $entity->getId(),
+                'errorMessage' => $e->getMessage(),
+            ]);
+            return null;
+        }
+        $localFilePath = $this->storeTempFile($fileContent);
 
         $file = $this->importFile($entity, $localFilePath);
 
