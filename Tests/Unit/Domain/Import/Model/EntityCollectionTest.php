@@ -31,14 +31,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
 class EntityCollectionTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new EntityCollection();
-
-        self::assertInstanceOf(EntityCollection::class, $subject);
-    }
-
-    #[Test]
     public function returnsEmptyArrayAsDefaultEntities(): void
     {
         $subject = new EntityCollection();

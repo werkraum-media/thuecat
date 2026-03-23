@@ -59,6 +59,9 @@ class Media implements TypeInterface
         return [];
     }
 
+    /**
+     * @return array[]
+     */
     public function getImages(): array
     {
         return array_filter($this->data, function (array $media): bool {
@@ -66,6 +69,9 @@ class Media implements TypeInterface
         });
     }
 
+    /**
+     * @return array[]
+     */
     public function getExtraImages(): array
     {
         return array_filter($this->data, function (array $media): bool {
@@ -74,6 +80,9 @@ class Media implements TypeInterface
         });
     }
 
+    /**
+     * @return array<FileReference|array>
+     */
     public function getAllImages(): array
     {
         return array_merge($this->getEditorialImages(), $this->getImages());
@@ -91,6 +100,8 @@ class Media implements TypeInterface
      * @internal Only used to set the values while mapping objects.
      *
      * @see: AfterObjectThawedHandler
+     *
+     * @param FileReference[] $images
      */
     public function setEditorialImages(array $images): void
     {
@@ -102,6 +113,9 @@ class Media implements TypeInterface
         return $this->serialized;
     }
 
+    /**
+     * @return array[]
+     */
     private function prepareData(array $data): array
     {
         return array_map(function (array $media) {

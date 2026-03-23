@@ -114,6 +114,9 @@ abstract class Place extends Base
         return $this->parkingFacilityNearBy;
     }
 
+    /**
+     * @return ParkingFacility[]
+     */
     public function getParkingFacilitiesNearBySortedByAlphabet(): array
     {
         $facilities = $this->parkingFacilityNearBy->toArray();
@@ -151,7 +154,7 @@ abstract class Place extends Base
             return [];
         }
         return [
-            'value' => $values[0] ?? '',
+            'value' => $values[0],
             'unit' => $values[1] ?? '',
             'types' => GeneralUtility::trimExplode(':', $values[2] ?? '', true),
         ];

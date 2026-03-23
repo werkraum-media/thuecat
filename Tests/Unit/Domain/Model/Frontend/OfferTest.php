@@ -40,10 +40,6 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertInstanceOf(
-            Offer::class,
-            $subject
-        );
         self::assertSame('LegacyType', $subject->getType());
     }
 
@@ -58,10 +54,6 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertInstanceOf(
-            Offer::class,
-            $subject
-        );
         self::assertSame('ParkingFee', $subject->getType());
     }
 
@@ -76,10 +68,6 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertInstanceOf(
-            Offer::class,
-            $subject
-        );
         self::assertSame('CourseOffer', $subject->getType());
     }
 
@@ -92,10 +80,6 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertInstanceOf(
-            Offer::class,
-            $subject
-        );
         self::assertSame('', $subject->getType());
     }
 }

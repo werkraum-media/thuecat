@@ -23,8 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
  * 02110-1301, USA.
  */
 
-use Countable;
-use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -32,30 +30,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers;
 
 class OffersTest extends TestCase
 {
-    #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new Offers('{}');
-
-        self::assertInstanceOf(Offers::class, $subject);
-    }
-
-    #[Test]
-    public function isCountable(): void
-    {
-        $subject = new Offers('{}');
-
-        self::assertInstanceOf(Countable::class, $subject);
-    }
-
-    #[Test]
-    public function isIterator(): void
-    {
-        $subject = new Offers('{}');
-
-        self::assertInstanceOf(Iterator::class, $subject);
-    }
-
     #[Test]
     #[DataProvider('forCount')]
     public function returnsExpectedCount(string $serialized, int $expected): void

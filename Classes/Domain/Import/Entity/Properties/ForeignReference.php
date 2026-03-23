@@ -29,23 +29,18 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Entity\Properties;
  */
 class ForeignReference
 {
-    /**
-     * URL to the original source at ThüCAT.
-     * Not unique within our system. We have one entity per language,
-     * while ThüCAT has a single entity containing all languages.
-     */
-    protected string $id = '';
+    public function __construct(
+        /**
+         * URL to the original source at ThüCAT.
+         * Not unique within our system. We have one entity per language,
+         * while ThüCAT has a single entity containing all languages.
+         */
+        private readonly string $id,
+    ) {
+    }
 
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @internal for mapping via Symfony component.
-     */
-    public function setId(string $id): void
-    {
-        $this->id = $id;
     }
 }

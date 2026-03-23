@@ -50,7 +50,7 @@ class TimingFormat
     {
         $parts = explode(':', $string);
         return [
-            'hour' => $parts[0] ?? '',
+            'hour' => $parts[0],
             'minutes' => $parts[1] ?? '',
             'seconds' => $parts[2] ?? '',
         ];

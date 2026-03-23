@@ -32,24 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 class RegistryTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new Registry();
-
-        self::assertInstanceOf(Registry::class, $subject);
-    }
-
-    #[Test]
-    public function allowsRegistrationOfUrlProvider(): void
-    {
-        $subject = new Registry();
-        $provider = new StaticUrlProvider();
-
-        $subject->registerProvider($provider);
-        self::assertTrue(true);
-    }
-
-    #[Test]
     public function returnsNullIfNoProviderExistsForConfiguration(): void
     {
         $configuration = new ImportConfiguration();

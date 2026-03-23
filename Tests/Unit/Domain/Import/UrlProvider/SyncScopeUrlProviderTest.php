@@ -32,18 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 class SyncScopeUrlProviderTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $fetchData = self::createStub(FetchData::class);
-
-        $subject = new SyncScopeUrlProvider(
-            $fetchData
-        );
-
-        self::assertInstanceOf(SyncScopeUrlProvider::class, $subject);
-    }
-
-    #[Test]
     public function canProvideForSyncScope(): void
     {
         $configuration = new ImportConfiguration();

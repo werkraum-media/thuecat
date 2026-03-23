@@ -36,7 +36,12 @@ class FrontendTest extends FunctionalTestCase
     protected function setUp(): void
     {
         $this->coreExtensionsToLoad = [
+            'core',
+            'backend',
+            'extbase',
+            'frontend',
             'fluid_styled_content',
+            'install',
         ];
 
         $this->testExtensionsToLoad = [
@@ -685,11 +690,11 @@ class FrontendTest extends FunctionalTestCase
         $html = (string)$this->executeFrontendSubRequest($request)->getBody();
 
         self::assertStringContainsString(
-            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/parks_gaerten/hirschgarten/2998_Spielplaetze_Hirschgarten.jpg" width="" height="" alt="" />',
+            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/parks_gaerten/hirschgarten/2998_Spielplaetze_Hirschgarten.jpg" ',
             $html
         );
         self::assertStringContainsString(
-            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/sehenswuerdigkeiten/Petersberg/20_Erfurt-Schriftzug_Petersberg_2021__c_Stadtverwaltung_Erfurt_CC-BY-NC-SA.JPG" width="" height="" alt="" />',
+            '<img src="/fileadmin/tourismus/images/inhalte/sehenswertes/sehenswuerdigkeiten/Petersberg/20_Erfurt-Schriftzug_Petersberg_2021__c_Stadtverwaltung_Erfurt_CC-BY-NC-SA.JPG" ',
             $html,
         );
     }

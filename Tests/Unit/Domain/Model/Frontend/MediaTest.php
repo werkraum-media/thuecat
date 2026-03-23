@@ -31,14 +31,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
 class MediaTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new Media('[]');
-
-        self::assertInstanceOf(Media::class, $subject);
-    }
-
-    #[Test]
     public function returnsMainImageIfPresent(): void
     {
         $subject = new Media('[{"mainImage":false,"type":"image","title":"Erfurt-Dom-und-Severikirche.jpg"},{"mainImage":true,"type":"image","title":"Erfurt-Dom und Severikirche-beleuchtet.jpg"}]');
@@ -287,10 +279,13 @@ class MediaTest extends TestCase
             $reference2,
             $subject->getAllImages()[1]
         );
+
+        self::assertIsArray($subject->getAllImages()[2]);
         self::assertSame(
             'Full Name 1',
             $subject->getAllImages()[2]['copyrightAuthor']
         );
+        self::assertIsArray($subject->getAllImages()[3]);
         self::assertSame(
             'Full Name 2',
             $subject->getAllImages()[3]['copyrightAuthor']

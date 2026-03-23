@@ -1,0 +1,28 @@
+5.0.0
+=====
+
+Breaking
+--------
+
+* Remove support for TYPO3 v12.
+
+Features
+--------
+
+* Add support for TYPO3 v14.
+
+Fixes
+-----
+
+Nothing
+
+Tasks
+-----
+
+Nothing
+
+Deprecation
+-----------
+
+Nothing
+

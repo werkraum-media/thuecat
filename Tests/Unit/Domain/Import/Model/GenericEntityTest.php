@@ -30,19 +30,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Model\GenericEntity;
 class GenericEntityTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new GenericEntity(
-            0,
-            '',
-            0,
-            '',
-            []
-        );
-        self::assertInstanceOf(GenericEntity::class, $subject);
-    }
-
-    #[Test]
     public function returnsTypo3StoragePid(): void
     {
         $subject = new GenericEntity(

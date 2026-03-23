@@ -30,14 +30,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address;
 class AddressTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new Address('[]');
-
-        self::assertInstanceOf(Address::class, $subject);
-    }
-
-    #[Test]
     public function returnsProperDefaults(): void
     {
         $subject = new Address('[]');

@@ -63,13 +63,8 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.configuration',
                 'config' => [
                     'type' => 'flex',
-                    'ds_pointerField' => 'type',
-                    'ds' => [
-                        'default' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
-                        'static' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
-                        'syncScope' => $flexFormConfigurationPath . 'ImportConfiguration/SyncScope.xml',
-                        'containsPlace' => $flexFormConfigurationPath . 'ImportConfiguration/ContainsPlace.xml',
-                    ],
+                    'ds' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
+                    'searchable' => false,
                 ],
             ],
             'tstamp' => [
@@ -77,6 +72,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'datetime',
                     'format' => 'datetime',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             // Configured for usage within Extbase, not TCA itself
@@ -92,6 +88,36 @@ return (static function (string $extensionKey, string $tableName) {
         'types' => [
             '0' => [
                 'showitem' => 'title, type, configuration',
+            ],
+            'static' => [
+                'showitem' => 'title, type, configuration',
+                'columnsOverrides' => [
+                    'pi_flexform' => [
+                        'config' => [
+                            'ds' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
+                        ],
+                    ],
+                ],
+            ],
+            'syncScope' => [
+                'showitem' => 'title, type, configuration',
+                'columnsOverrides' => [
+                    'pi_flexform' => [
+                        'config' => [
+                            'ds' => $flexFormConfigurationPath . 'ImportConfiguration/SyncScope.xml',
+                        ],
+                    ],
+                ],
+            ],
+            'containsPlace' => [
+                'showitem' => 'title, type, configuration',
+                'columnsOverrides' => [
+                    'pi_flexform' => [
+                        'config' => [
+                            'ds' => $flexFormConfigurationPath . 'ImportConfiguration/ContainsPlace.xml',
+                        ],
+                    ],
+                ],
             ],
         ],
     ];

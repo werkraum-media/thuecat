@@ -35,22 +35,6 @@ use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 class RequestFactoryTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
-        $requestFactory = self::createStub(Typo3RequestFactory::class);
-        $uriFactory = new UriFactory();
-
-        $subject = new RequestFactory(
-            $extensionConfiguration,
-            $requestFactory,
-            $uriFactory
-        );
-
-        self::assertInstanceOf(RequestFactory::class, $subject);
-    }
-
-    #[Test]
     public function returnsRequestWithJsonIdFormat(): void
     {
         $extensionConfiguration = self::createStub(ExtensionConfiguration::class);

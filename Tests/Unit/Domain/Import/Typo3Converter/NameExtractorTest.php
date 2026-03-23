@@ -35,21 +35,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Typo3Converter\NameExtractor;
 class NameExtractorTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
-
-        $subject = new NameExtractor(
-            $resolveForeignReference
-        );
-
-        self::assertInstanceOf(
-            NameExtractor::class,
-            $subject
-        );
-    }
-
-    #[Test]
     public function extractsNameFromString(): void
     {
         $resolveForeignReference = self::createStub(ResolveForeignReference::class);

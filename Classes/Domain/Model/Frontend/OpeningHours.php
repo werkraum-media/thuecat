@@ -68,7 +68,7 @@ class OpeningHours implements TypeInterface, Iterator, Countable
             return $hourA->getFrom() <=> $hourB->getFrom();
         });
 
-        return array_values($array);
+        return $array;
     }
 
     public function getMerged(): MergedOpeningHours

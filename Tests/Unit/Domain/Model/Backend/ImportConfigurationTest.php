@@ -31,14 +31,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 class ImportConfigurationTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new ImportConfiguration();
-
-        self::assertInstanceOf(ImportConfiguration::class, $subject);
-    }
-
-    #[Test]
     public function returnsTitle(): void
     {
         $subject = new ImportConfiguration();

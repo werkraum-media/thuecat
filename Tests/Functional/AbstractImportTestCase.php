@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use DateTimeImmutable;
-use TypeError;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
@@ -50,6 +49,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             'backend',
             'extbase',
             'frontend',
+            'fluid_styled_content',
+            'install',
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
@@ -130,13 +131,13 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
      */
     protected function setDateAspect(DateTimeImmutable $dateTime): void
     {
-        $context = $this->getContainer()->get(Context::class);
-        if (!$context instanceof Context) {
-            throw new TypeError('Retrieved context was of unexpected type.', 1638182021);
-        }
-
-        $aspect = new DateTimeAspect($dateTime);
-        $context->setAspect('date', $aspect);
+        $this->getContainer()
+            ->get(Context::class)
+            ->setAspect(
+                'date',
+                new DateTimeAspect($dateTime)
+            )
+        ;
     }
 
     /**
@@ -146,13 +147,9 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     {
         $fakeRequest = new ServerRequest();
         $fakeRequest = $fakeRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
-        $configurationManager = $this->get(ConfigurationManagerInterface::class);
 
-        // TODO: typo3/cms-core:14.0 Remove condition, the method should always be available
-        if (method_exists($configurationManager, 'setRequest') === false) {
-            return;
-        }
-
-        $configurationManager->setRequest($fakeRequest);
+        $this->get(ConfigurationManagerInterface::class)
+            ->setRequest($fakeRequest)
+        ;
     }
 }

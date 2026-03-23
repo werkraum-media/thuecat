@@ -37,6 +37,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'remote_id' => [
@@ -44,6 +45,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'manages_towns' => [
@@ -79,6 +81,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'datetime',
                     'format' => 'datetime',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
         ],

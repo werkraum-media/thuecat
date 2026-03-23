@@ -30,17 +30,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class ResolveEntities implements DataProcessorInterface
 {
-    private readonly TypoScriptFrontendController $tsfe;
-
     public function __construct(
         private readonly ConnectionPool $connectionPool,
-        private readonly DataMapper $dataMapper
+        private readonly DataMapper $dataMapper,
+        private readonly PageRepository $pageRepository,
     ) {
-        $this->tsfe = $GLOBALS['TSFE'];
     }
 
     public function process(
@@ -80,12 +77,7 @@ class ResolveEntities implements DataProcessorInterface
 
         $rows = [];
         foreach ($queryBuilder->executeQuery()->iterateAssociative() as $row) {
-            // TODO: typo3/cms-core:14.0 Remove this condition, should always be an instance now.
-            if (!$this->tsfe->sys_page instanceof PageRepository) {
-                continue;
-            }
-
-            $row = $this->tsfe->sys_page->getLanguageOverlay($tableName, $row);
+            $row = $this->pageRepository->getLanguageOverlay($tableName, $row);
             if (is_array($row)) {
                 $rows[] = $row;
             }

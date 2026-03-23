@@ -46,6 +46,10 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         $this->coreExtensionsToLoad = array_merge($this->coreExtensionsToLoad, [
             'core',
             'backend',
+            'extbase',
+            'frontend',
+            'fluid_styled_content',
+            'install',
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
@@ -297,6 +301,9 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         $this->assertUrlTitles();
     }
 
+    /**
+     * @return string[]
+     */
     private function executeDataHandler(array $dataMap): array
     {
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
