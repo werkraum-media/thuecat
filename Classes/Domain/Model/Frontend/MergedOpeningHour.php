@@ -36,6 +36,9 @@ class MergedOpeningHour
 
     private readonly ?DateTimeImmutable $through;
 
+    /**
+     * @param MergedOpeningHourWeekDay[] $weekDays
+     */
     public function __construct(
         array $weekDays,
         ?DateTimeImmutable $from,
@@ -54,6 +57,9 @@ class MergedOpeningHour
         return $this->weekDays;
     }
 
+    /**
+     * @return MergedOpeningHourWeekDay[]
+     */
     public function getWeekDaysWithMondayFirstWeekDay(): array
     {
         return $this->sortWeekDays([
@@ -78,6 +84,9 @@ class MergedOpeningHour
         return $this->through;
     }
 
+    /**
+     * @return MergedOpeningHourWeekDay[]
+     */
     private function sortWeekDays(array $sorting): array
     {
         $days = [];

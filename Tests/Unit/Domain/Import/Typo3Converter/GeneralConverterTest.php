@@ -43,36 +43,6 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\TownRepository;
 class GeneralConverterTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $resolveForeignReference = self::createStub(ResolveForeignReference::class);
-        $importer = self::createStub(Importer::class);
-        $languageHandling = self::createStub(LanguageHandling::class);
-        $organisationRepository = self::createStub(OrganisationRepository::class);
-        $townRepository = self::createStub(TownRepository::class);
-        $parkingFacilityRepository = self::createStub(ParkingFacilityRepository::class);
-        $nameExtractor = self::createStub(NameExtractor::class);
-        $logManager = self::createStub(LogManager::class);
-        $logManager->method('getLogger')->willReturn(self::createStub(Logger::class));
-
-        $subject = new GeneralConverter(
-            $resolveForeignReference,
-            $importer,
-            $languageHandling,
-            $organisationRepository,
-            $townRepository,
-            $parkingFacilityRepository,
-            $nameExtractor,
-            $logManager
-        );
-
-        self::assertInstanceOf(
-            GeneralConverter::class,
-            $subject
-        );
-    }
-
-    #[Test]
     public function skipsWithoutManager(): void
     {
         $resolveForeignReference = self::createStub(ResolveForeignReference::class);
@@ -98,8 +68,7 @@ class GeneralConverterTest extends TestCase
             $logManager
         );
 
-        $contentResponsible = new ForeignReference();
-        $contentResponsible->setId('https://example.com/content-responsible');
+        $contentResponsible = new ForeignReference('https://example.com/content-responsible');
         $entity = new Town();
         $entity->setName('Test Name');
         $entity->setContentResponsible($contentResponsible);

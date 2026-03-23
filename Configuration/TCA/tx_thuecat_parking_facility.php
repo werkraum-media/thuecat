@@ -94,6 +94,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'other_service' => [
@@ -102,6 +103,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'traffic_infrastructure' => [
@@ -110,6 +112,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'payment_accepted' => [
@@ -118,6 +121,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'distance_to_public_transport' => [
@@ -126,6 +130,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'opening_hours' => [
@@ -134,6 +139,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'special_opening_hours' => [
@@ -142,6 +148,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'address' => [
@@ -150,6 +157,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'media' => [
@@ -158,6 +166,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'offers' => [
@@ -166,6 +175,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'remote_id' => [
@@ -174,6 +184,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
+                    'searchable' => false,
                 ],
             ],
             'town' => [

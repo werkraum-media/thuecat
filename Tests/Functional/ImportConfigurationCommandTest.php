@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
@@ -38,7 +37,6 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $this->workaroundExtbaseConfiguration();
 
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
-        self::assertInstanceOf(Command::class, $subject);
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -55,7 +53,6 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $this->workaroundExtbaseConfiguration();
 
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
-        self::assertInstanceOf(Command::class, $subject);
 
         $tester = new CommandTester($subject);
 
@@ -70,7 +67,6 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
     public function throwsExceptionOnMissingArgument(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
-        self::assertInstanceOf(Command::class, $subject);
 
         $tester = new CommandTester($subject);
 
@@ -85,7 +81,6 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
     public function throwsExceptionOnNoneNumericConfigurationArgument(): void
     {
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
-        self::assertInstanceOf(Command::class, $subject);
 
         $tester = new CommandTester($subject);
 

@@ -123,10 +123,6 @@ class BaseInfosTest extends TestCase
         ]);
 
         self::assertInstanceOf(Base::class, $result);
-        self::assertIsArray($result->getImages());
-        foreach ($result->getImages() as $image) {
-            self::assertInstanceOf(ForeignReference::class, $image);
-        }
         self::assertSame('https://thuecat.org/resources/835224016581-1st', $result->getImages()[0]->getId());
         self::assertSame('https://thuecat.org/resources/835224016581-2nd', $result->getImages()[1]->getId());
     }

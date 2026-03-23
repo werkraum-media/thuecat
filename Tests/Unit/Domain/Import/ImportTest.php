@@ -27,22 +27,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Import;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class ImportTest extends TestCase
 {
-    #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new Import();
-
-        self::assertInstanceOf(
-            Import::class,
-            $subject
-        );
-    }
-
     #[Test]
     public function canStart(): void
     {
@@ -53,10 +41,6 @@ class ImportTest extends TestCase
         self::assertSame(
             $configuration,
             $subject->getConfiguration()
-        );
-        self::assertInstanceOf(
-            ImportLog::class,
-            $subject->getLog()
         );
     }
 
@@ -71,10 +55,6 @@ class ImportTest extends TestCase
         self::assertSame(
             $configuration,
             $subject->getConfiguration()
-        );
-        self::assertInstanceOf(
-            ImportLog::class,
-            $subject->getLog()
         );
     }
 
@@ -123,19 +103,11 @@ class ImportTest extends TestCase
         $subject->start($configuration1);
 
         $log1 = $subject->getLog();
-        self::assertInstanceOf(
-            ImportLog::class,
-            $log1
-        );
 
         $configuration2 = new ImportConfiguration();
         $subject->start($configuration2);
 
         $log2 = $subject->getLog();
-        self::assertInstanceOf(
-            ImportLog::class,
-            $log2
-        );
 
         self::assertNotSame(
             $log1,

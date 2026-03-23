@@ -31,14 +31,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 class ImportLogTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new ImportLog();
-
-        self::assertInstanceOf(ImportLog::class, $subject);
-    }
-
-    #[Test]
     public function returnsConfigurationIfSet(): void
     {
         $configuration = new ImportConfiguration();

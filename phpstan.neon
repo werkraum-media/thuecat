@@ -7,7 +7,6 @@ parameters:
     - 'Configuration'
     - 'Tests'
   excludePaths:
-    - 'Tests/Acceptance/Support/_generated/'
     - 'Classes/Domain/Import/EntityMapper/CustomAnnotationExtractor.php'
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:

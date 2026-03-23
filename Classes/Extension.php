@@ -25,8 +25,6 @@ namespace WerkraumMedia\ThueCat;
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extension
@@ -47,7 +45,6 @@ class Extension
     public static function registerExtLocalconfConfigConfig(): void
     {
         self::addCaching();
-        self::addPageTypesExtLocalconf();
     }
 
     public static function registerExtTablesConfig(): void
@@ -70,16 +67,6 @@ class Extension
                 'allowedTables' => '*',
             ]
         );
-    }
-
-    private static function addPageTypesExtLocalconf(): void
-    {
-        // TODO: typo3/cms-core:14.0 Remove this code block as Configuration/user.tsconfig will be loaded since 13.x
-        if (version_compare(GeneralUtility::makeInstance(Typo3Version::class)->__toString(), '13.0', '<')) {
-            ExtensionManagementUtility::addUserTSConfig(
-                "@import 'EXT:" . self::EXTENSION_KEY . '/Configuration/user.tsconfig'
-            );
-        }
     }
 
     private static function addCaching(): void

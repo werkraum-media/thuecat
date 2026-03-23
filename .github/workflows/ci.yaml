@@ -45,16 +45,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - php-version: '8.1'
-            typo3-version: '^12.4'
-          - php-version: '8.2'
-            typo3-version: '^12.4'
-          - php-version: '8.3'
-            typo3-version: '^12.4'
-          - php-version: '8.4'
-            typo3-version: '^12.4'
-          - php-version: '8.5'
-            typo3-version: '^12.4'
           - php-version: '8.2'
             typo3-version: '^13.4'
           - php-version: '8.3'
@@ -63,6 +53,14 @@ jobs:
             typo3-version: '^13.4'
           - php-version: '8.5'
             typo3-version: '^13.4'
+          - php-version: '8.2'
+            typo3-version: '^14'
+          - php-version: '8.3'
+            typo3-version: '^14'
+          - php-version: '8.4'
+            typo3-version: '^14'
+          - php-version: '8.5'
+            typo3-version: '^14'
     steps:
       - uses: 'actions/checkout@v3'
 
@@ -76,7 +74,7 @@ jobs:
         run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
 
       - name: 'Install dependencies with expected TYPO3 version'
-        run: 'composer require --no-interaction --prefer-dist --no-progress "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}"  "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}"'
+        run: 'composer require --no-interaction --prefer-dist --no-progress "typo3/cms-backend:${{ matrix.typo3-version }}" "typo3/cms-core:${{ matrix.typo3-version }}" "typo3/cms-extbase:${{ matrix.typo3-version }}" "typo3/cms-fluid-styled-content:${{ matrix.typo3-version }}" "typo3/cms-frontend:${{ matrix.typo3-version }}" "typo3/cms-install:${{ matrix.typo3-version }}"'
 
       - name: 'Code Quality (by PHPStan)'
         run: './vendor/bin/phpstan analyse'

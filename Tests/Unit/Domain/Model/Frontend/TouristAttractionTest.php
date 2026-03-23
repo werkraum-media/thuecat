@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHour;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\MergedOpeningHours;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility;
@@ -161,7 +160,6 @@ class TouristAttractionTest extends TestCase
         self::assertInstanceOf(MergedOpeningHours::class, $result);
         self::assertCount(2, $result);
         foreach ($result as $index => $mergedHour) {
-            self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
             $today = (new DateTimeImmutable())->format('Y-m-d');
             $inTwoDays = (new DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
             $inThreeDays = (new DateTimeImmutable())->modify('+3 days')->format('Y-m-d');
@@ -252,7 +250,6 @@ class TouristAttractionTest extends TestCase
         self::assertInstanceOf(MergedOpeningHours::class, $result);
         self::assertCount(2, $result);
         foreach ($result as $index => $mergedHour) {
-            self::assertInstanceOf(MergedOpeningHour::class, $mergedHour);
             $today = (new DateTimeImmutable())->format('Y-m-d');
             $inTwoDays = (new DateTimeImmutable())->modify('+2 days')->format('Y-m-d');
             $inThreeDays = (new DateTimeImmutable())->modify('+3 days')->format('Y-m-d');

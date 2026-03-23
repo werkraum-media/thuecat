@@ -61,7 +61,7 @@ class TouristAttraction extends Place
 
     public function getSlogan(): string
     {
-        return explode(',', $this->slogan)[0] ?? '';
+        return explode(',', $this->slogan)[0];
     }
 
     /**

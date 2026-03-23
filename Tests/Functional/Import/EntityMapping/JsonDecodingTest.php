@@ -30,17 +30,6 @@ use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 class JsonDecodingTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new JsonDecode();
-
-        self::assertInstanceOf(
-            JsonDecode::class,
-            $subject
-        );
-    }
-
-    #[Test]
     public function decodesPropertyWithMultipleLanguagesProvidingActiveOne(): void
     {
         $subject = new JsonDecode();

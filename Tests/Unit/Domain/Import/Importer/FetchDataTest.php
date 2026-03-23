@@ -38,22 +38,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseExcept
 class FetchDataTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
-        $cache = self::createStub(FrontendInterface::class);
-
-        $subject = new FetchData(
-            $requestFactory,
-            $httpClient,
-            $cache
-        );
-
-        self::assertInstanceOf(FetchData::class, $subject);
-    }
-
-    #[Test]
     public function returnsParsedJsonLdBasedOnUrl(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);

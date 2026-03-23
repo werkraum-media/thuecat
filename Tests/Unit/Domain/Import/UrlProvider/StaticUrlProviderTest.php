@@ -31,13 +31,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 class StaticUrlProviderTest extends TestCase
 {
     #[Test]
-    public function canBeCreated(): void
-    {
-        $subject = new StaticUrlProvider();
-        self::assertInstanceOf(StaticUrlProvider::class, $subject);
-    }
-
-    #[Test]
     public function canProvideForStaticConfiguration(): void
     {
         $configuration = new ImportConfiguration();
