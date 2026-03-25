@@ -156,26 +156,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9787007,11.0277439,21z"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_653435"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653458"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653546"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653571"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319657"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319686"
-                }
-            ],
             "schema:name": {
                 "@language": "de",
                 "@value": "Waagegasse Erfurt"
@@ -183,9 +163,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5319686"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

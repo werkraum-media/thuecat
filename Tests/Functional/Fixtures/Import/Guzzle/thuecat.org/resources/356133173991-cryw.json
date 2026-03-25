@@ -150,17 +150,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9785325,11.0298036,20z"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_5311411"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_6233066"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_6480118"
-                }
-            ],
             "schema:name": {
                 "@language": "de",
                 "@value": "Benediktsplatz Erfurt"
@@ -168,9 +157,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_6480118"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

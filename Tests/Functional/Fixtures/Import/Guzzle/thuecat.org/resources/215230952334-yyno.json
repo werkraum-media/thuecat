@@ -217,17 +217,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/kraemerbruecke-103571.html"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_134288"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_134362"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_652340"
-                }
-            ],
             "schema:isAccessibleForFree": {
                 "@type": "schema:Boolean",
                 "@value": "true"
@@ -249,9 +238,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_134362"
             },
             "schema:publicAccess": {
                 "@type": "schema:Boolean",
