@@ -3,3 +3,4 @@
 /.*.cache
 /Tests/Acceptance/Support/_generated
 /vendor/
+/var/

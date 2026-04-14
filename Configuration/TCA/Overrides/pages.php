@@ -37,6 +37,11 @@ defined('TYPO3') or die();
                     'showitem' => 'tx_thuecat_flexform',
                 ],
             ],
+            'types' => [
+                Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION => [
+                    'allowedRecordTypes' => ['*'],
+                ],
+            ],
         ]);
 
         ExtensionManagementUtility::addTcaSelectItemGroup(
@@ -55,11 +60,6 @@ defined('TYPO3') or die();
                 'icon' => 'pages_module_thuecat',
             ]
         );
-
-        if (is_array($GLOBALS['TCA'][$tableName]['types'])) {  // just keep phpstan quiet
-            $GLOBALS['TCA'][$tableName]['types'][Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION] = []; // phpstan, too. overhead, much?
-            $GLOBALS['TCA'][$tableName]['types'][Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION]['allowedRecordTypes'] = ['*'];
-        }
     }
 })(
     Extension::EXTENSION_KEY,
