@@ -54,6 +54,9 @@ defined('TYPO3') or die();
             'icon' => 'pages_module_thuecat',
         ]
     );
+
+    $GLOBALS['TCA']['pages']['types'][Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION]['allowedRecordTypes'] = ['*'];
+
 })(
     Extension::EXTENSION_KEY,
     'pages'

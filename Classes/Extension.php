@@ -47,26 +47,9 @@ class Extension
         self::addCaching();
     }
 
-    public static function registerExtTablesConfig(): void
-    {
-        self::addPageTypesExtTables();
-    }
-
     public static function getIconPath(): string
     {
         return 'EXT:' . self::EXTENSION_KEY . '/Resources/Public/Icons/';
-    }
-
-    private static function addPageTypesExtTables(): void
-    {
-        $registry = GeneralUtility::makeInstance(PageDoktypeRegistry::class);
-        $registry->add(
-            self::PAGE_DOKTYPE_TOURIST_ATTRACTION,
-            [
-                'type' => 'web',
-                'allowedTables' => '*',
-            ]
-        );
     }
 
     private static function addCaching(): void
