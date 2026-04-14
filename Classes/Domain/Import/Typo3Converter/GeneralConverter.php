@@ -462,6 +462,7 @@ class GeneralConverter implements Converter
         }
 
         $uids = [];
+        /** @var \WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility $entry */
         foreach ($result as $entry) {
             $uids[] = $entry->getUid();
         }
