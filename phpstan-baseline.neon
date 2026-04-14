@@ -337,12 +337,6 @@ parameters:
 			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
 
 		-
-			message: '#^Cannot call method getUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
 			message: '#^Parameter \#1 \$entity of method WerkraumMedia\\ThueCat\\Domain\\Import\\Typo3Converter\\GeneralConverter\:\:buildDataArrayFromEntity\(\) expects WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Minimum, WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\MapsToType given\.$#'
 			identifier: argument.type
 			count: 1
@@ -901,12 +895,6 @@ parameters:
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
-			message: '#^Parameter \#1 \$conf of method TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer\:\:checkIf\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
 			message: '#^Unable to resolve the template type T in call to method TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Mapper\\DataMapper\:\:map\(\)$#'
 			identifier: argument.templateType
 			count: 1
@@ -1091,18 +1079,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
-			message: '#^Parameter \#1 \$mods of method WerkraumMedia\\ThueCat\\Updates\\BackendModuleUserPermission\:\:updateMods\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Updates/BackendModuleUserPermission.php
-
-		-
-			message: '#^Cannot access offset ''pages'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/pages.php
 
 		-
 			message: '#^Parameter \#1 \$original of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:mergeRecursiveWithOverrule\(\) expects array, mixed given\.$#'

@@ -20,7 +20,6 @@ return (static function (string $extensionKey, string $tableName) {
             'enablecolumns' => [
                 'disabled' => 'disable',
             ],
-            'searchFields' => 'title',
         ],
         'columns' => [
             'title' => [

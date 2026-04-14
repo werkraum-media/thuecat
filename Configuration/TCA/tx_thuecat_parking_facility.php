@@ -20,7 +20,6 @@ return (static function (string $extensionKey, string $tableName) {
             'enablecolumns' => [
                 'disabled' => 'disable',
             ],
-            'searchFields' => 'title, description',
             'transOrigPointerField' => 'l18n_parent',
             'transOrigDiffSourceField' => 'l18n_diffsource',
             'languageField' => 'sys_language_uid',
