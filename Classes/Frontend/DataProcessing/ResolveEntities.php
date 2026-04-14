@@ -46,7 +46,11 @@ class ResolveEntities implements DataProcessorInterface
         array $processorConfiguration,
         array $processedData
     ) {
-        if (isset($processorConfiguration['if.']) && !$cObj->checkIf($processorConfiguration['if.'])) {
+        if (
+            isset($processorConfiguration['if.'])
+            && is_array($processorConfiguration['if.'])
+            && !$cObj->checkIf($processorConfiguration['if.'])
+        ) {
             return $processedData;
         }
 
