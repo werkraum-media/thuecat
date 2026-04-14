@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Typo3Converter;
 
+use BadMethodCallException;
 use Exception;
 use TYPO3\CMS\Core\Log\Logger;
 use TYPO3\CMS\Core\Log\LogManager;
@@ -462,8 +463,11 @@ class GeneralConverter implements Converter
         }
 
         $uids = [];
-        /** @var \WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility $entry */
         foreach ($result as $entry) {
+            if (method_exists($entry, 'getUid') === false) {
+                throw new BadMethodCallException('Given entry does not provide a getUid() method: ' . $entry::class, 1776164806);
+            }
+
             $uids[] = $entry->getUid();
         }
         return $uids;
