@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat;
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
-use TYPO3\CMS\Core\DataHandling\PageDoktypeRegistry;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Extension
 {
