@@ -165,20 +165,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9767896,11.023818,18.25z"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_5122508"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319718"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319755"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319964"
-                }
-            ],
             "schema:name": [
                 {
                     "@language": "de",
@@ -200,9 +186,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5319718"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

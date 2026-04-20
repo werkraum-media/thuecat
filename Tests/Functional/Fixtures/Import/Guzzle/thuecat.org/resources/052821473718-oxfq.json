@@ -150,9 +150,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9785793,11.0319168,21z"
             },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_5143698"
-            },
             "schema:name": {
                 "@language": "de",
                 "@value": "Wenigemarkt Erfurt"
@@ -160,9 +157,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5143698"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",
