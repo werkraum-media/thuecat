@@ -11,6 +11,7 @@ return (static function (string $extensionKey, string $tableName) {
     $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
     $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
 
+    // TODO: typo3/cms-core:^15.0 Remove condition and keep v14 support.
     $majorVersion = (new Typo3Version())->getMajorVersion();
     $flexFormField = 'configuration';
     if ($majorVersion === 13) {
