@@ -3,39 +3,30 @@
 declare(strict_types=1);
 
 return [
-    'tx_events_domain_model_event' => [
-        0 => [
-            'uid' => '1',
-            'pid' => '11',
-            'remote_id' => 'https://int.thuecat.org/resources/e_101209018-hubev',
-            'title' => 'Hausmusik: Musik trifft Literatur',
-        ],
-    ],
-    'tx_events_domain_model_date' => [
-        0 => [
-            'uid' => '1',
-            'pid' => '11',
-            'start' => 0,
-            'end' => 0,
-        ],
-    ],
-    'tx_events_domain_model_organizer' => [
-        0 => [
-            'uid' => '1',
-            'pid' => '11',
-            'name' => '',
-            'phone' => '',
-            'email' => '',
-        ],
-    ],
     'tx_events_domain_model_location' => [
         0 => [
             'uid' => '1',
             'pid' => '11',
-            'name' => '',
-            'street' => '',
-            'zip' => '',
-            'city' => '',
+            'remote_id' => 'https://int.thuecat.org/resources/e_101155560-hubev#location',
+            'name' => 'Schillerhaus Rudolstadt',
+            'street' => 'Schillerstraße 25',
+            'zip' => '07407',
+            'city' => 'Rudolstadt',
+            'phone' => '+49 3672 486470',
+            'latitude' => '50.7212805',
+            'longitude' => '11.3351741',
+        ],
+    ],
+    'tx_events_domain_model_event' => [
+        0 => [
+            'uid' => '1',
+            'pid' => '11',
+            'remote_id' => 'https://int.thuecat.org/resources/e_101155560-hubev',
+            'global_id' => 'https://int.thuecat.org/resources/e_101155560-hubev',
+            'title' => 'Museumstag. Entdeckertag.',
+            'source_name' => 'thuecat',
+            'source_url' => 'https://int.thuecat.org/resources/e_101155560-hubev',
+            'location' => '1',
         ],
     ],
     'tx_thuecat_import_log' => [

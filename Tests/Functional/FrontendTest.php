@@ -47,7 +47,7 @@ class FrontendTest extends FunctionalTestCase
         $this->testExtensionsToLoad = [
             'werkraummedia/thuecat',
             'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Extensions/example/',
-            'werkraummedia/events'
+            'werkraummedia/events',
         ];
 
         $this->pathsToLinkInTestInstance = [

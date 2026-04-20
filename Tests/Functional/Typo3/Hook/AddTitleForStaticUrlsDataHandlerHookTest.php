@@ -53,7 +53,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
-            'werkraummedia/events/'
+            'werkraummedia/events/',
         ]);
         $this->pathsToLinkInTestInstance = array_merge($this->pathsToLinkInTestInstance, [
             'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',

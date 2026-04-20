@@ -23,14 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
-use DateTimeImmutable;
-use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Context\DateTimeAspect;
-use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
-use WerkraumMedia\ThueCat\Domain\Import\Importer;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 class ImportTest extends AbstractImportTestCase
 {
@@ -44,8 +37,6 @@ class ImportTest extends AbstractImportTestCase
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
-
-
 
     #[Test]
     public function updatesExistingOrganization(): void
@@ -418,5 +409,4 @@ class ImportTest extends AbstractImportTestCase
             $loggedErrors
         );
     }
-
 }

@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use DateTimeImmutable;
+use DateTimeZone;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
@@ -164,7 +165,7 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         $this->get(Context::class)->setAspect(
             'date',
             new DateTimeAspect(
-                new DateTimeImmutable('2024-03-03 00:00:00', new \DateTimeZone('UTC'))
+                new DateTimeImmutable('2024-03-03 00:00:00', new DateTimeZone('UTC'))
             )
         );
 

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
-namespace WerkraumMedia\thuecat\Tests\Functional;
+namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 class ImportEventsTest extends AbstractImportTestCase
 {
