@@ -45,6 +45,8 @@ class ImportTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
 
+
+
     #[Test]
     public function updatesExistingOrganization(): void
     {
@@ -417,19 +419,4 @@ class ImportTest extends AbstractImportTestCase
         );
     }
 
-    private function importConfiguration(): void
-    {
-        $this->workaroundExtbaseConfiguration();
-
-        $this->get(Context::class)->setAspect(
-            'date',
-            new DateTimeAspect(
-                new DateTimeImmutable('2024-03-03 00:00:00', new DateTimeZone('UTC'))
-            )
-        );
-
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        self::assertInstanceOf(ImportConfiguration::class, $configuration);
-        $this->get(Importer::class)->importConfiguration($configuration);
-    }
 }

@@ -31,6 +31,9 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Import\Importer;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
@@ -54,6 +57,7 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
+            'werkraummedia/events/',
         ]);
         $this->pathsToLinkInTestInstance = array_merge($this->pathsToLinkInTestInstance, [
             'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
@@ -151,5 +155,21 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         $this->get(ConfigurationManagerInterface::class)
             ->setRequest($fakeRequest)
         ;
+    }
+
+    protected function importConfiguration(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $this->get(Context::class)->setAspect(
+            'date',
+            new DateTimeAspect(
+                new DateTimeImmutable('2024-03-03 00:00:00', new \DateTimeZone('UTC'))
+            )
+        );
+
+        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
+        self::assertInstanceOf(ImportConfiguration::class, $configuration);
+        $this->get(Importer::class)->importConfiguration($configuration);
     }
 }
