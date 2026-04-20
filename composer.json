@@ -53,7 +53,7 @@
         "typo3/cms-fluid-styled-content": "^13.4 || 14.*",
         "typo3/cms-frontend": "^13.4 || 14.*",
         "typo3/cms-install": "^13.4 || 14.*",
-        "werkraummedia/events": "*"
+        "werkraummedia/events": "dev-main"
     },
     "require-dev": {
         "codappix/typo3-php-datasets": "^2.0",
