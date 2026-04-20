@@ -46,6 +46,12 @@ class Registry
 
     public function getConverterBasedOnType(MapsToType $entity): ?Converter
     {
-        return $this->converters[0];
+        foreach ($this->converters as $converter) {
+            if ($converter->supports($entity)) {
+                return $converter;
+            }
+        }
+
+        return null;
     }
 }
