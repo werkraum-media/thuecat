@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -42,6 +43,8 @@ class FrontendTest extends FunctionalTestCase
             'frontend',
             'fluid_styled_content',
             'install',
+            'filelist',
+            'filemetadata',
         ];
 
         $this->testExtensionsToLoad = [
@@ -65,6 +68,7 @@ class FrontendTest extends FunctionalTestCase
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     public function touristAttractionContentElementIsRendered(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/TouristAttractions.php');

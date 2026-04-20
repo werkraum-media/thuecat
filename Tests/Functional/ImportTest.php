@@ -23,11 +23,13 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
  * 02110-1301, USA.
  */
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 
 class ImportTest extends AbstractImportTestCase
 {
     #[Test]
+    #[IgnoreDeprecations]
     public function importsFreshOrganization(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');

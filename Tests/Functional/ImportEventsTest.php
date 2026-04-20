@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 
 class ImportEventsTest extends AbstractImportTestCase
 {
     #[Test]
+    #[IgnoreDeprecations]
     public function importsFreshEvent(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshEvent.php');

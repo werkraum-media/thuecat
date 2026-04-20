@@ -27,6 +27,7 @@ use Codappix\Typo3PhpDatasets\PhpDataSet;
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -50,6 +51,8 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
             'frontend',
             'fluid_styled_content',
             'install',
+            'filelist',
+            'filemetadata',
         ]);
         $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
             'werkraummedia/thuecat/',
@@ -83,6 +86,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
     }
 
     #[Test]
+    #[IgnoreDeprecations]
     #[DataProvider('possibleUpdatesForTitle')]
     public function changesTitleFromRemote(
         string $existingConfiguration,

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Exception;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -32,6 +33,7 @@ use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
 final class ImportConfigurationCommandTest extends AbstractImportTestCase
 {
     #[Test]
+    #[IgnoreDeprecations]
     public function canImport(): void
     {
         $this->workaroundExtbaseConfiguration();
