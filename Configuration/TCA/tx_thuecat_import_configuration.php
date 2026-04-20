@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') or die();
@@ -9,6 +10,13 @@ defined('TYPO3') or die();
 return (static function (string $extensionKey, string $tableName) {
     $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
     $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
+
+    // TODO: typo3/cms-core:15.0 Remove condition and keep v14 support.
+    $majorVersion = (new Typo3Version())->getMajorVersion();
+    $flexFormField = 'configuration';
+    if ($majorVersion === 13) {
+        $flexFormField = 'pi_flexform';
+    }
 
     return [
         'ctrl' => [
@@ -91,7 +99,7 @@ return (static function (string $extensionKey, string $tableName) {
             'static' => [
                 'showitem' => 'title, type, configuration',
                 'columnsOverrides' => [
-                    'pi_flexform' => [
+                    $flexFormField => [
                         'config' => [
                             'ds' => $flexFormConfigurationPath . 'ImportConfiguration/Static.xml',
                         ],
@@ -101,7 +109,7 @@ return (static function (string $extensionKey, string $tableName) {
             'syncScope' => [
                 'showitem' => 'title, type, configuration',
                 'columnsOverrides' => [
-                    'pi_flexform' => [
+                    $flexFormField => [
                         'config' => [
                             'ds' => $flexFormConfigurationPath . 'ImportConfiguration/SyncScope.xml',
                         ],
@@ -111,7 +119,7 @@ return (static function (string $extensionKey, string $tableName) {
             'containsPlace' => [
                 'showitem' => 'title, type, configuration',
                 'columnsOverrides' => [
-                    'pi_flexform' => [
+                    $flexFormField => [
                         'config' => [
                             'ds' => $flexFormConfigurationPath . 'ImportConfiguration/ContainsPlace.xml',
                         ],
