@@ -29,5 +29,10 @@ interface EntityInterface
 
     public function getRemoteId(): string;
 
+    /**
+     * Return DataHandler-compatible array. Relation field values (refs to other entities)
+     * must be prefixed with 'REF:' so the UID Resolver can find and replace them with UIDs.
+     * The 'remote_id' field value itself must NOT be prefixed — it identifies the record.
+     */
     public function toDataHandlerArray(): array;
 }

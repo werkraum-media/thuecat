@@ -23,19 +23,26 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
-class OrganisationEntity extends AbstractEntity
+abstract class AbstractEntity implements EntityInterface
 {
-    public function getTable(): string
+    public function __construct(protected readonly array $node) {}
+
+    public function getRemoteId(): string
     {
-        return 'tx_thuecat_organisation';
+        return (string)$this->node['@id'];
     }
 
-    public function toDataHandlerArray(): array
+    protected function prefixRelation(string $remoteId): string
     {
-        return [
-            'remote_id' => $this->getRemoteId(),
-            'title' => $this->extractLanguageValue($this->node['schema:name'] ?? null),
-            'description' => $this->extractLanguageValue($this->node['schema:description'] ?? null),
-        ];
+        return 'REF:' . $remoteId;
+    }
+
+    protected function extractLanguageValue(mixed $value): string
+    {
+        if (is_array($value) && isset($value['@value'])) {
+            return (string)$value['@value'];
+        }
+
+        return '';
     }
 }
