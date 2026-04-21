@@ -21,12 +21,31 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
+namespace WerkraumMedia\ThueCat\Domain\Import\Parser;
 
-interface EntityInterface
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
+
+class DataHandlerPayload
 {
-    public function getRemoteId(array $node): string;
+    /** @var array<string, array<string, array>> */
+    private array $data = [];
 
-    public function toArray(): array;
+    public function addEntity(EntityInterface $entity): void
+    {
+        $table = $entity->table;
+        $remoteId = $entity->toArray()['remote_id'];
+
+        if (!isset($this->data[$table])) {
+            $this->data[$table] = [];
+        }
+
+        $this->data[$table][$remoteId] = $entity->toArray();
+    }
+
+    public function getPayload(): array
+    {
+        return $this->data;
+    }
+
 
 }

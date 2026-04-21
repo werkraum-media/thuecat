@@ -23,19 +23,30 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
+
 class OrganisationEntity extends AbstractEntity
 {
-    public function getTable(): string
-    {
-        return 'tx_thuecat_organisation';
-    }
+    public $table = 'tx_thuecat_organisation';
+    protected string $remote_id = '';
+    protected string $title = '';
+    protected string $description = '';
 
-    public function toDataHandlerArray(): array
+    // Relations, track by their identifier
+    protected string $towns = '';
+    protected string $manages_tourist_information = '';
+    protected string $manages_tourist_attraction = '';
+
+    public function __construct(array $node, DataHandlerPayload $payload, bool $extractRelations = false)
     {
-        return [
-            'remote_id' => $this->getRemoteId(),
-            'title' => $this->extractLanguageValue($this->node['schema:name'] ?? null),
-            'description' => $this->extractLanguageValue($this->node['schema:description'] ?? null),
-        ];
+        $this->remote_id = $this->getRemoteId($node);
+        $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
+        $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
+        if ($extractRelations === true) {
+            // @todo [1] implement relation extraction, if this is the top level entity.
+            // @todo [2] For now, we skip, as everything comes from elsewhere (TouristAttraction mostly)
+        }
+
+        $payload->addEntity($this);
     }
 }

@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
 
 final class OrganisationEntityTest extends TestCase
@@ -36,9 +37,9 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node);
+        $subject = new OrganisationEntity($node, new DataHandlerPayload());
 
-        self::assertSame('tx_thuecat_organisation', $subject->getTable());
+        self::assertSame('tx_thuecat_organisation', $subject->table);
     }
 
     #[Test]
@@ -46,9 +47,9 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node);
+        $subject = new OrganisationEntity($node, new DataHandlerPayload());
 
-        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $subject->getRemoteId());
+        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $subject->getRemoteId($node));
     }
 
     #[Test]
@@ -56,9 +57,9 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node);
+        $subject = new OrganisationEntity($node, new DataHandlerPayload());
 
-        $row = $subject->toDataHandlerArray();
+        $row = $subject->toArray();
 
         self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
     }
@@ -68,9 +69,9 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node);
+        $subject = new OrganisationEntity($node, new DataHandlerPayload());
 
-        $row = $subject->toDataHandlerArray();
+        $row = $subject->toArray();
 
         self::assertStringStartsWith('Die Erfurt Tourismus', $row['description']);
     }
@@ -80,9 +81,9 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node);
+        $subject = new OrganisationEntity($node, new DataHandlerPayload());
 
-        $row = $subject->toDataHandlerArray();
+        $row = $subject->toArray();
 
         self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
     }

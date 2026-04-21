@@ -23,90 +23,77 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser;
 
+use phpDocumentor\Reflection\Types\Boolean;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\AddressEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Exception\UnhandledNodeException;
 
 class Parser
 {
+    protected DataHandlerPayload $dataHandlerPayload;
+
+
     private const TYPE_TO_ENTITY = [
         'schema:Organization' => OrganisationEntity::class,
-    ];
-
-    private const NODE_HANDLER = [
-        'schema:Organization' => 'process',
+        'thuecat:TouristAttraction' => TouristAttractionEntity::class,
+        'schema:PostalAddress' => AddressEntity::class,
     ];
 
     private const NODE_SKIPPER = [
-        'genid-' => 'discard',
+        'genid-',
     ];
 
-    /** @var array<int, array{id: string, type: string, action: string}> */
-    private array $nodeLog = [];
 
-    public function parse(array $graph): array
+    public function parse(array $graph): void
     {
-        $result = [];
-        $this->nodeLog = [];
+        $this->dataHandlerPayload = new DataHandlerPayload();
 
         foreach ($graph as $node) {
             $id = $node['@id'] ?? '';
             $types = $node['@type'] ?? [];
             $types = is_array($types) ? $types : [];
 
-            $action = $this->determineNodeAction($id, $types);
-
-            $this->logNode($id, $types, $action);
-
-            if ($action === 'discard') {
+            if ($this->determineNodeAction($id, $types) === false) {
                 continue;
             }
 
-            if ($action === 'process') {
+            if ($this->determineNodeAction($id, $types) === true) {
                 $entityClass = $this->resolveEntityClass($types);
                 if ($entityClass === null) {
                     continue;
                 }
 
-                $entity = new $entityClass($node);
-                $result[$entity->getTable()][$entity->getRemoteId()] = $entity->toDataHandlerArray();
+                new $entityClass($node, $this->dataHandlerPayload);
+
             }
         }
 
-        return $result;
     }
 
-    public function getNodeLog(): array
+    public function getDataHandlerPayload(): DataHandlerPayload
     {
-        return $this->nodeLog;
+        return $this->dataHandlerPayload;
     }
 
-    private function determineNodeAction(string $id, array $types): string
+    private function determineNodeAction(string $id, array $types): bool
     {
-        foreach (self::NODE_SKIPPER as $pattern => $action) {
-            if (str_contains($id, $pattern)) {
-                return $action;
+        foreach (self::NODE_SKIPPER as $pattern) {
+            if (str_starts_with($pattern, $id)) {
+                return false;
             }
         }
 
         foreach ($types as $type) {
-            if (isset(self::NODE_HANDLER[$type])) {
-                return self::NODE_HANDLER[$type];
+            if (array_key_exists($type, self::TYPE_TO_ENTITY)) {
+                return true;
             }
         }
 
         throw new UnhandledNodeException(
             'No handler defined for node ' . $id . ' with types: ' . implode(', ', $types)
         );
-    }
-
-    private function logNode(string $id, array $types, string $action): void
-    {
-        $this->nodeLog[] = [
-            'id' => $id,
-            'type' => !empty($types) ? implode(', ', $types) : '(no type)',
-            'action' => $action,
-        ];
     }
 
     /** @return class-string<EntityInterface>|null */

@@ -37,7 +37,8 @@ final class ParserTest extends TestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = new Parser();
-        $result = $subject->parse($graph);
+        $subject->parse($graph);
+        $result = $subject->getDataHandlerPayload()->getPayload();
 
         self::assertArrayHasKey('tx_thuecat_organisation', $result);
         self::assertArrayHasKey(
@@ -57,7 +58,8 @@ final class ParserTest extends TestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = new Parser();
-        $result = $subject->parse($graph);
+        $subject->parse($graph);
+        $result = $subject->getDataHandlerPayload()->getPayload();
 
         foreach (array_keys($result) as $table) {
             foreach (array_keys($result[$table]) as $remoteId) {

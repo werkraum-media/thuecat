@@ -23,18 +23,30 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
+
 abstract class AbstractEntity implements EntityInterface
 {
-    public function __construct(protected readonly array $node) {}
 
-    public function getRemoteId(): string
+
+    public function getRemoteId(array $node): string
     {
-        return (string)$this->node['@id'];
+        return (string)$node['@id'];
     }
 
     protected function prefixRelation(string $remoteId): string
     {
         return 'REF:' . $remoteId;
+    }
+
+
+    protected function extractStringValue(mixed $value): string
+    {
+        if (is_array($value)) {
+            return (string)($value['@value'] ?? '');
+        }
+
+        return '';
     }
 
     protected function extractLanguageValue(mixed $value): string
@@ -44,5 +56,13 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         return '';
+    }
+
+    public function toArray(): array
+    {
+        $array = get_object_vars($this);
+        unset($array['table']);
+
+        return array_filter($array);
     }
 }
