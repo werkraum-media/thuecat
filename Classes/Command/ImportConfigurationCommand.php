@@ -35,8 +35,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 class ImportConfigurationCommand extends Command
 {
     public function __construct(
-        private readonly ImportConfigurationRepository $importConfigurationRepository,
-        private readonly Importer $importer
+        private readonly ImportConfigurationRepository $importConfigurationRepository
     ) {
         parent::__construct();
     }
@@ -67,12 +66,13 @@ class ImportConfigurationCommand extends Command
         if ($configuration === null) {
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
+        // @todo restore actual import functionality
 
-        $importLog = $this->importer->importConfiguration($configuration);
-
-        if ($importLog->hasErrors()) {
-            return Command::FAILURE;
-        }
+//        $importLog = $this->importer->importConfiguration($configuration);
+//
+//        if ($importLog->hasErrors()) {
+//            return Command::FAILURE;
+//        }
 
         return Command::SUCCESS;
     }

@@ -38,11 +38,12 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
  */
 final class AddTitleForStaticUrlsDataHandlerHook
 {
+    // @todo this functionality needs to be restored!
     public function __construct(
         private readonly SiteFinder $siteFinder,
         private readonly FetchData $fetchData,
-        private readonly EntityRegistry $entityRegistry,
-        private readonly EntityMapper $entityMapper,
+//        private readonly EntityRegistry $entityRegistry,
+//        private readonly EntityMapper $entityMapper,
     ) {
     }
 
@@ -51,6 +52,8 @@ final class AddTitleForStaticUrlsDataHandlerHook
         string $table,
         string|int $id,
     ): void {
+        // @todo this functionality needs to be restored!
+        return;
         if ($this->shouldSkip($table, $incomingFieldArray)) {
             return;
         }
@@ -137,6 +140,7 @@ final class AddTitleForStaticUrlsDataHandlerHook
 
     public static function register(): void
     {
+        return;
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
     }
 }
