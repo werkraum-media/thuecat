@@ -39,7 +39,7 @@ class AddressEntity extends AbstractEntity
     protected string $fax = '';
     protected array $geo = [];
 
-    public function __construct(array $node, array $geo_node = [])
+    public function configure(array $node, array $geo_node = []): void
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->street = $this->extractLanguageValue($node['schema:streetAddress'] ?? null);
@@ -70,5 +70,10 @@ class AddressEntity extends AbstractEntity
             'latitude' => (float)$latitude,
             'longitude' => (float)$longitude,
         ];
+    }
+
+    public function handlesTypes():array
+    {
+        return [];
     }
 }

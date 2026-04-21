@@ -23,27 +23,36 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser;
 
-use phpDocumentor\Reflection\Types\Boolean;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\AddressEntity;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristInformationEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Exception\UnhandledNodeException;
 
+#[Autoconfigure(public: true)]
 class Parser
 {
     protected DataHandlerPayload $dataHandlerPayload;
 
 
     private const TYPE_TO_ENTITY = [
+        'thuecat:TouristInformation' => TouristInformationEntity::class,
         'schema:Organization' => OrganisationEntity::class,
         'thuecat:TouristAttraction' => TouristAttractionEntity::class,
-        'schema:PostalAddress' => AddressEntity::class,
+
     ];
 
     private const NODE_SKIPPER = [
         'genid-',
     ];
+
+    public function __construct(#[AutowireLocator(services: 'import.entity')] private readonly ServiceLocator $entities)
+    {
+
+    }
 
 
     public function parse(array $graph): void
@@ -51,23 +60,17 @@ class Parser
         $this->dataHandlerPayload = new DataHandlerPayload();
 
         foreach ($graph as $node) {
-            $id = $node['@id'] ?? '';
             $types = $node['@type'] ?? [];
             $types = is_array($types) ? $types : [];
 
-            if ($this->determineNodeAction($id, $types) === false) {
+            $entityClass = $this->resolveEntityClass($types);
+            if ($entityClass === null) {
                 continue;
             }
+            $entity = new $entityClass();
+            $entity->configure($node);
+            $this->dataHandlerPayload->addEntity($entity);
 
-            if ($this->determineNodeAction($id, $types) === true) {
-                $entityClass = $this->resolveEntityClass($types);
-                if ($entityClass === null) {
-                    continue;
-                }
-
-                new $entityClass($node, $this->dataHandlerPayload);
-
-            }
         }
 
     }
@@ -77,34 +80,24 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
-    private function determineNodeAction(string $id, array $types): bool
+    private function resolveEntityClass(array $types): EntityInterface
     {
-        foreach (self::NODE_SKIPPER as $pattern) {
-            if (str_starts_with($pattern, $id)) {
-                return false;
+        $candidates = [];
+        foreach ($this->entities as $candidate) {
+            foreach ($types as $type) {
+                if (in_array($type, $candidate->handlesTypes())) {
+                    $candidates[] = $candidate;
+                }
             }
         }
-
-        foreach ($types as $type) {
-            if (array_key_exists($type, self::TYPE_TO_ENTITY)) {
-                return true;
-            }
+        if (count($candidates) > 1) {
+            usort($candidates, function (EntityInterface $a, EntityInterface $b) {
+                if ($a->getPriority() === $b->getPriority()) {
+                    return 0;
+                }
+                return $a->getPriority() < $b->getPriority() ? 1 : -1;
+            });
         }
-
-        throw new UnhandledNodeException(
-            'No handler defined for node ' . $id . ' with types: ' . implode(', ', $types)
-        );
-    }
-
-    /** @return class-string<EntityInterface>|null */
-    private function resolveEntityClass(array $types): ?string
-    {
-        foreach ($types as $type) {
-            if (isset(self::TYPE_TO_ENTITY[$type])) {
-                return self::TYPE_TO_ENTITY[$type];
-            }
-        }
-
-        return null;
+        return array_shift($candidates);
     }
 }

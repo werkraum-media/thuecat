@@ -60,24 +60,27 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $managed_by = '';
     protected string $parking_facility_near_by = '';
 
-    public function __construct(array $node, DataHandlerPayload $payload)
+    public function configure(array $node)
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
         $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
         $this->url = $this->extractStringValue($node['schema:url'] ?? null);
         if ($node['schema:address'] ?? []) {
-            $this->address = json_encode(
-                (
-                new AddressEntity(
-                    $node['schema:address'] ?? [],
-                    $node['schema:geo'] ?? []
-                )
-                )->toArray()
-            ) ?? '';
+            $addressEntity = new AddressEntity();
+            $addressEntity->configure(
+                $node['schema:address'] ?? [],
+                $node['schema:geo'] ?? []
+
+            );
+            $this->address = json_encode($addressEntity->toArray()) ?? '';
         }
 
-        $payload->addEntity($this);
     }
 
+    public function handlesTypes(): array
+    {
+        return [
+        ];
+    }
 }

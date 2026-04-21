@@ -23,10 +23,17 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+
+#[AutoconfigureTag('import.entity')]
 interface EntityInterface
 {
     public function getRemoteId(array $node): string;
 
     public function toArray(): array;
+
+    public function handlesTypes():array;
+
+    public function getPriority():int;
 
 }

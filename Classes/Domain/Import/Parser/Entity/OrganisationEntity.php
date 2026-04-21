@@ -37,7 +37,7 @@ class OrganisationEntity extends AbstractEntity
     protected string $manages_tourist_information = '';
     protected string $manages_tourist_attraction = '';
 
-    public function __construct(array $node, DataHandlerPayload $payload, bool $extractRelations = false)
+    public function configure(array $node, bool $extractRelations = false)
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
@@ -47,6 +47,13 @@ class OrganisationEntity extends AbstractEntity
             // @todo [2] For now, we skip, as everything comes from elsewhere (TouristAttraction mostly)
         }
 
-        $payload->addEntity($this);
     }
+
+    public function handlesTypes():array
+    {
+        return [
+            'schema:Organization',
+        ];
+    }
+
 }

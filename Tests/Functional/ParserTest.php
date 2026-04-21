@@ -21,22 +21,25 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser;
+namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 
-final class ParserTest extends TestCase
+final class ParserTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/Fixtures/';
+    private const FIXTURE_PATH = __DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/';
 
     #[Test]
     public function parsesOrganisationNode(): void
     {
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
-        $subject = new Parser();
+        $subject = $this->get(Parser::class);
         $subject->parse($graph);
         $result = $subject->getDataHandlerPayload()->getPayload();
 
@@ -53,11 +56,32 @@ final class ParserTest extends TestCase
     }
 
     #[Test]
+    public function parsesTouristInformationNode(): void
+    {
+        $graph = $this->graphFromFixture('333039283321-xxwg.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph);
+        $result = $subject->getDataHandlerPayload()->getPayload();
+
+        self::assertArrayHasKey('tx_thuecat_tourist_information', $result);
+        self::assertArrayHasKey(
+            'https://thuecat.org/resources/333039283321-xxwg',
+            $result['tx_thuecat_tourist_information']
+        );
+
+        $row = $result['tx_thuecat_tourist_information']['https://thuecat.org/resources/333039283321-xxwg'];
+
+        self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
+        self::assertSame('Erfurt Tourist Information', $row['title']);
+    }
+
+    #[Test]
     public function skipsBlankNodes(): void
     {
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
-        $subject = new Parser();
+        $subject = $this->get(Parser::class);
         $subject->parse($graph);
         $result = $subject->getDataHandlerPayload()->getPayload();
 
