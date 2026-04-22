@@ -65,20 +65,6 @@ abstract class AbstractEntity implements EntityInterface
         return '';
     }
 
-    protected function extractLanguageValue(mixed $value): string
-    {
-        if (is_array($value)) {
-            if (!array_key_exists('@value', $value)) {
-                if (array_key_exists('@value', $value[0])) {
-                    $value = $value[0];
-                }
-            }
-            return (string)$value['@value'];
-        }
-
-        return '';
-    }
-
     /**
      * Strip the thuecat:/schema: namespace prefix from an enum @value.
      *

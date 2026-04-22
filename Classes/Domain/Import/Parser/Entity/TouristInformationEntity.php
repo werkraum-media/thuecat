@@ -38,9 +38,11 @@ class TouristInformationEntity extends AbstractEntity
 
     public function configure(array $node, ParserContext $context): void
     {
+        $language = $context->language;
+
         $this->remote_id = $this->getRemoteId($node);
-        $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
-        $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
+        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
+        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
 
         // town (tx_thuecat_town) and managed_by (tx_thuecat_organisation) live
         // on the row but stay empty here — the referenced @id stubs only carry
