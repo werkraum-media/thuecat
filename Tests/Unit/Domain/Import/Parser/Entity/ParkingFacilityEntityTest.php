@@ -24,14 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
-class ParkingFacilityEntityTest extends TestCase
+class ParkingFacilityEntityTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
-
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -51,7 +48,7 @@ class ParkingFacilityEntityTest extends TestCase
     #[Test]
     public function extractsFlatValuesFromFixture(): void
     {
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -76,7 +73,7 @@ class ParkingFacilityEntityTest extends TestCase
         // is_accessible_for_free, start_of_construction, accessibility_spec.
         // The parser must not surface those columns even when the fixture
         // happens to carry equivalent JSON-LD (e.g. schema:url, schema:petsAllowed).
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -100,7 +97,7 @@ class ParkingFacilityEntityTest extends TestCase
     #[Test]
     public function rowOmitsResolverOwnedColumns(): void
     {
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -115,7 +112,7 @@ class ParkingFacilityEntityTest extends TestCase
     #[Test]
     public function createsChildAddressEntityAndJsonEncodes(): void
     {
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -135,7 +132,7 @@ class ParkingFacilityEntityTest extends TestCase
         // The Parkhaus fixture carries schema:containedInPlace as a single
         // {"@id"} object (not a list). recordTransient must normalise both
         // shapes into the same list<string> bucket.
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -155,7 +152,7 @@ class ParkingFacilityEntityTest extends TestCase
         // ParkingFacility uses thuecat:managedBy directly, where attractions
         // encode the same relation as thuecat:contentResponsible. The bucket
         // key is 'managedBy' in both cases so the resolver treats them the same.
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -175,7 +172,7 @@ class ParkingFacilityEntityTest extends TestCase
         // Parkhaus has schema:image and schema:photo both pointing at the same
         // dms_* resource. Duplicates are preserved for the resolver, same as
         // TouristAttraction's Alte Synagoge case.
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -195,7 +192,7 @@ class ParkingFacilityEntityTest extends TestCase
         // ParkingFacility's TCA has no accessibility_specification column, and
         // the fixture carries no thuecat:accessibilitySpecification node.
         // Bucket must stay absent (not present-but-empty).
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -208,7 +205,7 @@ class ParkingFacilityEntityTest extends TestCase
     {
         // parkingFacilityNearBy is an attraction-side relation. The parking
         // facility is the target, not the source — no reverse bucket here.
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -219,7 +216,7 @@ class ParkingFacilityEntityTest extends TestCase
     #[Test]
     public function encodesOpeningHoursListAsJsonBlob(): void
     {
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -237,7 +234,7 @@ class ParkingFacilityEntityTest extends TestCase
     {
         // Parkhaus offers carry no schema:name, so title / description fall
         // back to '' (matches the legacy golden shape for language mismatches).
-        $node = $this->nodeFromFixture('396420044896-drzt.json');
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
@@ -270,18 +267,5 @@ class ParkingFacilityEntityTest extends TestCase
         ], new ParserContextFake());
 
         self::assertSame([], $entity->getTransients());
-    }
-
-    private function nodeFromFixture(string $filename): ?array
-    {
-        $path = self::FIXTURE_PATH . $filename;
-        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        $graph = is_array($decoded) ? $decoded['@graph'] : [];
-        foreach ($graph as $node) {
-            if (is_array($node) && in_array('schema:ParkingFacility', $node['@type'] ?? [], true)) {
-                return $node;
-            }
-        }
-        return null;
     }
 }

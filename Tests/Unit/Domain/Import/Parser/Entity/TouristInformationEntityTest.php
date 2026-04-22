@@ -24,14 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristInformationEntity;
 use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
-final class TouristInformationEntityTest extends TestCase
+final class TouristInformationEntityTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
-
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -51,7 +48,7 @@ final class TouristInformationEntityTest extends TestCase
     #[Test]
     public function rowContainsRemoteId(): void
     {
-        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -66,7 +63,7 @@ final class TouristInformationEntityTest extends TestCase
     {
         // The resolver decides the target row for each referenced @id after a
         // type lookup, so the parser must not pre-fill town or managed_by.
-        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -80,7 +77,7 @@ final class TouristInformationEntityTest extends TestCase
     #[Test]
     public function capturesContainedInPlaceRefsAsTransient(): void
     {
-        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -109,7 +106,7 @@ final class TouristInformationEntityTest extends TestCase
     #[Test]
     public function capturesManagedByRefAsTransient(): void
     {
-        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -133,19 +130,5 @@ final class TouristInformationEntityTest extends TestCase
         ], new ParserContextFake());
 
         self::assertSame([], $subject->getTransients());
-    }
-
-    private function nodeFromFixture(string $filename): ?array
-    {
-        $path = self::FIXTURE_PATH . $filename;
-        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        $graph = is_array($decoded) ? $decoded['@graph'] : [];
-        foreach ($graph as $node) {
-            // The fixture is the TouristInformation node; locate it by its own @type.
-            if (is_array($node) && in_array('thuecat:TouristInformation', $node['@type'] ?? [], true)) {
-                return $node;
-            }
-        }
-        return null;
     }
 }

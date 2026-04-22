@@ -24,14 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
 use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
-final class OrganisationEntityTest extends TestCase
+final class OrganisationEntityTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
-
     #[Test]
     public function returnsTableName(): void
     {
@@ -43,7 +40,7 @@ final class OrganisationEntityTest extends TestCase
     #[Test]
     public function returnsRemoteId(): void
     {
-        $node = $this->nodeFromFixture('018132452787-ngbe.json');
+        $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
 
@@ -53,7 +50,7 @@ final class OrganisationEntityTest extends TestCase
     #[Test]
     public function returnsTitle(): void
     {
-        $node = $this->nodeFromFixture('018132452787-ngbe.json');
+        $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -66,7 +63,7 @@ final class OrganisationEntityTest extends TestCase
     #[Test]
     public function returnsDescription(): void
     {
-        $node = $this->nodeFromFixture('018132452787-ngbe.json');
+        $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -79,7 +76,7 @@ final class OrganisationEntityTest extends TestCase
     #[Test]
     public function rowContainsRemoteId(): void
     {
-        $node = $this->nodeFromFixture('018132452787-ngbe.json');
+        $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->configure($node, new ParserContextFake());
@@ -87,18 +84,5 @@ final class OrganisationEntityTest extends TestCase
         $row = $subject->toArray();
 
         self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
-    }
-
-    private function nodeFromFixture(string $filename): ?array
-    {
-        $path = self::FIXTURE_PATH . $filename;
-        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        $graph = is_array($decoded) ? $decoded['@graph'] : [];
-        foreach ($graph as $node) {
-            if (is_array($node) && in_array('schema:Organization', $node['@type'] ?? [], true)) {
-                return $node;
-            }
-        }
-        return null;
     }
 }

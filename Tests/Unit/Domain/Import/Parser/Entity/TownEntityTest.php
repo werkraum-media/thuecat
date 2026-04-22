@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
+
+use PHPUnit\Framework\Attributes\Test;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TownEntity;
+use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
+
+class TownEntityTest extends AbstractImportTestCase
+{
+    #[Test]
+    public function returnsTableName(): void
+    {
+        $subject = new TownEntity();
+
+        self::assertSame('tx_thuecat_town', $subject->table);
+    }
+
+    #[Test]
+    public function returnsRemoteId(): void
+    {
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        self::assertSame('https://thuecat.org/resources/043064193523-jcyt', $subject->getRemoteId($node));
+    }
+
+    #[Test]
+    public function returnsTitle(): void
+    {
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $row = $subject->toArray();
+
+        self::assertSame('Erfurt', $row['title']);
+    }
+
+    #[Test]
+    public function returnsDescription(): void
+    {
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $row = $subject->toArray();
+
+        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge – die', $row['description']);
+    }
+
+    #[Test]
+    public function rowOmitsResolverOwnedColumns(): void
+    {
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $row = $subject->toArray();
+
+        self::assertArrayNotHasKey('managed_by', $row);
+    }
+
+    #[Test]
+    public function capturesManagedByFromTopLevelThuecatField(): void
+    {
+        // Town uses thuecat:managedBy directly, where attractions
+        // encode the same relation as thuecat:contentResponsible. The bucket
+        // key is 'managedBy' in both cases so the resolver treats them the same.
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $transients = $subject->getTransients();
+
+        self::assertArrayHasKey('managedBy', $transients);
+        self::assertSame(
+            ['https://thuecat.org/resources/018132452787-ngbe'],
+            $transients['managedBy']
+        );
+    }
+}

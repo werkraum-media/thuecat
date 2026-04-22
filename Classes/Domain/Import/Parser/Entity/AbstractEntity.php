@@ -67,7 +67,12 @@ abstract class AbstractEntity implements EntityInterface
 
     protected function extractLanguageValue(mixed $value): string
     {
-        if (is_array($value) && isset($value['@value'])) {
+        if (is_array($value)) {
+            if (!array_key_exists('@value', $value)) {
+                if (array_key_exists('@value', $value[0])) {
+                    $value = $value[0];
+                }
+            }
             return (string)$value['@value'];
         }
 

@@ -41,6 +41,7 @@ class DataHandlerPayload
 
     public function addEntity(EntityInterface $entity): void
     {
+        /** @var string $table */
         $table = $entity->table;
         $row = $entity->toArray();
         $remoteId = $row['remote_id'];

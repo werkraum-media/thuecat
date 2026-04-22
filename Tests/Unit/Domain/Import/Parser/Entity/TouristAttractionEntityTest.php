@@ -24,14 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
-class TouristAttractionEntityTest extends TestCase
+class TouristAttractionEntityTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
-
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -143,7 +140,7 @@ class TouristAttractionEntityTest extends TestCase
     {
         // Golden values are the sys_language_uid=0 row for 165868194223-zmqf in
         // Tests/Unit/Domain/Import/Parser/Assertions/ImportsTouristAttractionsWithRelations.php.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -172,7 +169,7 @@ class TouristAttractionEntityTest extends TestCase
     {
         // Dom fixture carries two means (Streetcar + CityBus) as a list; the
         // result is a single colon-joined string.
-        $node = $this->nodeFromFixture('835224016581-dara.json');
+        $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -185,7 +182,7 @@ class TouristAttractionEntityTest extends TestCase
     {
         // Resolver-owned columns: parser mustn't pre-fill them. The JSON-LD
         // stub only carries @id, and containedInPlace mixes several place types.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -206,7 +203,7 @@ class TouristAttractionEntityTest extends TestCase
     #[Test]
     public function capturesContainedInPlaceRefsAsTransient(): void
     {
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -227,7 +224,7 @@ class TouristAttractionEntityTest extends TestCase
         // Attractions carry thuecat:contentResponsible; TouristInformation /
         // ParkingFacility use thuecat:managedBy. Same semantic target (an
         // organisation), so we normalise to a single bucket key for the resolver.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -244,7 +241,7 @@ class TouristAttractionEntityTest extends TestCase
     #[Test]
     public function capturesParkingFacilityNearByRefsAsTransient(): void
     {
-        $node = $this->nodeFromFixture('215230952334-yyno.json');
+        $node = $this->nodeFromFixture('215230952334-yyno.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -264,7 +261,7 @@ class TouristAttractionEntityTest extends TestCase
         // opening-hours-to-filter.json has two OpeningHoursSpecification nodes —
         // one with a list of dayOfWeek entries, one with a single object — so
         // it exercises both input shapes in one round trip.
-        $node = $this->nodeFromFixture('opening-hours-to-filter.json');
+        $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -295,7 +292,7 @@ class TouristAttractionEntityTest extends TestCase
         // Alte Synagoge's fixture carries schema:openingHoursSpecification as a
         // single object rather than a list — the parser still has to produce a
         // list of one entry in the JSON column.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -313,7 +310,7 @@ class TouristAttractionEntityTest extends TestCase
         // special-opening-hours.json has two specialOpeningHoursSpecification
         // nodes — different JSON-LD key, identical shape, so the same transient
         // handles it; only the target column changes.
-        $node = $this->nodeFromFixture('special-opening-hours.json');
+        $node = $this->nodeFromFixture('special-opening-hours.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -343,7 +340,7 @@ class TouristAttractionEntityTest extends TestCase
     {
         // The regular opening-hours fixture has no specialOpeningHours node; the
         // column must not appear rather than serialising an empty list.
-        $node = $this->nodeFromFixture('opening-hours-to-filter.json');
+        $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -371,7 +368,7 @@ class TouristAttractionEntityTest extends TestCase
         // Unusual member of the transient flow: target column is a JSON blob,
         // not a uid. The resolver fetches the referenced resource and shapes
         // the spec into accessibility_specification.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -400,7 +397,7 @@ class TouristAttractionEntityTest extends TestCase
         // and de-duping here would strip that signal before the resolver sees
         // it. The resolver can collapse equal @ids if it decides the slot
         // distinction isn't load-bearing.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -421,7 +418,7 @@ class TouristAttractionEntityTest extends TestCase
         // (single stub) on the same attraction node. One column, one bucket —
         // the resolver decides per-resource which ones are images vs photos
         // vs videos based on the fetched @type, not on the JSON-LD slot name.
-        $node = $this->nodeFromFixture('835224016581-dara.json');
+        $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -455,7 +452,7 @@ class TouristAttractionEntityTest extends TestCase
         // Alte Synagoge carries two Offers — GuidedTourOffer with two prices,
         // EntryOffer with four — so one fixture covers offerType extraction,
         // nested priceSpecification list handling, and the full price shape.
-        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
@@ -517,18 +514,5 @@ class TouristAttractionEntityTest extends TestCase
         // Same array_filter contract as opening_hours: '' is dropped, so the
         // column simply doesn't appear.
         self::assertArrayNotHasKey('offers', $entity->toArray());
-    }
-
-    private function nodeFromFixture(string $filename): ?array
-    {
-        $path = self::FIXTURE_PATH . $filename;
-        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
-        $graph = is_array($decoded) ? $decoded['@graph'] : [];
-        foreach ($graph as $node) {
-            if (is_array($node) && in_array('schema:TouristAttraction', $node['@type'] ?? [], true)) {
-                return $node;
-            }
-        }
-        return null;
     }
 }
