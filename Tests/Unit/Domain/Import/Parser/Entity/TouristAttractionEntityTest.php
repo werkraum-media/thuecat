@@ -198,6 +198,9 @@ class TouristAttractionEntityTest extends TestCase
         // accessibility_specification is resolver-owned too: the JSON-LD only
         // carries an @id pointing at a separate resource we can't fetch here.
         self::assertArrayNotHasKey('accessibility_specification', $row);
+        // media follows the same fetch-and-shape-to-JSON path: schema:image /
+        // schema:photo / schema:video all point at separate dms_* resources.
+        self::assertArrayNotHasKey('media', $row);
     }
 
     #[Test]
@@ -380,6 +383,58 @@ class TouristAttractionEntityTest extends TestCase
             ['https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa'],
             $transients['accessibilitySpecification']
         );
+    }
+
+    #[Test]
+    public function capturesMediaRefsAsTransient(): void
+    {
+        // Alte Synagoge carries the same dms_* resource under both schema:image
+        // and schema:photo. Same fetch-and-shape-to-JSON pattern as
+        // accessibilitySpecification: parser records the @id list, resolver
+        // fetches each dms_* resource, shapes it, and writes the media JSON
+        // blob onto the column.
+        //
+        // The duplicate is deliberately preserved: the two JSON-LD slots may
+        // encode different roles for the same underlying resource (schema:image
+        // as the principal image, schema:photo as a supplementary reference),
+        // and de-duping here would strip that signal before the resolver sees
+        // it. The resolver can collapse equal @ids if it decides the slot
+        // distinction isn't load-bearing.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('media', $transients);
+        self::assertSame([
+            'https://thuecat.org/resources/dms_5099196',
+            'https://thuecat.org/resources/dms_5099196',
+        ], $transients['media']);
+    }
+
+    #[Test]
+    public function mergesImageAndPhotoRefsIntoSingleMediaBucket(): void
+    {
+        // Dom fixture has both schema:image (list of three) and schema:photo
+        // (single stub) on the same attraction node. One column, one bucket —
+        // the resolver decides per-resource which ones are images vs photos
+        // vs videos based on the fetched @type, not on the JSON-LD slot name.
+        $node = $this->nodeFromFixture('835224016581-dara.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('media', $transients);
+        self::assertSame([
+            'https://thuecat.org/resources/dms_5713563',
+            'https://thuecat.org/resources/dms_5159186',
+            'https://thuecat.org/resources/dms_5159216',
+            'https://thuecat.org/resources/dms_5159216',
+        ], $transients['media']);
     }
 
     #[Test]

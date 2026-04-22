@@ -54,7 +54,6 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $offers = '';
     protected string $address = '';
     protected string $url = '';
-    protected string $media = '';
 
     public function configure(array $node, ParserContext $context): void
     {
@@ -121,6 +120,47 @@ class TouristAttractionEntity extends AbstractEntity
         // accessibility_specification column — unusually for the transient
         // flow, the bucket drives a JSON blob, not a uid lookup.
         $this->recordTransient('accessibilitySpecification', $node['thuecat:accessibilitySpecification'] ?? null);
+
+        // schema:image / schema:photo / schema:video are bare {"@id": "dms_…"}
+        // stubs pointing at separate resources we don't have here. Merge all
+        // three slots into a single "media" bucket; the resolver fetches each
+        // dms_* resource, shapes it into the legacy Media frontend model's JSON
+        // and writes the blob onto the attraction's media column. Same
+        // fetch-and-shape path as accessibilitySpecification, just list-shaped.
+        $mediaRefs = array_merge(
+            $this->collectIds($node['schema:image'] ?? null),
+            $this->collectIds($node['schema:photo'] ?? null),
+            $this->collectIds($node['schema:video'] ?? null),
+        );
+        if ($mediaRefs !== []) {
+            $this->recordTransient('media', $mediaRefs);
+        }
+    }
+
+    /**
+     * Flatten a single {"@id": "…"} node or a list of them into a plain list
+     * of id strings. Kept local to the media merge since recordTransient
+     * already handles the single-key case, but overwrites on repeat calls —
+     * merging three JSON-LD slots into one bucket needs pre-aggregation.
+     *
+     * @return list<string>
+     */
+    private function collectIds(mixed $value): array
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return [];
+        }
+
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $ids = [];
+        foreach ($items as $item) {
+            $id = is_array($item) ? ($item['@id'] ?? '') : (string)$item;
+            if ($id === '') {
+                continue;
+            }
+            $ids[] = (string)$id;
+        }
+        return $ids;
     }
 
     public function handlesTypes(): array
