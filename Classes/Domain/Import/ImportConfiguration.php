@@ -51,4 +51,11 @@ interface ImportConfiguration
      * @return string[]
      */
     public function getAllowedTypes(): array;
+
+    /**
+     * Per-configuration ThueCat API key. Takes priority over the global
+     * key from ExtensionConfiguration. Empty string means "not set — fall
+     * back to the global key".
+     */
+    public function getApiKey(): string;
 }
