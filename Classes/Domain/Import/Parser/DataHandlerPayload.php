@@ -30,16 +30,31 @@ class DataHandlerPayload
     /** @var array<string, array<string, array>> */
     private array $data = [];
 
+    /**
+     * Unresolved references, bound to (table, remote_id) so the resolver can
+     * write each resolved uid back into the correct row without risk of mixing
+     * up records that share similar raw refs.
+     *
+     * @var array<string, array<string, array<string, list<string>>>>
+     */
+    private array $transients = [];
+
     public function addEntity(EntityInterface $entity): void
     {
         $table = $entity->table;
-        $remoteId = $entity->toArray()['remote_id'];
+        $row = $entity->toArray();
+        $remoteId = $row['remote_id'];
 
         if (!isset($this->data[$table])) {
             $this->data[$table] = [];
         }
 
-        $this->data[$table][$remoteId] = $entity->toArray();
+        $this->data[$table][$remoteId] = $row;
+
+        $entityTransients = $entity->getTransients();
+        if ($entityTransients !== []) {
+            $this->transients[$table][$remoteId] = $entityTransients;
+        }
     }
 
     public function getPayload(): array
@@ -47,5 +62,11 @@ class DataHandlerPayload
         return $this->data;
     }
 
-
+    /**
+     * @return array<string, array<string, array<string, list<string>>>>
+     */
+    public function getTransients(): array
+    {
+        return $this->transients;
+    }
 }

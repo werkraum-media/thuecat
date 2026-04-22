@@ -37,6 +37,15 @@ interface EntityInterface
 
     public function toArray(): array;
 
+    /**
+     * Unresolved references captured during configure() for the resolver to
+     * swap into real relation fields post-parse. Keyed by JSON-LD field name
+     * with the schema:/thuecat: prefix stripped.
+     *
+     * @return array<string, list<string>>
+     */
+    public function getTransients(): array;
+
     public function handlesTypes(): array;
 
     public function getPriority(): int;

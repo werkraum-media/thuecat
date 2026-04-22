@@ -36,17 +36,18 @@ class TouristInformationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    // Relations carry REF:<remote_id> (comma-joined for multi-value); the
-    // post-processor swaps them for real uids / NEW placeholders before
-    // handing the payload to DataHandler.
-    protected string $town = '';
-    protected string $managed_by = '';
-
     public function configure(array $node, ParserContext $context): void
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
         $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
+
+        // town (tx_thuecat_town) and managed_by (tx_thuecat_organisation) live
+        // on the row but stay empty here — the referenced @id stubs only carry
+        // ids, not types, so the resolver must look each one up before deciding
+        // which table it points to.
+        $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
+        $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
     }
 
     public function handlesTypes(): array

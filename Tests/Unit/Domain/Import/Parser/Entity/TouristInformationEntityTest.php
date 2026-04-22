@@ -61,6 +61,80 @@ final class TouristInformationEntityTest extends TestCase
         self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
     }
 
+    #[Test]
+    public function rowOmitsRelationFieldsForResolverToFill(): void
+    {
+        // The resolver decides the target row for each referenced @id after a
+        // type lookup, so the parser must not pre-fill town or managed_by.
+        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        self::assertNotNull($node);
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $row = $subject->toArray();
+
+        self::assertArrayNotHasKey('town', $row);
+        self::assertArrayNotHasKey('managed_by', $row);
+    }
+
+    #[Test]
+    public function capturesContainedInPlaceRefsAsTransient(): void
+    {
+        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        self::assertNotNull($node);
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $transients = $subject->getTransients();
+
+        self::assertArrayHasKey('containedInPlace', $transients);
+        self::assertSame([
+            'https://thuecat.org/resources/043064193523-jcyt',
+            'https://thuecat.org/resources/573211638937-gmqb',
+            'https://thuecat.org/resources/e_108867196-oatour',
+            'https://thuecat.org/resources/e_1492818-oatour',
+            'https://thuecat.org/resources/e_16571065-oatour',
+            'https://thuecat.org/resources/e_16659193-oatour',
+            'https://thuecat.org/resources/e_18179059-oatour',
+            'https://thuecat.org/resources/e_18429754-oatour',
+            'https://thuecat.org/resources/e_18429974-oatour',
+            'https://thuecat.org/resources/e_18550292-oatour',
+            'https://thuecat.org/resources/e_21827958-oatour',
+            'https://thuecat.org/resources/e_39285647-oatour',
+            'https://thuecat.org/resources/e_52469786-oatour',
+            'https://thuecat.org/resources/356133173991-cryw',
+        ], $transients['containedInPlace']);
+    }
+
+    #[Test]
+    public function capturesManagedByRefAsTransient(): void
+    {
+        $node = $this->nodeFromFixture('333039283321-xxwg.json');
+        self::assertNotNull($node);
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $transients = $subject->getTransients();
+
+        self::assertArrayHasKey('managedBy', $transients);
+        self::assertSame(
+            ['https://thuecat.org/resources/018132452787-ngbe'],
+            $transients['managedBy']
+        );
+    }
+
+    #[Test]
+    public function transientsAreEmptyWhenNodeLacksRelations(): void
+    {
+        $subject = new TouristInformationEntity();
+        $subject->configure([
+            '@id' => 'https://thuecat.org/resources/no-relations',
+            '@type' => ['thuecat:TouristInformation'],
+        ], new ParserContextFake());
+
+        self::assertSame([], $subject->getTransients());
+    }
+
     private function nodeFromFixture(string $filename): ?array
     {
         $path = self::FIXTURE_PATH . $filename;

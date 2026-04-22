@@ -27,6 +27,22 @@ abstract class AbstractEntity implements EntityInterface
 {
     protected int $priority = 10;
 
+    /**
+     * Per-record side channel for unresolved references (e.g. schema:containedInPlace).
+     *
+     * The parser cannot decide the target table for a bare {"@id": "…"} stub — the
+     * JSON-LD node only holds the id, not the type. The resolver runs post-parse,
+     * looks each id up via API + DB cache, and writes the real relation field on
+     * this record. Keeping the bucket on the entity guarantees it stays bound to
+     * its owning (table, remote_id) pair even when an import contains many records
+     * that share similar raw refs.
+     *
+     * Keys match the JSON-LD field name with the schema:/thuecat: prefix stripped.
+     *
+     * @var array<string, list<string>>
+     */
+    protected array $transients = [];
+
     public function getRemoteId(array $node): string
     {
         return (string)$node['@id'];
@@ -56,10 +72,49 @@ abstract class AbstractEntity implements EntityInterface
         return '';
     }
 
+    /**
+     * Record a raw JSON-LD relation value for the resolver.
+     *
+     * Accepts the three shapes JSON-LD emits — a single {"@id": "…"} object, a
+     * bare string id, or a list of either — and stores a plain list of @id
+     * strings. A null / empty / all-blank input is ignored so the transient map
+     * stays truthy-only and easy for the resolver to iterate.
+     *
+     * $key must be the JSON-LD field name with the schema:/thuecat: prefix
+     * stripped (e.g. 'containedInPlace', not 'schema:containedInPlace').
+     */
+    protected function recordTransient(string $key, mixed $value): void
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return;
+        }
+
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $ids = [];
+        foreach ($items as $item) {
+            $id = is_array($item) ? ($item['@id'] ?? '') : (string)$item;
+            if ($id === '') {
+                continue;
+            }
+            $ids[] = (string)$id;
+        }
+
+        if ($ids === []) {
+            return;
+        }
+
+        $this->transients[$key] = $ids;
+    }
+
+    public function getTransients(): array
+    {
+        return $this->transients;
+    }
+
     public function toArray(): array
     {
         $array = get_object_vars($this);
-        unset($array['table']);
+        unset($array['table'], $array['transients']);
 
         return array_filter($array);
     }
