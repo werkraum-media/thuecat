@@ -87,6 +87,51 @@ final class ParserTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function townPayloadContainsCompleteRowAndManagedByTransient(): void
+    {
+        // Single top-level schema:City node that carries a thuecat:managedBy
+        // reference — exercises the transients bucket alongside the data row,
+        // which Organisation's fixture does not.
+        $graph = $this->graphFromFixture('043064193523-jcyt.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph);
+        $payload = $subject->getDataHandlerPayload();
+
+        $data = $payload->getPayload();
+
+        self::assertSame(['tx_thuecat_town'], array_keys($data));
+        self::assertSame(
+            ['https://thuecat.org/resources/043064193523-jcyt'],
+            array_keys($data['tx_thuecat_town'])
+        );
+
+        $row = $data['tx_thuecat_town']['https://thuecat.org/resources/043064193523-jcyt'];
+        self::assertSame(
+            ['remote_id', 'title', 'description'],
+            array_keys($row)
+        );
+        self::assertSame('https://thuecat.org/resources/043064193523-jcyt', $row['remote_id']);
+        self::assertSame('Erfurt', $row['title']);
+        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge', $row['description']);
+
+        // managed_by is a real TCA column but stays out of the row — the
+        // resolver fills it after looking up the referenced @id.
+        self::assertArrayNotHasKey('managed_by', $row);
+
+        self::assertSame(
+            [
+                'tx_thuecat_town' => [
+                    'https://thuecat.org/resources/043064193523-jcyt' => [
+                        'managedBy' => ['https://thuecat.org/resources/018132452787-ngbe'],
+                    ],
+                ],
+            ],
+            $payload->getTransients()
+        );
+    }
+
+    #[Test]
     public function parsesTouristInformationNode(): void
     {
         $graph = $this->graphFromFixture('333039283321-xxwg.json');
