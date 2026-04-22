@@ -1,21 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * Copyright (C) 2024 werkraum-media
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristInformationEntity;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristInformationEntity;
+use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
-class TouristInformationEntityTest extends TestCase
+final class TouristInformationEntityTest extends TestCase
 {
     private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
+
     #[Test]
     public function returnsCorrectTable(): void
     {
-        $entity = new TouristInformationEntity(['@id' => 'https://thuecat.org/resources/333039283321-xxwg'], new DataHandlerPayload());
-        self::assertSame('tx_thuecat_tourist_information', $entity->table);
+        $subject = new TouristInformationEntity();
+
+        self::assertSame('tx_thuecat_tourist_information', $subject->table);
+    }
+
+    #[Test]
+    public function handlesTouristInformationType(): void
+    {
+        $subject = new TouristInformationEntity();
+
+        self::assertSame(['thuecat:TouristInformation'], $subject->handlesTypes());
     }
 
     #[Test]
@@ -23,7 +53,8 @@ class TouristInformationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json');
         self::assertNotNull($node);
-        $subject = new TouristInformationEntity($node, new DataHandlerPayload());
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake());
 
         $row = $subject->toArray();
 
@@ -36,7 +67,8 @@ class TouristInformationEntityTest extends TestCase
         $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         $graph = is_array($decoded) ? $decoded['@graph'] : [];
         foreach ($graph as $node) {
-            if (is_array($node) && in_array('schema:Organization', $node['@type'] ?? [], true)) {
+            // The fixture is the TouristInformation node; locate it by its own @type.
+            if (is_array($node) && in_array('thuecat:TouristInformation', $node['@type'] ?? [], true)) {
                 return $node;
             }
         }

@@ -25,8 +25,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
+use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
 final class OrganisationEntityTest extends TestCase
 {
@@ -35,9 +35,7 @@ final class OrganisationEntityTest extends TestCase
     #[Test]
     public function returnsTableName(): void
     {
-        $node = $this->nodeFromFixture('018132452787-ngbe.json');
-        self::assertNotNull($node);
-        $subject = new OrganisationEntity($node, new DataHandlerPayload());
+        $subject = new OrganisationEntity();
 
         self::assertSame('tx_thuecat_organisation', $subject->table);
     }
@@ -47,7 +45,7 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node, new DataHandlerPayload());
+        $subject = new OrganisationEntity();
 
         self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $subject->getRemoteId($node));
     }
@@ -57,7 +55,8 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node, new DataHandlerPayload());
+        $subject = new OrganisationEntity();
+        $subject->configure($node, new ParserContextFake());
 
         $row = $subject->toArray();
 
@@ -69,7 +68,8 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node, new DataHandlerPayload());
+        $subject = new OrganisationEntity();
+        $subject->configure($node, new ParserContextFake());
 
         $row = $subject->toArray();
 
@@ -81,7 +81,8 @@ final class OrganisationEntityTest extends TestCase
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json');
         self::assertNotNull($node);
-        $subject = new OrganisationEntity($node, new DataHandlerPayload());
+        $subject = new OrganisationEntity();
+        $subject->configure($node, new ParserContextFake());
 
         $row = $subject->toArray();
 

@@ -32,7 +32,8 @@ class AddressEntityTest extends TestCase
     #[Test]
     public function returnsCorrectTable(): void
     {
-        $entity = new AddressEntity(['@id' => 'genid-39178cabb01c40e091809d730cb07b5a-b0']);
+        $entity = new AddressEntity();
+
         self::assertSame('tx_thuecat_address', $entity->table);
     }
 
@@ -78,10 +79,11 @@ class AddressEntityTest extends TestCase
             ],
         ];
 
-        $entity = new AddressEntity($node, $geo);
+        $entity = new AddressEntity();
+        $entity->configure($node, $geo);
         $result = $entity->toArray();
 
-        $expected = array (
+        $expected = [
             'remote_id' => 'genid-39178cabb01c40e091809d730cb07b5a-b0',
             'street' => 'Benediktsplatz 1',
             'zip' => '99084',
@@ -89,12 +91,11 @@ class AddressEntityTest extends TestCase
             'email' => 'info@erfurt-tourismus.de',
             'phone' => '+49 361 66400',
             'fax' => '+49 361 6640290',
-            'geo' =>
-                array (
-                    'latitude' => 50.9784118,
-                    'longitude' => 11.0298392,
-                ),
-        );
+            'geo' => [
+                'latitude' => 50.9784118,
+                'longitude' => 11.0298392,
+            ],
+        ];
         self::assertSame('genid-39178cabb01c40e091809d730cb07b5a-b0', $result['remote_id']);
         self::assertSame($expected, $result);
     }
@@ -128,23 +129,24 @@ class AddressEntityTest extends TestCase
                 '@language' => 'de',
                 '@value' => '+49 361 6640290',
             ],
-            ];
-            $geo_node = [
-                'schema:latitude' => [
-                    '@type' => 'schema:Number',
-                    '@value' => '50.9784118',
-                ],
-                'schema:longitude' => [
-                    '@type' => 'schema:Number',
-                    '@value' => '11.0298392',
-                ],
-            ];
+        ];
+        $geo_node = [
+            'schema:latitude' => [
+                '@type' => 'schema:Number',
+                '@value' => '50.9784118',
+            ],
+            'schema:longitude' => [
+                '@type' => 'schema:Number',
+                '@value' => '11.0298392',
+            ],
+        ];
 
-
-        $entity = new AddressEntity($node, $geo_node);
+        $entity = new AddressEntity();
+        $entity->configure($node, $geo_node);
         $result = $entity->toArray();
 
-        // remote_id must NOT be prefixed so it survives UID replacement
+        // remote_id is a real column on the Address record; it must stay unprefixed
+        // so it survives the REF→UID swap done before DataHandler.
         self::assertStringNotContainsString('REF:', $result['remote_id']);
         self::assertSame('genid-39178cabb01c40e091809d730cb07b5a-b0', $result['remote_id']);
         self::assertArrayNotHasKey('address', $result);

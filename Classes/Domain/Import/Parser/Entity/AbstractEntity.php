@@ -23,10 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
-use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
-
-
 abstract class AbstractEntity implements EntityInterface
 {
     protected int $priority = 10;

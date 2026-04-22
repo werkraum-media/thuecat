@@ -27,52 +27,32 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristInformationEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Exception\UnhandledNodeException;
 
 #[Autoconfigure(public: true)]
 class Parser
 {
-    protected DataHandlerPayload $dataHandlerPayload;
+    private DataHandlerPayload $dataHandlerPayload;
 
+    private ParserContext $context;
 
-    private const TYPE_TO_ENTITY = [
-        'thuecat:TouristInformation' => TouristInformationEntity::class,
-        'schema:Organization' => OrganisationEntity::class,
-        'thuecat:TouristAttraction' => TouristAttractionEntity::class,
-
-    ];
-
-    private const NODE_SKIPPER = [
-        'genid-',
-    ];
-
-    public function __construct(#[AutowireLocator(services: 'import.entity')] private readonly ServiceLocator $entities)
-    {
-
+    public function __construct(
+        // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
+        #[AutowireLocator(services: 'import.entity')] private readonly ServiceLocator $entities,
+    ) {
     }
-
 
     public function parse(array $graph): void
     {
+        // Fresh payload per parse() call so repeated imports don't accumulate state.
         $this->dataHandlerPayload = new DataHandlerPayload();
+        $this->context = new ParserContext($this);
 
         foreach ($graph as $node) {
-            $types = $node['@type'] ?? [];
-            $types = is_array($types) ? $types : [];
-
-            $entityClass = $this->resolveEntityClass($types);
-            if ($entityClass === null) {
+            if (!is_array($node)) {
                 continue;
             }
-            $entity = new $entityClass();
-            $entity->configure($node);
-            $this->dataHandlerPayload->addEntity($entity);
-
+            $this->parseNode($node);
         }
-
     }
 
     public function getDataHandlerPayload(): DataHandlerPayload
@@ -80,24 +60,57 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
-    private function resolveEntityClass(array $types): EntityInterface
+    /**
+     * Entry point for recursion — ParserContext delegates child parsing here.
+     *
+     * Returns REF:<remote_id> so the caller can write that reference into its own
+     * field. Returns '' when no registered entity handles the node's @types
+     * (e.g. genid-* intangibles like Offer/GeoCoordinates/PriceSpecification).
+     *
+     * @internal Only {@see ParserContext} should call this.
+     */
+    public function parseNode(array $node): string
     {
+        $entity = $this->resolveEntity($node['@type'] ?? []);
+        if ($entity === null) {
+            return '';
+        }
+
+        $entity->configure($node, $this->context);
+        $this->dataHandlerPayload->addEntity($entity);
+
+        return 'REF:' . $entity->getRemoteId($node);
+    }
+
+    private function resolveEntity(mixed $types): ?EntityInterface
+    {
+        $types = is_array($types) ? $types : [];
+        if ($types === []) {
+            return null;
+        }
+
+        // A JSON-LD node usually carries multiple @types (e.g. a TouristAttraction
+        // is also Place, Thing, CivicStructure…). Collect every entity that claims
+        // any of them, then let priority break ties — more specific entities
+        // (TouristInformation, priority 20) win over generic ones.
         $candidates = [];
         foreach ($this->entities as $candidate) {
             foreach ($types as $type) {
-                if (in_array($type, $candidate->handlesTypes())) {
+                if (in_array($type, $candidate->handlesTypes(), true)) {
                     $candidates[] = $candidate;
+                    break;
                 }
             }
         }
-        if (count($candidates) > 1) {
-            usort($candidates, function (EntityInterface $a, EntityInterface $b) {
-                if ($a->getPriority() === $b->getPriority()) {
-                    return 0;
-                }
-                return $a->getPriority() < $b->getPriority() ? 1 : -1;
-            });
+        if ($candidates === []) {
+            return null;
         }
-        return array_shift($candidates);
+
+        usort(
+            $candidates,
+            static fn (EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
+        );
+
+        return $candidates[0];
     }
 }

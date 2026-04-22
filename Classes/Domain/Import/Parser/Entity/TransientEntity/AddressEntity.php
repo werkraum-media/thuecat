@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity;
 
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\AbstractEntity;
-
-class AddressEntity extends AbstractEntity
+// Transient: never registered as `import.entity` tagged service, never dispatched
+// by the Parser. Lifecycle is owned by the parent (TouristAttraction et al.) which
+// constructs, configures, and json_encodes it into one of its own fields.
+class AddressEntity
 {
     public $table = 'tx_thuecat_address';
 
@@ -53,12 +53,39 @@ class AddressEntity extends AbstractEntity
         }
     }
 
-    protected function extractGeo(array $geoNode): array
+    public function toArray(): array
     {
-        if (!is_array($geoNode)) {
-            return [];
+        $array = get_object_vars($this);
+        unset($array['table']);
+
+        return array_filter($array);
+    }
+
+    protected function getRemoteId(array $node): string
+    {
+        return (string)($node['@id'] ?? '');
+    }
+
+    protected function extractLanguageValue(mixed $value): string
+    {
+        if (is_array($value) && isset($value['@value'])) {
+            return (string)$value['@value'];
         }
 
+        return '';
+    }
+
+    protected function extractStringValue(mixed $value): string
+    {
+        if (is_array($value)) {
+            return (string)($value['@value'] ?? '');
+        }
+
+        return '';
+    }
+
+    protected function extractGeo(array $geoNode): array
+    {
         $latitude = $this->extractStringValue($geoNode['schema:latitude'] ?? null);
         $longitude = $this->extractStringValue($geoNode['schema:longitude'] ?? null);
 
@@ -70,10 +97,5 @@ class AddressEntity extends AbstractEntity
             'latitude' => (float)$latitude,
             'longitude' => (float)$longitude,
         ];
-    }
-
-    public function handlesTypes():array
-    {
-        return [];
     }
 }

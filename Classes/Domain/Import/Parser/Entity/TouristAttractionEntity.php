@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
 {
@@ -55,32 +55,33 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $url = '';
     protected string $media = '';
 
-    // Relations, track them with their identifiers
+    // Relations — REF:<remote_id> (comma-joined if multi-value).
     protected string $town = '';
     protected string $managed_by = '';
     protected string $parking_facility_near_by = '';
 
-    public function configure(array $node)
+    public function configure(array $node, ParserContext $context): void
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
         $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
         $this->url = $this->extractStringValue($node['schema:url'] ?? null);
-        if ($node['schema:address'] ?? []) {
-            $addressEntity = new AddressEntity();
-            $addressEntity->configure(
-                $node['schema:address'] ?? [],
+
+        if (!empty($node['schema:address'])) {
+            // Address + geo are one logical record in TCA but two sibling keys in
+            // JSON-LD. The transient AddressEntity merges them into a single JSON
+            // blob stored on this entity's `address` column.
+            $address = new AddressEntity();
+            $address->configure(
+                $node['schema:address'],
                 $node['schema:geo'] ?? []
-
             );
-            $this->address = json_encode($addressEntity->toArray()) ?? '';
+            $this->address = (string)(json_encode($address->toArray()) ?: '');
         }
-
     }
 
     public function handlesTypes(): array
     {
-        return [
-        ];
+        return ['schema:TouristAttraction'];
     }
 }

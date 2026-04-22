@@ -25,16 +25,27 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
+use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
 class TouristAttractionEntityTest extends TestCase
 {
     #[Test]
     public function returnsCorrectTable(): void
     {
-        $entity = new TouristAttractionEntity(['@id' => 'https://thuecat.org/resources/333039283321-xxwg'], new DataHandlerPayload());
+        $entity = new TouristAttractionEntity();
+
         self::assertSame('tx_thuecat_tourist_attraction', $entity->table);
+    }
+
+    #[Test]
+    public function handlesSchemaTouristAttractionType(): void
+    {
+        // Regression guard: handlesTypes() previously returned []; the Parser
+        // resolver silently skipped every TouristAttraction node.
+        $entity = new TouristAttractionEntity();
+
+        self::assertContains('schema:TouristAttraction', $entity->handlesTypes());
     }
 
     #[Test]
@@ -56,7 +67,8 @@ class TouristAttractionEntityTest extends TestCase
             ],
         ];
 
-        $entity = new TouristAttractionEntity($node, new DataHandlerPayload());
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
         $result = $entity->toArray();
 
         self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $result['remote_id']);
@@ -116,11 +128,11 @@ class TouristAttractionEntityTest extends TestCase
             ],
         ];
 
-        $entity = new TouristAttractionEntity($node, new DataHandlerPayload());
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
         $result = $entity->toArray();
 
         $expectedAddress = '{"remote_id":"genid-39178cabb01c40e091809d730cb07b5a-b0","street":"Benediktsplatz 1","zip":"99084","city":"Erfurt","email":"info@erfurt-tourismus.de","phone":"+49 361 66400","fax":"+49 361 6640290","geo":{"latitude":50.9784118,"longitude":11.0298392}}';
         self::assertSame($expectedAddress, $result['address']);
     }
-
 }
