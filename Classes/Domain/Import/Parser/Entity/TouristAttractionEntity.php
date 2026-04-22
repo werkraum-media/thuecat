@@ -51,7 +51,6 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $opening_hours = '';
     protected string $special_opening_hours = '';
     protected string $offers = '';
-    protected string $accessibility_specification = '';
     protected string $address = '';
     protected string $url = '';
     protected string $media = '';
@@ -114,6 +113,12 @@ class TouristAttractionEntity extends AbstractEntity
         $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
         $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
         $this->recordTransient('parkingFacilityNearBy', $node['thuecat:parkingFacilityNearBy'] ?? null);
+        // accessibilitySpecification is a bare {"@id": "…"} stub pointing at a
+        // separate resource we don't have here. The resolver fetches that
+        // resource and writes the JSON blob onto the attraction's
+        // accessibility_specification column — unusually for the transient
+        // flow, the bucket drives a JSON blob, not a uid lookup.
+        $this->recordTransient('accessibilitySpecification', $node['thuecat:accessibilitySpecification'] ?? null);
     }
 
     public function handlesTypes(): array

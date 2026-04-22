@@ -195,6 +195,9 @@ class TouristAttractionEntityTest extends TestCase
         self::assertArrayNotHasKey('town', $row);
         self::assertArrayNotHasKey('managed_by', $row);
         self::assertArrayNotHasKey('parking_facility_near_by', $row);
+        // accessibility_specification is resolver-owned too: the JSON-LD only
+        // carries an @id pointing at a separate resource we can't fetch here.
+        self::assertArrayNotHasKey('accessibility_specification', $row);
     }
 
     #[Test]
@@ -357,6 +360,26 @@ class TouristAttractionEntityTest extends TestCase
         // '' is filtered out by AbstractEntity::toArray, so the column simply
         // doesn't appear in the row.
         self::assertArrayNotHasKey('opening_hours', $entity->toArray());
+    }
+
+    #[Test]
+    public function capturesAccessibilitySpecificationRefAsTransient(): void
+    {
+        // Unusual member of the transient flow: target column is a JSON blob,
+        // not a uid. The resolver fetches the referenced resource and shapes
+        // the spec into accessibility_specification.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('accessibilitySpecification', $transients);
+        self::assertSame(
+            ['https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa'],
+            $transients['accessibilitySpecification']
+        );
     }
 
     #[Test]
