@@ -117,7 +117,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $address = json_decode($entity->toArray()['address'], true, 512, JSON_THROW_ON_ERROR);
+        $address = $this->decodeJson($entity->toArray()['address']);
 
         self::assertSame('Bechtheimer Str. 1', $address['street']);
         self::assertSame('99084', $address['zip']);
@@ -221,7 +221,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
         self::assertCount(2, $decoded);
         self::assertSame('07:00:00', $decoded[0]['opens']);
@@ -239,7 +239,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $entity = new ParkingFacilityEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['offers'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['offers']);
 
         self::assertCount(4, $decoded);
         self::assertSame(['ParkingFee'], $decoded[0]['types']);

@@ -266,7 +266,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
         self::assertSame([
             [
@@ -297,7 +297,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
         self::assertCount(1, $decoded);
         self::assertSame('10:00:00', $decoded[0]['opens']);
@@ -315,7 +315,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['special_opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['special_opening_hours']);
 
         self::assertSame([
             [
@@ -457,7 +457,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['offers'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['offers']);
 
         self::assertCount(2, $decoded);
         self::assertSame(['GuidedTourOffer'], $decoded[0]['types']);
@@ -497,7 +497,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->configure($node, new ParserContextFake());
 
-        $decoded = json_decode($entity->toArray()['offers'], true, 512, JSON_THROW_ON_ERROR);
+        $decoded = $this->decodeJson($entity->toArray()['offers']);
         self::assertCount(1, $decoded);
         self::assertSame('Eintritt', $decoded[0]['title']);
     }

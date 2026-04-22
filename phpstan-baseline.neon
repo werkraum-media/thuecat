@@ -1,406 +1,178 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#1 \$entryWithPrefix of static method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\PropertyValues\:\:removePrefixFromEntry\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 8
-			path: Classes/Domain/Import/Entity/AccessibilityCertification.php
-
-		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Method WerkraumMedia\\ThueCat\\Controller\\Backend\\ImportController\:\:createImportErrorFlashMessage\(\) is unused\.$#'
+			identifier: method.unused
 			count: 1
-			path: Classes/Domain/Import/Entity/AccessibilitySpecification.php
+			path: Classes/Controller/Backend/ImportController.php
 
 		-
-			message: '#^Parameter \#1 \$entriesWithPrefix of static method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\PropertyValues\:\:removePrefixFromEntries\(\) expects array, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Class WerkraumMedia\\ThueCat\\Domain\\Import\\UrlProvider\\Registry not found\.$#'
+			identifier: class.notFound
 			count: 1
-			path: Classes/Domain/Import/Entity/AccessibilitySpecification.php
+			path: Classes/DependencyInjection/UrlProvidersPass.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
+			message: '#^Cannot call method canProvideForConfiguration\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: Classes/Domain/Import/Entity/AccessibilitySpecification.php
+			path: Classes/Domain/Import/Importer.php
 
 		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Minimum\:\:\$urls \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
+			message: '#^Cannot call method createWithConfiguration\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: Classes/Domain/Import/Entity/Minimum.php
+			path: Classes/Domain/Import/Importer.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''\:'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:getOpeningHoursSpecification\(\) should return array\<WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\OpeningHour\> but returns array\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Importer\:\:getProviderForConfiguration\(\) should return WerkraumMedia\\ThueCat\\Domain\\Import\\UrlProvider\\UrlProvider\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
+			path: Classes/Domain/Import/Importer.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:getSpecialOpeningHoursSpecification\(\) should return array\<WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\OpeningHour\> but returns array\.$#'
-			identifier: return.type
+			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\:\:\$table\.$#'
+			identifier: property.notFound
 			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Parameter \#1 \$entryWithPrefix of static method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\PropertyValues\:\:removePrefixFromEntry\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:\$otherServices \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:\$paymentsAccepted \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:\$sanitations \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Place\:\:\$trafficInfrastructures \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/Place.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Entity/Properties/Offer.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Entity/Properties/OpeningHour.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\PriceSpecification\:\:getCalculationRules\(\) should return array\<string\> but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Import/Entity/Properties/PriceSpecification.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$architecturalStyles \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$availableLanguages \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$digitalOffers \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$museumServices \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$photographies \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\TouristAttraction\:\:\$slogan \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Entity/TouristAttraction.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\:\:mapDataToEntity\(\) should return object but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Import/EntityMapper.php
-
-		-
-			message: '#^Parameter \#4 \$context of method Symfony\\Component\\Serializer\\Serializer\:\:deserialize\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/EntityMapper.php
-
-		-
-			message: '#^Class WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\ArrayDenormalizer extends @final class Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer\.$#'
-			identifier: class.extendsFinalByPhpDoc
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/ArrayDenormalizer.php
-
-		-
-			message: '#^Parameter \#1 \$data of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\ArrayDenormalizer\:\:transformSingleEntryToMultiEntry\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/ArrayDenormalizer.php
-
-		-
-			message: '#^Cannot access offset ''entityClassName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/EntityRegistry.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\EntityRegistry\:\:getEntityByTypes\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/EntityRegistry.php
-
-		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, Closure\(array, array\)\: int\<\-1, 1\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/EntityRegistry.php
+			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
 
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 2
-			path: Classes/Domain/Import/EntityMapper/EntityRegistry.php
+			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\DataHandlerPayload\:\:\$data \(array\<string, array\<string, array\>\>\) does not accept array\<string, array\<array\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\DataHandlerPayload\:\:\$transients \(array\<string, array\<string, array\<string, list\<string\>\>\>\>\) does not accept non\-empty\-array\<string, array\<array\<string, list\<string\>\>\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 9
+			path: Classes/Domain/Import/Parser/Entity/AbstractEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\OrganisationEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/OrganisationEntity.php
+
+		-
+			message: '#^Parameter \#1 \$node of method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TransientEntity\\AddressEntity\:\:configure\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/ParkingFacilityEntity.php
+
+		-
+			message: '#^Parameter \#2 \$geo_node of method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TransientEntity\\AddressEntity\:\:configure\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/ParkingFacilityEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\ParkingFacilityEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/ParkingFacilityEntity.php
+
+		-
+			message: '#^Parameter \#1 \$node of method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TransientEntity\\AddressEntity\:\:configure\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/TouristAttractionEntity.php
+
+		-
+			message: '#^Parameter \#2 \$geo_node of method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TransientEntity\\AddressEntity\:\:configure\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/TouristAttractionEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TouristAttractionEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/TouristAttractionEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TouristInformationEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/TouristInformationEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TownEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: Classes/Domain/Import/Parser/Entity/TownEntity.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 4
+			path: Classes/Domain/Import/Parser/Entity/TransientEntity/AbstractTransientEntity.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
-			path: Classes/Domain/Import/EntityMapper/JsonDecode.php
+			path: Classes/Domain/Import/Parser/Entity/TransientEntity/AddressEntity.php
 
 		-
-			message: '#^Parameter \#1 \$array of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\JsonDecode\:\:process\(\) expects array, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\TransientEntity\\AddressEntity\:\:\$table has no type specified\.$#'
+			identifier: missingType.property
 			count: 1
-			path: Classes/Domain/Import/EntityMapper/JsonDecode.php
+			path: Classes/Domain/Import/Parser/Entity/TransientEntity/AddressEntity.php
 
 		-
-			message: '#^Parameter \#2 \$activeLanguage of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\JsonDecode\:\:process\(\) expects string, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: Classes/Domain/Import/Parser/Entity/TransientEntity/OpeningHoursEntity.php
+
+		-
+			message: '#^Cannot call method handlesTypes\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
-			path: Classes/Domain/Import/EntityMapper/JsonDecode.php
+			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: Classes/Domain/Import/EntityMapper/JsonDecode.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\MappingException\:\:getUrl\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Parser\:\:resolveEntity\(\) should return WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Import/EntityMapper/MappingException.php
+			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: string given\.$#'
+			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, Closure\(WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface, WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\)\: int\<\-1, 1\> given\.$#'
 			identifier: argument.type
 			count: 1
-			path: Classes/Domain/Import/EntityMapper/PropertyValues.php
+			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: Classes/Domain/Import/Importer.php
-
-		-
-			message: '#^Parameter \#1 \$jsonEntity of method WerkraumMedia\\ThueCat\\Domain\\Import\\Importer\:\:importJsonEntity\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: Classes/Domain/Import/Importer.php
+			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Parameter \#1 \$types of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\EntityRegistry\:\:getEntityByTypes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Importer.php
-
-		-
-			message: '#^Cannot call method getTypo3DatabaseTableName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Cannot call method getTypo3Uid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Cannot call method hasColumn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Importer\\SaveData\:\:hasTableSysLanguageUidColumn\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method WerkraumMedia\\ThueCat\\Domain\\Import\\Importer\\SaveData\:\:getEntityData\(\) expects WerkraumMedia\\ThueCat\\Domain\\Import\\Model\\Entity, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Parameter \#1 \$uid of method WerkraumMedia\\ThueCat\\Domain\\Import\\Model\\Entity\:\:setImportedTypo3Uid\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 2
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Importer\\SaveData\:\:\$errorLog \(array\<string\>\) does not accept array\.$#'
-			identifier: assign.propertyType
-			count: 3
-			path: Classes/Domain/Import/Importer/SaveData.php
-
-		-
-			message: '#^Cannot access offset ''@type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/ResolveForeignReference.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/ResolveForeignReference.php
-
-		-
-			message: '#^Parameter \#1 \$jsonLD of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\:\:mapDataToEntity\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/ResolveForeignReference.php
-
-		-
-			message: '#^Parameter \#1 \$types of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\EntityRegistry\:\:getEntityByTypes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/ResolveForeignReference.php
-
-		-
-			message: '#^Call to an undefined method WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\MapsToType\:\:getId\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Cannot access offset ''ctrl'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Cannot access offset ''languageField'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Cannot access offset string on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method WerkraumMedia\\ThueCat\\Domain\\Import\\Typo3Converter\\GeneralConverter\:\:buildDataArrayFromEntity\(\) expects WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Minimum, WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\MapsToType given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#1 \$foreignReference of method WerkraumMedia\\ThueCat\\Domain\\Import\\ResolveForeignReference\:\:resolve\(\) expects WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 10
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#2 \$foreignReferences of static method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:createFromBaseWithForeignReferences\(\) expects array\<WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#4 \$remoteId of class WerkraumMedia\\ThueCat\\Domain\\Import\\Model\\GenericEntity constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/GeneralConverter.php
-
-		-
-			message: '#^Parameter \#1 \$pageUid of method WerkraumMedia\\ThueCat\\Domain\\Import\\Typo3Converter\\LanguageHandling\:\:getLanguages\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/LanguageHandling.php
-
-		-
-			message: '#^Binary operation "\." between mixed and '' '' results in an error\.$#'
+			message: '#^Binary operation "\." between ''REF\:'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
-			path: Classes/Domain/Import/Typo3Converter/NameExtractor.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/NameExtractor.php
+			path: Classes/Domain/Import/Parser/ParserContext.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
-			path: Classes/Domain/Import/Typo3Converter/NameExtractor.php
-
-		-
-			message: '#^Instanceof between WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference and WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: Classes/Domain/Import/Typo3Converter/NameExtractor.php
+			path: Classes/Domain/Import/Parser/ParserContext.php
 
 		-
 			message: '#^Cannot access offset ''schema\:containsPlace'' on mixed\.$#'
@@ -463,6 +235,12 @@ parameters:
 			path: Classes/Domain/Import/UrlProvider/SyncScopeUrlProvider.php
 
 		-
+			message: '#^Call to static method convertToRemoteIds\(\) on an unknown class WerkraumMedia\\ThueCat\\Domain\\Import\\ResolveForeignReference\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
 			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:getEntries\(\) should return array but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -493,7 +271,19 @@ parameters:
 			path: Classes/Domain/Model/Backend/ImportConfiguration.php
 
 		-
+			message: '#^Parameter \$foreignReferences of method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:createFromBaseWithForeignReferences\(\) has invalid type WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
 			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:\$allowedTypes \(array\<string\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportConfiguration.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:\$urls \(array\<string\>\|null\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: Classes/Domain/Model/Backend/ImportConfiguration.php
@@ -505,6 +295,18 @@ parameters:
 			path: Classes/Domain/Model/Backend/ImportLog.php
 
 		-
+			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\:\:\$table\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\:\:getRemoteId\(\) invoked with 0 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
+
+		-
 			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<mixed, mixed\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -512,6 +314,12 @@ parameters:
 
 		-
 			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportLogEntry\\SavingEntity\:\:\$errorsAsArray \(array\<string\>\) does not accept array\<mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
+
+		-
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportLogEntry\\SavingEntity\:\:\$tableName \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
@@ -841,7 +649,13 @@ parameters:
 			path: Classes/Domain/Repository/Backend/ImportConfigurationRepository.php
 
 		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\)\: string given\.$#'
+			message: '#^Call to method getId\(\) on an unknown class WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
@@ -853,14 +667,20 @@ parameters:
 			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Repository\\Backend\\TownRepository\:\:findOneByEntity\(\) should return WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\Town\|null but returns TYPO3\\CMS\\Extbase\\DomainObject\\DomainObjectInterface\|null\.$#'
-			identifier: return.type
+			message: '#^Parameter \$reference of anonymous function has invalid type WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Domain/Repository/Backend/ParkingFacilityRepository.php
+
+		-
+			message: '#^Call to static method convertToRemoteIds\(\) on an unknown class WerkraumMedia\\ThueCat\\Domain\\Import\\ResolveForeignReference\.$#'
+			identifier: class.notFound
 			count: 1
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 
 		-
-			message: '#^Parameter \#1 \$foreignReferences of static method WerkraumMedia\\ThueCat\\Domain\\Import\\ResolveForeignReference\:\:convertToRemoteIds\(\) expects array\<WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Properties\\ForeignReference\>, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Repository\\Backend\\TownRepository\:\:findOneByEntity\(\) should return WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\Town\|null but returns TYPO3\\CMS\\Extbase\\DomainObject\\DomainObjectInterface\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: Classes/Domain/Repository/Backend/TownRepository.php
 
@@ -961,19 +781,31 @@ parameters:
 			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
 
 		-
-			message: '#^Cannot access an offset on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:\$entityMapper\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:\$entityRegistry\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Access to constant ACTIVE_LANGUAGE on an unknown class WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\JsonDecode\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Call to method getName\(\) on an unknown class WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Minimum\.$#'
+			identifier: class.notFound
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
 			message: '#^Cannot access offset ''@type'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
-			message: '#^Cannot access offset ''SC_OPTIONS'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
@@ -997,19 +829,7 @@ parameters:
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
-			message: '#^Cannot access offset ''processDatamapClass'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
 			message: '#^Cannot access offset ''sDEF'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
-			message: '#^Cannot access offset ''t3lib/class\.t3lib_tcemain\.php'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
@@ -1051,8 +871,50 @@ parameters:
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
+			message: '#^Cannot call method getEntityByTypes\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Cannot call method mapDataToEntity\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Class WerkraumMedia\\ThueCat\\Domain\\Import\\Entity\\Minimum not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:addTitles\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:determineLanguage\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:mapUrlToEntity\(\) should return object\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHook\:\:shouldSkip\(\) is unused\.$#'
+			identifier: method.unused
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
@@ -1069,15 +931,15 @@ parameters:
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
-			message: '#^Parameter \#1 \$jsonLD of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\:\:mapDataToEntity\(\) expects array, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: array.invalidKey
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
-			message: '#^Parameter \#1 \$types of method WerkraumMedia\\ThueCat\\Domain\\Import\\EntityMapper\\EntityRegistry\:\:getEntityByTypes\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
@@ -1117,94 +979,40 @@ parameters:
 			path: Tests/Functional/GuzzleClientFaker.php
 
 		-
-			message: '#^Binary operation "\." between mixed and "\\n"\|"\\r\\n" results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''accessibility_specification'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''configuration'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''errors'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''import_log'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''insertion'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''record_uid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ImportTest.php
-
-		-
 			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''special_opening_hours'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''table_name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: Tests/Functional/ImportTest.php
+			path: Tests/Functional/ParserTest.php
 
 		-
 			message: '#^Cannot access offset ''title'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Cannot access offset ''uid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: Tests/Functional/ImportTest.php
+			path: Tests/Functional/ParserTest.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 9
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^If condition is always false\.$#'
-			identifier: if.alwaysFalse
-			count: 1
-			path: Tests/Functional/ImportTest.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: Tests/Functional/ImportTest.php
+			path: Tests/Functional/ParserTest.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Functional/ParserTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: Tests/Functional/ParserTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Functional/ParserTest.php
 
 		-
 			message: '#^Binary operation "\." between ''Title for URL '' and mixed results in an error\.$#'
@@ -1253,3 +1061,177 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Unit\\Domain\\Import\\Parser\\Entity\\AbstractImportTestCase\:\:nodeFromFixture\(\) should return array\<string, mixed\>\|null but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/AbstractImportTestCase.php
+
+		-
+			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/OrganisationEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''closes'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''daysOfWeek'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''latitude'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''opens'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''prices'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''title'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''types'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertContains\(\) expects iterable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''closes'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''opens'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''prices'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''title'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''types'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TownEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/AddressEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''currency'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''description'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''price'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''rule'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Cannot access offset ''title'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 7
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php

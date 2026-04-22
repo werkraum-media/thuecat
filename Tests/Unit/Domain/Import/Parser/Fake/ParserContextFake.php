@@ -58,7 +58,13 @@ final class ParserContextFake extends ParserContext
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
         $refs = [];
         foreach ($items as $item) {
-            $id = is_array($item) ? ($item['@id'] ?? '') : (string)$item;
+            if (is_array($item)) {
+                $id = is_string($item['@id'] ?? null) ? $item['@id'] : '';
+            } elseif (is_scalar($item)) {
+                $id = (string)$item;
+            } else {
+                $id = '';
+            }
             if ($id === '') {
                 continue;
             }
@@ -71,7 +77,8 @@ final class ParserContextFake extends ParserContext
     public function parseNode(array $node): string
     {
         $this->parsedNodes[] = $node;
-        $id = (string)($node['@id'] ?? '');
+        $id = $node['@id'] ?? null;
+        $id = is_string($id) ? $id : '';
         return $id === '' ? '' : 'REF:' . $id;
     }
 }
