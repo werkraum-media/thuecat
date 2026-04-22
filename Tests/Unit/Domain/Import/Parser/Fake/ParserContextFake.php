@@ -39,10 +39,13 @@ final class ParserContextFake extends ParserContext
     /** @var list<array> Nodes passed to parseNode(), in call order. */
     public array $parsedNodes = [];
 
-    public function __construct()
+    public function __construct(string $language = 'de')
     {
         // No parent::__construct() — the readonly Parser property stays unset
-        // on purpose; nothing here touches it.
+        // on purpose; nothing here touches it. We assign the public $language
+        // by reflection so tests can pick a non-German default when needed.
+        $ref = new \ReflectionProperty(ParserContext::class, 'language');
+        $ref->setValue($this, $language);
     }
 
     public function reference(mixed $value): string

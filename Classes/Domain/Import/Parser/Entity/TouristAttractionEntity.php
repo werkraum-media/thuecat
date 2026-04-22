@@ -55,17 +55,36 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $url = '';
     protected string $media = '';
 
-    // Relations — REF:<remote_id> (comma-joined if multi-value).
-    protected string $town = '';
-    protected string $managed_by = '';
-    protected string $parking_facility_near_by = '';
-
     public function configure(array $node, ParserContext $context): void
     {
+        $language = $context->language;
+
         $this->remote_id = $this->getRemoteId($node);
-        $this->title = $this->extractLanguageValue($node['schema:name'] ?? null);
-        $this->description = $this->extractLanguageValue($node['schema:description'] ?? null);
+        // Text fields (schema:name, schema:description, …) carry one entry per
+        // locale; pick the one matching the site's language so the default row
+        // holds the German (or configured) strings. Overlay rows for other
+        // languages are the later localisation pipeline's job.
+        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
+        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
         $this->url = $this->extractStringValue($node['schema:url'] ?? null);
+
+        $this->slogan = $this->extractEnumList($node['schema:slogan'] ?? null);
+        $this->start_of_construction = $this->extractLocalisedValue($node['thuecat:startOfConstruction'] ?? null, $language);
+        $this->sanitation = $this->extractEnumList($node['thuecat:sanitation'] ?? null);
+        $this->other_service = $this->extractEnumList($node['thuecat:otherService'] ?? null);
+        $this->museum_service = $this->extractEnumList($node['thuecat:museumService'] ?? null);
+        $this->architectural_style = $this->extractEnumList($node['thuecat:architecturalStyle'] ?? null);
+        $this->traffic_infrastructure = $this->extractEnumList($node['thuecat:trafficInfrastructure'] ?? null);
+        $this->payment_accepted = $this->extractEnumList($node['schema:paymentAccepted'] ?? null);
+        $this->digital_offer = $this->extractEnumList($node['thuecat:digitalOffer'] ?? null);
+        $this->photography = $this->extractEnumList($node['thuecat:photography'] ?? null);
+        // petsAllowed is either a localised string or a typed schema:Boolean;
+        // extractLocalisedValue falls back to the plain @value for the latter.
+        $this->pets_allowed = $this->extractLocalisedValue($node['schema:petsAllowed'] ?? null, $language);
+        $this->is_accessible_for_free = $this->extractLocalisedValue($node['schema:isAccessibleForFree'] ?? null, $language);
+        $this->public_access = $this->extractLocalisedValue($node['schema:publicAccess'] ?? null, $language);
+        $this->available_languages = $this->extractEnumList($node['schema:availableLanguage'] ?? null);
+        $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in
@@ -78,10 +97,55 @@ class TouristAttractionEntity extends AbstractEntity
             );
             $this->address = (string)(json_encode($address->toArray()) ?: '');
         }
+
+        // town, managed_by and parking_facility_near_by live on the row but stay
+        // empty here — the referenced @id stubs only carry ids, not types, and
+        // containedInPlace mixes cities with regions and oatour entries. The
+        // resolver fetches each id's @type before choosing a target table.
+        //
+        // Attractions use schema:contentResponsible where TouristInformation /
+        // ParkingFacility use thuecat:managedBy; both point at an organisation,
+        // so we record under a single "managedBy" key and let the resolver map
+        // it onto the managed_by column.
+        $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
+        $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
+        $this->recordTransient('parkingFacilityNearBy', $node['thuecat:parkingFacilityNearBy'] ?? null);
     }
 
     public function handlesTypes(): array
     {
         return ['schema:TouristAttraction'];
+    }
+
+    /**
+     * Flatten thuecat:distanceToPublicTransport into "value:unit[:mean1:mean2]".
+     *
+     * JSON-LD shape:
+     *   schema:value       -> numeric distance
+     *   schema:unitCode    -> single typed @value (e.g. thuecat:MTR)
+     *   thuecat:meansOfTransport -> string | {@value} | list of either
+     *
+     * meansOfTransport is optional; when absent the string is just "value:unit".
+     */
+    private function buildDistanceToPublicTransport(mixed $node): string
+    {
+        if (!is_array($node)) {
+            return '';
+        }
+
+        $distance = $this->extractStringValue($node['schema:value'] ?? null);
+        if ($distance === '') {
+            return '';
+        }
+
+        $unit = $this->extractEnumList($node['schema:unitCode'] ?? null);
+        // meansOfTransport may be a single member or a list; the legacy importer
+        // colon-separates every means (see Assertions fixture "350:MTR:Streetcar:CityBus"),
+        // so we flatten the members into sibling parts rather than comma-joining.
+        $means = $this->extractEnumMembers($node['thuecat:meansOfTransport'] ?? null);
+
+        $parts = array_merge([$distance, $unit], $means);
+
+        return implode(':', array_filter($parts, static fn ($part) => $part !== ''));
     }
 }

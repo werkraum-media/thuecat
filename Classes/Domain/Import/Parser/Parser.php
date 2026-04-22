@@ -41,11 +41,17 @@ class Parser
     ) {
     }
 
-    public function parse(array $graph): void
+    /**
+     * @param string $language Site-language tag used to pick the default row for
+     *                         multi-locale JSON-LD fields (defaults to German).
+     *                         The ImporterCommand will later derive this from the
+     *                         target folder's site configuration.
+     */
+    public function parse(array $graph, string $language = 'de'): void
     {
         // Fresh payload per parse() call so repeated imports don't accumulate state.
         $this->dataHandlerPayload = new DataHandlerPayload();
-        $this->context = new ParserContext($this);
+        $this->context = new ParserContext($this, $language);
 
         foreach ($graph as $node) {
             if (!is_array($node)) {

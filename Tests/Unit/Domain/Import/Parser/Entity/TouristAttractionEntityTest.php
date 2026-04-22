@@ -30,6 +30,8 @@ use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake
 
 class TouristAttractionEntityTest extends TestCase
 {
+    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/';
+
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -134,5 +136,144 @@ class TouristAttractionEntityTest extends TestCase
 
         $expectedAddress = '{"remote_id":"genid-39178cabb01c40e091809d730cb07b5a-b0","street":"Benediktsplatz 1","zip":"99084","city":"Erfurt","email":"info@erfurt-tourismus.de","phone":"+49 361 66400","fax":"+49 361 6640290","geo":{"latitude":50.9784118,"longitude":11.0298392}}';
         self::assertSame($expectedAddress, $result['address']);
+    }
+
+    #[Test]
+    public function extractsFlatEnumAndValueFields(): void
+    {
+        // Golden values are the sys_language_uid=0 row for 165868194223-zmqf in
+        // Tests/Unit/Domain/Import/Parser/Assertions/ImportsTouristAttractionsWithRelations.php.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $row = $entity->toArray();
+
+        self::assertSame('Highlight', $row['slogan']);
+        self::assertSame('11. Jh.', $row['start_of_construction']);
+        self::assertSame('Toilets,DisabledToilets,NappyChangingArea,FamilyAndChildFriendly', $row['sanitation']);
+        self::assertSame('SeatingPossibilitiesRestArea,LockBoxes,SouvenirShop,BaggageStorage', $row['other_service']);
+        self::assertSame('MuseumShop', $row['museum_service']);
+        self::assertSame('GothicArt', $row['architectural_style']);
+        self::assertSame('ZeroSpecialTrafficInfrastructure', $row['traffic_infrastructure']);
+        self::assertSame('CashPayment,EC', $row['payment_accepted']);
+        self::assertSame('AudioGuide,VideoGuide', $row['digital_offer']);
+        self::assertSame('ZeroPhotography', $row['photography']);
+        self::assertSame('Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.', $row['pets_allowed']);
+        self::assertSame('false', $row['is_accessible_for_free']);
+        self::assertSame('true', $row['public_access']);
+        self::assertSame('German,English,French', $row['available_languages']);
+        self::assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+    }
+
+    #[Test]
+    public function distanceToPublicTransportJoinsMultipleMeansOfTransport(): void
+    {
+        // Dom fixture carries two means (Streetcar + CityBus) as a list; the
+        // result is a single colon-joined string.
+        $node = $this->nodeFromFixture('835224016581-dara.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        self::assertSame('350:MTR:Streetcar:CityBus', $entity->toArray()['distance_to_public_transport']);
+    }
+
+    #[Test]
+    public function rowOmitsRelationFieldsForResolverToFill(): void
+    {
+        // Resolver-owned columns: parser mustn't pre-fill them. The JSON-LD
+        // stub only carries @id, and containedInPlace mixes several place types.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $row = $entity->toArray();
+
+        self::assertArrayNotHasKey('town', $row);
+        self::assertArrayNotHasKey('managed_by', $row);
+        self::assertArrayNotHasKey('parking_facility_near_by', $row);
+    }
+
+    #[Test]
+    public function capturesContainedInPlaceRefsAsTransient(): void
+    {
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('containedInPlace', $transients);
+        self::assertSame([
+            'https://thuecat.org/resources/043064193523-jcyt',
+            'https://thuecat.org/resources/573211638937-gmqb',
+            'https://thuecat.org/resources/497839263245-edbm',
+        ], $transients['containedInPlace']);
+    }
+
+    #[Test]
+    public function capturesContentResponsibleAsManagedByTransient(): void
+    {
+        // Attractions carry thuecat:contentResponsible; TouristInformation /
+        // ParkingFacility use thuecat:managedBy. Same semantic target (an
+        // organisation), so we normalise to a single bucket key for the resolver.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('managedBy', $transients);
+        self::assertSame(
+            ['https://thuecat.org/resources/018132452787-ngbe'],
+            $transients['managedBy']
+        );
+    }
+
+    #[Test]
+    public function capturesParkingFacilityNearByRefsAsTransient(): void
+    {
+        $node = $this->nodeFromFixture('215230952334-yyno.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $transients = $entity->getTransients();
+
+        self::assertArrayHasKey('parkingFacilityNearBy', $transients);
+        self::assertSame([
+            'https://thuecat.org/resources/396420044896-drzt',
+            'https://thuecat.org/resources/440055527204-ocar',
+        ], $transients['parkingFacilityNearBy']);
+    }
+
+    #[Test]
+    public function transientsAreEmptyWhenNodeLacksRelations(): void
+    {
+        $entity = new TouristAttractionEntity();
+        $entity->configure([
+            '@id' => 'https://thuecat.org/resources/no-relations',
+            '@type' => ['schema:TouristAttraction'],
+        ], new ParserContextFake());
+
+        self::assertSame([], $entity->getTransients());
+    }
+
+    private function nodeFromFixture(string $filename): ?array
+    {
+        $path = self::FIXTURE_PATH . $filename;
+        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+        $graph = is_array($decoded) ? $decoded['@graph'] : [];
+        foreach ($graph as $node) {
+            if (is_array($node) && in_array('schema:TouristAttraction', $node['@type'] ?? [], true)) {
+                return $node;
+            }
+        }
+        return null;
     }
 }

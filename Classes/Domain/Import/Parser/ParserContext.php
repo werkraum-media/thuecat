@@ -32,8 +32,17 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Parser;
  */
 class ParserContext
 {
-    public function __construct(private readonly Parser $parser)
-    {
+    /**
+     * The site-language tag that picks which localised @value wins for the default
+     * row (e.g. "de"). Source fixtures always carry exactly one entry per language
+     * per field, so matching on @language collapses a multi-locale list back to a
+     * single scalar. Supplied by the ImporterCommand from the target folder's site
+     * configuration; defaults to German for tests and existing callers.
+     */
+    public function __construct(
+        private readonly Parser $parser,
+        public readonly string $language = 'de',
+    ) {
     }
 
     /**
