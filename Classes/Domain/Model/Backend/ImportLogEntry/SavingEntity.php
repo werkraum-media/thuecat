@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 use Exception;
-use WerkraumMedia\ThueCat\Domain\Import\Model\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 class SavingEntity extends ImportLogEntry
@@ -50,14 +51,14 @@ class SavingEntity extends ImportLogEntry
      * @param string[] $errorsAsArray
      */
     public function __construct(
-        Entity $entity,
+        EntityInterface $entity,
         array $errorsAsArray
     ) {
         $this->remoteId = $entity->getRemoteId();
-        $this->insertion = $entity->wasCreated();
-        $this->recordUid = $entity->getTypo3Uid();
-        $this->recordPid = $entity->getTypo3StoragePid();
-        $this->tableName = $entity->getTypo3DatabaseTableName();
+//        $this->insertion = $entity->wasCreated();
+//        $this->recordUid = $entity->getTypo3Uid();
+//        $this->recordPid = $entity->getTypo3StoragePid();
+        $this->tableName = $entity->table;
         $this->errorsAsArray = $errorsAsArray;
     }
 

@@ -39,17 +39,12 @@ return [
         'tableName' => 'tx_thuecat_import_log_entry',
         'subclasses' => [
             'savingEntity' => SavingEntity::class,
-            'mappingError' => MappingError::class,
             'fetchingError' => FetchingError::class,
         ],
     ],
     SavingEntity::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'savingEntity',
-    ],
-    MappingError::class => [
-        'tableName' => 'tx_thuecat_import_log_entry',
-        'recordType' => 'mappingError',
     ],
     FetchingError::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

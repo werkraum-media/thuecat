@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 
+#[AutoconfigureTag('import.url.provider')]
 interface UrlProvider
 {
     /**
