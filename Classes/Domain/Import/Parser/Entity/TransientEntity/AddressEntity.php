@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity;
 // Transient: never registered as `import.entity` tagged service, never dispatched
 // by the Parser. Lifecycle is owned by the parent (TouristAttraction et al.) which
 // constructs, configures, and json_encodes it into one of its own fields.
-class AddressEntity
+class AddressEntity extends AbstractTransientEntity
 {
     public $table = 'tx_thuecat_address';
 
@@ -64,24 +64,6 @@ class AddressEntity
     protected function getRemoteId(array $node): string
     {
         return (string)($node['@id'] ?? '');
-    }
-
-    protected function extractLanguageValue(mixed $value): string
-    {
-        if (is_array($value) && isset($value['@value'])) {
-            return (string)$value['@value'];
-        }
-
-        return '';
-    }
-
-    protected function extractStringValue(mixed $value): string
-    {
-        if (is_array($value)) {
-            return (string)($value['@value'] ?? '');
-        }
-
-        return '';
     }
 
     protected function extractGeo(array $geoNode): array

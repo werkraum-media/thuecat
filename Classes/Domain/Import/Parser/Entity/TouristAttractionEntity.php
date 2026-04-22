@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
@@ -86,6 +87,8 @@ class TouristAttractionEntity extends AbstractEntity
         $this->available_languages = $this->extractEnumList($node['schema:availableLanguage'] ?? null);
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
+        $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
+
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in
             // JSON-LD. The transient AddressEntity merges them into a single JSON
@@ -115,6 +118,39 @@ class TouristAttractionEntity extends AbstractEntity
     public function handlesTypes(): array
     {
         return ['schema:TouristAttraction'];
+    }
+
+    /**
+     * schema:openingHoursSpecification is a single OpeningHoursSpecification node
+     * or a list of them. Each is self-contained (no @id indirection), so the
+     * transient OpeningHoursEntity can shape each one independently; the list of
+     * arrays is then json_encoded into the single opening_hours column.
+     *
+     * Returns '' when the field is absent so the column stays NULL-ish rather
+     * than getting a misleading "[]" literal.
+     */
+    private function buildOpeningHours(mixed $value): string
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return '';
+        }
+
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $hours = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $entity = new OpeningHoursEntity();
+            $entity->configure($item);
+            $hours[] = $entity->toArray();
+        }
+
+        if ($hours === []) {
+            return '';
+        }
+
+        return (string)(json_encode($hours) ?: '');
     }
 
     /**

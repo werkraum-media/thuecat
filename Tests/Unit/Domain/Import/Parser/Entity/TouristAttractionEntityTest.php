@@ -253,6 +253,69 @@ class TouristAttractionEntityTest extends TestCase
     }
 
     #[Test]
+    public function encodesOpeningHoursListAsJsonBlob(): void
+    {
+        // opening-hours-to-filter.json has two OpeningHoursSpecification nodes —
+        // one with a list of dayOfWeek entries, one with a single object — so
+        // it exercises both input shapes in one round trip.
+        $node = $this->nodeFromFixture('opening-hours-to-filter.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $decoded = json_decode($entity->toArray()['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertSame([
+            [
+                'opens' => '09:30:00',
+                'closes' => '18:00:00',
+                'daysOfWeek' => ['Wednesday'],
+                'from' => ['date' => '2021-05-01'],
+                'through' => ['date' => '2021-10-31'],
+            ],
+            [
+                'opens' => '13:00:00',
+                'closes' => '17:00:00',
+                'daysOfWeek' => ['Sunday'],
+                'from' => ['date' => '2050-11-01'],
+                'through' => ['date' => '2050-04-30'],
+            ],
+        ], $decoded);
+    }
+
+    #[Test]
+    public function acceptsSingleOpeningHoursSpecificationObject(): void
+    {
+        // Alte Synagoge's fixture carries schema:openingHoursSpecification as a
+        // single object rather than a list — the parser still has to produce a
+        // list of one entry in the JSON column.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $decoded = json_decode($entity->toArray()['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertCount(1, $decoded);
+        self::assertSame('10:00:00', $decoded[0]['opens']);
+        self::assertSame('18:00:00', $decoded[0]['closes']);
+    }
+
+    #[Test]
+    public function openingHoursIsAbsentWhenNodeLacksSpecification(): void
+    {
+        $entity = new TouristAttractionEntity();
+        $entity->configure([
+            '@id' => 'https://thuecat.org/resources/no-hours',
+            '@type' => ['schema:TouristAttraction'],
+        ], new ParserContextFake());
+
+        // '' is filtered out by AbstractEntity::toArray, so the column simply
+        // doesn't appear in the row.
+        self::assertArrayNotHasKey('opening_hours', $entity->toArray());
+    }
+
+    #[Test]
     public function transientsAreEmptyWhenNodeLacksRelations(): void
     {
         $entity = new TouristAttractionEntity();

@@ -21,7 +21,7 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
+namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity\TransientEntity;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
