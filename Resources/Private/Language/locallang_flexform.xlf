@@ -48,6 +48,14 @@
                 <source>Only ID, not full URL e.g. 043064193523-jcyt</source>
             </trans-unit>
 
+            <!-- Shared across all ImportConfiguration sheets -->
+            <trans-unit id="importConfiguration.apiKey" xml:space="preserve">
+                <source>API Key (optional)</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.apiKey.description" xml:space="preserve">
+                <source>Overrides the global ThueCat API key from the extension configuration. Leave empty to use the global key.</source>
+            </trans-unit>
+
             <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>
