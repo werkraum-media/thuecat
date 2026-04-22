@@ -25,7 +25,15 @@
         </include>
     </source>
 
-    <coverage/>
+    <coverage
+        includeUncoveredFiles="true"
+        pathCoverage="false"
+    >
+        <report>
+            <html outputDirectory=".coverage/html"/>
+            <xml outputDirectory=".coverage/xml"/>
+        </report>
+    </coverage>
 
     <testsuites>
         <testsuite name="unit">

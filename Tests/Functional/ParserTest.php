@@ -132,6 +132,126 @@ final class ParserTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function touristAttractionPayloadContainsCompleteRowAndTransients(): void
+    {
+        // Alte Synagoge — the richest fixture in the suite. Exercises JSON blob
+        // columns (opening_hours, offers, address), the full enum/localised
+        // scalar set, and every transient bucket the attraction carries:
+        // containedInPlace, managedBy (normalised from contentResponsible),
+        // parkingFacilityNearBy, accessibilitySpecification, media.
+        $graph = $this->graphFromFixture('165868194223-zmqf.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph);
+        $payload = $subject->getDataHandlerPayload();
+
+        $data = $payload->getPayload();
+
+        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
+        self::assertSame(
+            ['https://thuecat.org/resources/165868194223-zmqf'],
+            array_keys($data['tx_thuecat_tourist_attraction'])
+        );
+
+        $row = $data['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
+
+        // Full shape golden: catches regressions like the priority leak that
+        // the Organisation/Town tests found. Absent keys (special_opening_hours
+        // is absent because array_filter drops '' — fixture has no special
+        // openings) stay absent.
+        self::assertSame(
+            [
+                'remote_id',
+                'title',
+                'description',
+                'slogan',
+                'start_of_construction',
+                'sanitation',
+                'other_service',
+                'museum_service',
+                'architectural_style',
+                'traffic_infrastructure',
+                'payment_accepted',
+                'digital_offer',
+                'photography',
+                'pets_allowed',
+                'is_accessible_for_free',
+                'public_access',
+                'available_languages',
+                'distance_to_public_transport',
+                'opening_hours',
+                'offers',
+                'address',
+                'url',
+            ],
+            array_keys($row)
+        );
+
+        self::assertSame('https://thuecat.org/resources/165868194223-zmqf', $row['remote_id']);
+        self::assertSame('Alte Synagoge', $row['title']);
+        self::assertSame('Beispiel Beschreibung', $row['description']);
+        self::assertSame('http://www.alte-synagoge.erfurt.de', $row['url']);
+        self::assertSame('Highlight', $row['slogan']);
+        self::assertSame('11. Jh.', $row['start_of_construction']);
+        self::assertSame('false', $row['is_accessible_for_free']);
+        self::assertSame('true', $row['public_access']);
+        self::assertSame('German,English,French', $row['available_languages']);
+        self::assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+
+        // Resolver-owned columns stay off the row entirely. Same contract as
+        // the Organisation/Town tests, plus the attraction-specific ones.
+        self::assertArrayNotHasKey('town', $row);
+        self::assertArrayNotHasKey('managed_by', $row);
+        self::assertArrayNotHasKey('parking_facility_near_by', $row);
+        self::assertArrayNotHasKey('accessibility_specification', $row);
+        self::assertArrayNotHasKey('media', $row);
+
+        // JSON blobs: we only spot-check shape here; the unit tests assert
+        // the full decoded structure for offers / opening_hours / address.
+        $openingHours = json_decode($row['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $openingHours);
+        self::assertSame('10:00:00', $openingHours[0]['opens']);
+
+        $offers = json_decode($row['offers'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(2, $offers);
+        self::assertSame(['GuidedTourOffer'], $offers[0]['types']);
+        self::assertSame(['EntryOffer'], $offers[1]['types']);
+
+        $address = json_decode($row['address'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame('Waagegasse 8', $address['street']);
+        self::assertSame('99084', $address['zip']);
+        self::assertSame('Erfurt', $address['city']);
+
+        // Transients: every bucket the attraction records. media preserves the
+        // duplicate (schema:image + schema:photo pointing at the same dms_*
+        // resource) — deliberate, see TouristAttractionEntity::configure().
+        self::assertSame(
+            [
+                'tx_thuecat_tourist_attraction' => [
+                    'https://thuecat.org/resources/165868194223-zmqf' => [
+                        'containedInPlace' => [
+                            'https://thuecat.org/resources/043064193523-jcyt',
+                            'https://thuecat.org/resources/573211638937-gmqb',
+                            'https://thuecat.org/resources/497839263245-edbm',
+                        ],
+                        'managedBy' => [
+                            'https://thuecat.org/resources/018132452787-ngbe',
+                        ],
+                        'accessibilitySpecification' => [
+                            'https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa',
+                        ],
+                        'media' => [
+                            'https://thuecat.org/resources/dms_5099196',
+                            'https://thuecat.org/resources/dms_5099196',
+                        ],
+                    ],
+                ],
+            ],
+            $payload->getTransients()
+        );
+    }
+
+    #[Test]
     public function parsesTouristInformationNode(): void
     {
         $graph = $this->graphFromFixture('333039283321-xxwg.json');
