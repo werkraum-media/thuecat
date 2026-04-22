@@ -26,62 +26,38 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
-class TouristAttractionEntity extends AbstractEntity
+// Column set is narrower than TouristAttraction (no url, no slogan, no
+// accessibility_specification, no pets/public_access/…); see TCA
+// tx_thuecat_parking_facility. buildOpeningHours / buildOffers /
+// buildDistanceToPublicTransport / collectIds live on AbstractEntity.
+class ParkingFacilityEntity extends AbstractEntity
 {
-    public $table = 'tx_thuecat_tourist_attraction';
+    public $table = 'tx_thuecat_parking_facility';
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
-    protected string $slogan = '';
-    protected string $start_of_construction = '';
     protected string $sanitation = '';
     protected string $other_service = '';
-    protected string $museum_service = '';
-    protected string $architectural_style = '';
     protected string $traffic_infrastructure = '';
     protected string $payment_accepted = '';
-    protected string $digital_offer = '';
-    protected string $photography = '';
-    protected string $pets_allowed = '';
-    protected string $is_accessible_for_free = '';
-    protected string $public_access = '';
-    protected string $available_languages = '';
     protected string $distance_to_public_transport = '';
     protected string $opening_hours = '';
     protected string $special_opening_hours = '';
     protected string $offers = '';
     protected string $address = '';
-    protected string $url = '';
 
     public function configure(array $node, ParserContext $context): void
     {
         $language = $context->language;
 
         $this->remote_id = $this->getRemoteId($node);
-        // Text fields (schema:name, schema:description, …) carry one entry per
-        // locale; pick the one matching the site's language so the default row
-        // holds the German (or configured) strings. Overlay rows for other
-        // languages are the later localisation pipeline's job.
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
         $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
-        $this->url = $this->extractStringValue($node['schema:url'] ?? null);
 
-        $this->slogan = $this->extractEnumList($node['schema:slogan'] ?? null);
-        $this->start_of_construction = $this->extractLocalisedValue($node['thuecat:startOfConstruction'] ?? null, $language);
         $this->sanitation = $this->extractEnumList($node['thuecat:sanitation'] ?? null);
         $this->other_service = $this->extractEnumList($node['thuecat:otherService'] ?? null);
-        $this->museum_service = $this->extractEnumList($node['thuecat:museumService'] ?? null);
-        $this->architectural_style = $this->extractEnumList($node['thuecat:architecturalStyle'] ?? null);
         $this->traffic_infrastructure = $this->extractEnumList($node['thuecat:trafficInfrastructure'] ?? null);
         $this->payment_accepted = $this->extractEnumList($node['schema:paymentAccepted'] ?? null);
-        $this->digital_offer = $this->extractEnumList($node['thuecat:digitalOffer'] ?? null);
-        $this->photography = $this->extractEnumList($node['thuecat:photography'] ?? null);
-        // petsAllowed is either a localised string or a typed schema:Boolean;
-        // extractLocalisedValue falls back to the plain @value for the latter.
-        $this->pets_allowed = $this->extractLocalisedValue($node['schema:petsAllowed'] ?? null, $language);
-        $this->is_accessible_for_free = $this->extractLocalisedValue($node['schema:isAccessibleForFree'] ?? null, $language);
-        $this->public_access = $this->extractLocalisedValue($node['schema:publicAccess'] ?? null, $language);
-        $this->available_languages = $this->extractEnumList($node['schema:availableLanguage'] ?? null);
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
         $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
@@ -89,9 +65,6 @@ class TouristAttractionEntity extends AbstractEntity
         $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
         if (!empty($node['schema:address'])) {
-            // Address + geo are one logical record in TCA but two sibling keys in
-            // JSON-LD. The transient AddressEntity merges them into a single JSON
-            // blob stored on this entity's `address` column.
             $address = new AddressEntity();
             $address->configure(
                 $node['schema:address'],
@@ -100,31 +73,19 @@ class TouristAttractionEntity extends AbstractEntity
             $this->address = (string)(json_encode($address->toArray()) ?: '');
         }
 
-        // town, managed_by and parking_facility_near_by live on the row but stay
-        // empty here — the referenced @id stubs only carry ids, not types, and
-        // containedInPlace mixes cities with regions and oatour entries. The
-        // resolver fetches each id's @type before choosing a target table.
-        //
-        // Attractions use schema:contentResponsible where TouristInformation /
-        // ParkingFacility use thuecat:managedBy; both point at an organisation,
-        // so we record under a single "managedBy" key and let the resolver map
-        // it onto the managed_by column.
+        // town and managed_by live on the row but stay empty here — the
+        // referenced @id stubs only carry ids, not types, so the resolver
+        // must look each one up before deciding which table it points to.
+        // ParkingFacility uses thuecat:managedBy directly (unlike attractions,
+        // which encode the same relation as thuecat:contentResponsible).
         $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
-        $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
-        $this->recordTransient('parkingFacilityNearBy', $node['thuecat:parkingFacilityNearBy'] ?? null);
-        // accessibilitySpecification is a bare {"@id": "…"} stub pointing at a
-        // separate resource we don't have here. The resolver fetches that
-        // resource and writes the JSON blob onto the attraction's
-        // accessibility_specification column — unusually for the transient
-        // flow, the bucket drives a JSON blob, not a uid lookup.
-        $this->recordTransient('accessibilitySpecification', $node['thuecat:accessibilitySpecification'] ?? null);
+        $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
 
         // schema:image / schema:photo / schema:video are bare {"@id": "dms_…"}
         // stubs pointing at separate resources we don't have here. Merge all
         // three slots into a single "media" bucket; the resolver fetches each
         // dms_* resource, shapes it into the legacy Media frontend model's JSON
-        // and writes the blob onto the attraction's media column. Same
-        // fetch-and-shape path as accessibilitySpecification, just list-shaped.
+        // and writes the blob onto the parking facility's media column.
         $mediaRefs = array_merge(
             $this->collectIds($node['schema:image'] ?? null),
             $this->collectIds($node['schema:photo'] ?? null),
@@ -137,6 +98,6 @@ class TouristAttractionEntity extends AbstractEntity
 
     public function handlesTypes(): array
     {
-        return ['schema:TouristAttraction'];
+        return ['schema:ParkingFacility'];
     }
 }

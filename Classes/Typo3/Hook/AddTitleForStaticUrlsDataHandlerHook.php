@@ -42,8 +42,8 @@ final class AddTitleForStaticUrlsDataHandlerHook
     public function __construct(
         private readonly SiteFinder $siteFinder,
         private readonly FetchData $fetchData,
-//        private readonly EntityRegistry $entityRegistry,
-//        private readonly EntityMapper $entityMapper,
+        //        private readonly EntityRegistry $entityRegistry,
+        //        private readonly EntityMapper $entityMapper,
     ) {
     }
 

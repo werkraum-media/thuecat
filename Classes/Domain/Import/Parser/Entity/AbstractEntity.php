@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OfferEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
+
 abstract class AbstractEntity implements EntityInterface
 {
     protected int $priority = 10;
@@ -52,7 +55,6 @@ abstract class AbstractEntity implements EntityInterface
     {
         return 'REF:' . $remoteId;
     }
-
 
     protected function extractStringValue(mixed $value): string
     {
@@ -168,11 +170,33 @@ abstract class AbstractEntity implements EntityInterface
      *
      * $key must be the JSON-LD field name with the schema:/thuecat: prefix
      * stripped (e.g. 'containedInPlace', not 'schema:containedInPlace').
+     *
+     * Overwrites on repeat calls with the same key — if a bucket needs to
+     * merge across several JSON-LD slots (see media = image ∪ photo ∪ video),
+     * pre-aggregate with collectIds() and pass the merged list in one call.
      */
     protected function recordTransient(string $key, mixed $value): void
     {
-        if ($value === null || $value === '' || $value === []) {
+        $ids = $this->collectIds($value);
+        if ($ids === []) {
             return;
+        }
+
+        $this->transients[$key] = $ids;
+    }
+
+    /**
+     * Flatten a single {"@id": "…"} node, a bare id string, or a list of either
+     * into a plain list of id strings. Shared building block for
+     * recordTransient and for owners that need to pre-aggregate ids from
+     * several JSON-LD slots into a single transient bucket.
+     *
+     * @return list<string>
+     */
+    protected function collectIds(mixed $value): array
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return [];
         }
 
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
@@ -184,12 +208,106 @@ abstract class AbstractEntity implements EntityInterface
             }
             $ids[] = (string)$id;
         }
+        return $ids;
+    }
 
-        if ($ids === []) {
-            return;
+    /**
+     * schema:openingHoursSpecification and schema:specialOpeningHoursSpecification
+     * arrive as a single OpeningHoursSpecification node or a list of them. Each
+     * is self-contained, so the transient OpeningHoursEntity shapes each
+     * independently; the list of arrays is then json_encoded into the owning
+     * entity's target column.
+     *
+     * Returns '' when the field is absent so AbstractEntity::toArray's
+     * array_filter drops the column rather than persisting a misleading "[]"
+     * literal.
+     */
+    protected function buildOpeningHours(mixed $value): string
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return '';
         }
 
-        $this->transients[$key] = $ids;
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $hours = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $entity = new OpeningHoursEntity();
+            $entity->configure($item);
+            $hours[] = $entity->toArray();
+        }
+
+        if ($hours === []) {
+            return '';
+        }
+
+        return (string)(json_encode($hours) ?: '');
+    }
+
+    /**
+     * schema:makesOffer is a single Offer node or a list of them. Each carries
+     * its own nested priceSpecification plus localised name/description; the
+     * transient OfferEntity shapes each into the legacy Offer/Price frontend
+     * shape, and the list of arrays is json_encoded into the owning entity's
+     * `offers` column.
+     *
+     * Returns '' on absence for the same reason as buildOpeningHours.
+     */
+    protected function buildOffers(mixed $value, string $language): string
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return '';
+        }
+
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $offers = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $entity = new OfferEntity();
+            $entity->configure($item, $language);
+            $offers[] = $entity->toArray();
+        }
+
+        if ($offers === []) {
+            return '';
+        }
+
+        return (string)(json_encode($offers) ?: '');
+    }
+
+    /**
+     * Flatten thuecat:distanceToPublicTransport into "value:unit[:mean1:mean2]".
+     *
+     * JSON-LD shape:
+     *   schema:value             -> numeric distance
+     *   schema:unitCode          -> single typed @value(e.g. thuecat:MTR)
+     *   thuecat:meansOfTransport -> string | {@value} | list of either
+     *
+     * meansOfTransport is optional; when absent the string is just "value:unit".
+     * The legacy importer colon-separates every means rather than comma-joining
+     * them (see Assertions fixture "350:MTR:Streetcar:CityBus").
+     */
+    protected function buildDistanceToPublicTransport(mixed $node): string
+    {
+        if (!is_array($node)) {
+            return '';
+        }
+
+        $distance = $this->extractStringValue($node['schema:value'] ?? null);
+        if ($distance === '') {
+            return '';
+        }
+
+        $unit = $this->extractEnumList($node['schema:unitCode'] ?? null);
+        $means = $this->extractEnumMembers($node['thuecat:meansOfTransport'] ?? null);
+
+        $parts = array_merge([$distance, $unit], $means);
+
+        return implode(':', array_filter($parts, static fn ($part) => $part !== ''));
     }
 
     public function getTransients(): array
@@ -205,7 +323,7 @@ abstract class AbstractEntity implements EntityInterface
         return array_filter($array);
     }
 
-    public function getPriority():int
+    public function getPriority(): int
     {
         return $this->priority;
     }

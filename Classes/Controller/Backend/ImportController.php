@@ -36,7 +36,7 @@ class ImportController extends AbstractController
 {
     public function __construct(
         // @todo get the importer back
-//        private readonly Importer $importer,
+        //        private readonly Importer $importer,
         private readonly ImportLogRepository $repository,
         private readonly TranslationService $translation
     ) {
@@ -54,13 +54,13 @@ class ImportController extends AbstractController
     #[IgnoreValidation(['argumentName' => 'importConfiguration'])]
     public function importAction(ImportConfiguration $importConfiguration): ResponseInterface
     {
-//        $importLog = $this->importer->importConfiguration($importConfiguration);
-//
-//        if ($importLog->hasErrors()) {
-//            $this->createImportErrorFlashMessage($importConfiguration);
-//        } else {
-            $this->createImportDoneFlashMessage($importConfiguration);
-//        }
+        //        $importLog = $this->importer->importConfiguration($importConfiguration);
+        //
+        //        if ($importLog->hasErrors()) {
+        //            $this->createImportErrorFlashMessage($importConfiguration);
+        //        } else {
+        $this->createImportDoneFlashMessage($importConfiguration);
+        //        }
 
         return $this->redirect('index', 'Backend\Configuration');
     }

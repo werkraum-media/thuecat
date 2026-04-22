@@ -70,7 +70,7 @@ class OfferEntity extends AbstractTransientEntity
     }
 
     /**
-     * thuecat:offerType is a single typed @value ("thuecat:GuidedTourOffer"),
+     * thuecat:offerType is a single typed @value("thuecat:GuidedTourOffer"),
      * occasionally a list of them. Return the bare member names.
      *
      * @return list<string>

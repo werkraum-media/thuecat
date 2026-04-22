@@ -37,7 +37,8 @@ class Parser
 
     public function __construct(
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
-        #[AutowireLocator(services: 'import.entity')] private readonly ServiceLocator $entities,
+        #[AutowireLocator(services: 'import.entity')]
+        private readonly ServiceLocator $entities,
     ) {
     }
 
@@ -70,8 +71,7 @@ class Parser
      * Entry point for recursion — ParserContext delegates child parsing here.
      *
      * Returns REF:<remote_id> so the caller can write that reference into its own
-     * field. Returns '' when no registered entity handles the node's @types
-     * (e.g. genid-* intangibles like Offer/GeoCoordinates/PriceSpecification).
+     * field. Returns '' when no registered entity handles the node's @types(e.g. genid-* intangibles like Offer/GeoCoordinates/PriceSpecification).
      *
      * @internal Only {@see ParserContext} should call this.
      */

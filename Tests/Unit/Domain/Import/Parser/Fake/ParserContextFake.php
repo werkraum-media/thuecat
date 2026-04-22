@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake;
 
+use ReflectionProperty;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 /**
@@ -44,7 +45,7 @@ final class ParserContextFake extends ParserContext
         // No parent::__construct() — the readonly Parser property stays unset
         // on purpose; nothing here touches it. We assign the public $language
         // by reflection so tests can pick a non-German default when needed.
-        $ref = new \ReflectionProperty(ParserContext::class, 'language');
+        $ref = new ReflectionProperty(ParserContext::class, 'language');
         $ref->setValue($this, $language);
     }
 

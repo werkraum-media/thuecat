@@ -24,10 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ServiceLocator;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 
 final class ParserTest extends AbstractImportTestCase

@@ -77,8 +77,6 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
 
     protected function setUp(): void
     {
-
-
         parent::setUp();
 
         GuzzleClientFaker::registerClient();
@@ -139,7 +137,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             ->setAspect(
                 'date',
                 new DateTimeAspect($dateTime)
-            );
+            )
+        ;
     }
 
     /**
@@ -151,6 +150,7 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         $fakeRequest = $fakeRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
 
         $this->get(ConfigurationManagerInterface::class)
-            ->setRequest($fakeRequest);
+            ->setRequest($fakeRequest)
+        ;
     }
 }

@@ -27,7 +27,6 @@ use Codappix\Typo3PhpDatasets\PhpDataSet;
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -82,7 +81,6 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    
     #[DataProvider('possibleUpdatesForTitle')]
     public function changesTitleFromRemote(
         string $existingConfiguration,
@@ -233,7 +231,6 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         ];
     }
 
-    
     public function addsTitleForAllUrlsInNewRecord(): void
     {
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/thuecat.org/resources/r_22033250-oapoi.json');
@@ -274,7 +271,6 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         );
     }
 
-    
     public function doesNothingIfNewRecordDoesNotContainUrls(): void
     {
         $dataMap = $this->createDataMap([], 'NEW67a1e37c5cc8c460046430');

@@ -73,7 +73,7 @@ class ParserContext
 
     /**
      * Recurse into a child node. Returns REF:<remote_id> for persisted entities,
-     * '' when no registered entity handles the node's @type (e.g. blank intangibles).
+     * '' when no registered entity handles the node's @type(e.g. blank intangibles).
      */
     public function parseNode(array $node): string
     {

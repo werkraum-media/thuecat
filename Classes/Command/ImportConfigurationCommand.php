@@ -68,11 +68,11 @@ class ImportConfigurationCommand extends Command
         }
         // @todo restore actual import functionality
 
-//        $importLog = $this->importer->importConfiguration($configuration);
-//
-//        if ($importLog->hasErrors()) {
-//            return Command::FAILURE;
-//        }
+        //        $importLog = $this->importer->importConfiguration($configuration);
+        //
+        //        if ($importLog->hasErrors()) {
+        //            return Command::FAILURE;
+        //        }
 
         return Command::SUCCESS;
     }
