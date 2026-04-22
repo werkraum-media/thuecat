@@ -302,6 +302,50 @@ class TouristAttractionEntityTest extends TestCase
     }
 
     #[Test]
+    public function encodesSpecialOpeningHoursListAsJsonBlob(): void
+    {
+        // special-opening-hours.json has two specialOpeningHoursSpecification
+        // nodes — different JSON-LD key, identical shape, so the same transient
+        // handles it; only the target column changes.
+        $node = $this->nodeFromFixture('special-opening-hours.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $decoded = json_decode($entity->toArray()['special_opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertSame([
+            [
+                'opens' => '10:00:00',
+                'closes' => '14:00:00',
+                'daysOfWeek' => ['Saturday'],
+                'from' => ['date' => '2050-12-31'],
+                'through' => ['date' => '2050-12-31'],
+            ],
+            [
+                'opens' => '10:00:00',
+                'closes' => '14:00:00',
+                'daysOfWeek' => ['Saturday'],
+                'from' => ['date' => '2021-12-31'],
+                'through' => ['date' => '2021-12-31'],
+            ],
+        ], $decoded);
+    }
+
+    #[Test]
+    public function specialOpeningHoursIsAbsentWhenNodeLacksSpecification(): void
+    {
+        // The regular opening-hours fixture has no specialOpeningHours node; the
+        // column must not appear rather than serialising an empty list.
+        $node = $this->nodeFromFixture('opening-hours-to-filter.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());
+    }
+
+    #[Test]
     public function openingHoursIsAbsentWhenNodeLacksSpecification(): void
     {
         $entity = new TouristAttractionEntity();

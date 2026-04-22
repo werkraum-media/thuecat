@@ -88,6 +88,7 @@ class TouristAttractionEntity extends AbstractEntity
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
         $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
+        $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
 
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in
@@ -121,10 +122,11 @@ class TouristAttractionEntity extends AbstractEntity
     }
 
     /**
-     * schema:openingHoursSpecification is a single OpeningHoursSpecification node
-     * or a list of them. Each is self-contained (no @id indirection), so the
-     * transient OpeningHoursEntity can shape each one independently; the list of
-     * arrays is then json_encoded into the single opening_hours column.
+     * Both schema:openingHoursSpecification and schema:specialOpeningHoursSpecification
+     * arrive as a single OpeningHoursSpecification node or a list of them. Each is
+     * self-contained (no @id indirection), so the transient OpeningHoursEntity can
+     * shape each independently; the list of arrays is then json_encoded into the
+     * single target column.
      *
      * Returns '' when the field is absent so the column stays NULL-ish rather
      * than getting a misleading "[]" literal.
