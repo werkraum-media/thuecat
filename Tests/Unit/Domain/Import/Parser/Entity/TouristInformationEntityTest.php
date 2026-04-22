@@ -46,6 +46,37 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function returnsTitleAndDescriptionForDefaultLanguage(): void
+    {
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
+        self::assertNotNull($node);
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake());
+
+        $row = $subject->toArray();
+
+        self::assertSame('Erfurt Tourist Information', $row['title']);
+        self::assertStringStartsWith('Direkt an der Krämerbrücke', $row['description']);
+    }
+
+    #[Test]
+    public function titleAndDescriptionAreOmittedForUnmatchedLanguage(): void
+    {
+        // Fixture only carries German entries; picking a language that is not
+        // present must yield '' rather than silently falling back to German.
+        // toArray() then drops the empty strings, so the keys disappear entirely.
+        $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
+        self::assertNotNull($node);
+        $subject = new TouristInformationEntity();
+        $subject->configure($node, new ParserContextFake('en'));
+
+        $row = $subject->toArray();
+
+        self::assertArrayNotHasKey('title', $row);
+        self::assertArrayNotHasKey('description', $row);
+    }
+
+    #[Test]
     public function rowContainsRemoteId(): void
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');

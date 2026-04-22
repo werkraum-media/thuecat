@@ -67,6 +67,23 @@ class TownEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function titleAndDescriptionAreOmittedForUnmatchedLanguage(): void
+    {
+        // Fixture only carries German entries; picking a language that is not
+        // present must yield '' rather than silently falling back to German.
+        // toArray() then drops the empty strings, so the keys disappear entirely.
+        $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
+        self::assertNotNull($node);
+        $subject = new TownEntity();
+        $subject->configure($node, new ParserContextFake('en'));
+
+        $row = $subject->toArray();
+
+        self::assertArrayNotHasKey('title', $row);
+        self::assertArrayNotHasKey('description', $row);
+    }
+
+    #[Test]
     public function capturesManagedByFromTopLevelThuecatField(): void
     {
         // Town uses thuecat:managedBy directly, where attractions
