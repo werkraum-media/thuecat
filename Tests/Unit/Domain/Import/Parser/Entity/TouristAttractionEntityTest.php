@@ -394,6 +394,76 @@ class TouristAttractionEntityTest extends TestCase
         self::assertSame([], $entity->getTransients());
     }
 
+    #[Test]
+    public function encodesOffersListAsJsonBlob(): void
+    {
+        // Alte Synagoge carries two Offers — GuidedTourOffer with two prices,
+        // EntryOffer with four — so one fixture covers offerType extraction,
+        // nested priceSpecification list handling, and the full price shape.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $decoded = json_decode($entity->toArray()['offers'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertCount(2, $decoded);
+        self::assertSame(['GuidedTourOffer'], $decoded[0]['types']);
+        self::assertSame('Führungen', $decoded[0]['title']);
+        self::assertCount(2, $decoded[0]['prices']);
+        self::assertSame([
+            'title' => 'Erwachsene',
+            'description' => '',
+            'price' => 8,
+            'currency' => 'EUR',
+            'rule' => 'PerPerson',
+        ], $decoded[0]['prices'][0]);
+
+        self::assertSame(['EntryOffer'], $decoded[1]['types']);
+        self::assertSame('Eintritt', $decoded[1]['title']);
+        self::assertCount(4, $decoded[1]['prices']);
+    }
+
+    #[Test]
+    public function acceptsSingleMakesOfferObject(): void
+    {
+        $node = [
+            '@id' => 'https://thuecat.org/resources/single-offer',
+            '@type' => ['schema:TouristAttraction'],
+            'schema:makesOffer' => [
+                'schema:name' => ['@language' => 'de', '@value' => 'Eintritt'],
+                'thuecat:offerType' => ['@type' => 'thuecat:OfferType', '@value' => 'thuecat:EntryOffer'],
+                'schema:priceSpecification' => [
+                    'schema:name' => ['@language' => 'de', '@value' => 'Erwachsene'],
+                    'schema:price' => ['@type' => 'schema:Number', '@value' => '8'],
+                    'schema:priceCurrency' => ['@type' => 'thuecat:Currency', '@value' => 'thuecat:EUR'],
+                    'thuecat:calculationRule' => ['@type' => 'thuecat:CalculationRule', '@value' => 'thuecat:PerPerson'],
+                ],
+            ],
+        ];
+
+        $entity = new TouristAttractionEntity();
+        $entity->configure($node, new ParserContextFake());
+
+        $decoded = json_decode($entity->toArray()['offers'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $decoded);
+        self::assertSame('Eintritt', $decoded[0]['title']);
+    }
+
+    #[Test]
+    public function offersIsAbsentWhenNodeLacksMakesOffer(): void
+    {
+        $entity = new TouristAttractionEntity();
+        $entity->configure([
+            '@id' => 'https://thuecat.org/resources/no-offers',
+            '@type' => ['schema:TouristAttraction'],
+        ], new ParserContextFake());
+
+        // Same array_filter contract as opening_hours: '' is dropped, so the
+        // column simply doesn't appear.
+        self::assertArrayNotHasKey('offers', $entity->toArray());
+    }
+
     private function nodeFromFixture(string $filename): ?array
     {
         $path = self::FIXTURE_PATH . $filename;

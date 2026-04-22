@@ -73,4 +73,37 @@ abstract class AbstractTransientEntity
         $colon = strpos($value, ':');
         return $colon === false ? $value : substr($value, $colon + 1);
     }
+
+    /**
+     * Pick the @value that matches $language from a localised slot. Mirrors
+     * AbstractEntity::extractLocalisedValue intentionally — the two class
+     * hierarchies deliberately don't share a base (see class docblock), so
+     * we keep a dedicated copy here rather than leaking transient helpers
+     * into AbstractEntity.
+     *
+     * Returns '' when no matching translation exists, so the JSON blob for a
+     * non-default language row carries empty strings rather than a German
+     * fallback (mirrors the legacy Offer/Price frontend shape).
+     */
+    protected function extractLocalisedValue(mixed $value, string $language): string
+    {
+        if (!is_array($value)) {
+            return '';
+        }
+
+        if (array_is_list($value)) {
+            foreach ($value as $item) {
+                if (is_array($item) && ($item['@language'] ?? null) === $language && isset($item['@value'])) {
+                    return (string)$item['@value'];
+                }
+            }
+            return '';
+        }
+
+        if (($value['@language'] ?? null) === $language && isset($value['@value'])) {
+            return (string)$value['@value'];
+        }
+
+        return '';
+    }
 }

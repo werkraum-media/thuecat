@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OfferEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
@@ -88,6 +89,7 @@ class TouristAttractionEntity extends AbstractEntity
 
         $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
         $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
+        $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in
@@ -158,6 +160,40 @@ class TouristAttractionEntity extends AbstractEntity
         }
 
         return (string)(json_encode($hours) ?: '');
+    }
+
+    /**
+     * schema:makesOffer is a single Offer node or a list of them. Each carries
+     * its own nested priceSpecification plus localised name/description, so the
+     * transient OfferEntity can shape each independently; the list of arrays
+     * is then json_encoded into the `offers` column.
+     *
+     * Returns '' when the field is absent so the column stays NULL-ish rather
+     * than getting a misleading "[]" literal (keeps AbstractEntity::toArray's
+     * array_filter behaviour consistent with buildOpeningHours).
+     */
+    private function buildOffers(mixed $value, string $language): string
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return '';
+        }
+
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+        $offers = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $entity = new OfferEntity();
+            $entity->configure($item, $language);
+            $offers[] = $entity->toArray();
+        }
+
+        if ($offers === []) {
+            return '';
+        }
+
+        return (string)(json_encode($offers) ?: '');
     }
 
     /**
