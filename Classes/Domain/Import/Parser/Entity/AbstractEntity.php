@@ -309,7 +309,8 @@ abstract class AbstractEntity implements EntityInterface
     public function toArray(): array
     {
         $array = get_object_vars($this);
-        unset($array['table'], $array['transients']);
+        // table / transients / priority are framework metadata, not DB columns.
+        unset($array['table'], $array['transients'], $array['priority']);
 
         return array_filter($array);
     }

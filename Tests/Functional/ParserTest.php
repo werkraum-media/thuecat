@@ -52,6 +52,41 @@ final class ParserTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function organisationPayloadContainsCompleteRowAndNoTransients(): void
+    {
+        // Single top-level schema:Organization node, no outgoing relations —
+        // exercises the full parse → DataHandlerPayload shape without any
+        // resolver-owned fields or transient buckets getting in the way.
+        $graph = $this->graphFromFixture('018132452787-ngbe.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph);
+        $payload = $subject->getDataHandlerPayload();
+
+        $data = $payload->getPayload();
+
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame(
+            ['https://thuecat.org/resources/018132452787-ngbe'],
+            array_keys($data['tx_thuecat_organisation'])
+        );
+
+        $row = $data['tx_thuecat_organisation']['https://thuecat.org/resources/018132452787-ngbe'];
+        self::assertSame(
+            ['remote_id', 'title', 'description'],
+            array_keys($row)
+        );
+        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
+        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        self::assertStringStartsWith('Die Erfurt Tourismus', $row['description']);
+        self::assertStringEndsWith('4 Auszubildende', $row['description']);
+
+        // Organisation has no outgoing relations of its own (reverse-inline
+        // only), so the transients bucket must stay untouched.
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
     public function parsesTouristInformationNode(): void
     {
         $graph = $this->graphFromFixture('333039283321-xxwg.json');
