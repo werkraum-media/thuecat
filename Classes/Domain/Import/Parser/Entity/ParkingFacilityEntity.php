@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 // Column set is narrower than TouristAttraction (no url, no slogan, no
 // accessibility_specification, no pets/public_access/…); see TCA
@@ -46,10 +45,8 @@ class ParkingFacilityEntity extends AbstractEntity
     protected string $offers = '';
     protected string $address = '';
 
-    public function configure(array $node, ParserContext $context): void
+    public function configure(array $node, string $language): void
     {
-        $language = $context->language;
-
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
         $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);

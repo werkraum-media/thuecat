@@ -6,7 +6,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TownEntity;
-use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
 class TownEntityTest extends AbstractImportTestCase
 {
@@ -33,7 +32,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 
@@ -46,7 +45,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 
@@ -59,7 +58,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 
@@ -75,7 +74,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, new ParserContextFake('en'));
+        $subject->configure($node, 'en');
 
         $row = $subject->toArray();
 
@@ -92,7 +91,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $transients = $subject->getTransients();
 

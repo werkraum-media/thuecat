@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OrganisationEntity;
-use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
 final class OrganisationEntityTest extends AbstractImportTestCase
 {
@@ -53,7 +52,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 
@@ -66,7 +65,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 
@@ -82,7 +81,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, new ParserContextFake('en'));
+        $subject->configure($node, 'en');
 
         $row = $subject->toArray();
 
@@ -96,7 +95,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, new ParserContextFake());
+        $subject->configure($node, 'de');
 
         $row = $subject->toArray();
 

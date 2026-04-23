@@ -33,7 +33,7 @@ class Parser
 {
     private DataHandlerPayload $dataHandlerPayload;
 
-    private ParserContext $context;
+    private string $language = 'de';
 
     public function __construct(
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
@@ -45,14 +45,14 @@ class Parser
     /**
      * @param string $language Site-language tag used to pick the default row for
      *                         multi-locale JSON-LD fields (defaults to German).
-     *                         The ImporterCommand will later derive this from the
+     *                         The ImporterCommand will derive this from the
      *                         target folder's site configuration.
      */
     public function parse(array $graph, string $language = 'de'): void
     {
         // Fresh payload per parse() call so repeated imports don't accumulate state.
         $this->dataHandlerPayload = new DataHandlerPayload();
-        $this->context = new ParserContext($this, $language);
+        $this->language = $language;
 
         foreach ($graph as $node) {
             if (!is_array($node)) {
@@ -67,14 +67,6 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
-    /**
-     * Entry point for recursion — ParserContext delegates child parsing here.
-     *
-     * Returns REF:<remote_id> so the caller can write that reference into its own
-     * field. Returns '' when no registered entity handles the node's @types(e.g. genid-* intangibles like Offer/GeoCoordinates/PriceSpecification).
-     *
-     * @internal Only {@see ParserContext} should call this.
-     */
     public function parseNode(array $node): string
     {
         $entity = $this->resolveEntity($node['@type'] ?? []);
@@ -82,7 +74,7 @@ class Parser
             return '';
         }
 
-        $entity->configure($node, $this->context);
+        $entity->configure($node, $this->language);
         $this->dataHandlerPayload->addEntity($entity);
 
         return 'REF:' . $entity->getRemoteId($node);

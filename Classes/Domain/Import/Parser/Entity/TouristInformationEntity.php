@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
-
 class TouristInformationEntity extends AbstractEntity
 {
     public $table = 'tx_thuecat_tourist_information';
@@ -36,10 +34,8 @@ class TouristInformationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function configure(array $node, ParserContext $context): void
+    public function configure(array $node, string $language): void
     {
-        $language = $context->language;
-
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
         $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);

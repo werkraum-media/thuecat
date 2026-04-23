@@ -25,7 +25,6 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
-use WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Fake\ParserContextFake;
 
 class TouristAttractionEntityTest extends AbstractImportTestCase
 {
@@ -67,7 +66,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         ];
 
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
         $result = $entity->toArray();
 
         self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $result['remote_id']);
@@ -128,7 +127,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         ];
 
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
         $result = $entity->toArray();
 
         $expectedAddress = '{"remote_id":"genid-39178cabb01c40e091809d730cb07b5a-b0","street":"Benediktsplatz 1","zip":"99084","city":"Erfurt","email":"info@erfurt-tourismus.de","phone":"+49 361 66400","fax":"+49 361 6640290","geo":{"latitude":50.9784118,"longitude":11.0298392}}';
@@ -143,7 +142,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $row = $entity->toArray();
 
@@ -172,7 +171,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         self::assertSame('350:MTR:Streetcar:CityBus', $entity->toArray()['distance_to_public_transport']);
     }
@@ -185,7 +184,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $row = $entity->toArray();
 
@@ -206,7 +205,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -227,7 +226,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -244,7 +243,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('215230952334-yyno.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -264,7 +263,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
@@ -295,7 +294,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
@@ -313,7 +312,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('special-opening-hours.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['special_opening_hours']);
 
@@ -343,7 +342,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());
     }
@@ -355,7 +354,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->configure([
             '@id' => 'https://thuecat.org/resources/no-hours',
             '@type' => ['schema:TouristAttraction'],
-        ], new ParserContextFake());
+        ], 'de');
 
         // '' is filtered out by AbstractEntity::toArray, so the column simply
         // doesn't appear in the row.
@@ -371,7 +370,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -400,7 +399,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -421,7 +420,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -441,7 +440,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->configure([
             '@id' => 'https://thuecat.org/resources/no-relations',
             '@type' => ['schema:TouristAttraction'],
-        ], new ParserContextFake());
+        ], 'de');
 
         self::assertSame([], $entity->getTransients());
     }
@@ -455,7 +454,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
@@ -495,7 +494,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         ];
 
         $entity = new TouristAttractionEntity();
-        $entity->configure($node, new ParserContextFake());
+        $entity->configure($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
         self::assertCount(1, $decoded);
@@ -509,7 +508,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->configure([
             '@id' => 'https://thuecat.org/resources/no-offers',
             '@type' => ['schema:TouristAttraction'],
-        ], new ParserContextFake());
+        ], 'de');
 
         // Same array_filter contract as opening_hours: '' is dropped, so the
         // column simply doesn't appear.

@@ -24,14 +24,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 // Entities are constructed via the ServiceLocator, which cannot supply the node.
 // Data extraction therefore happens post-construction through configure().
 #[AutoconfigureTag('import.entity')]
 interface EntityInterface
 {
-    public function configure(array $node, ParserContext $context): void;
+    public function configure(array $node, string $language): void;
 
     public function getRemoteId(array $node): string;
 

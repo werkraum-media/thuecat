@@ -276,6 +276,48 @@ final class ParserTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function noRefPlaceholdersLeakIntoPayloadOrTransients(): void
+    {
+        // Parser::parseNode() returns a REF:<id> string internally, but the
+        // top-level parse() loop discards it. Nothing in the payload or transients
+        // should ever contain a REF: placeholder — relations are recorded as plain
+        // @id strings in the transients bucket for the resolver to handle.
+        $graph = $this->graphFromFixture('165868194223-zmqf.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph);
+        $payload = $subject->getDataHandlerPayload();
+
+        $needle = 'REF:';
+
+        foreach ($payload->getPayload() as $table => $rows) {
+            foreach ($rows as $remoteId => $row) {
+                foreach ($row as $column => $value) {
+                    self::assertStringNotContainsString(
+                        $needle,
+                        (string)$value,
+                        "REF: placeholder leaked into {$table}[{$remoteId}][{$column}]"
+                    );
+                }
+            }
+        }
+
+        foreach ($payload->getTransients() as $table => $rows) {
+            foreach ($rows as $remoteId => $buckets) {
+                foreach ($buckets as $key => $ids) {
+                    foreach ($ids as $id) {
+                        self::assertStringNotContainsString(
+                            $needle,
+                            $id,
+                            "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]"
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    #[Test]
     public function skipsBlankNodes(): void
     {
         $graph = $this->graphFromFixture('018132452787-ngbe.json');

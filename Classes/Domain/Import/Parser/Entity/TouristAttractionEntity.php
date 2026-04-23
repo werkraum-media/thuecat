@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
 {
@@ -53,10 +52,8 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $address = '';
     protected string $url = '';
 
-    public function configure(array $node, ParserContext $context): void
+    public function configure(array $node, string $language): void
     {
-        $language = $context->language;
-
         $this->remote_id = $this->getRemoteId($node);
         // Text fields (schema:name, schema:description, …) carry one entry per
         // locale; pick the one matching the site's language so the default row

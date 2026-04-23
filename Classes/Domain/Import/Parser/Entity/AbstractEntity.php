@@ -51,11 +51,6 @@ abstract class AbstractEntity implements EntityInterface
         return (string)$node['@id'];
     }
 
-    protected function prefixRelation(string $remoteId): string
-    {
-        return 'REF:' . $remoteId;
-    }
-
     protected function extractStringValue(mixed $value): string
     {
         if (is_array($value)) {
