@@ -74,6 +74,9 @@
         ]
     },
     "config": {
+        "audit": {
+            "block-insecure": false
+        },
         "sort-packages": true,
         "allow-plugins": {
             "typo3/cms-composer-installers": true,
