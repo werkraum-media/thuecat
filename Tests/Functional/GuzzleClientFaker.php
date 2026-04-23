@@ -48,6 +48,16 @@ class GuzzleClientFaker
         self::appendResponse(new Response(SymfonyResponse::HTTP_NOT_FOUND));
     }
 
+    public static function appendUnauthorizedResponse(): void
+    {
+        self::appendResponse(new Response(SymfonyResponse::HTTP_UNAUTHORIZED));
+    }
+
+    public static function getLastRequest(): ?\Psr\Http\Message\RequestInterface
+    {
+        return self::getMockHandler()->getLastRequest();
+    }
+
     private static function appendResponseFromContent(string $content): void
     {
         self::appendResponse(new Response(
