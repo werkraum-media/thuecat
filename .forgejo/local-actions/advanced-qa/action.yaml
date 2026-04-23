@@ -1,0 +1,33 @@
+inputs:
+  php-version:
+    required: true
+  typo3-version:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'PHP lint'
+      run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
+
+    - name: 'Get Composer Cache Directory'
+      id: 'composer-cache-dir'
+      run: 'echo "dir=$(composer config cache-files-dir)" >> $FORGEJO_OUTPUT'
+    - name: 'Configure composer cache'
+      uses: 'actions/cache@v5'
+      with:
+        path: '${{ steps.composer-cache-dir.outputs.dir }}'
+        key: "composer-${{ hashFiles('${{ env.FORGEJO_WORKSPACE }}/composer.*') }}-${{ inputs.php-version }}-${{ inputs.typo3-version }}"
+        restore-keys: 'composer'
+
+    - name: 'Install dependencies with expected TYPO3 version'
+      run: 'composer require --no-interaction --prefer-dist --no-progress "typo3/cms-core:${{ inputs.typo3-version }}" "typo3/cms-extbase:${{ inputs.typo3-version }}" "typo3/cms-filelist:${{ inputs.typo3-version }}" "typo3/cms-filemetadata:${{ inputs.typo3-version }}" "typo3/cms-fluid:${{ inputs.typo3-version }}" "typo3/cms-frontend:${{ inputs.typo3-version }}" "typo3/cms-install:${{ inputs.typo3-version }}"'
+
+    - name: 'Generate Codeception Code'
+      run: './vendor/bin/codecept build'
+
+    - name: 'Code Quality (by PHPStan)'
+      run: './vendor/bin/phpstan analyse'
+
+    - name: 'PHPUnit Tests'
+      run: './vendor/bin/phpunit --display-all-issues'
