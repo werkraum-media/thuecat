@@ -140,6 +140,33 @@ class DataHandlerPayload
     }
 
     /**
+     * Append rows and transients from another payload. Existing rows (keyed by
+     * remote_id at this stage) are left untouched — same @id fetched twice
+     * must not clobber whatever is already there. Used by the resolver when a
+     * transient reference triggers a follow-up fetch that yields more rows.
+     */
+    public function mergeFrom(self $other): void
+    {
+        foreach ($other->data as $table => $rows) {
+            foreach ($rows as $remoteId => $row) {
+                if (isset($this->data[$table][$remoteId])) {
+                    continue;
+                }
+                $this->data[$table][$remoteId] = $row;
+            }
+        }
+
+        foreach ($other->transients as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $buckets) {
+                if (isset($this->transients[$table][$remoteId])) {
+                    continue;
+                }
+                $this->transients[$table][$remoteId] = $buckets;
+            }
+        }
+    }
+
+    /**
      * @return array<string, array<int|string, array<string, string|int|float>>>
      */
     public function getPayload(): array

@@ -67,6 +67,17 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
+    /**
+     * Parse a graph and return its own payload without touching any payload
+     * the caller may have built via prior parse() calls. Used by the resolver
+     * when a transient reference triggers a follow-up fetch.
+     */
+    public function parseFresh(array $graph, string $language = 'de'): DataHandlerPayload
+    {
+        $this->parse($graph, $language);
+        return $this->dataHandlerPayload;
+    }
+
     public function parseNode(array $node): string
     {
         $entity = $this->resolveEntity($node['@type'] ?? []);

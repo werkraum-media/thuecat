@@ -24,9 +24,14 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Resolver;
 
 use PHPUnit\Framework\Attributes\Test;
+use ReflectionProperty;
+use WerkraumMedia\ThueCat\Domain\Import\InvalidTransientReferenceException;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Resolver;
+use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
 final class ResolverTest extends AbstractImportTestCase
 {
@@ -41,7 +46,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('018132452787-ngbe.json');
 
-        $this->get(Resolver::class)->resolve($payload, 10);
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
         $data = $payload->getPayload();
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
@@ -68,7 +73,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('018132452787-ngbe.json');
 
-        $this->get(Resolver::class)->resolve($payload, 10);
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
         $data = $payload->getPayload();
         // PHP casts numeric-string array keys back to int automatically, so the
@@ -91,7 +96,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('043064193523-jcyt.json');
 
-        $this->get(Resolver::class)->resolve($payload, 10);
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
         $data = $payload->getPayload();
         self::assertSame(['tx_thuecat_town'], array_keys($data));
@@ -105,6 +110,83 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertSame(10, $townRow['pid']);
 
         self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function townFetchesMissingOrganisationAndLinksViaNewPlaceholder(): void
+    {
+        // No preloaded organisation. Resolver must fetch the managedBy @id
+        // from ThueCat, parse the returned graph, and merge the organisation
+        // row into the payload. The next drain pass wires the town's
+        // managed_by to the organisation's NEW placeholder key.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(
+            ['tx_thuecat_town', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $orgKeys = array_keys($data['tx_thuecat_organisation']);
+        self::assertCount(1, $orgKeys);
+        self::assertStringStartsWith('NEW', (string)$orgKeys[0]);
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame((string)$orgKeys[0], $townRow['managed_by']);
+        self::assertSame(10, $townRow['pid']);
+
+        $orgRow = $data['tx_thuecat_organisation'][$orgKeys[0]];
+        self::assertSame(10, $orgRow['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function nonUrlTransientReferenceRaisesException(): void
+    {
+        // Simulate a bug in a parser entity that leaks a non-URL value into
+        // a transient bucket. The resolver must refuse to dispatch a DB
+        // lookup or API fetch for that reference and throw instead.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+        $this->injectTransient(
+            $payload,
+            'tx_thuecat_town',
+            'https://thuecat.org/resources/043064193523-jcyt',
+            'managedBy',
+            ['not-a-url']
+        );
+
+        $this->expectException(InvalidTransientReferenceException::class);
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+    }
+
+    /**
+     * @param list<string> $references
+     */
+    private function injectTransient(
+        DataHandlerPayload $payload,
+        string $table,
+        string $remoteId,
+        string $bucket,
+        array $references
+    ): void {
+        $reflection = new ReflectionProperty(DataHandlerPayload::class, 'transients');
+        /** @var array<string, array<string, array<string, list<string>>>> $transients */
+        $transients = $reflection->getValue($payload);
+        $transients[$table][$remoteId][$bucket] = $references;
+        $reflection->setValue($payload, $transients);
     }
 
     private function parseFixture(string $filename): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload
