@@ -89,6 +89,57 @@ class DataHandlerPayload
     }
 
     /**
+     * Append a resolved uid (or NEW… placeholder) to a comma-separated
+     * relation field. Dedupes so repeated resolver passes stay idempotent.
+     */
+    public function setRelationField(string $table, string $key, string $field, string|int $value): void
+    {
+        if (!isset($this->data[$table][$key])) {
+            return;
+        }
+
+        $existing = (string)($this->data[$table][$key][$field] ?? '');
+        $values = $existing === '' ? [] : explode(',', $existing);
+        $value = (string)$value;
+
+        if (!in_array($value, $values, true)) {
+            $values[] = $value;
+        }
+
+        $this->data[$table][$key][$field] = implode(',', $values);
+    }
+
+    /**
+     * Drop a single @id from a transient bucket. Empty buckets and empty
+     * row/table entries are cleaned up so `getTransients() === []` means
+     * the resolver is done.
+     */
+    public function removeTransient(string $table, string $remoteId, string $bucket, string $reference): void
+    {
+        if (!isset($this->transients[$table][$remoteId][$bucket])) {
+            return;
+        }
+
+        $filtered = array_values(array_filter(
+            $this->transients[$table][$remoteId][$bucket],
+            static fn (string $ref): bool => $ref !== $reference
+        ));
+
+        if ($filtered === []) {
+            unset($this->transients[$table][$remoteId][$bucket]);
+        } else {
+            $this->transients[$table][$remoteId][$bucket] = $filtered;
+        }
+
+        if (($this->transients[$table][$remoteId] ?? []) === []) {
+            unset($this->transients[$table][$remoteId]);
+        }
+        if (($this->transients[$table] ?? []) === []) {
+            unset($this->transients[$table]);
+        }
+    }
+
+    /**
      * @return array<string, array<int|string, array<string, string|int|float>>>
      */
     public function getPayload(): array

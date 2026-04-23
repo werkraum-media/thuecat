@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -32,6 +33,15 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 #[Autoconfigure(public: true)]
 class Resolver
 {
+    /**
+     * Hard-coded mapping from transient bucket name to
+     * [target table, target relation field on the owning row].
+     * Extend as new buckets get ref→uid resolution.
+     */
+    private const BUCKET_MAP = [
+        'managedBy' => ['tx_thuecat_organisation', 'managed_by'],
+    ];
+
     public function __construct(
         private readonly ConnectionPool $connectionPool,
     ) {
@@ -40,23 +50,91 @@ class Resolver
     /**
      * Rewrites the payload in place so each row's outer key becomes either
      * the existing DB uid (as string) or a StringUtility::getUniqueId('NEW')
-     * placeholder. Always injects `pid`. After this call the payload can be
-     * handed to DataHandler once the transients bucket is empty.
+     * placeholder, injects `pid`, and drains the transient buckets against
+     * the DB. Buckets that need a live API fetch are NOT handled here yet.
      */
     public function resolve(DataHandlerPayload $payload, int $storagePid): void
     {
+        // remote_id → current outer key (uid string or NEW… placeholder).
+        // Populated as rows get rekeyed; used to locate the owning row for
+        // a transient write without re-probing the DB.
+        $remoteIdToKey = [];
+
+        $this->rekeyRowsAndInjectPid($payload, $storagePid, $remoteIdToKey);
+        $this->drainTransients($payload, $remoteIdToKey);
+    }
+
+    /**
+     * @param array<string, string> $remoteIdToKey
+     */
+    private function rekeyRowsAndInjectPid(
+        DataHandlerPayload $payload,
+        int $storagePid,
+        array &$remoteIdToKey
+    ): void {
         foreach ($payload->getPayload() as $table => $rows) {
             foreach (array_keys($rows) as $remoteId) {
-                // Parser always registers rows under their remote-id URL, so this
-                // is a string at first pass. After we rekey below, PHP re-casts
-                // numeric keys to int, but those rows are already resolved and
-                // won't re-enter this loop.
                 $remoteId = (string)$remoteId;
                 $uid = $this->findUidByRemoteId($table, $remoteId);
                 $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
                 $payload->setField($table, $newKey, 'pid', $storagePid);
+                $remoteIdToKey[$remoteId] = $newKey;
+            }
+        }
+    }
+
+    /**
+     * Outer loop over remaining transients. Each pass must drop at least
+     * one @id, otherwise we'd spin forever — throw instead.
+     *
+     * @param array<string, string> $remoteIdToKey
+     */
+    private function drainTransients(DataHandlerPayload $payload, array &$remoteIdToKey): void
+    {
+        while ($payload->getTransients() !== []) {
+            $progress = false;
+
+            foreach ($payload->getTransients() as $ownerTable => $rowsByRemoteId) {
+                foreach ($rowsByRemoteId as $ownerRemoteId => $buckets) {
+                    foreach ($buckets as $bucket => $references) {
+                        if (!isset(self::BUCKET_MAP[$bucket])) {
+                            // Unknown bucket (e.g. accessibilitySpecification,
+                            // media) — not in scope for this pass. Leave it so
+                            // a later resolver stage can pick it up. We still
+                            // need progress elsewhere or the guard will fire.
+                            continue;
+                        }
+
+                        [$targetTable, $targetField] = self::BUCKET_MAP[$bucket];
+                        $ownerKey = $remoteIdToKey[$ownerRemoteId] ?? null;
+                        if ($ownerKey === null) {
+                            continue;
+                        }
+
+                        foreach ($references as $reference) {
+                            $uid = $this->findUidByRemoteId($targetTable, $reference);
+                            if ($uid <= 0) {
+                                // Would need an API fetch. Not in this pass.
+                                continue;
+                            }
+
+                            $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
+                            $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+                            $remoteIdToKey[$reference] = (string)$uid;
+                            $progress = true;
+                        }
+                    }
+                }
+            }
+
+            if (!$progress) {
+                throw new RuntimeException(
+                    'Resolver made no progress draining transients; remaining: '
+                    . json_encode($payload->getTransients()),
+                    1745000000
+                );
             }
         }
     }

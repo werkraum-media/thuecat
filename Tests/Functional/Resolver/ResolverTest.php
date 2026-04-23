@@ -81,6 +81,32 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertSame(10, $row['pid']);
     }
 
+    #[Test]
+    public function townResolvesManagedByToExistingOrganisationUid(): void
+    {
+        // Organisation is preloaded with uid=7; the town fixture carries a
+        // managedBy transient pointing at that same remote_id. Resolver must
+        // write `managed_by = 7` on the town row and drop the transient.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+
+        $this->get(Resolver::class)->resolve($payload, 10);
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_town'], array_keys($data));
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame('7', $townRow['managed_by']);
+        self::assertSame(10, $townRow['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
     private function parseFixture(string $filename): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload
     {
         $path = self::FIXTURE_PATH . $filename;
