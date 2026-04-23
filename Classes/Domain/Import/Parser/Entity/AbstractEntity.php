@@ -306,13 +306,16 @@ abstract class AbstractEntity implements EntityInterface
         return $this->transients;
     }
 
+    /** @return array<string, string|int|float> */
     public function toArray(): array
     {
         $array = get_object_vars($this);
         // table / transients / priority are framework metadata, not DB columns.
         unset($array['table'], $array['transients'], $array['priority']);
 
-        return array_filter($array);
+        /** @var array<string, string|int|float> $filtered */
+        $filtered = array_filter($array);
+        return $filtered;
     }
 
     public function getPriority(): int

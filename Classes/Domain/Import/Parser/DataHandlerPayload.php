@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 
 class DataHandlerPayload
 {
-    /** @var array<string, array<string, array>> */
+    /** @var array<string, array<string, array<string, string|int|float>>> */
     private array $data = [];
 
     /**
@@ -44,7 +44,7 @@ class DataHandlerPayload
         /** @var string $table */
         $table = $entity->table;
         $row = $entity->toArray();
-        $remoteId = $row['remote_id'];
+        $remoteId = (string)$row['remote_id'];
 
         if (!isset($this->data[$table])) {
             $this->data[$table] = [];
@@ -58,6 +58,9 @@ class DataHandlerPayload
         }
     }
 
+    /**
+     * @return array<string, array<string, array<string, string|int|float>>>
+     */
     public function getPayload(): array
     {
         return $this->data;

@@ -56,7 +56,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $row = $subject->toArray();
 
         self::assertSame('Erfurt Tourist Information', $row['title']);
-        self::assertStringStartsWith('Direkt an der Krämerbrücke', $row['description']);
+        self::assertStringStartsWith('Direkt an der Krämerbrücke', (string)$row['description']);
     }
 
     #[Test]

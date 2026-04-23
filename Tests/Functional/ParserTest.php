@@ -78,8 +78,8 @@ final class ParserTest extends AbstractImportTestCase
         );
         self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
         self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
-        self::assertStringStartsWith('Die Erfurt Tourismus', $row['description']);
-        self::assertStringEndsWith('4 Auszubildende', $row['description']);
+        self::assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
+        self::assertStringEndsWith('4 Auszubildende', (string)$row['description']);
 
         // Organisation has no outgoing relations of its own (reverse-inline
         // only), so the transients bucket must stay untouched.
@@ -113,7 +113,7 @@ final class ParserTest extends AbstractImportTestCase
         );
         self::assertSame('https://thuecat.org/resources/043064193523-jcyt', $row['remote_id']);
         self::assertSame('Erfurt', $row['title']);
-        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge', $row['description']);
+        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge', (string)$row['description']);
 
         // managed_by is a real TCA column but stays out of the row — the
         // resolver fills it after looking up the referenced @id.
@@ -208,16 +208,19 @@ final class ParserTest extends AbstractImportTestCase
 
         // JSON blobs: we only spot-check shape here; the unit tests assert
         // the full decoded structure for offers / opening_hours / address.
-        $openingHours = json_decode($row['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array<string, mixed>> $openingHours */
+        $openingHours = json_decode((string)$row['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(1, $openingHours);
         self::assertSame('10:00:00', $openingHours[0]['opens']);
 
-        $offers = json_decode($row['offers'], true, 512, JSON_THROW_ON_ERROR);
+        /** @var list<array<string, mixed>> $offers */
+        $offers = json_decode((string)$row['offers'], true, 512, JSON_THROW_ON_ERROR);
         self::assertCount(2, $offers);
         self::assertSame(['GuidedTourOffer'], $offers[0]['types']);
         self::assertSame(['EntryOffer'], $offers[1]['types']);
 
-        $address = json_decode($row['address'], true, 512, JSON_THROW_ON_ERROR);
+        /** @var array<string, mixed> $address */
+        $address = json_decode((string)$row['address'], true, 512, JSON_THROW_ON_ERROR);
         self::assertSame('Waagegasse 8', $address['street']);
         self::assertSame('99084', $address['zip']);
         self::assertSame('Erfurt', $address['city']);
@@ -291,7 +294,7 @@ final class ParserTest extends AbstractImportTestCase
     private function graphFromFixture(string $filename): array
     {
         $path = self::FIXTURE_PATH . $filename;
-        $decoded = json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+        $decoded = json_decode((string)file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         $graph = is_array($decoded) ? $decoded['@graph'] : [];
         return is_array($graph) ? $graph : [];
     }

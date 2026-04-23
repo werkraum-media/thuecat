@@ -57,7 +57,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
 
         self::assertSame('https://thuecat.org/resources/396420044896-drzt', $row['remote_id']);
         self::assertSame('Parkhaus Domplatz', $row['title']);
-        self::assertStringStartsWith('Das Parkhaus Domplatz', $row['description']);
+        self::assertStringStartsWith('Das Parkhaus Domplatz', (string)$row['description']);
         self::assertSame('ZeroSanitation', $row['sanitation']);
         self::assertSame('ZeroOtherServiceEnumMem', $row['other_service']);
         self::assertSame('ElectricVehicleCarChargingStationEnumMem', $row['traffic_infrastructure']);

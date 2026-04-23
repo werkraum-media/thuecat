@@ -50,7 +50,7 @@ class TownEntityTest extends AbstractImportTestCase
 
         $row = $subject->toArray();
 
-        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge – die', $row['description']);
+        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge – die', (string)$row['description']);
     }
 
     #[Test]

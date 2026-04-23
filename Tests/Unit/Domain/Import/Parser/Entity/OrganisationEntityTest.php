@@ -70,7 +70,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
 
         $row = $subject->toArray();
 
-        self::assertStringStartsWith('Die Erfurt Tourismus', $row['description']);
+        self::assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
     }
 
     #[Test]

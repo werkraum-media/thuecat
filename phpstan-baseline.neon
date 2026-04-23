@@ -37,24 +37,6 @@ parameters:
 			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 2
-			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\DataHandlerPayload\:\:\$data \(array\<string, array\<string, array\>\>\) does not accept array\<string, array\<array\>\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\DataHandlerPayload\:\:\$transients \(array\<string, array\<string, array\<string, list\<string\>\>\>\>\) does not accept non\-empty\-array\<string, array\<array\<string, list\<string\>\>\>\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Import/Parser/DataHandlerPayload.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 9
@@ -979,42 +961,6 @@ parameters:
 			path: Tests/Functional/GuzzleClientFaker.php
 
 		-
-			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ParserTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/ParserTest.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Functional/ParserTest.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Functional/ParserTest.php
-
-		-
-			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: Tests/Functional/ParserTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, int\|string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Functional/ParserTest.php
-
-		-
 			message: '#^Binary operation "\." between ''Title for URL '' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -1068,11 +1014,6 @@ parameters:
 			count: 1
 			path: Tests/Unit/Domain/Import/Parser/Entity/AbstractImportTestCase.php
 
-		-
-			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/OrganisationEntityTest.php
 
 		-
 			message: '#^Cannot access offset ''closes'' on mixed\.$#'
@@ -1135,12 +1076,6 @@ parameters:
 			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
 
 		-
-			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
 			message: '#^Cannot access offset ''closes'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -1181,12 +1116,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertStringStartsWith\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TownEntityTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'

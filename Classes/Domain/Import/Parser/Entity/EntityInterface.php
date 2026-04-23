@@ -35,6 +35,7 @@ interface EntityInterface
 
     public function getRemoteId(array $node): string;
 
+    /** @return array<string, string|int|float> */
     public function toArray(): array;
 
     /**
