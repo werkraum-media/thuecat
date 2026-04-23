@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
@@ -15,12 +16,12 @@ use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 class Importer
 {
     public function __construct(
-        private readonly Parser         $parser,
-        private readonly FetchData      $fetchData,
-        private readonly SiteFinder     $siteFinder,
+        private readonly Parser $parser,
+        private readonly FetchData $fetchData,
+        private readonly SiteFinder $siteFinder,
         #[AutowireLocator(services: 'import.url.provider')]
-        private readonly ServiceLocator $urlProviders)
-    {
+        private readonly ServiceLocator $urlProviders
+    ) {
     }
 
     public function importConfiguration(ImportConfiguration $configuration): void

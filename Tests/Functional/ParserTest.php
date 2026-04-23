@@ -328,7 +328,7 @@ final class ParserTest extends AbstractImportTestCase
 
         foreach (array_keys($result) as $table) {
             foreach (array_keys($result[$table]) as $remoteId) {
-                self::assertStringNotContainsString('genid-', $remoteId);
+                self::assertStringNotContainsString('genid-', (string)$remoteId);
             }
         }
     }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 use Exception;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
@@ -55,9 +54,9 @@ class SavingEntity extends ImportLogEntry
         array $errorsAsArray
     ) {
         $this->remoteId = $entity->getRemoteId();
-//        $this->insertion = $entity->wasCreated();
-//        $this->recordUid = $entity->getTypo3Uid();
-//        $this->recordPid = $entity->getTypo3StoragePid();
+        //        $this->insertion = $entity->wasCreated();
+        //        $this->recordUid = $entity->getTypo3Uid();
+        //        $this->recordPid = $entity->getTypo3StoragePid();
         $this->tableName = $entity->table;
         $this->errorsAsArray = $errorsAsArray;
     }

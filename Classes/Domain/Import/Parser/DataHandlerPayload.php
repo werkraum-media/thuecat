@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 
 class DataHandlerPayload
 {
-    /** @var array<string, array<string, array<string, string|int|float>>> */
+    /** @var array<string, array<int|string, array<string, string|int|float>>> */
     private array $data = [];
 
     /**
@@ -59,7 +59,37 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array<string, string|int|float>>>
+     * Swap the outer key of an already-registered row. Used by the resolver
+     * to replace the remote-id URL with either an existing uid or a
+     * StringUtility::getUniqueId('NEW') placeholder, turning the payload
+     * into a valid DataHandler datamap in place.
+     */
+    public function rekeyRow(string $table, string $oldKey, string $newKey): void
+    {
+        if (!isset($this->data[$table][$oldKey])) {
+            return;
+        }
+
+        $this->data[$table][$newKey] = $this->data[$table][$oldKey];
+        unset($this->data[$table][$oldKey]);
+    }
+
+    /**
+     * Write a single field onto a row already present in the payload.
+     * Used by the resolver to inject `pid` and, later, to fill resolved
+     * uid references into relation fields.
+     */
+    public function setField(string $table, string $key, string $field, string|int|float $value): void
+    {
+        if (!isset($this->data[$table][$key])) {
+            return;
+        }
+
+        $this->data[$table][$key][$field] = $value;
+    }
+
+    /**
+     * @return array<string, array<int|string, array<string, string|int|float>>>
      */
     public function getPayload(): array
     {

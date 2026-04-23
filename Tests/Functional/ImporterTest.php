@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
@@ -10,6 +11,6 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsFreshOrganization(): void
     {
-        $this->markTestSkipped('we will come to that after parser and resolver are done');
+        self::markTestSkipped('we will come to that after parser and resolver are done');
     }
 }

@@ -78,6 +78,4 @@ class ImportConfigurationCommand extends Command
 
         return Command::SUCCESS;
     }
-
-
 }

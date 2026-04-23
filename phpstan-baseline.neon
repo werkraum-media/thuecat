@@ -145,18 +145,6 @@ parameters:
 			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Binary operation "\." between ''REF\:'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: Classes/Domain/Import/Parser/ParserContext.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: Classes/Domain/Import/Parser/ParserContext.php
-
-		-
 			message: '#^Cannot access offset ''schema\:containsPlace'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
