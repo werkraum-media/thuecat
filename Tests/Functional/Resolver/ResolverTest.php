@@ -411,6 +411,131 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function touristAttractionAccessibilitySpecificationShapesIntoJsonBlob(): void
+    {
+        // zmqf (Alte Synagoge) references e_23…-rfa via thuecat:accessibility-
+        // Specification. The resolver fetches the node, groups
+        // thuecat:accessibilitySearchCriteria by @type into four fixed facility
+        // buckets (Walking, Visual, Deaf, Mental), pulls the seven
+        // certification levels out of thuecat:accessibilityCertification, and
+        // picks the short descriptions in the owning row's language. Test runs
+        // the German default: all four shortDescription* fields resolve to
+        // German strings; the English follow-up is covered separately.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'e_23bec7f80c864c358da033dd75328f27-rfa.json');
+
+        $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $keys);
+
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        self::assertArrayHasKey('accessibility_specification', $row);
+
+        $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame([
+            'accessibilityCertificationStatus' => 'AccessibilityChecked',
+            'certificationAccessibilityDeaf' => 'None',
+            'certificationAccessibilityMental' => 'None',
+            'certificationAccessibilityPartiallyDeaf' => 'None',
+            'certificationAccessibilityPartiallyVisual' => 'Info',
+            'certificationAccessibilityVisual' => 'None',
+            'certificationAccessibilityWalking' => 'Info',
+            'certificationAccessibilityWheelchair' => 'Info',
+            'accessibilitySearchCriteria' => [
+                'facilityAccessibilityWalking' => [
+                    'AllRoomsStepFreeAccess',
+                    'HingedGrabRailToilet',
+                    'LateralAccessibleToilet',
+                    'StepFreeAccess',
+                    'ToiletsPeopleWithDisabilities',
+                    'NinetyCMWidthPassageWays',
+                    'SpecialOffersWalkingImpairment',
+                    'SpecialOffersWheelchairUsers',
+                ],
+                'facilityAccessibilityVisual' => [
+                    'AssistanceDogsWelcome',
+                    'VisuallyContrastingStepEdges',
+                    'OffersInPictoralLanguage',
+                    'SpecialOffersBlindPeople',
+                    'SpecialOffersVisualImpairment',
+                    'TactileOffers',
+                ],
+                'facilityAccessibilityDeaf' => [
+                    'AudioInductionLoop',
+                    'SpecialOffersHearingImpairment',
+                ],
+                'facilityAccessibilityMental' => [
+                    'InformationWithPictogramsOrPictures',
+                ],
+            ],
+            'shortDescriptionAccessibilityDeaf' => 'Deutsche Beschreibung von shortDescriptionAccessibilityDeaf',
+            'shortDescriptionAccessibilityMental' => 'Deutsche Beschreibung von shortDescriptionAccessibilityMental',
+            'shortDescriptionAccessibilityVisual' => 'Deutsche Beschreibung von shortDescriptionAccessibilityVisual',
+            'shortDescriptionAccessibilityWalking' => 'Deutsche Beschreibung von shortDescriptionAccessibilityWalking',
+        ], $blob);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionAccessibilitySpecificationSkipsShortDescriptionsWithoutTranslation(): void
+    {
+        // Same source node, but shaped for a language the fixture doesn't
+        // provide: French. Search criteria + certification levels are
+        // language-agnostic, so they stay; every shortDescription* field
+        // falls away because the fixture only carries de + en translations.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'e_23bec7f80c864c358da033dd75328f27-rfa.json');
+
+        $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10, language: 'fr'));
+
+        $data = $payload->getPayload();
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertIsArray($blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityDeaf', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityMental', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityVisual', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityWalking', $blob);
+
+        // Certifications + search criteria still shaped.
+        self::assertSame('AccessibilityChecked', $blob['accessibilityCertificationStatus']);
+        self::assertArrayHasKey('accessibilitySearchCriteria', $blob);
+    }
+
+    #[Test]
+    public function unknownTransientBucketRaisesException(): void
+    {
+        // Defensive: if the parser emits a bucket the resolver has no branch
+        // for, loop forever is the alternative. Better to fail loud so the
+        // gap surfaces on the next test run.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json');
+        $this->injectTransient(
+            $payload,
+            'tx_thuecat_organisation',
+            'https://thuecat.org/resources/018132452787-ngbe',
+            'someFutureBucket',
+            ['https://thuecat.org/resources/whatever']
+        );
+
+        $this->expectException(\RuntimeException::class);
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+    }
+
+    #[Test]
     public function nonUrlTransientReferenceRaisesException(): void
     {
         // Simulate a bug in a parser entity that leaks a non-URL value into

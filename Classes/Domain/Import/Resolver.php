@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 
@@ -154,12 +155,32 @@ class Resolver
                             continue;
                         }
 
-                        if (!isset(self::BUCKET_MAP[$bucket])) {
-                            // Unknown bucket (e.g. accessibilitySpecification)
-                            // — not in scope for this pass. Leave it so a
-                            // later resolver stage can pick it up. We still
-                            // need progress elsewhere or the guard will fire.
+                        if ($bucket === 'accessibilitySpecification') {
+                            $this->shapeAccessibilityBlob(
+                                $payload,
+                                $context,
+                                $ownerTable,
+                                $ownerRemoteId,
+                                $ownerKey,
+                                $references
+                            );
+                            $progress = true;
                             continue;
+                        }
+
+                        if (!isset(self::BUCKET_MAP[$bucket])) {
+                            // Unknown bucket — parser emitted something the
+                            // resolver has no mapping for. Loud failure is
+                            // better than spinning through the drain loop.
+                            throw new RuntimeException(
+                                sprintf(
+                                    'Unknown transient bucket "%s" on %s[%s].',
+                                    $bucket,
+                                    $ownerTable,
+                                    $ownerRemoteId
+                                ),
+                                1745100005
+                            );
                         }
 
                         [$targetTable, $targetField] = self::BUCKET_MAP[$bucket];
@@ -335,6 +356,62 @@ class Resolver
             if (is_array($entry)) {
                 $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
             }
+        }
+    }
+
+    /**
+     * Drain the `accessibilitySpecification` bucket for one owner. Each
+     * reference points at a separate AccessibilitySpecification resource;
+     * the fetched node gets shaped into the legacy blob and written to the
+     * owning row's `accessibility_specification` column. Multiple entries on
+     * the same owner would overwrite each other — in practice the parser
+     * emits at most one per owner, but we iterate defensively.
+     *
+     * @param list<string>|list<array{kind: string, id: string}> $references
+     */
+    private function shapeAccessibilityBlob(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $ownerKey,
+        array $references
+    ): void {
+        foreach ($references as $reference) {
+            if (!is_string($reference)) {
+                throw new InvalidTransientReferenceException(
+                    sprintf(
+                        'accessibilitySpecification bucket on %s[%s] must carry string @ids.',
+                        $ownerTable,
+                        $ownerRemoteId
+                    ),
+                    1745100006
+                );
+            }
+
+            if (!$this->isFetchableUrl($reference)) {
+                throw new InvalidTransientReferenceException(
+                    sprintf(
+                        'accessibilitySpecification reference "%s" on %s[%s] is not a fetchable URL.',
+                        $reference,
+                        $ownerTable,
+                        $ownerRemoteId
+                    ),
+                    1745100007
+                );
+            }
+
+            $node = $this->fetchGraphNode($reference, $context, $reference);
+            $entity = new AccessibilitySpecificationEntity();
+            $entity->configure($node, $context->language);
+
+            $payload->setField(
+                $ownerTable,
+                $ownerKey,
+                'accessibility_specification',
+                (string)(json_encode($entity->toArray()) ?: '{}')
+            );
+            $payload->removeTransient($ownerTable, $ownerRemoteId, 'accessibilitySpecification', $reference);
         }
     }
 

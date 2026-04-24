@@ -127,7 +127,7 @@ parameters:
 			path: Classes/Domain/Import/Parser/Parser.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Parser\:\:resolveEntity\(\) should return WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\|null but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Parser\:\:resolveEntityClass\(\) should return WerkraumMedia\\ThueCat\\Domain\\Import\\Parser\\Entity\\EntityInterface\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: Classes/Domain/Import/Parser/Parser.php
