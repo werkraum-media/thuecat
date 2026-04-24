@@ -116,20 +116,18 @@ class TouristAttractionEntity extends AbstractEntity
         // flow, the bucket drives a JSON blob, not a uid lookup.
         $this->recordTransient('accessibilitySpecification', $node['thuecat:accessibilitySpecification'] ?? null);
 
-        // schema:image / schema:photo / schema:video are bare {"@id": "dms_…"}
-        // stubs pointing at separate resources we don't have here. Merge all
-        // three slots into a single "media" bucket; the resolver fetches each
-        // dms_* resource, shapes it into the legacy Media frontend model's JSON
-        // and writes the blob onto the attraction's media column. Same
+        // schema:photo / schema:image / schema:video are bare {"@id": "dms_…"}
+        // stubs pointing at separate resources we don't have here. The resolver
+        // fetches each dms_* resource, shapes it into the legacy Media frontend
+        // model's JSON and writes the blob onto the attraction's media column.
+        // The per-ref `kind` tag tells the resolver which source slot each
+        // entry came from so mainImage + type end up correct on output. Same
         // fetch-and-shape path as accessibilitySpecification, just list-shaped.
-        $mediaRefs = array_merge(
-            $this->collectIds($node['schema:image'] ?? null),
-            $this->collectIds($node['schema:photo'] ?? null),
-            $this->collectIds($node['schema:video'] ?? null),
+        $this->recordMediaTransient(
+            $node['schema:photo'] ?? null,
+            $node['schema:image'] ?? null,
+            $node['schema:video'] ?? null,
         );
-        if ($mediaRefs !== []) {
-            $this->recordTransient('media', $mediaRefs);
-        }
     }
 
     public function handlesTypes(): array

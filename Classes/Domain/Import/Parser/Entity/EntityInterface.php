@@ -42,7 +42,12 @@ interface EntityInterface
      * swap into real relation fields post-parse. Keyed by JSON-LD field name
      * with the schema:/thuecat: prefix stripped.
      *
-     * @return array<string, list<string>>
+     * Most buckets carry list<string> (ref→uid lookups); the `media` bucket
+     * carries list<array{kind, id}> so the resolver can distinguish
+     * schema:photo vs schema:image vs schema:video origin on the shaped
+     * output.
+     *
+     * @return array<string, list<string>|list<array{kind: string, id: string}>>
      */
     public function getTransients(): array;
 

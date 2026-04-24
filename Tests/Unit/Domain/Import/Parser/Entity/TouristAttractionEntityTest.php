@@ -386,16 +386,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         // Alte Synagoge carries the same dms_* resource under both schema:image
         // and schema:photo. Same fetch-and-shape-to-JSON pattern as
-        // accessibilitySpecification: parser records the @id list, resolver
-        // fetches each dms_* resource, shapes it, and writes the media JSON
-        // blob onto the column.
-        //
-        // The duplicate is deliberately preserved: the two JSON-LD slots may
-        // encode different roles for the same underlying resource (schema:image
-        // as the principal image, schema:photo as a supplementary reference),
-        // and de-duping here would strip that signal before the resolver sees
-        // it. The resolver can collapse equal @ids if it decides the slot
-        // distinction isn't load-bearing.
+        // accessibilitySpecification, but the entries are `{kind, id}` tuples:
+        // the resolver needs to know which JSON-LD slot each ref came from to
+        // set mainImage (true for photo) and type (image vs video) on the
+        // shaped output. Photo entries come first to preserve legacy ordering
+        // where the schema:photo ref is emitted as the principal image.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -405,8 +400,8 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         self::assertArrayHasKey('media', $transients);
         self::assertSame([
-            'https://thuecat.org/resources/dms_5099196',
-            'https://thuecat.org/resources/dms_5099196',
+            ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5099196'],
+            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5099196'],
         ], $transients['media']);
     }
 
@@ -414,9 +409,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     public function mergesImageAndPhotoRefsIntoSingleMediaBucket(): void
     {
         // Dom fixture has both schema:image (list of three) and schema:photo
-        // (single stub) on the same attraction node. One column, one bucket —
-        // the resolver decides per-resource which ones are images vs photos
-        // vs videos based on the fetched @type, not on the JSON-LD slot name.
+        // (single stub) on the same attraction node. One column, one bucket,
+        // photo-first ordering — the resolver uses the kind tag to produce the
+        // legacy `mainImage:true` entry (photo) and the subsequent
+        // `mainImage:false` entries (image). Duplicates between slots stay.
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -426,10 +422,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         self::assertArrayHasKey('media', $transients);
         self::assertSame([
-            'https://thuecat.org/resources/dms_5713563',
-            'https://thuecat.org/resources/dms_5159186',
-            'https://thuecat.org/resources/dms_5159216',
-            'https://thuecat.org/resources/dms_5159216',
+            ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5159216'],
+            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5713563'],
+            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5159186'],
+            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5159216'],
         ], $transients['media']);
     }
 

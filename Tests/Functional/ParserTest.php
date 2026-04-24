@@ -244,8 +244,8 @@ final class ParserTest extends AbstractImportTestCase
                             'https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa',
                         ],
                         'media' => [
-                            'https://thuecat.org/resources/dms_5099196',
-                            'https://thuecat.org/resources/dms_5099196',
+                            ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5099196'],
+                            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5099196'],
                         ],
                     ],
                 ],
@@ -306,9 +306,10 @@ final class ParserTest extends AbstractImportTestCase
             foreach ($rows as $remoteId => $buckets) {
                 foreach ($buckets as $key => $ids) {
                     foreach ($ids as $id) {
+                        $reference = is_array($id) ? $id['id'] : $id;
                         self::assertStringNotContainsString(
                             $needle,
-                            $id,
+                            $reference,
                             "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]"
                         );
                     }

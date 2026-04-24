@@ -169,8 +169,9 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     public function mergesImageAndPhotoRefsIntoSingleMediaBucket(): void
     {
         // Parkhaus has schema:image and schema:photo both pointing at the same
-        // dms_* resource. Duplicates are preserved for the resolver, same as
-        // TouristAttraction's Alte Synagoge case.
+        // dms_* resource. Entries are `{kind, id}` tuples, photo-first, so the
+        // resolver can set mainImage:true on the schema:photo emission and
+        // mainImage:false on the schema:image one.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
@@ -180,8 +181,8 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
 
         self::assertArrayHasKey('media', $transients);
         self::assertSame([
-            'https://thuecat.org/resources/dms_6486108',
-            'https://thuecat.org/resources/dms_6486108',
+            ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_6486108'],
+            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_6486108'],
         ], $transients['media']);
     }
 

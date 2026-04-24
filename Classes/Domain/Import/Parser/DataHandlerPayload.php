@@ -35,7 +35,14 @@ class DataHandlerPayload
      * write each resolved uid back into the correct row without risk of mixing
      * up records that share similar raw refs.
      *
-     * @var array<string, array<string, array<string, list<string>>>>
+     * Most buckets carry a `list<string>` of @id URLs that the resolver looks
+     * up in the DB or fetches via API (managedBy, containedInPlace, …). The
+     * `media` bucket is the exception: its entries are `{kind, id}` tuples
+     * because the resolver needs the `schema:photo`/`schema:image`/
+     * `schema:video` origin of each ref to set `mainImage` and `type` on the
+     * shaped JSON output — a flat list of ids would lose that information.
+     *
+     * @var array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>>>>
      */
     private array $transients = [];
 
@@ -113,6 +120,10 @@ class DataHandlerPayload
      * Drop a single @id from a transient bucket. Empty buckets and empty
      * row/table entries are cleaned up so `getTransients() === []` means
      * the resolver is done.
+     *
+     * Handles both bucket shapes: simple `list<string>` (ref→uid buckets)
+     * and `list<array{kind, id}>` (the media bucket) — the id field is
+     * compared in the tuple case.
      */
     public function removeTransient(string $table, string $remoteId, string $bucket, string $reference): void
     {
@@ -122,7 +133,12 @@ class DataHandlerPayload
 
         $filtered = array_values(array_filter(
             $this->transients[$table][$remoteId][$bucket],
-            static fn (string $ref): bool => $ref !== $reference
+            static function (string|array $entry) use ($reference): bool {
+                if (is_array($entry)) {
+                    return $entry['id'] !== $reference;
+                }
+                return $entry !== $reference;
+            }
         ));
 
         if ($filtered === []) {
@@ -175,7 +191,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array<string, list<string>>>>
+     * @return array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>>>>
      */
     public function getTransients(): array
     {

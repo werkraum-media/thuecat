@@ -294,6 +294,123 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function parkingFacilityMediaBucketShapesIntoJsonBlob(): void
+    {
+        // drzt's schema:photo and schema:image both point at dms_6486108, so
+        // the media bucket has two {kind,id} entries referencing the same
+        // resource. The resolver fetches the media node once (FetchData
+        // caches by url+apiKey), shapes each entry into the legacy Media
+        // frontend JSON, and writes the encoded list onto the `media`
+        // column. Photo-first ordering makes the first entry mainImage:true.
+        // Preload town + orgs so the ref→uid buckets resolve via DB.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownForParkingFacility.php');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'dms_6486108.json');
+
+        $payload = $this->parseFixture('396420044896-drzt.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_parking_facility'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $keys);
+
+        $row = $data['tx_thuecat_parking_facility'][$keys[0]];
+        self::assertArrayHasKey('media', $row);
+
+        $media = json_decode((string)$row['media'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($media);
+        self::assertCount(2, $media);
+
+        self::assertSame([
+            'mainImage' => true,
+            'type' => 'image',
+            'title' => 'Erfurt-Parkhaus-Domplatz.jpg',
+            'description' => '',
+            'url' => 'https://cms.thuecat.org/o/adaptive-media/image/6486108/Preview-1280x0/image',
+            'author' => 'Florian Trykowski',
+            'copyrightYear' => 2021,
+            'license' => [
+                'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                'author' => '',
+            ],
+        ], $media[0]);
+
+        self::assertSame([
+            'mainImage' => false,
+            'type' => 'image',
+            'title' => 'Erfurt-Parkhaus-Domplatz.jpg',
+            'description' => '',
+            'url' => 'https://cms.thuecat.org/o/adaptive-media/image/6486108/Preview-1280x0/image',
+            'author' => 'Florian Trykowski',
+            'copyrightYear' => 2021,
+            'license' => [
+                'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                'author' => '',
+            ],
+        ], $media[1]);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionMediaBucketResolvesAuthorReference(): void
+    {
+        // attraction-with-media references four image-with-* resources, one
+        // of which (image-with-foreign-author) points its schema:author at an
+        // author-with-names Person node. The resolver must fetch the Person
+        // node and shape "GivenName FamilyName" into the output. This also
+        // covers the three other author shapes in one sweep: literal string,
+        // license-author-only, and string + license-author.
+        //
+        // managedBy via contentResponsible → ngbe (preloaded as uid=7).
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-foreign-author.json');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'author-with-names.json');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-author-string.json');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-license-author.json');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-author-and-license-author.json');
+
+        $payload = $this->parseFixture('attraction-with-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $keys);
+
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        /** @var list<array{mainImage: bool, type: string, author: string, license: array{type: string, author: string}}> $media */
+        $media = json_decode((string)$row['media'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(4, $media);
+
+        // All four entries are mainImage:false (attraction-with-media has no
+        // schema:photo slot) and in source order.
+        self::assertSame('GivenName FamilyName', $media[0]['author']);
+        self::assertSame('', $media[0]['license']['author']);
+
+        self::assertSame('Full Name', $media[1]['author']);
+        self::assertSame('', $media[1]['license']['author']);
+
+        self::assertSame('', $media[2]['author']);
+        self::assertSame('Autor aus Lizenz', $media[2]['license']['author']);
+
+        self::assertSame('Full Name', $media[3]['author']);
+        self::assertSame('Autor aus Lizenz', $media[3]['license']['author']);
+
+        foreach ($media as $entry) {
+            self::assertFalse($entry['mainImage']);
+            self::assertSame('image', $entry['type']);
+        }
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
     public function nonUrlTransientReferenceRaisesException(): void
     {
         // Simulate a bug in a parser entity that leaks a non-URL value into

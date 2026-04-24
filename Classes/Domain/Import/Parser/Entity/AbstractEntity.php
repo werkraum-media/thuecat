@@ -42,7 +42,12 @@ abstract class AbstractEntity implements EntityInterface
      *
      * Keys match the JSON-LD field name with the schema:/thuecat: prefix stripped.
      *
-     * @var array<string, list<string>>
+     * Most buckets are plain lists of @id strings. The `media` bucket is a
+     * `list<array{kind, id}>` because the resolver needs to know whether a
+     * ref came from schema:photo (mainImage:true), schema:image, or
+     * schema:video to shape the output correctly.
+     *
+     * @var array<string, list<string>|list<array{kind: string, id: string}>>
      */
     protected array $transients = [];
 
@@ -157,9 +162,8 @@ abstract class AbstractEntity implements EntityInterface
      * $key must be the JSON-LD field name with the schema:/thuecat: prefix
      * stripped (e.g. 'containedInPlace', not 'schema:containedInPlace').
      *
-     * Overwrites on repeat calls with the same key — if a bucket needs to
-     * merge across several JSON-LD slots (see media = image ∪ photo ∪ video),
-     * pre-aggregate with collectIds() and pass the merged list in one call.
+     * Overwrites on repeat calls with the same key. The media bucket carries
+     * per-slot kind info so it uses recordMediaTransient() instead.
      */
     protected function recordTransient(string $key, mixed $value): void
     {
@@ -169,6 +173,37 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $this->transients[$key] = $ids;
+    }
+
+    /**
+     * Build the `media` bucket by pairing schema:photo / schema:image /
+     * schema:video refs with a `kind` tag the resolver uses to set
+     * mainImage + type on the shaped JSON output. Emits photo refs first,
+     * then image, then video — mirrors the legacy ordering where the
+     * schema:photo ref becomes the mainImage entry at index 0.
+     *
+     * Duplicates across slots are kept: the same dms_* may legitimately
+     * appear as both schema:photo AND schema:image on the source, and
+     * the legacy output preserved both entries.
+     */
+    protected function recordMediaTransient(mixed $photo, mixed $image, mixed $video): void
+    {
+        $entries = [];
+        foreach ($this->collectIds($photo) as $id) {
+            $entries[] = ['kind' => 'photo', 'id' => $id];
+        }
+        foreach ($this->collectIds($image) as $id) {
+            $entries[] = ['kind' => 'image', 'id' => $id];
+        }
+        foreach ($this->collectIds($video) as $id) {
+            $entries[] = ['kind' => 'video', 'id' => $id];
+        }
+
+        if ($entries === []) {
+            return;
+        }
+
+        $this->transients['media'] = $entries;
     }
 
     /**
