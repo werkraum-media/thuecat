@@ -172,7 +172,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $row = $data['tx_thuecat_parking_facility'][$keys[0]];
         self::assertSame('5', $row['town']);
-        self::assertSame('8', $row['managed_by']);
+        self::assertSame('7', $row['managed_by']);
         self::assertSame(10, $row['pid']);
 
         self::assertSame([], $payload->getTransients());

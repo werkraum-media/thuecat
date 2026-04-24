@@ -6,8 +6,10 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
 
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
@@ -38,8 +40,9 @@ class Importer
             $inputData = $this->fetchDataFromApi($url, $apiKey);
             $this->parser->parse($inputData, $language);
             $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $language, $configuration->getApiKey()));
-            // DataHandler comes in here next
-            $foo = 'bar';
+            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->start($dataHandlerPayload->getPayload(), []);
+            $dataHandler->process_datamap();
         }
     }
 

@@ -387,6 +387,7 @@ class Resolver
             ->from($table)
             ->where($queryBuilder->expr()->eq(
                 'remote_id',
+                // @todo consider language and workspaces here! we might have several rows with the remote id
                 $queryBuilder->createNamedParameter($remoteId)
             ))
         ;

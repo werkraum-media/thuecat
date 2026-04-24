@@ -35,7 +35,7 @@ class ParkingFacilityEntity extends AbstractEntity
     // Higher than the default 10 — ParkingFacility nodes also carry
     // schema:Organization in @type, so without priority the generic
     // OrganisationEntity would win the resolver tie-break.
-    protected int $priority = 20;
+    protected int $priority = 30;
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
@@ -80,7 +80,7 @@ class ParkingFacilityEntity extends AbstractEntity
         // ParkingFacility uses thuecat:managedBy directly (unlike attractions,
         // which encode the same relation as thuecat:contentResponsible).
         $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
-        $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
+        $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
 
         // schema:photo / schema:image / schema:video are bare {"@id": "dms_…"}
         // stubs pointing at separate resources we don't have here. The resolver

@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEnt
 class TouristAttractionEntity extends AbstractEntity
 {
     public $table = 'tx_thuecat_tourist_attraction';
+    protected int $priority = 20;
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';

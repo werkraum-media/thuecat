@@ -160,7 +160,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
 
         self::assertArrayHasKey('managedBy', $transients);
         self::assertSame(
-            ['https://thuecat.org/resources/570107928040-rfze'],
+            ['https://thuecat.org/resources/018132452787-ngbe'],
             $transients['managedBy']
         );
     }
