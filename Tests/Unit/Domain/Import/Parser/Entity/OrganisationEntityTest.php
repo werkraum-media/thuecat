@@ -52,7 +52,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -65,7 +65,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -81,7 +81,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, 'en');
+        $subject->parse($node, 'en');
 
         $row = $subject->toArray();
 
@@ -95,7 +95,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
         self::assertNotNull($node);
         $subject = new OrganisationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 

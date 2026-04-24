@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('import.entity')]
 interface EntityInterface
 {
-    public function configure(array $node, string $language): void;
+    public function parse(array $node, string $language): void;
 
     public function getRemoteId(array $node): string;
 

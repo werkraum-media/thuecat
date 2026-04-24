@@ -50,7 +50,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $row = $entity->toArray();
 
@@ -75,7 +75,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $row = $entity->toArray();
 
@@ -99,7 +99,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $row = $entity->toArray();
 
@@ -114,7 +114,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $address = $this->decodeJson($entity->toArray()['address']);
 
@@ -134,7 +134,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -154,7 +154,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -175,7 +175,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $transients = $entity->getTransients();
 
@@ -195,7 +195,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         self::assertArrayNotHasKey('accessibilitySpecification', $entity->getTransients());
     }
@@ -208,7 +208,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         self::assertArrayNotHasKey('parkingFacilityNearBy', $entity->getTransients());
     }
@@ -219,7 +219,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
@@ -237,7 +237,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
-        $entity->configure($node, 'de');
+        $entity->parse($node, 'de');
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
@@ -261,7 +261,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     public function transientsAreEmptyWhenNodeLacksRelations(): void
     {
         $entity = new ParkingFacilityEntity();
-        $entity->configure([
+        $entity->parse([
             '@id' => 'https://thuecat.org/resources/no-relations',
             '@type' => ['schema:ParkingFacility'],
         ], 'de');

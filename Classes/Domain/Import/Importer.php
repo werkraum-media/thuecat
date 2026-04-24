@@ -19,6 +19,7 @@ class Importer
         private readonly Parser $parser,
         private readonly FetchData $fetchData,
         private readonly SiteFinder $siteFinder,
+        private readonly Resolver $resolver,
         #[AutowireLocator(services: 'import.url.provider')]
         private readonly ServiceLocator $urlProviders
     ) {
@@ -36,6 +37,9 @@ class Importer
         foreach ($urlProvider->getUrls() as $url) {
             $inputData = $this->fetchDataFromApi($url, $apiKey);
             $this->parser->parse($inputData, $language);
+            $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $language, $configuration->getApiKey()));
+            // DataHandler comes in here next
+            $foo = 'bar';
         }
     }
 

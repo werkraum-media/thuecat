@@ -52,7 +52,7 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $address = '';
     protected string $url = '';
 
-    public function configure(array $node, string $language): void
+    public function parse(array $node, string $language): void
     {
         $this->remote_id = $this->getRemoteId($node);
         // Text fields (schema:name, schema:description, …) carry one entry per

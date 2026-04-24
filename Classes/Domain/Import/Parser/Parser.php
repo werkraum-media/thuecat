@@ -39,7 +39,8 @@ class Parser
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
         #[AutowireLocator(services: 'import.entity')]
         private readonly ServiceLocator $entities,
-    ) {
+    )
+    {
     }
 
     /**
@@ -78,21 +79,24 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
-    public function parseNode(array $node): string
+    public function parseNode(array $node): void
     {
-        $entity = $this->resolveEntity($node['@type'] ?? []);
+        $entity = $this->resolveEntityClass($node['@type'] ?? []);
         if ($entity === null) {
-            return '';
+            return;
         }
 
-        $entity->configure($node, $this->language);
+        $entity->parse($node, $this->language);
         $this->dataHandlerPayload->addEntity($entity);
 
-        return 'REF:' . $entity->getRemoteId($node);
     }
 
-    private function resolveEntity(mixed $types): ?EntityInterface
+    /**
+     * Based on @type, the correct Entity class for the node is determined and returned.
+     */
+    private function resolveEntityClass(mixed $types): ?EntityInterface
     {
+        // @todo check the mixed type here. This is always an array of strings if I am not very much mistaken
         $types = is_array($types) ? $types : [];
         if ($types === []) {
             return null;
@@ -117,7 +121,7 @@ class Parser
 
         usort(
             $candidates,
-            static fn (EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
+            static fn(EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
         );
 
         return $candidates[0];

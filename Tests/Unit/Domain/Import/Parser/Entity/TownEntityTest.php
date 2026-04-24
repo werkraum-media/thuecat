@@ -32,7 +32,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -45,7 +45,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -58,7 +58,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -74,7 +74,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, 'en');
+        $subject->parse($node, 'en');
 
         $row = $subject->toArray();
 
@@ -91,7 +91,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $transients = $subject->getTransients();
 

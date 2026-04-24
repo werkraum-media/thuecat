@@ -50,7 +50,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -67,7 +67,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'en');
+        $subject->parse($node, 'en');
 
         $row = $subject->toArray();
 
@@ -81,7 +81,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -96,7 +96,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $row = $subject->toArray();
 
@@ -110,7 +110,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $transients = $subject->getTransients();
 
@@ -139,7 +139,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
         self::assertNotNull($node);
         $subject = new TouristInformationEntity();
-        $subject->configure($node, 'de');
+        $subject->parse($node, 'de');
 
         $transients = $subject->getTransients();
 
@@ -154,7 +154,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     public function transientsAreEmptyWhenNodeLacksRelations(): void
     {
         $subject = new TouristInformationEntity();
-        $subject->configure([
+        $subject->parse([
             '@id' => 'https://thuecat.org/resources/no-relations',
             '@type' => ['thuecat:TouristInformation'],
         ], 'de');

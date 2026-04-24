@@ -34,7 +34,7 @@ class TouristInformationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function configure(array $node, string $language): void
+    public function parse(array $node, string $language): void
     {
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);

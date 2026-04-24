@@ -61,7 +61,7 @@ class Resolver
      * against the DB or, for unknown remote_ids, by fetching the resource
      * from ThueCat and merging the parsed rows back into the payload.
      */
-    public function resolve(DataHandlerPayload $payload, ResolverContext $context): void
+    public function resolve(DataHandlerPayload $payload, ResolverContext $context): DataHandlerPayload
     {
         // remote_id → current outer key (uid string or NEW… placeholder).
         // Populated as rows get rekeyed; used to locate the owning row for
@@ -70,6 +70,8 @@ class Resolver
 
         $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $remoteIdToKey);
         $this->drainTransients($payload, $context, $remoteIdToKey);
+
+        return $payload;
     }
 
     /**
