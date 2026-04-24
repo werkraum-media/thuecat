@@ -42,6 +42,8 @@ class Resolver
      */
     private const BUCKET_MAP = [
         'managedBy' => ['tx_thuecat_organisation', 'managed_by'],
+        'containedInPlace' => ['tx_thuecat_town', 'town'],
+        'parkingFacilityNearBy' => ['tx_thuecat_parking_facility', 'parking_facility_near_by'],
     ];
 
     public function __construct(

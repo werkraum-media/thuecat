@@ -151,6 +151,149 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function parkingFacilityResolvesContainedInPlaceAndManagedByToExistingUids(): void
+    {
+        // ParkingFacility fixture carries two ref→uid transients we now handle:
+        // containedInPlace (→ town wwne, preloaded uid=5) and managedBy
+        // (→ organisation rfze, preloaded uid=8). Fixture is trimmed to drop
+        // the media bucket which is still out of scope for the resolver.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownForParkingFacility.php');
+
+        $payload = $this->parseFixture('396420044896-drzt-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_parking_facility'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $keys);
+        self::assertStringStartsWith('NEW', (string)$keys[0]);
+
+        $row = $data['tx_thuecat_parking_facility'][$keys[0]];
+        self::assertSame('5', $row['town']);
+        self::assertSame('8', $row['managed_by']);
+        self::assertSame(10, $row['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionResolvesMultipleParkingFacilityNearByToExistingUids(): void
+    {
+        // Bridge fixture carries two parkingFacilityNearBy @ids; both parking
+        // facilities are preloaded (uid=9 for drzt, uid=11 for ocar). Both
+        // towns from containedInPlace are preloaded too so the whole payload
+        // resolves without any API fetch. This covers the multi-ref path of
+        // drainTransients (`foreach ($references as …)`).
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingParkingFacilityForAttraction.php');
+
+        $payload = $this->parseFixture('215230952334-yyno-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $keys);
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+
+        // town is a single-select; multiple containedInPlace refs collapse
+        // via the csv append+dedupe in DataHandlerPayload::setRelationField.
+        self::assertSame('5,6', $row['town']);
+        self::assertSame('9,11', $row['parking_facility_near_by']);
+        self::assertSame('7', $row['managed_by']);
+        self::assertSame(10, $row['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function parkingFacilityFetchesMissingTownViaContainedInPlaceAndLinksViaNewPlaceholder(): void
+    {
+        // ParkingFacility ocar references town jcyt via containedInPlace; no
+        // town preloaded. Queue the town fixture: parser re-runs, merges the
+        // town row with its own managedBy transient pointing at the preloaded
+        // organisation ngbe (uid=7). After two drain passes the parking
+        // facility's `town` field is wired to the town's NEW placeholder.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '043064193523-jcyt.json');
+
+        $payload = $this->parseFixture('440055527204-ocar-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(
+            ['tx_thuecat_parking_facility', 'tx_thuecat_town'],
+            array_keys($data)
+        );
+
+        $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $parkingKeys);
+        self::assertStringStartsWith('NEW', (string)$parkingKeys[0]);
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $parkingRow = $data['tx_thuecat_parking_facility'][$parkingKeys[0]];
+        self::assertSame((string)$townKeys[0], $parkingRow['town']);
+        // ocar does not carry thuecat:managedBy, so the row stays without a
+        // managed_by value — nothing to assert on the parking row here.
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame('7', $townRow['managed_by']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionFetchesMissingParkingFacilityAndLinksViaNewPlaceholder(): void
+    {
+        // Bridge fixture with two parkingFacilityNearBy refs; neither parking
+        // facility is preloaded. Queue both trimmed parking-facility fixtures.
+        // Towns (jcyt, oxfq) and organisation (ngbe) are preloaded to keep
+        // the chain fanout contained — the parking facilities themselves
+        // carry containedInPlace + contentResponsible transients that must
+        // resolve via DB on the follow-up drain pass.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForAttraction.php');
+
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '396420044896-drzt-without-media.json');
+        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '440055527204-ocar-without-media.json');
+
+        $payload = $this->parseFixture('215230952334-yyno-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getPayload();
+        self::assertSame(
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_parking_facility'],
+            array_keys($data)
+        );
+
+        $attractionKeys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $attractionKeys);
+
+        $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(2, $parkingKeys);
+        foreach ($parkingKeys as $parkingKey) {
+            self::assertStringStartsWith('NEW', (string)$parkingKey);
+        }
+
+        $row = $data['tx_thuecat_tourist_attraction'][$attractionKeys[0]];
+        self::assertSame(
+            implode(',', array_map('strval', $parkingKeys)),
+            $row['parking_facility_near_by']
+        );
+        self::assertSame('5,6', $row['town']);
+        self::assertSame('7', $row['managed_by']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
     public function nonUrlTransientReferenceRaisesException(): void
     {
         // Simulate a bug in a parser entity that leaks a non-URL value into

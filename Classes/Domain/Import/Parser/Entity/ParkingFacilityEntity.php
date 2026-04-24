@@ -32,6 +32,10 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEnt
 class ParkingFacilityEntity extends AbstractEntity
 {
     public $table = 'tx_thuecat_parking_facility';
+    // Higher than the default 10 — ParkingFacility nodes also carry
+    // schema:Organization in @type, so without priority the generic
+    // OrganisationEntity would win the resolver tie-break.
+    protected int $priority = 20;
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
