@@ -37,6 +37,10 @@ return [
             'title' => 'Old DE title',
             'description' => 'Alte deutsche Beschreibung.',
         ],
+        // Translation rows mirror the parent row exactly — that's the state
+        // DataHandler::cmd.localize produces (a copy of the parent at the
+        // moment the localize ran). The second resolver pass overrides
+        // these with the actual translated values from the bucket.
         1 => [
             'uid' => '2',
             'pid' => '10',
@@ -46,8 +50,8 @@ return [
             'crdate' => '1613400558',
             'disable' => '0',
             'remote_id' => 'https://thuecat.org/resources/organisation-translated',
-            'title' => 'Old EN title',
-            'description' => 'Old EN description.',
+            'title' => 'Old DE title',
+            'description' => 'Alte deutsche Beschreibung.',
         ],
         2 => [
             'uid' => '3',
@@ -58,7 +62,8 @@ return [
             'crdate' => '1613400558',
             'disable' => '0',
             'remote_id' => 'https://thuecat.org/resources/organisation-translated',
-            'title' => 'Old FR title',
+            'title' => 'Old DE title',
+            'description' => 'Alte deutsche Beschreibung.',
         ],
     ],
 ];

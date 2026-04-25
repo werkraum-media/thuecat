@@ -602,6 +602,76 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function secondPassDrainsTranslationsBucketAfterImporterClearedDataMap(): void
+    {
+        // Models the second resolver pass after the Importer has fired
+        // process_datamap + process_cmdmap and cleared the datamap/cmdMap on
+        // the payload. Only the translations bucket survives. The DB now has
+        // the parent (uid=1) plus en (uid=2) and fr (uid=3) translation rows
+        // — same shape as scenario 1's preloaded fixture. The resolver must
+        //   1. Resolve the parent uid via DB lookup (datamap empty, so the
+        //      remoteIdToKey shortcut doesn't fire on this pass).
+        //   2. Drain the bucket via the scenario-1 branch, writing the
+        //      translated fields onto the existing translation row uids.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+        $this->clearDataMap($payload);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        // Parent row not in the datamap on this pass — the parent fields were
+        // already written in round one; round two only writes translations.
+        self::assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame([
+            'title' => 'Tourism Ltd.',
+            'description' => 'We market the region.',
+        ], $data['tx_thuecat_organisation'][2]);
+
+        self::assertSame([
+            'title' => 'Tourisme SARL',
+        ], $data['tx_thuecat_organisation'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+        self::assertSame([], $payload->getCmdMap());
+    }
+
+    #[Test]
+    public function findUidByRemoteIdIgnoresTranslationRowsAndReturnsParentUid(): void
+    {
+        // Translation rows share the parent's remote_id. Without the
+        // languageField restriction in findUidByRemoteId, a second-pass
+        // lookup could surface a translation uid as the "parent". The
+        // organisation fixture preloads uid=1 (de), 2 (en), 3 (fr) for the
+        // same remote_id; we verify that even with a translation-only
+        // payload (datamap cleared, parent uid unknown to the in-memory
+        // map) the resolver still picks uid=1 for the second-pass drain.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+        $this->clearDataMap($payload);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        // If the language restriction were missing, findUidByRemoteId could
+        // return uid=2 or 3 (translation rows), and findTranslationUidsByParent
+        // would return an empty map (no rows have l10n_parent=2 or 3) — the
+        // bucket would then re-stage cmdMap entries instead of draining.
+        self::assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
+        self::assertSame([], $payload->getCmdMap());
+    }
+
+    #[Test]
     public function existingTownTranslationRowsGetUpdatedWithFreshFields(): void
     {
         // Town counterpart to the organisation translation test: parent row
@@ -679,6 +749,17 @@ final class ResolverTest extends AbstractImportTestCase
         $this->expectException(InvalidTransientReferenceException::class);
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+    }
+
+    /**
+     * Reflectively wipe the datamap on a payload, mirroring what the Importer
+     * does between resolver passes after a successful process_datamap +
+     * process_cmdmap round-trip.
+     */
+    private function clearDataMap(DataHandlerPayload $payload): void
+    {
+        $reflection = new ReflectionProperty(DataHandlerPayload::class, 'dataMap');
+        $reflection->setValue($payload, []);
     }
 
     /**

@@ -94,8 +94,18 @@ class Resolver
         foreach ($payload->getTranslations() as $table => $rowsByRemoteId) {
             foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
                 $ownerKey = $remoteIdToKey[$remoteId] ?? null;
+                if ($ownerKey === null) {
+                    // Second-pass entry: datamap got cleared between Importer
+                    // rounds, so $remoteIdToKey is empty. Resolve the parent
+                    // uid directly from the DB (default-language row only —
+                    // see findUidByRemoteId).
+                    $uid = $this->findUidByRemoteId($table, $remoteId);
+                    if ($uid > 0) {
+                        $ownerKey = (string)$uid;
+                    }
+                }
                 if ($ownerKey === null || !ctype_digit($ownerKey)) {
-                    // Parent row is NEW… or missing: scenarios 2/3.
+                    // Parent row is NEW… or still missing: scenario 3.
                     continue;
                 }
 
@@ -550,6 +560,15 @@ class Resolver
         );
     }
 
+    /**
+     * Look up the default-language row for a given remote_id. Translation
+     * rows on translatable tables share the parent's remote_id, so without
+     * the languageField restriction a second resolver pass could pick up a
+     * translation uid as the "parent". Tables without a languageField in
+     * TCA (non-translatable) get no restriction beyond DeletedRestriction.
+     *
+     * @todo workspaces — same shared-remote_id pitfall applies for v* rows.
+     */
     private function findUidByRemoteId(string $table, string $remoteId): int
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
@@ -561,12 +580,35 @@ class Resolver
             ->from($table)
             ->where($queryBuilder->expr()->eq(
                 'remote_id',
-                // @todo consider language and workspaces here! we might have several rows with the remote id
                 $queryBuilder->createNamedParameter($remoteId)
             ))
         ;
 
+        $languageField = $this->languageFieldFor($table);
+        if ($languageField !== null) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq(
+                $languageField,
+                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+            ));
+        }
+
         $result = $queryBuilder->executeQuery()->fetchOne();
         return is_numeric($result) ? (int)$result : 0;
+    }
+
+    private function languageFieldFor(string $table): ?string
+    {
+        /** @var array<string, mixed> $globalTca */
+        $globalTca = $GLOBALS['TCA'] ?? [];
+        $tableConfig = $globalTca[$table] ?? null;
+        if (!is_array($tableConfig)) {
+            return null;
+        }
+        $ctrl = $tableConfig['ctrl'] ?? null;
+        if (!is_array($ctrl)) {
+            return null;
+        }
+        $languageField = $ctrl['languageField'] ?? null;
+        return is_string($languageField) ? $languageField : null;
     }
 }
