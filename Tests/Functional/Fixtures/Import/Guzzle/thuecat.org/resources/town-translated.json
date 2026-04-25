@@ -1,0 +1,39 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/town-translated",
+            "@type": [
+                "schema:AdministrativeArea",
+                "schema:Place",
+                "schema:Thing",
+                "schema:City",
+                "ttgds:Destination",
+                "thuecat:Town"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Erfurt (EN)"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Erfurt (FR)"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Thüringer Landeshauptstadt."
+                },
+                {
+                    "@language": "en",
+                    "@value": "Capital of Thuringia."
+                }
+            ]
+        }
+    ]
+}

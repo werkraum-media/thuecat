@@ -555,6 +555,42 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function existingTownTranslationRowsGetUpdatedWithFreshFields(): void
+    {
+        // Town counterpart to the organisation translation test: parent row
+        // (uid=1) plus en (uid=2) and fr (uid=3) translation rows preloaded.
+        // Fixture carries de+en+fr name and de+en description; fr description
+        // is intentionally absent so the fr translation row stays minimal.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TownWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('town-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_town'], array_keys($data));
+        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_town']));
+
+        self::assertSame('Erfurt', $data['tx_thuecat_town'][1]['title']);
+        self::assertSame('Thüringer Landeshauptstadt.', $data['tx_thuecat_town'][1]['description']);
+        self::assertSame(10, $data['tx_thuecat_town'][1]['pid']);
+
+        self::assertSame([
+            'title' => 'Erfurt (EN)',
+            'description' => 'Capital of Thuringia.',
+        ], $data['tx_thuecat_town'][2]);
+
+        self::assertSame([
+            'title' => 'Erfurt (FR)',
+        ], $data['tx_thuecat_town'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+    }
+
+    #[Test]
     public function unknownTransientBucketRaisesException(): void
     {
         // Defensive: if the parser emits a bucket the resolver has no branch
