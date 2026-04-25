@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
 
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\StringUtility;
@@ -71,8 +72,93 @@ class Resolver
 
         $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $remoteIdToKey);
         $this->drainTransients($payload, $context, $remoteIdToKey);
+        $this->drainTranslationsAgainstExistingRows($payload, $remoteIdToKey);
 
         return $payload;
+    }
+
+    /**
+     * Very-happy-path scenario: the parent row resolved to a real DB uid and
+     * a translation row already exists for the requested sys_language_uid.
+     * Look up the existing translation row's uid (one query per parent), add
+     * it to the datamap under its own key with just the translated fields,
+     * and drop the bucket entry. Languages with no matching translation row
+     * stay in the bucket for scenarios 2/3 to handle.
+     *
+     * @param array<string, string> $remoteIdToKey
+     */
+    private function drainTranslationsAgainstExistingRows(
+        DataHandlerPayload $payload,
+        array $remoteIdToKey
+    ): void {
+        foreach ($payload->getTranslations() as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
+                $ownerKey = $remoteIdToKey[$remoteId] ?? null;
+                if ($ownerKey === null || !ctype_digit($ownerKey)) {
+                    // Parent row is NEW… or missing: scenarios 2/3.
+                    continue;
+                }
+
+                $existing = $this->findTranslationUidsByParent($table, (int)$ownerKey);
+
+                foreach ($perLanguage as $sysLanguageUid => $fields) {
+                    $translationUid = $existing[$sysLanguageUid] ?? null;
+                    if ($translationUid === null) {
+                        // Scenario 2: parent uid known, translation row missing.
+                        continue;
+                    }
+
+                    $payload->addTranslationRow($table, (string)$translationUid, $fields);
+                    $payload->removeTranslation($table, $remoteId, $sysLanguageUid);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return array<int, int> sys_language_uid => translation row uid
+     */
+    private function findTranslationUidsByParent(string $table, int $parentUid): array
+    {
+        /** @var array<string, mixed> $globalTca */
+        $globalTca = $GLOBALS['TCA'] ?? [];
+        $tableConfig = $globalTca[$table] ?? null;
+        if (!is_array($tableConfig)) {
+            return [];
+        }
+        $tca = $tableConfig['ctrl'] ?? null;
+        if (!is_array($tca)) {
+            return [];
+        }
+        $parentField = $tca['transOrigPointerField'] ?? null;
+        $languageField = $tca['languageField'] ?? null;
+        if (!is_string($parentField) || !is_string($languageField)) {
+            return [];
+        }
+
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()
+            ->removeAll()
+            ->add(new DeletedRestriction())
+        ;
+        $queryBuilder->select('uid', $languageField)
+            ->from($table)
+            ->where($queryBuilder->expr()->eq(
+                $parentField,
+                $queryBuilder->createNamedParameter($parentUid, Connection::PARAM_INT)
+            ))
+        ;
+
+        $result = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
+            $sysLanguageUid = $row[$languageField] ?? null;
+            $uid = $row['uid'] ?? null;
+            if (!is_numeric($sysLanguageUid) || !is_numeric($uid)) {
+                continue;
+            }
+            $result[(int)$sysLanguageUid] = (int)$uid;
+        }
+        return $result;
     }
 
     /**

@@ -515,6 +515,46 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function existingTranslationRowsGetUpdatedWithFreshFields(): void
+    {
+        // Very-happy-path: parent organisation row + en (uid=2) and fr (uid=3)
+        // translation rows are preloaded. The fixture carries de+en+fr name and
+        // de+en description. After resolve(), the payload should hold the
+        // parent row keyed by uid=1 with the fresh DE values, plus the two
+        // translation rows keyed by their own uids carrying only the
+        // translated fields the fixture provides — no bookkeeping (sys_language_uid,
+        // l10n_parent) is written here because DataHandler keeps those on
+        // updates. The translations bucket must drain to [].
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getPayload();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+        self::assertSame(10, $data['tx_thuecat_organisation'][1]['pid']);
+
+        self::assertSame([
+            'title' => 'Tourism Ltd.',
+            'description' => 'We market the region.',
+        ], $data['tx_thuecat_organisation'][2]);
+
+        self::assertSame([
+            'title' => 'Tourisme SARL',
+        ], $data['tx_thuecat_organisation'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+    }
+
+    #[Test]
     public function unknownTransientBucketRaisesException(): void
     {
         // Defensive: if the parser emits a bucket the resolver has no branch
@@ -575,14 +615,19 @@ final class ResolverTest extends AbstractImportTestCase
         $reflection->setValue($payload, $transients);
     }
 
-    private function parseFixture(string $filename): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload
-    {
+    /**
+     * @param array<string, int> $translationLanguages
+     */
+    private function parseFixture(
+        string $filename,
+        array $translationLanguages = []
+    ): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload {
         $path = self::FIXTURE_PATH . $filename;
         $decoded = json_decode((string)file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         $graph = is_array($decoded) && is_array($decoded['@graph'] ?? null) ? $decoded['@graph'] : [];
 
         $parser = $this->get(Parser::class);
-        $parser->parse($graph);
+        $parser->parse($graph, 'de', $translationLanguages);
         return $parser->getDataHandlerPayload();
     }
 }

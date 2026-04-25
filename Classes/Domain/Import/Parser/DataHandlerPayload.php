@@ -134,6 +134,43 @@ class DataHandlerPayload
     }
 
     /**
+     * Register a translation row in the data array under its own outer key
+     * (the resolved translation uid as string, or a NEW… placeholder once
+     * scenarios 2/3 land). DataHandler then treats the row as an update or
+     * insert in the same datamap pass as the parent. Bookkeeping fields
+     * (sys_language_uid, l10n_parent, l10n_source) are intentionally not
+     * written here: when the translation row already exists the DataHandler
+     * leaves them alone, and for the create-then-update path scenarios 2/3
+     * will set them where appropriate.
+     *
+     * @param array<string, string|int|float> $fields
+     */
+    public function addTranslationRow(string $table, string $key, array $fields): void
+    {
+        $this->data[$table][$key] = $fields;
+    }
+
+    /**
+     * Drop one language entry from the translations bucket and clean up
+     * empty parents the same way removeTransient does.
+     */
+    public function removeTranslation(string $table, string $remoteId, int $sysLanguageUid): void
+    {
+        if (!isset($this->translations[$table][$remoteId][$sysLanguageUid])) {
+            return;
+        }
+
+        unset($this->translations[$table][$remoteId][$sysLanguageUid]);
+
+        if (($this->translations[$table][$remoteId] ?? []) === []) {
+            unset($this->translations[$table][$remoteId]);
+        }
+        if (($this->translations[$table] ?? []) === []) {
+            unset($this->translations[$table]);
+        }
+    }
+
+    /**
      * Drop a single @id from a transient bucket. Empty buckets and empty
      * row/table entries are cleaned up so `getTransients() === []` means
      * the resolver is done.
