@@ -73,6 +73,17 @@ class DataHandlerPayload
      */
     private array $cmdMap = [];
 
+    /**
+     * Outer keys of rows that came in via addEntity — i.e. default-language
+     * rows the parser produced. Translation rows added via addTranslationRow
+     * are deliberately excluded so the Importer can hand the logger a
+     * default-language-only snapshot, keeping the user-facing import counts
+     * matching what people see in the parser output.
+     *
+     * @var array<string, array<int|string, true>>
+     */
+    private array $defaultLanguageKeys = [];
+
     public function addEntity(EntityInterface $entity): void
     {
         /** @var string $table */
@@ -85,6 +96,7 @@ class DataHandlerPayload
         }
 
         $this->dataMap[$table][$remoteId] = $row;
+        $this->defaultLanguageKeys[$table][$remoteId] = true;
 
         $entityTransients = $entity->getTransients();
         if ($entityTransients !== []) {
@@ -111,6 +123,11 @@ class DataHandlerPayload
 
         $this->dataMap[$table][$newKey] = $this->dataMap[$table][$oldKey];
         unset($this->dataMap[$table][$oldKey]);
+
+        if (isset($this->defaultLanguageKeys[$table][$oldKey])) {
+            unset($this->defaultLanguageKeys[$table][$oldKey]);
+            $this->defaultLanguageKeys[$table][$newKey] = true;
+        }
     }
 
     /**
@@ -256,6 +273,9 @@ class DataHandlerPayload
                     continue;
                 }
                 $this->dataMap[$table][$remoteId] = $row;
+                if (isset($other->defaultLanguageKeys[$table][$remoteId])) {
+                    $this->defaultLanguageKeys[$table][$remoteId] = true;
+                }
             }
         }
 
@@ -292,6 +312,47 @@ class DataHandlerPayload
     public function getDataMap(): array
     {
         return $this->dataMap;
+    }
+
+    /**
+     * Same shape as getDataMap, restricted to rows the parser produced via
+     * addEntity (default-language rows). Translation rows added during the
+     * resolver's drain are excluded.
+     *
+     * @return array<string, array<int|string, array<string, string|int|float>>>
+     */
+    public function getDefaultLanguageDataMap(): array
+    {
+        $result = [];
+        foreach ($this->defaultLanguageKeys as $table => $keys) {
+            foreach ($keys as $key => $_) {
+                if (!isset($this->dataMap[$table][$key])) {
+                    continue;
+                }
+                $result[$table][$key] = $this->dataMap[$table][$key];
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Drop the staged datamap. Used by the Importer between loop passes
+     * after process_datamap() has consumed it. Default-language key tracking
+     * stays so a later pass that re-stages translation rows still keeps the
+     * "what counts as default language" view accurate.
+     */
+    public function clearDataMap(): void
+    {
+        $this->dataMap = [];
+    }
+
+    /**
+     * Drop the staged cmdmap. Counterpart to clearDataMap, used after
+     * process_cmdmap() has consumed it.
+     */
+    public function clearCmdMap(): void
+    {
+        $this->cmdMap = [];
     }
 
     /**

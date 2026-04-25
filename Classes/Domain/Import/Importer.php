@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
@@ -44,49 +46,79 @@ class Importer
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
-        $accumulatedPayload = [];
+        $context = new ResolverContext($configuration->getStoragePid(), $defaultLanguage, $configuration->getApiKey());
+        $accumulatedPayload = new DataHandlerPayload();
         foreach ($urlProvider->getUrls() as $url) {
             $inputData = $this->fetchDataFromApi($url, $apiKey);
             $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
-            $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $defaultLanguage, $configuration->getApiKey()));
-            $accumulatedPayload = $this->mergePayload($accumulatedPayload, $dataHandlerPayload->getDataMap());
+            $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $context);
+            $accumulatedPayload->mergeFrom($resolved);
         }
 
-        if ($accumulatedPayload === []) {
+        // Snapshot before the loop drains the datamap. Translation rows added
+        // by the resolver are excluded so the logger reports only the
+        // default-language records the user expects to see counted.
+        $loggerPayload = $accumulatedPayload->getDefaultLanguageDataMap();
+
+        if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
             return;
         }
 
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->start($accumulatedPayload, []);
-        $dataHandler->process_datamap();
+        $iterations = 0;
+        $maxIterations = 3;
+        // DataHandler carries state across calls (substNEWwithIDs, datamap,
+        // cmdmap, errors, …); reusing one instance across passes mixes state.
+        // Each pass gets a fresh instance and the substNEWwithIDs maps get
+        // merged so the logger sees every NEW→uid mapping the loop produced.
+        $substNEWwithIDs = [];
+        while ($accumulatedPayload->getDataMap() !== [] || $accumulatedPayload->getCmdMap() !== []) {
+            if ($iterations >= $maxIterations) {
+                throw new RuntimeException(
+                    'Importer loop exceeded ' . $maxIterations . ' iterations; translations bucket: '
+                    . json_encode($accumulatedPayload->getTranslations()),
+                    1777148664
+                );
+            }
+            $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
+            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
+            $dataHandler->process_datamap();
+            $dataHandler->process_cmdmap();
+            /** @var array<string, int|string> $passSubst */
+            $passSubst = $dataHandler->substNEWwithIDs;
+            $substNEWwithIDs = $substNEWwithIDs + $passSubst;
+            $accumulatedPayload->clearDataMap();
+            $accumulatedPayload->clearCmdMap();
+            $this->resolver->resolve($accumulatedPayload, $context);
+            $iterations++;
+        }
 
-        /** @var array<string, int|string> $substNEWwithIDs */
-        $substNEWwithIDs = $dataHandler->substNEWwithIDs;
         $this->importLogger->writeLog(
             $configuration->getUid(),
-            $accumulatedPayload,
+            $loggerPayload,
             $substNEWwithIDs
         );
     }
 
     /**
-     * Per-table merge so multiple URLs contributing to the same table
-     * stay in one entry. Same-key collisions across URLs let the later
-     * one win — the resolver assigns stable existing-uid keys for known
-     * remote_ids, so "collision" means the same record was emitted twice
-     * and the latest payload is the one to keep.
+     * Fan the staged cmdmap entries out into the nested shape DataHandler::start()
+     * consumes: $cmd[$table][$uid][$command] = $value.
      *
-     * @param array<string, array<int|string, array<string, mixed>>> $base
-     * @param array<string, array<int|string, array<string, mixed>>> $addition
+     * @param array<string, array<int|string, list<array{0: string, 1: int|string}>>> $cmdMap
      *
-     * @return array<string, array<int|string, array<string, mixed>>>
+     * @return array<string, array<int|string, array<string, int|string>>>
      */
-    private function mergePayload(array $base, array $addition): array
+    private function fanOutCmdMap(array $cmdMap): array
     {
-        foreach ($addition as $table => $rows) {
-            $base[$table] = array_merge($base[$table] ?? [], $rows);
+        $result = [];
+        foreach ($cmdMap as $table => $entriesByKey) {
+            foreach ($entriesByKey as $key => $entries) {
+                foreach ($entries as $entry) {
+                    $result[$table][$key][$entry[0]] = $entry[1];
+                }
+            }
         }
-        return $base;
+        return $result;
     }
 
     private function getProviderForConfiguration(ImportConfiguration $configuration): ?UrlProvider
