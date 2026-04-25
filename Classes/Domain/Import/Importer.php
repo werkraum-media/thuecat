@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
@@ -22,6 +23,7 @@ class Importer
         private readonly FetchData $fetchData,
         private readonly SiteFinder $siteFinder,
         private readonly Resolver $resolver,
+        private readonly ImportLogger $importLogger,
         #[AutowireLocator(services: 'import.url.provider')]
         private readonly ServiceLocator $urlProviders
     ) {
@@ -36,14 +38,46 @@ class Importer
 
         $apiKey = $configuration->getApiKey();
         $language = $this->resolveDefaultLanguage($configuration->getStoragePid());
+        $accumulatedPayload = [];
         foreach ($urlProvider->getUrls() as $url) {
             $inputData = $this->fetchDataFromApi($url, $apiKey);
             $this->parser->parse($inputData, $language);
             $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $language, $configuration->getApiKey()));
-            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-            $dataHandler->start($dataHandlerPayload->getPayload(), []);
-            $dataHandler->process_datamap();
+            $accumulatedPayload = $this->mergePayload($accumulatedPayload, $dataHandlerPayload->getPayload());
         }
+
+        if ($accumulatedPayload === []) {
+            return;
+        }
+
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->start($accumulatedPayload, []);
+        $dataHandler->process_datamap();
+
+        $this->importLogger->writeLog(
+            (int)$configuration->getUid(),
+            $accumulatedPayload,
+            $dataHandler->substNEWwithIDs
+        );
+    }
+
+    /**
+     * Per-table merge so multiple URLs contributing to the same table
+     * stay in one entry. Same-key collisions across URLs let the later
+     * one win — the resolver assigns stable existing-uid keys for known
+     * remote_ids, so "collision" means the same record was emitted twice
+     * and the latest payload is the one to keep.
+     *
+     * @param array<string, array<string, array<string, mixed>>> $base
+     * @param array<string, array<string, array<string, mixed>>> $addition
+     * @return array<string, array<string, array<string, mixed>>>
+     */
+    private function mergePayload(array $base, array $addition): array
+    {
+        foreach ($addition as $table => $rows) {
+            $base[$table] = array_merge($base[$table] ?? [], $rows);
+        }
+        return $base;
     }
 
     /**
