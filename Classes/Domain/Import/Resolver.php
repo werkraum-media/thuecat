@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
@@ -53,6 +55,7 @@ class Resolver
         private readonly ConnectionPool $connectionPool,
         private readonly FetchData $fetchData,
         private readonly Parser $parser,
+        private readonly TcaSchemaFactory $tcaSchemaFactory,
     ) {
     }
 
@@ -141,21 +144,12 @@ class Resolver
      */
     private function findTranslationUidsByParent(string $table, int $parentUid): array
     {
-        /** @var array<string, mixed> $globalTca */
-        $globalTca = $GLOBALS['TCA'] ?? [];
-        $tableConfig = $globalTca[$table] ?? null;
-        if (!is_array($tableConfig)) {
+        $language = $this->languageCapabilityFor($table);
+        if ($language === null) {
             return [];
         }
-        $tca = $tableConfig['ctrl'] ?? null;
-        if (!is_array($tca)) {
-            return [];
-        }
-        $parentField = $tca['transOrigPointerField'] ?? null;
-        $languageField = $tca['languageField'] ?? null;
-        if (!is_string($parentField) || !is_string($languageField)) {
-            return [];
-        }
+        $parentField = $language['parent'];
+        $languageField = $language['languageField'];
 
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
@@ -584,10 +578,10 @@ class Resolver
             ))
         ;
 
-        $languageField = $this->languageFieldFor($table);
-        if ($languageField !== null) {
+        $language = $this->languageCapabilityFor($table);
+        if ($language !== null) {
             $queryBuilder->andWhere($queryBuilder->expr()->eq(
-                $languageField,
+                $language['languageField'],
                 $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
             ));
         }
@@ -596,19 +590,26 @@ class Resolver
         return is_numeric($result) ? (int)$result : 0;
     }
 
-    private function languageFieldFor(string $table): ?string
+    /**
+     * Resolve the language-aware field names for a translatable table via
+     * TcaSchema. Returns null for non-translatable tables — callers fall
+     * back to no language restriction in that case.
+     *
+     * @return array{languageField: string, parent: string}|null
+     */
+    private function languageCapabilityFor(string $table): ?array
     {
-        /** @var array<string, mixed> $globalTca */
-        $globalTca = $GLOBALS['TCA'] ?? [];
-        $tableConfig = $globalTca[$table] ?? null;
-        if (!is_array($tableConfig)) {
+        if (!$this->tcaSchemaFactory->has($table)) {
             return null;
         }
-        $ctrl = $tableConfig['ctrl'] ?? null;
-        if (!is_array($ctrl)) {
+        $schema = $this->tcaSchemaFactory->get($table);
+        if (!$schema->hasCapability(TcaSchemaCapability::Language)) {
             return null;
         }
-        $languageField = $ctrl['languageField'] ?? null;
-        return is_string($languageField) ? $languageField : null;
+        $capability = $schema->getCapability(TcaSchemaCapability::Language);
+        return [
+            'languageField' => $capability->getLanguageField()->getName(),
+            'parent' => $capability->getTranslationOriginPointerField()->getName(),
+        ];
     }
 }
