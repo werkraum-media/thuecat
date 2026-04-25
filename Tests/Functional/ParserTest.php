@@ -37,7 +37,7 @@ final class ParserTest extends AbstractImportTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph);
-        $result = $subject->getDataHandlerPayload()->getPayload();
+        $result = $subject->getDataHandlerPayload()->getDataMap();
 
         self::assertArrayHasKey('tx_thuecat_organisation', $result);
         self::assertArrayHasKey(
@@ -63,7 +63,7 @@ final class ParserTest extends AbstractImportTestCase
         $subject->parse($graph);
         $payload = $subject->getDataHandlerPayload();
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
 
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
         self::assertSame(
@@ -98,7 +98,7 @@ final class ParserTest extends AbstractImportTestCase
         $subject->parse($graph);
         $payload = $subject->getDataHandlerPayload();
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
 
         self::assertSame(['tx_thuecat_town'], array_keys($data));
         self::assertSame(
@@ -145,7 +145,7 @@ final class ParserTest extends AbstractImportTestCase
         $subject->parse($graph);
         $payload = $subject->getDataHandlerPayload();
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
 
         self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
         self::assertSame(
@@ -261,7 +261,7 @@ final class ParserTest extends AbstractImportTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph);
-        $result = $subject->getDataHandlerPayload()->getPayload();
+        $result = $subject->getDataHandlerPayload()->getDataMap();
 
         self::assertArrayHasKey('tx_thuecat_tourist_information', $result);
         self::assertArrayHasKey(
@@ -290,7 +290,7 @@ final class ParserTest extends AbstractImportTestCase
 
         $needle = 'REF:';
 
-        foreach ($payload->getPayload() as $table => $rows) {
+        foreach ($payload->getDataMap() as $table => $rows) {
             foreach ($rows as $remoteId => $row) {
                 foreach ($row as $column => $value) {
                     self::assertStringNotContainsString(
@@ -335,7 +335,7 @@ final class ParserTest extends AbstractImportTestCase
         $payload = $subject->getDataHandlerPayload();
 
         // Default row holds the German strings.
-        $row = $payload->getPayload()['tx_thuecat_organisation']['https://thuecat.org/resources/organisation-translated'];
+        $row = $payload->getDataMap()['tx_thuecat_organisation']['https://thuecat.org/resources/organisation-translated'];
         self::assertSame('Tourismus GmbH', $row['title']);
         self::assertSame('Wir vermarkten die Region.', $row['description']);
 
@@ -381,7 +381,7 @@ final class ParserTest extends AbstractImportTestCase
         // en (title + description + start_of_construction) and fr
         // (title + description). The example site config defines
         // languageId 0 (de, default), 1 (en) and 2 (fr).
-        // The default-language row goes into getPayload() as before; per
+        // The default-language row goes into getDataMap() as before; per
         // additional language, fields with a translated entry land in
         // getTranslations()[$table][$remoteId][$sysLanguageUid]. Fields
         // without a translation in the JSON-LD must be absent (not '').
@@ -397,7 +397,7 @@ final class ParserTest extends AbstractImportTestCase
         // Default row is unchanged — multi-language must not pollute the
         // primary payload, and transients stay as the single-language test
         // already locked them down.
-        $row = $payload->getPayload()['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
+        $row = $payload->getDataMap()['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
         self::assertSame('Alte Synagoge', $row['title']);
         self::assertSame('Beispiel Beschreibung', $row['description']);
         self::assertSame('11. Jh.', $row['start_of_construction']);
@@ -481,7 +481,7 @@ final class ParserTest extends AbstractImportTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph);
-        $result = $subject->getDataHandlerPayload()->getPayload();
+        $result = $subject->getDataHandlerPayload()->getDataMap();
 
         foreach (array_keys($result) as $table) {
             foreach (array_keys($result[$table]) as $remoteId) {

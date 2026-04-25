@@ -104,7 +104,18 @@ class Resolver
                 foreach ($perLanguage as $sysLanguageUid => $fields) {
                     $translationUid = $existing[$sysLanguageUid] ?? null;
                     if ($translationUid === null) {
-                        // Scenario 2: parent uid known, translation row missing.
+                        // Scenario 2: parent uid known, translation row
+                        // missing. Stage a localize cmdmap so DataHandler
+                        // creates the row; the bucket entry stays in place
+                        // so a second resolver pass (after process_cmdmap)
+                        // can drain it via the scenario-1 branch once the
+                        // new translation uid is in the DB.
+                        $payload->addCmdMap(
+                            $table,
+                            $ownerKey,
+                            'localize',
+                            $sysLanguageUid
+                        );
                         continue;
                     }
 
@@ -169,7 +180,7 @@ class Resolver
         int $storagePid,
         array &$remoteIdToKey
     ): void {
-        foreach ($payload->getPayload() as $table => $rows) {
+        foreach ($payload->getDataMap() as $table => $rows) {
             foreach (array_keys($rows) as $outerKey) {
                 $outerKey = (string)$outerKey;
                 // Skip rows already rekeyed (uid-numeric or NEW… placeholder) —

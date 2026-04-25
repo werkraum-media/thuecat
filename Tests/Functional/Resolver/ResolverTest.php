@@ -49,7 +49,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_organisation']);
@@ -76,7 +76,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         // PHP casts numeric-string array keys back to int automatically, so the
         // outer key the resolver sets as '1' ends up as int 1 in the array.
         self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
@@ -99,7 +99,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_town'], array_keys($data));
 
         $townKeys = array_keys($data['tx_thuecat_town']);
@@ -127,7 +127,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(
             ['tx_thuecat_town', 'tx_thuecat_organisation'],
             array_keys($data)
@@ -164,7 +164,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_parking_facility'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_parking_facility']);
@@ -193,7 +193,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
@@ -225,7 +225,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(
             ['tx_thuecat_parking_facility', 'tx_thuecat_town'],
             array_keys($data)
@@ -268,7 +268,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(
             ['tx_thuecat_tourist_attraction', 'tx_thuecat_parking_facility'],
             array_keys($data)
@@ -311,7 +311,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_parking_facility'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_parking_facility']);
@@ -378,7 +378,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
@@ -429,7 +429,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
@@ -498,7 +498,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10, language: 'fr'));
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
         $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
         $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
@@ -534,7 +534,7 @@ final class ResolverTest extends AbstractImportTestCase
             new ResolverContext(storagePid: 10)
         );
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
         self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_organisation']));
 
@@ -555,6 +555,53 @@ final class ResolverTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function missingTranslationRowsAreStagedAsLocalizeCmdMap(): void
+    {
+        // Scenario 2: parent organisation row preloaded (uid=1) without any
+        // translation rows. Fixture carries de+en+fr name and de+en
+        // description. Resolver must:
+        //   1. Update the parent row (uid=1) with fresh DE values.
+        //   2. Stage one `localize` cmdmap entry per missing language on the
+        //      parent uid — en (sys_language_uid=1) and fr (=2).
+        //   3. Leave the en/fr entries in the translations bucket so a
+        //      second pass can drain them once DataHandler::process_cmdmap
+        //      creates the rows and the new uids land in the DB.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithoutTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
+        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+
+        // PHP coerces the numeric-string key '1' (the parent uid the resolver
+        // writes) to int 1 at array-set time, so we assert against int keys.
+        self::assertSame(
+            ['tx_thuecat_organisation' => [1 => [['localize', 1], ['localize', 2]]]],
+            $payload->getCmdMap()
+        );
+
+        self::assertSame(
+            [
+                'tx_thuecat_organisation' => [
+                    'https://thuecat.org/resources/organisation-translated' => [
+                        1 => ['title' => 'Tourism Ltd.', 'description' => 'We market the region.'],
+                        2 => ['title' => 'Tourisme SARL'],
+                    ],
+                ],
+            ],
+            $payload->getTranslations()
+        );
+    }
+
+    #[Test]
     public function existingTownTranslationRowsGetUpdatedWithFreshFields(): void
     {
         // Town counterpart to the organisation translation test: parent row
@@ -570,7 +617,7 @@ final class ResolverTest extends AbstractImportTestCase
             new ResolverContext(storagePid: 10)
         );
 
-        $data = $payload->getPayload();
+        $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_town'], array_keys($data));
         self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_town']));
 

@@ -49,7 +49,7 @@ class Importer
             $inputData = $this->fetchDataFromApi($url, $apiKey);
             $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
             $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $defaultLanguage, $configuration->getApiKey()));
-            $accumulatedPayload = $this->mergePayload($accumulatedPayload, $dataHandlerPayload->getPayload());
+            $accumulatedPayload = $this->mergePayload($accumulatedPayload, $dataHandlerPayload->getDataMap());
         }
 
         if ($accumulatedPayload === []) {

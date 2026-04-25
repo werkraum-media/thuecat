@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 class DataHandlerPayload
 {
     /** @var array<string, array<int|string, array<string, string|int|float>>> */
-    private array $data = [];
+    private array $dataMap = [];
 
     /**
      * Unresolved references, bound to (table, remote_id) so the resolver can
@@ -58,6 +58,21 @@ class DataHandlerPayload
      */
     private array $translations = [];
 
+    /**
+     * Staged DataHandler cmdmap entries. Outer key is the table; second key
+     * is the target uid (as string, since cmdmap targets are existing rows);
+     * inner is a list of `[$command, $value]` tuples. The Importer fans these
+     * out into the `$cmd[$table][$uid][$command] = $value` shape that
+     * DataHandler::start() consumes.
+     *
+     * Today only `localize` (value = sys_language_uid) lands here, but the
+     * shape is generic so future commands (copy, move, delete, …) can land
+     * without renaming the API.
+     *
+     * @var array<string, array<int|string, list<array{0: string, 1: int|string}>>>
+     */
+    private array $cmdMap = [];
+
     public function addEntity(EntityInterface $entity): void
     {
         /** @var string $table */
@@ -65,11 +80,11 @@ class DataHandlerPayload
         $row = $entity->toArray();
         $remoteId = (string)$row['remote_id'];
 
-        if (!isset($this->data[$table])) {
-            $this->data[$table] = [];
+        if (!isset($this->dataMap[$table])) {
+            $this->dataMap[$table] = [];
         }
 
-        $this->data[$table][$remoteId] = $row;
+        $this->dataMap[$table][$remoteId] = $row;
 
         $entityTransients = $entity->getTransients();
         if ($entityTransients !== []) {
@@ -90,12 +105,12 @@ class DataHandlerPayload
      */
     public function rekeyRow(string $table, string $oldKey, string $newKey): void
     {
-        if (!isset($this->data[$table][$oldKey])) {
+        if (!isset($this->dataMap[$table][$oldKey])) {
             return;
         }
 
-        $this->data[$table][$newKey] = $this->data[$table][$oldKey];
-        unset($this->data[$table][$oldKey]);
+        $this->dataMap[$table][$newKey] = $this->dataMap[$table][$oldKey];
+        unset($this->dataMap[$table][$oldKey]);
     }
 
     /**
@@ -105,11 +120,11 @@ class DataHandlerPayload
      */
     public function setField(string $table, string $key, string $field, string|int|float $value): void
     {
-        if (!isset($this->data[$table][$key])) {
+        if (!isset($this->dataMap[$table][$key])) {
             return;
         }
 
-        $this->data[$table][$key][$field] = $value;
+        $this->dataMap[$table][$key][$field] = $value;
     }
 
     /**
@@ -118,11 +133,11 @@ class DataHandlerPayload
      */
     public function setRelationField(string $table, string $key, string $field, string|int $value): void
     {
-        if (!isset($this->data[$table][$key])) {
+        if (!isset($this->dataMap[$table][$key])) {
             return;
         }
 
-        $existing = (string)($this->data[$table][$key][$field] ?? '');
+        $existing = (string)($this->dataMap[$table][$key][$field] ?? '');
         $values = $existing === '' ? [] : explode(',', $existing);
         $value = (string)$value;
 
@@ -130,7 +145,7 @@ class DataHandlerPayload
             $values[] = $value;
         }
 
-        $this->data[$table][$key][$field] = implode(',', $values);
+        $this->dataMap[$table][$key][$field] = implode(',', $values);
     }
 
     /**
@@ -147,7 +162,25 @@ class DataHandlerPayload
      */
     public function addTranslationRow(string $table, string $key, array $fields): void
     {
-        $this->data[$table][$key] = $fields;
+        $this->dataMap[$table][$key] = $fields;
+    }
+
+    /**
+     * Stage a DataHandler cmdmap entry on an existing target uid. Dedupes so
+     * repeated resolver passes (scenario 2 → second pass) don't queue the
+     * same command twice.
+     */
+    public function addCmdMap(string $table, string $key, string $command, int|string $value): void
+    {
+        $entry = [$command, $value];
+        $existing = $this->cmdMap[$table][$key] ?? [];
+        foreach ($existing as $candidate) {
+            if ($candidate === $entry) {
+                return;
+            }
+        }
+        $existing[] = $entry;
+        $this->cmdMap[$table][$key] = $existing;
     }
 
     /**
@@ -217,12 +250,12 @@ class DataHandlerPayload
      */
     public function mergeFrom(self $other): void
     {
-        foreach ($other->data as $table => $rows) {
+        foreach ($other->dataMap as $table => $rows) {
             foreach ($rows as $remoteId => $row) {
-                if (isset($this->data[$table][$remoteId])) {
+                if (isset($this->dataMap[$table][$remoteId])) {
                     continue;
                 }
-                $this->data[$table][$remoteId] = $row;
+                $this->dataMap[$table][$remoteId] = $row;
             }
         }
 
@@ -243,14 +276,22 @@ class DataHandlerPayload
                 $this->translations[$table][$remoteId] = $perLanguage;
             }
         }
+
+        foreach ($other->cmdMap as $table => $entriesByKey) {
+            foreach ($entriesByKey as $key => $entries) {
+                foreach ($entries as $entry) {
+                    $this->addCmdMap($table, (string)$key, $entry[0], $entry[1]);
+                }
+            }
+        }
     }
 
     /**
      * @return array<string, array<int|string, array<string, string|int|float>>>
      */
-    public function getPayload(): array
+    public function getDataMap(): array
     {
-        return $this->data;
+        return $this->dataMap;
     }
 
     /**
@@ -267,5 +308,13 @@ class DataHandlerPayload
     public function getTranslations(): array
     {
         return $this->translations;
+    }
+
+    /**
+     * @return array<string, array<int|string, list<array{0: string, 1: int|string}>>>
+     */
+    public function getCmdMap(): array
+    {
+        return $this->cmdMap;
     }
 }
