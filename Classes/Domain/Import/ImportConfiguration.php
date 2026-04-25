@@ -65,4 +65,6 @@ interface ImportConfiguration
      * picking localised values from the JSON-LD payload.
      */
     public function getStoragePid(): int;
+
+    public function getUid(): ?int;
 }

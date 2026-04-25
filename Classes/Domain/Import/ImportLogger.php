@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -26,17 +25,17 @@ class ImportLogger
      * tstamp falls within UPDATE_WINDOW_SECONDS are updates; older tstamps
      * are treated as unchanged and skipped.
      *
-     * @param array<string, array<string, array<string, mixed>>> $payload
+     * @param array<string, array<int|string, array<string, mixed>>> $payload
      * @param array<string, int|string> $substNEWwithIDs
      */
-    public function writeLog(int $configurationUid, array $payload, array $substNEWwithIDs): void
+    public function writeLog(int|null $configurationUid, array $payload, array $substNEWwithIDs): void
     {
         $logKey = StringUtility::getUniqueId('NEW');
         $datamap = [
             'tx_thuecat_import_log' => [
                 $logKey => [
                     'pid' => 0,
-                    'configuration' => $configurationUid,
+                    'configuration' => (int)$configurationUid,
                 ],
             ],
             'tx_thuecat_import_log_entry' => [],
@@ -67,6 +66,7 @@ class ImportLogger
     /**
      * @param array<string, mixed> $row
      * @param array<string, int|string> $substNEWwithIDs
+     *
      * @return array<string, mixed>|null
      */
     private function buildEntry(string $table, string $key, array $row, array $substNEWwithIDs, int $threshold): ?array
@@ -114,7 +114,8 @@ class ImportLogger
             ->from($table)
             ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
             ->executeQuery()
-            ->fetchOne();
+            ->fetchOne()
+        ;
 
         return is_numeric($tstamp) && (int)$tstamp >= $threshold;
     }

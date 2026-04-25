@@ -11,7 +11,6 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
-use WerkraumMedia\ThueCat\Domain\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
@@ -54,10 +53,12 @@ class Importer
         $dataHandler->start($accumulatedPayload, []);
         $dataHandler->process_datamap();
 
+        /** @var array<string, int|string> $substNEWwithIDs */
+        $substNEWwithIDs = $dataHandler->substNEWwithIDs;
         $this->importLogger->writeLog(
-            (int)$configuration->getUid(),
+            $configuration->getUid(),
             $accumulatedPayload,
-            $dataHandler->substNEWwithIDs
+            $substNEWwithIDs
         );
     }
 
@@ -68,9 +69,10 @@ class Importer
      * remote_ids, so "collision" means the same record was emitted twice
      * and the latest payload is the one to keep.
      *
-     * @param array<string, array<string, array<string, mixed>>> $base
-     * @param array<string, array<string, array<string, mixed>>> $addition
-     * @return array<string, array<string, array<string, mixed>>>
+     * @param array<string, array<int|string, array<string, mixed>>> $base
+     * @param array<string, array<int|string, array<string, mixed>>> $addition
+     *
+     * @return array<string, array<int|string, array<string, mixed>>>
      */
     private function mergePayload(array $base, array $addition): array
     {

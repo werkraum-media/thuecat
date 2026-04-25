@@ -39,8 +39,7 @@ class Parser
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
         #[AutowireLocator(services: 'import.entity')]
         private readonly ServiceLocator $entities,
-    )
-    {
+    ) {
     }
 
     /**
@@ -88,7 +87,6 @@ class Parser
 
         $entity->parse($node, $this->language);
         $this->dataHandlerPayload->addEntity($entity);
-
     }
 
     /**
@@ -121,7 +119,7 @@ class Parser
 
         usort(
             $candidates,
-            static fn(EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
+            static fn (EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
         );
 
         return $candidates[0];

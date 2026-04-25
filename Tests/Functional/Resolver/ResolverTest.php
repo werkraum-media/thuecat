@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Resolver;
 
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
+use RuntimeException;
 use WerkraumMedia\ThueCat\Domain\Import\InvalidTransientReferenceException;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
@@ -530,7 +531,7 @@ final class ResolverTest extends AbstractImportTestCase
             ['https://thuecat.org/resources/whatever']
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
     }
