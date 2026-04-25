@@ -30,7 +30,14 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('import.entity')]
 interface EntityInterface
 {
-    public function parse(array $node, string $language): void;
+    /**
+     * @param array<string, int> $translationLanguages Two-letter language
+     *        code → target sys_language_uid. The default-language row goes
+     *        into the entity's data; for each entry here, fields whose
+     *        JSON-LD source carries a matching `@language` tag are recorded
+     *        into the translations bucket via recordTranslation().
+     */
+    public function parse(array $node, string $language, array $translationLanguages): void;
 
     public function getRemoteId(array $node): string;
 
@@ -50,6 +57,16 @@ interface EntityInterface
      * @return array<string, list<string>|list<array{kind: string, id: string}>>
      */
     public function getTransients(): array;
+
+    /**
+     * Translated scalar values gathered during parse(), keyed by
+     * sys_language_uid → field → translated string. Only fields whose
+     * JSON-LD source actually carries a matching `@language` entry are
+     * recorded; empty extractions are dropped.
+     *
+     * @return array<int, array<string, string>>
+     */
+    public function getTranslations(): array;
 
     public function handlesTypes(): array;
 

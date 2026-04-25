@@ -33,11 +33,27 @@ class OrganisationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function parse(array $node, string $language): void
+    public function parse(array $node, string $language, array $translationLanguages = []): void
     {
+        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
-        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
+
+        // Field-name → JSON-LD key map; drives both the default-language
+        // assignment and the translation probe so the two stay in sync.
+        $localisedFields = [
+            'title' => 'schema:name',
+            'description' => 'schema:description',
+        ];
+        foreach ($localisedFields as $field => $jsonldName) {
+            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+        }
+
+        foreach ($translationLanguages as $code => $sysLanguageUid) {
+            foreach ($localisedFields as $field => $jsonldName) {
+                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $this->recordTranslation($field, $value, $sysLanguageUid);
+            }
+        }
     }
 
     public function handlesTypes(): array

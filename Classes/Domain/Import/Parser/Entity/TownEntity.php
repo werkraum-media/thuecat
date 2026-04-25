@@ -11,15 +11,25 @@ class TownEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function parse(array $node, string $language): void
+    public function parse(array $node, string $language, array $translationLanguages = []): void
     {
+        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
-        // Text fields (schema:name, schema:description, …) carry one entry per
-        // locale; pick the one matching the site's language so the default row
-        // holds the German (or configured) strings. Overlay rows for other
-        // languages are the later localisation pipeline's job.
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
-        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
+
+        $localisedFields = [
+            'title' => 'schema:name',
+            'description' => 'schema:description',
+        ];
+        foreach ($localisedFields as $field => $jsonldName) {
+            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+        }
+
+        foreach ($translationLanguages as $code => $sysLanguageUid) {
+            foreach ($localisedFields as $field => $jsonldName) {
+                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $this->recordTranslation($field, $value, $sysLanguageUid);
+            }
+        }
 
         $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
     }

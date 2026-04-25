@@ -1,0 +1,35 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/organisation-translated",
+            "@type": [
+                "schema:Organization",
+                "schema:Thing"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Tourismus GmbH"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Tourism Ltd."
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Tourisme SARL"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Wir vermarkten die Region."
+                },
+                {
+                    "@language": "en",
+                    "@value": "We market the region."
+                }
+            ]
+        }
+    ]
+}

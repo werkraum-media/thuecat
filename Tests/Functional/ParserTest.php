@@ -319,6 +319,162 @@ final class ParserTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function organisationPayloadCarriesTranslationsBucketKeyedBySysLanguageUid(): void
+    {
+        // Hand-crafted fixture: schema:name carries de + en + fr;
+        // schema:description carries de + en only. Probes the partial-
+        // translation path on the simplest entity (no transients, no
+        // typed-boolean fields, no JSON blobs).
+        $graph = $this->graphFromFixture('organisation-translated.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, 'de', [
+            'en' => 1,
+            'fr' => 2,
+        ]);
+        $payload = $subject->getDataHandlerPayload();
+
+        // Default row holds the German strings.
+        $row = $payload->getPayload()['tx_thuecat_organisation']['https://thuecat.org/resources/organisation-translated'];
+        self::assertSame('Tourismus GmbH', $row['title']);
+        self::assertSame('Wir vermarkten die Region.', $row['description']);
+
+        self::assertSame(
+            [
+                'tx_thuecat_organisation' => [
+                    'https://thuecat.org/resources/organisation-translated' => [
+                        1 => [
+                            'title' => 'Tourism Ltd.',
+                            'description' => 'We market the region.',
+                        ],
+                        2 => [
+                            'title' => 'Tourisme SARL',
+                        ],
+                    ],
+                ],
+            ],
+            $payload->getTranslations()
+        );
+    }
+
+    #[Test]
+    public function organisationPayloadHasEmptyTranslationsBucketWhenFixtureIsSingleLanguage(): void
+    {
+        // The Erfurt Tourismus fixture only carries de @language entries.
+        // Even when the parser is asked for en + fr, no translations are
+        // recorded — recordTranslation drops empty extractions.
+        $graph = $this->graphFromFixture('018132452787-ngbe.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, 'de', [
+            'en' => 1,
+            'fr' => 2,
+        ]);
+
+        self::assertSame([], $subject->getDataHandlerPayload()->getTranslations());
+    }
+
+    #[Test]
+    public function touristAttractionPayloadCarriesTranslationsBucketKeyedBySysLanguageUid(): void
+    {
+        // Fixture 165868194223-zmqf has @language entries for de (full),
+        // en (title + description + start_of_construction) and fr
+        // (title + description). The example site config defines
+        // languageId 0 (de, default), 1 (en) and 2 (fr).
+        // The default-language row goes into getPayload() as before; per
+        // additional language, fields with a translated entry land in
+        // getTranslations()[$table][$remoteId][$sysLanguageUid]. Fields
+        // without a translation in the JSON-LD must be absent (not '').
+        $graph = $this->graphFromFixture('165868194223-zmqf.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, 'de', [
+            'en' => 1,
+            'fr' => 2,
+        ]);
+        $payload = $subject->getDataHandlerPayload();
+
+        // Default row is unchanged — multi-language must not pollute the
+        // primary payload, and transients stay as the single-language test
+        // already locked them down.
+        $row = $payload->getPayload()['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
+        self::assertSame('Alte Synagoge', $row['title']);
+        self::assertSame('Beispiel Beschreibung', $row['description']);
+        self::assertSame('11. Jh.', $row['start_of_construction']);
+
+        $translations = $payload->getTranslations();
+
+        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($translations));
+        self::assertSame(
+            ['https://thuecat.org/resources/165868194223-zmqf'],
+            array_keys($translations['tx_thuecat_tourist_attraction'])
+        );
+
+        $perLanguage = $translations['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
+        self::assertSame([1, 2], array_keys($perLanguage));
+
+        // English: title, description, start_of_construction.
+        self::assertSame(
+            ['title', 'description', 'start_of_construction'],
+            array_keys($perLanguage[1])
+        );
+        self::assertSame('Old Synagogue', $perLanguage[1]['title']);
+        self::assertSame('11th century', $perLanguage[1]['start_of_construction']);
+        self::assertStringStartsWith(
+            'The Old Synagogue is one of very few preserved medieval synagogues',
+            (string)$perLanguage[1]['description']
+        );
+
+        // French: title and description only — start_of_construction has no
+        // fr entry in the JSON-LD, so it must not appear in the bucket.
+        self::assertSame(
+            ['title', 'description'],
+            array_keys($perLanguage[2])
+        );
+        self::assertSame('La vieille synagogue', $perLanguage[2]['title']);
+        self::assertStringStartsWith(
+            'La vieille synagogue (datant des années 1100)',
+            (string)$perLanguage[2]['description']
+        );
+
+        // Fields that exist on the de row but have no @language entry for en
+        // or fr (slogan, available_languages, JSON blobs, …) must be absent
+        // from the per-language sub-array — not present as ''.
+        self::assertArrayNotHasKey('slogan', $perLanguage[1]);
+        self::assertArrayNotHasKey('available_languages', $perLanguage[1]);
+        self::assertArrayNotHasKey('opening_hours', $perLanguage[1]);
+        self::assertArrayNotHasKey('offers', $perLanguage[1]);
+        self::assertArrayNotHasKey('address', $perLanguage[1]);
+        self::assertArrayNotHasKey('slogan', $perLanguage[2]);
+        self::assertArrayNotHasKey('start_of_construction', $perLanguage[2]);
+
+        // Resolver-owned columns and bookkeeping must stay out of the bucket
+        // — DataHandler will set sys_language_uid / l18n_parent / pid /
+        // remote_id when consuming the array.
+        foreach ($perLanguage as $fields) {
+            self::assertArrayNotHasKey('sys_language_uid', $fields);
+            self::assertArrayNotHasKey('l18n_parent', $fields);
+            self::assertArrayNotHasKey('l10n_source', $fields);
+            self::assertArrayNotHasKey('pid', $fields);
+            self::assertArrayNotHasKey('remote_id', $fields);
+        }
+    }
+
+    #[Test]
+    public function translationsBucketStaysEmptyWhenNoAdditionalLanguagesGiven(): void
+    {
+        // Backward-compat: existing single-language callers (current Importer
+        // and the other ParserTest cases) pass no translation languages and
+        // must keep seeing an empty translations bucket.
+        $graph = $this->graphFromFixture('165868194223-zmqf.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, 'de');
+
+        self::assertSame([], $subject->getDataHandlerPayload()->getTranslations());
+    }
+
+    #[Test]
     public function skipsBlankNodes(): void
     {
         $graph = $this->graphFromFixture('018132452787-ngbe.json');

@@ -53,19 +53,37 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $address = '';
     protected string $url = '';
 
-    public function parse(array $node, string $language): void
+    public function parse(array $node, string $language, array $translationLanguages = []): void
     {
+        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
-        // Text fields (schema:name, schema:description, …) carry one entry per
-        // locale; pick the one matching the site's language so the default row
-        // holds the German (or configured) strings. Overlay rows for other
-        // languages are the later localisation pipeline's job.
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
-        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
-        $this->url = $this->extractStringValue($node['schema:url'] ?? null);
 
+        // Localised text fields (schema:name, schema:description, …): pick the
+        // entry matching the site's default language for the main row, then
+        // probe each translation language so per-locale values land in the
+        // translations bucket. petsAllowed is included here because in
+        // practice ThueCat publishes it as a localised string ("Tiere sind
+        // im Gebäude nicht gestattet …") even though the schema technically
+        // allows a typed boolean.
+        $localisedFields = [
+            'title' => 'schema:name',
+            'description' => 'schema:description',
+            'start_of_construction' => 'thuecat:startOfConstruction',
+            'pets_allowed' => 'schema:petsAllowed',
+        ];
+        foreach ($localisedFields as $field => $jsonldName) {
+            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+        }
+
+        foreach ($translationLanguages as $code => $sysLanguageUid) {
+            foreach ($localisedFields as $field => $jsonldName) {
+                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $this->recordTranslation($field, $value, $sysLanguageUid);
+            }
+        }
+
+        $this->url = $this->extractStringValue($node['schema:url'] ?? null);
         $this->slogan = $this->extractEnumList($node['schema:slogan'] ?? null);
-        $this->start_of_construction = $this->extractLocalisedValue($node['thuecat:startOfConstruction'] ?? null, $language);
         $this->sanitation = $this->extractEnumList($node['thuecat:sanitation'] ?? null);
         $this->other_service = $this->extractEnumList($node['thuecat:otherService'] ?? null);
         $this->museum_service = $this->extractEnumList($node['thuecat:museumService'] ?? null);
@@ -74,11 +92,11 @@ class TouristAttractionEntity extends AbstractEntity
         $this->payment_accepted = $this->extractEnumList($node['schema:paymentAccepted'] ?? null);
         $this->digital_offer = $this->extractEnumList($node['thuecat:digitalOffer'] ?? null);
         $this->photography = $this->extractEnumList($node['thuecat:photography'] ?? null);
-        // petsAllowed is either a localised string or a typed schema:Boolean;
-        // extractLocalisedValue falls back to the plain @value for the latter.
-        $this->pets_allowed = $this->extractLocalisedValue($node['schema:petsAllowed'] ?? null, $language);
-        $this->is_accessible_for_free = $this->extractLocalisedValue($node['schema:isAccessibleForFree'] ?? null, $language);
-        $this->public_access = $this->extractLocalisedValue($node['schema:publicAccess'] ?? null, $language);
+        // schema:isAccessibleForFree / schema:publicAccess are typed
+        // schema:Boolean values with no @language tag — extractStringValue
+        // pulls the bare @value without going through the localised path.
+        $this->is_accessible_for_free = $this->extractStringValue($node['schema:isAccessibleForFree'] ?? null);
+        $this->public_access = $this->extractStringValue($node['schema:publicAccess'] ?? null);
         $this->available_languages = $this->extractEnumList($node['schema:availableLanguage'] ?? null);
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 

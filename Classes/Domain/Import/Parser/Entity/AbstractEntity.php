@@ -51,6 +51,19 @@ abstract class AbstractEntity implements EntityInterface
      */
     protected array $transients = [];
 
+    /**
+     * Translated scalar values for fields that carry an `@language: <code>`
+     * entry in the JSON-LD. Keyed by sys_language_uid → field → translated
+     * string. The parser hands the entity a `[code => sysLanguageUid]` map
+     * during parse() and recordTranslation() fills this bucket.
+     *
+     * Reset at the start of each parse() so a reused entity instance does
+     * not leak translations between nodes.
+     *
+     * @var array<int, array<string, string>>
+     */
+    protected array $translations = [];
+
     public function getRemoteId(array $node): string
     {
         return (string)$node['@id'];
@@ -173,6 +186,23 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $this->transients[$key] = $ids;
+    }
+    /**
+     * Record a single translated field value into the entity's translations
+     * bucket, keyed by sys_language_uid → field name.
+     *
+     * Empty strings are dropped — they mean the JSON-LD has no `@language`
+     * entry for the requested locale, so there is no translation to store.
+     * That keeps the bucket presence-based: only fields that actually carry
+     * a translation appear, mirroring how toArray's array_filter drops blank
+     * default-language columns.
+     */
+    protected function recordTranslation(string $fieldName, string $value, int $sysLanguageUid): void
+    {
+        if ($value === '') {
+            return;
+        }
+        $this->translations[$sysLanguageUid][$fieldName] = $value;
     }
 
     /**
@@ -336,12 +366,24 @@ abstract class AbstractEntity implements EntityInterface
         return $this->transients;
     }
 
+    /** @return array<int, array<string, string>> */
+    public function getTranslations(): array
+    {
+        return $this->translations;
+    }
+
     /** @return array<string, string|int|float> */
     public function toArray(): array
     {
         $array = get_object_vars($this);
-        // table / transients / priority are framework metadata, not DB columns.
-        unset($array['table'], $array['transients'], $array['priority']);
+        // table / transients / priority / translations are framework
+        // metadata, not DB columns.
+        unset(
+            $array['table'],
+            $array['transients'],
+            $array['priority'],
+            $array['translations'],
+        );
 
         /** @var array<string, string|int|float> $filtered */
         $filtered = array_filter($array);

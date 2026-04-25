@@ -7,7 +7,6 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
@@ -36,12 +35,20 @@ class Importer
         }
 
         $apiKey = $configuration->getApiKey();
-        $language = $this->resolveDefaultLanguage($configuration->getStoragePid());
+        $translationLanguages = [];
+        $defaultLanguage = 'de'; // fallback
+        foreach ($this->siteFinder->getSiteByPageId($configuration->getStoragePid())->getLanguages() as $siteLanguage) {
+            if ($siteLanguage->getLanguageId() === 0) {
+                $defaultLanguage = $siteLanguage->getLocale()->getLanguageCode();
+            } else {
+                $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
+            }
+        }
         $accumulatedPayload = [];
         foreach ($urlProvider->getUrls() as $url) {
             $inputData = $this->fetchDataFromApi($url, $apiKey);
-            $this->parser->parse($inputData, $language);
-            $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $language, $configuration->getApiKey()));
+            $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
+            $dataHandlerPayload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), new ResolverContext($configuration->getStoragePid(), $defaultLanguage, $configuration->getApiKey()));
             $accumulatedPayload = $this->mergePayload($accumulatedPayload, $dataHandlerPayload->getPayload());
         }
 
@@ -80,26 +87,6 @@ class Importer
             $base[$table] = array_merge($base[$table] ?? [], $rows);
         }
         return $base;
-    }
-
-    /**
-     * Two-letter language code (e.g. "de") of the target site's default language,
-     * used by the Parser to pick the matching @language entry from the JSON-LD.
-     * Falls back to "de" when the storagePid is not attached to any site.
-     */
-    private function resolveDefaultLanguage(int $storagePid): string
-    {
-        if ($storagePid <= 0) {
-            return 'de';
-        }
-
-        try {
-            $site = $this->siteFinder->getSiteByPageId($storagePid);
-        } catch (SiteNotFoundException) {
-            return 'de';
-        }
-
-        return $site->getDefaultLanguage()->getLocale()->getLanguageCode();
     }
 
     private function getProviderForConfiguration(ImportConfiguration $configuration): ?UrlProvider

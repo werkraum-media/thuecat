@@ -35,6 +35,9 @@ class Parser
 
     private string $language = 'de';
 
+    /** @var array<string, int> */
+    private array $translationLanguages = [];
+
     public function __construct(
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
         #[AutowireLocator(services: 'import.entity')]
@@ -47,12 +50,18 @@ class Parser
      *                         multi-locale JSON-LD fields (defaults to German).
      *                         The ImporterCommand will derive this from the
      *                         target folder's site configuration.
+     * @param array<string, int> $translationLanguages Map of two-letter
+     *        language code → target sys_language_uid for every additional
+     *        site language. The Parser forwards this to each entity, which
+     *        records translated values into the payload's translations bucket
+     *        alongside the default-language row.
      */
-    public function parse(array $graph, string $language = 'de'): void
+    public function parse(array $graph, string $language = 'de', array $translationLanguages = []): void
     {
         // Fresh payload per parse() call so repeated imports don't accumulate state.
         $this->dataHandlerPayload = new DataHandlerPayload();
         $this->language = $language;
+        $this->translationLanguages = $translationLanguages;
 
         foreach ($graph as $node) {
             if (!is_array($node)) {
@@ -71,10 +80,12 @@ class Parser
      * Parse a graph and return its own payload without touching any payload
      * the caller may have built via prior parse() calls. Used by the resolver
      * when a transient reference triggers a follow-up fetch.
+     *
+     * @param array<string, int> $translationLanguages
      */
-    public function parseFresh(array $graph, string $language = 'de'): DataHandlerPayload
+    public function parseFresh(array $graph, string $language = 'de', array $translationLanguages = []): DataHandlerPayload
     {
-        $this->parse($graph, $language);
+        $this->parse($graph, $language, $translationLanguages);
         return $this->dataHandlerPayload;
     }
 
@@ -85,7 +96,7 @@ class Parser
             return;
         }
 
-        $entity->parse($node, $this->language);
+        $entity->parse($node, $this->language, $this->translationLanguages);
         $this->dataHandlerPayload->addEntity($entity);
     }
 

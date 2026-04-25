@@ -46,6 +46,18 @@ class DataHandlerPayload
      */
     private array $transients = [];
 
+    /**
+     * Translated scalar values, bound to the same (table, remote_id) shape
+     * as transients. Inner key is the target sys_language_uid; inner value
+     * is a partial row holding only the fields whose JSON-LD source carries
+     * a matching `@language` entry. The DataHandler will use each entry as
+     * the data part of an l18n_parent / l10n_source insert or update for
+     * that record.
+     *
+     * @var array<string, array<string, array<int, array<string, string>>>>
+     */
+    private array $translations = [];
+
     public function addEntity(EntityInterface $entity): void
     {
         /** @var string $table */
@@ -62,6 +74,11 @@ class DataHandlerPayload
         $entityTransients = $entity->getTransients();
         if ($entityTransients !== []) {
             $this->transients[$table][$remoteId] = $entityTransients;
+        }
+
+        $entityTranslations = $entity->getTranslations();
+        if ($entityTranslations !== []) {
+            $this->translations[$table][$remoteId] = $entityTranslations;
         }
     }
 
@@ -180,6 +197,15 @@ class DataHandlerPayload
                 $this->transients[$table][$remoteId] = $buckets;
             }
         }
+
+        foreach ($other->translations as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
+                if (isset($this->translations[$table][$remoteId])) {
+                    continue;
+                }
+                $this->translations[$table][$remoteId] = $perLanguage;
+            }
+        }
     }
 
     /**
@@ -196,5 +222,13 @@ class DataHandlerPayload
     public function getTransients(): array
     {
         return $this->transients;
+    }
+
+    /**
+     * @return array<string, array<string, array<int, array<string, string>>>>
+     */
+    public function getTranslations(): array
+    {
+        return $this->translations;
     }
 }
