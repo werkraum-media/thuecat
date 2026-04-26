@@ -57,7 +57,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'title' => [
                 'label' => $languagePath . '.title',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'size' => 20,
@@ -67,7 +67,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'description' => [
                 'label' => $languagePath . '.description',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'text',
                     'readOnly' => true,
@@ -75,7 +75,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'sanitation' => [
                 'label' => $languagePath . '.sanitation',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
@@ -84,7 +84,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'other_service' => [
                 'label' => $languagePath . '.other_service',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
@@ -93,7 +93,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'traffic_infrastructure' => [
                 'label' => $languagePath . '.traffic_infrastructure',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
@@ -102,7 +102,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'payment_accepted' => [
                 'label' => $languagePath . '.payment_accepted',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
@@ -111,7 +111,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'distance_to_public_transport' => [
                 'label' => $languagePath . '.distance_to_public_transport',
-                'l10n_mode' => 'prefixLangTitle',
+                'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,

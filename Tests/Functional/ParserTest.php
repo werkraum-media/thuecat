@@ -415,7 +415,23 @@ final class ParserTest extends AbstractImportTestCase
 
         // English: title, description, start_of_construction.
         self::assertSame(
-            ['title', 'description', 'start_of_construction'],
+            [
+                'title',
+                'description',
+                'start_of_construction',
+                'slogan',
+                'sanitation',
+                'other_service',
+                'museum_service',
+                'architectural_style',
+                'traffic_infrastructure',
+                'payment_accepted',
+                'digital_offer',
+                'photography',
+                'available_languages',
+                'distance_to_public_transport',
+                'offers',
+            ],
             array_keys($perLanguage[1])
         );
         self::assertSame('Old Synagogue', $perLanguage[1]['title']);
@@ -428,7 +444,18 @@ final class ParserTest extends AbstractImportTestCase
         // French: title and description only — start_of_construction has no
         // fr entry in the JSON-LD, so it must not appear in the bucket.
         self::assertSame(
-            ['title', 'description'],
+            ['title', 'description','slogan',
+                'sanitation',
+                'other_service',
+                'museum_service',
+                'architectural_style',
+                'traffic_infrastructure',
+                'payment_accepted',
+                'digital_offer',
+                'photography',
+                'available_languages',
+                'distance_to_public_transport',
+                'offers',],
             array_keys($perLanguage[2])
         );
         self::assertSame('La vieille synagogue', $perLanguage[2]['title']);
@@ -436,17 +463,6 @@ final class ParserTest extends AbstractImportTestCase
             'La vieille synagogue (datant des années 1100)',
             (string)$perLanguage[2]['description']
         );
-
-        // Fields that exist on the de row but have no @language entry for en
-        // or fr (slogan, available_languages, JSON blobs, …) must be absent
-        // from the per-language sub-array — not present as ''.
-        self::assertArrayNotHasKey('slogan', $perLanguage[1]);
-        self::assertArrayNotHasKey('available_languages', $perLanguage[1]);
-        self::assertArrayNotHasKey('opening_hours', $perLanguage[1]);
-        self::assertArrayNotHasKey('offers', $perLanguage[1]);
-        self::assertArrayNotHasKey('address', $perLanguage[1]);
-        self::assertArrayNotHasKey('slogan', $perLanguage[2]);
-        self::assertArrayNotHasKey('start_of_construction', $perLanguage[2]);
 
         // Resolver-owned columns and bookkeeping must stay out of the bucket
         // — DataHandler will set sys_language_uid / l18n_parent / pid /

@@ -65,44 +65,85 @@ class TouristAttractionEntity extends AbstractEntity
         // practice ThueCat publishes it as a localised string ("Tiere sind
         // im Gebäude nicht gestattet …") even though the schema technically
         // allows a typed boolean.
+        // Localised text fields (schema:name, schema:description, …): pick the
+        // entry matching the site's default language for the main row, then
+        // probe each translation language so per-locale values land in the
+        // translations bucket. petsAllowed is included here because in
+        // practice ThueCat publishes it as a localised string ("Tiere sind
+        // im Gebäude nicht gestattet …") even though the schema technically
+        // allows a typed boolean.
+        //
+        // The "concatenated" set treats URI-list values (slogan, sanitation,
+        // paymentAccepted, …) the same way: extract once per language and
+        // record translations alongside the main row, even though current
+        // ThueCat fixtures emit lang-less values that resolve identically
+        // across locales.
         $localisedFields = [
             'title' => 'schema:name',
             'description' => 'schema:description',
             'start_of_construction' => 'thuecat:startOfConstruction',
             'pets_allowed' => 'schema:petsAllowed',
         ];
+        $concatenatedFields = [
+            'slogan' => 'schema:slogan',
+            'sanitation' => 'thuecat:sanitation',
+            'other_service' => 'thuecat:otherService',
+            'museum_service' => 'thuecat:museumService',
+            'architectural_style' => 'thuecat:architecturalStyle',
+            'traffic_infrastructure' => 'thuecat:trafficInfrastructure',
+            'payment_accepted' => 'schema:paymentAccepted',
+            'digital_offer' => 'thuecat:digitalOffer',
+            'photography' => 'thuecat:photography',
+            'available_languages' => 'schema:availableLanguage',
+        ];
         foreach ($localisedFields as $field => $jsonldName) {
             $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
         }
+        foreach ($concatenatedFields as $field => $jsonldName) {
+            $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
+        }
+        $this->distance_to_public_transport = $this->buildDistanceToPublicTransport(
+            $node['thuecat:distanceToPublicTransport'] ?? null,
+            $language
+        );
+        $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
+        // Two-pass: localised fields decide whether a language is "present"
+        // (a language with no @language-tagged content does not get a row).
+        // Only languages that picked up at least one localised field then
+        // receive the lang-less concatenated/derived fields, so a site with
+        // fr enabled but no fr content in the JSON-LD does not spawn an
+        // empty fr translation row driven purely by URI-list values.
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
                 $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+            if (!isset($this->translations[$sysLanguageUid])) {
+                continue;
+            }
+            foreach ($concatenatedFields as $field => $jsonldName) {
+                $value = $this->extractConcatenatedString($node[$jsonldName] ?? null, $code);
+                $this->recordTranslation($field, $value, $sysLanguageUid);
+            }
+            $distance = $this->buildDistanceToPublicTransport(
+                $node['thuecat:distanceToPublicTransport'] ?? null,
+                $code
+            );
+            $this->recordTranslation('distance_to_public_transport', $distance, $sysLanguageUid);
+            $offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $code);
+            $this->recordTranslation('offers', $offers, $sysLanguageUid);
         }
 
         $this->url = $this->extractStringValue($node['schema:url'] ?? null);
-        $this->slogan = $this->extractEnumList($node['schema:slogan'] ?? null);
-        $this->sanitation = $this->extractEnumList($node['thuecat:sanitation'] ?? null);
-        $this->other_service = $this->extractEnumList($node['thuecat:otherService'] ?? null);
-        $this->museum_service = $this->extractEnumList($node['thuecat:museumService'] ?? null);
-        $this->architectural_style = $this->extractEnumList($node['thuecat:architecturalStyle'] ?? null);
-        $this->traffic_infrastructure = $this->extractEnumList($node['thuecat:trafficInfrastructure'] ?? null);
-        $this->payment_accepted = $this->extractEnumList($node['schema:paymentAccepted'] ?? null);
-        $this->digital_offer = $this->extractEnumList($node['thuecat:digitalOffer'] ?? null);
-        $this->photography = $this->extractEnumList($node['thuecat:photography'] ?? null);
         // schema:isAccessibleForFree / schema:publicAccess are typed
         // schema:Boolean values with no @language tag — extractStringValue
         // pulls the bare @value without going through the localised path.
         $this->is_accessible_for_free = $this->extractStringValue($node['schema:isAccessibleForFree'] ?? null);
         $this->public_access = $this->extractStringValue($node['schema:publicAccess'] ?? null);
-        $this->available_languages = $this->extractEnumList($node['schema:availableLanguage'] ?? null);
-        $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
         $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
         $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
-        $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in

@@ -58,26 +58,51 @@ class ParkingFacilityEntity extends AbstractEntity
             'title' => 'schema:name',
             'description' => 'schema:description',
         ];
+        $concatenatedFields = [
+            'sanitation' => 'thuecat:sanitation',
+            'other_service' => 'thuecat:otherService',
+            'traffic_infrastructure' => 'thuecat:trafficInfrastructure',
+            'payment_accepted' => 'schema:paymentAccepted',
+        ];
         foreach ($localisedFields as $field => $jsonldName) {
             $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
         }
+        foreach ($concatenatedFields as $field => $jsonldName) {
+            $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
+        }
+        $this->distance_to_public_transport = $this->buildDistanceToPublicTransport(
+            $node['thuecat:distanceToPublicTransport'] ?? null,
+            $language
+        );
+        $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
+        // Two-pass: only languages that picked up a localised field receive
+        // the lang-less concatenated/derived fields. A site language with
+        // no @language-tagged content stays out of the bucket so it does
+        // not spawn an empty translation row driven purely by URI lists.
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
                 $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+            if (!isset($this->translations[$sysLanguageUid])) {
+                continue;
+            }
+            foreach ($concatenatedFields as $field => $jsonldName) {
+                $value = $this->extractConcatenatedString($node[$jsonldName] ?? null, $code);
+                $this->recordTranslation($field, $value, $sysLanguageUid);
+            }
+            $distance = $this->buildDistanceToPublicTransport(
+                $node['thuecat:distanceToPublicTransport'] ?? null,
+                $code
+            );
+            $this->recordTranslation('distance_to_public_transport', $distance, $sysLanguageUid);
+            $offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $code);
+            $this->recordTranslation('offers', $offers, $sysLanguageUid);
         }
-
-        $this->sanitation = $this->extractEnumList($node['thuecat:sanitation'] ?? null);
-        $this->other_service = $this->extractEnumList($node['thuecat:otherService'] ?? null);
-        $this->traffic_infrastructure = $this->extractEnumList($node['thuecat:trafficInfrastructure'] ?? null);
-        $this->payment_accepted = $this->extractEnumList($node['schema:paymentAccepted'] ?? null);
-        $this->distance_to_public_transport = $this->buildDistanceToPublicTransport($node['thuecat:distanceToPublicTransport'] ?? null);
 
         $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
         $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
-        $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
         if (!empty($node['schema:address'])) {
             $address = new AddressEntity();

@@ -91,13 +91,19 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * Normalise a single or multi-valued enum field into a flat list of stripped
-     * member names. Accepts the three JSON-LD shapes — single typed {@value},
-     * bare string, or list of either.
+     * Normalise a single or multi-valued JSON-LD field into a flat list of
+     * stripped member names. Accepts the three JSON-LD shapes — single typed
+     * {@value}, bare string, or list of either.
+     *
+     * Language-aware: when an item carries an `@language` tag, only entries
+     * matching $language are kept. Items without `@language` (the typical
+     * shape for thuecat: namespaced URI values) are accepted regardless so
+     * the same set lands in every per-language pass. Callers that want the
+     * default-language pass should pass the site's default language code.
      *
      * @return list<string>
      */
-    protected function extractEnumMembers(mixed $value): array
+    protected function extractConcatenatedMembers(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];
@@ -106,19 +112,34 @@ abstract class AbstractEntity implements EntityInterface
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
         $names = [];
         foreach ($items as $item) {
-            $raw = is_array($item) ? ($item['@value'] ?? '') : (string)$item;
+            if (is_array($item)) {
+                if (isset($item['@language']) && $item['@language'] !== $language) {
+                    continue;
+                }
+                $raw = (string)($item['@value'] ?? '');
+            } else {
+                $raw = (string)$item;
+            }
             if ($raw === '') {
                 continue;
             }
-            $names[] = $this->stripNamespacePrefix((string)$raw);
+            $names[] = $this->stripNamespacePrefix($raw);
         }
 
         return $names;
     }
 
-    protected function extractEnumList(mixed $value): string
+    /**
+     * Comma-joined variant of extractConcatenatedMembers — the canonical
+     * shape stored in scalar columns that hold multi-valued URI lists
+     * (slogan, sanitation, paymentAccepted, …). Treated identically to a
+     * localised string: callers extract once per language and either feed
+     * the default-language value into the row or recordTranslation() it
+     * onto a per-language entry.
+     */
+    protected function extractConcatenatedString(mixed $value, string $language): string
     {
-        return implode(',', $this->extractEnumMembers($value));
+        return implode(',', $this->extractConcatenatedMembers($value, $language));
     }
 
     /**
@@ -342,7 +363,7 @@ abstract class AbstractEntity implements EntityInterface
      * The legacy importer colon-separates every means rather than comma-joining
      * them (see Assertions fixture "350:MTR:Streetcar:CityBus").
      */
-    protected function buildDistanceToPublicTransport(mixed $node): string
+    protected function buildDistanceToPublicTransport(mixed $node, string $language): string
     {
         if (!is_array($node)) {
             return '';
@@ -353,8 +374,8 @@ abstract class AbstractEntity implements EntityInterface
             return '';
         }
 
-        $unit = $this->extractEnumList($node['schema:unitCode'] ?? null);
-        $means = $this->extractEnumMembers($node['thuecat:meansOfTransport'] ?? null);
+        $unit = $this->extractConcatenatedString($node['schema:unitCode'] ?? null, $language);
+        $means = $this->extractConcatenatedMembers($node['thuecat:meansOfTransport'] ?? null, $language);
 
         $parts = array_merge([$distance, $unit], $means);
 

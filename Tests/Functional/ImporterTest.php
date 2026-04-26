@@ -85,8 +85,6 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTouristAttractionWithSloganArray(): void
     {
-        self::markTestSkipped('Pending: Importer does not iterate over all configured site languages. Assertion expects two attraction rows (de uid=1, en uid=2); current pipeline only emits the default-language row.');
-
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSloganArray.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -99,8 +97,6 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTouristAttractionWithMedia(): void
     {
-        self::markTestSkipped('Pending: Importer does not iterate over all configured site languages. Assertion expects two attraction rows (de uid=1, en uid=2) with the same media blob; current pipeline only emits the default-language row.');
-
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-media.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
