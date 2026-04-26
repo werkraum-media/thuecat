@@ -71,9 +71,16 @@ class Resolver
         // remote_id → current outer key (uid string or NEW… placeholder).
         // Lives on the context so it survives across Importer rounds; the
         // Importer promotes NEW… → uid between rounds via promoteNewKeys().
-        $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $context->remoteIdToKey);
+        // The status maps on the context (defaultStatus, translationStatus)
+        // ensure visit-once-per-importer-run: any remote_id already
+        // 'updated' from an earlier root or round is short-circuited here
+        // and in drainTransients without re-querying the DB or re-fetching.
+        // Roots (rows the Importer staged before calling resolve) enter at
+        // depth 0; rows merged later via fetchAndMerge are tagged with the
+        // owner's depth + 1 inside that helper.
+        $this->rekeyRowsAndInjectPid($payload, $context, 0);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
-        $this->drainTranslationsAgainstExistingRows($payload, $context->remoteIdToKey);
+        $this->drainTranslationsAgainstExistingRows($payload, $context);
 
         return $payload;
     }
@@ -86,15 +93,17 @@ class Resolver
      * and drop the bucket entry. Languages with no matching translation row
      * stay in the bucket for scenarios 2/3 to handle.
      *
-     * @param array<string, string> $remoteIdToKey
+     * Each (remote_id, sys_language_uid) pair is staged at most once per
+     * importer run: the translation status map on the context short-circuits
+     * any later sighting via isTranslationUpdated().
      */
     private function drainTranslationsAgainstExistingRows(
         DataHandlerPayload $payload,
-        array $remoteIdToKey
+        ResolverContext $context
     ): void {
         foreach ($payload->getTranslations() as $table => $rowsByRemoteId) {
             foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
-                $ownerKey = $remoteIdToKey[$remoteId] ?? null;
+                $ownerKey = $context->remoteIdToKey[$remoteId] ?? null;
                 if ($ownerKey === null || !ctype_digit($ownerKey)) {
                     // Parent row not yet a uid in this import's map: NEW…
                     // (scenario 3) or never-seen. promoteNewKeys + the
@@ -106,6 +115,14 @@ class Resolver
                 $existing = $this->findTranslationUidsByParent($table, (int)$ownerKey);
 
                 foreach ($perLanguage as $sysLanguageUid => $fields) {
+                    if ($context->isTranslationUpdated($remoteId, $sysLanguageUid)) {
+                        // Already staged for this (remote_id, language)
+                        // earlier in the run. Drop the bucket entry so the
+                        // resolver does not loop on it.
+                        $payload->removeTranslation($table, $remoteId, $sysLanguageUid);
+                        continue;
+                    }
+
                     $translationUid = $existing[$sysLanguageUid] ?? null;
                     if ($translationUid === null) {
                         // Scenario 2: parent uid known, translation row
@@ -120,11 +137,13 @@ class Resolver
                             'localize',
                             $sysLanguageUid
                         );
+                        $context->markTranslationCreated($remoteId, $sysLanguageUid);
                         continue;
                     }
 
                     $payload->addTranslationRow($table, (string)$translationUid, $fields);
                     $payload->removeTranslation($table, $remoteId, $sysLanguageUid);
+                    $context->markTranslationUpdated($remoteId, $sysLanguageUid);
                 }
             }
         }
@@ -167,13 +186,10 @@ class Resolver
         return $result;
     }
 
-    /**
-     * @param array<string, string> $remoteIdToKey
-     */
     private function rekeyRowsAndInjectPid(
         DataHandlerPayload $payload,
-        int $storagePid,
-        array &$remoteIdToKey
+        ResolverContext $context,
+        int $depth
     ): void {
         foreach ($payload->getDataMap() as $table => $rows) {
             foreach (array_keys($rows) as $outerKey) {
@@ -186,11 +202,22 @@ class Resolver
                 }
 
                 $remoteId = $outerKey;
+
+                // Already staged in an earlier root or round of this
+                // importer run: drop the row (and its transients +
+                // translations) so DataHandler is not asked to update the
+                // same record twice. The cached uid stays in
+                // $remoteIdToKey for downstream relation writes.
+                if ($context->isUpdated($remoteId)) {
+                    $payload->dropRow($table, $remoteId);
+                    continue;
+                }
+
                 // If a previous round already minted a key for this
                 // remote_id (NEW… or uid string), reuse it — otherwise a
                 // fresh NEW… would orphan the prior datamap row from its
                 // pending DataHandler substitution / known uid.
-                $existingKey = $remoteIdToKey[$remoteId] ?? null;
+                $existingKey = $context->remoteIdToKey[$remoteId] ?? null;
                 if ($existingKey !== null) {
                     $newKey = $existingKey;
                 } else {
@@ -199,8 +226,23 @@ class Resolver
                 }
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
-                $payload->setField($table, $newKey, 'pid', $storagePid);
-                $remoteIdToKey[$remoteId] = $newKey;
+                $payload->setField($table, $newKey, 'pid', $context->storagePid);
+                $context->remoteIdToKey[$remoteId] = $newKey;
+                $context->remoteIdToTable[$remoteId] = $table;
+                // First sighting wins — never deepen an already-recorded
+                // depth. A root that also appears as a transient elsewhere
+                // stays at depth 0; a depth-1 entity sighted again as a
+                // transient on another depth-1 row stays at 1, not 2.
+                if (!isset($context->depthByRemoteId[$remoteId])) {
+                    $context->depthByRemoteId[$remoteId] = $depth;
+                }
+
+                // Row is staged into the dataMap this run — DataHandler
+                // will see it. Flip to 'updated' so any later sighting of
+                // this remote_id (as a root in another URL, or as a
+                // relation transient) short-circuits to "use the cached
+                // uid, do nothing else".
+                $context->markUpdated($remoteId);
             }
         }
     }
@@ -243,7 +285,25 @@ class Resolver
                             continue;
                         }
 
+                        // Media + accessibility buckets are scalar blobs
+                        // shaped from a fetched graph, but they still hit
+                        // the API. At depth-cap, drop the bucket so we
+                        // don't fan out further; the owning row keeps
+                        // whatever the parser already wrote.
+                        $atCap = (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH);
+
                         if ($bucket === 'media') {
+                            if ($atCap) {
+                                foreach ($references as $entry) {
+                                    if (is_array($entry) && isset($entry['id'])) {
+                                        $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
+                                    } elseif (is_string($entry)) {
+                                        $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry);
+                                    }
+                                }
+                                $progress = true;
+                                continue;
+                            }
                             $this->shapeMediaBlob(
                                 $payload,
                                 $context,
@@ -257,6 +317,20 @@ class Resolver
                         }
 
                         if ($bucket === 'accessibilitySpecification') {
+                            if ($atCap) {
+                                foreach ($references as $reference) {
+                                    if (is_string($reference)) {
+                                        $payload->removeTransient(
+                                            $ownerTable,
+                                            $ownerRemoteId,
+                                            'accessibilitySpecification',
+                                            $reference
+                                        );
+                                    }
+                                }
+                                $progress = true;
+                                continue;
+                            }
                             $this->shapeAccessibilityBlob(
                                 $payload,
                                 $context,
@@ -321,49 +395,94 @@ class Resolver
                                 );
                             }
 
+                            // Hot path: this remote_id was fully resolved in
+                            // an earlier root or round of this importer run.
+                            // Wire the relation only if the cached entity
+                            // landed in the bucket's expected target table —
+                            // the upstream graph mixes types under shared
+                            // bucket names, and a region uid does not belong
+                            // in a town field. Drop the bucket entry either
+                            // way; the entity itself was already imported.
+                            if ($context->isUpdated($reference)) {
+                                if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
+                                    $payload->setRelationField(
+                                        $ownerTable,
+                                        $ownerKey,
+                                        $targetField,
+                                        $remoteIdToKey[$reference]
+                                    );
+                                }
+                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+                                $progress = true;
+                                continue;
+                            }
+
                             $uid = $this->findUidByRemoteId($targetTable, $reference);
                             if ($uid > 0) {
                                 $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $remoteIdToKey[$reference] = (string)$uid;
+                                $context->remoteIdToTable[$reference] = $targetTable;
+                                // Found in DB but not refreshed this run —
+                                // mark 'found'. If a later root carries the
+                                // same remote_id as a parsed row, the
+                                // rekey-and-inject pass will see it is not
+                                // yet 'updated' and will stage the refresh.
+                                $context->markFound($reference);
                                 $progress = true;
                                 continue;
                             }
 
                             // Unknown remote_id — already rekeyed as a NEW
                             // placeholder on a previous pass means the owning
-                            // row is in the payload; wire the relation up.
+                            // row is in the payload. Same table-match gate as
+                            // the isUpdated branch above.
                             if (isset($remoteIdToKey[$reference])) {
-                                $payload->setRelationField(
-                                    $ownerTable,
-                                    $ownerKey,
-                                    $targetField,
-                                    $remoteIdToKey[$reference]
-                                );
+                                if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
+                                    $payload->setRelationField(
+                                        $ownerTable,
+                                        $ownerKey,
+                                        $targetField,
+                                        $remoteIdToKey[$reference]
+                                    );
+                                }
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
                             }
 
                             // Neither in DB nor in the payload — fetch from
-                            // ThueCat and decide. The fetched node may not
-                            // shape into $targetTable at all (containedInPlace
-                            // notoriously mixes towns with regions and oatour
-                            // entries — only town-typed nodes belong in the
-                            // tx_thuecat_town bucket). When the parsed payload
-                            // carries no row in $targetTable for this @id, we
-                            // silently drop the bucket entry instead of
-                            // merging unrelated entities into the datamap.
-                            $merged = $this->fetchAndMaybeMerge(
+                            // ThueCat and merge whatever shape comes back.
+                            // The fetched node may land in a different table
+                            // (containedInPlace mixing towns with regions /
+                            // oatour entries); the entity is still a valid
+                            // import on its own. fetchAndMerge wires the
+                            // relation only when the merged payload contains
+                            // a row in $targetTable for this @id.
+                            // Depth cap: if this row is already at the
+                            // outermost permitted depth, drop the bucket
+                            // entry without fetching. The owning row still
+                            // persists with whatever scalar fields the
+                            // parser produced — we just don't pursue its
+                            // outbound references any further.
+                            if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
+                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+                                $progress = true;
+                                continue;
+                            }
+
+                            $this->fetchAndMerge(
                                 $payload,
                                 $context,
-                                $reference,
+                                $ownerTable,
+                                $ownerKey,
+                                $ownerRemoteId,
                                 $targetTable,
+                                $targetField,
+                                $reference,
                                 $remoteIdToKey
                             );
-                            if (!$merged) {
-                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
-                            }
+                            $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                             $progress = true;
                         }
                     }
@@ -381,37 +500,58 @@ class Resolver
     }
 
     /**
-     * Fetch + parse a transient reference into a throwaway payload, then
-     * merge into the real payload only if the fetched node actually shapes
-     * into the bucket's expected target table. Returns true on merge, false
-     * when the reference is type-incompatible and the caller should drop
-     * the bucket entry without further work.
+     * Fetch + parse a transient reference and merge whatever the parser
+     * produced into the real payload. The fetched node may or may not shape
+     * into the bucket's expected target table — the upstream graph mixes
+     * types under shared bucket names (containedInPlace pointing at regions
+     * or oatour entries instead of towns, etc.). Either way the entity is a
+     * valid import on its own; we simply only wire the parent's relation
+     * field when the merged payload actually contains a row in
+     * $targetTable for $reference.
      *
      * @param array<string, string> $remoteIdToKey
      */
-    private function fetchAndMaybeMerge(
+    private function fetchAndMerge(
         DataHandlerPayload $payload,
         ResolverContext $context,
-        string $reference,
+        string $ownerTable,
+        string $ownerKey,
+        string $ownerRemoteId,
         string $targetTable,
+        string $targetField,
+        string $reference,
         array &$remoteIdToKey
-    ): bool {
+    ): void {
         $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
         $graph = $response['@graph'] ?? [];
         if (!is_array($graph)) {
             $graph = [];
         }
 
-        $fetchedPayload = $this->parser->parseFresh($graph, $context->language);
-        if (!$fetchedPayload->hasRow($targetTable, $reference)) {
-            return false;
-        }
-
+        $fetchedPayload = $this->parser->parseFresh(
+            $graph,
+            $context->language,
+            $context->translationLanguages
+        );
         $payload->mergeFrom($fetchedPayload);
 
-        // Bring the newly merged rows into the rekey-map and inject pid.
-        $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $remoteIdToKey);
-        return true;
+        // Bring the newly merged rows into the rekey-map, inject pid, and
+        // mark them 'updated' so the rest of this run treats the fetched
+        // entity as fully resolved. This also records remoteIdToTable for
+        // the just-merged reference, which the table-match gate below uses.
+        // Depth = owner's depth + 1; the drain loop will refuse to fetch
+        // any transients on rows at MAX_FETCH_DEPTH.
+        $childDepth = ($context->depthByRemoteId[$ownerRemoteId] ?? 0) + 1;
+        $this->rekeyRowsAndInjectPid($payload, $context, $childDepth);
+
+        if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
+            $payload->setRelationField(
+                $ownerTable,
+                $ownerKey,
+                $targetField,
+                $remoteIdToKey[$reference]
+            );
+        }
     }
 
     /**

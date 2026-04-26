@@ -46,7 +46,12 @@ class Importer
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
-        $context = new ResolverContext($configuration->getStoragePid(), $defaultLanguage, $configuration->getApiKey());
+        $context = new ResolverContext(
+            $configuration->getStoragePid(),
+            $defaultLanguage,
+            $configuration->getApiKey(),
+            $translationLanguages,
+        );
         $accumulatedPayload = new DataHandlerPayload();
         foreach ($urlProvider->getUrls() as $url) {
             $inputData = $this->fetchDataFromApi($url, $apiKey);
@@ -65,11 +70,27 @@ class Importer
         }
 
         $iterations = 0;
-        $maxIterations = 3;
+        // DataHandler's cmdMap is keyed [table][uid][command] = value, so
+        // two localize commands on the same uid (one per target language)
+        // collapse to a single entry — only the last survives. Each
+        // additional language therefore needs its own iteration: round N
+        // stages localize for one outstanding language, round N+1 fills
+        // the just-created translation row's fields. Budget: iter 0 for
+        // defaults, 2 iters per translation language, plus one trailing
+        // iter where the loop notices nothing is left and exits.
+        $maxIterations = count($translationLanguages) * 2 + 2;
         // DataHandler carries state across calls (substNEWwithIDs, datamap,
         // cmdmap, errors, …); reusing one instance across passes mixes state.
         // Each pass gets a fresh instance and the substNEWwithIDs maps get
         // merged so the logger sees every NEW→uid mapping the loop produced.
+        //
+        // The loop survives because translation scenario 2 needs two passes:
+        // pass 1 stages a localize cmdMap (creating the translation row),
+        // pass 2 picks up the new translation uid and writes its translated
+        // fields. Default-language rows and already-resolved transients are
+        // idempotent across passes via ResolverContext::defaultStatus and
+        // translationStatus — re-resolving a drained payload short-circuits
+        // instead of re-querying or re-fetching.
         $substNEWwithIDs = [];
         while ($accumulatedPayload->getDataMap() !== [] || $accumulatedPayload->getCmdMap() !== []) {
             if ($iterations >= $maxIterations) {

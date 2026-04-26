@@ -110,6 +110,38 @@ class DataHandlerPayload
     }
 
     /**
+     * Drop a row, its transients, and its translations from the payload. Used
+     * by the resolver when an entity's remote_id has already been staged in
+     * an earlier pass of this importer run (status = updated): re-staging
+     * would either duplicate the dataMap entry or schedule a redundant
+     * DataHandler update for a row already on its way in. The
+     * defaultLanguageKeys entry is dropped too so the logger snapshot only
+     * counts rows that actually go through DataHandler this run.
+     */
+    public function dropRow(string $table, string $key): void
+    {
+        unset(
+            $this->dataMap[$table][$key],
+            $this->transients[$table][$key],
+            $this->translations[$table][$key],
+            $this->defaultLanguageKeys[$table][$key]
+        );
+
+        if (($this->dataMap[$table] ?? []) === []) {
+            unset($this->dataMap[$table]);
+        }
+        if (($this->transients[$table] ?? []) === []) {
+            unset($this->transients[$table]);
+        }
+        if (($this->translations[$table] ?? []) === []) {
+            unset($this->translations[$table]);
+        }
+        if (($this->defaultLanguageKeys[$table] ?? []) === []) {
+            unset($this->defaultLanguageKeys[$table]);
+        }
+    }
+
+    /**
      * Swap the outer key of an already-registered row. Used by the resolver
      * to replace the remote-id URL with either an existing uid or a
      * StringUtility::getUniqueId('NEW') placeholder, turning the payload
@@ -128,17 +160,6 @@ class DataHandlerPayload
             unset($this->defaultLanguageKeys[$table][$oldKey]);
             $this->defaultLanguageKeys[$table][$newKey] = true;
         }
-    }
-
-    /**
-     * True if the payload carries a row for the given table keyed by the
-     * given (remote-id or rekeyed) outer key. Used by the resolver after a
-     * follow-up fetch to decide whether the fetched response actually shapes
-     * into the bucket's expected target table.
-     */
-    public function hasRow(string $table, string $key): bool
-    {
-        return isset($this->dataMap[$table][$key]);
     }
 
     /**

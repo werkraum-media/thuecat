@@ -124,6 +124,35 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
     }
 
+    /**
+     * Visit-once contract: two attraction roots in one configuration both
+     * reference the same managedBy organization. The org JSON appears in
+     * the Guzzle queue exactly once. If the resolver re-fetches the org
+     * for the second root the queue runs dry and the test fails — which
+     * is the only way the resolve-once short-circuit
+     * (ResolverContext::isUpdated) is exercised by the suite.
+     */
+    #[Test]
+    public function importsTwoAttractionsSharingOrgFetchesOrgOnce(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
+        // Importer flow is per-URL parse+resolve, not "all roots first then
+        // drain": URL 1 fetches single-slogan, then its resolver drains the
+        // managedBy transient (org). URL 2 fetches slogan-array; the same
+        // managedBy transient short-circuits via ResolverContext::isUpdated
+        // and does NOT fetch again — that's the visit-once contract this
+        // test enforces. Three responses total; the org being absent from
+        // the queue at URL 2's resolve time is what makes the assertion
+        // bite if isUpdated ever regresses.
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTwoAttractionsSharingOrg.php');
+    }
+
     private function importConfiguration(int $uid): void
     {
         $this->workaroundExtbaseConfiguration();
