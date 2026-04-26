@@ -89,6 +89,10 @@ class Importer
             $substNEWwithIDs = $substNEWwithIDs + $passSubst;
             $accumulatedPayload->clearDataMap();
             $accumulatedPayload->clearCmdMap();
+            // Rewrite NEW… entries in the resolver's remote_id→key map to
+            // the uids DataHandler just assigned, so the next round wires
+            // FKs against real uids instead of stale placeholders.
+            $context->promoteNewKeys($passSubst);
             $this->resolver->resolve($accumulatedPayload, $context);
             $iterations++;
         }

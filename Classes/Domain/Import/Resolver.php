@@ -69,13 +69,11 @@ class Resolver
     public function resolve(DataHandlerPayload $payload, ResolverContext $context): DataHandlerPayload
     {
         // remote_id → current outer key (uid string or NEW… placeholder).
-        // Populated as rows get rekeyed; used to locate the owning row for
-        // a transient write without re-probing the DB.
-        $remoteIdToKey = [];
-
-        $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $remoteIdToKey);
-        $this->drainTransients($payload, $context, $remoteIdToKey);
-        $this->drainTranslationsAgainstExistingRows($payload, $remoteIdToKey);
+        // Lives on the context so it survives across Importer rounds; the
+        // Importer promotes NEW… → uid between rounds via promoteNewKeys().
+        $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $context->remoteIdToKey);
+        $this->drainTransients($payload, $context, $context->remoteIdToKey);
+        $this->drainTranslationsAgainstExistingRows($payload, $context->remoteIdToKey);
 
         return $payload;
     }
@@ -97,18 +95,11 @@ class Resolver
         foreach ($payload->getTranslations() as $table => $rowsByRemoteId) {
             foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
                 $ownerKey = $remoteIdToKey[$remoteId] ?? null;
-                if ($ownerKey === null) {
-                    // Second-pass entry: datamap got cleared between Importer
-                    // rounds, so $remoteIdToKey is empty. Resolve the parent
-                    // uid directly from the DB (default-language row only —
-                    // see findUidByRemoteId).
-                    $uid = $this->findUidByRemoteId($table, $remoteId);
-                    if ($uid > 0) {
-                        $ownerKey = (string)$uid;
-                    }
-                }
                 if ($ownerKey === null || !ctype_digit($ownerKey)) {
-                    // Parent row is NEW… or still missing: scenario 3.
+                    // Parent row not yet a uid in this import's map: NEW…
+                    // (scenario 3) or never-seen. promoteNewKeys + the
+                    // initial rekey ensure that if the parent belongs to
+                    // this import, $ownerKey is a uid string by round 2.
                     continue;
                 }
 
@@ -195,8 +186,17 @@ class Resolver
                 }
 
                 $remoteId = $outerKey;
-                $uid = $this->findUidByRemoteId($table, $remoteId);
-                $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
+                // If a previous round already minted a key for this
+                // remote_id (NEW… or uid string), reuse it — otherwise a
+                // fresh NEW… would orphan the prior datamap row from its
+                // pending DataHandler substitution / known uid.
+                $existingKey = $remoteIdToKey[$remoteId] ?? null;
+                if ($existingKey !== null) {
+                    $newKey = $existingKey;
+                } else {
+                    $uid = $this->findUidByRemoteId($table, $remoteId);
+                    $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
+                }
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
                 $payload->setField($table, $newKey, 'pid', $storagePid);

@@ -608,20 +608,18 @@ final class ResolverTest extends AbstractImportTestCase
         // process_datamap + process_cmdmap and cleared the datamap/cmdMap on
         // the payload. Only the translations bucket survives. The DB now has
         // the parent (uid=1) plus en (uid=2) and fr (uid=3) translation rows
-        // — same shape as scenario 1's preloaded fixture. The resolver must
-        //   1. Resolve the parent uid via DB lookup (datamap empty, so the
-        //      remoteIdToKey shortcut doesn't fire on this pass).
-        //   2. Drain the bucket via the scenario-1 branch, writing the
-        //      translated fields onto the existing translation row uids.
+        // — same shape as scenario 1's preloaded fixture. The Importer's
+        // promoteNewKeys step seeds $context->remoteIdToKey with the parent
+        // uid before round 2; we replicate that here so the drain branch
+        // sees a uid string for the owner.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
 
         $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
         $this->clearDataMap($payload);
 
-        $this->get(Resolver::class)->resolve(
-            $payload,
-            new ResolverContext(storagePid: 10)
-        );
+        $context = new ResolverContext(storagePid: 10);
+        $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] = '1';
+        $this->get(Resolver::class)->resolve($payload, $context);
 
         $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
@@ -646,29 +644,25 @@ final class ResolverTest extends AbstractImportTestCase
     public function findUidByRemoteIdIgnoresTranslationRowsAndReturnsParentUid(): void
     {
         // Translation rows share the parent's remote_id. Without the
-        // languageField restriction in findUidByRemoteId, a second-pass
-        // lookup could surface a translation uid as the "parent". The
-        // organisation fixture preloads uid=1 (de), 2 (en), 3 (fr) for the
-        // same remote_id; we verify that even with a translation-only
-        // payload (datamap cleared, parent uid unknown to the in-memory
-        // map) the resolver still picks uid=1 for the second-pass drain.
+        // languageField restriction in findUidByRemoteId, the round-1
+        // rekey could surface a translation uid (2 or 3) as the parent
+        // and rekey the datamap row under the wrong uid. The organisation
+        // fixture preloads uid=1 (de), 2 (en), 3 (fr) for the same
+        // remote_id; we verify the resolver rekeys the parent row under
+        // uid=1 and seeds the context map accordingly.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
 
         $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
-        $this->clearDataMap($payload);
 
-        $this->get(Resolver::class)->resolve(
-            $payload,
-            new ResolverContext(storagePid: 10)
-        );
+        $context = new ResolverContext(storagePid: 10);
+        $this->get(Resolver::class)->resolve($payload, $context);
 
         $data = $payload->getDataMap();
-        // If the language restriction were missing, findUidByRemoteId could
-        // return uid=2 or 3 (translation rows), and findTranslationUidsByParent
-        // would return an empty map (no rows have l10n_parent=2 or 3) — the
-        // bucket would then re-stage cmdMap entries instead of draining.
-        self::assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
-        self::assertSame([], $payload->getCmdMap());
+        self::assertArrayHasKey(1, $data['tx_thuecat_organisation']);
+        self::assertSame(
+            '1',
+            $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] ?? null
+        );
     }
 
     #[Test]

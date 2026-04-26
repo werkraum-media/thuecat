@@ -25,10 +25,41 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
 
 final class ResolverContext
 {
+    /**
+     * remote_id → current outer key for the in-flight import.
+     *
+     * Lifetime spans every Resolver round for a single
+     * Importer::importConfiguration call. Values evolve:
+     *   - first sighting of a new remote_id: NEW… placeholder
+     *   - after DataHandler runs: promoted to the assigned uid (string)
+     *   - pre-existing rows: the uid string from the first sighting
+     * Kept on the context (not on the Resolver, which is a DI singleton)
+     * so concurrent imports cannot cross-contaminate each other.
+     *
+     * @var array<string, string>
+     */
+    public array $remoteIdToKey = [];
+
     public function __construct(
         public readonly int $storagePid,
         public readonly string $language = 'de',
         public readonly ?string $apiKey = null,
     ) {
+    }
+
+    /**
+     * Rewrite NEW… placeholders in $remoteIdToKey to the uids assigned by
+     * DataHandler in the previous round. After the call the map only holds
+     * uid strings for any remote_id whose row has hit the DB.
+     *
+     * @param array<string, int|string> $substNEWwithIDs
+     */
+    public function promoteNewKeys(array $substNEWwithIDs): void
+    {
+        foreach ($this->remoteIdToKey as $remoteId => $key) {
+            if (isset($substNEWwithIDs[$key])) {
+                $this->remoteIdToKey[$remoteId] = (string)$substNEWwithIDs[$key];
+            }
+        }
     }
 }
