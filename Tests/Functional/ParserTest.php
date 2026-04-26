@@ -444,7 +444,7 @@ final class ParserTest extends AbstractImportTestCase
         // French: title and description only — start_of_construction has no
         // fr entry in the JSON-LD, so it must not appear in the bucket.
         self::assertSame(
-            ['title', 'description','slogan',
+            ['title', 'description', 'slogan',
                 'sanitation',
                 'other_service',
                 'museum_service',
@@ -455,7 +455,7 @@ final class ParserTest extends AbstractImportTestCase
                 'photography',
                 'available_languages',
                 'distance_to_public_transport',
-                'offers',],
+                'offers', ],
             array_keys($perLanguage[2])
         );
         self::assertSame('La vieille synagogue', $perLanguage[2]['title']);

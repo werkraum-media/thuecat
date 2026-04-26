@@ -345,10 +345,25 @@ class Resolver
                                 continue;
                             }
 
-                            // Neither in DB nor in the payload — fetch it from
-                            // ThueCat, parse, and merge. The next drain pass
-                            // picks the relation up via $remoteIdToKey.
-                            $this->fetchAndMerge($payload, $context, $reference, $remoteIdToKey);
+                            // Neither in DB nor in the payload — fetch from
+                            // ThueCat and decide. The fetched node may not
+                            // shape into $targetTable at all (containedInPlace
+                            // notoriously mixes towns with regions and oatour
+                            // entries — only town-typed nodes belong in the
+                            // tx_thuecat_town bucket). When the parsed payload
+                            // carries no row in $targetTable for this @id, we
+                            // silently drop the bucket entry instead of
+                            // merging unrelated entities into the datamap.
+                            $merged = $this->fetchAndMaybeMerge(
+                                $payload,
+                                $context,
+                                $reference,
+                                $targetTable,
+                                $remoteIdToKey
+                            );
+                            if (!$merged) {
+                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+                            }
                             $progress = true;
                         }
                     }
@@ -366,14 +381,21 @@ class Resolver
     }
 
     /**
+     * Fetch + parse a transient reference into a throwaway payload, then
+     * merge into the real payload only if the fetched node actually shapes
+     * into the bucket's expected target table. Returns true on merge, false
+     * when the reference is type-incompatible and the caller should drop
+     * the bucket entry without further work.
+     *
      * @param array<string, string> $remoteIdToKey
      */
-    private function fetchAndMerge(
+    private function fetchAndMaybeMerge(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $reference,
+        string $targetTable,
         array &$remoteIdToKey
-    ): void {
+    ): bool {
         $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
         $graph = $response['@graph'] ?? [];
         if (!is_array($graph)) {
@@ -381,10 +403,15 @@ class Resolver
         }
 
         $fetchedPayload = $this->parser->parseFresh($graph, $context->language);
+        if (!$fetchedPayload->hasRow($targetTable, $reference)) {
+            return false;
+        }
+
         $payload->mergeFrom($fetchedPayload);
 
         // Bring the newly merged rows into the rekey-map and inject pid.
         $this->rekeyRowsAndInjectPid($payload, $context->storagePid, $remoteIdToKey);
+        return true;
     }
 
     /**

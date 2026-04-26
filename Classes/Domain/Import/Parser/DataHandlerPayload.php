@@ -131,6 +131,17 @@ class DataHandlerPayload
     }
 
     /**
+     * True if the payload carries a row for the given table keyed by the
+     * given (remote-id or rekeyed) outer key. Used by the resolver after a
+     * follow-up fetch to decide whether the fetched response actually shapes
+     * into the bucket's expected target table.
+     */
+    public function hasRow(string $table, string $key): bool
+    {
+        return isset($this->dataMap[$table][$key]);
+    }
+
+    /**
      * Write a single field onto a row already present in the payload.
      * Used by the resolver to inject `pid` and, later, to fill resolved
      * uid references into relation fields.

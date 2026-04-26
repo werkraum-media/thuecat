@@ -40,7 +40,7 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTownWithRelation(): void
     {
-        self::markTestSkipped('Pending: Importer does not refresh preloaded transients. The fixture preloads tx_thuecat_organisation uid=1 with title="Old title"; the assertion expects it overwritten with the fetched title. The Resolver currently resolves the managedBy FK to the existing uid and drops the transient — no fresh org row is emitted, so the title stays stale.');
+        self::markTestSkipped('Pending: full-refresh contract not yet implemented. Importing the configured root URL must also refresh every transitively-referenced row (managedBy targets, containedInPlace targets, etc.) so stale preloaded data — like this fixture\'s "Old title" on the org — gets overwritten with the upstream payload. A naive Resolver-level always-refresh fanned out recursively across every FK target and broke the existing ResolverTest contract; root cause is that the refresh decision belongs at the Importer level, not the Resolver. Design needed: (1) which entity types trigger downstream refresh (in production likely only TouristAttraction roots), (2) loop-detection for circular FKs, (3) bandwidth caps. Do not unskip until that design lands.');
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
@@ -54,14 +54,29 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTouristInformationWithRelation(): void
     {
-        self::markTestSkipped('Pending: Importer does not iterate over all configured site languages. The assertion expects rows in multiple sys_language_uid values (de + en + fr), so the Importer must run the parse/resolve pass once per site language. Currently it only resolves the default language, which also explains the "Mock queue empty" error — the queued responses were sized for the multi-language run.');
-
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.php');
+        // Importer fetches the info first.
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/333039283321-xxwg.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        // Then the resolver drains containedInPlace in JSON-array order: only
+        // jcyt parses as a Town and merges; the others fetch fine but their
+        // @type doesn't shape into tx_thuecat_town, so the resolver drops the
+        // bucket entry without merging.
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_108867196-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_1492818-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_16571065-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_16659193-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18179059-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18429754-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18429974-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18550292-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_21827958-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_39285647-oatour.json');
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_52469786-oatour.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/356133173991-cryw.json');
+        // Then managedBy → org.
+        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -71,8 +86,6 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTouristAttractionWithSingleSlogan(): void
     {
-        self::markTestSkipped('Pending: Importer does not iterate over all configured site languages. Assertion expects two attraction rows (de uid=1, en uid=2) with l18n_parent wiring; current pipeline only emits the default-language row.');
-
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSingleSlogan.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
