@@ -49,6 +49,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.fetchingError',
                             'value' => 'fetchingError',
                         ],
+                        [
+                            'label' => $languagePath . '.type.dataHandlerError',
+                            'value' => 'dataHandlerError',
+                        ],
                     ],
                 ],
             ],
@@ -111,11 +115,43 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'severity' => [
+                'label' => $languagePath . '.severity',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        ['label' => $languagePath . '.severity.debug', 'value' => 'debug'],
+                        ['label' => $languagePath . '.severity.info', 'value' => 'info'],
+                        ['label' => $languagePath . '.severity.notice', 'value' => 'notice'],
+                        ['label' => $languagePath . '.severity.warning', 'value' => 'warning'],
+                        ['label' => $languagePath . '.severity.error', 'value' => 'error'],
+                        ['label' => $languagePath . '.severity.critical', 'value' => 'critical'],
+                        ['label' => $languagePath . '.severity.alert', 'value' => 'alert'],
+                        ['label' => $languagePath . '.severity.emergency', 'value' => 'emergency'],
+                    ],
+                    'readOnly' => true,
+                ],
+            ],
+            'message' => [
+                'label' => $languagePath . '.message',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
+            'context' => [
+                'label' => $languagePath . '.context',
+                'config' => [
+                    'type' => 'text',
+                    'readOnly' => true,
+                ],
+            ],
         ],
         'palettes' => [
             'always' => [
                 'label' => $languagePath . '.palette.always',
-                'showitem' => 'type, remote_id, import_log, crdate',
+                'showitem' => 'type, severity, remote_id, import_log, crdate',
             ],
         ],
         'types' => [
@@ -123,10 +159,13 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, record_uid, insertion, errors',
             ],
             'mappingError' => [
-                'showitem' => '--palette--;;always, errors',
+                'showitem' => '--palette--;;always, errors, message, context',
             ],
             'fetchingError' => [
-                'showitem' => '--palette--;;always, errors',
+                'showitem' => '--palette--;;always, errors, message, context',
+            ],
+            'dataHandlerError' => [
+                'showitem' => '--palette--;;always, table_name, record_uid, message, context',
             ],
         ],
     ];

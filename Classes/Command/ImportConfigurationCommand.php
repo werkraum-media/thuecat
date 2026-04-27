@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
+use WerkraumMedia\ThueCat\Domain\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 class ImportConfigurationCommand extends Command
@@ -67,15 +68,24 @@ class ImportConfigurationCommand extends Command
         if ($configuration === null) {
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
-        // @todo restore actual import functionality
-        $this->importer->importConfiguration($configuration);
+        $severity = $this->importer->importConfiguration($configuration);
 
-        //        $importLog = $this->importer->importConfiguration($configuration);
-        //
-        //        if ($importLog->hasErrors()) {
-        //            return Command::FAILURE;
-        //        }
+        return $this->isFailureSeverity($severity) ? Command::FAILURE : Command::SUCCESS;
+    }
 
-        return Command::SUCCESS;
+    /**
+     * Map our PSR-3-style severity onto a Command exit code. Anything at or
+     * above 'error' fails the command; warnings and below let the operator
+     * inspect the log without flagging the run as broken to whatever
+     * scheduler invoked the command.
+     */
+    private function isFailureSeverity(string $severity): bool
+    {
+        return in_array($severity, [
+            ImportLogger::SEVERITY_ERROR,
+            ImportLogger::SEVERITY_CRITICAL,
+            ImportLogger::SEVERITY_ALERT,
+            ImportLogger::SEVERITY_EMERGENCY,
+        ], true);
     }
 }

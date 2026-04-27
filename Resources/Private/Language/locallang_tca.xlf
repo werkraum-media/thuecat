@@ -283,6 +283,42 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.fetchingError" xml:space="preserve">
                 <source>Fetching Error</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.dataHandlerError" xml:space="preserve">
+                <source>DataHandler Error</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity" xml:space="preserve">
+                <source>Severity</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.debug" xml:space="preserve">
+                <source>Debug</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.info" xml:space="preserve">
+                <source>Info</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.notice" xml:space="preserve">
+                <source>Notice</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.warning" xml:space="preserve">
+                <source>Warning</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.error" xml:space="preserve">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.critical" xml:space="preserve">
+                <source>Critical</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.alert" xml:space="preserve">
+                <source>Alert</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.severity.emergency" xml:space="preserve">
+                <source>Emergency</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.message" xml:space="preserve">
+                <source>Message</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.context" xml:space="preserve">
+                <source>Context (JSON Format)</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.remote_id" xml:space="preserve">
                 <source>Remote ID (URL)</source>
             </trans-unit>

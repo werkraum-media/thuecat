@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
 
 final class ImportConfigurationCommandTest extends AbstractImportTestCase
 {
-    // @todo this test needs to come back
+    #[Test]
     public function canImport(): void
     {
         $this->workaroundExtbaseConfiguration();

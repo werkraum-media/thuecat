@@ -7,10 +7,12 @@ namespace WerkraumMedia\ThueCat\Domain\Import;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Throwable;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
@@ -29,7 +31,13 @@ class Importer
     ) {
     }
 
-    public function importConfiguration(ImportConfiguration $configuration): void
+    /**
+     * Runs one full import. Returns the highest severity recorded in the
+     * import log for this run, in PSR-3 vocabulary (`info` for a clean run,
+     * `error` if any DataHandler call complained or the URL loop swallowed
+     * an exception). Callers (Command) decide on an exit code from that.
+     */
+    public function importConfiguration(ImportConfiguration $configuration): string
     {
         $urlProvider = $this->getProviderForConfiguration($configuration);
         if (!$urlProvider instanceof UrlProvider) {
@@ -54,9 +62,23 @@ class Importer
         );
         $accumulatedPayload = new DataHandlerPayload();
         foreach ($urlProvider->getUrls() as $url) {
-            $inputData = $this->fetchDataFromApi($url, $apiKey);
-            $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
-            $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $context);
+            // Per-URL try/catch so a single broken root doesn't abort the
+            // run. The exception is staged into the import log and the
+            // loop moves on; the run finishes with severity 'error' so the
+            // command surfaces a non-zero exit code.
+            try {
+                $inputData = $this->fetchDataFromApi($url, $apiKey);
+            } catch (InvalidResponseException $e) {
+                $this->importLogger->recordException('fetchingError', $e);
+                continue;
+            }
+            try {
+                $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
+                $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $context);
+            } catch (Throwable $e) {
+                $this->importLogger->recordException('mappingError', $e);
+                continue;
+            }
             $accumulatedPayload->mergeFrom($resolved);
         }
 
@@ -66,7 +88,12 @@ class Importer
         $loggerPayload = $accumulatedPayload->getDefaultLanguageDataMap();
 
         if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
-            return;
+            $this->importLogger->writeLog(
+                $configuration->getUid(),
+                $loggerPayload,
+                []
+            );
+            return $this->importLogger->getMaxSeverity();
         }
 
         $iterations = 0;
@@ -105,6 +132,13 @@ class Importer
             $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
             $dataHandler->process_datamap();
             $dataHandler->process_cmdmap();
+            // DataHandler accumulates user/system errors into errorLog when
+            // log() is called with $error > 0. Forward whatever it captured
+            // this pass into our import log so editors see why a row failed
+            // to land instead of having to grep sys_log.
+            /** @var list<string> $passErrorLog */
+            $passErrorLog = $dataHandler->errorLog;
+            $this->importLogger->recordDataHandlerErrors($passErrorLog, $iterations);
             /** @var array<string, int|string> $passSubst */
             $passSubst = $dataHandler->substNEWwithIDs;
             $substNEWwithIDs = $substNEWwithIDs + $passSubst;
@@ -123,6 +157,8 @@ class Importer
             $loggerPayload,
             $substNEWwithIDs
         );
+
+        return $this->importLogger->getMaxSeverity();
     }
 
     /**
