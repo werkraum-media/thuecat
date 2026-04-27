@@ -420,16 +420,40 @@ class Resolver
 
                             $uid = $this->findUidByRemoteId($targetTable, $reference);
                             if ($uid > 0) {
+                                // Wire the FK to the existing row right away;
+                                // the uid is stable regardless of whether we
+                                // refresh the row's fields below.
                                 $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
-                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $remoteIdToKey[$reference] = (string)$uid;
                                 $context->remoteIdToTable[$reference] = $targetTable;
-                                // Found in DB but not refreshed this run —
-                                // mark 'found'. If a later root carries the
-                                // same remote_id as a parsed row, the
-                                // rekey-and-inject pass will see it is not
-                                // yet 'updated' and will stage the refresh.
                                 $context->markFound($reference);
+
+                                // STATUS_FOUND contract (see ResolverContext):
+                                // a DB-resident row is stale until it is
+                                // refreshed this run. Fetch and merge so the
+                                // existing uid gets a fresh dataMap entry —
+                                // rekeyRowsAndInjectPid will reuse the cached
+                                // uid as the outer key (no new NEW…) and flip
+                                // the status to 'updated'. Same depth cap as
+                                // the unknown-id branch below.
+                                if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
+                                    $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+                                    $progress = true;
+                                    continue;
+                                }
+
+                                $this->fetchAndMerge(
+                                    $payload,
+                                    $context,
+                                    $ownerTable,
+                                    $ownerKey,
+                                    $ownerRemoteId,
+                                    $targetTable,
+                                    $targetField,
+                                    $reference,
+                                    $remoteIdToKey
+                                );
+                                $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
                             }

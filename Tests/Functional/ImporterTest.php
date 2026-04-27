@@ -38,9 +38,10 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTownWithRelation(): void
     {
-        self::markTestSkipped('Pending: full-refresh contract not yet implemented. Importing the configured root URL must also refresh every transitively-referenced row (managedBy targets, containedInPlace targets, etc.) so stale preloaded data — like this fixture\'s "Old title" on the org — gets overwritten with the upstream payload. A naive Resolver-level always-refresh fanned out recursively across every FK target and broke the existing ResolverTest contract; root cause is that the refresh decision belongs at the Importer level, not the Resolver. Design needed: (1) which entity types trigger downstream refresh (in production likely only TouristAttraction roots), (2) loop-detection for circular FKs, (3) bandwidth caps. Do not unskip until that design lands.');
-
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.php');
+        // Pre-seeded org row is stale ("Old title"); per the STATUS_FOUND
+        // contract the resolver must refresh it before the FK is wired,
+        // so the org URL is fetched too even though its uid already exists.
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('018132452787-ngbe.json');
 
@@ -230,9 +231,11 @@ class ImporterTest extends AbstractImportTestCase
         // Three roots from get-updated-nodes: dara, zmqf, yyno. Each is
         // depth 0; their direct references resolve at depth 1; anything
         // beyond is depth-capped (ResolverContext::MAX_FETCH_DEPTH = 1)
-        // and the bucket is dropped without a fetch. The Town
-        // 043064193523-jcyt is pre-seeded in the DB fixture and resolved
-        // as a relation, not via HTTP.
+        // and the bucket is dropped without a fetch. The pre-seeded Town
+        // 043064193523-jcyt is referenced from a depth-0 root, so the
+        // STATUS_FOUND contract refreshes it via HTTP — its existing uid
+        // is reused, the row's fields are overwritten with the fetched
+        // payload.
         $this->expectFetch('835224016581-dara.json');
         $this->expectFetch('018132452787-ngbe.json');
         $this->expectFetch('573211638937-gmqb.json');
@@ -250,6 +253,9 @@ class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('dms_134288.json');
         $this->expectFetch('dms_652340.json');
         $this->expectFetch('440055527204-ocar.json');
+        // Pre-seeded town referenced from a depth-0 root — refreshed via
+        // HTTP under the STATUS_FOUND contract (see comment above).
+        $this->expectFetch('043064193523-jcyt.json');
         // Resolver follows references in the dara graph to resources that
         // don't exist upstream and 404 in production.
         $this->expectNotFound('dms_5713563');
