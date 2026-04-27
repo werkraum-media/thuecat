@@ -70,7 +70,12 @@ final class AddTitleForStaticUrlsDataHandlerHook
     {
         $pid = $incomingFieldArray['pid'] ?? '';
         if ($pid === '' && is_int($id)) {
-            $pid = BackendUtility::getRecord('tx_thuecat_import_configuration', $id, 'pid')['pid'] ?? '';
+            $record = BackendUtility::getRecord('tx_thuecat_import_configuration', $id, 'pid');
+            $pid = is_array($record) ? ($record['pid'] ?? '') : '';
+        }
+
+        if (!is_int($pid) && !is_string($pid)) {
+            return '';
         }
 
         if ($pid === '') {
@@ -92,6 +97,10 @@ final class AddTitleForStaticUrlsDataHandlerHook
         }
 
         foreach ($urls as $identifier => $values) {
+            if (!is_array($values)) {
+                continue;
+            }
+
             if (ArrayUtility::isValidPath($values, 'url/el/url/vDEF') === false) {
                 continue;
             }
@@ -101,7 +110,9 @@ final class AddTitleForStaticUrlsDataHandlerHook
                 continue;
             }
 
-            $node = $this->fetchData->jsonLDFromUrl($url)['@graph'][0] ?? [];
+            $graphData = $this->fetchData->jsonLDFromUrl($url);
+            $graph = is_array($graphData['@graph'] ?? null) ? $graphData['@graph'] : [];
+            $node = is_array($graph[0] ?? null) ? $graph[0] : [];
 
             $entity = $this->resolveEntityClass($node['@type'] ?? []);
             if ($entity === null) {
@@ -110,7 +121,14 @@ final class AddTitleForStaticUrlsDataHandlerHook
             $entity->parse($node, $language, []);
             $title = $entity->toArray()['title'];
 
-            $incomingFieldArray['configuration']['data']['sDEF']['lDEF']['urls']['el'][$identifier]['url']['el']['title']['vDEF'] = $title;
+            /** @var array<mixed> $configuration */
+            $configuration = is_array($incomingFieldArray['configuration']) ? $incomingFieldArray['configuration'] : [];
+            $configuration = ArrayUtility::setValueByPath(
+                $configuration,
+                'data/sDEF/lDEF/urls/el/' . $identifier . '/url/el/title/vDEF',
+                $title
+            );
+            $incomingFieldArray['configuration'] = $configuration;
         }
     }
 
@@ -136,8 +154,12 @@ final class AddTitleForStaticUrlsDataHandlerHook
         // is also Place, Thing, CivicStructure…). Collect every entity that claims
         // any of them, then let priority break ties — more specific entities
         // (TouristInformation, priority 20) win over generic ones.
+        /** @var EntityInterface[] $candidates */
         $candidates = [];
         foreach ($this->entities as $candidate) {
+            if (!$candidate instanceof EntityInterface) {
+                continue;
+            }
             foreach ($types as $type) {
                 if (in_array($type, $candidate->handlesTypes(), true)) {
                     $candidates[] = $candidate;
@@ -159,6 +181,8 @@ final class AddTitleForStaticUrlsDataHandlerHook
 
     public static function register(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
+        /** @var array{SC_OPTIONS: array{'t3lib/class.t3lib_tcemain.php': array{processDatamapClass: list<class-string>}}} $typo3ConfVars */
+        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
+        $typo3ConfVars['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
     }
 }

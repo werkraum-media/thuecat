@@ -412,7 +412,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array<int, array<string, string>>>>
+     * @return array<string, array<string, array<int, array<string, string|int|float>>>>
      */
     public function getTranslations(): array
     {

@@ -31,7 +31,6 @@ class StaticUrlProvider implements UrlProvider
      * @var string[]
      */
     private array $urls = [];
-    private string $apiKey = '';
 
     public function canProvideForConfiguration(
         ImportConfiguration $configuration
@@ -44,7 +43,6 @@ class StaticUrlProvider implements UrlProvider
     ): UrlProvider {
         $instance = clone $this;
         $instance->urls = $configuration->getUrls();
-        $instance->apiKey = $configuration->getApiKey();
 
         return $instance;
     }
