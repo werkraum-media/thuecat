@@ -30,6 +30,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 class SyncScopeUrlProvider implements UrlProvider
 {
     private string $syncScopeId = '';
+    private string $apiKey = '';
 
     public function __construct(
         private readonly FetchData $fetchData
@@ -50,13 +51,14 @@ class SyncScopeUrlProvider implements UrlProvider
         }
         $instance = clone $this;
         $instance->syncScopeId = $configuration->getSyncScopeId();
+        $instance->apiKey = $configuration->getApiKey();
 
         return $instance;
     }
 
-    public function getUrls(): array
+    public function getUrls(?string $apiDomain = null): array
     {
-        $response = $this->fetchData->updatedNodes($this->syncScopeId);
+        $response = $this->fetchData->updatedNodes($this->syncScopeId, $this->apiKey, $apiDomain);
         $resourceIds = array_values($response['data']['createdOrUpdated'] ?? []);
 
         return array_map(function (string $id) {

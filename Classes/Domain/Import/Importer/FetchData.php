@@ -29,6 +29,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 class FetchData
@@ -44,8 +45,11 @@ class FetchData
     ) {
     }
 
-    public function updatedNodes(string $scopeId, ?string $apiKey = null): array
+    public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null): array
     {
+        if ($apiDomain !== null) {
+            $this->databaseUrlPrefix = $apiDomain;
+        }
         return $this->jsonLDFromUrl(
             $this->databaseUrlPrefix
             . '/api/ext-sync/get-updated-nodes?syncScopeId='
@@ -107,7 +111,7 @@ class FetchData
         }
 
         if ($response->getStatusCode() === 404) {
-            throw new InvalidResponseException(
+            throw new ResourceNotFoundException(
                 sprintf(
                     'Not found, given resource could not be found: "%s".',
                     $request->getUri()

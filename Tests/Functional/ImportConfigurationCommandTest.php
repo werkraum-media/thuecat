@@ -39,7 +39,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $tester = new CommandTester($subject);
         $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);

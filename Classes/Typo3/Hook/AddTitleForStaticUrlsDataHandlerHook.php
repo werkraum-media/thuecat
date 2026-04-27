@@ -23,27 +23,25 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\Hook;
 
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Minimum;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 
 /**
  * Will add a title for all url entries, based on the fetched name of the record within url.
  */
 final class AddTitleForStaticUrlsDataHandlerHook
 {
-    // @todo this functionality needs to be restored!
     public function __construct(
         private readonly SiteFinder $siteFinder,
         private readonly FetchData $fetchData,
-        //        private readonly EntityRegistry $entityRegistry,
-        //        private readonly EntityMapper $entityMapper,
+        // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
+        #[AutowireLocator(services: 'import.entity')]
+        private readonly ServiceLocator $entities,
     ) {
     }
 
@@ -52,8 +50,6 @@ final class AddTitleForStaticUrlsDataHandlerHook
         string $table,
         string|int $id,
     ): void {
-        // @todo this functionality needs to be restored!
-        return;
         if ($this->shouldSkip($table, $incomingFieldArray)) {
             return;
         }
@@ -105,12 +101,16 @@ final class AddTitleForStaticUrlsDataHandlerHook
                 continue;
             }
 
-            $mappedEntity = $this->mapUrlToEntity($url, $language);
-            if (!$mappedEntity instanceof Minimum) {
+            $node = $this->fetchData->jsonLDFromUrl($url)['@graph'][0] ?? [];
+
+            $entity = $this->resolveEntityClass($node['@type'] ?? []);
+            if ($entity === null) {
                 continue;
             }
+            $entity->parse($node, $language, []);
+            $title = $entity->toArray()['title'];
 
-            $incomingFieldArray['configuration']['data']['sDEF']['lDEF']['urls']['el'][$identifier]['url']['el']['title']['vDEF'] = $mappedEntity->getName();
+            $incomingFieldArray['configuration']['data']['sDEF']['lDEF']['urls']['el'][$identifier]['url']['el']['title']['vDEF'] = $title;
         }
     }
 
@@ -122,25 +122,43 @@ final class AddTitleForStaticUrlsDataHandlerHook
             || ArrayUtility::isValidPath($incomingFieldArray, 'configuration/data/sDEF/lDEF/urls/el') === false;
     }
 
-    private function mapUrlToEntity(string $url, string $language): null|object
+    /**
+     * Based on @type, the correct Entity class for the node is determined and returned.
+     */
+    private function resolveEntityClass(mixed $types): ?EntityInterface
     {
-        if (GeneralUtility::isValidUrl($url) === false) {
+        $types = is_array($types) ? $types : [];
+        if ($types === []) {
             return null;
         }
 
-        $jsonEntity = $this->fetchData->jsonLDFromUrl($url)['@graph'][0] ?? [];
-        return $this->entityMapper->mapDataToEntity(
-            $jsonEntity,
-            $this->entityRegistry->getEntityByTypes($jsonEntity['@type']),
-            [
-                JsonDecode::ACTIVE_LANGUAGE => $language,
-            ]
+        // A JSON-LD node usually carries multiple @types (e.g. a TouristAttraction
+        // is also Place, Thing, CivicStructure…). Collect every entity that claims
+        // any of them, then let priority break ties — more specific entities
+        // (TouristInformation, priority 20) win over generic ones.
+        $candidates = [];
+        foreach ($this->entities as $candidate) {
+            foreach ($types as $type) {
+                if (in_array($type, $candidate->handlesTypes(), true)) {
+                    $candidates[] = $candidate;
+                    break;
+                }
+            }
+        }
+        if ($candidates === []) {
+            return null;
+        }
+
+        usort(
+            $candidates,
+            static fn (EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
         );
+
+        return $candidates[0];
     }
 
     public static function register(): void
     {
-        return;
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
     }
 }

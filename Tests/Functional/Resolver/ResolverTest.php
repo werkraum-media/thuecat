@@ -32,7 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Resolver;
 use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
-use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
 final class ResolverTest extends AbstractImportTestCase
 {
@@ -121,7 +120,7 @@ final class ResolverTest extends AbstractImportTestCase
         // row into the payload. The next drain pass wires the town's
         // managed_by to the organisation's NEW placeholder key.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $payload = $this->parseFixture('043064193523-jcyt.json');
 
@@ -219,7 +218,7 @@ final class ResolverTest extends AbstractImportTestCase
         // organisation ngbe (uid=7). After two drain passes the parking
         // facility's `town` field is wired to the town's NEW placeholder.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '043064193523-jcyt.json');
+        $this->expectFetch('043064193523-jcyt.json');
 
         $payload = $this->parseFixture('440055527204-ocar-without-media.json');
 
@@ -261,8 +260,8 @@ final class ResolverTest extends AbstractImportTestCase
         // resolve via DB on the follow-up drain pass.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForAttraction.php');
 
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '396420044896-drzt-without-media.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '440055527204-ocar-without-media.json');
+        $this->expectFetch('396420044896-drzt.json');
+        $this->expectFetch('440055527204-ocar.json');
 
         $payload = $this->parseFixture('215230952334-yyno-without-media.json');
 
@@ -305,7 +304,7 @@ final class ResolverTest extends AbstractImportTestCase
         // column. Photo-first ordering makes the first entry mainImage:true.
         // Preload town + orgs so the ref→uid buckets resolve via DB.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownForParkingFacility.php');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'dms_6486108.json');
+        $this->expectFetch('dms_6486108.json');
 
         $payload = $this->parseFixture('396420044896-drzt.json');
 
@@ -368,11 +367,11 @@ final class ResolverTest extends AbstractImportTestCase
         // managedBy via contentResponsible → ngbe (preloaded as uid=7).
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
 
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-foreign-author.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'author-with-names.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-author-string.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-license-author.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'image-with-author-and-license-author.json');
+        $this->expectFetch('image-with-foreign-author.json');
+        $this->expectFetch('author-with-names.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $this->expectFetch('image-with-author-and-license-author.json');
 
         $payload = $this->parseFixture('attraction-with-media.json');
 
@@ -423,7 +422,7 @@ final class ResolverTest extends AbstractImportTestCase
         // the German default: all four shortDescription* fields resolve to
         // German strings; the English follow-up is covered separately.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        $this->expectFetch('e_23bec7f80c864c358da033dd75328f27-rfa.json');
 
         $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
 
@@ -492,7 +491,7 @@ final class ResolverTest extends AbstractImportTestCase
         // language-agnostic, so they stay; every shortDescription* field
         // falls away because the fixture only carries de + en translations.
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . 'e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        $this->expectFetch('e_23bec7f80c864c358da033dd75328f27-rfa.json');
 
         $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
 

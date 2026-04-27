@@ -18,7 +18,7 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301 USA.
+ * 02110-1301, USA.
  */
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Importer;
@@ -31,12 +31,10 @@ use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
 final class FetchDataTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/';
-
     #[Test]
     public function returnsDecodedGraphFromSuccessfulResponse(): void
     {
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $result = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
@@ -49,9 +47,9 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function secondCallForSameUrlIsServedFromCache(): void
     {
-        // Only one response queued — a second HTTP hit would exhaust the queue
-        // and throw. Cache must absorb the second call.
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        // Only one response staged — a second HTTP hit would trip the
+        // empty-bag error. Cache must absorb the second call.
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $first = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
@@ -63,9 +61,11 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function differentApiKeyBypassesCache(): void
     {
-        // Same URL, different key → different cache slot → two HTTP hits needed.
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        // Same URL, different key → different cache slot → two HTTP hits
+        // needed. The faker normalises away api_key before matching, so the
+        // same URL declaration covers both calls.
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe', 'key-a');
@@ -79,7 +79,7 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function apiKeyIsAppendedToRequestUri(): void
     {
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe', 'my-secret-key');
@@ -93,7 +93,7 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function formatJsonldIsAlwaysAppendedToRequestUri(): void
     {
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
@@ -107,7 +107,7 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function formatJsonldOverridesExistingFormatParameterInUrl(): void
     {
-        GuzzleClientFaker::appendResponseFromFile(self::FIXTURE_PATH . '018132452787-ngbe.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $subject = $this->get(FetchData::class);
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe?format=xml');
@@ -121,7 +121,7 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function throwsOnNotFoundResponse(): void
     {
-        GuzzleClientFaker::appendNotFoundResponse();
+        $this->expectNotFound('018132452787-ngbe');
 
         $this->expectException(InvalidResponseException::class);
 
@@ -132,7 +132,7 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function throwsOnUnauthorizedResponse(): void
     {
-        GuzzleClientFaker::appendUnauthorizedResponse();
+        GuzzleClientFaker::expectUnauthorizedForUrl('https://thuecat.org/resources/018132452787-ngbe');
 
         $this->expectException(InvalidResponseException::class);
 

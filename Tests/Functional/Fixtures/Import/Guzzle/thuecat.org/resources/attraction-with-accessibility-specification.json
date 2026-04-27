@@ -47,7 +47,7 @@
                 "@id": "https://thuecat.org/resources/018132452787-ngbe"
             },
             "thuecat:accessibilitySpecification": {
-                "@id": "https://thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json"
+                "@id": "https://thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification"
             }
         }
     ]

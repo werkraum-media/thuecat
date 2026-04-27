@@ -16,9 +16,7 @@ class ImporterTest extends AbstractImportTestCase
     public function importsFreshOrganization(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        GuzzleClientFaker::appendResponseFromFile(
-            __DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json'
-        );
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -29,10 +27,8 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTown(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -45,8 +41,8 @@ class ImporterTest extends AbstractImportTestCase
         self::markTestSkipped('Pending: full-refresh contract not yet implemented. Importing the configured root URL must also refresh every transitively-referenced row (managedBy targets, containedInPlace targets, etc.) so stale preloaded data — like this fixture\'s "Old title" on the org — gets overwritten with the upstream payload. A naive Resolver-level always-refresh fanned out recursively across every FK target and broke the existing ResolverTest contract; root cause is that the refresh decision belongs at the Importer level, not the Resolver. Design needed: (1) which entity types trigger downstream refresh (in production likely only TouristAttraction roots), (2) loop-detection for circular FKs, (3) bandwidth caps. Do not unskip until that design lands.');
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -57,28 +53,25 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTouristInformationWithRelation(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristInformationWithRelation.php');
-        // Importer fetches the info first.
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/333039283321-xxwg.json');
-        // Then the resolver drains containedInPlace in JSON-array order: only
-        // jcyt parses as a Town and merges; the others fetch fine but their
-        // @type doesn't shape into tx_thuecat_town, so the resolver drops the
-        // bucket entry without merging.
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/043064193523-jcyt.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/573211638937-gmqb.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_108867196-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_1492818-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_16571065-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_16659193-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18179059-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18429754-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18429974-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_18550292-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_21827958-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_39285647-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_52469786-oatour.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/356133173991-cryw.json');
-        // Then managedBy → org.
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        // Importer fetches the info first, then drains containedInPlace and
+        // managedBy. Order doesn't matter to the faker — it only checks each
+        // URL is fetched exactly the declared number of times.
+        $this->expectFetch('333039283321-xxwg.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('573211638937-gmqb.json');
+        $this->expectFetch('e_108867196-oatour.json');
+        $this->expectFetch('e_1492818-oatour.json');
+        $this->expectFetch('e_16571065-oatour.json');
+        $this->expectFetch('e_16659193-oatour.json');
+        $this->expectFetch('e_18179059-oatour.json');
+        $this->expectFetch('e_18429754-oatour.json');
+        $this->expectFetch('e_18429974-oatour.json');
+        $this->expectFetch('e_18550292-oatour.json');
+        $this->expectFetch('e_21827958-oatour.json');
+        $this->expectFetch('e_39285647-oatour.json');
+        $this->expectFetch('e_52469786-oatour.json');
+        $this->expectFetch('356133173991-cryw.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -89,8 +82,8 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTouristAttractionWithSingleSlogan(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSingleSlogan.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('attraction-with-single-slogan.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -101,8 +94,8 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTouristAttractionWithSloganArray(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSloganArray.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('attraction-with-slogan-array.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -113,13 +106,13 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTouristAttractionWithMedia(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-media.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-foreign-author.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/author-with-names.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-string.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-license-author.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/image-with-author-and-license-author.json');
+        $this->expectFetch('attraction-with-media.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-with-foreign-author.json');
+        $this->expectFetch('author-with-names.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $this->expectFetch('image-with-author-and-license-author.json');
 
         $this->importConfiguration(1);
 
@@ -128,27 +121,22 @@ class ImporterTest extends AbstractImportTestCase
 
     /**
      * Visit-once contract: two attraction roots in one configuration both
-     * reference the same managedBy organization. The org JSON appears in
-     * the Guzzle queue exactly once. If the resolver re-fetches the org
-     * for the second root the queue runs dry and the test fails — which
-     * is the only way the resolve-once short-circuit
+     * reference the same managedBy organization. The org URL is staged
+     * exactly once. Under the URL-keyed faker, a re-fetch surfaces as an
+     * "unexpected request" error (the bag for that URL is empty on the
+     * second attempt) — which is the only way the resolve-once short-circuit
      * (ResolverContext::isUpdated) is exercised by the suite.
      */
     #[Test]
     public function importsTwoAttractionsSharingOrgFetchesOrgOnce(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
-        // Importer flow is per-URL parse+resolve, not "all roots first then
-        // drain": URL 1 fetches single-slogan, then its resolver drains the
-        // managedBy transient (org). URL 2 fetches slogan-array; the same
-        // managedBy transient short-circuits via ResolverContext::isUpdated
-        // and does NOT fetch again — that's the visit-once contract this
-        // test enforces. Three responses total; the org being absent from
-        // the queue at URL 2's resolve time is what makes the assertion
-        // bite if isUpdated ever regresses.
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-single-slogan.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-slogan-array.json');
+        // Three URLs in total; the org appears exactly once. If isUpdated
+        // ever regresses, the second managedBy resolution will trip the
+        // empty-bag error for the org URL.
+        $this->expectFetch('attraction-with-single-slogan.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('attraction-with-slogan-array.json');
 
         $this->importConfiguration(1);
 
@@ -174,8 +162,8 @@ class ImporterTest extends AbstractImportTestCase
     public function importsSameAttractionTwiceKeepsFirstParse(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSameAttractionTwice.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-duplicate-first.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-duplicate-second.json');
+        $this->expectFetch('attraction-duplicate-first.json');
+        $this->expectFetch('attraction-duplicate-second.json');
 
         $this->importConfiguration(1);
 
@@ -189,8 +177,8 @@ class ImporterTest extends AbstractImportTestCase
         // entry and drops the 2021 one, so any "now" between them works.
         $this->setDateAspect(new DateTimeImmutable('2024-03-03', new DateTimeZone('UTC')));
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFilteredOpeningHours.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/opening-hours-to-filter.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('opening-hours-to-filter.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -202,8 +190,8 @@ class ImporterTest extends AbstractImportTestCase
     {
         $this->setDateAspect(new DateTimeImmutable('2024-03-03', new DateTimeZone('UTC')));
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/special-opening-hours.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
+        $this->expectFetch('special-opening-hours.json');
+        $this->expectFetch('018132452787-ngbe.json');
 
         $this->importConfiguration(1);
 
@@ -214,9 +202,9 @@ class ImporterTest extends AbstractImportTestCase
     public function importsTouristAttractionWithAccessibilitySpecification(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-accessibility-specification.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
+        $this->expectFetch('attraction-with-accessibility-specification.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
 
         $this->importConfiguration(1);
 
@@ -225,6 +213,50 @@ class ImporterTest extends AbstractImportTestCase
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
+    }
+
+    #[Test]
+    public function importsBasedOnSyncScope(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.php');
+        // SyncScopeUrlProvider first hits the get-updated-nodes endpoint to
+        // collect the URL list, then the importer fetches each in turn.
+        // Order doesn't matter — every URL must be fetched exactly the
+        // declared number of times.
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+        // Three roots from get-updated-nodes: dara, zmqf, yyno. Each is
+        // depth 0; their direct references resolve at depth 1; anything
+        // beyond is depth-capped (ResolverContext::MAX_FETCH_DEPTH = 1)
+        // and the bucket is dropped without a fetch. The Town
+        // 043064193523-jcyt is pre-seeded in the DB fixture and resolved
+        // as a relation, not via HTTP.
+        $this->expectFetch('835224016581-dara.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('573211638937-gmqb.json');
+        $this->expectFetch('508431710173-wwne.json');
+        $this->expectFetch('dms_5159216.json');
+        $this->expectFetch('dms_5159186.json');
+        $this->expectFetch('396420044896-drzt.json');
+        $this->expectFetch('165868194223-zmqf.json');
+        $this->expectFetch('497839263245-edbm.json');
+        $this->expectFetch('dms_5099196.json');
+        $this->expectFetch('e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        $this->expectFetch('215230952334-yyno.json');
+        $this->expectFetch('052821473718-oxfq.json');
+        $this->expectFetch('dms_134362.json');
+        $this->expectFetch('dms_134288.json');
+        $this->expectFetch('dms_652340.json');
+        $this->expectFetch('440055527204-ocar.json');
+        // Resolver follows references in the dara graph to resources that
+        // don't exist upstream and 404 in production.
+        $this->expectNotFound('dms_5713563');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
     }
 
     private function importConfiguration(int $uid): void

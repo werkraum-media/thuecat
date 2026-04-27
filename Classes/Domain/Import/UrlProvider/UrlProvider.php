@@ -32,7 +32,7 @@ interface UrlProvider
     /**
      * @return string[]
      */
-    public function getUrls(): array;
+    public function getUrls(?string $apiDomain = null): array;
 
     public function canProvideForConfiguration(ImportConfiguration $configuration): bool;
 

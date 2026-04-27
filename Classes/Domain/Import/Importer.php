@@ -157,7 +157,7 @@ class Importer
         return null;
     }
 
-    private function fetchDataFromApi(string $url, string $apiKey): array
+    private function fetchDataFromApi(string $url, string $apiKey, string $apiDomain = ''): array
     {
         $response = $this->fetchData->jsonLDFromUrl($url, $apiKey === '' ? null : $apiKey);
         $graph = $response['@graph'] ?? [];

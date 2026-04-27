@@ -32,6 +32,7 @@ use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\MediaEntity;
@@ -602,12 +603,23 @@ class Resolver
                 );
             }
 
-            $mediaNode = $this->fetchGraphNode($reference, $context, $reference);
+            try {
+                $mediaNode = $this->fetchGraphNode($reference, $context, $reference);
+            } catch (ResourceNotFoundException) {
+                // Upstream removed the media — drop the entry rather than
+                // emit a stub that would render as a broken image later.
+                continue;
+            }
             $resolvedAuthor = null;
             $authorRef = MediaEntity::authorReference($mediaNode);
             if ($authorRef !== null) {
-                $personNode = $this->fetchGraphNode($authorRef, $context, $authorRef);
-                $resolvedAuthor = MediaEntity::shapePersonName($personNode, $context->language);
+                try {
+                    $personNode = $this->fetchGraphNode($authorRef, $context, $authorRef);
+                    $resolvedAuthor = MediaEntity::shapePersonName($personNode, $context->language);
+                } catch (ResourceNotFoundException) {
+                    // Author resource gone; leave the media entry without
+                    // an author rather than skipping the image.
+                }
             }
 
             $mediaEntity = new MediaEntity();
@@ -669,7 +681,15 @@ class Resolver
                 );
             }
 
-            $node = $this->fetchGraphNode($reference, $context, $reference);
+            try {
+                $node = $this->fetchGraphNode($reference, $context, $reference);
+            } catch (ResourceNotFoundException) {
+                // Upstream removed the spec — drain the transient bucket so
+                // it doesn't linger, but emit no field. A partial blob would
+                // surface as half-rendered output downstream.
+                $payload->removeTransient($ownerTable, $ownerRemoteId, 'accessibilitySpecification', $reference);
+                continue;
+            }
             $entity = new AccessibilitySpecificationEntity();
             $entity->configure($node, $context->language);
 

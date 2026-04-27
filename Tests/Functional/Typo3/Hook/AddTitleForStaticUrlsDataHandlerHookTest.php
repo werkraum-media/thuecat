@@ -27,60 +27,28 @@ use Codappix\Typo3PhpDatasets\PhpDataSet;
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
 #[CoversClass(AddTitleForStaticUrlsDataHandlerHook::class)]
-final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
+final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestCase
 {
-    // @todo all tests here have been deactivated, bring them back
-    use TestingFramework;
+    //    use TestingFramework;
+
+    protected string $fixtureGuzzleBase = __DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/';
 
     protected function setUp(): void
     {
-        $this->coreExtensionsToLoad = array_merge($this->coreExtensionsToLoad, [
-            'core',
-            'backend',
-            'extbase',
-            'frontend',
-            'fluid_styled_content',
-            'install',
-        ]);
-        $this->testExtensionsToLoad = array_merge($this->testExtensionsToLoad, [
-            'werkraummedia/thuecat/',
-        ]);
-        $this->pathsToLinkInTestInstance = array_merge($this->pathsToLinkInTestInstance, [
-            'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
-        ]);
-        $this->configurationToUseInTestInstance = array_merge($this->configurationToUseInTestInstance, [
-            'EXTENSIONS' => [
-                'thuecat' => [
-                    'apiKey' => null,
-                ],
-            ],
-        ]);
-
         parent::setUp();
 
-        GuzzleClientFaker::registerClient();
         $this->importPHPDataSet(__DIR__ . '/../../Fixtures/Import/BasicPages.php');
-        $this->importPHPDataSet(__DIR__ . '/../../Fixtures/Import/BackendUser.php');
-        $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->getContainer()->get(LanguageServiceFactory::class)->create('en_US');
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['LANG']);
-        GuzzleClientFaker::tearDown();
-        parent::tearDown();
-    }
-
+    #[Test]
     #[DataProvider('possibleUpdatesForTitle')]
     public function changesTitleFromRemote(
         string $existingConfiguration,
@@ -98,8 +66,8 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
             ],
         ]);
 
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/thuecat.org/resources/r_22033250-oapoi.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/thuecat.org/resources/809459960188-epwb.json');
+        $this->expectFetch('r_22033250-oapoi.json');
+        $this->expectFetch('809459960188-epwb.json');
 
         $errorLog = $this->executeDataHandler($this->createDataMap($submittedValues));
 
@@ -231,10 +199,11 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         ];
     }
 
+    #[Test]
     public function addsTitleForAllUrlsInNewRecord(): void
     {
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/thuecat.org/resources/r_22033250-oapoi.json');
-        GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/thuecat.org/resources/809459960188-epwb.json');
+        $this->expectFetch('r_22033250-oapoi.json');
+        $this->expectFetch('809459960188-epwb.json');
 
         $dataMap = $this->createDataMap([
             '67a1b62355ad6737507957' => [
@@ -271,6 +240,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
         );
     }
 
+    #[Test]
     public function doesNothingIfNewRecordDoesNotContainUrls(): void
     {
         $dataMap = $this->createDataMap([], 'NEW67a1e37c5cc8c460046430');

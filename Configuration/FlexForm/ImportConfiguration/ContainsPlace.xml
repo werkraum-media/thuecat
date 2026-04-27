@@ -36,7 +36,7 @@
                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.apiKey</label>
                         <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.apiKey.description</description>
                         <config>
-                            <type>password</type>
+                            <type>input</type>
                             <nullable type="boolean">0</nullable>
                         </config>
                     </apiKey>

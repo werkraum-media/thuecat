@@ -21,36 +21,8 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
+namespace WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 
-use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
-
-class StaticUrlProvider implements UrlProvider
+class ResourceNotFoundException extends InvalidResponseException
 {
-    /**
-     * @var string[]
-     */
-    private array $urls = [];
-    private string $apiKey = '';
-
-    public function canProvideForConfiguration(
-        ImportConfiguration $configuration
-    ): bool {
-        return $configuration->getType() === 'static';
-    }
-
-    public function createWithConfiguration(
-        ImportConfiguration $configuration
-    ): UrlProvider {
-        $instance = clone $this;
-        $instance->urls = $configuration->getUrls();
-        $instance->apiKey = $configuration->getApiKey();
-
-        return $instance;
-    }
-
-    public function getUrls(?string $apiDomain = null): array
-    {
-        return $this->urls;
-    }
 }
