@@ -24,10 +24,31 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\ParkingFacilityEntity;
 
 class ParkingFacilityEntityTest extends AbstractImportTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Fixtures used here carry schema:openingHoursSpecification, so parse()
+        // hits AbstractEntity::buildOpeningHours, which fetches the Context
+        // singleton to filter past-dated entries. The Context auto-creates a
+        // date aspect from $GLOBALS['EXEC_TIME']; without it the lookup throws.
+        $GLOBALS['EXEC_TIME'] = 1709424000; // 2024-03-03 UTC
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['EXEC_TIME']);
+        // Context is a TYPO3 SingletonInterface — clear it so a stale instance
+        // from one test doesn't leak its date aspect into the next.
+        GeneralUtility::purgeInstances();
+        parent::tearDown();
+    }
+
     #[Test]
     public function returnsCorrectTable(): void
     {

@@ -295,7 +295,7 @@ class Resolver
                         if ($bucket === 'media') {
                             if ($atCap) {
                                 foreach ($references as $entry) {
-                                    if (is_array($entry) && isset($entry['id'])) {
+                                    if (is_array($entry)) {
                                         $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
                                     } elseif (is_string($entry)) {
                                         $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry);

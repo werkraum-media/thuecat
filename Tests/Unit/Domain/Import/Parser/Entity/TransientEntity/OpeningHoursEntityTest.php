@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity\TransientEntity;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
@@ -46,12 +48,17 @@ class OpeningHoursEntityTest extends TestCase
         $entity = new OpeningHoursEntity();
         $entity->configure($node);
 
-        self::assertSame([
+        // from/through are DateTimeImmutable so json_encode emits the legacy
+        // {date, timezone_type, timezone} shape OpeningHour::createFromArray
+        // expects. Field order matches the legacy converter
+        // (opens, closes, from, through, daysOfWeek).
+        $utc = new DateTimeZone('UTC');
+        self::assertEquals([
             'opens' => '10:00:00',
             'closes' => '18:00:00',
+            'from' => new DateTimeImmutable('2021-03-01', $utc),
+            'through' => new DateTimeImmutable('2021-12-31', $utc),
             'daysOfWeek' => ['Saturday', 'Sunday'],
-            'from' => ['date' => '2021-03-01'],
-            'through' => ['date' => '2021-12-31'],
         ], $entity->toArray());
     }
 

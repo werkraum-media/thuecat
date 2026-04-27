@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 
@@ -139,6 +141,9 @@ final class ParserTest extends AbstractImportTestCase
         // scalar set, and every transient bucket the attraction carries:
         // containedInPlace, managedBy (normalised from contentResponsible),
         // parkingFacilityNearBy, accessibilitySpecification, media.
+        // The fixture's only opening hour expired 2021-12-31 — pin "now" before
+        // then so buildOpeningHours' past-date filter keeps it in the row.
+        $this->setDateAspect(new DateTimeImmutable('2021-06-01', new DateTimeZone('UTC')));
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);

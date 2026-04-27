@@ -23,13 +23,18 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity;
 
+use DateTimeImmutable;
+use DateTimeZone;
+
 // Transient, like AddressEntity: not tagged as import.entity, not dispatched by
 // the Parser. The parent entity (TouristAttraction, …) constructs one per
 // OpeningHoursSpecification node, collects the toArray() outputs and
 // json_encodes the list into its own opening_hours column.
 //
 // Shape matches the frontend model's OpeningHour::createFromArray so the existing
-// rendering pipeline keeps working without changes.
+// rendering pipeline keeps working without changes: validFrom/validThrough are
+// stored as DateTimeImmutable so json_encode emits the legacy
+// {date, timezone_type, timezone} payload the frontend expects.
 class OpeningHoursEntity extends AbstractTransientEntity
 {
     protected string $opens = '';
@@ -40,31 +45,22 @@ class OpeningHoursEntity extends AbstractTransientEntity
      */
     protected array $daysOfWeek = [];
 
-    /**
-     * @var array{date: string}|null
-     */
-    protected ?array $from = null;
+    protected ?DateTimeImmutable $from = null;
 
-    /**
-     * @var array{date: string}|null
-     */
-    protected ?array $through = null;
+    protected ?DateTimeImmutable $through = null;
 
     public function configure(array $node): void
     {
         $this->opens = $this->extractStringValue($node['schema:opens'] ?? null);
         $this->closes = $this->extractStringValue($node['schema:closes'] ?? null);
         $this->daysOfWeek = $this->extractDaysOfWeek($node['schema:dayOfWeek'] ?? null);
+        $this->from = $this->extractDate($node['schema:validFrom'] ?? null);
+        $this->through = $this->extractDate($node['schema:validThrough'] ?? null);
+    }
 
-        $from = $this->extractStringValue($node['schema:validFrom'] ?? null);
-        if ($from !== '') {
-            $this->from = ['date' => $from];
-        }
-
-        $through = $this->extractStringValue($node['schema:validThrough'] ?? null);
-        if ($through !== '') {
-            $this->through = ['date' => $through];
-        }
+    public function getValidThrough(): ?DateTimeImmutable
+    {
+        return $this->through;
     }
 
     public function toArray(): array
@@ -72,7 +68,6 @@ class OpeningHoursEntity extends AbstractTransientEntity
         $array = [
             'opens' => $this->opens,
             'closes' => $this->closes,
-            'daysOfWeek' => $this->daysOfWeek,
         ];
         if ($this->from !== null) {
             $array['from'] = $this->from;
@@ -80,8 +75,19 @@ class OpeningHoursEntity extends AbstractTransientEntity
         if ($this->through !== null) {
             $array['through'] = $this->through;
         }
+        $array['daysOfWeek'] = $this->daysOfWeek;
 
         return $array;
+    }
+
+    private function extractDate(mixed $value): ?DateTimeImmutable
+    {
+        $raw = $this->extractStringValue($value);
+        if ($raw === '') {
+            return null;
+        }
+
+        return new DateTimeImmutable($raw, new DateTimeZone('UTC'));
     }
 
     /**

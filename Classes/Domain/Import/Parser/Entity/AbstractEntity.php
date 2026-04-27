@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OfferEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
+use WerkraumMedia\ThueCat\Service\DateBasedFilter\FilterBasedOnTypo3Context;
 
 abstract class AbstractEntity implements EntityInterface
 {
@@ -301,18 +304,40 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
-        $hours = [];
+        $entities = [];
         foreach ($items as $item) {
             if (!is_array($item)) {
                 continue;
             }
             $entity = new OpeningHoursEntity();
             $entity->configure($item);
-            $hours[] = $entity->toArray();
+            $entities[] = $entity;
         }
 
-        if ($hours === []) {
+        // Drop entries whose validThrough is before the reference date so stale
+        // seasonal hours don't pile up in the DB. Reference date is the TYPO3
+        // Context's date aspect (now in production, fixed in tests). The filter
+        // itself is a tiny stateless wrapper, so newing it here keeps the
+        // entity free of DI plumbing — entities are constructed bare in unit
+        // tests and via the import.entity ServiceLocator in production, neither
+        // of which permits constructor DI. Context is a TYPO3 core singleton,
+        // so it must be fetched via GeneralUtility to honour any aspect set by
+        // the caller (e.g. tests pinning "now" via setDateAspect()).
+        /** @var list<OpeningHoursEntity> $filtered */
+        $filtered = (new FilterBasedOnTypo3Context(GeneralUtility::makeInstance(Context::class)))
+            ->filterOutPreviousDates(
+                $entities,
+                static fn (OpeningHoursEntity $hour) => $hour->getValidThrough()
+            )
+        ;
+
+        if ($filtered === []) {
             return '';
+        }
+
+        $hours = [];
+        foreach ($filtered as $entity) {
+            $hours[] = $entity->toArray();
         }
 
         return (string)(json_encode($hours) ?: '');

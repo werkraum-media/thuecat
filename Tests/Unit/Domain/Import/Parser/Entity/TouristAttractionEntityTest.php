@@ -24,10 +24,31 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
 
 class TouristAttractionEntityTest extends AbstractImportTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Fixtures used here carry schema:openingHoursSpecification, so parse()
+        // hits AbstractEntity::buildOpeningHours, which fetches the Context
+        // singleton to filter past-dated entries. The Context auto-creates a
+        // date aspect from $GLOBALS['EXEC_TIME']; without it the lookup throws.
+        $GLOBALS['EXEC_TIME'] = 1709424000; // 2024-03-03 UTC
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['EXEC_TIME']);
+        // Context is a TYPO3 SingletonInterface — clear it so a stale instance
+        // from one test doesn't leak its date aspect into the next.
+        GeneralUtility::purgeInstances();
+        parent::tearDown();
+    }
+
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -259,7 +280,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         // opening-hours-to-filter.json has two OpeningHoursSpecification nodes —
         // one with a list of dayOfWeek entries, one with a single object — so
-        // it exercises both input shapes in one round trip.
+        // it exercises both input shapes in one round trip. The 2021 entry is
+        // filtered out by buildOpeningHours' past-date guard (EXEC_TIME=2024).
+        // from/through serialize as DateTimeImmutable so the legacy
+        // OpeningHour::createFromArray contract keeps working.
         $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -269,18 +293,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         self::assertSame([
             [
-                'opens' => '09:30:00',
-                'closes' => '18:00:00',
-                'daysOfWeek' => ['Wednesday'],
-                'from' => ['date' => '2021-05-01'],
-                'through' => ['date' => '2021-10-31'],
-            ],
-            [
                 'opens' => '13:00:00',
                 'closes' => '17:00:00',
+                'from' => ['date' => '2050-11-01 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
+                'through' => ['date' => '2050-04-30 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
                 'daysOfWeek' => ['Sunday'],
-                'from' => ['date' => '2050-11-01'],
-                'through' => ['date' => '2050-04-30'],
             ],
         ], $decoded);
     }
@@ -290,7 +307,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         // Alte Synagoge's fixture carries schema:openingHoursSpecification as a
         // single object rather than a list — the parser still has to produce a
-        // list of one entry in the JSON column.
+        // list of one entry in the JSON column. Pin EXEC_TIME before this
+        // entry's validThrough (2021-12-31) so the past-date filter keeps it.
+        $GLOBALS['EXEC_TIME'] = strtotime('2021-06-01 UTC');
+
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -308,7 +328,8 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         // special-opening-hours.json has two specialOpeningHoursSpecification
         // nodes — different JSON-LD key, identical shape, so the same transient
-        // handles it; only the target column changes.
+        // handles it; only the target column changes. The 2021 entry is filtered
+        // out by buildOpeningHours' past-date guard (EXEC_TIME=2024).
         $node = $this->nodeFromFixture('special-opening-hours.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -320,16 +341,9 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             [
                 'opens' => '10:00:00',
                 'closes' => '14:00:00',
+                'from' => ['date' => '2050-12-31 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
+                'through' => ['date' => '2050-12-31 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
                 'daysOfWeek' => ['Saturday'],
-                'from' => ['date' => '2050-12-31'],
-                'through' => ['date' => '2050-12-31'],
-            ],
-            [
-                'opens' => '10:00:00',
-                'closes' => '14:00:00',
-                'daysOfWeek' => ['Saturday'],
-                'from' => ['date' => '2021-12-31'],
-                'through' => ['date' => '2021-12-31'],
             ],
         ], $decoded);
     }

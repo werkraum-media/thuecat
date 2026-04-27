@@ -31,7 +31,7 @@ return [
             'tstamp' => '1613400587',
             'crdate' => '1613400558',
             'disable' => '0',
-            'title' => 'Two attractions sharing one org',
+            'title' => 'Same attraction twice',
             'type' => 'static',
             'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
@@ -47,7 +47,7 @@ return [
                             <value index="url">
                                 <el>
                                     <field index="url">
-                                        <value index="vDEF">https://thuecat.org/resources/attraction-with-single-slogan</value>
+                                        <value index="vDEF">https://thuecat.org/resources/attraction-duplicate-first</value>
                                     </field>
                                 </el>
                             </value>
@@ -56,7 +56,7 @@ return [
                             <value index="url">
                                 <el>
                                     <field index="url">
-                                        <value index="vDEF">https://thuecat.org/resources/attraction-with-slogan-array</value>
+                                        <value index="vDEF">https://thuecat.org/resources/attraction-duplicate-second</value>
                                     </field>
                                 </el>
                             </value>
