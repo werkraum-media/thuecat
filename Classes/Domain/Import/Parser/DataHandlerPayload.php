@@ -54,7 +54,7 @@ class DataHandlerPayload
      * the data part of an l18n_parent / l10n_source insert or update for
      * that record.
      *
-     * @var array<string, array<string, array<int, array<string, string>>>>
+     * @var array<string, array<string, array<int, array<string, string|int|float>>>>
      */
     private array $translations = [];
 
@@ -212,6 +212,22 @@ class DataHandlerPayload
     public function addTranslationRow(string $table, string $key, array $fields): void
     {
         $this->dataMap[$table][$key] = $fields;
+    }
+
+    /**
+     * Append (or overwrite) a single translated field on the per-language
+     * translations bucket. Used by the resolver when it builds per-language
+     * blobs (e.g. accessibility_specification) outside the parser path so the
+     * eventual addTranslationRow merge picks them up.
+     */
+    public function addTranslationField(
+        string $table,
+        string $remoteId,
+        int $sysLanguageUid,
+        string $field,
+        string|int|float $value
+    ): void {
+        $this->translations[$table][$remoteId][$sysLanguageUid][$field] = $value;
     }
 
     /**

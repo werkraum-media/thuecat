@@ -87,9 +87,16 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
                 $this->extractLanguageValue($certification['thuecat:accessibilityCertificationStatus'] ?? null)
             );
             foreach (self::CERTIFICATION_KEYS as $key) {
-                $value = $this->stripNamespacePrefix(
-                    $this->extractLanguageValue($certification['thuecat:' . $key] ?? null)
-                );
+                // Two upstream shapes: legacy fixtures emit a flat
+                // {@type: thuecat:CertificationLevel, @value: thuecat:<level>}
+                // node, while newer ones wrap that pair inside a PropertyValue
+                // with the actual level living at schema:value. Try the wrapper
+                // first; fall back to the bare value for the legacy shape.
+                $wrapper = $certification['thuecat:' . $key] ?? null;
+                $source = (is_array($wrapper) && isset($wrapper['schema:value']))
+                    ? $wrapper['schema:value']
+                    : $wrapper;
+                $value = $this->stripNamespacePrefix($this->extractLanguageValue($source));
                 if ($value !== '') {
                     $this->certifications[$key] = $value;
                 }

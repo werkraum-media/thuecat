@@ -213,7 +213,6 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function importsTouristAttractionWithAccessibilitySpecification(): void
     {
-        self::markTestSkipped('Pending: certificationAccessibility* fields (Deaf/Mental/PartiallyDeaf/PartiallyVisual/Visual/Walking/Wheelchair) are missing from the produced accessibility_specification text blob. Mapping for those schema:certificationAccessibility… terms is not picked up by the rewritten parser.');
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/attraction-with-accessibility-specification.json');
         GuzzleClientFaker::appendResponseFromFile(__DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/018132452787-ngbe.json');
@@ -222,6 +221,7 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
+        /** @var list<array{accessibility_specification: string}> $records */
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);

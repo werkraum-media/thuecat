@@ -679,6 +679,32 @@ class Resolver
                 'accessibility_specification',
                 (string)(json_encode($entity->toArray()) ?: '{}')
             );
+
+            // The blob is built by the resolver (not the parser), so per-
+            // language translation rows would otherwise inherit the default-
+            // language text. Re-shape per translation language and stage each
+            // blob into the translations bucket so drainTranslationsAgainstExistingRows
+            // writes them onto the existing translation rows. Only languages
+            // the parser already staged a translation for (i.e. the source
+            // graph carries text in that language) get a blob — otherwise we'd
+            // create an empty translation row for site languages the upstream
+            // doesn't cover.
+            $existingTranslations = $payload->getTranslations()[$ownerTable][$ownerRemoteId] ?? [];
+            foreach ($context->translationLanguages as $languageCode => $sysLanguageUid) {
+                if (!isset($existingTranslations[$sysLanguageUid])) {
+                    continue;
+                }
+                $translatedEntity = new AccessibilitySpecificationEntity();
+                $translatedEntity->configure($node, $languageCode);
+                $payload->addTranslationField(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $sysLanguageUid,
+                    'accessibility_specification',
+                    (string)(json_encode($translatedEntity->toArray()) ?: '{}')
+                );
+            }
+
             $payload->removeTransient($ownerTable, $ownerRemoteId, 'accessibilitySpecification', $reference);
         }
     }
