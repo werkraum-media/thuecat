@@ -47,6 +47,8 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends FunctionalTestCase
             'core',
             'backend',
             'extbase',
+            'filelist',
+            'filemetadata',
             'frontend',
             'fluid_styled_content',
             'install',

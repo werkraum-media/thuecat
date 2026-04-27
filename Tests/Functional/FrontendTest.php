@@ -39,8 +39,10 @@ class FrontendTest extends FunctionalTestCase
             'core',
             'backend',
             'extbase',
-            'frontend',
+            'filelist',
+            'filemetadata',
             'fluid_styled_content',
+            'frontend',
             'install',
         ];
 

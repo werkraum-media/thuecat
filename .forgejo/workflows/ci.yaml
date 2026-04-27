@@ -1,0 +1,58 @@
+name: 'CI'
+
+'on':
+  push:
+    branches:
+      - 'main'
+  pull_request:
+
+jobs:
+  base-qa:
+    runs-on: 'self-hosted'
+    container:
+      image: 'forgejo.werkraum-media.de/global/typo3-ci:php82-node24'
+    steps:
+      - uses: 'actions/checkout@v6'
+
+      - uses: 'actions/local/qa-forgejo-folder@v1'
+
+      - uses: 'actions/local/setup-composer-cache@v1'
+
+      - name: 'Validate composer.json'
+        run: 'composer validate'
+
+      - name: 'Validate TYPO3 language files'
+        run: "xmllint --schema xliff-core-1.2-strict.xsd --noout $(find Resources -name '*.xlf')"
+
+      - name: 'Install dependencies'
+        run: 'composer install --no-progress --no-interaction --no-ansi'
+
+      - name: 'Validate PHPUnit configuration file'
+        run: 'xmllint --schema vendor/phpunit/phpunit/phpunit.xsd --noout phpunit.xml.dist'
+
+      - name: 'Coding Guideline'
+        run: './vendor/bin/php-cs-fixer fix --dry-run --diff'
+
+  advanced-qa:
+    runs-on: 'self-hosted'
+    container:
+      image: 'forgejo.werkraum-media.de/global/typo3-ci:php${{ matrix.php-version }}-node24'
+    needs:
+      - 'base-qa'
+    strategy:
+      matrix:
+        php-version:
+          - '82'
+          - '83'
+          - '84'
+          - '85'
+        typo3-version:
+          - '^13.4'
+          - '^14'
+    steps:
+      - uses: 'actions/checkout@v6'
+
+      - uses: './.forgejo/local-actions/advanced-qa'
+        with:
+          php-version: '${{ matrix.php-version }}'
+          typo3-version: '${{ matrix.typo3-version }}'
