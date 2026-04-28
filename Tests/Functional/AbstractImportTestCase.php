@@ -70,6 +70,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         'frontend',
         'fluid_styled_content',
         'install',
+        'filelist',
+        'filemetadata',
     ];
     protected array $testExtensionsToLoad = [
         'werkraummedia/thuecat/',
