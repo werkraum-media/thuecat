@@ -330,6 +330,17 @@
             <trans-unit id="pages.module.thuecat" xml:space="preserve">
                 <source>ThÜCAT</source>
             </trans-unit>
+
+            <trans-unit id="tx_events_domain_model_event.remote_id">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_events_domain_model_event.location">
+                <source>Location</source>
+            </trans-unit>
+
+            <trans-unit id="tx_events_domain_model_location.remote_id">
+                <source>Remote ID</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

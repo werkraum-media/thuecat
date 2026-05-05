@@ -1,0 +1,641 @@
+{
+  "@context": {
+    "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+    "schema": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "wod": "https://web-of-data.org/ontology/wod/1.0/",
+    "epapp": "https://int.thuecat.org/ontology/epapp/1.0/",
+    "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "cc": "http://creativecommons.org/ns#",
+    "tourism": "https://web-of-data.org/tourism/",
+    "thuecatsh": "https://int.thuecat.org/shapes/thuecat/1.0/",
+    "ttgds": "https://int.thuecat.org/ontology/ttgds/1.0/",
+    "agg": "http://jena.apache.org/ARQ/function/aggregate#",
+    "geof": "http://www.opengis.net/def/function/geosparql/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "spif": "http://spinrdf.org/spif#",
+    "path": "http://www.ontotext.com/path#",
+    "apf": "http://jena.apache.org/ARQ/property#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "rep": "http://www.openrdf.org/config/repository#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "wgs": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "void": "http://rdfs.org/ns/void#",
+    "vb": "https://data.visitberlin.de/ontology/vb/1.0/",
+    "list": "http://jena.apache.org/ARQ/list#",
+    "geoext": "http://rdf.useekm.com/ext#",
+    "sesame": "http://www.openrdf.org/schema/sesame#",
+    "math": "http://www.w3.org/2005/xpath-functions/math",
+    "sail": "http://www.openrdf.org/config/sail#",
+    "fn": "http://www.w3.org/2005/xpath-functions",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "sys": "http://www.ontotext.com/owlim/system#",
+    "dachkg": "https://int.thuecat.org/ontology/dachkg/1.0/",
+    "array": "http://www.w3.org/2005/xpath-functions/array",
+    "similarity": "http://www.ontotext.com/graphdb/similarity/",
+    "similarity-index": "http://www.ontotext.com/graphdb/similarity/instance/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "map": "http://www.w3.org/2005/xpath-functions/map",
+    "sr": "http://www.openrdf.org/config/repository/sail#",
+    "rdf4j": "http://rdf4j.org/schema/rdf4j#",
+    "gn": "http://www.geonames.org/ontology#",
+    "afn": "http://jena.apache.org/ARQ/function#",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "ofn": "http://www.ontotext.com/sparql/functions/",
+    "inst": "http://www.ontotext.com/connectors/lucene/instance#",
+    "graphdb": "http://www.ontotext.com/config/graphdb#",
+    "luc": "http://www.ontotext.com/connectors/lucene#",
+    "omgeo": "http://www.ontotext.com/owlim/geo#"
+  },
+  "@graph": [
+    {
+      "@id": "https://int.thuecat.org/resources/e_101155560-hubev",
+      "@type": [
+        "schema:Thing",
+        "schema:Event",
+        "dcmitype:Event",
+        "ttgds:Event"
+      ],
+      "rdfs:label": {
+        "@language": "de",
+        "@value": "Museumstag. Entdeckertag."
+      },
+      "schema:dateModified": {
+        "@type": "schema:DateTime",
+        "@value": "2025-12-21T13:00:00+01:00"
+      },
+      "schema:identifier": [
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b6",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "hubermedia"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          }
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b7",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "thueringer-staedte"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          }
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b8",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "e_101155560"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          }
+        }
+      ],
+      "schema:name": {
+        "@language": "de",
+        "@value": "Museumstag. Entdeckertag."
+      },
+      "schema:copyrightHolder": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b2",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        },
+        "schema:address": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b3",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "rdfs:label": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          },
+          "schema:name": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "verein@thueringer-staedte.de"
+          },
+          "dcterms:title": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://www.thueringer-staedte.de/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        }
+      },
+      "schema:dateCreated": {
+        "@type": "schema:DateTime",
+        "@value": "2025-11-18T14:31:00+01:00"
+      },
+      "schema:location": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b9",
+        "@type": [
+          "schema:Thing",
+          "schema:Place"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        },
+        "schema:address": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b10",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "07407"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "Schillerstraße 25"
+          },
+          "schema:addressCountry": {
+            "@language": "de",
+            "@value": "Deutschland"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Rudolstadt"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "+49 3672 486470"
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "schillerhaus@rudolstadt.de"
+          }
+        },
+        "schema:geo": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b11",
+          "@type": [
+            "schema:Thing",
+            "schema:GeoCoordinates",
+            "schema:Intangible",
+            "schema:StructuredValue"
+          ],
+          "schema:latitude": {
+            "@type": "schema:Float",
+            "@value": "50.7212805"
+          },
+          "schema:longitude": {
+            "@type": "schema:Float",
+            "@value": "11.3351741"
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://schillerhaus.rudolstadt.de/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        }
+      },
+      "schema:eventSchedule": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b5",
+        "@type": [
+          "schema:Thing",
+          "schema:Schedule",
+          "schema:Intangible"
+        ],
+        "schema:startTime": {
+          "@type": "schema:DateTime",
+          "@value": "2026-05-17T14:00:00+02:00"
+        },
+        "schema:endTime": {
+          "@type": "schema:DateTime",
+          "@value": "2026-05-17T18:00:00+02:00"
+        },
+        "schema:startDate": {
+          "@type": "schema:DateTime",
+          "@value": "2026-05-17T14:00:00+02:00"
+        },
+        "schema:endDate": {
+          "@type": "schema:DateTime",
+          "@value": "2026-05-17T18:00:00+02:00"
+        },
+        "schema:scheduleTimezone": {
+          "@type": "xsd:string",
+          "@value": "Europe/Berlin"
+        }
+      },
+      "schema:sourceOrganization": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b15",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen\" e.V."
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen\" e.V."
+        },
+        "schema:address": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b16",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "rdfs:label": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen\" e.V."
+          },
+          "schema:name": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen\" e.V."
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "verein@thueringer-staedte.de"
+          },
+          "dcterms:title": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen\" e.V."
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://www.thueringer-staedte.de/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen\" e.V."
+        }
+      },
+      "schema:description": [
+        {
+          "@language": "de",
+          "@value": "Zum Internationalen Museumstag hält das Schillerhaus verschiedene Workshops bereit. Man kann sich zum Beispiel silhouettieren lassen, wie es früher üblich war. Dabei erhält man einen Scherenschnitt vom eigenen Profil. Außerdem gibt es eine Ex Libris Werkstatt. Das sind selbstgestaltete „Namensschilder“ für die Lieblingsbücher. Kaffee und Kuchen gibt’s natürlich auch. Außerdem kommen alle Gäste zum ermäßigten Eintrittspreis ins Museum.\nEintritt frei."
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b4",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "Zum Internationalen Museumstag hält das Schillerhaus verschiedene Workshops bereit. Man kann sich zum Beispiel silhouettieren lassen, wie es früher üblich war. Dabei erhält man einen Scherenschnitt vom eigenen Profil. Außerdem gibt es eine Ex Libris Werkstatt. Das sind selbstgestaltete „Namensschilder“ für die Lieblingsbücher. Kaffee und Kuchen gibt’s natürlich auch. Außerdem kommen alle Gäste zum ermäßigten Eintrittspreis ins Museum.<br />Eintritt frei.<br />"
+          }
+        }
+      ],
+      "schema:organizer": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b12",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        },
+        "schema:address": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b13",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "rdfs:label": {
+            "@language": "de",
+            "@value": "Schillerhaus Rudolstadt"
+          },
+          "schema:name": {
+            "@language": "de",
+            "@value": "Schillerhaus Rudolstadt"
+          },
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "07407"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "Schillerstraße 25"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Rudolstadt"
+          },
+          "schema:faxNumber": {
+            "@language": "de",
+            "@value": "+49 3672 486471"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "+49 3672 486470"
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "schillerhaus@rudolstadt.de"
+          },
+          "dcterms:title": {
+            "@language": "de",
+            "@value": "Schillerhaus Rudolstadt"
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://schillerhaus.rudolstadt.de/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Schillerhaus Rudolstadt"
+        }
+      },
+      "schema:author": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b0",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        },
+        "schema:address": {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b1",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "rdfs:label": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          },
+          "schema:name": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          },
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "99423"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "UNESCO-Platz 1"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Weimar"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "+49 (3643) 745 314"
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "verein@thueringer-staedte.de"
+          },
+          "dcterms:title": {
+            "@language": "de",
+            "@value": "Städtetourismus in Thüringen e.V."
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://www.thueringer-staedte.de/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Städtetourismus in Thüringen e.V."
+        }
+      },
+      "schema:provider": {
+        "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b14",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "destination.one"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "destination.one"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://destination.one/"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "destination.one"
+        }
+      },
+      "schema:keywords": {
+        "@id": "https://int.thuecat.org/resources/836532518318-wddc"
+      },
+      "dcterms:identifier": [
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b6",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "hubermedia"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          }
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b7",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "thueringer-staedte"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_project_id"
+          }
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b8",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "e_101155560"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_reference_id"
+          }
+        }
+      ],
+      "dcterms:title": {
+        "@language": "de",
+        "@value": "Museumstag. Entdeckertag."
+      },
+      "dcterms:description": [
+        {
+          "@language": "de",
+          "@value": "Zum Internationalen Museumstag hält das Schillerhaus verschiedene Workshops bereit. Man kann sich zum Beispiel silhouettieren lassen, wie es früher üblich war. Dabei erhält man einen Scherenschnitt vom eigenen Profil. Außerdem gibt es eine Ex Libris Werkstatt. Das sind selbstgestaltete „Namensschilder“ für die Lieblingsbücher. Kaffee und Kuchen gibt’s natürlich auch. Außerdem kommen alle Gäste zum ermäßigten Eintrittspreis ins Museum.\nEintritt frei."
+        },
+        {
+          "@id": "genid-a4133dde22a945bfad9261c7f6eda4245632273-b4",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "Zum Internationalen Museumstag hält das Schillerhaus verschiedene Workshops bereit. Man kann sich zum Beispiel silhouettieren lassen, wie es früher üblich war. Dabei erhält man einen Scherenschnitt vom eigenen Profil. Außerdem gibt es eine Ex Libris Werkstatt. Das sind selbstgestaltete „Namensschilder“ für die Lieblingsbücher. Kaffee und Kuchen gibt’s natürlich auch. Außerdem kommen alle Gäste zum ermäßigten Eintrittspreis ins Museum.<br />Eintritt frei.<br />"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -84,6 +84,11 @@ class GeneralConverter implements Converter
         $this->logger = $logManager->getLogger(self::class);
     }
 
+    public function supports(MapsToType $entity): bool
+    {
+        return isset($this->classToTableMapping[$entity::class]);
+    }
+
     public function convert(
         MapsToType $entity,
         ImportConfiguration $importConfiguration,
