@@ -133,6 +133,12 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return $this->allowedTypes;
     }
 
+    public function getApiKey(): string
+    {
+        $apiKey = $this->getConfigurationValueFromFlexForm('apiKey');
+        return is_string($apiKey) ? $apiKey : '';
+    }
+
     public function getSyncScopeId(): string
     {
         return $this->getConfigurationValueFromFlexForm('syncScopeId');

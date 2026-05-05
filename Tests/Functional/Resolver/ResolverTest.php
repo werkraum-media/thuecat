@@ -1,0 +1,886 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * Copyright (C) 2024 werkraum-media
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+namespace WerkraumMedia\ThueCat\Tests\Functional\Resolver;
+
+use PHPUnit\Framework\Attributes\Test;
+use ReflectionProperty;
+use RuntimeException;
+use WerkraumMedia\ThueCat\Domain\Import\InvalidTransientReferenceException;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Resolver;
+use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+
+final class ResolverTest extends AbstractImportTestCase
+{
+    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/';
+
+    private const ORG_REMOTE_ID = 'https://thuecat.org/resources/018132452787-ngbe';
+
+    #[Test]
+    public function freshOrganisationGetsNewPlaceholderKey(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+
+        $keys = array_keys($data['tx_thuecat_organisation']);
+        self::assertCount(1, $keys);
+        self::assertStringStartsWith('NEW', (string)$keys[0]);
+
+        $row = $data['tx_thuecat_organisation'][$keys[0]];
+        self::assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
+        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        self::assertSame(10, $row['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function existingOrganisationIsKeyedByUidAndDataOverwritten(): void
+    {
+        // Preloaded row has uid=1, remote_id matching the fixture, title 'Old title'.
+        // We expect the resolver to key the row by '1' and leave the fresh data
+        // (new title from the fixture) intact — no diffing, legacy behaviour.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/UpdatesExistingOrganization.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        // PHP casts numeric-string array keys back to int automatically, so the
+        // outer key the resolver sets as '1' ends up as int 1 in the array.
+        self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
+
+        $row = $data['tx_thuecat_organisation'][1];
+        self::assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
+        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        self::assertSame(10, $row['pid']);
+    }
+
+    #[Test]
+    public function townResolvesManagedByToExistingOrganisationUid(): void
+    {
+        // Organisation is preloaded with uid=7; the town fixture carries a
+        // managedBy transient pointing at that same remote_id. Resolver
+        // wires `managed_by = 7` on the town row, then refreshes the org
+        // via HTTP per the STATUS_FOUND contract.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        // Refreshed organisation merges in under its existing uid=7.
+        self::assertSame(
+            ['tx_thuecat_town', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame('7', $townRow['managed_by']);
+        self::assertSame(10, $townRow['pid']);
+
+        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function townFetchesMissingOrganisationAndLinksViaNewPlaceholder(): void
+    {
+        // No preloaded organisation. Resolver must fetch the managedBy @id
+        // from ThueCat, parse the returned graph, and merge the organisation
+        // row into the payload. The next drain pass wires the town's
+        // managed_by to the organisation's NEW placeholder key.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            ['tx_thuecat_town', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $orgKeys = array_keys($data['tx_thuecat_organisation']);
+        self::assertCount(1, $orgKeys);
+        self::assertStringStartsWith('NEW', (string)$orgKeys[0]);
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame((string)$orgKeys[0], $townRow['managed_by']);
+        self::assertSame(10, $townRow['pid']);
+
+        $orgRow = $data['tx_thuecat_organisation'][$orgKeys[0]];
+        self::assertSame(10, $orgRow['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function parkingFacilityResolvesContainedInPlaceAndManagedByToExistingUids(): void
+    {
+        // ParkingFacility fixture carries two ref→uid transients we now handle:
+        // containedInPlace (→ town wwne, preloaded uid=5) and managedBy
+        // (→ organisation rfze, preloaded uid=8). Fixture is trimmed to drop
+        // the media bucket which is still out of scope for the resolver.
+        // Per the STATUS_FOUND contract both DB-resident references are
+        // refreshed via HTTP.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownForParkingFacility.php');
+        $this->expectFetch('508431710173-wwne.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('396420044896-drzt-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        // The wwne fixture upstream is typed schema:TouristAttraction even
+        // though the test fixture preloads it as a town for FK purposes
+        // (the old behaviour wired FKs by uid without ever fetching). With
+        // STATUS_FOUND refresh, the fetched payload enters under the type
+        // its JSON actually declares — tourist_attraction — alongside the
+        // organisation refresh keyed by uid=7.
+        self::assertSame(
+            ['tx_thuecat_parking_facility', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $keys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $keys);
+        self::assertStringStartsWith('NEW', (string)$keys[0]);
+
+        $row = $data['tx_thuecat_parking_facility'][$keys[0]];
+        self::assertSame('5', $row['town']);
+        self::assertSame('7', $row['managed_by']);
+        self::assertSame(10, $row['pid']);
+
+        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionResolvesMultipleParkingFacilityNearByToExistingUids(): void
+    {
+        // Bridge fixture carries two parkingFacilityNearBy @ids; both parking
+        // facilities are preloaded (uid=9 for drzt, uid=11 for ocar). Both
+        // towns from containedInPlace are preloaded too. Per the STATUS_FOUND
+        // contract every direct reference is refreshed via HTTP — both towns,
+        // the organisation, and both parking facilities. The without-media
+        // variants are mapped onto the canonical URLs to keep media fanout
+        // out of scope for this test.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingParkingFacilityForAttraction.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('052821473718-oxfq.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/396420044896-drzt',
+            'thuecat.org/resources/396420044896-drzt-without-media.json'
+        );
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/440055527204-ocar',
+            'thuecat.org/resources/440055527204-ocar-without-media.json'
+        );
+
+        $payload = $this->parseFixture('215230952334-yyno-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            [
+                'tx_thuecat_tourist_attraction',
+                'tx_thuecat_town',
+                'tx_thuecat_organisation',
+                'tx_thuecat_parking_facility',
+            ],
+            array_keys($data)
+        );
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(2, $keys);
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+
+        // town is a single-select; multiple containedInPlace refs collapse
+        // via the csv append+dedupe in DataHandlerPayload::setRelationField.
+        self::assertSame('5,6', $row['town']);
+        self::assertSame('9,11', $row['parking_facility_near_by']);
+        self::assertSame('7', $row['managed_by']);
+        self::assertSame(10, $row['pid']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function parkingFacilityFetchesMissingTownViaContainedInPlaceAndLinksViaNewPlaceholder(): void
+    {
+        // ParkingFacility ocar references town jcyt via containedInPlace; no
+        // town preloaded. Queue the town fixture: parser re-runs, merges the
+        // town row with its own managedBy transient pointing at the preloaded
+        // organisation ngbe (uid=7). The STATUS_FOUND contract refreshes the
+        // organisation too — ocar's contentResponsible→ngbe is a direct
+        // ref from the depth-0 root, so it is fetched even though ngbe is
+        // already in the DB.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('440055527204-ocar-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            ['tx_thuecat_parking_facility', 'tx_thuecat_town', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $parkingKeys);
+        self::assertStringStartsWith('NEW', (string)$parkingKeys[0]);
+
+        $townKeys = array_keys($data['tx_thuecat_town']);
+        self::assertCount(1, $townKeys);
+        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+
+        $parkingRow = $data['tx_thuecat_parking_facility'][$parkingKeys[0]];
+        self::assertSame((string)$townKeys[0], $parkingRow['town']);
+        // ocar maps thuecat:contentResponsible into the managedBy bucket and
+        // the existing ngbe uid=7 wires the FK directly.
+        self::assertSame('7', $parkingRow['managed_by']);
+
+        $townRow = $data['tx_thuecat_town'][$townKeys[0]];
+        self::assertSame('7', $townRow['managed_by']);
+
+        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionFetchesMissingParkingFacilityAndLinksViaNewPlaceholder(): void
+    {
+        // Bridge fixture with two parkingFacilityNearBy refs; neither parking
+        // facility is preloaded. Queue both trimmed parking-facility fixtures.
+        // Towns (jcyt, oxfq) and organisation (ngbe) are preloaded; under
+        // the STATUS_FOUND contract every direct ref from the depth-0 root
+        // is refreshed, so all three preloaded targets are fetched too.
+        // The parking facilities are at depth 1: their own
+        // containedInPlace + contentResponsible transients sit at depth 2
+        // and are dropped by the depth cap (no further fetches).
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForAttraction.php');
+
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('052821473718-oxfq.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/396420044896-drzt',
+            'thuecat.org/resources/396420044896-drzt-without-media.json'
+        );
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/440055527204-ocar',
+            'thuecat.org/resources/440055527204-ocar-without-media.json'
+        );
+
+        $payload = $this->parseFixture('215230952334-yyno-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            [
+                'tx_thuecat_tourist_attraction',
+                'tx_thuecat_town',
+                'tx_thuecat_organisation',
+                'tx_thuecat_parking_facility',
+            ],
+            array_keys($data)
+        );
+
+        $attractionKeys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(2, $attractionKeys);
+
+        $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(2, $parkingKeys);
+        foreach ($parkingKeys as $parkingKey) {
+            self::assertStringStartsWith('NEW', (string)$parkingKey);
+        }
+
+        $row = $data['tx_thuecat_tourist_attraction'][$attractionKeys[0]];
+        self::assertSame(
+            implode(',', array_map('strval', $parkingKeys)),
+            $row['parking_facility_near_by']
+        );
+        self::assertSame('5,6', $row['town']);
+        self::assertSame('7', $row['managed_by']);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function parkingFacilityMediaBucketShapesIntoJsonBlob(): void
+    {
+        // drzt's schema:photo and schema:image both point at dms_6486108, so
+        // the media bucket has two {kind,id} entries referencing the same
+        // resource. The resolver fetches the media node once (FetchData
+        // caches by url+apiKey), shapes each entry into the legacy Media
+        // frontend JSON, and writes the encoded list onto the `media`
+        // column. Photo-first ordering makes the first entry mainImage:true.
+        // Preload town + orgs so the ref→uid buckets resolve via DB. Per
+        // STATUS_FOUND, both DB-resident direct refs are also refreshed.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownForParkingFacility.php');
+        $this->expectFetch('dms_6486108.json');
+        $this->expectFetch('508431710173-wwne.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('396420044896-drzt.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        // wwne refresh enters as tourist_attraction (its actual JSON type)
+        // even though it's preloaded as a town in the DB fixture — see the
+        // parkingFacilityResolvesContainedInPlaceAndManagedByToExistingUids
+        // test for context.
+        self::assertSame(
+            ['tx_thuecat_parking_facility', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $keys = array_keys($data['tx_thuecat_parking_facility']);
+        self::assertCount(1, $keys);
+
+        $row = $data['tx_thuecat_parking_facility'][$keys[0]];
+        self::assertArrayHasKey('media', $row);
+
+        $media = json_decode((string)$row['media'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertIsArray($media);
+        self::assertCount(2, $media);
+
+        self::assertSame([
+            'mainImage' => true,
+            'type' => 'image',
+            'title' => 'Erfurt-Parkhaus-Domplatz.jpg',
+            'description' => '',
+            'url' => 'https://cms.thuecat.org/o/adaptive-media/image/6486108/Preview-1280x0/image',
+            'author' => 'Florian Trykowski',
+            'copyrightYear' => 2021,
+            'license' => [
+                'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                'author' => '',
+            ],
+        ], $media[0]);
+
+        self::assertSame([
+            'mainImage' => false,
+            'type' => 'image',
+            'title' => 'Erfurt-Parkhaus-Domplatz.jpg',
+            'description' => '',
+            'url' => 'https://cms.thuecat.org/o/adaptive-media/image/6486108/Preview-1280x0/image',
+            'author' => 'Florian Trykowski',
+            'copyrightYear' => 2021,
+            'license' => [
+                'type' => 'https://creativecommons.org/licenses/by/4.0/',
+                'author' => '',
+            ],
+        ], $media[1]);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionMediaBucketResolvesAuthorReference(): void
+    {
+        // attraction-with-media references four image-with-* resources, one
+        // of which (image-with-foreign-author) points its schema:author at an
+        // author-with-names Person node. The resolver must fetch the Person
+        // node and shape "GivenName FamilyName" into the output. This also
+        // covers the three other author shapes in one sweep: literal string,
+        // license-author-only, and string + license-author.
+        //
+        // managedBy via contentResponsible → ngbe (preloaded as uid=7);
+        // refreshed via HTTP per the STATUS_FOUND contract.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+
+        $this->expectFetch('image-with-foreign-author.json');
+        $this->expectFetch('author-with-names.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $this->expectFetch('image-with-author-and-license-author.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('attraction-with-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $keys);
+
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        /** @var list<array{mainImage: bool, type: string, author: string, license: array{type: string, author: string}}> $media */
+        $media = json_decode((string)$row['media'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(4, $media);
+
+        // All four entries are mainImage:false (attraction-with-media has no
+        // schema:photo slot) and in source order.
+        self::assertSame('GivenName FamilyName', $media[0]['author']);
+        self::assertSame('', $media[0]['license']['author']);
+
+        self::assertSame('Full Name', $media[1]['author']);
+        self::assertSame('', $media[1]['license']['author']);
+
+        self::assertSame('', $media[2]['author']);
+        self::assertSame('Autor aus Lizenz', $media[2]['license']['author']);
+
+        self::assertSame('Full Name', $media[3]['author']);
+        self::assertSame('Autor aus Lizenz', $media[3]['license']['author']);
+
+        foreach ($media as $entry) {
+            self::assertFalse($entry['mainImage']);
+            self::assertSame('image', $entry['type']);
+        }
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionAccessibilitySpecificationShapesIntoJsonBlob(): void
+    {
+        // zmqf (Alte Synagoge) references e_23…-rfa via thuecat:accessibility-
+        // Specification. The resolver fetches the node, groups
+        // thuecat:accessibilitySearchCriteria by @type into four fixed facility
+        // buckets (Walking, Visual, Deaf, Mental), pulls the seven
+        // certification levels out of thuecat:accessibilityCertification, and
+        // picks the short descriptions in the owning row's language. Test runs
+        // the German default: all four shortDescription* fields resolve to
+        // German strings; the English follow-up is covered separately.
+        // STATUS_FOUND refreshes every direct DB-resident reference: the
+        // three towns from containedInPlace and the organisation from
+        // contentResponsible.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
+        $this->expectFetch('e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('573211638937-gmqb.json');
+        $this->expectFetch('497839263245-edbm.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+
+        $data = $payload->getDataMap();
+        self::assertSame(
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_town', 'tx_thuecat_organisation'],
+            array_keys($data)
+        );
+
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(2, $keys);
+
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        self::assertArrayHasKey('accessibility_specification', $row);
+
+        $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame([
+            'accessibilityCertificationStatus' => 'AccessibilityChecked',
+            'certificationAccessibilityDeaf' => 'None',
+            'certificationAccessibilityMental' => 'None',
+            'certificationAccessibilityPartiallyDeaf' => 'None',
+            'certificationAccessibilityPartiallyVisual' => 'Info',
+            'certificationAccessibilityVisual' => 'None',
+            'certificationAccessibilityWalking' => 'Info',
+            'certificationAccessibilityWheelchair' => 'Info',
+            'accessibilitySearchCriteria' => [
+                'facilityAccessibilityWalking' => [
+                    'AllRoomsStepFreeAccess',
+                    'HingedGrabRailToilet',
+                    'LateralAccessibleToilet',
+                    'StepFreeAccess',
+                    'ToiletsPeopleWithDisabilities',
+                    'NinetyCMWidthPassageWays',
+                    'SpecialOffersWalkingImpairment',
+                    'SpecialOffersWheelchairUsers',
+                ],
+                'facilityAccessibilityVisual' => [
+                    'AssistanceDogsWelcome',
+                    'VisuallyContrastingStepEdges',
+                    'OffersInPictoralLanguage',
+                    'SpecialOffersBlindPeople',
+                    'SpecialOffersVisualImpairment',
+                    'TactileOffers',
+                ],
+                'facilityAccessibilityDeaf' => [
+                    'AudioInductionLoop',
+                    'SpecialOffersHearingImpairment',
+                ],
+                'facilityAccessibilityMental' => [
+                    'InformationWithPictogramsOrPictures',
+                ],
+            ],
+            'shortDescriptionAccessibilityDeaf' => 'Deutsche Beschreibung von shortDescriptionAccessibilityDeaf',
+            'shortDescriptionAccessibilityMental' => 'Deutsche Beschreibung von shortDescriptionAccessibilityMental',
+            'shortDescriptionAccessibilityVisual' => 'Deutsche Beschreibung von shortDescriptionAccessibilityVisual',
+            'shortDescriptionAccessibilityWalking' => 'Deutsche Beschreibung von shortDescriptionAccessibilityWalking',
+        ], $blob);
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function touristAttractionAccessibilitySpecificationSkipsShortDescriptionsWithoutTranslation(): void
+    {
+        // Same source node, but shaped for a language the fixture doesn't
+        // provide: French. Search criteria + certification levels are
+        // language-agnostic, so they stay; every shortDescription* field
+        // falls away because the fixture only carries de + en translations.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTownsAndOrganisationForZmqf.php');
+        $this->expectFetch('e_23bec7f80c864c358da033dd75328f27-rfa.json');
+        // Same STATUS_FOUND fanout as the German variant above.
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('573211638937-gmqb.json');
+        $this->expectFetch('497839263245-edbm.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10, language: 'fr'));
+
+        $data = $payload->getDataMap();
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
+        $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
+
+        self::assertIsArray($blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityDeaf', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityMental', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityVisual', $blob);
+        self::assertArrayNotHasKey('shortDescriptionAccessibilityWalking', $blob);
+
+        // Certifications + search criteria still shaped.
+        self::assertSame('AccessibilityChecked', $blob['accessibilityCertificationStatus']);
+        self::assertArrayHasKey('accessibilitySearchCriteria', $blob);
+    }
+
+    #[Test]
+    public function existingTranslationRowsGetUpdatedWithFreshFields(): void
+    {
+        // Very-happy-path: parent organisation row + en (uid=2) and fr (uid=3)
+        // translation rows are preloaded. The fixture carries de+en+fr name and
+        // de+en description. After resolve(), the payload should hold the
+        // parent row keyed by uid=1 with the fresh DE values, plus the two
+        // translation rows keyed by their own uids carrying only the
+        // translated fields the fixture provides — no bookkeeping (sys_language_uid,
+        // l10n_parent) is written here because DataHandler keeps those on
+        // updates. The translations bucket must drain to [].
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+        self::assertSame(10, $data['tx_thuecat_organisation'][1]['pid']);
+
+        self::assertSame([
+            'title' => 'Tourism Ltd.',
+            'description' => 'We market the region.',
+        ], $data['tx_thuecat_organisation'][2]);
+
+        self::assertSame([
+            'title' => 'Tourisme SARL',
+        ], $data['tx_thuecat_organisation'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+    }
+
+    #[Test]
+    public function missingTranslationRowsAreStagedAsLocalizeCmdMap(): void
+    {
+        // Scenario 2: parent organisation row preloaded (uid=1) without any
+        // translation rows. Fixture carries de+en+fr name and de+en
+        // description. Resolver must:
+        //   1. Update the parent row (uid=1) with fresh DE values.
+        //   2. Stage one `localize` cmdmap entry per missing language on the
+        //      parent uid — en (sys_language_uid=1) and fr (=2).
+        //   3. Leave the en/fr entries in the translations bucket so a
+        //      second pass can drain them once DataHandler::process_cmdmap
+        //      creates the rows and the new uids land in the DB.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithoutTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
+        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+
+        // PHP coerces the numeric-string key '1' (the parent uid the resolver
+        // writes) to int 1 at array-set time, so we assert against int keys.
+        self::assertSame(
+            ['tx_thuecat_organisation' => [1 => [['localize', 1], ['localize', 2]]]],
+            $payload->getCmdMap()
+        );
+
+        self::assertSame(
+            [
+                'tx_thuecat_organisation' => [
+                    'https://thuecat.org/resources/organisation-translated' => [
+                        1 => ['title' => 'Tourism Ltd.', 'description' => 'We market the region.'],
+                        2 => ['title' => 'Tourisme SARL'],
+                    ],
+                ],
+            ],
+            $payload->getTranslations()
+        );
+    }
+
+    #[Test]
+    public function secondPassDrainsTranslationsBucketAfterImporterClearedDataMap(): void
+    {
+        // Models the second resolver pass after the Importer has fired
+        // process_datamap + process_cmdmap and cleared the datamap/cmdMap on
+        // the payload. Only the translations bucket survives. The DB now has
+        // the parent (uid=1) plus en (uid=2) and fr (uid=3) translation rows
+        // — same shape as scenario 1's preloaded fixture. The Importer's
+        // promoteNewKeys step seeds $context->remoteIdToKey with the parent
+        // uid before round 2; we replicate that here so the drain branch
+        // sees a uid string for the owner.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+        $this->clearDataMap($payload);
+
+        $context = new ResolverContext(storagePid: 10);
+        $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] = '1';
+        $this->get(Resolver::class)->resolve($payload, $context);
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        // Parent row not in the datamap on this pass — the parent fields were
+        // already written in round one; round two only writes translations.
+        self::assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
+
+        self::assertSame([
+            'title' => 'Tourism Ltd.',
+            'description' => 'We market the region.',
+        ], $data['tx_thuecat_organisation'][2]);
+
+        self::assertSame([
+            'title' => 'Tourisme SARL',
+        ], $data['tx_thuecat_organisation'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+        self::assertSame([], $payload->getCmdMap());
+    }
+
+    #[Test]
+    public function findUidByRemoteIdIgnoresTranslationRowsAndReturnsParentUid(): void
+    {
+        // Translation rows share the parent's remote_id. Without the
+        // languageField restriction in findUidByRemoteId, the round-1
+        // rekey could surface a translation uid (2 or 3) as the parent
+        // and rekey the datamap row under the wrong uid. The organisation
+        // fixture preloads uid=1 (de), 2 (en), 3 (fr) for the same
+        // remote_id; we verify the resolver rekeys the parent row under
+        // uid=1 and seeds the context map accordingly.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/OrganisationWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $context = new ResolverContext(storagePid: 10);
+        $this->get(Resolver::class)->resolve($payload, $context);
+
+        $data = $payload->getDataMap();
+        self::assertArrayHasKey(1, $data['tx_thuecat_organisation']);
+        self::assertSame(
+            '1',
+            $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] ?? null
+        );
+    }
+
+    #[Test]
+    public function existingTownTranslationRowsGetUpdatedWithFreshFields(): void
+    {
+        // Town counterpart to the organisation translation test: parent row
+        // (uid=1) plus en (uid=2) and fr (uid=3) translation rows preloaded.
+        // Fixture carries de+en+fr name and de+en description; fr description
+        // is intentionally absent so the fr translation row stays minimal.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TownWithExistingTranslations.php');
+
+        $payload = $this->parseFixture('town-translated.json', ['en' => 1, 'fr' => 2]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(storagePid: 10)
+        );
+
+        $data = $payload->getDataMap();
+        self::assertSame(['tx_thuecat_town'], array_keys($data));
+        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_town']));
+
+        self::assertSame('Erfurt', $data['tx_thuecat_town'][1]['title']);
+        self::assertSame('Thüringer Landeshauptstadt.', $data['tx_thuecat_town'][1]['description']);
+        self::assertSame(10, $data['tx_thuecat_town'][1]['pid']);
+
+        self::assertSame([
+            'title' => 'Erfurt (EN)',
+            'description' => 'Capital of Thuringia.',
+        ], $data['tx_thuecat_town'][2]);
+
+        self::assertSame([
+            'title' => 'Erfurt (FR)',
+        ], $data['tx_thuecat_town'][3]);
+
+        self::assertSame([], $payload->getTranslations());
+    }
+
+    #[Test]
+    public function unknownTransientBucketRaisesException(): void
+    {
+        // Defensive: if the parser emits a bucket the resolver has no branch
+        // for, loop forever is the alternative. Better to fail loud so the
+        // gap surfaces on the next test run.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json');
+        $this->injectTransient(
+            $payload,
+            'tx_thuecat_organisation',
+            'https://thuecat.org/resources/018132452787-ngbe',
+            'someFutureBucket',
+            ['https://thuecat.org/resources/whatever']
+        );
+
+        $this->expectException(RuntimeException::class);
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+    }
+
+    #[Test]
+    public function nonUrlTransientReferenceRaisesException(): void
+    {
+        // Simulate a bug in a parser entity that leaks a non-URL value into
+        // a transient bucket. The resolver must refuse to dispatch a DB
+        // lookup or API fetch for that reference and throw instead.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('043064193523-jcyt.json');
+        $this->injectTransient(
+            $payload,
+            'tx_thuecat_town',
+            'https://thuecat.org/resources/043064193523-jcyt',
+            'managedBy',
+            ['not-a-url']
+        );
+
+        $this->expectException(InvalidTransientReferenceException::class);
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+    }
+
+    /**
+     * Reflectively wipe the datamap on a payload, mirroring what the Importer
+     * does between resolver passes after a successful process_datamap +
+     * process_cmdmap round-trip.
+     */
+    private function clearDataMap(DataHandlerPayload $payload): void
+    {
+        $reflection = new ReflectionProperty(DataHandlerPayload::class, 'dataMap');
+        $reflection->setValue($payload, []);
+    }
+
+    /**
+     * @param list<string> $references
+     */
+    private function injectTransient(
+        DataHandlerPayload $payload,
+        string $table,
+        string $remoteId,
+        string $bucket,
+        array $references
+    ): void {
+        $reflection = new ReflectionProperty(DataHandlerPayload::class, 'transients');
+        /** @var array<string, array<string, array<string, list<string>>>> $transients */
+        $transients = $reflection->getValue($payload);
+        $transients[$table][$remoteId][$bucket] = $references;
+        $reflection->setValue($payload, $transients);
+    }
+
+    /**
+     * @param array<string, int> $translationLanguages
+     */
+    private function parseFixture(
+        string $filename,
+        array $translationLanguages = []
+    ): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload {
+        $path = self::FIXTURE_PATH . $filename;
+        $decoded = json_decode((string)file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+        $graph = is_array($decoded) && is_array($decoded['@graph'] ?? null) ? $decoded['@graph'] : [];
+
+        $parser = $this->get(Parser::class);
+        $parser->parse($graph, 'de', $translationLanguages);
+        return $parser->getDataHandlerPayload();
+    }
+}

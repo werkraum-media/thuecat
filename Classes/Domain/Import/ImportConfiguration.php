@@ -51,4 +51,20 @@ interface ImportConfiguration
      * @return string[]
      */
     public function getAllowedTypes(): array;
+
+    /**
+     * Per-configuration ThueCat API key. Takes priority over the global
+     * key from ExtensionConfiguration. Empty string means "not set — fall
+     * back to the global key".
+     */
+    public function getApiKey(): string;
+
+    /**
+     * PID imported records will be written to. Also used to resolve the target
+     * site, which determines the default language tag (e.g. "de") used when
+     * picking localised values from the JSON-LD payload.
+     */
+    public function getStoragePid(): int;
+
+    public function getUid(): ?int;
 }

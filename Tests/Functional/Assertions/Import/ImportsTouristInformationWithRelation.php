@@ -9,7 +9,7 @@ return [
             'pid' => '10',
             'remote_id' => 'https://thuecat.org/resources/333039283321-xxwg',
             'title' => 'Erfurt Tourist Information',
-            'description' => 'Direkt an der Krämerbrücke liegt die Erfurter Tourist Information. Nach einer Modernisierung im Frühjahr 2017 erstrahlt diese in neuem Glanz und ist auch technisch auf dem neuesten Stand. Hier erhalten Sie Stadtpläne, Broschüren zu Erfurt und originelle Souvenirs. Zudem bietet die Tourist Information vielfältige Stadtführungen und Rundfahrten mit Straßenbahn oder Bus sowie kompetente Beratung zu Hotels, Pensionen und Privatunterkünften.',
+            'description' => 'Direkt an der Krämerbrücke liegt die Erfurter Tourist Information. Nach einer Modernisierung im Frühjahr 2017 erstrahlt diese in neuem Glanz und ist auch technisch auf dem neuesten Stand. Hier erhalten Sie Stadtpläne, Broschüren zu Erfurt und originelle Souvenirs. Zudem bietet die Tourist Information vielfältige Stadtführungen und Rundfahrten mit Straßenbahn oder Bus sowie kompetente Beratung zu Hotels, Pensionen und Privatunterkünften. ',
             'managed_by' => '1',
             'town' => '1',
         ],

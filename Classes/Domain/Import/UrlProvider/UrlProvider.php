@@ -23,14 +23,16 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\UrlProvider;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
 
+#[AutoconfigureTag('import.url.provider')]
 interface UrlProvider
 {
     /**
      * @return string[]
      */
-    public function getUrls(): array;
+    public function getUrls(?string $apiDomain = null): array;
 
     public function canProvideForConfiguration(ImportConfiguration $configuration): bool;
 

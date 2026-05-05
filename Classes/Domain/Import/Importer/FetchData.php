@@ -29,6 +29,8 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
+use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\ResourceNotFoundException;
+use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 class FetchData
 {
@@ -43,12 +45,16 @@ class FetchData
     ) {
     }
 
-    public function updatedNodes(string $scopeId): array
+    public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null): array
     {
+        if ($apiDomain !== null) {
+            $this->databaseUrlPrefix = $apiDomain;
+        }
         return $this->jsonLDFromUrl(
             $this->databaseUrlPrefix
             . '/api/ext-sync/get-updated-nodes?syncScopeId='
-            . urlencode($scopeId)
+            . urlencode($scopeId),
+            $apiKey
         );
     }
 
@@ -57,15 +63,20 @@ class FetchData
         return $this->getResourceEndpoint() . ltrim($id, '/');
     }
 
-    public function jsonLDFromUrl(string $url): array
+    public function jsonLDFromUrl(string $url, ?string $apiKey = null): array
     {
-        $cacheIdentifier = sha1($url);
+        // Include the effective api key in the cache identifier so two
+        // configurations with different keys don't share responses.
+        $cacheIdentifier = sha1($url . '|' . ($apiKey ?? ''));
         $cacheEntry = $this->cache->get($cacheIdentifier);
         if (is_array($cacheEntry)) {
             return $cacheEntry;
         }
 
-        $request = $this->requestFactory->createRequest('GET', $url);
+        $requestFactory = ($apiKey !== null && $apiKey !== '' && $this->requestFactory instanceof RequestFactory)
+            ? $this->requestFactory->withApiKey($apiKey)
+            : $this->requestFactory;
+        $request = $requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 
         $this->handleInvalidResponse($response, $request);
@@ -100,7 +111,7 @@ class FetchData
         }
 
         if ($response->getStatusCode() === 404) {
-            throw new InvalidResponseException(
+            throw new ResourceNotFoundException(
                 sprintf(
                     'Not found, given resource could not be found: "%s".',
                     $request->getUri()

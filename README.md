@@ -61,3 +61,9 @@ Please configure API Key via Extension Configuration.
 
 Configuration records need to be created, e.g. by visiting the ThüCAT module.
 Those can then be imported via the same module.
+
+## Architecture notes
+
+* Importer overview: see [Readme.Importer.md](Readme.Importer.md) for a tour
+  of the import package — components, run flow, logging contract, and
+  extension points.

@@ -1,6 +1,7 @@
 {
   "@graph": [
     {
+      "@id" : "https://thuecat.org/resources/r_22033250-oapoi",
       "@type": [
         "schema:Thing",
         "schema:Place",

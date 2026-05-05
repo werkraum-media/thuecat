@@ -32,11 +32,25 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 class RequestFactory implements RequestFactoryInterface
 {
+    private ?string $apiKeyOverride = null;
+
     public function __construct(
         private readonly ExtensionConfiguration $extensionConfiguration,
         private readonly RequestFactoryInterface $requestFactory,
         private readonly UriFactoryInterface $uriFactory
     ) {
+    }
+
+    /**
+     * Returns a clone that uses the given per-ImportConfiguration key instead
+     * of the global ExtensionConfiguration key. An empty string or null falls
+     * back to the global key.
+     */
+    public function withApiKey(?string $apiKey): self
+    {
+        $clone = clone $this;
+        $clone->apiKeyOverride = ($apiKey === null || $apiKey === '') ? null : $apiKey;
+        return $clone;
     }
 
     /**
@@ -54,14 +68,28 @@ class RequestFactory implements RequestFactoryInterface
             'format' => 'jsonld',
         ]);
 
-        try {
-            $query['api_key'] = $this->extensionConfiguration->get('thuecat', 'apiKey');
-        } catch (ExtensionConfigurationExtensionNotConfiguredException) {
-            // Nothing todo, not configured, don't add.
+        $apiKey = $this->resolveApiKey();
+        if ($apiKey !== null) {
+            $query['api_key'] = $apiKey;
         }
 
         $uri = $uri->withQuery(http_build_query($query));
 
         return $this->requestFactory->createRequest($method, $uri);
+    }
+
+    private function resolveApiKey(): ?string
+    {
+        if ($this->apiKeyOverride !== null) {
+            return $this->apiKeyOverride;
+        }
+
+        try {
+            $apiKey = $this->extensionConfiguration->get('thuecat', 'apiKey');
+        } catch (ExtensionConfigurationExtensionNotConfiguredException) {
+            return null;
+        }
+
+        return is_string($apiKey) && $apiKey !== '' ? $apiKey : null;
     }
 }

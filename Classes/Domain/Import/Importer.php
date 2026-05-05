@@ -2,218 +2,201 @@
 
 declare(strict_types=1);
 
-/*
- * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301, USA.
- */
-
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
-use Exception;
-use TYPO3\CMS\Core\Log\Logger;
-use TYPO3\CMS\Core\Log\LogManager;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\MapsToType;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\EntityRegistry;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\JsonDecode;
-use WerkraumMedia\ThueCat\Domain\Import\EntityMapper\MappingException;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\Converter;
+use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Throwable;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\Languages;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\SaveData;
-use WerkraumMedia\ThueCat\Domain\Import\Model\EntityCollection;
-use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\Registry as UrlProviderRegistry;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 class Importer
 {
-    private readonly Logger $logger;
-
-    private readonly Import $import;
-
     public function __construct(
-        private readonly UrlProviderRegistry $urls,
-        private readonly Converter $converter,
-        private readonly EntityRegistry $entityRegistry,
-        private readonly EntityMapper $entityMapper,
-        private readonly Languages $languages,
-        private readonly ImportLogRepository $importLogRepository,
+        private readonly Parser $parser,
         private readonly FetchData $fetchData,
-        private readonly SaveData $saveData,
-        LogManager $logManager
+        private readonly SiteFinder $siteFinder,
+        private readonly Resolver $resolver,
+        private readonly ImportLogger $importLogger,
+        #[AutowireLocator(services: 'import.url.provider')]
+        private readonly ServiceLocator $urlProviders
     ) {
-        $this->logger = $logManager->getLogger(self::class);
-        $this->import = new Import();
     }
 
-    public function importConfiguration(ImportConfiguration $configuration): ImportLog
+    /**
+     * Runs one full import. Returns the highest severity recorded in the
+     * import log for this run, in PSR-3 vocabulary (`info` for a clean run,
+     * `error` if any DataHandler call complained or the URL loop swallowed
+     * an exception). Callers (Command) decide on an exit code from that.
+     */
+    public function importConfiguration(ImportConfiguration $configuration): string
     {
-        $this->import->start($configuration);
-        $this->import();
-        $this->import->end();
-
-        if ($this->import->done()) {
-            $this->logger->info(
-                'Finished import.',
-                [
-                    'errors' => $this->import->getLog()->getListOfErrors(),
-                    'summary' => $this->import->getLog()->getSummaryOfEntries(),
-                ]
-            );
-            $this->importLogRepository->addLog($this->import->getLog());
-        }
-
-        return $this->import->getLog();
-    }
-
-    private function import(): void
-    {
-        $urlProvider = $this->urls->getProviderForConfiguration($this->import->getConfiguration());
+        $urlProvider = $this->getProviderForConfiguration($configuration);
         if (!$urlProvider instanceof UrlProvider) {
-            throw new Exception('No URL Provider available for given configuration.', 1629296635);
+            throw new InvalidUrlProviderException('No URL Provider available for given configuration.', 1629296635);
         }
 
-        foreach ($urlProvider->getUrls() as $url) {
-            $this->importResourceByUrl($url);
-        }
-    }
-
-    private function importResourceByUrl(string $url): void
-    {
-        $this->logger->info('Process url.', ['url' => $url]);
-        if ($this->import->handledRemoteId($url)) {
-            $this->logger->notice('Skip Url as we already handled it during import.', ['url' => $url]);
-            return;
-        }
-
-        try {
-            $content = $this->fetchData->jsonLDFromUrl($url);
-        } catch (InvalidResponseException $e) {
-            $this->logger->error('Skip Url as we could not fetch content of entity "{entityId}" due to error: {errorMessage}.', [
-                'entityId' => $url,
-                'errorMessage' => $e->getMessage(),
-                'exception' => $e,
-            ]);
-            $this->import->getLog()->addEntry(new FetchingError($url, $e));
-            return;
-        }
-
-        if ($content === []) {
-            $this->logger->notice('Skip Url as we did not receive any content.', ['url' => $url]);
-            return;
-        }
-
-        foreach ($content['@graph'] as $jsonEntity) {
-            $this->importJsonEntity($jsonEntity, $url);
-        }
-    }
-
-    private function importJsonEntity(array $jsonEntity, string $url): void
-    {
-        if ($this->entityAllowed($jsonEntity) === false) {
-            return;
-        }
-
-        $targetEntity = $this->entityRegistry->getEntityByTypes($jsonEntity['@type']);
-        if ($targetEntity === '') {
-            $this->logger->notice('Skip entity, no target entity found.', ['types' => $jsonEntity['@type']]);
-            return;
-        }
-
-        $entities = new EntityCollection();
-
-        foreach ($this->languages->getAvailable($this->import->getConfiguration()) as $language) {
-            $this->logger->info('Process entity for language.', ['language' => $language, 'targetEntity' => $targetEntity]);
-            try {
-                $mappedEntity = $this->entityMapper->mapDataToEntity(
-                    $jsonEntity,
-                    $targetEntity,
-                    [
-                        JsonDecode::ACTIVE_LANGUAGE => $language,
-                    ]
-                );
-            } catch (MappingException $e) {
-                $this->handleMappingException($e, $language);
-                continue;
+        $apiKey = $configuration->getApiKey();
+        $translationLanguages = [];
+        $defaultLanguage = 'de'; // fallback
+        foreach ($this->siteFinder->getSiteByPageId($configuration->getStoragePid())->getLanguages() as $siteLanguage) {
+            if ($siteLanguage->getLanguageId() === 0) {
+                $defaultLanguage = $siteLanguage->getLocale()->getLanguageCode();
+            } else {
+                $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
-
-            if (!$mappedEntity instanceof MapsToType) {
-                $this->logger->error('Mapping did not result in an MapsToType instance.', ['class' => $mappedEntity::class]);
-                continue;
-            }
-
-            try {
-                $convertedEntity = $this->converter->convert(
-                    $mappedEntity,
-                    $this->import->getConfiguration(),
-                    $language
-                );
-            } catch (MappingException $e) {
-                $this->handleMappingException($e, $language);
-                $convertedEntity = null;
-            }
-
-            if ($convertedEntity === null) {
-                $this->logger->notice(
-                    'Could not convert entity.',
-                    [
-                        'url' => $url,
-                        'language' => $language,
-                        'targetEntity' => $targetEntity,
-                    ]
-                );
-                continue;
-            }
-            $entities->add($convertedEntity);
         }
-
-        $this->saveData->import(
-            $entities,
-            $this->import->getLog()
+        $context = new ResolverContext(
+            $configuration->getStoragePid(),
+            $defaultLanguage,
+            $configuration->getApiKey(),
+            $translationLanguages,
         );
-    }
-
-    private function entityAllowed(array $jsonEntity): bool
-    {
-        if ($this->import->getConfiguration()->getAllowedTypes() === []) {
-            return true;
+        $accumulatedPayload = new DataHandlerPayload();
+        foreach ($urlProvider->getUrls() as $url) {
+            // Per-URL try/catch so a single broken root doesn't abort the
+            // run. The exception is staged into the import log and the
+            // loop moves on; the run finishes with severity 'error' so the
+            // command surfaces a non-zero exit code.
+            try {
+                $inputData = $this->fetchDataFromApi($url, $apiKey);
+            } catch (InvalidResponseException $e) {
+                $this->importLogger->recordException('fetchingError', $e);
+                continue;
+            }
+            try {
+                $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
+                $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $context);
+            } catch (Throwable $e) {
+                $this->importLogger->recordException('mappingError', $e);
+                continue;
+            }
+            $accumulatedPayload->mergeFrom($resolved);
         }
 
-        foreach ($jsonEntity['@type'] as $type) {
-            if (in_array($type, $this->import->getConfiguration()->getAllowedTypes()) === true) {
-                return true;
+        // Snapshot before the loop drains the datamap. Translation rows added
+        // by the resolver are excluded so the logger reports only the
+        // default-language records the user expects to see counted.
+        $loggerPayload = $accumulatedPayload->getDefaultLanguageDataMap();
+
+        if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
+            $this->importLogger->writeLog(
+                $configuration->getUid(),
+                $loggerPayload,
+                []
+            );
+            return $this->importLogger->getMaxSeverity();
+        }
+
+        $iterations = 0;
+        // DataHandler's cmdMap is keyed [table][uid][command] = value, so
+        // two localize commands on the same uid (one per target language)
+        // collapse to a single entry — only the last survives. Each
+        // additional language therefore needs its own iteration: round N
+        // stages localize for one outstanding language, round N+1 fills
+        // the just-created translation row's fields. Budget: iter 0 for
+        // defaults, 2 iters per translation language, plus one trailing
+        // iter where the loop notices nothing is left and exits.
+        $maxIterations = count($translationLanguages) * 2 + 2;
+        // DataHandler carries state across calls (substNEWwithIDs, datamap,
+        // cmdmap, errors, …); reusing one instance across passes mixes state.
+        // Each pass gets a fresh instance and the substNEWwithIDs maps get
+        // merged so the logger sees every NEW→uid mapping the loop produced.
+        //
+        // The loop survives because translation scenario 2 needs two passes:
+        // pass 1 stages a localize cmdMap (creating the translation row),
+        // pass 2 picks up the new translation uid and writes its translated
+        // fields. Default-language rows and already-resolved transients are
+        // idempotent across passes via ResolverContext::defaultStatus and
+        // translationStatus — re-resolving a drained payload short-circuits
+        // instead of re-querying or re-fetching.
+        $substNEWwithIDs = [];
+        while ($accumulatedPayload->getDataMap() !== [] || $accumulatedPayload->getCmdMap() !== []) {
+            if ($iterations >= $maxIterations) {
+                throw new RuntimeException(
+                    'Importer loop exceeded ' . $maxIterations . ' iterations; translations bucket: '
+                    . json_encode($accumulatedPayload->getTranslations()),
+                    1777148664
+                );
+            }
+            $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
+            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
+            $dataHandler->process_datamap();
+            $dataHandler->process_cmdmap();
+            // DataHandler accumulates user/system errors into errorLog when
+            // log() is called with $error > 0. Forward whatever it captured
+            // this pass into our import log so editors see why a row failed
+            // to land instead of having to grep sys_log.
+            /** @var list<string> $passErrorLog */
+            $passErrorLog = $dataHandler->errorLog;
+            $this->importLogger->recordDataHandlerErrors($passErrorLog, $iterations);
+            /** @var array<string, int|string> $passSubst */
+            $passSubst = $dataHandler->substNEWwithIDs;
+            $substNEWwithIDs = $substNEWwithIDs + $passSubst;
+            $accumulatedPayload->clearDataMap();
+            $accumulatedPayload->clearCmdMap();
+            // Rewrite NEW… entries in the resolver's remote_id→key map to
+            // the uids DataHandler just assigned, so the next round wires
+            // FKs against real uids instead of stale placeholders.
+            $context->promoteNewKeys($passSubst);
+            $this->resolver->resolve($accumulatedPayload, $context);
+            $iterations++;
+        }
+
+        $this->importLogger->writeLog(
+            $configuration->getUid(),
+            $loggerPayload,
+            $substNEWwithIDs
+        );
+
+        return $this->importLogger->getMaxSeverity();
+    }
+
+    /**
+     * Fan the staged cmdmap entries out into the nested shape DataHandler::start()
+     * consumes: $cmd[$table][$uid][$command] = $value.
+     *
+     * @param array<string, array<int|string, list<array{0: string, 1: int|string}>>> $cmdMap
+     *
+     * @return array<string, array<int|string, array<string, int|string>>>
+     */
+    private function fanOutCmdMap(array $cmdMap): array
+    {
+        $result = [];
+        foreach ($cmdMap as $table => $entriesByKey) {
+            foreach ($entriesByKey as $key => $entries) {
+                foreach ($entries as $entry) {
+                    $result[$table][$key][$entry[0]] = $entry[1];
+                }
+            }
+        }
+        return $result;
+    }
+
+    private function getProviderForConfiguration(ImportConfiguration $configuration): ?UrlProvider
+    {
+        foreach ($this->urlProviders as $provider) {
+            if ($provider->canProvideForConfiguration($configuration)) {
+                return $provider->createWithConfiguration($configuration);
             }
         }
 
-        $this->logger->notice('Deny entity as type is not allowed.', ['types' => $jsonEntity['@type']]);
-        return false;
+        return null;
     }
 
-    private function handleMappingException(MappingException $exception, string $language): void
+    private function fetchDataFromApi(string $url, string $apiKey, string $apiDomain = ''): array
     {
-        $this->logger->error('Could not map data to entity.', [
-            'url' => $exception->getUrl(),
-            'language' => $language,
-            'mappingError' => $exception->getMessage(),
-        ]);
-        $this->import->getLog()->addEntry(new MappingError($exception));
+        $response = $this->fetchData->jsonLDFromUrl($url, $apiKey === '' ? null : $apiKey);
+        $graph = $response['@graph'] ?? [];
+        return is_array($graph) ? $graph : [];
     }
 }

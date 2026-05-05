@@ -1,0 +1,122 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/835224016581-dara",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "thuecat:Building",
+                "thuecat:ReligiousBuilding",
+                "thuecat:Cathedral",
+                "thuecat:CatholicChurch",
+                "thuecat:Dome"
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                }
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Dom St. Marien"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Cathedral of St. Mary"
+                }
+            ],
+            "schema:openingHoursSpecification": [
+                {
+                    "@id": "genid-7bb7d92bd6624bdf84634c86e8acdbb4-b4",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:closes": {
+                        "@type": "schema:Time",
+                        "@value": "18:00:00"
+                    },
+                    "schema:dayOfWeek": [
+                        {
+                            "@type": "schema:DayOfWeek",
+                            "@value": "schema:Wednesday"
+                        }
+                    ],
+                    "schema:opens": {
+                        "@type": "schema:Time",
+                        "@value": "09:30:00"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2021-05-01"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2021-10-31"
+                    }
+                },
+                {
+                    "@id": "genid-7bb7d92bd6624bdf84634c86e8acdbb4-b7",
+                    "@type": [
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:Thing",
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:closes": {
+                        "@type": "schema:Time",
+                        "@value": "17:00:00"
+                    },
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Sunday"
+                    },
+                    "schema:opens": {
+                        "@type": "schema:Time",
+                        "@value": "13:00:00"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2050-11-01"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2050-04-30"
+                    }
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "http://www.dom-erfurt.de"
+            }
+        }
+    ]
+}

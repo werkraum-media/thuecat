@@ -1,6 +1,7 @@
 /.Build/
 /composer.lock
 /.*.cache
+/.coverage/
 /Tests/Acceptance/Support/_generated
 /vendor/
 /var/

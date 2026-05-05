@@ -22,6 +22,9 @@ CREATE TABLE tx_thuecat_import_log_entry (
     record_uid int(11) unsigned DEFAULT '0' NOT NULL,
     table_name varchar(255) DEFAULT '' NOT NULL,
     insertion TINYINT(1) unsigned DEFAULT '0' NOT NULL,
+    severity varchar(16) DEFAULT 'info' NOT NULL,
+    message text,
+    context text,
 );
 
 CREATE TABLE tx_thuecat_organisation (

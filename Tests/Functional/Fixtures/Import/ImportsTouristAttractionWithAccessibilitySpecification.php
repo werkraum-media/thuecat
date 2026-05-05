@@ -47,7 +47,7 @@ return [
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-accessibility-certification</value>
+                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-accessibility-specification</value>
                                                 </field>
                                             </el>
                                         </value>
