@@ -33,6 +33,30 @@
             <trans-unit id="importConfiguration.syncScope.syncScopeId" xml:space="preserve">
                 <source>syncScopeId</source>
             </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.importTarget">
+                <source>Import Target Extension</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.importTarget.description">
+                <source>When importing events, they can use the ext:events data structures.</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.importTarget.thuecat">
+                <source>ThueCat</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.importTarget.events">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.apiDomain">
+                <source>API Domain</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.apiDomain.description">
+                <source>Which Url to query for resources. E.g. `https://cdb.thuecat.org` or `https://cdb.int.thuecat.org`. Falls back to `https://cdb.thuecat.org` when left empty.</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.fetchLastXDays">
+                <source>Fetch last X Days of Changes</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.fetchLastXDays.description">
+                <source>If the jobs runs every 5 days, set the X to 6 here to be safe. Don't let it go on for too long.</source>
+            </trans-unit>
 
             <!-- Contains Place Import Configuration -->
             <trans-unit id="importConfiguration.containsPlace.sheetTitle" xml:space="preserve">

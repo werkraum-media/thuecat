@@ -66,5 +66,24 @@ interface ImportConfiguration
      */
     public function getStoragePid(): int;
 
+    /**
+     * Host the importer fetches resources from for this configuration.
+     * Implementations must never return an empty string — when no override is
+     * configured they fall back to FetchData::DEFAULT_API_DOMAIN so callers
+     * can rely on always having a usable URL prefix.
+     */
+    public function getApiDomain(): string;
+
+    /**
+     * Which extension's data structures the import populates. Currently
+     * supplied by the syncScope flexform; other configuration types return
+     * 'thuecat' as the historical default. Returned values mirror the
+     * extension keys ('thuecat', 'events') so callers can route on them
+     * directly without a mapping layer.
+     */
+    public function getImportTarget(): string;
+
     public function getUid(): ?int;
+
+    public function getFetchLastXDays(): int;
 }

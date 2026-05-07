@@ -139,4 +139,76 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject = $this->get(FetchData::class);
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
     }
+
+    #[Test]
+    public function updatedNodesUsesDefaultApiDomainWhenNoOverrideGiven(): void
+    {
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+
+        $subject = $this->get(FetchData::class);
+        $subject->updatedNodes('scope-1');
+
+        $lastRequest = GuzzleClientFaker::getLastRequest();
+        self::assertNotNull($lastRequest);
+        self::assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
+    }
+
+    #[Test]
+    public function updatedNodesHonoursPerCallApiDomainOverride(): void
+    {
+        $this->expectFetchForUrl(
+            'https://cdb.int.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+
+        $subject = $this->get(FetchData::class);
+        $subject->updatedNodes('scope-1', null, 'https://cdb.int.thuecat.org');
+
+        $lastRequest = GuzzleClientFaker::getLastRequest();
+        self::assertNotNull($lastRequest);
+        self::assertSame('cdb.int.thuecat.org', $lastRequest->getUri()->getHost());
+    }
+
+    #[Test]
+    public function updatedNodesDoesNotLeakOverrideAcrossCalls(): void
+    {
+        // Two consecutive calls on the same FetchData instance must each
+        // pick their own host. The previous implementation mutated an
+        // instance field on override; a second call without override would
+        // have stayed on cdb.int.thuecat.org instead of returning to the
+        // default. Stage cdb.int.thuecat.org once and cdb.thuecat.org once
+        // — if the override leaked, the default-host bag would stay empty
+        // and the int-host bag would receive both calls.
+        $this->expectFetchForUrl(
+            'https://cdb.int.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-int&showTotal=true',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-default&showTotal=true',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+
+        $subject = $this->get(FetchData::class);
+        $subject->updatedNodes('scope-int', null, 'https://cdb.int.thuecat.org');
+        $subject->updatedNodes('scope-default');
+    }
+
+    #[Test]
+    public function updatedNodesFallsBackToDefaultWhenOverrideIsBlank(): void
+    {
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
+            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
+        );
+
+        $subject = $this->get(FetchData::class);
+        $subject->updatedNodes('scope-1', null, '');
+
+        $lastRequest = GuzzleClientFaker::getLastRequest();
+        self::assertNotNull($lastRequest);
+        self::assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
+    }
 }

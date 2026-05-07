@@ -29,6 +29,19 @@ services:
     class: 'WerkraumMedia\ThueCat\Service\DateBasedFilter\FilterBasedOnTypo3Context'
     public: true
 
+  # The events EventEntity is instantiated outside the container (Parser's
+  # ServiceLocator hands out entities without ctor args), so its runtime
+  # collaborators are resolved via GeneralUtility::makeInstance. That helper
+  # only goes through the container for *public* services — `public: false`
+  # services fall back to `new`, which fails on classes with required ctor
+  # args (DatesFactory needs Context + LogManager). Mark both public so
+  # makeInstance hands back fully autowired instances.
+  WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\Events\Support\EventScheduleAdapter:
+    public: true
+
+  WerkraumMedia\Events\Service\DestinationDataImportService\DatesFactory:
+    public: true
+
   WerkraumMedia\ThueCat\Typo3\Extbase\DataMapping\AfterObjectThawedHandler:
     tags:
       - name: 'event.listener'

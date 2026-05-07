@@ -26,6 +26,8 @@ namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 // Organisation's "manages_*" / "manages_towns" fields are reverse inline relations
 // in TCA (foreign_field on the child table). The child records write managed_by;
 // Organisation itself has no outgoing relation data to persist.
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+
 class OrganisationEntity extends AbstractEntity
 {
     public $table = 'tx_thuecat_organisation';
@@ -33,7 +35,7 @@ class OrganisationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function parse(array $node, string $language, array $translationLanguages = []): void
+    public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);

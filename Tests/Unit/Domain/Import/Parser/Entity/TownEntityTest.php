@@ -6,6 +6,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TownEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TownEntityTest extends AbstractImportTestCase
 {
@@ -32,7 +33,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->parse($node, 'de');
+        $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
@@ -45,7 +46,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->parse($node, 'de');
+        $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
@@ -58,7 +59,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->parse($node, 'de');
+        $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
@@ -74,7 +75,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->parse($node, 'en');
+        $subject->parse($node, 'en', new ParserContext(0));
 
         $row = $subject->toArray();
 
@@ -91,7 +92,7 @@ class TownEntityTest extends AbstractImportTestCase
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
         self::assertNotNull($node);
         $subject = new TownEntity();
-        $subject->parse($node, 'de');
+        $subject->parse($node, 'de', new ParserContext(0));
 
         $transients = $subject->getTransients();
 

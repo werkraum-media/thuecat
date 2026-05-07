@@ -750,6 +750,29 @@ parameters:
 			count: 1
 			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
 
+		-
+			message: '#^Cannot access an offset on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Cannot access offset ''SC_OPTIONS'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Cannot access offset ''processDatamapClass'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
+
+		-
+			message: '#^Cannot access offset ''t3lib/class\.t3lib_tcemain\.php'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
 
 		-
 			message: '#^Parameter \#1 \$original of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:mergeRecursiveWithOverrule\(\) expects array, mixed given\.$#'
@@ -768,6 +791,84 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
+
+		-
+			message: '#^Cannot access offset ''columns'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
+
+		-
+			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
+
+		-
+			message: '#^Cannot access offset ''tx_events_domain_model_date'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
+
+		-
+			message: '#^Cannot access offset ''columns'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''palettes'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''remote_identifier'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''showitem'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''source'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''thuecat_import_configuration'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''tx_events_domain_model_event'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset ''types'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
+
+		-
+			message: '#^Cannot access offset 1 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
 
 		-
 			message: '#^Cannot access offset ''HTTP'' on mixed\.$#'
@@ -840,7 +941,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: Tests/Unit/Domain/Import/Parser/Entity/AbstractImportTestCase.php
-
 
 		-
 			message: '#^Cannot access offset ''closes'' on mixed\.$#'

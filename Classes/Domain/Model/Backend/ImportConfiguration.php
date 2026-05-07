@@ -144,6 +144,37 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return $this->getConfigurationValueFromFlexForm('syncScopeId');
     }
 
+    public function getApiDomain(): string
+    {
+        // Returns the user's explicit choice or '' when blank/missing. The
+        // default (FetchData::DEFAULT_API_DOMAIN) is applied downstream by
+        // FetchData itself — keeping this method honest lets
+        // FetchData::getFullResourceUrl() distinguish "no override → use
+        // canonical resource host" from "explicit override → co-locate
+        // resource fetches at that host".
+        $apiDomain = $this->getConfigurationValueFromFlexForm('apiDomain');
+        return is_string($apiDomain) ? $apiDomain : '';
+    }
+
+    public function getImportTarget(): string
+    {
+        $importTarget = $this->getConfigurationValueFromFlexForm('importTarget');
+        // syncScope flexform values are extension keys ('thuecat', 'events').
+        // Non-syncScope configurations don't carry the field — they import
+        // ThueCat POI structures by definition, so 'thuecat' is the safe
+        // historical default.
+        return is_string($importTarget) && $importTarget !== '' ? $importTarget : 'thuecat';
+    }
+
+    public function getFetchLastXDays(): int
+    {
+        $value = $this->getConfigurationValueFromFlexForm('fetchLastXDays');
+        if (!is_scalar($value) || $value === '') {
+            return 1;
+        }
+        return (int)$value;
+    }
+
     public function getContainsPlaceId(): string
     {
         $containsPlaceId = $this->getConfigurationValueFromFlexForm('containsPlaceId');

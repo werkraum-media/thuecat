@@ -15,6 +15,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Domain\Import\UrlProvider\UrlProvider;
 
@@ -45,6 +46,7 @@ class Importer
         }
 
         $apiKey = $configuration->getApiKey();
+        $apiDomain = $configuration->getApiDomain();
         $translationLanguages = [];
         $defaultLanguage = 'de'; // fallback
         foreach ($this->siteFinder->getSiteByPageId($configuration->getStoragePid())->getLanguages() as $siteLanguage) {
@@ -54,14 +56,16 @@ class Importer
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
-        $context = new ResolverContext(
+        $parserContext = new ParserContext((int)$configuration->getUid(), $apiDomain);
+        $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
+            $parserContext,
             $defaultLanguage,
             $configuration->getApiKey(),
             $translationLanguages,
         );
         $accumulatedPayload = new DataHandlerPayload();
-        foreach ($urlProvider->getUrls() as $url) {
+        foreach ($urlProvider->getUrls($apiDomain) as $url) {
             // Per-URL try/catch so a single broken root doesn't abort the
             // run. The exception is staged into the import log and the
             // loop moves on; the run finishes with severity 'error' so the
@@ -73,8 +77,8 @@ class Importer
                 continue;
             }
             try {
-                $this->parser->parse($inputData, $defaultLanguage, $translationLanguages);
-                $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $context);
+                $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
+                $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
             } catch (Throwable $e) {
                 $this->importLogger->recordException('mappingError', $e);
                 continue;
@@ -147,8 +151,8 @@ class Importer
             // Rewrite NEW… entries in the resolver's remote_id→key map to
             // the uids DataHandler just assigned, so the next round wires
             // FKs against real uids instead of stale placeholders.
-            $context->promoteNewKeys($passSubst);
-            $this->resolver->resolve($accumulatedPayload, $context);
+            $resolverContext->promoteNewKeys($passSubst);
+            $this->resolver->resolve($accumulatedPayload, $resolverContext);
             $iterations++;
         }
 
@@ -193,7 +197,7 @@ class Importer
         return null;
     }
 
-    private function fetchDataFromApi(string $url, string $apiKey, string $apiDomain = ''): array
+    private function fetchDataFromApi(string $url, string $apiKey): array
     {
         $response = $this->fetchData->jsonLDFromUrl($url, $apiKey === '' ? null : $apiKey);
         $graph = $response['@graph'] ?? [];

@@ -56,7 +56,7 @@ class Parser
      *        records translated values into the payload's translations bucket
      *        alongside the default-language row.
      */
-    public function parse(array $graph, string $language = 'de', array $translationLanguages = []): void
+    public function parse(array $graph, ParserContext $parserContext, string $language = 'de', array $translationLanguages = []): void
     {
         // Fresh payload per parse() call so repeated imports don't accumulate state.
         $this->dataHandlerPayload = new DataHandlerPayload();
@@ -67,7 +67,7 @@ class Parser
             if (!is_array($node)) {
                 continue;
             }
-            $this->parseNode($node);
+            $this->parseNode($node, $parserContext);
         }
     }
 
@@ -83,21 +83,29 @@ class Parser
      *
      * @param array<string, int> $translationLanguages
      */
-    public function parseFresh(array $graph, string $language = 'de', array $translationLanguages = []): DataHandlerPayload
+    public function parseFresh(array $graph, ParserContext $parserContext, string $language = 'de', array $translationLanguages = []): DataHandlerPayload
     {
-        $this->parse($graph, $language, $translationLanguages);
+        $this->parse($graph, $parserContext, $language, $translationLanguages);
         return $this->dataHandlerPayload;
     }
 
-    public function parseNode(array $node): void
+    public function parseNode(array $node, ParserContext $parserContext): void
     {
         $entity = $this->resolveEntityClass($node['@type'] ?? []);
         if ($entity === null) {
             return;
         }
 
-        $entity->parse($node, $this->language, $this->translationLanguages);
+        $entity->parse($node, $this->language, $parserContext, $this->translationLanguages);
         $this->dataHandlerPayload->addEntity($entity);
+
+        // Inline side rows the parent manufactured (e.g. per-occurrence Date
+        // rows under an Event). They flow through the same payload so the
+        // Resolver wires their FK back to the parent via a transient bucket
+        // entry on the child pointing at the parent's remote_id.
+        foreach ($entity->getChildren() as $child) {
+            $this->dataHandlerPayload->addEntity($child);
+        }
     }
 
     /**

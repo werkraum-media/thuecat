@@ -1,0 +1,220 @@
+{
+  "@context": {
+    "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+    "schema": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+    "ttgds": "https://int.thuecat.org/ontology/ttgds/1.0/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcmitype": "http://purl.org/dc/dcmitype/"
+  },
+  "@graph": [
+    {
+      "@id": "https://int.thuecat.org/resources/e_19542-hubev",
+      "@type": [
+        "schema:Thing",
+        "schema:Event",
+        "thuecat:CultureEvent",
+        "dcmitype:Event",
+        "ttgds:Event"
+      ],
+      "rdfs:label": {
+        "@language": "de",
+        "@value": "Konzert des Dresdner Kreuzchores"
+      },
+      "schema:dateModified": {
+        "@type": "schema:DateTime",
+        "@value": "2026-04-02T07:14:52+02:00"
+      },
+      "schema:name": {
+        "@language": "de",
+        "@value": "Konzert des Dresdner Kreuzchores"
+      },
+      "schema:location": {
+        "@id": "genid-11b827438018436895c992be2ef33f592649718-b5",
+        "@type": [
+          "schema:Thing",
+          "schema:Place"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Margarethenkirche"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Margarethenkirche"
+        },
+        "schema:address": {
+          "@id": "genid-11b827438018436895c992be2ef33f592649718-b6",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "99867"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "Neumarkt"
+          },
+          "schema:addressCountry": {
+            "@language": "de",
+            "@value": "DE"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Gotha"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "0 36 21 / 852 466"
+          }
+        },
+        "schema:geo": {
+          "@id": "genid-11b827438018436895c992be2ef33f592649718-b7",
+          "@type": [
+            "schema:Thing",
+            "schema:GeoCoordinates",
+            "schema:Intangible",
+            "schema:StructuredValue"
+          ],
+          "schema:latitude": {
+            "@type": "schema:Float",
+            "@value": "50.9502677707088"
+          },
+          "schema:longitude": {
+            "@type": "schema:Float",
+            "@value": "10.7050083884301"
+          }
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Margarethenkirche"
+        }
+      },
+      "schema:eventSchedule": {
+        "@id": "genid-11b827438018436895c992be2ef33f592649718-b1",
+        "@type": [
+          "schema:Thing",
+          "schema:Schedule",
+          "schema:Intangible"
+        ],
+        "schema:startTime": {
+          "@type": "schema:DateTime",
+          "@value": "2026-11-29T18:00:00+01:00"
+        },
+        "schema:startDate": {
+          "@type": "schema:DateTime",
+          "@value": "2026-11-29T18:00:00+01:00"
+        },
+        "schema:endDate": {
+          "@type": "schema:Date",
+          "@value": "2026-11-29"
+        },
+        "schema:scheduleTimezone": {
+          "@type": "xsd:string",
+          "@value": "Europe/Berlin"
+        }
+      },
+      "schema:description": [
+        {
+          "@language": "de",
+          "@value": "Der Dresdner Kreuzchor ist einer der ältesten und berühmtesten Knabenchöre der Welt."
+        },
+        {
+          "@id": "genid-11b827438018436895c992be2ef33f592649718-b0",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "<p>Der Dresdner Kreuzchor ist einer der ältesten und berühmtesten Knabenchöre der Welt.</p>"
+          }
+        }
+      ],
+      "schema:organizer": {
+        "@id": "genid-11b827438018436895c992be2ef33f592649718-b8",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Ev. Luth. Kirchengemeinde Gotha"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Ev. Luth. Kirchengemeinde Gotha"
+        },
+        "schema:address": {
+          "@id": "genid-11b827438018436895c992be2ef33f592649718-b9",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "99867"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "Jüdenstr. 27"
+          },
+          "schema:addressCountry": {
+            "@language": "de",
+            "@value": "DE"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Gotha"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "03621852466"
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "ceka70@gmx.de"
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://www.kirchengemeinde-gotha.de/"
+        }
+      },
+      "schema:url": {
+        "@type": "schema:URL",
+        "@value": "http://www.kirchengemeinde-gotha.de/"
+      },
+      "schema:provider": {
+        "@id": "genid-11b827438018436895c992be2ef33f592649718-b10",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "schema:name": {
+          "@language": "de",
+          "@value": "gotha"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "https://www.gotha-adelt.de/"
+        }
+      }
+    }
+  ]
+}

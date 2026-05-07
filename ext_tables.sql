@@ -101,3 +101,11 @@ CREATE TABLE tx_thuecat_parking_facility (
     payment_accepted text,
     distance_to_public_transport text,
 );
+
+CREATE TABLE tx_events_domain_model_event (
+    remote_id varchar(255) DEFAULT '' NOT NULL,
+);
+
+CREATE TABLE tx_events_domain_model_date (
+    remote_id varchar(255) DEFAULT '' NOT NULL,
+);

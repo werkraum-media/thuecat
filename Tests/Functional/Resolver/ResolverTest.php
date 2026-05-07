@@ -29,6 +29,7 @@ use RuntimeException;
 use WerkraumMedia\ThueCat\Domain\Import\InvalidTransientReferenceException;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Domain\Import\Resolver;
 use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -46,7 +47,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('018132452787-ngbe.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(['tx_thuecat_organisation'], array_keys($data));
@@ -73,7 +74,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('018132452787-ngbe.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         // PHP casts numeric-string array keys back to int automatically, so the
@@ -98,7 +99,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('043064193523-jcyt.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         // Refreshed organisation merges in under its existing uid=7.
@@ -132,7 +133,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('043064193523-jcyt.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -173,7 +174,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('396420044896-drzt-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         // The wwne fixture upstream is typed schema:TouristAttraction even
@@ -226,7 +227,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('215230952334-yyno-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -269,7 +270,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('440055527204-ocar-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -326,7 +327,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('215230952334-yyno-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -377,7 +378,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('396420044896-drzt.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         // wwne refresh enters as tourist_attraction (its actual JSON type)
@@ -453,7 +454,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('attraction-with-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -514,7 +515,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
         self::assertSame(
@@ -591,7 +592,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('165868194223-zmqf-without-media.json');
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10, language: 'fr'));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0), 'fr'));
 
         $data = $payload->getDataMap();
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
@@ -626,7 +627,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve(
             $payload,
-            new ResolverContext(storagePid: 10)
+            new ResolverContext(10, new ParserContext(0))
         );
 
         $data = $payload->getDataMap();
@@ -667,7 +668,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve(
             $payload,
-            new ResolverContext(storagePid: 10)
+            new ResolverContext(10, new ParserContext(0))
         );
 
         $data = $payload->getDataMap();
@@ -712,7 +713,7 @@ final class ResolverTest extends AbstractImportTestCase
         $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
         $this->clearDataMap($payload);
 
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] = '1';
         $this->get(Resolver::class)->resolve($payload, $context);
 
@@ -749,7 +750,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $payload = $this->parseFixture('organisation-translated.json', ['en' => 1, 'fr' => 2]);
 
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $this->get(Resolver::class)->resolve($payload, $context);
 
         $data = $payload->getDataMap();
@@ -773,7 +774,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->get(Resolver::class)->resolve(
             $payload,
-            new ResolverContext(storagePid: 10)
+            new ResolverContext(10, new ParserContext(0))
         );
 
         $data = $payload->getDataMap();
@@ -815,7 +816,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->expectException(RuntimeException::class);
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
     }
 
     #[Test]
@@ -837,7 +838,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $this->expectException(InvalidTransientReferenceException::class);
 
-        $this->get(Resolver::class)->resolve($payload, new ResolverContext(storagePid: 10));
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
     }
 
     /**
@@ -880,7 +881,7 @@ final class ResolverTest extends AbstractImportTestCase
         $graph = is_array($decoded) && is_array($decoded['@graph'] ?? null) ? $decoded['@graph'] : [];
 
         $parser = $this->get(Parser::class);
-        $parser->parse($graph, 'de', $translationLanguages);
+        $parser->parse($graph, new ParserContext(0), 'de', $translationLanguages);
         return $parser->getDataHandlerPayload();
     }
 }

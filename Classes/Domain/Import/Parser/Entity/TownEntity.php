@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+
 class TownEntity extends AbstractEntity
 {
     public $table = 'tx_thuecat_town';
@@ -11,7 +13,7 @@ class TownEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
-    public function parse(array $node, string $language, array $translationLanguages = []): void
+    public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);

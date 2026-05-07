@@ -27,6 +27,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 final class ParserTest extends AbstractImportTestCase
 {
@@ -38,7 +39,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         self::assertArrayHasKey('tx_thuecat_organisation', $result);
@@ -62,7 +63,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -97,7 +98,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('043064193523-jcyt.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -147,7 +148,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -265,7 +266,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('333039283321-xxwg.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         self::assertArrayHasKey('tx_thuecat_tourist_information', $result);
@@ -290,7 +291,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $payload = $subject->getDataHandlerPayload();
 
         $needle = 'REF:';
@@ -333,7 +334,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('organisation-translated.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph, 'de', [
+        $subject->parse($graph, new ParserContext(0), 'de', [
             'en' => 1,
             'fr' => 2,
         ]);
@@ -371,7 +372,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph, 'de', [
+        $subject->parse($graph, new ParserContext(0), 'de', [
             'en' => 1,
             'fr' => 2,
         ]);
@@ -393,7 +394,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph, 'de', [
+        $subject->parse($graph, new ParserContext(0), 'de', [
             'en' => 1,
             'fr' => 2,
         ]);
@@ -490,7 +491,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph, 'de');
+        $subject->parse($graph, new ParserContext(0), 'de');
 
         self::assertSame([], $subject->getDataHandlerPayload()->getTranslations());
     }
@@ -501,7 +502,7 @@ final class ParserTest extends AbstractImportTestCase
         $graph = $this->graphFromFixture('018132452787-ngbe.json');
 
         $subject = $this->get(Parser::class);
-        $subject->parse($graph);
+        $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         foreach (array_keys($result) as $table) {

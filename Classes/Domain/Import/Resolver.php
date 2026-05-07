@@ -50,6 +50,11 @@ class Resolver
         'managedBy' => ['tx_thuecat_organisation', 'managed_by'],
         'containedInPlace' => ['tx_thuecat_town', 'town'],
         'parkingFacilityNearBy' => ['tx_thuecat_parking_facility', 'parking_facility_near_by'],
+        // Date → Event back-reference: child Date rows manufactured by
+        // EventEntity stage the parent's remote_id under this bucket; the
+        // Resolver dereferences it to the parent uid (which is in the same
+        // payload) and writes the `event` FK on each Date row.
+        'event' => ['tx_events_domain_model_event', 'event'],
     ];
 
     public function __construct(
@@ -555,6 +560,7 @@ class Resolver
 
         $fetchedPayload = $this->parser->parseFresh(
             $graph,
+            $context->parserContext,
             $context->language,
             $context->translationLanguages
         );

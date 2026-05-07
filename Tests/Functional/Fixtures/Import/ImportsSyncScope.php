@@ -44,6 +44,9 @@ return [
                             <field index="syncScopeId">
                                 <value index="vDEF">dd4615dc-58a6-4648-a7ce-4950293a06db</value>
                             </field>
+                            <field index="fetchLastXDays">
+                                <value index="vDEF">0</value>
+                            </field>
                         </language>
                     </sheet>
                 </data>

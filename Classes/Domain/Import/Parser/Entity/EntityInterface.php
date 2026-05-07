@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 // Entities are constructed via the ServiceLocator, which cannot supply the node.
 // Data extraction therefore happens post-construction through configure().
@@ -37,7 +38,7 @@ interface EntityInterface
      *        JSON-LD source carries a matching `@language` tag are recorded
      *        into the translations bucket via recordTranslation().
      */
-    public function parse(array $node, string $language, array $translationLanguages): void;
+    public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages): void;
 
     public function getRemoteId(array $node): string;
 
@@ -71,4 +72,17 @@ interface EntityInterface
     public function handlesTypes(): array;
 
     public function getPriority(): int;
+
+    /**
+     * Side entities the parent manufactured during parse() — typically inline
+     * 1:n children (e.g. Date rows for an Event) that don't have their own
+     * JSON-LD nodes in the @graph but still need to flow through the same
+     * Resolver/DataHandler pipeline as top-level entities. The Parser flushes
+     * each child into the DataHandlerPayload right after the parent.
+     *
+     * Default: no children. Override in entities that synthesize side rows.
+     *
+     * @return list<EntityInterface>
+     */
+    public function getChildren(): array;
 }

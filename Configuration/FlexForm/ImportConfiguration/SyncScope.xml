@@ -23,6 +23,24 @@
                             </suggestOptions>
                         </config>
                     </storagePid>
+                    <importTarget>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget.description</description>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items>
+                                <numIndex index="0">
+                                    <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget.thuecat</label>
+                                    <value>thuecat</value>
+                                </numIndex>
+                                <numIndex index="1">
+                                    <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget.events</label>
+                                    <value>events</value>
+                                </numIndex>
+                            </items>
+                        </config>
+                    </importTarget>
                     <syncScopeId>
                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.syncScopeId</label>
                         <config>
@@ -31,6 +49,15 @@
                             <required type="boolean">1</required>
                         </config>
                     </syncScopeId>
+                    <apiDomain>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.apiDomain</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.apiDomain.description</description>
+                        <config>
+                            <type>input</type>
+                            <eval>trim</eval>
+                            <default>https://cdb.thuecat.org</default>
+                        </config>
+                    </apiDomain>
                     <apiKey>
                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.apiKey</label>
                         <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.apiKey.description</description>
@@ -39,6 +66,13 @@
                             <nullable type="boolean">0</nullable>
                         </config>
                     </apiKey>
+                    <fetchLastXDays>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.fetchLastXDays</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.fetchLastXDays.description</description>
+                        <config>
+                            <type>number</type>
+                        </config>
+                    </fetchLastXDays>
                 </el>
             </ROOT>
         </sDEF>

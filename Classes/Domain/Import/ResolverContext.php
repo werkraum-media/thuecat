@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+
 final class ResolverContext
 {
     /**
@@ -139,6 +141,7 @@ final class ResolverContext
      */
     public function __construct(
         public readonly int $storagePid,
+        public readonly ParserContext $parserContext,
         public readonly string $language = 'de',
         public readonly ?string $apiKey = null,
         public readonly array $translationLanguages = [],

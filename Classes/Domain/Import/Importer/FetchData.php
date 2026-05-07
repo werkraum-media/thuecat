@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Importer;
 
+use DateInterval;
+use DateTimeZone;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -34,7 +36,15 @@ use WerkraumMedia\ThueCat\Domain\Import\RequestFactory;
 
 class FetchData
 {
-    private string $databaseUrlPrefix = 'https://cdb.thuecat.org';
+    /**
+     * Single source of truth for the API host every import configuration
+     * targets unless it explicitly overrides the value. Applied across all
+     * configuration types (static, syncScope, containsPlace) — any caller
+     * that needs to default outside this class (e.g. the ImportConfiguration
+     * model when its flexform field is empty) must reuse this constant so
+     * the fallback stays in one place.
+     */
+    public const DEFAULT_API_DOMAIN = 'https://cdb.thuecat.org';
 
     private string $urlPrefix = 'https://thuecat.org';
 
@@ -45,22 +55,42 @@ class FetchData
     ) {
     }
 
-    public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null): array
+    public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null, int $fetchLastXDays = 0): array
     {
-        if ($apiDomain !== null) {
-            $this->databaseUrlPrefix = $apiDomain;
+        // Compute per-call so concurrent configurations using different hosts
+        // don't trample each other. Empty/null falls back to the default —
+        // never operate without an API domain.
+        $domain = ($apiDomain === null || $apiDomain === '') ? self::DEFAULT_API_DOMAIN : $apiDomain;
+        $domain = rtrim($domain, '/') . '/';
+        $timezone = new DateTimeZone('Europe/Berlin');
+        $from = '';
+        if ($fetchLastXDays > 0) {
+            $today = date_create_immutable('now', $timezone)->setTime(0, 0, 0, 0);
+            $interval = new DateInterval('P' . $fetchLastXDays . 'D');
+            $from = $today->sub($interval);
+            $from = 'from=' . urlencode($from->format('c')) . '&';
         }
         return $this->jsonLDFromUrl(
-            $this->databaseUrlPrefix
-            . '/api/ext-sync/get-updated-nodes?syncScopeId='
-            . urlencode($scopeId),
+            $domain
+                . 'api/ext-sync/get-updated-nodes?showTotal=true&' . $from . 'syncScopeId='
+                . urlencode($scopeId),
             $apiKey
         );
     }
 
-    public function getFullResourceUrl(string $id): string
+    /**
+     * Build the absolute resource URL for an id. The optional $apiDomain
+     * lets URL providers route resource fetches at the same host they pulled
+     * the sync-scope or contains-place response from — needed for
+     * configurations whose entire conversation runs against `int.thuecat.org`
+     * or another non-default host. Falls back to the canonical
+     * `https://thuecat.org` resource URI host (which is what JSON-LD `@id`
+     * URIs reference) when no per-config domain was threaded through.
+     */
+    public function getFullResourceUrl(string $id, ?string $apiDomain = null): string
     {
-        return $this->getResourceEndpoint() . ltrim($id, '/');
+        $host = ($apiDomain === null || $apiDomain === '') ? $this->urlPrefix : $apiDomain;
+        return rtrim($host, '/') . '/resources/' . ltrim($id, '/');
     }
 
     public function jsonLDFromUrl(string $url, ?string $apiKey = null): array
@@ -88,11 +118,6 @@ class FetchData
         }
 
         return [];
-    }
-
-    private function getResourceEndpoint(): string
-    {
-        return $this->urlPrefix . '/resources/';
     }
 
     private function handleInvalidResponse(

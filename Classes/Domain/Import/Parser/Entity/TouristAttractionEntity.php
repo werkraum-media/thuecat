@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\AddressEntity;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
 {
@@ -53,7 +54,7 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $address = '';
     protected string $url = '';
 
-    public function parse(array $node, string $language, array $translationLanguages = []): void
+    public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);

@@ -225,7 +225,7 @@ class ImporterTest extends AbstractImportTestCase
         // Order doesn't matter — every URL must be fetched exactly the
         // declared number of times.
         $this->expectFetchForUrl(
-            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db',
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db&showTotal=true',
             'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
         );
         // Three roots from get-updated-nodes: dara, zmqf, yyno. Each is

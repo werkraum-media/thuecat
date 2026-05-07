@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 /**
  * Will add a title for all url entries, based on the fetched name of the record within url.
@@ -118,7 +119,7 @@ final class AddTitleForStaticUrlsDataHandlerHook
             if ($entity === null) {
                 continue;
             }
-            $entity->parse($node, $language, []);
+            $entity->parse($node, $language, new ParserContext(0), []);
             $title = $entity->toArray()['title'];
 
             /** @var array<mixed> $configuration */
@@ -181,8 +182,6 @@ final class AddTitleForStaticUrlsDataHandlerHook
 
     public static function register(): void
     {
-        /** @var array{SC_OPTIONS: array{'t3lib/class.t3lib_tcemain.php': array{processDatamapClass: list<class-string>}}} $typo3ConfVars */
-        $typo3ConfVars = &$GLOBALS['TYPO3_CONF_VARS'];
-        $typo3ConfVars['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
+        $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = self::class;
     }
 }

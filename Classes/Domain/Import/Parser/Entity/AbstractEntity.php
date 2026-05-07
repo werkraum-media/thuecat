@@ -441,5 +441,17 @@ abstract class AbstractEntity implements EntityInterface
         return $this->priority;
     }
 
+    /**
+     * Default: no children. Subclasses that synthesize inline 1:n side rows
+     * (e.g. EventEntity → DateEntity per occurrence) override this and return
+     * a freshly built list of EntityInterface instances.
+     *
+     * @return list<EntityInterface>
+     */
+    public function getChildren(): array
+    {
+        return [];
+    }
+
     abstract public function handlesTypes(): array;
 }

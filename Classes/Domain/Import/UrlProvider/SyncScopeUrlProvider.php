@@ -32,6 +32,8 @@ class SyncScopeUrlProvider implements UrlProvider
     private string $syncScopeId = '';
     private string $apiKey = '';
 
+    private int $fetchLastXDays = 0;
+
     public function __construct(
         private readonly FetchData $fetchData
     ) {
@@ -52,17 +54,18 @@ class SyncScopeUrlProvider implements UrlProvider
         $instance = clone $this;
         $instance->syncScopeId = $configuration->getSyncScopeId();
         $instance->apiKey = $configuration->getApiKey();
+        $instance->fetchLastXDays = $configuration->getFetchLastXDays();
 
         return $instance;
     }
 
     public function getUrls(?string $apiDomain = null): array
     {
-        $response = $this->fetchData->updatedNodes($this->syncScopeId, $this->apiKey, $apiDomain);
+        $response = $this->fetchData->updatedNodes($this->syncScopeId, $this->apiKey, $apiDomain, $this->fetchLastXDays);
         $resourceIds = array_values($response['data']['createdOrUpdated'] ?? []);
 
-        return array_map(function (string $id) {
-            return $this->fetchData->getFullResourceUrl($id);
+        return array_map(function (string $id) use ($apiDomain) {
+            return $this->fetchData->getFullResourceUrl($id, $apiDomain);
         }, $resourceIds);
     }
 }

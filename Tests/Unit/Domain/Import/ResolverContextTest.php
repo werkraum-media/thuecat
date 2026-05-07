@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
 
 /**
@@ -40,7 +41,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteRewritesNewPlaceholderToUidString(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = 'NEW_abc';
 
         $context->promoteNewKeys(['NEW_abc' => 42]);
@@ -57,7 +58,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteCastsIntegerSubstValueToString(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = 'NEW_abc';
 
         $context->promoteNewKeys(['NEW_abc' => 7]);
@@ -74,7 +75,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteLeavesAlreadyPromotedUidsUntouched(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = '7';
 
         $context->promoteNewKeys([]);
@@ -90,7 +91,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteIgnoresSubstEntriesWithNoMatchingKey(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = 'NEW_known';
 
         $context->promoteNewKeys([
@@ -110,7 +111,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promotePreservesRemoteIdsNotMentionedBySubst(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = 'NEW_a';
         $context->remoteIdToKey[self::REMOTE_B] = 'NEW_b';
 
@@ -132,7 +133,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteAcceptsNumericStringSubstValue(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
         $context->remoteIdToKey[self::REMOTE_A] = 'NEW_abc';
 
         $context->promoteNewKeys(['NEW_abc' => '42']);
@@ -148,7 +149,7 @@ final class ResolverContextTest extends TestCase
     #[Test]
     public function promoteWithEmptyMapIsNoop(): void
     {
-        $context = new ResolverContext(storagePid: 10);
+        $context = new ResolverContext(10, new ParserContext(0));
 
         $context->promoteNewKeys(['NEW_abc' => 42]);
 

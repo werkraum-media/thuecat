@@ -291,4 +291,133 @@ class ImportConfigurationTest extends TestCase
 
         self::assertSame('', $subject->getSyncScopeId());
     }
+
+    #[Test]
+    public function returnsConfiguredApiDomain(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="apiDomain">',
+            '<value index="vDEF">https://cdb.int.thuecat.org</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('https://cdb.int.thuecat.org', $subject->getApiDomain());
+    }
+
+    #[Test]
+    public function returnsEmptyApiDomainWhenFieldMissing(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('', $subject->getApiDomain());
+    }
+
+    #[Test]
+    public function returnsEmptyApiDomainWhenFieldBlank(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="apiDomain">',
+            '<value index="vDEF"></value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('', $subject->getApiDomain());
+    }
+
+    #[Test]
+    public function returnsEmptyApiDomainWhenConfigurationEmpty(): void
+    {
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', '');
+
+        self::assertSame('', $subject->getApiDomain());
+    }
+
+    #[Test]
+    public function returnsConfiguredImportTarget(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="importTarget">',
+            '<value index="vDEF">events</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('events', $subject->getImportTarget());
+    }
+
+    #[Test]
+    public function fallsBackToThuecatImportTargetWhenFieldMissing(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="storagePid">',
+            '<value index="vDEF">10</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('thuecat', $subject->getImportTarget());
+    }
 }

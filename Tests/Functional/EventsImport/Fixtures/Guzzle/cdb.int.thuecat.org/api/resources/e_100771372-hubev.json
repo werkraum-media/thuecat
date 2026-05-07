@@ -1,0 +1,268 @@
+{
+  "@context": {
+    "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+    "schema": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+    "ttgds": "https://int.thuecat.org/ontology/ttgds/1.0/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcmitype": "http://purl.org/dc/dcmitype/"
+  },
+  "@graph": [
+    {
+      "@id": "https://int.thuecat.org/resources/e_100771372-hubev",
+      "@type": [
+        "schema:Thing",
+        "schema:Intangible",
+        "schema:Event",
+        "schema:Series",
+        "schema:EventSeries",
+        "schema:ComedyEvent",
+        "thuecat:CultureEvent",
+        "dcmitype:Event",
+        "ttgds:Event"
+      ],
+      "rdfs:label": {
+        "@language": "de",
+        "@value": "Distel-Comedy. Große Stand-up-Comedy-Show"
+      },
+      "schema:dateModified": {
+        "@type": "schema:DateTime",
+        "@value": "2026-04-02T15:33:00+02:00"
+      },
+      "schema:name": {
+        "@language": "de",
+        "@value": "Distel-Comedy. Große Stand-up-Comedy-Show"
+      },
+      "schema:dateCreated": {
+        "@type": "schema:DateTime",
+        "@value": "2024-01-19T06:38:00+01:00"
+      },
+      "schema:location": {
+        "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b24",
+        "@type": [
+          "schema:Thing",
+          "schema:Place"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Distelschänke"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Distelschänke"
+        },
+        "schema:address": {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b25",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:PostalAddress",
+            "schema:ContactPoint",
+            "schema:StructuredValue"
+          ],
+          "schema:postalCode": {
+            "@language": "de",
+            "@value": "07749"
+          },
+          "schema:streetAddress": {
+            "@language": "de",
+            "@value": "Am Jenzig 1"
+          },
+          "schema:addressCountry": {
+            "@language": "de",
+            "@value": "Deutschland"
+          },
+          "schema:addressLocality": {
+            "@language": "de",
+            "@value": "Jena"
+          },
+          "schema:telephone": {
+            "@language": "de",
+            "@value": "+49 (0) 3641 2263343"
+          },
+          "schema:email": {
+            "@language": "de",
+            "@value": "disteljena@gmail.com"
+          }
+        },
+        "schema:geo": {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b26",
+          "@type": [
+            "schema:Thing",
+            "schema:GeoCoordinates",
+            "schema:Intangible",
+            "schema:StructuredValue"
+          ],
+          "schema:latitude": {
+            "@type": "schema:Float",
+            "@value": "50.9363636"
+          },
+          "schema:longitude": {
+            "@type": "schema:Float",
+            "@value": "11.6102608"
+          }
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://www.distelschaenke-jena.de/"
+        }
+      },
+      "schema:eventSchedule": [
+        {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b18",
+          "@type": [
+            "schema:Thing",
+            "schema:Schedule",
+            "schema:Intangible"
+          ],
+          "schema:startTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-02-22T19:00:00+01:00"
+          },
+          "schema:endTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-02-22T21:00:00+01:00"
+          },
+          "schema:startDate": {
+            "@type": "schema:DateTime",
+            "@value": "2026-02-22T19:00:00+01:00"
+          },
+          "schema:endDate": {
+            "@type": "schema:DateTime",
+            "@value": "2026-02-22T21:00:00+01:00"
+          },
+          "schema:scheduleTimezone": {
+            "@type": "xsd:string",
+            "@value": "Europe/Berlin"
+          }
+        },
+        {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b20",
+          "@type": [
+            "schema:Thing",
+            "schema:Schedule",
+            "schema:Intangible"
+          ],
+          "schema:startTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-06-28T17:00:00+02:00"
+          },
+          "schema:endTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-06-28T19:00:00+02:00"
+          },
+          "schema:startDate": {
+            "@type": "schema:DateTime",
+            "@value": "2026-06-28T17:00:00+02:00"
+          },
+          "schema:endDate": {
+            "@type": "schema:DateTime",
+            "@value": "2026-06-28T19:00:00+02:00"
+          },
+          "schema:scheduleTimezone": {
+            "@type": "xsd:string",
+            "@value": "Europe/Berlin"
+          }
+        },
+        {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b5",
+          "@type": [
+            "schema:Thing",
+            "schema:Schedule",
+            "schema:Intangible"
+          ],
+          "schema:frequency": {
+            "@type": "schema:Duration",
+            "@value": "P1M"
+          },
+          "schema:startTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-09-27T19:00:00+02:00"
+          },
+          "schema:endTime": {
+            "@type": "schema:DateTime",
+            "@value": "2026-09-27T20:30:00+02:00"
+          },
+          "schema:startDate": {
+            "@type": "schema:DateTime",
+            "@value": "2026-09-27T19:00:00+02:00"
+          },
+          "schema:repeatFrequency": {
+            "@type": "schema:Duration",
+            "@value": "P1M"
+          },
+          "schema:endDate": {
+            "@type": "schema:Date",
+            "@value": "2026-12-27"
+          },
+          "schema:byDay": {
+            "@type": "schema:DayOfWeek",
+            "@value": "schema:Sunday"
+          },
+          "schema:scheduleTimezone": {
+            "@type": "xsd:string",
+            "@value": "Europe/Berlin"
+          },
+          "schema:byMonthWeek": {
+            "@type": "schema:Integer",
+            "@value": "4"
+          }
+        }
+      ],
+      "schema:offers": {
+        "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b27",
+        "@type": [
+          "schema:Thing",
+          "schema:Offer",
+          "schema:Intangible",
+          "ttgds:Offer"
+        ],
+        "schema:itemOffered": {
+          "@id": "https://int.thuecat.org/resources/e_100771372-hubev"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "https://www.eventbrite.de/e/distel-comedy-tickets-1111060414609"
+        }
+      },
+      "schema:description": [
+        {
+          "@language": "de",
+          "@value": "Am 28. Juni findet ein CSD-Special statt."
+        },
+        {
+          "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b4",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "<p>Am 28. Juni findet ein CSD-Special statt.</p>"
+          }
+        }
+      ],
+      "schema:provider": {
+        "@id": "genid-99f569cd87304ba0bae54e6323fe4b3c404327-b28",
+        "@type": [
+          "schema:Thing",
+          "schema:Place",
+          "schema:Organization"
+        ],
+        "schema:name": {
+          "@language": "de",
+          "@value": "destination.one"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "http://destination.one/"
+        }
+      }
+    }
+  ]
+}

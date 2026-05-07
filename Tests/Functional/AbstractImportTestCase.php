@@ -74,7 +74,8 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         'filemetadata',
     ];
     protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
+        'werkraummedia/thuecat',
+        'werkraummedia/events',
     ];
     protected array $pathsToLinkInTestInstance = [
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
