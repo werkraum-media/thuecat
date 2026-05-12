@@ -320,7 +320,9 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
         self::assertCount(1, $decoded);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('10:00:00', $decoded[0]['opens']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('18:00:00', $decoded[0]['closes']);
     }
 
@@ -470,19 +472,29 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
         self::assertCount(2, $decoded);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame(['GuidedTourOffer'], $decoded[0]['types']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('Führungen', $decoded[0]['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertCount(2, $decoded[0]['prices']);
-        self::assertSame([
-            'title' => 'Erwachsene',
-            'description' => '',
-            'price' => 8,
-            'currency' => 'EUR',
-            'rule' => 'PerPerson',
-        ], $decoded[0]['prices'][0]);
+        self::assertSame(
+            [
+                'title' => 'Erwachsene',
+                'description' => '',
+                'price' => 8,
+                'currency' => 'EUR',
+                'rule' => 'PerPerson',
+            ],
+            // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
+            $decoded[0]['prices'][0]
+        );
 
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame(['EntryOffer'], $decoded[1]['types']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('Eintritt', $decoded[1]['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertCount(4, $decoded[1]['prices']);
     }
 
@@ -509,6 +521,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
         self::assertCount(1, $decoded);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('Eintritt', $decoded[0]['title']);
     }
 

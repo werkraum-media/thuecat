@@ -98,7 +98,9 @@ class OfferEntityTest extends TestCase
         $entity->configure($node, 'de');
 
         self::assertCount(1, $entity->toArray()['prices']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('Familienkarte', $entity->toArray()['prices'][0]['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('PerGroup', $entity->toArray()['prices'][0]['rule']);
     }
 
@@ -126,11 +128,16 @@ class OfferEntityTest extends TestCase
 
         $result = $entity->toArray();
         self::assertSame('', $result['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('', $result['prices'][0]['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('', $result['prices'][0]['description']);
         // Numeric and enum fields stay language-independent.
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame(14.90, $result['prices'][0]['price']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible(this array is artificially constructed, so we trust it here)
         self::assertSame('EUR', $result['prices'][0]['currency']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible(this array is artificially constructed, so we trust it here)
         self::assertSame('PerPackage', $result['prices'][0]['rule']);
     }
 

@@ -8,6 +8,7 @@ declare(strict_types=1);
 // remote_id from the parent event id + start time.
 defined('TYPO3') || die();
 
+// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $GLOBALS['TCA']['tx_events_domain_model_date']['columns']['remote_id'] = [
     'label' => 'Remote ID',
     'config' => [

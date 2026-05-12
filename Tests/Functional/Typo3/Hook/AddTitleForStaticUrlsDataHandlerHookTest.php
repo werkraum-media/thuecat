@@ -306,6 +306,9 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
     private function createDataMap(array $urls, string|int $id = 1): array
     {
         $finalUrls = [];
+        /**
+         * @var array<string, mixed> $urlConfiguration
+         */
         foreach ($urls as $identifier => $urlConfiguration) {
             $finalUrls[$identifier] =  [
                 'url' => [
@@ -348,6 +351,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
 
     private function assertUrlTitles(string ... $titles): void
     {
+        /** @var array<int, array<mixed>> $configurations */
         $configurations = $this->getAllRecords('tx_thuecat_import_configuration', true);
         $configuration = GeneralUtility::xml2array($configurations[1]['configuration']);
         self::assertIsArray($configuration);
@@ -364,7 +368,9 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         foreach ($urls as $url) {
             self::assertSame(
                 $titles[$position++],
+                // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
                 $url['url']['el']['title']['vDEF'],
+                // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
                 'Title for URL ' . $url['url']['el']['url']['vDEF'] . ' was not as expected.'
             );
         }

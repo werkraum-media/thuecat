@@ -144,6 +144,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         self::assertSame('99084', $address['zip']);
         self::assertSame('Erfurt', $address['city']);
         self::assertSame('+49 361 5640', $address['phone']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame(50.977648905044, $address['geo']['latitude']);
     }
 
@@ -243,6 +244,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
+        /** @var array<int, array<string, mixed>> $decoded */
         $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
 
         self::assertCount(2, $decoded);
@@ -264,19 +266,27 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
         self::assertCount(4, $decoded);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame(['ParkingFee'], $decoded[0]['types']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertSame('', $decoded[0]['title']);
+        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
         self::assertCount(1, $decoded[0]['prices']);
         // Whole-number prices json_encode as "35" (no decimal) and decode
         // back as int — same round-trip behaviour the attraction test relies
         // on for price 8.
-        self::assertSame([
-            'title' => '',
-            'description' => '',
-            'price' => 35,
-            'currency' => 'EUR',
-            'rule' => 'PerCar',
-        ], $decoded[0]['prices'][0]);
+
+        self::assertSame(
+            [
+                'title' => '',
+                'description' => '',
+                'price' => 35,
+                'currency' => 'EUR',
+                'rule' => 'PerCar',
+            ],
+            // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
+            $decoded[0]['prices'][0]
+        );
     }
 
     #[Test]

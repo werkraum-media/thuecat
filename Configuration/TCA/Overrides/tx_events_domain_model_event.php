@@ -7,6 +7,7 @@ declare(strict_types=1);
 // they index different things (URI vs sha256 of address parts on Location).
 defined('TYPO3') || die();
 
+// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $GLOBALS['TCA']['tx_events_domain_model_event']['columns']['remote_id'] = [
     'label' => 'Remote ID',
     'config' => [
@@ -15,6 +16,7 @@ $GLOBALS['TCA']['tx_events_domain_model_event']['columns']['remote_id'] = [
         'searchable' => false,
     ],
 ];
+// @phpstan-ignore offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $GLOBALS['TCA']['tx_events_domain_model_event']['columns']['thuecat_import_configuration'] = [
     'exclude' => true,
     'label' => 'ThueCat Import Configuration',
@@ -31,14 +33,19 @@ $GLOBALS['TCA']['tx_events_domain_model_event']['columns']['thuecat_import_confi
         'readOnly' => true,
     ],
 ];
+// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $GLOBALS['TCA']['tx_events_domain_model_event']['palettes']['source']['showitem'] = 'source_name, source_url, --linebreak--,import_configuration,thuecat_import_configuration';
+// @phpstan-ignore offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $GLOBALS['TCA']['tx_events_domain_model_event']['palettes']['remote_identifier'] = [
 
     'label' => 'Remote Identifier',
     'showitem' => 'global_id, remote_id',
 ];
+
+// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $showitem = $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] ?? '';
 if (is_string($showitem)) {
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
     $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] = str_replace(
         'global_id',
         '--palette--;;remote_identifier',

@@ -781,147 +781,15 @@ parameters:
 			path: Configuration/TCA/Overrides/pages.php
 
 		-
-			message: '#^Cannot access offset ''pages'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
-
-		-
 			message: '#^Parameter \#1 \$original of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:mergeRecursiveWithOverrule\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
 
 		-
-			message: '#^Cannot access offset ''columns'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
-
-		-
-			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
-
-		-
-			message: '#^Cannot access offset ''tx_events_domain_model_date'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_date.php
-
-		-
-			message: '#^Cannot access offset ''columns'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''palettes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''remote_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''remote_identifier'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''showitem'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''source'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''thuecat_import_configuration'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''tx_events_domain_model_event'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''types'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Configuration/TCA/Overrides/tx_events_domain_model_event.php
-
-		-
-			message: '#^Cannot access offset ''HTTP'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/GuzzleClientFaker.php
-
-		-
-			message: '#^Cannot access offset ''faker'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/GuzzleClientFaker.php
-
-		-
-			message: '#^Cannot access offset ''handler'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/GuzzleClientFaker.php
-
-		-
 			message: '#^Binary operation "\." between ''Title for URL '' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Cannot access offset ''configuration'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Cannot access offset ''el'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Cannot access offset ''url'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Cannot access offset ''vDEF'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
 
 		-
@@ -943,54 +811,6 @@ parameters:
 			path: Tests/Unit/Domain/Import/Parser/Entity/AbstractImportTestCase.php
 
 		-
-			message: '#^Cannot access offset ''closes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''daysOfWeek'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''latitude'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''opens'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''prices'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''types'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertContains\(\) expects iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1003,42 +823,6 @@ parameters:
 			path: Tests/Unit/Domain/Import/Parser/Entity/ParkingFacilityEntityTest.php
 
 		-
-			message: '#^Cannot access offset ''closes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''opens'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''prices'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''types'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1049,42 +833,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/AddressEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''currency'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''description'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''price'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''rule'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: Tests/Unit/Domain/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'

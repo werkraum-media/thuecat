@@ -12,6 +12,7 @@ defined('TYPO3') or die();
     $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName . '.' . $pageIdentifier;
 
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
     ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
         'ctrl' => [
             'typeicon_classes' => [
