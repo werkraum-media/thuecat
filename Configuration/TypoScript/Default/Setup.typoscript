@@ -7,3 +7,9 @@ module {
         }
     }
 }
+
+plugin.tx_thuecat {
+    view {
+        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+    }
+}
