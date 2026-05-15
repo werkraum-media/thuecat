@@ -28,21 +28,8 @@ class TouristAttractionController extends ActionController
         $contentObject = $this->request->getAttribute('currentContentObject');
         $dataFromTypoScript = $contentObject->data;
 
-        /** @var Record $recordData */
-        $recordData = $dataFromTypoScript['record'];
-        /** @var LazyRecordCollection $storagePidCollection */
-        $storagePidCollection = $recordData->get('pages');
-        $storagePids = [];
-        /** @var Page $storagePid */
-        foreach ($storagePidCollection->getIterator() as $storagePid) {
-            $storagePids[] = $storagePid->getPageId();
-        }
-        $recursive = $recordData->get('werkraummedia_recursive') ? 99 : 0;
-        if ($recursive > 0) {
-            $storagePids = $this->pageRepository->getPageIdsRecursive($storagePids, $recursive);
-        }
-        $attractions = $this->touristAttractionRepository->findCustom($storagePids);
-        $this->view->assign('attractions', $attractions);
+        $attractions = $this->touristAttractionRepository->findAll();
+        $this->view->assignMultiple(['attractions' => $attractions, 'data' => $dataFromTypoScript]);
         return $this->htmlResponse($this->view->render());
     }
 

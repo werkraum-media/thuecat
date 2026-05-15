@@ -32,14 +32,16 @@ Extension::registerExtLocalconfConfigConfig();
         ];
     }
 
-    ExtensionUtility::configurePlugin(
+    ExtensionUtility::registerControllerActions(
         'ThueCat',
         'TouristAttractionList',
-        [TouristAttractionController::class => 'list']
+        [TouristAttractionController::class => ['list']],
+        []
     );
-    ExtensionUtility::configurePlugin(
+    ExtensionUtility::registerControllerActions(
         'ThueCat',
         'TouristAttractionShow',
-        [TouristAttractionController::class => 'show']
+        [TouristAttractionController::class => ['show']],
+        []
     );
 })(Extension::EXTENSION_KEY);
