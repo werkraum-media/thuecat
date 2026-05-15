@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Attribute\ORM\Lazy;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class TouristAttraction extends Place
 {
@@ -58,6 +60,14 @@ class TouristAttraction extends Place
     protected string $isAccessibleForFree = '';
 
     protected string $publicAccess = '';
+
+    #[Lazy]
+    protected ObjectStorage $parkingFacilityNearBy;
+
+    public function initializeObject(): void
+    {
+        $this->parkingFacilityNearBy = new ObjectStorage();
+    }
 
     public function getSlogan(): string
     {
@@ -121,4 +131,15 @@ class TouristAttraction extends Place
     {
         return $this->publicAccess;
     }
+
+    public function getParkingFacilityNearBy(): ObjectStorage
+    {
+        return $this->parkingFacilityNearBy;
+    }
+
+    public function setParkingFacilityNearBy(ObjectStorage $parkingFacilityNearBy): void
+    {
+        $this->parkingFacilityNearBy = $parkingFacilityNearBy;
+    }
+
 }

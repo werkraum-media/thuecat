@@ -37,4 +37,9 @@ Extension::registerExtLocalconfConfigConfig();
         'TouristAttractionList',
         [TouristAttractionController::class => 'list']
     );
+    ExtensionUtility::configurePlugin(
+        'ThueCat',
+        'TouristAttractionShow',
+        [TouristAttractionController::class => 'show']
+    );
 })(Extension::EXTENSION_KEY);

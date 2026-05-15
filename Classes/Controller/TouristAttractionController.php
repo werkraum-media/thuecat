@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 
 class TouristAttractionController extends ActionController
@@ -42,6 +43,12 @@ class TouristAttractionController extends ActionController
         }
         $attractions = $this->touristAttractionRepository->findCustom($storagePids);
         $this->view->assign('attractions', $attractions);
+        return $this->htmlResponse($this->view->render());
+    }
+
+    public function showAction(TouristAttraction $attraction): ResponseInterface
+    {
+        $this->view->assign('attraction', $attraction);
         return $this->htmlResponse($this->view->render());
     }
 
