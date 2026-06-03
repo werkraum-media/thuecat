@@ -55,6 +55,7 @@ class TouristAttractionRepository extends Repository
         }
 
         $query = $this->createQuery();
+        $query->getQuerySettings()->setRespectStoragePage(false);
         $query->matching($query->in('uid', $uids));
 
         $byUid = [];

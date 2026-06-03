@@ -32,6 +32,14 @@ return [
             'sorting' => '256',
             'deleted' => '0',
         ],
+        [
+            'uid' => '12',
+            'pid' => '1',
+            'title' => 'Second Storage Folder',
+            'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
+            'sorting' => '384',
+            'deleted' => '0',
+        ],
     ],
     'tt_content' => [
         [
@@ -63,7 +71,7 @@ return [
         ],
         [
             'uid' => '3',
-            'pid' => '11',
+            'pid' => '12',
             'title' => 'Goethehaus Weimar',
         ],
     ],
