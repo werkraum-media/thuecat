@@ -12,12 +12,18 @@ class PaginationResult
     public function __construct(
         protected readonly QueryResultPaginator $paginator,
         protected readonly PaginationInterface $pagination,
+        protected readonly int $itemsPerPage,
     ) {
     }
 
     public function getPaginator(): QueryResultPaginator
     {
         return $this->paginator;
+    }
+
+    public function getItemsPerPage(): int
+    {
+        return $this->itemsPerPage;
     }
 
     public function getPagination(): PaginationInterface

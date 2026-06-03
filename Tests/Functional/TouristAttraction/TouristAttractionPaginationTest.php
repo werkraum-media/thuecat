@@ -57,4 +57,15 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
         self::assertStringContainsString('thuecat%5BcurrentPage%5D=2', $body);
         self::assertStringContainsString('thuecat%5BcurrentPage%5D=3', $body);
     }
+
+    #[Test]
+    public function rendersPaginationSummaryWithItemsPerPageAndPageCount(): void
+    {
+        $request = (new InternalRequest())->withPageId(10);
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        // 25 fixtures, itemsPerPage = 10 => 3 pages
+        self::assertStringContainsString('10 Einträge pro Seite, 3 Seiten insgesamt', $body);
+    }
 }

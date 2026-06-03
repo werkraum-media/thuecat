@@ -63,9 +63,7 @@ class TouristAttractionController extends ActionController
         $pagination = $this->paginationFactory->fromSettings($attractions, $currentPage, $this->settings);
 
         $this->view->assignMultiple([
-            'attractions' => $pagination->getPaginatedItems(),
-            'paginator' => $pagination->getPaginator(),
-            'pagination' => $pagination->getPagination(),
+            'list' => $pagination,
             'demand' => $demand,
             'data' => $contentObject->data,
         ]);

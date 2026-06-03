@@ -34,6 +34,6 @@ final class PaginationFactory
 
         $paginator = new QueryResultPaginator($items, $currentPage, $itemsPerPage);
 
-        return new PaginationResult($paginator, new SimplePagination($paginator));
+        return new PaginationResult($paginator, new SimplePagination($paginator), $itemsPerPage);
     }
 }

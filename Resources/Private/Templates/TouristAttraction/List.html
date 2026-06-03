@@ -2,15 +2,16 @@
         xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
         data-namespace-typo3-fluid="true"
 >
-<f:if condition="{attractions}">
+<f:if condition="{list.paginatedItems}">
     <f:then>
-        <f:for each="{attractions}" as="attraction">
+        <f:for each="{list.paginatedItems}" as="attraction">
             <h2><f:link.action action="show" arguments="{attraction: attraction}" pageUid="{settings.page.pid.thuecat_attraction_show}">{attraction.title}</f:link.action></h2>
             <p>{attraction.description}</p>
         </f:for>
-        <f:if condition="{pagination.lastPageNumber} > 1">
+        <f:if condition="{list.pagination.lastPageNumber} > 1">
             <nav>
-                <f:for each="{pagination.allPageNumbers}" as="pageNumber">
+                <span><f:translate key="content.pagination.info" extensionName="thuecat" arguments="{0: list.itemsPerPage, 1: list.pagination.lastPageNumber}" /></span>
+                <f:for each="{list.pagination.allPageNumbers}" as="pageNumber">
                     <f:link.action action="list" arguments="{demand: demand, currentPage: pageNumber}">{pageNumber}</f:link.action>
                 </f:for>
             </nav>
