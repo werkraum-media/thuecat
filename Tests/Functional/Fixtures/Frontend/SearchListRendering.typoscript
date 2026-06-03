@@ -1,0 +1,25 @@
+page = PAGE
+page.10 < styles.content.get
+
+plugin.tx_thuecat {
+    view {
+        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+    }
+    settings {
+        # Both plugins live on page 10; form + redirect must target it.
+        page.pid.thuecat_attraction_search = 10
+        itemsPerPage = 10
+    }
+}
+
+tt_content.thuecat_tourist_attraction_list = EXTBASEPLUGIN
+tt_content.thuecat_tourist_attraction_list {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}
+
+tt_content.thuecat_tourist_attraction_search = EXTBASEPLUGIN
+tt_content.thuecat_tourist_attraction_search {
+    extensionName = ThueCat
+    pluginName = TouristAttractionSearch
+}

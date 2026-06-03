@@ -17,3 +17,5 @@ plugin.tx_thuecat {
 # Shared namespace so the search form can <f:form action="list"> into the list plugin.
 plugin.tx_thuecat_touristattractionlist.view.pluginNamespace = thuecat
 plugin.tx_thuecat_touristattractionsearch.view.pluginNamespace = thuecat
+
+config.tx_extbase.mvc.callDefaultActionIfActionCantBeResolved = 1

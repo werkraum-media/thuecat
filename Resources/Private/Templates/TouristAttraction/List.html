@@ -12,7 +12,7 @@
             <nav>
                 <span><f:translate key="content.pagination.info" extensionName="thuecat" arguments="{0: list.itemsPerPage, 1: list.pagination.lastPageNumber}" /></span>
                 <f:for each="{list.pagination.allPageNumbers}" as="pageNumber">
-                    <f:link.action action="list" arguments="{demand: demand, currentPage: pageNumber}">{pageNumber}</f:link.action>
+                    <f:link.action action="list" arguments="{demand: demand.queryParameters, currentPage: pageNumber}">{pageNumber}</f:link.action>
                 </f:for>
             </nav>
         </f:if>

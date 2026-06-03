@@ -2,7 +2,7 @@
         xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
         data-namespace-typo3-fluid="true"
 >
-<f:form method="get" action="list" pluginName="TouristAttractionList" object="{demand}" objectName="demand" pageUid="{settings.page.pid.thuecat_attraction_search}">
+<f:form method="post" action="list" pluginName="TouristAttractionList" object="{demand}" objectName="demand" pageUid="{settings.page.pid.thuecat_attraction_search}">
     <f:form.textfield property="searchword" />
 
     <f:if condition="{lockedMap.towns}">

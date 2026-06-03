@@ -74,4 +74,25 @@ class TouristAttractionDemand
     {
         $this->publicAccess = $publicAccess;
     }
+
+    /**
+     * Flat shape for GET URLs (f:link.action / POST redirect); empties dropped.
+     * Iterates properties so new filters are included without touching this.
+     *
+     * @return array<string, string|int|int[]>
+     */
+    public function getQueryParameters(): array
+    {
+        $parameters = [];
+        /** @var array<string, string|int|int[]|bool> $properties */
+        $properties = get_object_vars($this);
+        foreach ($properties as $name => $value) {
+            if ($value === '' || $value === [] || $value === false) {
+                continue;
+            }
+            $parameters[$name] = $value === true ? 1 : $value;
+        }
+
+        return $parameters;
+    }
 }

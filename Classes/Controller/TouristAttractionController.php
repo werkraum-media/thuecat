@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
@@ -22,6 +24,7 @@ class TouristAttractionController extends ActionController
         protected TownRepository $townRepository,
         protected TouristAttractionDemandFactory $demandFactory,
         protected PaginationFactory $paginationFactory,
+        protected ExtensionService $extensionService,
     ) {
     }
 
@@ -48,6 +51,32 @@ class TouristAttractionController extends ActionController
         ;
     }
 
+    /**
+     * Turn a posted search form into a bookmarkable GET URL carrying only the
+     * demand values (cHash-excluded), so the form's referrer/trusted-properties
+     * fields never reach the cacheable URL.
+     */
+    protected function redirectPostToGet(TouristAttractionDemand $demand): void
+    {
+        if ($this->request->getMethod() !== 'POST') {
+            return;
+        }
+
+        $parameters = $demand->getQueryParameters();
+        $parameter = $parameters === [] ? [] : ['demand' => $parameters];
+        $namespace = $this->extensionService->getPluginNamespace(null, null);
+
+        /** @var ContentObjectRenderer $contentObject */
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        throw new PropagateResponseException(
+            $this->redirectToUri($contentObject->typoLink_URL([
+                'parameter' => 't3://page?uid=current',
+                'additionalParams' => '&' . http_build_query([$namespace => $parameter]),
+            ])),
+            303
+        );
+    }
+
     public function listAction(?TouristAttractionDemand $demand = null, int $currentPage = 1): ResponseInterface
     {
         /** @var ContentObjectRenderer $contentObject */
@@ -58,6 +87,9 @@ class TouristAttractionController extends ActionController
         // within the configured set.
         $editorFilter = $this->demandFactory->fromSettings($this->settings);
         $this->demandFactory->applyEditorFilter($demand, $editorFilter);
+
+        // A posted search form redirects here to a clean, bookmarkable GET URL.
+        $this->redirectPostToGet($demand);
 
         $attractions = $this->touristAttractionRepository->findByDemand($demand);
         $pagination = $this->paginationFactory->fromSettings($attractions, $currentPage, $this->settings);
@@ -106,7 +138,7 @@ class TouristAttractionController extends ActionController
 
         $this->view->assignMultiple([
             'demand' => $demand,
-            'towns' => $this->townRepository->findAllSortedByTitle(),
+            'towns' => $this->townRepository->findAllForSearchFormSortedByTitle(),
             // Locked filters render as hidden (kept in the submitted demand);
             // listAction re-forces them, so a tampered value can't widen the set.
             'lockedMap' => $editorFilter->getLockedMap(),
