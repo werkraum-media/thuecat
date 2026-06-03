@@ -1,0 +1,15 @@
+page = PAGE
+page.10 < styles.content.get
+
+plugin.tx_thuecat {
+    view {
+        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+    }
+}
+
+# Filtered CE rendered as plain EXTBASEPLUGIN (no content-blocks in tests).
+tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlistfiltered {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}

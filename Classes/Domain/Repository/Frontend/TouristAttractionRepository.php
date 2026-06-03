@@ -16,6 +16,14 @@ class TouristAttractionRepository extends Repository
     {
         $query = $this->createQuery();
 
+        // The CE's `pages` field becomes the storagePid; absent it, extbase
+        // defaults to [0]. Restrict only when a real page was configured, so an
+        // unconfigured plugin lists every imported record regardless of pid.
+        $settings = $query->getQuerySettings();
+        if (array_filter($settings->getStoragePageIds()) === []) {
+            $settings->setRespectStoragePage(false);
+        }
+
         $constraints = [];
         if ($demand->getSearchword() !== '') {
             $constraints[] = $query->like('title', '%' . $demand->getSearchword() . '%');

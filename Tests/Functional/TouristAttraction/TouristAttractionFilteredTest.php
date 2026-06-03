@@ -40,4 +40,19 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
         self::assertStringContainsString('Domberg Erfurt', $body);
         self::assertStringNotContainsString('Goethehaus Weimar', $body);
     }
+
+    #[Test]
+    public function visitorCannotWidenPastTheLockedTown(): void
+    {
+        // Editor locked town 1; a tampered URL asking for town 2 must be ignored.
+        $request = (new InternalRequest())
+            ->withPageId(10)
+            ->withQueryParams(['thuecat' => ['demand' => ['towns' => [2]]]])
+        ;
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+    }
 }
