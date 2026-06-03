@@ -156,6 +156,41 @@ class ImportConfigurationTest extends TestCase
     }
 
     #[Test]
+    public function returnsFileFolderWhenSet(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="fileFolder">',
+            '<value index="vDEF">1:/thuecat/</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('1:/thuecat/', $subject->getFileFolder());
+    }
+
+    #[Test]
+    public function returnsEmptyStringAsFileFolderWhenNoConfigurationExists(): void
+    {
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', '');
+
+        self::assertSame('', $subject->getFileFolder());
+    }
+
+    #[Test]
     public function returnsUrlsWhenSet(): void
     {
         $flexForm = implode(PHP_EOL, [

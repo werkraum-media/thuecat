@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Throwable;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
@@ -26,6 +27,8 @@ class Importer
         private readonly FetchData $fetchData,
         private readonly SiteFinder $siteFinder,
         private readonly Resolver $resolver,
+        private readonly FileFolderAccess $fileFolderAccess,
+        private readonly MediaFileStaging $mediaFileStaging,
         private readonly ImportLogger $importLogger,
         #[AutowireLocator(services: 'import.url.provider')]
         private readonly ServiceLocator $urlProviders
@@ -40,6 +43,26 @@ class Importer
      */
     public function importConfiguration(ImportConfiguration $configuration): string
     {
+        // Resolve the target folder (this runs the write-access probe) and
+        // create a fresh per-run staging folder under it before touching the
+        // API. Media is downloaded into staging and only promoted into the
+        // target on a clean run; the staging folder is always discarded in
+        // the finally, so a failed run leaves no orphaned files behind.
+        $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
+        $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
+
+        try {
+            return $this->runImport($configuration, $targetFolder, $stagingFolder);
+        } finally {
+            $this->mediaFileStaging->discard($stagingFolder);
+        }
+    }
+
+    private function runImport(
+        ImportConfiguration $configuration,
+        Folder $targetFolder,
+        Folder $stagingFolder
+    ): string {
         $urlProvider = $this->getProviderForConfiguration($configuration);
         if (!$urlProvider instanceof UrlProvider) {
             throw new InvalidUrlProviderException('No URL Provider available for given configuration.', 1629296635);
@@ -63,6 +86,8 @@ class Importer
             $defaultLanguage,
             $configuration->getApiKey(),
             $translationLanguages,
+            $targetFolder,
+            $stagingFolder,
         );
         $accumulatedPayload = new DataHandlerPayload();
         foreach ($urlProvider->getUrls($apiDomain) as $url) {
@@ -97,7 +122,7 @@ class Importer
                 $loggerPayload,
                 []
             );
-            return $this->importLogger->getMaxSeverity();
+            return $this->finishRun($targetFolder, $stagingFolder);
         }
 
         $iterations = 0;
@@ -162,7 +187,21 @@ class Importer
             $substNEWwithIDs
         );
 
-        return $this->importLogger->getMaxSeverity();
+        return $this->finishRun($targetFolder, $stagingFolder);
+    }
+
+    /**
+     * Promote staged media into the target folder when the run is clean. Else, staged
+     * file remain and will be discarded.
+     */
+    private function finishRun(Folder $targetFolder, Folder $stagingFolder): string
+    {
+        $severity = $this->importLogger->getMaxSeverity();
+        if ($severity !== ImportLogger::SEVERITY_ERROR) {
+            $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
+        }
+
+        return $severity;
     }
 
     /**

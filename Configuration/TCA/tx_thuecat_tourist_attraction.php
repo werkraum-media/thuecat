@@ -238,6 +238,24 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            'main_image' => [
+                'label' => $languagePath . '.main_image',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                    'maxitems' => 1,
+                ],
+            ],
+            'media_files' => [
+                'label' => $languagePath . '.media_files',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                ],
+            ],
+            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
             'media' => [
                 'label' => $languagePath . '.media',
                 'l10n_mode' => 'exclude',
@@ -332,7 +350,13 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, slogan, start_of_construction, sanitation, other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, opening_hours, special_opening_hours, offers, accessibility_specification, address, url, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, parking_facility_near_by, --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
+                'showitem' => '--palette--;;language, title, description, main_image, media_files, slogan, start_of_construction, sanitation, 
+                other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
+                photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
+                opening_hours, special_opening_hours, offers, accessibility_specification, address, url, 
+                 media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, 
+                parking_facility_near_by, 
+                --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],
         ],
     ];

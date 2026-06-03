@@ -58,6 +58,10 @@ class ImporterTest extends AbstractImportTestCase
         // managedBy. Order doesn't matter to the faker — it only checks each
         // URL is fetched exactly the declared number of times.
         $this->expectFetch('333039283321-xxwg.json');
+        // The info's schema:photo/image reference this media node; the
+        // resolver still fetches it during the media drain even though the
+        // stubbed downloader skips the actual file download + storage.
+        $this->expectFetch('dms_5162598.json');
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('573211638937-gmqb.json');
         $this->expectFetch('e_108867196-oatour.json');
@@ -101,23 +105,6 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSloganArray.php');
-    }
-
-    #[Test]
-    public function importsTouristAttractionWithMedia(): void
-    {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMedia.php');
-        $this->expectFetch('attraction-with-media.json');
-        $this->expectFetch('018132452787-ngbe.json');
-        $this->expectFetch('image-with-foreign-author.json');
-        $this->expectFetch('author-with-names.json');
-        $this->expectFetch('image-with-author-string.json');
-        $this->expectFetch('image-with-license-author.json');
-        $this->expectFetch('image-with-author-and-license-author.json');
-
-        $this->importConfiguration(1);
-
-        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
     }
 
     /**

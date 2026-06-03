@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import;
 
+use TYPO3\CMS\Core\Resource\Folder;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 final class ResolverContext
@@ -145,6 +146,8 @@ final class ResolverContext
         public readonly string $language = 'de',
         public readonly ?string $apiKey = null,
         public readonly array $translationLanguages = [],
+        public readonly ?Folder $targetFolder = null,
+        public readonly ?Folder $stagingFolder = null,
     ) {
     }
 

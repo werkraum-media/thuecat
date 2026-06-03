@@ -109,6 +109,12 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return 0;
     }
 
+    public function getFileFolder(): string
+    {
+        $fileFolder = $this->getConfigurationValueFromFlexForm('fileFolder');
+        return is_string($fileFolder) ? $fileFolder : '';
+    }
+
     public function getUrls(): array
     {
         if ($this->urls !== null) {

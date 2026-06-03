@@ -40,6 +40,12 @@
             <trans-unit id="tx_thuecat_tourist_information.description" xml:space="preserve">
                 <source>Description</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.main_image" xml:space="preserve">
+                <source>Main image</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.media_files" xml:space="preserve">
+                <source>Images</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
@@ -153,8 +159,14 @@
             <trans-unit id="tx_thuecat_tourist_attraction.url" xml:space="preserve">
                 <source>Url</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.main_image" xml:space="preserve">
+                <source>Main image</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.media_files" xml:space="preserve">
+                <source>Images</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.media" xml:space="preserve">
-                <source>Media</source>
+                <source>Media (legacy)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.offers" xml:space="preserve">
                 <source>Offers</source>
@@ -211,8 +223,14 @@
             <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.main_image" xml:space="preserve">
+                <source>Main image</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.media_files" xml:space="preserve">
+                <source>Images</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.media" xml:space="preserve">
-                <source>Media</source>
+                <source>Media (legacy)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.offers" xml:space="preserve">
                 <source>Offers</source>

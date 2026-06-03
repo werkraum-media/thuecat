@@ -10,6 +10,7 @@ Features
 --------
 
 * Add support for TYPO3 v14.
+* Handle images and other files properly via FAL upon import. Target file directory is now part of the import configuration.
 
 Fixes
 -----
@@ -24,5 +25,7 @@ Nothing
 Deprecation
 -----------
 
-Nothing
+* The json-based media storage has been superseeded by proper FAL handling. The json-based output logic is still in place.
+The next import will copy and relate the files as needed. With the next fitting version, the json-based fields will be
+removed.
 

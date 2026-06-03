@@ -43,6 +43,23 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            'main_image' => [
+                'label' => $languagePath . '.main_image',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                    'maxitems' => 1,
+                ],
+            ],
+            'media_files' => [
+                'label' => $languagePath . '.media_files',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                ],
+            ],
             'remote_id' => [
                 'label' => $languagePath . '.remote_id',
                 'config' => [
@@ -86,7 +103,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, remote_id, town, managed_by',
+                'showitem' => 'title, description, main_image, media_files, remote_id, town, managed_by',
             ],
         ],
     ];

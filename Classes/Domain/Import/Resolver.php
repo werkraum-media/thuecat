@@ -62,6 +62,7 @@ class Resolver
         private readonly FetchData $fetchData,
         private readonly Parser $parser,
         private readonly TcaSchemaFactory $tcaSchemaFactory,
+        private readonly MediaFileDownloader $mediaFileDownloader,
     ) {
     }
 
@@ -310,7 +311,7 @@ class Resolver
                                 $progress = true;
                                 continue;
                             }
-                            $this->shapeMediaBlob(
+                            $this->importMediaFiles(
                                 $payload,
                                 $context,
                                 $ownerTable,
@@ -586,20 +587,12 @@ class Resolver
     }
 
     /**
-     * Drain the whole `media` bucket for one owner in a single pass. Each
-     * entry is a `{kind, id}` tuple — kind (photo|image|video) drives the
-     * `mainImage` + `type` fields on the shaped output, id points at a
-     * dms_* MediaObject resource. When an entry's schema:author is an @id
-     * ref (not a literal string), the Person node is fetched first and the
-     * shaped name passed into MediaEntity.
-     *
-     * The media column is a JSON-encoded list, not a relation — emitting
-     * the full list at once keeps order predictable and lets us write with
-     * a single setField() + one clear of the whole bucket.
+     * Download each media entry's file and stage a sys_file_reference on the
+     * owner: photo → main_image, image → media_files. video skipped (no file).
      *
      * @param list<string>|list<array{kind: string, id: string}> $entries
      */
-    private function shapeMediaBlob(
+    private function importMediaFiles(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $ownerTable,
@@ -607,7 +600,20 @@ class Resolver
         string $ownerKey,
         array $entries
     ): void {
-        $shaped = [];
+        $target = $context->targetFolder;
+        $staging = $context->stagingFolder;
+        if ($target === null || $staging === null) {
+            throw new InvalidTransientReferenceException(
+                sprintf(
+                    'Media bucket on %s[%s] cannot be drained without resolved '
+                    . 'target/staging folders on the context.',
+                    $ownerTable,
+                    $ownerRemoteId
+                ),
+                1748520004
+            );
+        }
+
         foreach ($entries as $entry) {
             if (!is_array($entry)) {
                 throw new InvalidTransientReferenceException(
@@ -633,11 +639,18 @@ class Resolver
                 );
             }
 
+            // Videos reference a stream, not an image file we can store in a
+            // common-image-types FAL field. Drop the entry; the owner keeps
+            // no media relation for it.
+            if ($entry['kind'] === 'video') {
+                continue;
+            }
+
             try {
                 $mediaNode = $this->fetchGraphNode($reference, $context, $reference);
             } catch (ResourceNotFoundException) {
                 // Upstream removed the media — drop the entry rather than
-                // emit a stub that would render as a broken image later.
+                // emit a broken reference.
                 continue;
             }
             $resolvedAuthor = null;
@@ -647,26 +660,84 @@ class Resolver
                     $personNode = $this->fetchGraphNode($authorRef, $context, $authorRef);
                     $resolvedAuthor = MediaEntity::shapePersonName($personNode, $context->language);
                 } catch (ResourceNotFoundException) {
-                    // Author resource gone; leave the media entry without
-                    // an author rather than skipping the image.
+                    // Author resource gone; leave the media without an author.
                 }
             }
 
             $mediaEntity = new MediaEntity();
             $mediaEntity->configure($mediaNode, $entry['kind'], $context->language, $resolvedAuthor);
-            $shaped[] = $mediaEntity->toArray();
+
+            $downloadUrl = $mediaEntity->getUrl();
+            if ($downloadUrl === '') {
+                continue;
+            }
+
+            $file = $this->mediaFileDownloader->download(
+                $target,
+                $staging,
+                $downloadUrl,
+                $this->extractDmsId($reference),
+                $mediaEntity->getOriginalFileName(),
+            );
+            if ($file === null) {
+                continue;
+            }
+
+            $file->getMetaData()->add(array_filter([
+                'title' => $mediaEntity->getOriginalFileName(),
+                'description' => $mediaEntity->getDescription(),
+                'creator' => $mediaEntity->getAuthor(),
+                'copyright' => $mediaEntity->getCopyright(),
+            ], static fn (string $value): bool => $value !== ''));
+
+            $targetField = $mediaEntity->isMainImage() ? 'main_image' : 'media_files';
+            $this->stageFileReference(
+                $payload,
+                $ownerTable,
+                $ownerKey,
+                $targetField,
+                $file->getUid(),
+                $mediaEntity,
+                $context->storagePid,
+            );
         }
 
-        $payload->setField($ownerTable, $ownerKey, 'media', (string)(json_encode($shaped) ?: ''));
-
-        // Drop every entry for this bucket in one go. Iterating the
-        // references list with removeTransient would work too, but a
-        // single teardown mirrors the "list emitted whole" semantics.
         foreach ($entries as $entry) {
             if (is_array($entry)) {
                 $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
             }
         }
+    }
+
+    private function stageFileReference(
+        DataHandlerPayload $payload,
+        string $ownerTable,
+        string $ownerKey,
+        string $targetField,
+        int $fileUid,
+        MediaEntity $media,
+        int $pid
+    ): void {
+        $newKey = StringUtility::getUniqueId('NEW');
+        $payload->addRow('sys_file_reference', $newKey, [
+            'pid' => $pid,
+            'uid_local' => $fileUid,
+            'title' => $media->getOriginalFileName(),
+            'description' => $media->getDescription(),
+        ]);
+        $payload->setRelationField($ownerTable, $ownerKey, $targetField, $newKey);
+    }
+
+    /**
+     * Last path segment of a dms_* resource URL, the stable basis for the
+     * stored filename: "https://thuecat.org/resources/dms_5159216"
+     * → "dms_5159216".
+     */
+    private function extractDmsId(string $reference): string
+    {
+        $path = (string)(parse_url($reference, PHP_URL_PATH) ?: $reference);
+        $segment = basename($path);
+        return $segment !== '' ? $segment : $reference;
     }
 
     /**

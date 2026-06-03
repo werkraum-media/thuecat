@@ -23,6 +23,15 @@
                             </suggestOptions>
                         </config>
                     </storagePid>
+                    <fileFolder>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.fileFolder</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.fileFolder.description</description>
+                        <config>
+                            <type>folder</type>
+                            <maxitems>1</maxitems>
+                            <minitems>1</minitems>
+                        </config>
+                    </fileFolder>
                     <urls>
                         <title>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.static.urls</title>
                         <section>1</section>

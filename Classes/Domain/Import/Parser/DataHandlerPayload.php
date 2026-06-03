@@ -215,6 +215,16 @@ class DataHandlerPayload
     }
 
     /**
+     * Stage an arbitrary row into the datamap under its own outer key
+     *
+     * @param array<string, string|int|float> $fields
+     */
+    public function addRow(string $table, string $key, array $fields): void
+    {
+        $this->dataMap[$table][$key] = $fields;
+    }
+
+    /**
      * Append (or overwrite) a single translated field on the per-language
      * translations bucket. Used by the resolver when it builds per-language
      * blobs (e.g. accessibility_specification) outside the parser path so the

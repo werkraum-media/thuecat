@@ -3,6 +3,15 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat Plugins and Modules">
         <header/>
         <body>
+            <trans-unit id="import.fileFolder.missing" xml:space="preserve">
+                <source>No target folder is configured for the import. Configure a file folder on the import configuration before running it.</source>
+            </trans-unit>
+            <trans-unit id="import.fileFolder.unresolvable" xml:space="preserve">
+                <source>The configured import target folder "%s" could not be resolved: %s</source>
+            </trans-unit>
+            <trans-unit id="import.fileFolder.notWritable" xml:space="preserve">
+                <source>The import target folder "%s" is not writable: %s</source>
+            </trans-unit>
             <trans-unit id="content.openingHour.weekday.Monday" xml:space="preserve">
                 <source>Monday:</source>
             </trans-unit>

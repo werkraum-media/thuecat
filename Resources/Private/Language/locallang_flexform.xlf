@@ -10,6 +10,12 @@
             <trans-unit id="importConfiguration.static.storagePid" xml:space="preserve">
                 <source>Storage Page UID</source>
             </trans-unit>
+            <trans-unit id="importConfiguration.static.fileFolder" xml:space="preserve">
+                <source>Target folder for imported files</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.static.fileFolder.description" xml:space="preserve">
+                <source>Imported images and other media files are stored in this folder.</source>
+            </trans-unit>
             <trans-unit id="importConfiguration.static.urls" xml:space="preserve">
                 <source>URLs</source>
             </trans-unit>
@@ -29,6 +35,12 @@
             </trans-unit>
             <trans-unit id="importConfiguration.syncScope.storagePid" xml:space="preserve">
                 <source>Storage Page UID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.fileFolder" xml:space="preserve">
+                <source>Target folder for imported files</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncScope.fileFolder.description" xml:space="preserve">
+                <source>Imported images and other media files are stored in this folder.</source>
             </trans-unit>
             <trans-unit id="importConfiguration.syncScope.syncScopeId" xml:space="preserve">
                 <source>syncScopeId</source>
@@ -64,6 +76,12 @@
             </trans-unit>
             <trans-unit id="importConfiguration.containsPlace.storagePid" xml:space="preserve">
                 <source>Storage Page UID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.containsPlace.fileFolder" xml:space="preserve">
+                <source>Target folder for imported files</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.containsPlace.fileFolder.description" xml:space="preserve">
+                <source>Imported images and other media files are stored in this folder.</source>
             </trans-unit>
             <trans-unit id="importConfiguration.containsPlace.containsPlaceId" xml:space="preserve">
                 <source>Contains Place ID</source>

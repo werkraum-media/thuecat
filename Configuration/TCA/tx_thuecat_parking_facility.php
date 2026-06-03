@@ -145,6 +145,24 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            'main_image' => [
+                'label' => $languagePath . '.main_image',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                    'maxitems' => 1,
+                ],
+            ],
+            'media_files' => [
+                'label' => $languagePath . '.media_files',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                ],
+            ],
+            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
             'media' => [
                 'label' => $languagePath . '.media',
                 'l10n_mode' => 'exclude',
@@ -215,7 +233,10 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, disable, title, description, sanitation, other_service, traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, special_opening_hours, offers, address, media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by',
+                'showitem' => '--palette--;;language, disable, title, description, main_image, media_files, sanitation, other_service, 
+                traffic_infrastructure, payment_accepted, distance_to_public_transport, opening_hours, 
+                special_opening_hours, offers, address,  media, remote_id, 
+                --div--;' . $languagePath . '.tab.relations, town, managed_by',
             ],
         ],
     ];

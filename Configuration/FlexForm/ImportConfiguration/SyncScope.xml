@@ -23,6 +23,15 @@
                             </suggestOptions>
                         </config>
                     </storagePid>
+                    <fileFolder>
+                        <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.fileFolder</label>
+                        <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.fileFolder.description</description>
+                        <config>
+                            <type>folder</type>
+                            <maxitems>1</maxitems>
+                            <minitems>1</minitems>
+                        </config>
+                    </fileFolder>
                     <importTarget>
                         <label>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget</label>
                         <description>LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:importConfiguration.syncScope.importTarget.description</description>

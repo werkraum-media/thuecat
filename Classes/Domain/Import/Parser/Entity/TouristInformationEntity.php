@@ -62,6 +62,13 @@ class TouristInformationEntity extends AbstractEntity
         // which table it points to.
         $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
         $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
+
+        // photo → main_image, image → media_files; resolver fetches + downloads each.
+        $this->recordMediaTransient(
+            $node['schema:photo'] ?? null,
+            $node['schema:image'] ?? null,
+            $node['schema:video'] ?? null,
+        );
     }
 
     public function handlesTypes(): array

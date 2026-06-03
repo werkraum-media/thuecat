@@ -67,6 +67,12 @@ interface ImportConfiguration
     public function getStoragePid(): int;
 
     /**
+     * Combined FAL folder identifier (e.g. "1:/thuecat/") imported media
+     * files are written to.
+     */
+    public function getFileFolder(): string;
+
+    /**
      * Host the importer fetches resources from for this configuration.
      * Implementations must never return an empty string — when no override is
      * configured they fall back to FetchData::DEFAULT_API_DOMAIN so callers

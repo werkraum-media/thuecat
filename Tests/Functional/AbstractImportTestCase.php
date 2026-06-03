@@ -31,6 +31,8 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use WerkraumMedia\ThueCat\Domain\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Domain\Import\MediaFileDownloader;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
@@ -41,6 +43,18 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
      * Will check for no errors if set to false.
      */
     protected bool $expectErrors = false;
+
+    /**
+     * Prevent media handling on tests that care about them. Set to false
+     * for tests focused on FAL handling.
+     */
+    protected bool $stubMediaDownloader = true;
+
+    /**
+     * Prevent media handling on tests that care about them. Set to false
+     * for tests focused on FAL handling.
+     */
+    protected bool $stubFileFolderAccess = true;
 
     /**
      * Default domain used by expectFetch()/expectNotFound() when no
@@ -104,6 +118,14 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         parent::setUp();
 
         GuzzleClientFaker::registerClient();
+        if ($this->stubFileFolderAccess) {
+            // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+            $this->getContainer()->set(FileFolderAccess::class, new FileFolderAccessStub());
+        }
+        if ($this->stubMediaDownloader) {
+            // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+            $this->getContainer()->set(MediaFileDownloader::class, new MediaFileDownloaderStub());
+        }
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/BackendUser.php');
         $this->setDateAspect(new DateTimeImmutable('2024-09-19T00:00:00+00:00'));
         $this->setUpBackendUser(1);

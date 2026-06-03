@@ -71,6 +71,47 @@ class MediaEntity extends AbstractTransientEntity
         ];
     }
 
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function isMainImage(): bool
+    {
+        return $this->mainImage;
+    }
+
+    public function getOriginalFileName(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    public function getCopyright(): string
+    {
+        $parts = array_filter([
+            $this->license['type'],
+            $this->license['author'],
+            $this->copyrightYear > 0 ? (string)$this->copyrightYear : '',
+        ], static fn (string $part): bool => $part !== '');
+
+        return implode(', ', $parts);
+    }
+
     public function toArray(): array
     {
         return [

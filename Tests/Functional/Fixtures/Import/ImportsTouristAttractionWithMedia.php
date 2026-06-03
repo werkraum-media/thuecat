@@ -41,6 +41,9 @@ return [
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
                             </field>
+                            <field index="fileFolder">
+                                <value index="vDEF">1:/thuecat/</value>
+                            </field>
                             <field index="urls">
                                 <el index="el">
                                     <field index="602a89f54d694654233086">
