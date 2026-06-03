@@ -2,6 +2,13 @@
         xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
         data-namespace-typo3-fluid="true"
 >
-<h2>{attraction.title}</h2>
-<p>{attraction.description}</p>
-<a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>
+<f:if condition="{attraction}">
+    <f:then>
+        <h2>{attraction.title}</h2>
+        <p>{attraction.description}</p>
+        <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>
+    </f:then>
+    <f:else>
+        <p><f:translate key="content.show.empty" extensionName="thuecat" /></p>
+    </f:else>
+</f:if>

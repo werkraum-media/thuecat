@@ -70,8 +70,9 @@ class TouristAttractionController extends ActionController
         return $this->htmlResponse();
     }
 
-    public function showAction(TouristAttraction $attraction): ResponseInterface
+    public function showAction(?TouristAttraction $attraction = null): ResponseInterface
     {
+        // No/invalid attraction (e.g. plugin reached without parameters): render empty.
         $this->view->assign('attraction', $attraction);
         return $this->htmlResponse();
     }

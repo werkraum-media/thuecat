@@ -501,6 +501,10 @@
                 <source>No records to display.</source>
             </trans-unit>
 
+            <trans-unit id="content.show.empty" xml:space="preserve">
+                <source>No data to show.</source>
+            </trans-unit>
+
             <trans-unit id="content.petsAllowed.false">
                 <source>No Pets Allowed</source>
             </trans-unit>

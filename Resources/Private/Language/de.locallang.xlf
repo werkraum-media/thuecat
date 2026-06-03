@@ -585,6 +585,11 @@
                 <target>Keine Einträge vorhanden.</target>
             </trans-unit>
 
+            <trans-unit id="content.show.empty" xml:space="preserve">
+                <source>No data to show.</source>
+                <target>Keine Daten vorhanden.</target>
+            </trans-unit>
+
             <trans-unit id="content.petsAllowed.false">
                 <source>No Pets Allowed</source>
                 <target>Keine Tiere erlaubt</target>
