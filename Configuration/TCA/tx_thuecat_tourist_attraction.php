@@ -77,7 +77,6 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'input',
                     'size' => 20,
                     'max' => 255,
-                    'readOnly' => true,
                 ],
             ],
             'description' => [
@@ -85,7 +84,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                 ],
             ],
             'slogan' => [
@@ -93,7 +91,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -102,7 +99,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -111,7 +107,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -120,7 +115,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -129,7 +123,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -138,7 +131,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -147,7 +139,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -156,7 +147,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -165,7 +155,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -174,7 +163,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -183,7 +171,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -192,7 +179,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -201,7 +187,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -210,7 +195,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -219,7 +203,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => '',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -228,7 +211,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -237,7 +219,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -246,7 +227,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -255,7 +235,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -264,7 +243,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -272,7 +250,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.offers',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -280,7 +257,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.accessibility_specification',
                 'config' => [
                     'type' => 'text',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -289,7 +265,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
-                    'readOnly' => true,
                     'searchable' => false,
                 ],
             ],
@@ -307,7 +282,6 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 0,
                         ],
                     ],
-                    'readOnly' => true,
                 ],
             ],
             'managed_by' => [
@@ -324,7 +298,6 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 0,
                         ],
                     ],
-                    'readOnly' => true,
                 ],
             ],
             'parking_facility_near_by' => [
@@ -339,7 +312,6 @@ return (static function (string $extensionKey, string $tableName) {
                             'searchCondition' => 'sys_language_uid IN (0,-1)',
                         ],
                     ],
-                    'readOnly' => true,
                 ],
             ],
 

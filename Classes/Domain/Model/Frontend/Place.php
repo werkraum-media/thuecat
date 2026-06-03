@@ -109,6 +109,16 @@ abstract class Place extends Base
         return $this->specialOpeningHours->getMerged();
     }
 
+    public function getParkingFacilityNearBy(): ObjectStorage
+    {
+        return $this->parkingFacilityNearBy;
+    }
+
+    public function setParkingFacilityNearBy(ObjectStorage $parkingFacilityNearBy): void
+    {
+        $this->parkingFacilityNearBy = $parkingFacilityNearBy;
+    }
+
     public function getParkingFacilitiesNearBy(): ObjectStorage
     {
         return $this->parkingFacilityNearBy;

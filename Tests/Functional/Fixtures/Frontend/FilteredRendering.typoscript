@@ -1,0 +1,17 @@
+page = PAGE
+page.10 < styles.content.get
+
+plugin.tx_thuecat {
+    view {
+        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+    }
+    settings {
+        towns = 1
+    }
+}
+
+tt_content.thuecat_tourist_attraction_list_filtered = EXTBASEPLUGIN
+tt_content.thuecat_tourist_attraction_list_filtered {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}

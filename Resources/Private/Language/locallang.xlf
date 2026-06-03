@@ -161,6 +161,9 @@
             <trans-unit id="content.generalInformation" xml:space="preserve">
                 <source>General Information</source>
             </trans-unit>
+            <trans-unit id="content.parkingFacilities" xml:space="preserve">
+                <source>Parking facilities nearby</source>
+            </trans-unit>
             <trans-unit id="content.payment" xml:space="preserve">
                 <source>Accepted payment</source>
             </trans-unit>
@@ -190,6 +193,27 @@
             </trans-unit>
             <trans-unit id="content.accessibility" xml:space="preserve">
                 <source>Information on accessibility</source>
+            </trans-unit>
+            <trans-unit id="content.slogan" xml:space="preserve">
+                <source>Slogans</source>
+            </trans-unit>
+            <trans-unit id="content.town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="content.otherService" xml:space="preserve">
+                <source>Other services</source>
+            </trans-unit>
+            <trans-unit id="content.pagination.previous" xml:space="preserve">
+                <source>Previous</source>
+            </trans-unit>
+            <trans-unit id="content.pagination.next" xml:space="preserve">
+                <source>Next</source>
+            </trans-unit>
+            <trans-unit id="content.pagination.info" xml:space="preserve">
+                <source>%1$s items per page, %2$s pages total</source>
+            </trans-unit>
+            <trans-unit id="content.backToTop" xml:space="preserve">
+                <source>Back to top</source>
             </trans-unit>
             <trans-unit id="content.price.rule.PerPackage" xml:space="preserve">
                 <source>per package</source>
@@ -437,6 +461,35 @@
 
             <trans-unit id="content.url">
                 <source>Website</source>
+            </trans-unit>
+
+            <trans-unit id="content.backToList" xml:space="preserve">
+                <source>Back to list</source>
+            </trans-unit>
+
+            <trans-unit id="content.search.submit" xml:space="preserve">
+                <source>Search</source>
+            </trans-unit>
+            <trans-unit id="content.search.searchword" xml:space="preserve">
+                <source>Search term</source>
+            </trans-unit>
+            <trans-unit id="content.search.town" xml:space="preserve">
+                <source>Town</source>
+            </trans-unit>
+            <trans-unit id="content.search.town.hint" xml:space="preserve">
+                <source>Hold Ctrl (Cmd) to select multiple towns.</source>
+            </trans-unit>
+            <trans-unit id="content.search.petsAllowed" xml:space="preserve">
+                <source>Pets allowed</source>
+            </trans-unit>
+            <trans-unit id="content.search.isAccessibleForFree" xml:space="preserve">
+                <source>Free admission</source>
+            </trans-unit>
+            <trans-unit id="content.search.publicAccess" xml:space="preserve">
+                <source>Publicly accessible</source>
+            </trans-unit>
+            <trans-unit id="content.list.empty" xml:space="preserve">
+                <source>No records to display.</source>
             </trans-unit>
 
             <trans-unit id="content.petsAllowed.false">

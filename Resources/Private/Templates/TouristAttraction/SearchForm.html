@@ -1,0 +1,30 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:form method="get" action="list" pluginName="TouristAttractionList" object="{demand}" objectName="demand" pageUid="{settings.page.pid.thuecat_attraction_search}">
+    <f:form.textfield property="searchword" />
+
+    <f:if condition="{lockedMap.towns}">
+        <f:then><f:form.hidden property="towns" /></f:then>
+        <f:else><f:form.select property="towns" options="{towns}" optionValueField="uid" optionLabelField="title" multiple="1" /></f:else>
+    </f:if>
+
+    <f:if condition="{lockedMap.petsAllowed}">
+        <f:then><f:form.hidden property="petsAllowed" /></f:then>
+        <f:else><label><f:form.checkbox property="petsAllowed" value="1" /> <f:translate key="content.search.petsAllowed" extensionName="thuecat" /></label></f:else>
+    </f:if>
+
+    <f:if condition="{lockedMap.isAccessibleForFree}">
+        <f:then><f:form.hidden property="isAccessibleForFree" /></f:then>
+        <f:else><label><f:form.checkbox property="isAccessibleForFree" value="1" /> <f:translate key="content.search.isAccessibleForFree" extensionName="thuecat" /></label></f:else>
+    </f:if>
+
+    <f:if condition="{lockedMap.publicAccess}">
+        <f:then><f:form.hidden property="publicAccess" /></f:then>
+        <f:else><label><f:form.checkbox property="publicAccess" value="1" /> <f:translate key="content.search.publicAccess" extensionName="thuecat" /></label></f:else>
+    </f:if>
+
+    <button type="submit"><f:translate key="content.search.submit" extensionName="thuecat" /></button>
+</f:form>
+</html>

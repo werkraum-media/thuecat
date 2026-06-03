@@ -6,6 +6,7 @@ services:
 
   WerkraumMedia\ThueCat\:
     resource: '../Classes/*'
+    exclude: '..Classes/Domain/Model/*'
 
   WerkraumMedia\ThueCat\Typo3\Hook\:
     resource: '../Classes/Typo3/Hook/*'

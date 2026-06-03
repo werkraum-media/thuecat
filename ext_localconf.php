@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
+use WerkraumMedia\ThueCat\Controller\TouristAttractionController;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
@@ -29,4 +31,33 @@ Extension::registerExtLocalconfConfigConfig();
             'expirePeriod' => '180',
         ];
     }
+
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TouristAttractionList',
+        [TouristAttractionController::class => ['list']],
+        []
+    );
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TouristAttractionShow',
+        [TouristAttractionController::class => ['show']],
+        []
+    );
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TouristAttractionSearch',
+        [TouristAttractionController::class => ['searchForm']],
+        []
+    );
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TouristAttractionListSelected',
+        [TouristAttractionController::class => ['selectedList']],
+        []
+    );
+
+    // Demand + paging are non-cacheable, under the shared thuecat namespace.
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^thuecat[demand]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^thuecat[currentPage]';
 })(Extension::EXTENSION_KEY);
