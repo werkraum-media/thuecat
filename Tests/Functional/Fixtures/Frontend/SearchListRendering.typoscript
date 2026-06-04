@@ -12,14 +12,14 @@ plugin.tx_thuecat {
     }
 }
 
-tt_content.thuecat_tourist_attraction_list = EXTBASEPLUGIN
-tt_content.thuecat_tourist_attraction_list {
+tt_content.werkraummedia_thuecatattractionlist = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlist {
     extensionName = ThueCat
     pluginName = TouristAttractionList
 }
 
-tt_content.thuecat_tourist_attraction_search = EXTBASEPLUGIN
-tt_content.thuecat_tourist_attraction_search {
+tt_content.werkraummedia_thuecatattractionsearch = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionsearch {
     extensionName = ThueCat
     pluginName = TouristAttractionSearch
 }

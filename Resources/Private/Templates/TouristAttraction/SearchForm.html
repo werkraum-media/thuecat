@@ -2,11 +2,11 @@
         xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
         data-namespace-typo3-fluid="true"
 >
-<f:form method="post" action="list" pluginName="TouristAttractionList" object="{demand}" objectName="demand" pageUid="{settings.page.pid.thuecat_attraction_search}">
+<f:form method="post" action="list" pluginName="TouristAttractionList" object="{demand}" objectName="demand" pageUid="{formTargetPid}">
     <f:form.textfield property="searchword" />
 
     <f:if condition="{lockedMap.towns}">
-        <f:then><f:form.hidden property="towns" /></f:then>
+        <f:then><f:for each="{demand.towns}" as="town" iteration="i"><f:form.hidden property="towns.{i.index}" /></f:for></f:then>
         <f:else><f:form.select property="towns" options="{towns}" optionValueField="uid" optionLabelField="title" multiple="1" /></f:else>
     </f:if>
 

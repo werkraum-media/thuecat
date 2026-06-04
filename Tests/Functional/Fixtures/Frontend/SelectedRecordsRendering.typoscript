@@ -10,8 +10,8 @@ plugin.tx_thuecat {
     }
 }
 
-tt_content.thuecat_tourist_attraction_list_selected = EXTBASEPLUGIN
-tt_content.thuecat_tourist_attraction_list_selected {
+tt_content.werkraummedia_thuecatattractionlistselected = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlistselected {
     extensionName = ThueCat
     pluginName = TouristAttractionListSelected
 }

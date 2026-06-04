@@ -21,7 +21,7 @@ class TouristAttractionFilterTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => $search]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $search]])
         ;
 
         return (string)$this->executeFrontendSubRequest($request)->getBody();

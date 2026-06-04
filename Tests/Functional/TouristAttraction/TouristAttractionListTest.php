@@ -31,7 +31,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => ['searchword' => '']]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => '']]])
         ;
 
         $result = $this->executeFrontendSubRequest($request);
@@ -46,7 +46,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => ['searchword' => 'Stadtmuseum']]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
         ;
 
         $result = $this->executeFrontendSubRequest($request);
@@ -61,7 +61,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => ['searchword' => 'GibtEsNicht']]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'GibtEsNicht']]])
         ;
 
         $result = $this->executeFrontendSubRequest($request);
@@ -77,7 +77,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => ['searchword' => 'Erfurt']]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Erfurt']]])
         ;
 
         $result = $this->executeFrontendSubRequest($request);

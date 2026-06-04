@@ -1,0 +1,31 @@
+page = PAGE
+page.10 < styles.content.get
+
+plugin.tx_thuecat {
+    view {
+        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+    }
+    settings {
+        # Fallback target when no list shares the search form's page.
+        page.pid.thuecat_attraction_search = 40
+        itemsPerPage = 10
+    }
+}
+
+tt_content.werkraummedia_thuecatattractionsearch = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionsearch {
+    extensionName = ThueCat
+    pluginName = TouristAttractionSearch
+}
+
+tt_content.werkraummedia_thuecatattractionlist = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlist {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}
+
+tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlistfiltered {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}

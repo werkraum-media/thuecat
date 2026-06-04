@@ -47,7 +47,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
         // Editor locked town 1; a tampered URL asking for town 2 must be ignored.
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => ['towns' => [2]]]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['towns' => [2]]]])
         ;
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();

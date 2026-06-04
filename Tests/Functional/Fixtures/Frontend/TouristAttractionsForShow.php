@@ -37,7 +37,7 @@ return [
         [
             'uid' => '10',
             'pid' => '10',
-            'CType' => 'thuecat_tourist_attraction_show',
+            'CType' => 'werkraummedia_thuecatattractionshow',
             'header' => 'Show Plugin',
             'colPos' => '0',
             'sorting' => '256',

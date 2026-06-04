@@ -6,8 +6,10 @@ namespace WerkraumMedia\ThueCat\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
@@ -15,6 +17,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFacto
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
+use WerkraumMedia\ThueCat\Domain\Resolver\AttractionListOnPageResolver;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 
 class TouristAttractionController extends ActionController
@@ -25,6 +28,7 @@ class TouristAttractionController extends ActionController
         protected TouristAttractionDemandFactory $demandFactory,
         protected PaginationFactory $paginationFactory,
         protected ExtensionService $extensionService,
+        protected AttractionListOnPageResolver $attractionListOnPageResolver,
     ) {
     }
 
@@ -35,7 +39,33 @@ class TouristAttractionController extends ActionController
 
     public function initializeSearchFormAction(): void
     {
+        $this->adoptListDemandForRepopulation();
         $this->allowDemandMapping();
+    }
+
+    // After a search the demand travels in the list namespace; lift it into our
+    // own argument so Extbase maps it back and the form shows the visitor's input.
+    protected function adoptListDemandForRepopulation(): void
+    {
+        $listNamespace = $this->extensionService->getPluginNamespace('ThueCat', 'TouristAttractionList');
+
+        $routing = $this->request->getAttribute('routing');
+        $listArguments = $routing instanceof PageArguments ? $routing->get($listNamespace) : null;
+        $listArguments = is_array($listArguments) ? $listArguments : [];
+        $parsedBody = $this->request->getParsedBody();
+        if ($this->request->getMethod() === 'POST' && is_array($parsedBody)) {
+            $body = $parsedBody[$listNamespace] ?? [];
+            $listArguments = array_replace_recursive($listArguments, is_array($body) ? $body : []);
+        }
+
+        if (!isset($listArguments['demand']) || !is_array($listArguments['demand'])) {
+            return;
+        }
+
+        $extbaseParameters = $this->request->getAttribute('extbase');
+        if ($extbaseParameters instanceof ExtbaseRequestParameters) {
+            $extbaseParameters->setArgument('demand', $listArguments['demand']);
+        }
     }
 
     // Demand is a trusted-shape DTO (typed setters only); allow request mapping
@@ -64,7 +94,7 @@ class TouristAttractionController extends ActionController
 
         $parameters = $demand->getQueryParameters();
         $parameter = $parameters === [] ? [] : ['demand' => $parameters];
-        $namespace = $this->extensionService->getPluginNamespace(null, null);
+        $namespace = $this->extensionService->getPluginNamespace('ThueCat', 'TouristAttractionList');
 
         /** @var ContentObjectRenderer $contentObject */
         $contentObject = $this->request->getAttribute('currentContentObject');
@@ -134,14 +164,31 @@ class TouristAttractionController extends ActionController
     public function searchFormAction(?TouristAttractionDemand $demand = null): ResponseInterface
     {
         $demand ??= new TouristAttractionDemand();
-        $editorFilter = $this->demandFactory->fromSettings($this->settings);
+
+        /** @var ContentObjectRenderer $contentObject */
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        $routing = $this->request->getAttribute('routing');
+        $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
+        // A list CE on this page makes the form stay here and supplies the locks.
+        $listFilter = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
+
+        // Force locked fields to the preset so hidden inputs carry the editor value.
+        if ($listFilter !== null) {
+            $this->demandFactory->applyEditorFilter($demand, $listFilter);
+        }
+
+        // On a list page post to self; otherwise to the configured central search page.
+        $pageSettings = $this->settings['page'] ?? [];
+        $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
+        $centralPid = is_array($pidSettings) ? ($pidSettings['thuecat_attraction_search'] ?? null) : null;
+        $formTargetPid = $listFilter !== null ? $pageId : $centralPid;
 
         $this->view->assignMultiple([
             'demand' => $demand,
             'towns' => $this->townRepository->findAllForSearchFormSortedByTitle(),
-            // Locked filters render as hidden (kept in the submitted demand);
-            // listAction re-forces them, so a tampered value can't widen the set.
-            'lockedMap' => $editorFilter->getLockedMap(),
+            // Locked filters render hidden; listAction re-forces them so a tampered value can't widen.
+            'lockedMap' => $listFilter?->getLockedMap() ?? [],
+            'formTargetPid' => $formTargetPid,
         ]);
         return $this->htmlResponse();
     }

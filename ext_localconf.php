@@ -57,7 +57,8 @@ Extension::registerExtLocalconfConfigConfig();
         []
     );
 
-    // Demand + paging are non-cacheable, under the shared thuecat namespace.
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^thuecat[demand]';
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^thuecat[currentPage]';
+    // Demand + paging are non-cacheable, per native plugin namespace.
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[demand]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[currentPage]';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionsearch[demand]';
 })(Extension::EXTENSION_KEY);

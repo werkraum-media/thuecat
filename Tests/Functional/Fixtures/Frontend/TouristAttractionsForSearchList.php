@@ -70,7 +70,7 @@ return [
         [
             'uid' => '10',
             'pid' => '10',
-            'CType' => 'thuecat_tourist_attraction_search',
+            'CType' => 'werkraummedia_thuecatattractionsearch',
             'header' => 'Attraction Search',
             'colPos' => '0',
             'sorting' => '1',
@@ -79,7 +79,7 @@ return [
         [
             'uid' => '11',
             'pid' => '10',
-            'CType' => 'thuecat_tourist_attraction_list',
+            'CType' => 'werkraummedia_thuecatattractionlist',
             'header' => 'Attraction List',
             'colPos' => '0',
             'sorting' => '2',

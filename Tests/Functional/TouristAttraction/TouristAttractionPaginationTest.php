@@ -36,7 +36,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['currentPage' => '2']])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
         ;
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
@@ -54,8 +54,8 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        self::assertStringContainsString('thuecat%5BcurrentPage%5D=2', $body);
-        self::assertStringContainsString('thuecat%5BcurrentPage%5D=3', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=3', $body);
     }
 
     #[Test]

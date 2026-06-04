@@ -24,7 +24,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         self::assertSame(200, $result->getStatusCode());
         self::assertStringContainsString('<form', $body);
-        self::assertStringContainsString('name="thuecat[demand][searchword]"', $body);
+        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
     }
 
     #[Test]
@@ -54,11 +54,11 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(12)
-            ->withQueryParams(['thuecat' => ['demand' => ['searchword' => 'Stadtmuseum']]])
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
         ;
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        self::assertMatchesRegularExpression('#<input[^>]+name="thuecat\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
+        self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
 }

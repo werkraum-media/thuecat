@@ -29,7 +29,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
         $body = (string)$result->getBody();
 
         self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('name="thuecat[demand][searchword]"', $body);
+        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
         self::assertStringContainsString('Erfurt Frei 01', $body);
     }
 
@@ -51,7 +51,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => [
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
                 'isAccessibleForFree' => '1',
             ]]])
@@ -69,7 +69,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => [
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
                 'isAccessibleForFree' => '1',
             ]]])
@@ -79,7 +79,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         self::assertMatchesRegularExpression('#<option value="1"[^>]*selected#', $body);
         self::assertMatchesRegularExpression(
-            '#name="thuecat\[demand\]\[isAccessibleForFree\]"[^>]*checked#',
+            '#name="tx_thuecat_touristattractionlist\[demand\]\[isAccessibleForFree\]"[^>]*checked#',
             $body
         );
     }
@@ -89,7 +89,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())
             ->withPageId(10)
-            ->withQueryParams(['thuecat' => ['demand' => [
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
                 'isAccessibleForFree' => '1',
             ]]])
@@ -99,9 +99,9 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         // 15 free Erfurt records, itemsPerPage 10 -> a second page exists, and its
         // link must keep the active filter so paging does not reset the search.
-        self::assertStringContainsString('thuecat%5BcurrentPage%5D=2', $body);
-        self::assertStringContainsString('thuecat%5Bdemand%5D%5Btowns%5D%5B0%5D=1', $body);
-        self::assertStringContainsString('thuecat%5Bdemand%5D%5BisAccessibleForFree%5D=1', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Btowns%5D%5B0%5D=1', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5BisAccessibleForFree%5D=1', $body);
     }
 
     #[Test]
@@ -111,7 +111,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
             ->withPageId(10)
             ->withMethod('POST')
             ->withBody((new StreamFactory())->createStream(http_build_query([
-                'thuecat' => ['demand' => ['searchword' => 'Erfurt Frei 01']],
+                'tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Erfurt Frei 01']],
             ])))
         ;
 
@@ -119,7 +119,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         self::assertSame(303, $response->getStatusCode());
         $location = $response->getHeaderLine('location');
-        self::assertStringContainsString('thuecat%5Bdemand%5D%5Bsearchword%5D=Erfurt', $location);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Bsearchword%5D=Erfurt', $location);
         self::assertStringNotContainsString('__referrer', $location);
         self::assertStringNotContainsString('__trustedProperties', $location);
     }

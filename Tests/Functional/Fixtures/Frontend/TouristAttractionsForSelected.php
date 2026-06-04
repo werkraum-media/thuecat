@@ -47,7 +47,7 @@ return [
             'pid' => '10',
             'hidden' => '0',
             'sorting' => '1',
-            'CType' => 'thuecat_tourist_attraction_list_selected',
+            'CType' => 'werkraummedia_thuecatattractionlistselected',
             'header' => 'Selected Attraction List',
             'deleted' => '0',
             'starttime' => '0',
