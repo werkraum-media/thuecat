@@ -9,6 +9,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 
 class TouristAttractionRepository extends Repository
 {
@@ -81,5 +82,32 @@ class TouristAttractionRepository extends Repository
         }
 
         return $ordered;
+    }
+
+    /**
+     * Distinct towns of attractions within $storagePageIds, sorted by title — the
+     * search form's town options scoped to what a list on those pages can return.
+     *
+     * @param int[] $storagePageIds
+     *
+     * @return Town[]
+     */
+    public function findTownsInStorageSortedByTitle(array $storagePageIds): array
+    {
+        $query = $this->createQuery();
+        if ($storagePageIds !== []) {
+            $query->getQuerySettings()->setStoragePageIds($storagePageIds);
+        }
+        $query->setOrderings(['town.title' => QueryInterface::ORDER_ASCENDING]);
+
+        $towns = [];
+        foreach ($query->execute() as $attraction) {
+            $town = $attraction instanceof TouristAttraction ? $attraction->getTown() : null;
+            if ($town instanceof Town && $town->getUid() !== null) {
+                $towns[$town->getUid()] = $town;
+            }
+        }
+
+        return array_values($towns);
     }
 }

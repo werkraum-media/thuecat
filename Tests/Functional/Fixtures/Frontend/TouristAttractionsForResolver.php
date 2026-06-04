@@ -88,12 +88,21 @@ return [
         $page(50, '/filtered-translated/', 'Search + filtered list (translated)'),
         $page(51, '/filtered-translated/', 'Search + filtered list (translated EN)', 1, 50),
         $page(60, '/filtered-two-towns/', 'Search + filtered list (two towns)'),
+        $page(70, '/storage-scoped/', 'Search + list restricted to one storage folder'),
         [
             'uid' => '11',
             'pid' => '1',
             'title' => 'Storage for Attractions',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'sorting' => '512',
+            'deleted' => '0',
+        ],
+        [
+            'uid' => '12',
+            'pid' => '1',
+            'title' => 'Other storage folder',
+            'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
+            'sorting' => '513',
             'deleted' => '0',
         ],
     ],
@@ -115,13 +124,22 @@ return [
 
         $search(601, 60, 1),
         $list(602, 60, 'werkraummedia_thuecatattractionlistfiltered', $townFlexform('1,2'), 2),
+
+        // page 70: plain list restricted to storage folder 11 only.
+        $search(701, 70, 1),
+        $list(702, 70, 'werkraummedia_thuecatattractionlist', '', 2),
     ],
     'tx_thuecat_town' => [
         ['uid' => '1', 'pid' => '11', 'title' => 'Erfurt'],
         ['uid' => '2', 'pid' => '11', 'title' => 'Weimar'],
+        // In folder 11 but no attraction references it -> must not be offered.
+        ['uid' => '4', 'pid' => '11', 'title' => 'Jena'],
+        // Lives in the other folder (12) -> outside a list restricted to 11.
+        ['uid' => '3', 'pid' => '12', 'title' => 'Gera'],
     ],
     'tx_thuecat_tourist_attraction' => [
         ['uid' => '1', 'pid' => '11', 'title' => 'Stadtmuseum Erfurt', 'town' => '1'],
         ['uid' => '2', 'pid' => '11', 'title' => 'Goethehaus Weimar', 'town' => '2'],
+        ['uid' => '3', 'pid' => '12', 'title' => 'Gera Museum', 'town' => '3'],
     ],
 ];

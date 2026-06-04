@@ -170,24 +170,31 @@ class TouristAttractionController extends ActionController
         $routing = $this->request->getAttribute('routing');
         $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
         // A list CE on this page makes the form stay here and supplies the locks.
-        $listFilter = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
+        $resolvedList = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
 
         // Force locked fields to the preset so hidden inputs carry the editor value.
-        if ($listFilter !== null) {
-            $this->demandFactory->applyEditorFilter($demand, $listFilter);
+        if ($resolvedList !== null) {
+            $this->demandFactory->applyEditorFilter($demand, $resolvedList->getEditorFilter());
         }
 
         // On a list page post to self; otherwise to the configured central search page.
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
         $centralPid = is_array($pidSettings) ? ($pidSettings['thuecat_attraction_search'] ?? null) : null;
-        $formTargetPid = $listFilter !== null ? $pageId : $centralPid;
+        $formTargetPid = $resolvedList !== null ? $pageId : $centralPid;
+
+        // Offer only towns the list on this page can actually return; all towns otherwise.
+        // @todo Any future record-backed filter option needs the same storage scoping.
+        $storagePageIds = $resolvedList?->getStoragePageIds() ?? [];
+        $towns = $storagePageIds === []
+            ? $this->townRepository->findAllForSearchFormSortedByTitle()
+            : $this->touristAttractionRepository->findTownsInStorageSortedByTitle($storagePageIds);
 
         $this->view->assignMultiple([
             'demand' => $demand,
-            'towns' => $this->townRepository->findAllForSearchFormSortedByTitle(),
+            'towns' => $towns,
             // Locked filters render hidden; listAction re-forces them so a tampered value can't widen.
-            'lockedMap' => $listFilter?->getLockedMap() ?? [],
+            'lockedMap' => $resolvedList?->getEditorFilter()->getLockedMap() ?? [],
             'formTargetPid' => $formTargetPid,
         ]);
         return $this->htmlResponse();

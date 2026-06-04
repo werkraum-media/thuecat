@@ -47,6 +47,19 @@ class AttractionListOnPageResolverTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function townOptionsAreScopedToTheListStorage(): void
+    {
+        // List restricted to folder 11: only towns with an attraction there are
+        // offered. Gera lives in folder 12; Jena in 11 but has no attraction.
+        $body = $this->render(70);
+
+        self::assertStringContainsString('>Erfurt</option>', $body);
+        self::assertStringContainsString('>Weimar</option>', $body);
+        self::assertStringNotContainsString('>Gera</option>', $body);
+        self::assertStringNotContainsString('>Jena</option>', $body);
+    }
+
+    #[Test]
     public function searchWithoutListTargetsTheConfiguredCentralSearchPage(): void
     {
         $body = $this->render(30);
