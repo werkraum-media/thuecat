@@ -19,6 +19,8 @@ Table of Contents
    Installation
    Configuration
    Integration
+   FrontendOutput
+   ContentElementExample
    Changelog
    Maintenance
    Sitemap
