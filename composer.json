@@ -6,22 +6,26 @@
     "homepage": "https://github.com/werkraum-media/thuecat",
     "support": {
         "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/master/en-us/",
-        "email": "coding@daniel-siepmann.de",
         "issues": "https://github.com/werkraum-media/thuecat/issues",
         "source": "https://github.com/werkraum-media/thuecat"
     },
     "authors": [
         {
+            "name": "Dirk Koritnik",
+            "email": "koritnik@werkraum-media.de",
+            "homepage": "https://werkraum-media.de/",
+            "role": "Owner"
+        },
+        {
+            "name": "Anja Leichsenring",
+            "email": "aleichsenring@ab-softlab.de",
+            "role": "Developer"
+        },
+        {
             "name": "Daniel Siepmann",
             "email": "daniel.siepmann@codappix.com",
             "homepage": "https://www.codappix.com/",
             "role": "Developer"
-        },
-        {
-            "name": "Carlos Pozo",
-            "email": "carlosricardo.pozo@hotmail.com",
-            "homepage": "https://codebycarlos.com/",
-            "role": "Templater"
         }
     ],
     "autoload": {
