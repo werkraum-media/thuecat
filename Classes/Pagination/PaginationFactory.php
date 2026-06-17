@@ -15,7 +15,7 @@ final class PaginationFactory
 
     /**
      * Build paginator + pagination for a query result, reading itemsPerPage
-     * from plugin settings (falling back to the default).
+     * from plugin settings (falling back to the site settings default).
      *
      * @param array<mixed> $settings
      */

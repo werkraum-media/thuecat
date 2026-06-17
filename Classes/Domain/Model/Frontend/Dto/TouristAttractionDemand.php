@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto;
 
+/**
+ * carry search demand and filters for both list and search actions to use and stay in sync.
+ * Potential sources:
+ * - flexform configuration of list plugin
+ * - user input via search form
+ */
 class TouristAttractionDemand
 {
     protected string $searchword = '';
@@ -77,7 +83,6 @@ class TouristAttractionDemand
 
     /**
      * Flat shape for GET URLs (f:link.action / POST redirect); empties dropped.
-     * Iterates properties so new filters are included without touching this.
      *
      * @return array<string, string|int|int[]>
      */

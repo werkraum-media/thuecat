@@ -13,3 +13,4 @@ plugin.tx_thuecat {
         templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
     }
 }
+

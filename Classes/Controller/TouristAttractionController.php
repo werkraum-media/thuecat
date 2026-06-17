@@ -10,27 +10,29 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
 use WerkraumMedia\ThueCat\Domain\Resolver\AttractionListOnPageResolver;
+use WerkraumMedia\ThueCat\Domain\Resolver\ListPluginOnSamePage;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 
 class TouristAttractionController extends ActionController
 {
     public function __construct(
-        protected TouristAttractionRepository    $touristAttractionRepository,
-        protected TownRepository                 $townRepository,
+        protected TouristAttractionRepository $touristAttractionRepository,
+        protected TownRepository $townRepository,
         protected TouristAttractionDemandFactory $demandFactory,
-        protected PaginationFactory              $paginationFactory,
-        protected ExtensionService               $extensionService,
-        protected AttractionListOnPageResolver   $attractionListOnPageResolver,
-    )
-    {
+        protected PaginationFactory $paginationFactory,
+        protected ExtensionService $extensionService,
+        protected AttractionListOnPageResolver $attractionListOnPageResolver,
+    ) {
     }
 
     public function initializeListAction(): void
@@ -44,7 +46,7 @@ class TouristAttractionController extends ActionController
         $this->allowDemandMapping();
     }
 
-    public function initializeView()
+    public function initializeView(): void
     {
         /** @var ContentObjectRenderer $contentObject */
         $contentObject = $this->request->getAttribute('currentContentObject');
@@ -151,7 +153,8 @@ class TouristAttractionController extends ActionController
         }
         $this->arguments->getArgument('demand')
             ->getPropertyMappingConfiguration()
-            ->allowAllProperties();
+            ->allowAllProperties()
+        ;
     }
 
     /**
@@ -192,9 +195,8 @@ class TouristAttractionController extends ActionController
 
     /**
      * apply the filters from the list plugin to the demand object
-     *
      */
-    protected function detectSiblingListAndApplyTheirFilters(ContentObjectRenderer $contentObject, int $pageId, TouristAttractionDemand $demand): ?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList
+    protected function detectSiblingListAndApplyTheirFilters(ContentObjectRenderer $contentObject, int $pageId, TouristAttractionDemand $demand): ?ListPluginOnSamePage
     {
         $listPluginOnSamePage = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
 
@@ -207,12 +209,12 @@ class TouristAttractionController extends ActionController
     /**
      * On a list page post to self; otherwise to the configured central search page.
      *
-     * @param \WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList|null $listPluginOnSamePage
+     * @param ListPluginOnSamePage|null $listPluginOnSamePage
      * @param int $pageId
      *
      * @return int|mixed|null
      */
-    protected function determineSearchActionTargetPid(?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList $listPluginOnSamePage, int $pageId): mixed
+    protected function determineSearchActionTargetPid(?ListPluginOnSamePage $listPluginOnSamePage, int $pageId): mixed
     {
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
@@ -224,11 +226,11 @@ class TouristAttractionController extends ActionController
     /**
      * Offer only towns the list on this page can actually return; all towns otherwise.
      *
-     * @param \WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList|null $listPluginOnSamePage
+     * @param ListPluginOnSamePage|null $listPluginOnSamePage
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|\WerkraumMedia\ThueCat\Domain\Model\Frontend\Town[]
+     * @return array<Town>|QueryResultInterface<Town>
      */
-    public function adjustFilterTownValuesToGivenStoragePid(?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList $listPluginOnSamePage): array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+    public function adjustFilterTownValuesToGivenStoragePid(?ListPluginOnSamePage $listPluginOnSamePage): array|QueryResultInterface
     {
         $storagePageIds = $listPluginOnSamePage?->getStoragePageIds() ?? [];
         return $storagePageIds === []

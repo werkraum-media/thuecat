@@ -7,9 +7,10 @@ namespace WerkraumMedia\ThueCat\Domain\Resolver;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\EditorFilter;
 
 /**
+ * The question is raised by the search plugin for any list siblings on its PID.
  * A list content element found on the page: its editor preset and storage pages.
  */
-class ResolvedList
+class ListPluginOnSamePage
 {
     /**
      * @param int[] $storagePageIds

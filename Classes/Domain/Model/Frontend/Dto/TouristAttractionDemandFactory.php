@@ -10,7 +10,7 @@ class TouristAttractionDemandFactory
 {
     /**
      * Single source of truth for editor settings → demand: each property the
-     * editor configured is applied AND named, so the form can hide it.
+     * editor configured in a list plugin is applied AND named, so the form can render it hidden.
      *
      * @param array<mixed> $settings
      */
@@ -47,6 +47,7 @@ class TouristAttractionDemandFactory
     {
         $locked = $filter->getDemand();
 
+        // @todo each new filter needs its own condition here
         if ($filter->isLocked('towns')) {
             $demand->setTowns($locked->getTowns());
         }
