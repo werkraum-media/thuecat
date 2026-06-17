@@ -23,13 +23,14 @@ use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 class TouristAttractionController extends ActionController
 {
     public function __construct(
-        protected TouristAttractionRepository $touristAttractionRepository,
-        protected TownRepository $townRepository,
+        protected TouristAttractionRepository    $touristAttractionRepository,
+        protected TownRepository                 $townRepository,
         protected TouristAttractionDemandFactory $demandFactory,
-        protected PaginationFactory $paginationFactory,
-        protected ExtensionService $extensionService,
-        protected AttractionListOnPageResolver $attractionListOnPageResolver,
-    ) {
+        protected PaginationFactory              $paginationFactory,
+        protected ExtensionService               $extensionService,
+        protected AttractionListOnPageResolver   $attractionListOnPageResolver,
+    )
+    {
     }
 
     public function initializeListAction(): void
@@ -39,13 +40,84 @@ class TouristAttractionController extends ActionController
 
     public function initializeSearchFormAction(): void
     {
-        $this->adoptListDemandForRepopulation();
+        $this->liftListDemandToUseInSearch();
         $this->allowDemandMapping();
     }
 
-    // After a search the demand travels in the list namespace; lift it into our
-    // own argument so Extbase maps it back and the form shows the visitor's input.
-    protected function adoptListDemandForRepopulation(): void
+    public function initializeView()
+    {
+        /** @var ContentObjectRenderer $contentObject */
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        $this->view->assign('data', $contentObject->data);
+    }
+
+    public function listAction(?TouristAttractionDemand $demand = null, int $currentPage = 1): ResponseInterface
+    {
+        $demand = $this->buildDemandFromInputAndEditorSettings($demand);
+
+        $this->redirectPostToGet($demand);
+
+        $attractions = $this->touristAttractionRepository->findByDemand($demand);
+        $pagination = $this->paginationFactory->fromSettings($attractions, $currentPage, $this->settings);
+
+        $this->view->assignMultiple([
+            'list' => $pagination,
+            'demand' => $demand,
+        ]);
+        return $this->htmlResponse();
+    }
+
+    public function showAction(?TouristAttraction $attraction = null): ResponseInterface
+    {
+        $this->view->assign('attraction', $attraction);
+        return $this->htmlResponse();
+    }
+
+    /**
+     * Renders a fixed, editor-curated set of attractions in the picked order.
+     * Backend-only selection; no demand, no filtering, no pagination.
+     */
+    public function selectedListAction(): ResponseInterface
+    {
+        $selectedRecordsSetting = $this->settings['selectedRecords'] ?? '';
+        $uids = is_string($selectedRecordsSetting)
+            ? GeneralUtility::intExplode(',', $selectedRecordsSetting, true)
+            : [];
+
+        $this->view->assignMultiple([
+            'attractions' => $this->touristAttractionRepository->findBySelectedRecords($uids),
+        ]);
+        return $this->htmlResponse();
+    }
+
+    public function searchFormAction(?TouristAttractionDemand $demand = null): ResponseInterface
+    {
+        $demand ??= new TouristAttractionDemand();
+
+        /** @var ContentObjectRenderer $contentObject */
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        $routing = $this->request->getAttribute('routing');
+        $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
+        $listPluginOnSamePage = $this->detectSiblingListAndApplyTheirFilters($contentObject, $pageId, $demand);
+        $formTargetPid = $this->determineSearchActionTargetPid($listPluginOnSamePage, $pageId);
+        // @todo Any future record-backed filter option needs the same storage scoping.
+        $towns = $this->adjustFilterTownValuesToGivenStoragePid($listPluginOnSamePage);
+
+        $this->view->assignMultiple([
+            'demand' => $demand,
+            'towns' => $towns,
+            // pre-selected filters render hidden; listAction re-forces them so a tampered value can't widen.
+            'lockedMap' => $listPluginOnSamePage?->getEditorFilter()->getLockedMap() ?? [],
+            'formTargetPid' => $formTargetPid,
+        ]);
+        return $this->htmlResponse();
+    }
+
+    /**
+     * After a search the demand travels in the list namespace; lift it into //
+     * search action argument so Extbase maps it back and the form shows the visitor's input.
+     */
+    protected function liftListDemandToUseInSearch(): void
     {
         $listNamespace = $this->extensionService->getPluginNamespace('ThueCat', 'TouristAttractionList');
 
@@ -68,8 +140,10 @@ class TouristAttractionController extends ActionController
         }
     }
 
-    // Demand is a trusted-shape DTO (typed setters only); allow request mapping
-    // of all its properties so new filters need no change here.
+    /**
+     * Demand is a trusted-shape DTO (typed setters only); allow request mapping
+     * of all its properties so new filters need no change here.
+     */
     protected function allowDemandMapping(): void
     {
         if (!$this->arguments->hasArgument('demand')) {
@@ -77,14 +151,11 @@ class TouristAttractionController extends ActionController
         }
         $this->arguments->getArgument('demand')
             ->getPropertyMappingConfiguration()
-            ->allowAllProperties()
-        ;
+            ->allowAllProperties();
     }
 
     /**
-     * Turn a posted search form into a bookmarkable GET URL carrying only the
-     * demand values (cHash-excluded), so the form's referrer/trusted-properties
-     * fields never reach the cacheable URL.
+     * Turn a posted search form into a bookmarkable GET URL carrying demand values
      */
     protected function redirectPostToGet(TouristAttractionDemand $demand): void
     {
@@ -102,101 +173,66 @@ class TouristAttractionController extends ActionController
             $this->redirectToUri($contentObject->typoLink_URL([
                 'parameter' => 't3://page?uid=current',
                 'additionalParams' => '&' . http_build_query([$namespace => $parameter]),
-            ])),
-            303
+            ]))
         );
     }
 
-    public function listAction(?TouristAttractionDemand $demand = null, int $currentPage = 1): ResponseInterface
+    /**
+     * if sibling list CE on the same page carries any pre-selection, apply them to the demand object
+     * List and Search both will have the same selected values, and visitors can not widen the search
+     * scope by manipulating hidden fields (they are overridden here again).
+     */
+    protected function buildDemandFromInputAndEditorSettings(?TouristAttractionDemand $demand = null): TouristAttractionDemand
     {
-        /** @var ContentObjectRenderer $contentObject */
-        $contentObject = $this->request->getAttribute('currentContentObject');
-
         $demand ??= new TouristAttractionDemand();
-        // Editor-locked filters override the visitor's input so a search stays
-        // within the configured set.
         $editorFilter = $this->demandFactory->fromSettings($this->settings);
         $this->demandFactory->applyEditorFilter($demand, $editorFilter);
-
-        // A posted search form redirects here to a clean, bookmarkable GET URL.
-        $this->redirectPostToGet($demand);
-
-        $attractions = $this->touristAttractionRepository->findByDemand($demand);
-        $pagination = $this->paginationFactory->fromSettings($attractions, $currentPage, $this->settings);
-
-        $this->view->assignMultiple([
-            'list' => $pagination,
-            'demand' => $demand,
-            'data' => $contentObject->data,
-        ]);
-        return $this->htmlResponse();
-    }
-
-    public function showAction(?TouristAttraction $attraction = null): ResponseInterface
-    {
-        // No/invalid attraction (e.g. plugin reached without parameters): render empty.
-        $this->view->assign('attraction', $attraction);
-        return $this->htmlResponse();
+        return $demand;
     }
 
     /**
-     * Renders a fixed, editor-curated set of attractions in the picked order.
-     * Backend-only selection; no demand, no filtering, no pagination.
+     * apply the filters from the list plugin to the demand object
+     *
      */
-    public function selectedListAction(): ResponseInterface
+    protected function detectSiblingListAndApplyTheirFilters(ContentObjectRenderer $contentObject, int $pageId, TouristAttractionDemand $demand): ?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList
     {
-        /** @var ContentObjectRenderer $contentObject */
-        $contentObject = $this->request->getAttribute('currentContentObject');
-        $dataFromTypoScript = $contentObject->data;
+        $listPluginOnSamePage = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
 
-        $selectedRecordsSetting = $this->settings['selectedRecords'] ?? '';
-        $uids = is_string($selectedRecordsSetting)
-            ? GeneralUtility::intExplode(',', $selectedRecordsSetting, true)
-            : [];
-
-        $this->view->assignMultiple([
-            'attractions' => $this->touristAttractionRepository->findBySelectedRecords($uids),
-            'data' => $dataFromTypoScript,
-        ]);
-        return $this->htmlResponse();
+        if ($listPluginOnSamePage !== null) {
+            $this->demandFactory->applyEditorFilter($demand, $listPluginOnSamePage->getEditorFilter());
+        }
+        return $listPluginOnSamePage;
     }
 
-    public function searchFormAction(?TouristAttractionDemand $demand = null): ResponseInterface
+    /**
+     * On a list page post to self; otherwise to the configured central search page.
+     *
+     * @param \WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList|null $listPluginOnSamePage
+     * @param int $pageId
+     *
+     * @return int|mixed|null
+     */
+    protected function determineSearchActionTargetPid(?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList $listPluginOnSamePage, int $pageId): mixed
     {
-        $demand ??= new TouristAttractionDemand();
-
-        /** @var ContentObjectRenderer $contentObject */
-        $contentObject = $this->request->getAttribute('currentContentObject');
-        $routing = $this->request->getAttribute('routing');
-        $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
-        // A list CE on this page makes the form stay here and supplies the locks.
-        $resolvedList = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
-
-        // Force locked fields to the preset so hidden inputs carry the editor value.
-        if ($resolvedList !== null) {
-            $this->demandFactory->applyEditorFilter($demand, $resolvedList->getEditorFilter());
-        }
-
-        // On a list page post to self; otherwise to the configured central search page.
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
         $centralPid = is_array($pidSettings) ? ($pidSettings['thuecat_attraction_search'] ?? null) : null;
-        $formTargetPid = $resolvedList !== null ? $pageId : $centralPid;
+        $formTargetPid = $listPluginOnSamePage !== null ? $pageId : $centralPid;
+        return $formTargetPid;
+    }
 
-        // Offer only towns the list on this page can actually return; all towns otherwise.
-        // @todo Any future record-backed filter option needs the same storage scoping.
-        $storagePageIds = $resolvedList?->getStoragePageIds() ?? [];
-        $towns = $storagePageIds === []
+    /**
+     * Offer only towns the list on this page can actually return; all towns otherwise.
+     *
+     * @param \WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList|null $listPluginOnSamePage
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface|\WerkraumMedia\ThueCat\Domain\Model\Frontend\Town[]
+     */
+    public function adjustFilterTownValuesToGivenStoragePid(?\WerkraumMedia\ThueCat\Domain\Resolver\ResolvedList $listPluginOnSamePage): array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+    {
+        $storagePageIds = $listPluginOnSamePage?->getStoragePageIds() ?? [];
+        return $storagePageIds === []
             ? $this->townRepository->findAllForSearchFormSortedByTitle()
             : $this->touristAttractionRepository->findTownsInStorageSortedByTitle($storagePageIds);
-
-        $this->view->assignMultiple([
-            'demand' => $demand,
-            'towns' => $towns,
-            // Locked filters render hidden; listAction re-forces them so a tampered value can't widen.
-            'lockedMap' => $resolvedList?->getEditorFilter()->getLockedMap() ?? [],
-            'formTargetPid' => $formTargetPid,
-        ]);
-        return $this->htmlResponse();
     }
 }
