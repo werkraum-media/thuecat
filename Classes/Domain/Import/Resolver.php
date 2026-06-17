@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\ResourceNotFoundException;
@@ -67,7 +68,7 @@ class Resolver
     }
 
     /**
-     * Rewrites the payload in place so each row's outer key becomes either
+     * Rewrites the payload so each row's outer key becomes either
      * the existing DB uid (as string) or a StringUtility::getUniqueId('NEW')
      * placeholder, injects `pid`, and drains the transient buckets — either
      * against the DB or, for unknown remote_ids, by fetching the resource
@@ -75,16 +76,6 @@ class Resolver
      */
     public function resolve(DataHandlerPayload $payload, ResolverContext $context): DataHandlerPayload
     {
-        // remote_id → current outer key (uid string or NEW… placeholder).
-        // Lives on the context so it survives across Importer rounds; the
-        // Importer promotes NEW… → uid between rounds via promoteNewKeys().
-        // The status maps on the context (defaultStatus, translationStatus)
-        // ensure visit-once-per-importer-run: any remote_id already
-        // 'updated' from an earlier root or round is short-circuited here
-        // and in drainTransients without re-querying the DB or re-fetching.
-        // Roots (rows the Importer staged before calling resolve) enter at
-        // depth 0; rows merged later via fetchAndMerge are tagged with the
-        // owner's depth + 1 inside that helper.
         $this->rekeyRowsAndInjectPid($payload, $context, 0);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
         $this->drainTranslationsAgainstExistingRows($payload, $context);
@@ -93,12 +84,13 @@ class Resolver
     }
 
     /**
-     * Very-happy-path scenario: the parent row resolved to a real DB uid and
-     * a translation row already exists for the requested sys_language_uid.
-     * Look up the existing translation row's uid (one query per parent), add
-     * it to the datamap under its own key with just the translated fields,
-     * and drop the bucket entry. Languages with no matching translation row
-     * stay in the bucket for scenarios 2/3 to handle.
+     * possible scenarios:
+     *
+     * - parent row resolved to a real DB uid and a translation row already exists for the requested sys_language_uid.
+     * - parent row resolves, but no translation row exists
+     * - no parent and therefore no translation exists
+     *
+     * - Languages with no matching translation row stay in the bucket for scenarios 2/3 to handle.
      *
      * Each (remote_id, sys_language_uid) pair is staged at most once per
      * importer run: the translation status map on the context short-circuits
@@ -112,10 +104,6 @@ class Resolver
             foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
                 $ownerKey = $context->remoteIdToKey[$remoteId] ?? null;
                 if ($ownerKey === null || !ctype_digit($ownerKey)) {
-                    // Parent row not yet a uid in this import's map: NEW…
-                    // (scenario 3) or never-seen. promoteNewKeys + the
-                    // initial rekey ensure that if the parent belongs to
-                    // this import, $ownerKey is a uid string by round 2.
                     continue;
                 }
 
@@ -123,9 +111,7 @@ class Resolver
 
                 foreach ($perLanguage as $sysLanguageUid => $fields) {
                     if ($context->isTranslationUpdated($remoteId, $sysLanguageUid)) {
-                        // Already staged for this (remote_id, language)
-                        // earlier in the run. Drop the bucket entry so the
-                        // resolver does not loop on it.
+                        // Already staged for this (remote_id, language) earlier, no need to do it again
                         $payload->removeTranslation($table, $remoteId, $sysLanguageUid);
                         continue;
                     }
@@ -133,11 +119,8 @@ class Resolver
                     $translationUid = $existing[$sysLanguageUid] ?? null;
                     if ($translationUid === null) {
                         // Scenario 2: parent uid known, translation row
-                        // missing. Stage a localize cmdmap so DataHandler
-                        // creates the row; the bucket entry stays in place
-                        // so a second resolver pass (after process_cmdmap)
-                        // can drain it via the scenario-1 branch once the
-                        // new translation uid is in the DB.
+                        // missing. Stage it here for creation, next run will
+                        // promote the uid
                         $payload->addCmdMap(
                             $table,
                             $ownerKey,
@@ -193,6 +176,9 @@ class Resolver
         return $result;
     }
 
+    /**
+     * replace remote_id with either NEW... placeholder or resolved uid
+     */
     private function rekeyRowsAndInjectPid(
         DataHandlerPayload $payload,
         ResolverContext $context,
@@ -201,29 +187,17 @@ class Resolver
         foreach ($payload->getDataMap() as $table => $rows) {
             foreach (array_keys($rows) as $outerKey) {
                 $outerKey = (string)$outerKey;
-                // Skip rows already rekeyed (uid-numeric or NEW… placeholder) —
-                // the API-fetch branch calls us again after merging new rows,
-                // and we must not disturb previously assigned keys.
                 if ($this->isAlreadyRekeyed($outerKey)) {
                     continue;
                 }
 
                 $remoteId = $outerKey;
 
-                // Already staged in an earlier root or round of this
-                // importer run: drop the row (and its transients +
-                // translations) so DataHandler is not asked to update the
-                // same record twice. The cached uid stays in
-                // $remoteIdToKey for downstream relation writes.
                 if ($context->isUpdated($remoteId)) {
                     $payload->dropRow($table, $remoteId);
                     continue;
                 }
 
-                // If a previous round already minted a key for this
-                // remote_id (NEW… or uid string), reuse it — otherwise a
-                // fresh NEW… would orphan the prior datamap row from its
-                // pending DataHandler substitution / known uid.
                 $existingKey = $context->remoteIdToKey[$remoteId] ?? null;
                 if ($existingKey !== null) {
                     $newKey = $existingKey;
@@ -236,19 +210,10 @@ class Resolver
                 $payload->setField($table, $newKey, 'pid', $context->storagePid);
                 $context->remoteIdToKey[$remoteId] = $newKey;
                 $context->remoteIdToTable[$remoteId] = $table;
-                // First sighting wins — never deepen an already-recorded
-                // depth. A root that also appears as a transient elsewhere
-                // stays at depth 0; a depth-1 entity sighted again as a
-                // transient on another depth-1 row stays at 1, not 2.
                 if (!isset($context->depthByRemoteId[$remoteId])) {
                     $context->depthByRemoteId[$remoteId] = $depth;
                 }
 
-                // Row is staged into the dataMap this run — DataHandler
-                // will see it. Flip to 'updated' so any later sighting of
-                // this remote_id (as a root in another URL, or as a
-                // relation transient) short-circuits to "use the cached
-                // uid, do nothing else".
                 $context->markUpdated($remoteId);
             }
         }
@@ -292,11 +257,6 @@ class Resolver
                             continue;
                         }
 
-                        // Media + accessibility buckets are scalar blobs
-                        // shaped from a fetched graph, but they still hit
-                        // the API. At depth-cap, drop the bucket so we
-                        // don't fan out further; the owning row keeps
-                        // whatever the parser already wrote.
                         $atCap = (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH);
 
                         if ($bucket === 'media') {
@@ -352,8 +312,7 @@ class Resolver
 
                         if (!isset(self::BUCKET_MAP[$bucket])) {
                             // Unknown bucket — parser emitted something the
-                            // resolver has no mapping for. Loud failure is
-                            // better than spinning through the drain loop.
+                            // resolver has no mapping for.
                             throw new RuntimeException(
                                 sprintf(
                                     'Unknown transient bucket "%s" on %s[%s].',
@@ -368,10 +327,6 @@ class Resolver
                         [$targetTable, $targetField] = self::BUCKET_MAP[$bucket];
 
                         foreach ($references as $reference) {
-                            // Ref→uid buckets only ever hold string @ids; the
-                            // media bucket (handled above) is the sole case of
-                            // tuple entries. A non-string here means the
-                            // parser emitted tuples for the wrong bucket.
                             if (!is_string($reference)) {
                                 throw new InvalidTransientReferenceException(
                                     sprintf(
@@ -384,11 +339,6 @@ class Resolver
                                 );
                             }
 
-                            // Guard before any DB/API work: the reference must
-                            // be a fetchable URL. Anything else (empty string,
-                            // a bare id, an already-resolved uid leaking back
-                            // in) means the parser wrote junk into the bucket
-                            // and we'd loop forever or fire a bogus request.
                             if (!$this->isFetchableUrl($reference)) {
                                 throw new InvalidTransientReferenceException(
                                     sprintf(
@@ -402,14 +352,6 @@ class Resolver
                                 );
                             }
 
-                            // Hot path: this remote_id was fully resolved in
-                            // an earlier root or round of this importer run.
-                            // Wire the relation only if the cached entity
-                            // landed in the bucket's expected target table —
-                            // the upstream graph mixes types under shared
-                            // bucket names, and a region uid does not belong
-                            // in a town field. Drop the bucket entry either
-                            // way; the entity itself was already imported.
                             if ($context->isUpdated($reference)) {
                                 if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
                                     $payload->setRelationField(
@@ -426,22 +368,11 @@ class Resolver
 
                             $uid = $this->findUidByRemoteId($targetTable, $reference);
                             if ($uid > 0) {
-                                // Wire the FK to the existing row right away;
-                                // the uid is stable regardless of whether we
-                                // refresh the row's fields below.
                                 $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
                                 $remoteIdToKey[$reference] = (string)$uid;
                                 $context->remoteIdToTable[$reference] = $targetTable;
                                 $context->markFound($reference);
 
-                                // STATUS_FOUND contract (see ResolverContext):
-                                // a DB-resident row is stale until it is
-                                // refreshed this run. Fetch and merge so the
-                                // existing uid gets a fresh dataMap entry —
-                                // rekeyRowsAndInjectPid will reuse the cached
-                                // uid as the outer key (no new NEW…) and flip
-                                // the status to 'updated'. Same depth cap as
-                                // the unknown-id branch below.
                                 if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
                                     $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                     $progress = true;
@@ -464,10 +395,6 @@ class Resolver
                                 continue;
                             }
 
-                            // Unknown remote_id — already rekeyed as a NEW
-                            // placeholder on a previous pass means the owning
-                            // row is in the payload. Same table-match gate as
-                            // the isUpdated branch above.
                             if (isset($remoteIdToKey[$reference])) {
                                 if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
                                     $payload->setRelationField(
@@ -482,20 +409,6 @@ class Resolver
                                 continue;
                             }
 
-                            // Neither in DB nor in the payload — fetch from
-                            // ThueCat and merge whatever shape comes back.
-                            // The fetched node may land in a different table
-                            // (containedInPlace mixing towns with regions /
-                            // oatour entries); the entity is still a valid
-                            // import on its own. fetchAndMerge wires the
-                            // relation only when the merged payload contains
-                            // a row in $targetTable for this @id.
-                            // Depth cap: if this row is already at the
-                            // outermost permitted depth, drop the bucket
-                            // entry without fetching. The owning row still
-                            // persists with whatever scalar fields the
-                            // parser produced — we just don't pursue its
-                            // outbound references any further.
                             if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
@@ -532,13 +445,7 @@ class Resolver
 
     /**
      * Fetch + parse a transient reference and merge whatever the parser
-     * produced into the real payload. The fetched node may or may not shape
-     * into the bucket's expected target table — the upstream graph mixes
-     * types under shared bucket names (containedInPlace pointing at regions
-     * or oatour entries instead of towns, etc.). Either way the entity is a
-     * valid import on its own; we simply only wire the parent's relation
-     * field when the merged payload actually contains a row in
-     * $targetTable for $reference.
+     * produced into the real payload.
      *
      * @param array<string, string> $remoteIdToKey
      */
@@ -567,12 +474,6 @@ class Resolver
         );
         $payload->mergeFrom($fetchedPayload);
 
-        // Bring the newly merged rows into the rekey-map, inject pid, and
-        // mark them 'updated' so the rest of this run treats the fetched
-        // entity as fully resolved. This also records remoteIdToTable for
-        // the just-merged reference, which the table-match gate below uses.
-        // Depth = owner's depth + 1; the drain loop will refuse to fetch
-        // any transients on rows at MAX_FETCH_DEPTH.
         $childDepth = ($context->depthByRemoteId[$ownerRemoteId] ?? 0) + 1;
         $this->rekeyRowsAndInjectPid($payload, $context, $childDepth);
 
@@ -614,6 +515,15 @@ class Resolver
             );
         }
 
+        $existingReferences = [];
+        $claimedReferences = [];
+        if (MathUtility::canBeInterpretedAsInteger($ownerKey)) {
+            $ownerUid = (int)$ownerKey;
+            foreach (['main_image', 'media_files'] as $field) {
+                $existingReferences[$field] = $this->findExistingReferences($ownerTable, $ownerUid, $field);
+            }
+        }
+
         foreach ($entries as $entry) {
             if (!is_array($entry)) {
                 throw new InvalidTransientReferenceException(
@@ -639,9 +549,6 @@ class Resolver
                 );
             }
 
-            // Videos reference a stream, not an image file we can store in a
-            // common-image-types FAL field. Drop the entry; the owner keeps
-            // no media relation for it.
             if ($entry['kind'] === 'video') {
                 continue;
             }
@@ -649,8 +556,7 @@ class Resolver
             try {
                 $mediaNode = $this->fetchGraphNode($reference, $context, $reference);
             } catch (ResourceNotFoundException) {
-                // Upstream removed the media — drop the entry rather than
-                // emit a broken reference.
+                // Upstream removed the media — drop the reference
                 continue;
             }
             $resolvedAuthor = null;
@@ -691,15 +597,30 @@ class Resolver
             ], static fn (string $value): bool => $value !== ''));
 
             $targetField = $mediaEntity->isMainImage() ? 'main_image' : 'media_files';
+            $fileUid = $file->getUid();
+            $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
+            if ($existingRefUid !== null) {
+                $claimedReferences[$existingRefUid] = true;
+            }
             $this->stageFileReference(
                 $payload,
                 $ownerTable,
                 $ownerKey,
                 $targetField,
-                $file->getUid(),
+                $fileUid,
                 $mediaEntity,
                 $context->storagePid,
+                $existingRefUid,
             );
+        }
+
+        // Delete references the upstream set no longer contain
+        foreach ($existingReferences as $byFile) {
+            foreach ($byFile as $refUid) {
+                if (!isset($claimedReferences[$refUid])) {
+                    $payload->addCmdMap('sys_file_reference', (string)$refUid, 'delete', 1);
+                }
+            }
         }
 
         foreach ($entries as $entry) {
@@ -716,16 +637,19 @@ class Resolver
         string $targetField,
         int $fileUid,
         MediaEntity $media,
-        int $pid
+        int $pid,
+        ?int $existingRefUid = null
     ): void {
-        $newKey = StringUtility::getUniqueId('NEW');
-        $payload->addRow('sys_file_reference', $newKey, [
+        $referenceKey = $existingRefUid !== null
+            ? (string)$existingRefUid
+            : StringUtility::getUniqueId('NEW');
+        $payload->addRow('sys_file_reference', $referenceKey, [
             'pid' => $pid,
             'uid_local' => $fileUid,
             'title' => $media->getOriginalFileName(),
             'description' => $media->getDescription(),
         ]);
-        $payload->setRelationField($ownerTable, $ownerKey, $targetField, $newKey);
+        $payload->setRelationField($ownerTable, $ownerKey, $targetField, $referenceKey);
     }
 
     /**
@@ -741,13 +665,6 @@ class Resolver
     }
 
     /**
-     * Drain the `accessibilitySpecification` bucket for one owner. Each
-     * reference points at a separate AccessibilitySpecification resource;
-     * the fetched node gets shaped into the legacy blob and written to the
-     * owning row's `accessibility_specification` column. Multiple entries on
-     * the same owner would overwrite each other — in practice the parser
-     * emits at most one per owner, but we iterate defensively.
-     *
      * @param list<string>|list<array{kind: string, id: string}> $references
      */
     private function shapeAccessibilityBlob(
@@ -785,9 +702,7 @@ class Resolver
             try {
                 $node = $this->fetchGraphNode($reference, $context, $reference);
             } catch (ResourceNotFoundException) {
-                // Upstream removed the spec — drain the transient bucket so
-                // it doesn't linger, but emit no field. A partial blob would
-                // surface as half-rendered output downstream.
+                // Upstream removed the spec
                 $payload->removeTransient($ownerTable, $ownerRemoteId, 'accessibilitySpecification', $reference);
                 continue;
             }
@@ -834,7 +749,7 @@ class Resolver
      * Fetch a single JSON-LD resource and return the node whose @id matches.
      * Falls back to the first graph node for resources that publish a single
      * anonymous node. Throws if nothing matches so a broken upstream response
-     * surfaces loudly instead of silently writing empty values into the blob.
+     * surfaces loudly instead of silently writing empty values into the field.
      *
      * @return array<string, mixed>
      */
@@ -869,13 +784,52 @@ class Resolver
     }
 
     /**
-     * Look up the default-language row for a given remote_id. Translation
-     * rows on translatable tables share the parent's remote_id, so without
-     * the languageField restriction a second resolver pass could pick up a
-     * translation uid as the "parent". Tables without a languageField in
-     * TCA (non-translatable) get no restriction beyond DeletedRestriction.
-     *
-     * @todo workspaces — same shared-remote_id pitfall applies for v* rows.
+     * @return array<int, int> uid_local => sys_file_reference.uid
+     */
+    private function findExistingReferences(
+        string $ownerTable,
+        int $ownerUid,
+        string $ownerField
+    ): array {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()
+            ->removeAll()
+            ->add(new DeletedRestriction())
+        ;
+        $rows = $queryBuilder->select('uid', 'uid_local')
+            ->from('sys_file_reference')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'tablenames',
+                    $queryBuilder->createNamedParameter($ownerTable)
+                ),
+                $queryBuilder->expr()->eq(
+                    'fieldname',
+                    $queryBuilder->createNamedParameter($ownerField)
+                ),
+                $queryBuilder->expr()->eq(
+                    'uid_foreign',
+                    $queryBuilder->createNamedParameter($ownerUid, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_language_uid',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                )
+            )
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $byFile = [];
+        foreach ($rows as $row) {
+            $byFile[(int)(is_numeric($row['uid_local']) ? $row['uid_local'] : 0)]
+                = (int)(is_numeric($row['uid']) ? $row['uid'] : 0);
+        }
+        return $byFile;
+    }
+
+    /**
+     * Look up the default-language row for a given remote_id.
      */
     private function findUidByRemoteId(string $table, string $remoteId): int
     {
@@ -905,10 +859,6 @@ class Resolver
     }
 
     /**
-     * Resolve the language-aware field names for a translatable table via
-     * TcaSchema. Returns null for non-translatable tables — callers fall
-     * back to no language restriction in that case.
-     *
      * @return array{languageField: string, parent: string}|null
      */
     private function languageCapabilityFor(string $table): ?array

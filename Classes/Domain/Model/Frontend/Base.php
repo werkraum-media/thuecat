@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class Base extends AbstractEntity
 {
@@ -32,6 +34,24 @@ abstract class Base extends AbstractEntity
     protected string $description = '';
 
     protected ?Media $media = null;
+
+    protected ?FileReference $mainImage = null;
+
+    /**
+     * @var ObjectStorage<FileReference>
+     */
+    protected ObjectStorage $mediaFiles;
+
+    /**
+     * @var ObjectStorage<FileReference>
+     */
+    protected ObjectStorage $editorialImages;
+
+    public function initializeObject(): void
+    {
+        $this->mediaFiles = new ObjectStorage();
+        $this->editorialImages = new ObjectStorage();
+    }
 
     public function getTitle(): string
     {
@@ -43,8 +63,41 @@ abstract class Base extends AbstractEntity
         return $this->description;
     }
 
+    /**
+     * @deprecated Legacy JSON-blob media carrier. Use the FAL fields main_image / media_files /
+     *             editorial_images (getMainImage() / getMediaFiles() / getEditorialImages())
+     *             instead; re-run the import to populate them. Removed in the next major.
+     */
     public function getMedia(): ?Media
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Base::getMedia() returns the deprecated'
+            . ' JSON-blob media carrier. Use getMainImage() / getMediaFiles() / getEditorialImages()'
+            . ' (re-run the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return $this->media;
+    }
+
+    public function getMainImage(): ?FileReference
+    {
+        return $this->mainImage;
+    }
+
+    /**
+     * @return ObjectStorage<FileReference>
+     */
+    public function getMediaFiles(): ObjectStorage
+    {
+        return $this->mediaFiles;
+    }
+
+    /**
+     * @return ObjectStorage<FileReference>
+     */
+    public function getEditorialImages(): ObjectStorage
+    {
+        return $this->editorialImages;
     }
 }

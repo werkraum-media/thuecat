@@ -19,6 +19,7 @@ return (static function (string $extensionKey, string $tableName) {
             'default_sortby' => 'crdate desc',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
+            'delete' => 'deleted',
             'title' => $languagePath,
             'enablecolumns' => [
                 'disabled' => 'disable',

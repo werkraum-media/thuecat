@@ -16,6 +16,7 @@ return (static function (string $extensionKey, string $tableName) {
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
+            'delete' => 'deleted',
             'title' => $languagePath,
             'languageField' => 'sys_language_uid',
             'transOrigPointerField' => 'l10n_parent',

@@ -54,9 +54,12 @@ class MediaImportTest extends AbstractImportTestCase
             $basePath,
             'absolute'
         );
-        $this->get(StorageRepository::class)->getStorageObject($storageUid)
-            ->createFolder('thuecat')
-        ;
+        // Folder may survive on disk from a prior test method in this run (the
+        // DB resets between methods, the fileadmin path does not).
+        $storage = $this->get(StorageRepository::class)->getStorageObject($storageUid);
+        if (!$storage->hasFolder('thuecat')) {
+            $storage->createFolder('thuecat');
+        }
     }
 
     #[Test]
@@ -80,6 +83,41 @@ class MediaImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
+    }
+
+    #[Test]
+    public function reimportKeepsMediaReferencesIdempotent(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportTouristAttractionWithMedia.php');
+        $this->seedExistingMediaFiles();
+
+        // Files are already in the target folder, so only the JSON graph is
+        // fetched; no image download.
+        $this->expectFetch('attraction-with-media.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-with-foreign-author.json');
+        $this->expectFetch('author-with-names.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $this->expectFetch('image-with-author-and-license-author.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ReimportTouristAttractionWithMedia.php');
+    }
+
+    private function seedExistingMediaFiles(): void
+    {
+        $folder = $this->instancePath . '/fileadmin-thuecat/thuecat';
+        $source = $this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg';
+        foreach ([
+            'image-with-foreign-author_Bild-mit-externem-Autor.jpg',
+            'image-with-author-string_Bild-mit-author.jpg',
+            'image-with-license-author_Bild-mit-license-author.jpg',
+            'image-with-author-and-license-author_Bild-mit-author-und-license-author.jpg',
+        ] as $name) {
+            copy($source, $folder . '/' . $name);
+        }
     }
 
     private function importConfiguration(int $uid): void

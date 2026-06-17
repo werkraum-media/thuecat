@@ -4,6 +4,64 @@
 >
 <f:if condition="{attraction}">
     <f:then>
+        <f:if condition="{attraction.mainImage}">
+            <f:then>
+                <figure>
+                    <f:image image="{attraction.mainImage}" />
+                    <f:if condition="{attraction.mainImage.originalResource.properties.copyright}">
+                        <figcaption>{attraction.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+                    </f:if>
+                </figure>
+            </f:then>
+            <f:else>
+                <f:variable name="mainImage" value="{attraction.media.mainImage}" />
+                <f:if condition="{mainImage}">
+                    <figure>
+                        <img src="{mainImage.url}" alt="{mainImage.description -> f:format.htmlspecialchars()}" />
+                        <f:if condition="{mainImage.copyrightAuthor}">
+                            <figcaption>{mainImage.copyrightAuthor -> f:format.htmlspecialchars()}</figcaption>
+                        </f:if>
+                    </figure>
+                </f:if>
+            </f:else>
+        </f:if>
+        <f:if condition="{attraction.mediaFiles}">
+            <f:then>
+                <section class="gallery">
+                    <f:for each="{attraction.mediaFiles}" as="image">
+                        <figure>
+                            <f:image image="{image}" />
+                            <f:if condition="{image.originalResource.properties.copyright}">
+                                <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+                            </f:if>
+                        </figure>
+                    </f:for>
+                </section>
+            </f:then>
+            <f:else>
+                <f:if condition="{attraction.media.extraImages}">
+                    <section class="gallery">
+                        <f:for each="{attraction.media.extraImages}" as="image">
+                            <figure>
+                                <img src="{image.url}" alt="{image.description -> f:format.htmlspecialchars()}" />
+                                <f:if condition="{image.copyrightAuthor}">
+                                    <figcaption>{image.copyrightAuthor -> f:format.htmlspecialchars()}</figcaption>
+                                </f:if>
+                            </figure>
+                        </f:for>
+                    </section>
+                </f:if>
+            </f:else>
+        </f:if>
+        <f:if condition="{attraction.editorialImages}">
+            <section class="editorial">
+                <f:for each="{attraction.editorialImages}" as="image">
+                    <figure>
+                        <f:image image="{image}" />
+                    </figure>
+                </f:for>
+            </section>
+        </f:if>
         <h2>{attraction.title}</h2>
         <p>{attraction.description}</p>
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>

@@ -42,8 +42,6 @@ abstract class Place extends Base
     protected ObjectStorage $parkingFacilityNearBy;
 
     /**
-     * Necessary for Extbase/Symfony.
-     *
      * @var string
      */
     protected string $sanitation = '';
@@ -53,15 +51,11 @@ abstract class Place extends Base
     protected string $trafficInfrastructure = '';
 
     /**
-     * Necessary for Extbase/Symfony.
-     *
      * @var string
      */
     protected string $paymentAccepted = '';
 
     /**
-     * Necessary for Extbase/Symfony.
-     *
      * @var string
      */
     protected string $distanceToPublicTransport = '';
@@ -70,6 +64,7 @@ abstract class Place extends Base
 
     public function initializeObject(): void
     {
+        parent::initializeObject();
         $this->parkingFacilityNearBy = new ObjectStorage();
     }
 

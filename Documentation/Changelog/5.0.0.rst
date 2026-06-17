@@ -25,7 +25,22 @@ Nothing
 Deprecation
 -----------
 
-* The json-based media storage has been superseeded by proper FAL handling. The json-based output logic is still in place.
-The next import will copy and relate the files as needed. With the next fitting version, the json-based fields will be
-removed.
+* The json-based media storage has been superseeded by proper FAL handling. The json-based output logic is still in
+place. The next import will copy and relate the files as needed. With the next fitting version, the json-based fields
+will be removed.
 
+  Deprecated, triggering ``E_USER_DEPRECATED`` on use:
+
+  - :php:`Domain\Model\Frontend\Media::getMainImage()`, :php:`getImages()`, :php:`getExtraImages()`,
+    :php:`getEditorialImages()` and :php:`getAllImages()` (the json-blob read accessors).
+  - :php:`Domain\Model\Frontend\Base::getMedia()` (hands out the json-blob carrier).
+
+  Use the FAL fields instead, available as native Extbase properties on ``Base``:
+  :php:`getMainImage()` (:sql:`main_image`), :php:`getMediaFiles()` (:sql:`media_files`) and
+  :php:`getEditorialImages()` (:sql:`editorial_images`). Re-run the import to populate :sql:`main_image` and
+  :sql:`media_files`; :sql:`editorial_images` is maintained in the backend. Templates should switch from
+  :html:`{record.media.*}` to these properties.
+
+* The editorial_images field is now handled as the FAL field it always has been. Replace template output from
+  :html:`{entity.media.editorialImages}` to :html:`{entity.editorialImages}` to make use of the full FAL provided
+  functionality.

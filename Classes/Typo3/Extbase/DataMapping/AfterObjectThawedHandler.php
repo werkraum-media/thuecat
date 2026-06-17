@@ -33,6 +33,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
  * Will extend mapped objects with further info.
  *
  * E.g. will add editorial images to media property.
+ *
+ * @todo remove after deprecation phase of version 5.0.0 exceeds.
+ * @todo remove together with media blob and Media model, this is
+ * @todo superseeded by FAL functionality usage.
  */
 class AfterObjectThawedHandler
 {
@@ -84,7 +88,9 @@ class AfterObjectThawedHandler
 
     private function getMedia(Base $object): Media
     {
-        $media = $object->getMedia();
+        // _getProperty, not getMedia(): the getter is deprecated and this internal
+        // (also deprecated) path must not emit a deprecation on every thaw.
+        $media = $object->_getProperty('media');
 
         if (!$media instanceof Media) {
             $media = new Media('');

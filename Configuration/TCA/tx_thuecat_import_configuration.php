@@ -27,6 +27,7 @@ return (static function (string $extensionKey, string $tableName) {
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'title' => $languagePath,
+            'delete' => 'deleted',
             'enablecolumns' => [
                 'disabled' => 'disable',
             ],

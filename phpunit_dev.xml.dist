@@ -14,7 +14,7 @@
     backupStaticProperties="false"
     requireCoverageMetadata="false"
     beStrictAboutCoverageMetadata="false"
-    displayDetailsOnTestsThatTriggerDeprecations="true"
+    displayDetailsOnTestsThatTriggerDeprecations="false"
     displayDetailsOnTestsThatTriggerErrors="true"
     displayDetailsOnTestsThatTriggerNotices="true"
     displayDetailsOnTestsThatTriggerWarnings="true"

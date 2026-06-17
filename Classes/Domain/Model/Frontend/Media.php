@@ -45,8 +45,18 @@ class Media implements TypeInterface
         $this->data = $this->prepareData(is_array($data) ? $data : []);
     }
 
+    /**
+     * @deprecated Legacy JSON-blob media. Use the FAL field main_image (Base::getMainImage())
+     *             instead; re-run the import to populate it. Removed in the next major.
+     */
     public function getMainImage(): array
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Media::getMainImage() reads the deprecated'
+            . ' JSON-blob media. Use the FAL field main_image (re-run the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         foreach ($this->data as $media) {
             if (
                 $media['type'] === 'image'
@@ -61,9 +71,18 @@ class Media implements TypeInterface
 
     /**
      * @return array[]
+     *
+     * @deprecated Legacy JSON-blob media. Use the FAL field media_files (Base::getMediaFiles())
+     *             instead; re-run the import to populate it. Removed in the next major.
      */
     public function getImages(): array
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Media::getImages() reads the deprecated'
+            . ' JSON-blob media. Use the FAL field media_files (re-run the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return array_filter($this->data, function (array $media): bool {
             return $media['type'] === 'image';
         });
@@ -71,9 +90,18 @@ class Media implements TypeInterface
 
     /**
      * @return array[]
+     *
+     * @deprecated Legacy JSON-blob media. Use the FAL field media_files (Base::getMediaFiles())
+     *             instead; re-run the import to populate it. Removed in the next major.
      */
     public function getExtraImages(): array
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Media::getExtraImages() reads the deprecated'
+            . ' JSON-blob media. Use the FAL field media_files (re-run the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return array_filter($this->data, function (array $media): bool {
             return $media['type'] === 'image'
                 && $media['mainImage'] === false;
@@ -82,17 +110,41 @@ class Media implements TypeInterface
 
     /**
      * @return array<FileReference|array>
+     *
+     * @deprecated Legacy JSON-blob media. Use the FAL fields editorial_images + media_files
+     *             (Base::getEditorialImages() / getMediaFiles()) instead. Removed in the next major.
      */
     public function getAllImages(): array
     {
-        return array_merge($this->getEditorialImages(), $this->getImages());
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Media::getAllImages() reads the deprecated'
+            . ' JSON-blob media. Use the FAL fields editorial_images + media_files. Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
+        // Inlined (not via getImages()/getEditorialImages()) to avoid stacking their warnings.
+        $images = array_filter($this->data, static function (array $media): bool {
+            return $media['type'] === 'image';
+        });
+
+        return array_merge($this->editorialImages, $images);
     }
 
     /**
      * @return FileReference[]
+     *
+     * @deprecated Legacy carrier. Use the FAL field editorial_images (Base::getEditorialImages())
+     *             instead. Removed in the next major.
      */
     public function getEditorialImages(): array
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Media::getEditorialImages() is the deprecated'
+            . ' editorial-images carrier. Use the FAL field editorial_images (Base::getEditorialImages()).'
+            . ' Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return $this->editorialImages;
     }
 
