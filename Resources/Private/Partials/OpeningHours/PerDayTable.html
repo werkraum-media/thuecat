@@ -1,0 +1,44 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{openingHours.periods}">
+    <section>
+    <h2><f:translate key="{heading}" /></h2>
+    <f:for each="{openingHours.periods}" as="period">
+        <dl>
+            <f:if condition="!{period.current}">
+                <dt><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours.period.future" /></dt>
+            </f:if>
+            <f:if condition="{period.validFrom} || {period.validThrough}">
+                <dt>
+                    <f:if condition="{period.validFrom} && {period.validThrough}">
+                        <f:then>{period.validFrom -> f:format.date(format: 'd.m.Y')} &ndash; {period.validThrough -> f:format.date(format: 'd.m.Y')}</f:then>
+                        <f:else>
+                            <f:if condition="{period.validFrom}">
+                                <f:then>{period.validFrom -> f:format.date(format: 'd.m.Y')}</f:then>
+                                <f:else><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours.period.until" arguments="{0: '{period.validThrough -> f:format.date(format: \'d.m.Y\')}'}" /></f:else>
+                            </f:if>
+                        </f:else>
+                    </f:if>
+                </dt>
+            </f:if>
+            <f:for each="{period.weekDays}" as="weekDay">
+                <dt><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHour.weekday.{weekDay.dayOfWeek}" /></dt>
+                <dd>
+                    <f:if condition="{weekDay.closed}">
+                        <f:then><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours.closed" /></f:then>
+                        <f:else>
+                            <f:for each="{weekDay.timePeriods}" as="timePeriod" iteration="span">
+                                <f:if condition="!{span.isFirst}">, </f:if>
+                                {timePeriod.opens -> f:format.date(format: 'H:i')}&ndash;{timePeriod.closes -> f:format.date(format: 'H:i')}
+                            </f:for>
+                        </f:else>
+                    </f:if>
+                </dd>
+            </f:for>
+        </dl>
+    </f:for>
+    </section>
+</f:if>
+</html>

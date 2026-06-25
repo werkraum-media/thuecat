@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 // GeneralUtility::makeInstance rather than constructor injection: the Parser
 // instantiates entities through a ServiceLocator that does not supply
 // arguments, so constructor DI is not available. makeInstance is consistent
-// with how the abstract resolves Context (see AbstractEntity::buildOpeningHours).
+// with how the abstract resolves core singletons elsewhere.
 class EventEntity extends AbstractEventsEntity
 {
     public string $table = 'tx_events_domain_model_event';

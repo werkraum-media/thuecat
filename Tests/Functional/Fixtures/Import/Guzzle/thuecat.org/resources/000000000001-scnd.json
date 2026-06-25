@@ -1,0 +1,29 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/000000000001-scnd",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:CivicStructure",
+                "schema:ParkingFacility",
+                "ttgds:ParkingFacility"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Zweites Parkhaus"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Second car park"
+                }
+            ]
+        }
+    ]
+}

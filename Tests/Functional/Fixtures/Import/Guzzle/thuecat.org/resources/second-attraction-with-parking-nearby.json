@@ -1,0 +1,56 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/second-attraction-with-parking-nearby",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                }
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Zweite Attraktion mit Parkplatz"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Second attraction with parking"
+                }
+            ],
+            "thuecat:parkingFacilityNearBy": [
+                {
+                    "@id": "https://thuecat.org/resources/396420044896-drzt"
+                }
+            ]
+        }
+    ]
+}

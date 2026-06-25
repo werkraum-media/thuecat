@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 // Column set is narrower than TouristAttraction (no url, no slogan, no
 // accessibility_specification, no pets/public_access/…); see TCA
-// tx_thuecat_parking_facility. buildOpeningHours / buildOffers /
+// tx_thuecat_parking_facility. buildOpeningHourSpecifications / buildOffers /
 // buildDistanceToPublicTransport / collectIds live on AbstractEntity.
 class ParkingFacilityEntity extends AbstractEntity
 {
@@ -45,11 +45,13 @@ class ParkingFacilityEntity extends AbstractEntity
     protected string $traffic_infrastructure = '';
     protected string $payment_accepted = '';
     protected string $distance_to_public_transport = '';
-    protected string $opening_hours = '';
-    protected string $special_opening_hours = '';
     protected string $offers = '';
     protected string $address = '';
 
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->translations = [];
@@ -102,8 +104,7 @@ class ParkingFacilityEntity extends AbstractEntity
             $this->recordTranslation('offers', $offers, $sysLanguageUid);
         }
 
-        $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
-        $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
+        $this->buildOpeningHourSpecifications($node, $this->remote_id);
 
         if (!empty($node['schema:address'])) {
             $address = new AddressEntity();

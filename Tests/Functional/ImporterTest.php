@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use DateTimeImmutable;
-use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
@@ -159,24 +157,8 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function importsTouristAttractionsWithFilteredOpeningHours(): void
-    {
-        // Reference date for past-date filtering: assertion keeps the 2050
-        // entry and drops the 2021 one, so any "now" between them works.
-        $this->setDateAspect(new DateTimeImmutable('2024-03-03', new DateTimeZone('UTC')));
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFilteredOpeningHours.php');
-        $this->expectFetch('opening-hours-to-filter.json');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        $this->importConfiguration(1);
-
-        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithFilteredOpeningHours.php');
-    }
-
-    #[Test]
     public function importsTouristAttractionsWithSpecialOpeningHours(): void
     {
-        $this->setDateAspect(new DateTimeImmutable('2024-03-03', new DateTimeZone('UTC')));
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.php');
         $this->expectFetch('special-opening-hours.json');
         $this->expectFetch('018132452787-ngbe.json');
@@ -184,6 +166,45 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithSpecialOpeningHours.php');
+    }
+
+    /**
+     * The same parking facility is referenced by two roots via
+     * parkingFacilityNearBy, so it is sighted twice in one run. Its opening
+     * hours are manufactured as inline children of the parking row; on the
+     * second sighting the resolve-once short-circuit drops the already-staged
+     * child rows along with their pending parent-wiring transient, leaving
+     * the OH orphaned (parentid=0). Every OH row must instead wire to the
+     * parking parent. Regression guard for #10902.
+     */
+    #[Test]
+    public function importsOpeningHoursForParkingFacilityReferencedByTwoRoots(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsContainedParkingWithOpeningHours.php');
+        $this->expectFetch('attraction-with-parking-nearby.json');
+        $this->expectFetch('second-attraction-with-parking-nearby.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        // Referenced by both roots but fetched once (resolve-once contract).
+        $this->expectFetch('396420044896-drzt.json');
+        // A sibling parking on the first root, fetched after drzt — its merge
+        // re-rekeys the payload and drops drzt's not-yet-wired OH children.
+        $this->expectFetch('000000000001-scnd.json');
+
+        $this->importConfiguration(1);
+
+        /** @var list<array{uid: string, parentid: string, parenttable: string}> $openingHours */
+        $openingHours = $this->getAllRecords('tx_thuecat_opening_hours');
+        self::assertNotEmpty($openingHours, 'No opening hours imported for the contained parking facility.');
+
+        /** @var list<array{uid: string}> $parkingFacilities */
+        $parkingFacilities = $this->getAllRecords('tx_thuecat_parking_facility');
+        $parkingUids = array_map(static fn (array $row): string => (string)$row['uid'], $parkingFacilities);
+
+        foreach ($openingHours as $row) {
+            self::assertNotSame('0', (string)$row['parentid'], 'Opening hours row ' . $row['uid'] . ' is orphaned (parentid=0).');
+            self::assertSame('tx_thuecat_parking_facility', $row['parenttable'], 'Opening hours row ' . $row['uid'] . ' has the wrong parenttable.');
+            self::assertContains((string)$row['parentid'], $parkingUids, 'Opening hours row ' . $row['uid'] . ' points at a non-existent parking facility.');
+        }
     }
 
     #[Test]

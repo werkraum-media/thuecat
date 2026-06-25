@@ -164,6 +164,15 @@
             <trans-unit id="content.openingHours" xml:space="preserve">
                 <source>Opening hours</source>
             </trans-unit>
+            <trans-unit id="content.openingHours.period.future" xml:space="preserve">
+                <source>Upcoming</source>
+            </trans-unit>
+            <trans-unit id="content.openingHours.period.until" xml:space="preserve">
+                <source>until %s</source>
+            </trans-unit>
+            <trans-unit id="content.openingHours.closed" xml:space="preserve">
+                <source>closed</source>
+            </trans-unit>
             <trans-unit id="content.offers" xml:space="preserve">
                 <source>Offers</source>
             </trans-unit>

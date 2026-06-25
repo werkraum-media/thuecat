@@ -58,6 +58,27 @@ class Resolver
         'event' => ['tx_events_domain_model_event', 'event'],
     ];
 
+    /**
+     * Inline IRRE children that the parent entity manufactures locally (the
+     * child row and its parent are in the same payload — no fetch). Unlike the
+     * generic BUCKET_MAP (which writes an FK onto the owner row), inline IRRE
+     * needs the PARENT to list the child in an inline field; DataHandler then
+     * fills the child's parentid + parenttable. The parent's remote_id is the
+     * prefix of the child's own remote_id, split on `separator`. `fieldByValue`
+     * picks the inline field from a column on the child row (e.g. opening hours
+     * route regular vs special to different fields). Keyed by child table.
+     */
+    private const INLINE_CHILD_PARENTS = [
+        'tx_thuecat_opening_hours' => [
+            'separator' => '::oh::',
+            'column' => 'specification_type',
+            'fieldByValue' => [
+                'regular' => 'opening_hours_inline',
+                'special' => 'special_opening_hours_inline',
+            ],
+        ],
+    ];
+
     public function __construct(
         private readonly ConnectionPool $connectionPool,
         private readonly FetchData $fetchData,
@@ -217,6 +238,8 @@ class Resolver
                 $context->markUpdated($remoteId);
             }
         }
+
+        $this->wireInlineChildrenToParents($payload, $context);
     }
 
     private function isAlreadyRekeyed(string $outerKey): bool
@@ -650,6 +673,33 @@ class Resolver
             'description' => $media->getDescription(),
         ]);
         $payload->setRelationField($ownerTable, $ownerKey, $targetField, $referenceKey);
+    }
+
+    private function wireInlineChildrenToParents(
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): void {
+        foreach (self::INLINE_CHILD_PARENTS as $childTable => $config) {
+            foreach ($payload->getDataMap()[$childTable] ?? [] as $childKey => $childRow) {
+                $childKey = (string)$childKey;
+                $childRemoteId = (string)($childRow['remote_id'] ?? '');
+                $parentRemoteId = explode($config['separator'], $childRemoteId, 2)[0];
+
+                $parentKey = $context->remoteIdToKey[$parentRemoteId] ?? null;
+                $parentTable = $context->remoteIdToTable[$parentRemoteId] ?? null;
+                if ($parentKey === null || $parentTable === null) {
+                    continue;
+                }
+
+                $columnValue = (string)($childRow[$config['column']] ?? '');
+                $inlineField = $config['fieldByValue'][$columnValue] ?? null;
+                if ($inlineField === null) {
+                    continue;
+                }
+
+                $payload->setRelationField($parentTable, $parentKey, $inlineField, $childKey);
+            }
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ page.10 < styles.content.get
 plugin.tx_thuecat {
     view {
         templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+        partialRootPaths.10 = EXT:thuecat/Resources/Private/Partials/
     }
 }
 

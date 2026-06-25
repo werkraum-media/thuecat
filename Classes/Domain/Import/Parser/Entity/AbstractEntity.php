@@ -23,11 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Import\Parser\Entity;
 
-use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OfferEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TransientEntity\OpeningHoursEntity;
-use WerkraumMedia\ThueCat\Service\DateBasedFilter\FilterBasedOnTypo3Context;
 
 abstract class AbstractEntity implements EntityInterface
 {
@@ -66,6 +62,13 @@ abstract class AbstractEntity implements EntityInterface
      * @var array<int, array<string, string>>
      */
     protected array $translations = [];
+
+    /**
+     * Inline child entities manufactured during parse().
+     *
+     * @var list<EntityInterface>
+     */
+    protected array $children = [];
 
     public function getRemoteId(array $node): string
     {
@@ -287,70 +290,14 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
-     * schema:openingHoursSpecification and schema:specialOpeningHoursSpecification
-     * arrive as a single OpeningHoursSpecification node or a list of them. Each
-     * is self-contained, so the transient OpeningHoursEntity shapes each
-     * independently; the list of arrays is then json_encoded into the owning
-     * entity's target column.
-     *
-     * Returns '' when the field is absent so AbstractEntity::toArray's
-     * array_filter drops the column rather than persisting a misleading "[]"
-     * literal.
-     */
-    protected function buildOpeningHours(mixed $value): string
-    {
-        if ($value === null || $value === '' || $value === []) {
-            return '';
-        }
-
-        $items = is_array($value) && array_is_list($value) ? $value : [$value];
-        $entities = [];
-        foreach ($items as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-            $entity = new OpeningHoursEntity();
-            $entity->configure($item);
-            $entities[] = $entity;
-        }
-
-        // Drop entries whose validThrough is before the reference date so stale
-        // seasonal hours don't pile up in the DB. Reference date is the TYPO3
-        // Context's date aspect (now in production, fixed in tests). The filter
-        // itself is a tiny stateless wrapper, so newing it here keeps the
-        // entity free of DI plumbing — entities are constructed bare in unit
-        // tests and via the import.entity ServiceLocator in production, neither
-        // of which permits constructor DI. Context is a TYPO3 core singleton,
-        // so it must be fetched via GeneralUtility to honour any aspect set by
-        // the caller (e.g. tests pinning "now" via setDateAspect()).
-        /** @var list<OpeningHoursEntity> $filtered */
-        $filtered = (new FilterBasedOnTypo3Context(GeneralUtility::makeInstance(Context::class)))
-            ->filterOutPreviousDates(
-                $entities,
-                static fn (OpeningHoursEntity $hour) => $hour->getValidThrough()
-            )
-        ;
-
-        if ($filtered === []) {
-            return '';
-        }
-
-        $hours = [];
-        foreach ($filtered as $entity) {
-            $hours[] = $entity->toArray();
-        }
-
-        return (string)(json_encode($hours) ?: '');
-    }
-
-    /**
      * schema:makesOffer is a single Offer node or a list of them. Each carries
      * its own nested priceSpecification plus localised name/description; the
      * transient OfferEntity shapes each into the legacy Offer/Price frontend
      * shape, and the list of arrays is json_encoded into the owning entity's
      * `offers` column.
      *
-     * Returns '' on absence for the same reason as buildOpeningHours.
+     * Returns '' when the field is absent so AbstractEntity::toArray's
+     * array_filter drops the column rather than persisting a misleading "[]".
      */
     protected function buildOffers(mixed $value, string $language): string
     {
@@ -422,13 +369,14 @@ abstract class AbstractEntity implements EntityInterface
     public function toArray(): array
     {
         $array = get_object_vars($this);
-        // table / transients / priority / translations are framework
+        // table / transients / priority / translations / children are framework
         // metadata, not DB columns.
         unset(
             $array['table'],
             $array['transients'],
             $array['priority'],
             $array['translations'],
+            $array['children'],
         );
 
         /** @var array<string, string|int|float> $filtered */
@@ -450,7 +398,76 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function getChildren(): array
     {
-        return [];
+        return $this->children;
+    }
+
+    /**
+     * Manufacture one OpeningHourSpecificationEntity child per
+     * schema:OpeningHoursSpecification node and stage them as inline children.
+     * Imported as-is (no merging/filtering) — display computes the rest. The
+     * Resolver wires each child's parentid FK back to this row.
+     *
+     * @param array<string, mixed> $node owning JSON-LD node
+     */
+    protected function buildOpeningHourSpecifications(array $node, string $remoteId): void
+    {
+        $this->collectOpeningHourSpecifications(
+            $node['schema:openingHoursSpecification'] ?? null,
+            $remoteId,
+            OpeningHourSpecificationEntity::TYPE_REGULAR
+        );
+        $this->collectOpeningHourSpecifications(
+            $node['schema:specialOpeningHoursSpecification'] ?? null,
+            $remoteId,
+            OpeningHourSpecificationEntity::TYPE_SPECIAL
+        );
+    }
+
+    private function collectOpeningHourSpecifications(mixed $value, string $remoteId, string $specificationType): void
+    {
+        if (!is_array($value)) {
+            return;
+        }
+        $items = array_is_list($value) ? $value : [$value];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            /** @var array<string, mixed> $item JSON-LD nodes are string-keyed. */
+            // A spec may carry several weekdays; the table holds one weekday per
+            // row, so emit one child per day. Live data uses a single day, but
+            // schema:dayOfWeek may also be a list. A spec without any day still
+            // yields one row (empty day) so no hours are lost.
+            $days = $this->extractDaysOfWeek($item['schema:dayOfWeek'] ?? null);
+            foreach ($days === [] ? [''] : $days as $day) {
+                $child = new OpeningHourSpecificationEntity();
+                $child->configure($remoteId, $specificationType, $day, $item);
+                $this->children[] = $child;
+            }
+        }
+    }
+
+    /**
+     * schema:dayOfWeek is a single typed @value object or a list of them. Returns
+     * the bare day names (namespace prefix stripped), e.g. ["Monday"].
+     *
+     * @return list<string>
+     */
+    private function extractDaysOfWeek(mixed $value): array
+    {
+        if (!is_array($value)) {
+            return [];
+        }
+        $items = array_is_list($value) ? $value : [$value];
+        $days = [];
+        foreach ($items as $item) {
+            $raw = is_array($item) ? (string)($item['@value'] ?? '') : '';
+            if ($raw === '') {
+                continue;
+            }
+            $days[] = $this->stripNamespacePrefix($raw);
+        }
+        return $days;
     }
 
     abstract public function handlesTypes(): array;

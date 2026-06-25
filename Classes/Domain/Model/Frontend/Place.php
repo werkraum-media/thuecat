@@ -25,6 +25,8 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\OpeningHours as ComputedOpeningHours;
+use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
 abstract class Place extends Base
 {
@@ -35,6 +37,19 @@ abstract class Place extends Base
     protected ?OpeningHours $openingHours = null;
 
     protected ?OpeningHours $specialOpeningHours = null;
+
+    /**
+     * Imported tx_thuecat_opening_hours child rows (regular). Mapped for the
+     * formatter; never rendered bare — use getComputedOpeningHours().
+     *
+     * @var ObjectStorage<OpeningHourSpecification>
+     */
+    protected ObjectStorage $openingHoursInline;
+
+    /**
+     * @var ObjectStorage<OpeningHourSpecification>
+     */
+    protected ObjectStorage $specialOpeningHoursInline;
 
     /**
      * @var ObjectStorage<ParkingFacility>
@@ -66,6 +81,8 @@ abstract class Place extends Base
     {
         parent::initializeObject();
         $this->parkingFacilityNearBy = new ObjectStorage();
+        $this->openingHoursInline = new ObjectStorage();
+        $this->specialOpeningHoursInline = new ObjectStorage();
     }
 
     public function getAddress(): ?Address
@@ -78,30 +95,113 @@ abstract class Place extends Base
         return $this->url;
     }
 
+    /**
+     * @deprecated Legacy JSON-blob opening hours carrier. Use getComputedOpeningHours()
+     *             instead; re-run the import to populate the inline records. Removed in the next major.
+     */
     public function getOpeningHours(): ?OpeningHours
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getOpeningHours() returns the deprecated'
+            . ' JSON-blob opening hours carrier. Use getComputedOpeningHours() (re-run the import).'
+            . ' Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return $this->openingHours;
     }
 
+    /**
+     * @deprecated Legacy JSON-blob opening hours. Use getComputedOpeningHours()
+     *             instead; re-run the import. Removed in the next major.
+     */
     public function getMergedOpeningHours(): ?MergedOpeningHours
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedOpeningHours() returns the'
+            . ' deprecated merged JSON-blob opening hours. Use getComputedOpeningHours() (re-run the'
+            . ' import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         if ($this->openingHours === null) {
             return null;
         }
         return $this->openingHours->getMerged();
     }
 
+    /**
+     * @deprecated Legacy JSON-blob opening hours carrier. Use getComputedSpecialOpeningHours()
+     *             instead; re-run the import to populate the inline records. Removed in the next major.
+     */
     public function getSpecialOpeningHours(): ?OpeningHours
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getSpecialOpeningHours() returns the'
+            . ' deprecated JSON-blob opening hours carrier. Use getComputedSpecialOpeningHours() (re-run'
+            . ' the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return $this->specialOpeningHours;
     }
 
+    /**
+     * @deprecated Legacy JSON-blob opening hours. Use getComputedSpecialOpeningHours()
+     *             instead; re-run the import. Removed in the next major.
+     */
     public function getMergedSpecialOpeningHours(): ?MergedOpeningHours
     {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedSpecialOpeningHours() returns the'
+            . ' deprecated merged JSON-blob opening hours. Use getComputedSpecialOpeningHours() (re-run the'
+            . ' import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         if ($this->specialOpeningHours === null) {
             return null;
         }
         return $this->specialOpeningHours->getMerged();
+    }
+
+    /**
+     * Display-ready regular opening hours computed from the imported inline
+     * records: grouped into periods, weekdays Monday-first, each day
+     * carrying all its relevant time periods, open-now resolved.
+     */
+    public function getComputedOpeningHours(): ComputedOpeningHours
+    {
+        return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
+            ->build($this->openingHoursInline)
+        ;
+    }
+
+    /**
+     * Display-ready special/deviating opening hours (Feiertage etc.), same
+     * shape as getComputedOpeningHours().
+     */
+    public function getComputedSpecialOpeningHours(): ComputedOpeningHours
+    {
+        return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
+            ->build($this->specialOpeningHoursInline)
+        ;
+    }
+
+    /**
+     * @return ObjectStorage<OpeningHourSpecification>
+     */
+    public function getOpeningHoursInline(): ObjectStorage
+    {
+        return $this->openingHoursInline;
+    }
+
+    /**
+     * @return ObjectStorage<OpeningHourSpecification>
+     */
+    public function getSpecialOpeningHoursInline(): ObjectStorage
+    {
+        return $this->specialOpeningHoursInline;
     }
 
     public function getParkingFacilityNearBy(): ObjectStorage

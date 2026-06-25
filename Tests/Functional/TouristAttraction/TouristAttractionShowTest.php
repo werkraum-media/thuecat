@@ -55,6 +55,46 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         self::assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
     }
 
+    #[Test]
+    public function rendersBothOpenSpansOfALunchBreakUnderOneWeekday(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        // Monday keeps BOTH open spans either
+        // side of the lunch break (08:00–12:00 and 13:00–18:00).
+        self::assertStringContainsString('Montag', $body);
+        self::assertStringContainsString('08:00', $body);
+        self::assertStringContainsString('12:00', $body);
+        self::assertStringContainsString('13:00', $body);
+        self::assertStringContainsString('18:00', $body);
+    }
+
+    #[Test]
+    public function rendersSpecialPublicHolidayHours(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertStringContainsString('Sonderöffnungszeiten', $body);
+        self::assertStringContainsString('Feiertags', $body);
+        self::assertStringContainsString('09:00', $body);
+    }
+
+    #[Test]
+    public function rendersFuturePeriodAfterCurrentOne(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        // Future period (Sunday 2026-11-02 – 2027-03-25) renders distinctly.
+        self::assertStringContainsString('Sonntag', $body);
+        self::assertStringContainsString('02.11.2026', $body);
+    }
+
     /**
      * The attraction parameter is cacheable, so the request needs a valid cHash
      * (a real list link carries one); compute it the same way the core does.

@@ -104,6 +104,18 @@
                         <source>Opening hours</source>
                         <target>Heures d'ouverture</target>
                   </trans-unit>
+                  <trans-unit id="content.openingHours.period.future" xml:space="preserve">
+                        <source>Upcoming</source>
+                        <target>Prochainement</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHours.period.until" xml:space="preserve">
+                        <source>until %s</source>
+                        <target>jusqu'au %s</target>
+                  </trans-unit>
+                  <trans-unit id="content.openingHours.closed" xml:space="preserve">
+                        <source>closed</source>
+                        <target>fermé</target>
+                  </trans-unit>
                   <trans-unit id="content.offers" xml:space="preserve">
                         <source>Offers</source>
                         <target>Prix</target>

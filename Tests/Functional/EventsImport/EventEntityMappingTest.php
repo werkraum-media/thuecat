@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -30,6 +33,8 @@ class EventEntityMappingTest extends AbstractImportTestCase
     #[Test]
     public function mapsDistelFixtureWithRecurringScheduleToExpectedRows(): void
     {
+        $dateTime = new DateTimeImmutable('2024-09-19T00:00:00+00:00');
+        $this->getContainer()->get(Context::class)->setAspect('date', new DateTimeAspect($dateTime));
         $this->assertFixtureMapsTo('e_100771372-hubev', 'DistelMapping');
     }
 

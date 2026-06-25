@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2023 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2026 werkraum-media
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,36 +21,39 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
-
-use WerkraumMedia\ThueCat\Domain\TimingFormat;
+namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 
 /**
- * @deprecated Legacy merged JSON-blob opening hours weekday. Use the computed shape from
- *             Place::getComputedOpeningHours() / getComputedSpecialOpeningHours()
- *             (OpeningHours\WeekDay) instead; re-run the import. Removed in the next major.
+ * One weekday within a period, carrying ALL of its open–close time periods in
+ * order. A day can hold several periods (08:00–12:00, 13:00–18:00).
+ * An empty list means closed that day.
  */
-class MergedOpeningHourWeekDay
+final class WeekDay
 {
+    /**
+     * @param list<TimePeriod> $timePeriods
+     */
     public function __construct(
-        private readonly string $opens,
-        private readonly string $closes,
-        private readonly string $dayOfWeek
+        private readonly string $dayOfWeek,
+        private readonly array $timePeriods,
     ) {
-    }
-
-    public function getOpens(): string
-    {
-        return TimingFormat::format($this->opens);
-    }
-
-    public function getCloses(): string
-    {
-        return TimingFormat::format($this->closes);
     }
 
     public function getDayOfWeek(): string
     {
         return $this->dayOfWeek;
+    }
+
+    /**
+     * @return list<TimePeriod>
+     */
+    public function getTimePeriods(): array
+    {
+        return $this->timePeriods;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->timePeriods === [];
     }
 }

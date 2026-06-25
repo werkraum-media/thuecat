@@ -47,7 +47,17 @@ return [
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/opening-hours-to-filter</value>
+                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-parking-nearby</value>
+                                                </field>
+                                            </el>
+                                        </value>
+                                        <value index="_TOGGLE">0</value>
+                                    </field>
+                                    <field index="702a89f54d694654233087">
+                                        <value index="url">
+                                            <el>
+                                                <field index="url">
+                                                    <value index="vDEF">https://thuecat.org/resources/second-attraction-with-parking-nearby</value>
                                                 </field>
                                             </el>
                                         </value>

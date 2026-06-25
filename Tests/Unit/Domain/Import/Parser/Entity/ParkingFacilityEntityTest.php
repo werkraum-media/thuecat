@@ -24,32 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class ParkingFacilityEntityTest extends AbstractImportTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        // Fixtures used here carry schema:openingHoursSpecification, so parse()
-        // hits AbstractEntity::buildOpeningHours, which fetches the Context
-        // singleton to filter past-dated entries. The Context auto-creates a
-        // date aspect from $GLOBALS['EXEC_TIME']; without it the lookup throws.
-        $GLOBALS['EXEC_TIME'] = 1709424000; // 2024-03-03 UTC
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['EXEC_TIME']);
-        // Context is a TYPO3 SingletonInterface — clear it so a stale instance
-        // from one test doesn't leak its date aspect into the next.
-        GeneralUtility::purgeInstances();
-        parent::tearDown();
-    }
-
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -237,20 +216,26 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function encodesOpeningHoursListAsJsonBlob(): void
+    public function buildsOpeningHourSpecificationChildrenOnePerDay(): void
     {
+        // Two specs: 07–22 for Mon–Sat (6 days) and 09–22 for Sun + PublicHolidays
+        // (2 days). Multi-day specs expand to one child row per day → 8 rows.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        /** @var array<int, array<string, mixed>> $decoded */
-        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
+        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
 
-        self::assertCount(2, $decoded);
-        self::assertSame('07:00:00', $decoded[0]['opens']);
-        self::assertSame('22:00:00', $decoded[0]['closes']);
-        self::assertContains('Monday', $decoded[0]['daysOfWeek']);
+        self::assertCount(8, $rows);
+        $byDay = array_column($rows, null, 'day_of_week');
+        self::assertSame('07:00:00', $byDay['Monday']['opens']);
+        self::assertSame('22:00:00', $byDay['Monday']['closes']);
+        // Parent linkage rides in the remote_id prefix (the Resolver reads it
+        // back to wire the inline FK); the child carries no parenttable itself.
+        self::assertStringContainsString('::oh::', (string)$byDay['Monday']['remote_id']);
+        self::assertSame('09:00:00', $byDay['Sunday']['opens']);
+        self::assertArrayHasKey('PublicHolidays', $byDay);
     }
 
     #[Test]

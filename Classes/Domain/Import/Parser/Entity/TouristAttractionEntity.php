@@ -48,12 +48,14 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $public_access = '';
     protected string $available_languages = '';
     protected string $distance_to_public_transport = '';
-    protected string $opening_hours = '';
-    protected string $special_opening_hours = '';
     protected string $offers = '';
     protected string $address = '';
     protected string $url = '';
 
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->translations = [];
@@ -143,8 +145,7 @@ class TouristAttractionEntity extends AbstractEntity
         $this->is_accessible_for_free = $this->extractStringValue($node['schema:isAccessibleForFree'] ?? null);
         $this->public_access = $this->extractStringValue($node['schema:publicAccess'] ?? null);
 
-        $this->opening_hours = $this->buildOpeningHours($node['schema:openingHoursSpecification'] ?? null);
-        $this->special_opening_hours = $this->buildOpeningHours($node['schema:specialOpeningHoursSpecification'] ?? null);
+        $this->buildOpeningHourSpecifications($node, $this->remote_id);
 
         if (!empty($node['schema:address'])) {
             // Address + geo are one logical record in TCA but two sibling keys in

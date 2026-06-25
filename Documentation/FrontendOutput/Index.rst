@@ -89,6 +89,19 @@ The templates are
 * ``TouristAttraction/SearchForm``
 * ``TouristAttraction/Show``
 
+Field-specific output
+=====================
+
+Some fields carry richer data than a single value and have their own model
+accessors and partials. They are covered on their own pages:
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   OpeningHours
+   Media
+
 Site settings
 =============
 

@@ -11,6 +11,12 @@ Features
 
 * Add support for TYPO3 v14.
 * Handle images and other files properly via FAL upon import. Target file directory is now part of the import configuration.
+* Import opening hours as inline database records (:sql:`tx_thuecat_opening_hours`) and expose a display-ready,
+  computed shape via :php:`Domain\Model\Frontend\Place::getComputedOpeningHours()` and
+  :php:`getComputedSpecialOpeningHours()`. The shape groups records into validity periods, lists every weekday
+  Monday-first, keeps all time spans of a day and
+  marks days without hours as closed. A ``OpeningHours/PerDayTable`` partial renders it. The current open/closed
+  status is intentionally left to client-side logic.
 
 Fixes
 -----
@@ -44,3 +50,19 @@ will be removed.
 * The editorial_images field is now handled as the FAL field it always has been. Replace template output from
   :html:`{entity.media.editorialImages}` to :html:`{entity.editorialImages}` to make use of the full FAL provided
   functionality.
+
+* The json-based opening hours storage has been superseeded by inline database records. The json-based output logic
+  is still in place. The next import will create the inline records as needed. With the next fitting version, the
+  json-based fields will be removed.
+
+  Deprecated, triggering ``E_USER_DEPRECATED`` on use:
+
+  - :php:`Domain\Model\Frontend\Place::getOpeningHours()`, :php:`getMergedOpeningHours()`,
+    :php:`getSpecialOpeningHours()` and :php:`getMergedSpecialOpeningHours()` (the json-blob read accessors).
+
+  The legacy :php:`Domain\Model\Frontend\OpeningHours`, :php:`MergedOpeningHours` and
+  :php:`MergedOpeningHourWeekDay` models are deprecated alongside them.
+
+  Use :php:`getComputedOpeningHours()` / :php:`getComputedSpecialOpeningHours()` instead. Re-run the import to
+  populate the inline records. Templates should switch from :html:`{record.openingHours}` /
+  :html:`{record.mergedOpeningHours}` to the ``OpeningHours/PerDayTable`` partial.

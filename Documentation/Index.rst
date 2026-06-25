@@ -19,7 +19,7 @@ Table of Contents
    Installation
    Configuration
    Integration
-   FrontendOutput
+   FrontendOutput/Index
    ContentElementExample
    Changelog
    Maintenance

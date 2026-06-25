@@ -153,6 +153,12 @@
             <trans-unit id="tx_thuecat_tourist_attraction.special_opening_hours" xml:space="preserve">
                 <source>Special Opening Hours</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.opening_hours_inline" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.special_opening_hours_inline" xml:space="preserve">
+                <source>Special Opening Hours</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
@@ -218,6 +224,12 @@
                 <source>Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.special_opening_hours" xml:space="preserve">
+                <source>Special Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.opening_hours_inline" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.special_opening_hours_inline" xml:space="preserve">
                 <source>Special Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
@@ -383,6 +395,60 @@
             </trans-unit>
             <trans-unit id="pages.module.thuecat" xml:space="preserve">
                 <source>ThÜCAT</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.specification_type" xml:space="preserve">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.specification_type.regular" xml:space="preserve">
+                <source>Regular</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.specification_type.special" xml:space="preserve">
+                <source>Special</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week" xml:space="preserve">
+                <source>Day of week</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.monday" xml:space="preserve">
+                <source>Monday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.tuesday" xml:space="preserve">
+                <source>Tuesday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.wednesday" xml:space="preserve">
+                <source>Wednesday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.thursday" xml:space="preserve">
+                <source>Thursday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.friday" xml:space="preserve">
+                <source>Friday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.saturday" xml:space="preserve">
+                <source>Saturday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.sunday" xml:space="preserve">
+                <source>Sunday</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.day_of_week.publicHolidays" xml:space="preserve">
+                <source>Public holidays</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.opens" xml:space="preserve">
+                <source>Opens</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.closes" xml:space="preserve">
+                <source>Closes</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.valid_from" xml:space="preserve">
+                <source>Valid from</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.valid_through" xml:space="preserve">
+                <source>Valid through</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_opening_hours.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
             </trans-unit>
         </body>
     </file>

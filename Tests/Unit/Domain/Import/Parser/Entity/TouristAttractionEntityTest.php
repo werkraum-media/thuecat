@@ -24,32 +24,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
 
 class TouristAttractionEntityTest extends AbstractImportTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        // Fixtures used here carry schema:openingHoursSpecification, so parse()
-        // hits AbstractEntity::buildOpeningHours, which fetches the Context
-        // singleton to filter past-dated entries. The Context auto-creates a
-        // date aspect from $GLOBALS['EXEC_TIME']; without it the lookup throws.
-        $GLOBALS['EXEC_TIME'] = 1709424000; // 2024-03-03 UTC
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['EXEC_TIME']);
-        // Context is a TYPO3 SingletonInterface — clear it so a stale instance
-        // from one test doesn't leak its date aspect into the next.
-        GeneralUtility::purgeInstances();
-        parent::tearDown();
-    }
-
     #[Test]
     public function returnsCorrectTable(): void
     {
@@ -277,95 +256,70 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function encodesOpeningHoursListAsJsonBlob(): void
+    public function buildsOpeningHourSpecificationChildrenImportedAsIs(): void
     {
-        // opening-hours-to-filter.json has two OpeningHoursSpecification nodes —
-        // one with a list of dayOfWeek entries, one with a single object — so
-        // it exercises both input shapes in one round trip. The 2021 entry is
-        // filtered out by buildOpeningHours' past-date guard (EXEC_TIME=2024).
-        // from/through serialize as DateTimeImmutable so the legacy
-        // OpeningHour::createFromArray contract keeps working.
+        // Two specs (list-shaped + object-shaped dayOfWeek); both kept — import
+        // is lossless, no past-date filtering (that moved to display).
         $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
+        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
 
-        self::assertSame([
-            [
-                'opens' => '13:00:00',
-                'closes' => '17:00:00',
-                'from' => ['date' => '2050-11-01 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
-                'through' => ['date' => '2050-04-30 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
-                'daysOfWeek' => ['Sunday'],
-            ],
-        ], $decoded);
+        self::assertCount(2, $rows);
+        foreach ($rows as $row) {
+            self::assertSame('regular', $row['specification_type']);
+        }
+        $byDay = array_column($rows, null, 'day_of_week');
+        self::assertSame('09:30:00', $byDay['Wednesday']['opens']);
+        self::assertSame('2021-10-31', $byDay['Wednesday']['valid_through']);
+        self::assertSame('13:00:00', $byDay['Sunday']['opens']);
+        self::assertSame('2050-04-30', $byDay['Sunday']['valid_through']);
     }
 
     #[Test]
-    public function acceptsSingleOpeningHoursSpecificationObject(): void
+    public function buildsChildrenFromSingleObjectMultiDaySpecification(): void
     {
-        // Alte Synagoge's fixture carries schema:openingHoursSpecification as a
-        // single object rather than a list — the parser still has to produce a
-        // list of one entry in the JSON column. Pin EXEC_TIME before this
-        // entry's validThrough (2021-12-31) so the past-date filter keeps it.
-        $GLOBALS['EXEC_TIME'] = strtotime('2021-06-01 UTC');
-
+        // schema:openingHoursSpecification is a single object (not a list) but
+        // carries 6 weekdays → one child row per day.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $decoded = $this->decodeJson($entity->toArray()['opening_hours']);
+        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
 
-        self::assertCount(1, $decoded);
-        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('10:00:00', $decoded[0]['opens']);
-        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('18:00:00', $decoded[0]['closes']);
+        self::assertCount(6, $rows);
+        foreach ($rows as $row) {
+            self::assertSame('10:00:00', $row['opens']);
+            self::assertSame('18:00:00', $row['closes']);
+            self::assertSame('regular', $row['specification_type']);
+        }
+        self::assertContains('Saturday', array_column($rows, 'day_of_week'));
     }
 
     #[Test]
-    public function encodesSpecialOpeningHoursListAsJsonBlob(): void
+    public function buildsSpecialOpeningHourSpecificationChildren(): void
     {
-        // special-opening-hours.json has two specialOpeningHoursSpecification
-        // nodes — different JSON-LD key, identical shape, so the same transient
-        // handles it; only the target column changes. The 2021 entry is filtered
-        // out by buildOpeningHours' past-date guard (EXEC_TIME=2024).
         $node = $this->nodeFromFixture('special-opening-hours.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $decoded = $this->decodeJson($entity->toArray()['special_opening_hours']);
+        $special = array_values(array_filter(
+            array_map(static fn ($child) => $child->toArray(), $entity->getChildren()),
+            static fn (array $row) => $row['specification_type'] === 'special'
+        ));
 
-        self::assertSame([
-            [
-                'opens' => '10:00:00',
-                'closes' => '14:00:00',
-                'from' => ['date' => '2050-12-31 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
-                'through' => ['date' => '2050-12-31 00:00:00.000000', 'timezone_type' => 3, 'timezone' => 'UTC'],
-                'daysOfWeek' => ['Saturday'],
-            ],
-        ], $decoded);
+        self::assertNotEmpty($special);
+        self::assertSame('10:00:00', $special[0]['opens']);
+        self::assertSame('14:00:00', $special[0]['closes']);
+        self::assertSame('Saturday', $special[0]['day_of_week']);
     }
 
     #[Test]
-    public function specialOpeningHoursIsAbsentWhenNodeLacksSpecification(): void
-    {
-        // The regular opening-hours fixture has no specialOpeningHours node; the
-        // column must not appear rather than serialising an empty list.
-        $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
-        $entity = new TouristAttractionEntity();
-        $entity->parse($node, 'de', new ParserContext(0));
-
-        self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());
-    }
-
-    #[Test]
-    public function openingHoursIsAbsentWhenNodeLacksSpecification(): void
+    public function hasNoOpeningHourChildrenWhenNodeLacksSpecification(): void
     {
         $entity = new TouristAttractionEntity();
         $entity->parse([
@@ -373,9 +327,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             '@type' => ['schema:TouristAttraction'],
         ], 'de', new ParserContext(0));
 
-        // '' is filtered out by AbstractEntity::toArray, so the column simply
-        // doesn't appear in the row.
+        self::assertSame([], $entity->getChildren());
+        // Blob columns are no longer written either.
         self::assertArrayNotHasKey('opening_hours', $entity->toArray());
+        self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());
     }
 
     #[Test]

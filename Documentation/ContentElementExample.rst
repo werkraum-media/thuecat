@@ -49,4 +49,4 @@ attractions; the ``TouristAttractionListSelected`` plugin renders them via the
 The other content elements follow the same shape: a FlexForm field for their
 settings (a town preset for the filtered list, none for the plain list, none for
 the search-and-filter form) wired to the matching plugin name from
-:doc:`FrontendOutput`.
+:doc:`FrontendOutput/Index`.

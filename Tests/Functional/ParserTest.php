@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use DateTimeImmutable;
-use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
@@ -138,13 +136,10 @@ final class ParserTest extends AbstractImportTestCase
     public function touristAttractionPayloadContainsCompleteRowAndTransients(): void
     {
         // Alte Synagoge — the richest fixture in the suite. Exercises JSON blob
-        // columns (opening_hours, offers, address), the full enum/localised
-        // scalar set, and every transient bucket the attraction carries:
+        // columns (offers, address), inline opening-hours child rows, the full
+        // enum/localised scalar set, and every transient bucket it carries:
         // containedInPlace, managedBy (normalised from contentResponsible),
         // parkingFacilityNearBy, accessibilitySpecification, media.
-        // The fixture's only opening hour expired 2021-12-31 — pin "now" before
-        // then so buildOpeningHours' past-date filter keeps it in the row.
-        $this->setDateAspect(new DateTimeImmutable('2021-06-01', new DateTimeZone('UTC')));
         $graph = $this->graphFromFixture('165868194223-zmqf.json');
 
         $subject = $this->get(Parser::class);
@@ -153,7 +148,12 @@ final class ParserTest extends AbstractImportTestCase
 
         $data = $payload->getDataMap();
 
-        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($data));
+        // Opening hours are now inline child rows in a separate table, not a
+        // column on the attraction.
+        self::assertSame(
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours'],
+            array_keys($data)
+        );
         self::assertSame(
             ['https://thuecat.org/resources/165868194223-zmqf'],
             array_keys($data['tx_thuecat_tourist_attraction'])
@@ -162,9 +162,7 @@ final class ParserTest extends AbstractImportTestCase
         $row = $data['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
 
         // Full shape golden: catches regressions like the priority leak that
-        // the Organisation/Town tests found. Absent keys (special_opening_hours
-        // is absent because array_filter drops '' — fixture has no special
-        // openings) stay absent.
+        // the Organisation/Town tests found.
         self::assertSame(
             [
                 'remote_id',
@@ -185,7 +183,6 @@ final class ParserTest extends AbstractImportTestCase
                 'public_access',
                 'available_languages',
                 'distance_to_public_transport',
-                'opening_hours',
                 'offers',
                 'address',
                 'url',
@@ -212,12 +209,17 @@ final class ParserTest extends AbstractImportTestCase
         self::assertArrayNotHasKey('accessibility_specification', $row);
         self::assertArrayNotHasKey('media', $row);
 
+        // Opening hours: one inline child row per weekday (the fixture's single
+        // spec carries 6 days). Unit tests assert the full per-row shape.
+        // parenttable/parentid are filled later by DataHandler, not at parse time.
+        $openingHours = $data['tx_thuecat_opening_hours'];
+        self::assertCount(6, $openingHours);
+        $firstRow = reset($openingHours);
+        self::assertSame('10:00:00', $firstRow['opens']);
+        self::assertSame('regular', $firstRow['specification_type']);
+
         // JSON blobs: we only spot-check shape here; the unit tests assert
-        // the full decoded structure for offers / opening_hours / address.
-        /** @var list<array<string, mixed>> $openingHours */
-        $openingHours = json_decode((string)$row['opening_hours'], true, 512, JSON_THROW_ON_ERROR);
-        self::assertCount(1, $openingHours);
-        self::assertSame('10:00:00', $openingHours[0]['opens']);
+        // the full decoded structure for offers / address.
 
         /** @var list<array<string, mixed>> $offers */
         $offers = json_decode((string)$row['offers'], true, 512, JSON_THROW_ON_ERROR);
@@ -255,6 +257,9 @@ final class ParserTest extends AbstractImportTestCase
                         ],
                     ],
                 ],
+                // Inline opening-hours children carry no transient: the Resolver
+                // wires them to the parent from the datamap (parent remote_id is
+                // the child remote_id prefix), so the parser emits no OH bucket.
             ],
             $payload->getTransients()
         );

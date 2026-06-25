@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OpeningHourSpecificationEntity;
 use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') or die();
@@ -207,6 +208,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
             'opening_hours' => [
                 'label' => $languagePath . '.opening_hours',
                 'l10n_mode' => 'exclude',
@@ -215,12 +217,41 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
             'special_opening_hours' => [
                 'label' => $languagePath . '.special_opening_hours',
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'text',
                     'searchable' => false,
+                ],
+            ],
+            'opening_hours_inline' => [
+                'label' => $languagePath . '.opening_hours_inline',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_opening_hours',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'foreign_match_fields' => [
+                        'specification_type' => OpeningHourSpecificationEntity::TYPE_REGULAR,
+                    ],
+                    'foreign_default_sortby' => 'valid_from, day_of_week, opens',
+                ],
+            ],
+            'special_opening_hours_inline' => [
+                'label' => $languagePath . '.special_opening_hours_inline',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_opening_hours',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'foreign_match_fields' => [
+                        'specification_type' => OpeningHourSpecificationEntity::TYPE_SPECIAL,
+                    ],
+                    'foreign_default_sortby' => 'valid_from, day_of_week, opens',
                 ],
             ],
             'address' => [
@@ -358,7 +389,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;language, title, description, main_image, media_files, slogan, start_of_construction, sanitation, 
                 other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
                 photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
-                opening_hours, special_opening_hours, offers, accessibility_specification, address, url, 
+                opening_hours_inline, special_opening_hours_inline, opening_hours, special_opening_hours, offers, accessibility_specification, address, url,
                  media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, 
                 parking_facility_near_by, 
                 --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
