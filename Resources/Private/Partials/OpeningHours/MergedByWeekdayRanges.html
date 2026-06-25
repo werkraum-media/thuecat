@@ -23,19 +23,9 @@
                     </f:if>
                 </dt>
             </f:if>
-            <f:for each="{period.weekDays}" as="weekDay">
-                <dt><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHour.weekday.{weekDay.dayOfWeek}" />:</dt>
-                <dd>
-                    <f:if condition="{weekDay.closed}">
-                        <f:then><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours.closed" /></f:then>
-                        <f:else>
-                            <f:for each="{weekDay.timePeriods}" as="timePeriod" iteration="span">
-                                <f:if condition="!{span.isFirst}">, </f:if>
-                                {timePeriod.opens -> f:format.date(format: 'H:i')}&ndash;{timePeriod.closes -> f:format.date(format: 'H:i')}
-                            </f:for>
-                        </f:else>
-                    </f:if>
-                </dd>
+            <f:for each="{period.weekDayGroups}" as="weekDayGroup">
+                <dt><f:for each="{weekDayGroup.dayRanges}" as="dayRange" iteration="range"><f:if condition="!{range.isFirst}">, </f:if><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHour.weekday.{dayRange.firstDay}" /><f:if condition="{dayRange.range}">&ndash;<f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHour.weekday.{dayRange.lastDay}" /></f:if></f:for>:</dt>
+                <dd><f:for each="{weekDayGroup.timePeriods}" as="timePeriod" iteration="span"><f:if condition="!{span.isFirst}">, </f:if>{timePeriod.opens -> f:format.date(format: 'H:i')}&ndash;{timePeriod.closes -> f:format.date(format: 'H:i')}</f:for></dd>
             </f:for>
         </dl>
     </f:for>

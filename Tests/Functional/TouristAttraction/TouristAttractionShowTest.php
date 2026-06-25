@@ -60,15 +60,15 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         $request = $this->generateRequestWithCHash('21');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
         // Monday keeps BOTH open spans either
         // side of the lunch break (08:00–12:00 and 13:00–18:00).
-        self::assertStringContainsString('Montag', $body);
-        self::assertStringContainsString('08:00', $body);
-        self::assertStringContainsString('12:00', $body);
-        self::assertStringContainsString('13:00', $body);
-        self::assertStringContainsString('18:00', $body);
+        self::assertStringContainsString('Montag', $section);
+        self::assertStringContainsString('08:00', $section);
+        self::assertStringContainsString('12:00', $section);
+        self::assertStringContainsString('13:00', $section);
+        self::assertStringContainsString('18:00', $section);
     }
 
     #[Test]
@@ -76,11 +76,11 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         $request = $this->generateRequestWithCHash('21');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
-        self::assertStringContainsString('Sonderöffnungszeiten', $body);
-        self::assertStringContainsString('Feiertags', $body);
-        self::assertStringContainsString('09:00', $body);
+        self::assertStringContainsString('Sonderöffnungszeiten', $section);
+        self::assertStringContainsString('Feiertags', $section);
+        self::assertStringContainsString('09:00', $section);
     }
 
     #[Test]
@@ -88,11 +88,60 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         $request = $this->generateRequestWithCHash('21');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
         // Future period (Sunday 2026-11-02 – 2027-03-25) renders distinctly.
-        self::assertStringContainsString('Sonntag', $body);
-        self::assertStringContainsString('02.11.2026', $body);
+        self::assertStringContainsString('Sonntag', $section);
+        self::assertStringContainsString('02.11.2026', $section);
+    }
+
+    #[Test]
+    public function mergedByWeekdayFormatCollapsesDaysSharingTheSameHours(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $section = $this->renderedSection($request, 'openinghours-format', 'mergedByWeekday');
+
+        // Monday and Tuesday share identical spans, so the merged format lists
+        // them in one grouped row — a marker the per-day format never produces.
+        self::assertStringContainsString('Montag, Dienstag', $section);
+        self::assertStringContainsString('08:00', $section);
+        self::assertStringContainsString('13:00', $section);
+    }
+
+    #[Test]
+    public function mergedByWeekdayRangesFormatCollapsesConsecutiveDaysIntoARange(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $section = $this->renderedSection($request, 'openinghours-format', 'mergedByWeekdayRanges');
+
+        // Monday and Tuesday are consecutive and share spans, so the ranges
+        // format collapses them to "Montag–Dienstag" rather than listing both.
+        self::assertStringContainsString('Montag&ndash;Dienstag', $section);
+        self::assertStringNotContainsString('Montag, Dienstag', $section);
+    }
+
+    /**
+     * Render the request and return only the markup of the
+     * <section data-{$attribute}="..."> block, so assertions cannot accidentally
+     * match a sibling section's output. The next marked section (same data
+     * attribute) bounds this one; partials may emit their own plain <section>, so
+     * the boundary keys on the data attribute, not on <section> alone.
+     */
+    private function renderedSection(InternalRequest $request, string $attribute, string $value): string
+    {
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        $marker = '<section data-' . $attribute . '="';
+        $open = $marker . $value . '">';
+        $start = strpos($body, $open);
+        self::assertNotFalse($start, 'Section ' . $attribute . '="' . $value . '" not rendered.');
+
+        $rest = substr($body, $start + strlen($open));
+        $end = strpos($rest, $marker);
+
+        return $end === false ? $rest : substr($rest, 0, $end);
     }
 
     /**

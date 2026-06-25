@@ -5,35 +5,35 @@
 
             <body>
                   <trans-unit id="content.openingHour.weekday.Monday" xml:space="preserve">
-                        <source>Monday:</source>
+                        <source>Monday</source>
                         <target>Lundi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Tuesday" xml:space="preserve">
-                        <source>Tuesday:</source>
+                        <source>Tuesday</source>
                         <target>Mardi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Wednesday" xml:space="preserve">
-                        <source>Wednesday:</source>
+                        <source>Wednesday</source>
                         <target>Mercredi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Thursday" xml:space="preserve">
-                        <source>Thursday:</source>
+                        <source>Thursday</source>
                         <target>Jeudi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Friday" xml:space="preserve">
-                        <source>Friday:</source>
+                        <source>Friday</source>
                         <target>Vendredi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Saturday" xml:space="preserve">
-                        <source>Saturday:</source>
+                        <source>Saturday</source>
                         <target>Samedi:</target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.Sunday" xml:space="preserve">
-                        <source>Sunday:</source>
+                        <source>Sunday</source>
                         <target>Dimanche: </target>
                   </trans-unit>
                   <trans-unit id="content.openingHour.weekday.PublicHolidays" xml:space="preserve">
-                        <source>Public Holidays:</source>
+                        <source>Public Holidays</source>
                         <target>Jours f&#xE9;ri&#xE9;s: </target>
                   </trans-unit>
                   <trans-unit id="content.price.type.AccommodationOffer" xml:space="preserve">

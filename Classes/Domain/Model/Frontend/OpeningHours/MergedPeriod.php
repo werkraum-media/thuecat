@@ -23,38 +23,47 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 
+use DateTimeImmutable;
+
 /**
- * Display-ready opening hours for one place: the periods in display order
- * (current first, then upcoming) and the computed open-now status. This is the
- * presentation-agnostic shape the OpeningHoursFormatter produces and the Fluid
- * partials render; raw tx_thuecat_opening_hours rows are never exposed directly.
+ * One validity window of the merged format, holding its weekday groups in
+ * display order (groups by earliest contained day, PublicHolidays last). Mirrors
+ * Period but carries WeekDayGroups instead of individual weekdays; closed days
+ * produce no group.
  */
-final class OpeningHours
+final class MergedPeriod implements PeriodInterface
 {
     /**
-     * @param list<Period> $periods
+     * @param list<WeekDayGroup> $weekDayGroups
      */
     public function __construct(
-        private readonly array $periods,
-        private readonly bool $openNow,
+        private readonly ?DateTimeImmutable $validFrom,
+        private readonly ?DateTimeImmutable $validThrough,
+        private readonly array $weekDayGroups,
+        private readonly bool $current,
     ) {
     }
 
+    public function getValidFrom(): ?DateTimeImmutable
+    {
+        return $this->validFrom;
+    }
+
+    public function getValidThrough(): ?DateTimeImmutable
+    {
+        return $this->validThrough;
+    }
+
     /**
-     * @return list<Period>
+     * @return list<WeekDayGroup>
      */
-    public function getPeriods(): array
+    public function getWeekDayGroups(): array
     {
-        return $this->periods;
+        return $this->weekDayGroups;
     }
 
-    public function isOpenNow(): bool
+    public function isCurrent(): bool
     {
-        return $this->openNow;
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->periods === [];
+        return $this->current;
     }
 }

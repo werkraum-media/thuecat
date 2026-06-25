@@ -32,8 +32,8 @@ use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 
 /**
  * @deprecated Legacy JSON-blob opening hours model. Use the computed shape from
- *             Place::getComputedOpeningHours() / getComputedSpecialOpeningHours()
- *             (OpeningHours\OpeningHours) instead; re-run the import. Removed in the next major.
+ *             Place::getPerDayTable() / getSpecialPerDayTable()
+ *             (OpeningHours\PerDayTable) instead; re-run the import. Removed in the next major.
  *
  * @implements Iterator<int, OpeningHour>
  */

@@ -32,7 +32,7 @@ use DateTimeImmutable;
  * whether to pad closed days. A period is "current" when today falls in its
  * window, otherwise "future" (past periods are dropped by the formatter).
  */
-final class Period
+final class Period implements PeriodInterface
 {
     /**
      * @param list<WeekDay> $weekDays

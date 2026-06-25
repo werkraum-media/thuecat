@@ -102,6 +102,33 @@ return [
             'valid_from' => '2026-05-01',
             'valid_through' => '2026-11-01',
         ],
+        // Tuesday mirrors Monday's two spans so the merged-by-weekday format
+        // collapses them into one group (Montag, Dienstag) — a marker the per-day
+        // format can never produce.
+        [
+            'uid' => '5',
+            'pid' => '11',
+            'parentid' => '21',
+            'parenttable' => 'tx_thuecat_tourist_attraction',
+            'specification_type' => 'regular',
+            'day_of_week' => 'Tuesday',
+            'opens' => '08:00:00',
+            'closes' => '12:00:00',
+            'valid_from' => '2026-05-01',
+            'valid_through' => '2026-11-01',
+        ],
+        [
+            'uid' => '6',
+            'pid' => '11',
+            'parentid' => '21',
+            'parenttable' => 'tx_thuecat_tourist_attraction',
+            'specification_type' => 'regular',
+            'day_of_week' => 'Tuesday',
+            'opens' => '13:00:00',
+            'closes' => '18:00:00',
+            'valid_from' => '2026-05-01',
+            'valid_through' => '2026-11-01',
+        ],
         [
             'uid' => '3',
             'pid' => '11',

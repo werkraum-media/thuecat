@@ -28,8 +28,8 @@ use Iterator;
 
 /**
  * @deprecated Legacy merged JSON-blob opening hours model. Use the computed shape from
- *             Place::getComputedOpeningHours() / getComputedSpecialOpeningHours()
- *             (OpeningHours\OpeningHours) instead; re-run the import. Removed in the next major.
+ *             Place::getPerDayTable() / getSpecialPerDayTable()
+ *             (OpeningHours\PerDayTable) instead; re-run the import. Removed in the next major.
  */
 class MergedOpeningHours implements Iterator, Countable
 {

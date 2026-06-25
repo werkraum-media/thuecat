@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2023 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2026 werkraum-media
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,36 +21,33 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
-
-use WerkraumMedia\ThueCat\Domain\TimingFormat;
+namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 
 /**
- * @deprecated Legacy merged JSON-blob opening hours weekday. Use the computed shape from
- *             Place::getPerDayTable() / getSpecialPerDayTable()
- *             (OpeningHours\WeekDay) instead; re-run the import. Removed in the next major.
+ * A run of consecutive weekdays within a WeekDayGroup, collapsed to its first and
+ * last day (e.g. Monday–Friday). A standalone day has firstDay === lastDay and
+ * isRange() === false, so the template renders "Monday" instead of a span.
  */
-class MergedOpeningHourWeekDay
+final class DayRange
 {
     public function __construct(
-        private readonly string $opens,
-        private readonly string $closes,
-        private readonly string $dayOfWeek
+        private readonly string $firstDay,
+        private readonly string $lastDay,
     ) {
     }
 
-    public function getOpens(): string
+    public function getFirstDay(): string
     {
-        return TimingFormat::format($this->opens);
+        return $this->firstDay;
     }
 
-    public function getCloses(): string
+    public function getLastDay(): string
     {
-        return TimingFormat::format($this->closes);
+        return $this->lastDay;
     }
 
-    public function getDayOfWeek(): string
+    public function isRange(): bool
     {
-        return $this->dayOfWeek;
+        return $this->firstDay !== $this->lastDay;
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2023 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2026 werkraum-media
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,36 +21,41 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
-
-use WerkraumMedia\ThueCat\Domain\TimingFormat;
+namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
 
 /**
- * @deprecated Legacy merged JSON-blob opening hours weekday. Use the computed shape from
- *             Place::getPerDayTable() / getSpecialPerDayTable()
- *             (OpeningHours\WeekDay) instead; re-run the import. Removed in the next major.
+ * Per-day opening-hours format: the periods in display order (current first,
+ * then upcoming), each holding every weekday Monday-first, plus the computed
+ * open-now status. One of the format DTOs the OpeningHoursFormatter produces
+ * (paired with the PerDayTable partial); raw tx_thuecat_opening_hours rows are
+ * never exposed directly.
  */
-class MergedOpeningHourWeekDay
+final class PerDayTable
 {
+    /**
+     * @param list<Period> $periods
+     */
     public function __construct(
-        private readonly string $opens,
-        private readonly string $closes,
-        private readonly string $dayOfWeek
+        private readonly array $periods,
+        private readonly bool $openNow,
     ) {
     }
 
-    public function getOpens(): string
+    /**
+     * @return list<Period>
+     */
+    public function getPeriods(): array
     {
-        return TimingFormat::format($this->opens);
+        return $this->periods;
     }
 
-    public function getCloses(): string
+    public function isOpenNow(): bool
     {
-        return TimingFormat::format($this->closes);
+        return $this->openNow;
     }
 
-    public function getDayOfWeek(): string
+    public function isEmpty(): bool
     {
-        return $this->dayOfWeek;
+        return $this->periods === [];
     }
 }

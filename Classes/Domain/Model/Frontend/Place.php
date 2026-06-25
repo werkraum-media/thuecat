@@ -25,7 +25,8 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\OpeningHours as ComputedOpeningHours;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\MergedByWeekday;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\PerDayTable;
 use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
 abstract class Place extends Base
@@ -40,7 +41,7 @@ abstract class Place extends Base
 
     /**
      * Imported tx_thuecat_opening_hours child rows (regular). Mapped for the
-     * formatter; never rendered bare — use getComputedOpeningHours().
+     * formatter; never rendered bare — use getPerDayTable().
      *
      * @var ObjectStorage<OpeningHourSpecification>
      */
@@ -96,14 +97,14 @@ abstract class Place extends Base
     }
 
     /**
-     * @deprecated Legacy JSON-blob opening hours carrier. Use getComputedOpeningHours()
+     * @deprecated Legacy JSON-blob opening hours carrier. Use getPerDayTable()
      *             instead; re-run the import to populate the inline records. Removed in the next major.
      */
     public function getOpeningHours(): ?OpeningHours
     {
         trigger_error(
             'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getOpeningHours() returns the deprecated'
-            . ' JSON-blob opening hours carrier. Use getComputedOpeningHours() (re-run the import).'
+            . ' JSON-blob opening hours carrier. Use getPerDayTable() (re-run the import).'
             . ' Removed in the next major.',
             E_USER_DEPRECATED
         );
@@ -112,14 +113,14 @@ abstract class Place extends Base
     }
 
     /**
-     * @deprecated Legacy JSON-blob opening hours. Use getComputedOpeningHours()
+     * @deprecated Legacy JSON-blob opening hours. Use getPerDayTable()
      *             instead; re-run the import. Removed in the next major.
      */
     public function getMergedOpeningHours(): ?MergedOpeningHours
     {
         trigger_error(
             'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedOpeningHours() returns the'
-            . ' deprecated merged JSON-blob opening hours. Use getComputedOpeningHours() (re-run the'
+            . ' deprecated merged JSON-blob opening hours. Use getPerDayTable() (re-run the'
             . ' import). Removed in the next major.',
             E_USER_DEPRECATED
         );
@@ -131,14 +132,14 @@ abstract class Place extends Base
     }
 
     /**
-     * @deprecated Legacy JSON-blob opening hours carrier. Use getComputedSpecialOpeningHours()
+     * @deprecated Legacy JSON-blob opening hours carrier. Use getSpecialPerDayTable()
      *             instead; re-run the import to populate the inline records. Removed in the next major.
      */
     public function getSpecialOpeningHours(): ?OpeningHours
     {
         trigger_error(
             'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getSpecialOpeningHours() returns the'
-            . ' deprecated JSON-blob opening hours carrier. Use getComputedSpecialOpeningHours() (re-run'
+            . ' deprecated JSON-blob opening hours carrier. Use getSpecialPerDayTable() (re-run'
             . ' the import). Removed in the next major.',
             E_USER_DEPRECATED
         );
@@ -147,14 +148,14 @@ abstract class Place extends Base
     }
 
     /**
-     * @deprecated Legacy JSON-blob opening hours. Use getComputedSpecialOpeningHours()
+     * @deprecated Legacy JSON-blob opening hours. Use getSpecialPerDayTable()
      *             instead; re-run the import. Removed in the next major.
      */
     public function getMergedSpecialOpeningHours(): ?MergedOpeningHours
     {
         trigger_error(
             'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedSpecialOpeningHours() returns the'
-            . ' deprecated merged JSON-blob opening hours. Use getComputedSpecialOpeningHours() (re-run the'
+            . ' deprecated merged JSON-blob opening hours. Use getSpecialPerDayTable() (re-run the'
             . ' import). Removed in the next major.',
             E_USER_DEPRECATED
         );
@@ -166,25 +167,48 @@ abstract class Place extends Base
     }
 
     /**
-     * Display-ready regular opening hours computed from the imported inline
-     * records: grouped into periods, weekdays Monday-first, each day
-     * carrying all its relevant time periods, open-now resolved.
+     * Regular opening hours in the per-day-table format computed from the
+     * imported inline records: grouped into periods, weekdays Monday-first, each
+     * day carrying all its relevant time periods, open-now resolved.
      */
-    public function getComputedOpeningHours(): ComputedOpeningHours
+    public function getPerDayTable(): PerDayTable
     {
         return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
-            ->build($this->openingHoursInline)
+            ->buildPerDayTable($this->openingHoursInline)
         ;
     }
 
     /**
-     * Display-ready special/deviating opening hours (Feiertage etc.), same
-     * shape as getComputedOpeningHours().
+     * Special/deviating opening hours (Feiertage etc.) in the per-day-table
+     * format, same shape as getPerDayTable().
      */
-    public function getComputedSpecialOpeningHours(): ComputedOpeningHours
+    public function getSpecialPerDayTable(): PerDayTable
     {
         return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
-            ->build($this->specialOpeningHoursInline)
+            ->buildPerDayTable($this->specialOpeningHoursInline)
+        ;
+    }
+
+    /**
+     * Regular opening hours in the merged-by-weekday format: weekdays sharing
+     * identical hours collapsed into one group (e.g. Monday–Friday),
+     * PublicHolidays kept separate.
+     */
+    public function getMergedByWeekday(): MergedByWeekday
+    {
+        return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
+            ->buildMergedByWeekday($this->openingHoursInline)
+        ;
+    }
+
+    /**
+     * Special/deviating opening hours in the merged-by-weekday format, same
+     * shape as getMergedByWeekday().
+     */
+    public function getSpecialMergedByWeekday(): MergedByWeekday
+    {
+        return GeneralUtility::makeInstance(OpeningHoursFormatter::class)
+            ->buildMergedByWeekday($this->specialOpeningHoursInline)
         ;
     }
 

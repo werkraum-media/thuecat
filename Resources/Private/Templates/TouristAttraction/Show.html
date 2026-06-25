@@ -65,8 +65,23 @@
         <h2>{attraction.title}</h2>
         <p>{attraction.description}</p>
 
-        <f:render partial="OpeningHours/PerDayTable" arguments="{openingHours: attraction.computedOpeningHours, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
-        <f:render partial="OpeningHours/PerDayTable" arguments="{openingHours: attraction.computedSpecialOpeningHours, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
+        <section data-openinghours-format="perDayTable">
+            <h3>Demo: per-day-table format</h3>
+            <f:render partial="OpeningHours/PerDayTable" arguments="{openingHours: attraction.perDayTable, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
+            <f:render partial="OpeningHours/PerDayTable" arguments="{openingHours: attraction.specialPerDayTable, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
+        </section>
+
+        <section data-openinghours-format="mergedByWeekday">
+            <h3>Demo: merged-by-weekday format</h3>
+            <f:render partial="OpeningHours/MergedByWeekday" arguments="{openingHours: attraction.mergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
+            <f:render partial="OpeningHours/MergedByWeekday" arguments="{openingHours: attraction.specialMergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
+        </section>
+
+        <section data-openinghours-format="mergedByWeekdayRanges">
+            <h3>Demo: merged-by-weekday format with collapsed ranges</h3>
+            <f:render partial="OpeningHours/MergedByWeekdayRanges" arguments="{openingHours: attraction.mergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
+            <f:render partial="OpeningHours/MergedByWeekdayRanges" arguments="{openingHours: attraction.specialMergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
+        </section>
 
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>
     </f:then>
