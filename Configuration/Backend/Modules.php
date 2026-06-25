@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Controller\Backend\ConfigurationController;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
-use WerkraumMedia\ThueCat\Extension;
 
 return [
     'thuecat_thuecat' => [
-        'icon' => Extension::getIconPath() . 'ModuleGroup.svg',
+        'iconIdentifier' => 'thuecat_modules',
         'position' => [
             'after' => 'web',
             'before' => 'file',
@@ -19,7 +18,7 @@ return [
     'thuecat_configurations' => [
         'parent' => 'thuecat_thuecat',
         'access' => 'user',
-        'icon' => Extension::getIconPath() . 'ModuleConfigurations.svg',
+        'iconIdentifier' => 'thuecat_module_configurations',
         'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_configurations.xlf',
         'extensionName' => 'Thuecat',
         'controllerActions' => [
@@ -34,7 +33,7 @@ return [
     'thuecat_imports' => [
         'parent' => 'thuecat_thuecat',
         'access' => 'user',
-        'icon' => Extension::getIconPath() . 'ModuleImports.svg',
+        'iconIdentifier' => 'thuecat_module_imports',
         'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf',
         'extensionName' => 'Thuecat',
         'controllerActions' => [
