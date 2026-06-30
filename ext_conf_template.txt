@@ -1,2 +1,0 @@
-# cat=API; type=string; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:apiKey
-apiKey =

@@ -1,30 +1,40 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
-    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    {f:layout(name: 'Module')}
+    <f:layout name="Module" />
 
     <f:section name="Content">
+
         <h1>{f:translate(id: 'module.overview.headline')}</h1>
 
+        <f:if condition="{noSite} == true">
+            <f:then>
+                <f:translate id="module.importConfigurations.noSite" />
+            </f:then>
+            <f:else>
         <f:flashMessages />
 
         <h2>
             {f:translate(id: 'module.importConfigurations.headline')}
-            <f:link.newRecord
-                table="tx_thuecat_import_configuration"
-                pid="{settings.newRecordPid.tx_thuecat_import_configuration}"
-                title="{f:translate(id: 'module.importConfigurations.actions.new')}"
-            >
-                {f:icon(identifier: 'actions-document-add')}
-            </f:link.newRecord>
+            <f:if condition="{pid} > 0">
+                <be:link.newRecord
+                    table="tx_thuecat_import_configuration"
+                    pid="{pid}"
+
+                >
+                    <core:icon identifier="actions-document-add" title="{f:translate(id: 'module.importConfigurations.actions.new')}" />
+                </be:link.newRecord>
+            </f:if>
         </h2>
         <f:if condition="{importConfigurations}">
             <f:then>
                 {f:render(section: 'ImportConfigurations', arguments: {importConfigurations: importConfigurations})}
             </f:then>
             <f:else>
+                <f:if condition="{pid} > 0">
+                    <f:then>
                 <f:be.infobox
                     title="{f:translate(id: 'module.importConfigurations.missing.title')}"
                     state="1"
@@ -32,10 +42,20 @@
                     {f:translate(
                         id: 'module.importConfigurations.missing.text',
                         arguments: {
-                            0: "{f:uri.newRecord(table: 'tx_thuecat_import_configuration', pid: settings.newRecordPid.tx_thuecat_import_configuration)}"
+                            0: "{be:uri.newRecord(table: 'tx_thuecat_import_configuration', pid: pid)}"
                         }
                     ) -> f:format.raw()}
                 </f:be.infobox>
+                    </f:then>
+                    <f:else>
+                        <f:be.infobox
+                                title="{f:translate(id: 'module.importConfigurations.missing.title')}"
+                                state="1"
+                        >
+                            <f:translate key="module.importConfigurations.noStoragePid" />
+                        </f:be.infobox>
+                    </f:else>
+                </f:if>
             </f:else>
         </f:if>
 
@@ -49,6 +69,8 @@
                     title="{f:translate(id: 'module.organisations.missing.title')}"
                     state="1"
                 >{f:translate(id: 'module.organisations.missing.text')}</f:be.infobox>
+            </f:else>
+        </f:if>
             </f:else>
         </f:if>
     </f:section>
@@ -80,20 +102,18 @@
                                 </f:if>
                             </td>
                             <td>
-                                <f:link.editRecord
+                                <be:link.editRecord
                                     uid="{importConfiguration.uid}"
                                     table="{importConfiguration.tableName}"
-                                    title="{f:translate(id: 'module.importConfigurations.actions.edit')}"
                                 >
-                                    {f:icon(identifier: 'actions-document-edit')}
-                                </f:link.editRecord>
+                                    <core:icon identifier="actions-document-edit" title="{f:translate(id: 'module.importConfigurations.actions.edit')}" />
+                                </be:link.editRecord>
                                 <f:link.action
                                     action="import"
                                     controller="Backend\Import"
                                     arguments="{importConfiguration: importConfiguration}"
-                                    title="{f:translate(id: 'module.importConfigurations.actions.import')}"
                                 >
-                                    {f:icon(identifier: 'actions-download')}
+                                    <core:icon identifier="actions-download" title="{f:translate(id: 'module.importConfigurations.actions.import')}" />
                                 </f:link.action>
                             </td>
                         </tr>
@@ -123,12 +143,12 @@
                             </td>
                             <td>{organisation.lastImported -> f:format.date(format: 'd.m.Y H:i')}</td>
                             <td>
-                                <f:link.editRecord
+                                <be:link.editRecord
                                     uid="{organisation.uid}"
                                     table="{organisation.tableName}"
                                 >
-                                    {f:icon(identifier: 'actions-document-edit')}
-                                </f:link.editRecord>
+                                    <core:icon identifier="actions-document-edit" title="{f:translate(key:'module.importConfigurations.actions.record.edit')}"/>
+                                </be:link.editRecord>
                             </td>
                         </tr>
                     </f:for>

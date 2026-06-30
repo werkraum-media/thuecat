@@ -1,8 +1,11 @@
 module {
     tx_thuecat {
-        settings {
-            newRecordPid {
-                tx_thuecat_import_configuration = 0
+        view {
+            templateRootPaths {
+                10 = EXT:thuecat/Resources/Private/Templates/Backend
+            }
+            layoutRootPaths {
+                10 = EXT:thuecat/Resources/Private/Layouts
             }
         }
     }

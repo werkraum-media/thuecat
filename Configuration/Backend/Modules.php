@@ -8,10 +8,7 @@ use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
 return [
     'thuecat_thuecat' => [
         'iconIdentifier' => 'thuecat_modules',
-        'position' => [
-            'after' => 'web',
-            'before' => 'file',
-        ],
+        'position' => ['after' => 'content'],
         'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod.xlf',
         'extensionName' => 'Thuecat',
     ],
@@ -20,6 +17,7 @@ return [
         'access' => 'user',
         'iconIdentifier' => 'thuecat_module_configurations',
         'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_configurations.xlf',
+        'navigationComponent' => '@typo3/backend/tree/page-tree-element',
         'extensionName' => 'Thuecat',
         'controllerActions' => [
             ConfigurationController::class => [

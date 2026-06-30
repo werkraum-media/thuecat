@@ -46,6 +46,12 @@
             <trans-unit id="module.importConfigurations.headline" xml:space="preserve">
                 <source>Import Configurations</source>
             </trans-unit>
+            <trans-unit id="module.importConfigurations.noSite">
+                <source>Please select a page from the navigation component inside the site you want to manage.</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.noStoragePid">
+                <source>Configure the standard storage pid for import configurations for the current site in site settings first.</source>
+            </trans-unit>
             <trans-unit id="module.importConfigurations.missing.title" xml:space="preserve">
                 <source>None configured</source>
             </trans-unit>
@@ -66,6 +72,9 @@
             </trans-unit>
             <trans-unit id="module.importConfigurations.actions.edit" xml:space="preserve">
                 <source>Edit import configuration</source>
+            </trans-unit>
+            <trans-unit id="module.importConfigurations.actions.record.edit" xml:space="preserve">
+                <source>Edit record</source>
             </trans-unit>
             <trans-unit id="module.importConfigurations.actions.new" xml:space="preserve">
                 <source>Create new import configuration</source>

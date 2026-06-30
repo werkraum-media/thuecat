@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Site\Entity\NullSite;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\OrganisationRepository;
 
@@ -37,11 +40,27 @@ class ConfigurationController extends AbstractController
 
     public function indexAction(): ResponseInterface
     {
-        $this->moduleTemplate->assignMultiple([
-            'importConfigurations' => $this->importConfigurationRepository->findAll(),
-            'organisations' => $this->organisationRepository->findAll(),
-        ]);
+        $view = $this->initializeModuleTemplate($this->request);
+        /** @var SiteInterface $site */
+        $site = $this->request->getAttribute('site');
+        if ($site instanceof NullSite) {
+            $view->assign('noSite', true);
+        } else {
+            $importConfigurationStoragePid = 0;
+            if ($site instanceof Site) {
+                $configuration = $site->getConfiguration();
+                if (is_array($configuration['settings']) && is_array($configuration['settings']['page']) && is_array($configuration['settings']['page']['pid']) && $configuration['settings']['page']['pid']['import_configuration']) {
+                    $importConfigurationStoragePid = $configuration['settings']['page']['pid']['import_configuration'];
+                }
+            }
 
-        return $this->htmlResponse();
+            $view->assignMultiple([
+                'importConfigurations' => $this->importConfigurationRepository->findAll(),
+                'organisations' => $this->organisationRepository->findAll(),
+                'pid' => $importConfigurationStoragePid,
+            ]);
+        }
+
+        return $view->renderResponse('Backend/Configuration/Index');
     }
 }

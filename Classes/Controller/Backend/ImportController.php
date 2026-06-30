@@ -44,11 +44,12 @@ class ImportController extends AbstractController
 
     public function indexAction(): ResponseInterface
     {
-        $this->moduleTemplate->assignMultiple([
+        $view = $this->initializeModuleTemplate($this->request);
+        $view->assignMultiple([
             'imports' => $this->repository->findAll(),
         ]);
 
-        return $this->htmlResponse();
+        return $view->renderResponse('Backend/Import/Index');
     }
 
     #[IgnoreValidation(['argumentName' => 'importConfiguration'])]
