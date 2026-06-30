@@ -142,7 +142,7 @@ Mapping (``Configuration/Sets/<YourSet>/setup.typoscript``):
            thuecat_attraction_show = {$page.pid.thuecat_attraction_show}
            thuecat_attraction_search = {$page.pid.thuecat_attraction_search}
        }
-       itemsPerPage = {$list.itemsPerPage}
+       itemsPerPage = {$page.settings.itemsPerPage}
    }
 
 Search and list on one page
