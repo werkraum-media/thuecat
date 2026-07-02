@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 final class ParserTest extends AbstractImportTestCase
 {

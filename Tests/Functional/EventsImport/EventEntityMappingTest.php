@@ -8,8 +8,8 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\Events\EventEntity;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
+use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // Direct mapping smoke test: decode a Guzzle-fixture JSON-LD payload and feed

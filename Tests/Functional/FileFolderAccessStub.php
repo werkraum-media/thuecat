@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 
 /**
  * Test double for FileFolderAccess. Skips the real write probe so import tests

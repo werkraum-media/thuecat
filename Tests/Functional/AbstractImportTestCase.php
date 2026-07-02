@@ -28,8 +28,8 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use WerkraumMedia\ThueCat\Domain\Import\FileFolderAccess;
-use WerkraumMedia\ThueCat\Domain\Import\MediaFileDownloader;
+use WerkraumMedia\ThueCat\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {

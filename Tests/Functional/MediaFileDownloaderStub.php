@@ -25,7 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
-use WerkraumMedia\ThueCat\Domain\Import\MediaFileDownloader;
+use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 
 /**
  * Test double for MediaFileDownloader. Tests that focus elsewhere and don't care about

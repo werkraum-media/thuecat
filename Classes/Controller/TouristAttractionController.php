@@ -19,9 +19,9 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
-use WerkraumMedia\ThueCat\Domain\Resolver\AttractionListOnPageResolver;
-use WerkraumMedia\ThueCat\Domain\Resolver\ListPluginOnSamePage;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
+use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
+use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
 
 class TouristAttractionController extends ActionController
 {
@@ -31,7 +31,7 @@ class TouristAttractionController extends ActionController
         protected TouristAttractionDemandFactory $demandFactory,
         protected PaginationFactory $paginationFactory,
         protected ExtensionService $extensionService,
-        protected AttractionListOnPageResolver $attractionListOnPageResolver,
+        protected SiblingListPluginLocator $siblingListPluginLocator,
     ) {
     }
 
@@ -196,9 +196,9 @@ class TouristAttractionController extends ActionController
     /**
      * apply the filters from the list plugin to the demand object
      */
-    protected function detectSiblingListAndApplyTheirFilters(ContentObjectRenderer $contentObject, int $pageId, TouristAttractionDemand $demand): ?ListPluginOnSamePage
+    protected function detectSiblingListAndApplyTheirFilters(ContentObjectRenderer $contentObject, int $pageId, TouristAttractionDemand $demand): ?SiblingListPluginContext
     {
-        $listPluginOnSamePage = $this->attractionListOnPageResolver->resolveForPage($contentObject, $pageId);
+        $listPluginOnSamePage = $this->siblingListPluginLocator->resolveForPage($contentObject, $pageId);
 
         if ($listPluginOnSamePage !== null) {
             $this->demandFactory->applyEditorFilter($demand, $listPluginOnSamePage->getEditorFilter());
@@ -209,12 +209,12 @@ class TouristAttractionController extends ActionController
     /**
      * On a list page post to self; otherwise to the configured central search page.
      *
-     * @param ListPluginOnSamePage|null $listPluginOnSamePage
+     * @param SiblingListPluginContext|null $listPluginOnSamePage
      * @param int $pageId
      *
      * @return int|mixed|null
      */
-    protected function determineSearchActionTargetPid(?ListPluginOnSamePage $listPluginOnSamePage, int $pageId): mixed
+    protected function determineSearchActionTargetPid(?SiblingListPluginContext $listPluginOnSamePage, int $pageId): mixed
     {
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
@@ -226,11 +226,11 @@ class TouristAttractionController extends ActionController
     /**
      * Offer only towns the list on this page can actually return; all towns otherwise.
      *
-     * @param ListPluginOnSamePage|null $listPluginOnSamePage
+     * @param SiblingListPluginContext|null $listPluginOnSamePage
      *
      * @return array<Town>|QueryResultInterface<Town>
      */
-    public function adjustFilterTownValuesToGivenStoragePid(?ListPluginOnSamePage $listPluginOnSamePage): array|QueryResultInterface
+    public function adjustFilterTownValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array|QueryResultInterface
     {
         $storagePageIds = $listPluginOnSamePage?->getStoragePageIds() ?? [];
         return $storagePageIds === []

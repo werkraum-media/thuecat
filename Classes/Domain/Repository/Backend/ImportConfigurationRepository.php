@@ -25,7 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 
 class ImportConfigurationRepository extends Repository
 {
@@ -40,7 +40,7 @@ class ImportConfigurationRepository extends Repository
     }
 
     /**
-     * @return ImportConfiguration|null
+     * @return ImportConfigurationInterface|null
      */
     public function findOneByUid(int $uid)
     {
@@ -48,6 +48,8 @@ class ImportConfigurationRepository extends Repository
 
         $query->matching($query->equals('uid', $uid));
 
-        return $query->execute()->getFirst();
+        $result = $query->execute()->getFirst();
+
+        return $result instanceof ImportConfigurationInterface ? $result : null;
     }
 }

@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 use Exception;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 
 final class FetchingError extends ImportLogEntry
 {

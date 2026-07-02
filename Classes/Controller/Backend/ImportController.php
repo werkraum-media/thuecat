@@ -26,10 +26,10 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Extbase\Annotation\IgnoreValidation;
-use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 class ImportController extends AbstractController

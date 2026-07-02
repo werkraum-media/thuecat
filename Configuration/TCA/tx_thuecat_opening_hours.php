@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\OpeningHourSpecificationEntity;
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 
 defined('TYPO3') or die();
 

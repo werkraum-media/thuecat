@@ -12,16 +12,6 @@ services:
     resource: '../Classes/Typo3/Hook/*'
     public: true
 
-  WerkraumMedia\ThueCat\Command\ImportConfigurationCommand:
-    tags:
-      - name: 'console.command'
-        command: 'thuecat:importviaconfiguration'
-
-  WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData:
-    arguments:
-      $requestFactory: '@WerkraumMedia\ThueCat\Domain\Import\RequestFactory'
-      $cache: '@cache.thuecat_fetchdata'
-
   WerkraumMedia\ThueCat\Frontend\DataProcessing\:
     resource: '../Classes/Frontend/DataProcessing/*'
     public: true
@@ -35,18 +25,10 @@ services:
   # collaborators are resolved via GeneralUtility::makeInstance. That helper
   # only goes through the container for *public* services — `public: false`
   # services fall back to `new`, which fails on classes with required ctor
-  # args (DatesFactory needs Context + LogManager). Mark both public so
-  # makeInstance hands back fully autowired instances.
-  WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\Events\Support\EventScheduleAdapter:
-    public: true
-
+  # args (DatesFactory needs Context + LogManager). This foreign ext:events
+  # class can't carry our #[Autoconfigure] attribute, so it stays here.
   WerkraumMedia\Events\Service\DestinationDataImportService\DatesFactory:
     public: true
-
-  WerkraumMedia\ThueCat\Typo3\Extbase\DataMapping\AfterObjectThawedHandler:
-    tags:
-      - name: 'event.listener'
-        event: 'TYPO3\CMS\Extbase\Event\Persistence\AfterObjectThawedEvent'
 
   'cache.thuecat_fetchdata':
     class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'

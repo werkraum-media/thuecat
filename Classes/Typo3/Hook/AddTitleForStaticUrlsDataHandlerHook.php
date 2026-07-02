@@ -28,9 +28,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
+use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 /**
  * Will add a title for all url entries, based on the fetched name of the record within url.

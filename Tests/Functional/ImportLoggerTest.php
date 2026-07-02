@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
-use WerkraumMedia\ThueCat\Domain\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\ImportLogger;
 
 /**
  * Covers the DataHandler error-capture pipeline that hangs off ImportLogger:

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-// Combined pages exercising AttractionListOnPageResolver through the search form:
+// Combined pages exercising SiblingListPluginLocator through the search form:
 //  page 10 search + FILTERED list (towns=1) -> town hidden+locked, stays on page
 //  page 20 search + PLAIN list             -> town selectable, stays on page
 //  page 30 search only                      -> form targets central search page 40

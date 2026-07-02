@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
+use WerkraumMedia\ThueCat\Import\Importer;
 
 class ImporterTest extends AbstractImportTestCase
 {

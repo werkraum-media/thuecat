@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Importer;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData;
-use WerkraumMedia\ThueCat\Domain\Import\Importer\FetchData\InvalidResponseException;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 

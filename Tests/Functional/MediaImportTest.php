@@ -26,8 +26,8 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\Importer;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
+use WerkraumMedia\ThueCat\Import\Importer;
 
 /**
  * Exercises the real media import — download → sys_file → sys_file_reference.

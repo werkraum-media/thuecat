@@ -24,15 +24,17 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Command;
 
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TYPO3\CMS\Core\Core\Bootstrap;
-use WerkraumMedia\ThueCat\Domain\Import\Importer;
-use WerkraumMedia\ThueCat\Domain\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
+use WerkraumMedia\ThueCat\Import\Importer;
+use WerkraumMedia\ThueCat\Import\ImportLogger;
 
+#[AsCommand(name: 'thuecat:importviaconfiguration')]
 class ImportConfigurationCommand extends Command
 {
     public function __construct(

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\Extbase\DataMapping;
 
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Extbase\Event\Persistence\AfterObjectThawedEvent;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapFactory;
@@ -38,6 +39,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Media;
  * @todo remove together with media blob and Media model, this is
  * @todo superseeded by FAL functionality usage.
  */
+#[AsEventListener]
 class AfterObjectThawedHandler
 {
     public function __construct(

@@ -26,12 +26,12 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Resolver;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
 use RuntimeException;
-use WerkraumMedia\ThueCat\Domain\Import\InvalidTransientReferenceException;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Parser;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\ParserContext;
-use WerkraumMedia\ThueCat\Domain\Import\Resolver;
-use WerkraumMedia\ThueCat\Domain\Import\ResolverContext;
+use WerkraumMedia\ThueCat\Import\InvalidTransientReferenceException;
+use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Resolver;
+use WerkraumMedia\ThueCat\Import\ResolverContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class ResolverTest extends AbstractImportTestCase
@@ -745,7 +745,7 @@ final class ResolverTest extends AbstractImportTestCase
     private function parseFixture(
         string $filename,
         array $translationLanguages = []
-    ): \WerkraumMedia\ThueCat\Domain\Import\Parser\DataHandlerPayload {
+    ): \WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload {
         $path = self::FIXTURE_PATH . $filename;
         $decoded = json_decode((string)file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         $graph = is_array($decoded) && is_array($decoded['@graph'] ?? null) ? $decoded['@graph'] : [];

@@ -30,9 +30,6 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
-use WerkraumMedia\ThueCat\Domain\Import\ImportConfiguration as ImportConfigurationInterface;
-use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
 
 class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
@@ -213,21 +210,6 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         }
 
         return $asArray;
-    }
-
-    /**
-     * @param ForeignReference[] $foreignReferences
-     */
-    public static function createFromBaseWithForeignReferences(
-        self $base,
-        array $foreignReferences,
-        array $allowedTypes = []
-    ): self {
-        $configuration = clone $base;
-        $configuration->urls = ResolveForeignReference::convertToRemoteIds($foreignReferences);
-        $configuration->type = 'static';
-        $configuration->allowedTypes = $allowedTypes;
-        return $configuration;
     }
 
     /**

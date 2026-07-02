@@ -25,8 +25,6 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Import\ResolveForeignReference;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 
 class TownRepository extends Repository
 {
@@ -38,25 +36,5 @@ class TownRepository extends Repository
         $querySettings->setRespectStoragePage(false);
 
         $this->setDefaultQuerySettings($querySettings);
-    }
-
-    public function findOneByEntity(object $entity): ?Town
-    {
-        if (method_exists($entity, 'getContainedInPlaces') === false) {
-            return null;
-        }
-
-        $remoteIds = ResolveForeignReference::convertToRemoteIds($entity->getContainedInPlaces());
-
-        if ($remoteIds === []) {
-            return null;
-        }
-
-        $query = $this->createQuery();
-
-        $query->matching($query->in('remoteId', $remoteIds));
-        $query->setLimit(1);
-
-        return $query->execute()->getFirst();
     }
 }

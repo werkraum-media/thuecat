@@ -27,8 +27,8 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Import\FileFolderAccess;
-use WerkraumMedia\ThueCat\Domain\Import\FileFolderAccessException;
+use WerkraumMedia\ThueCat\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Import\FileFolderAccessException;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 class FileFolderAccessTest extends AbstractImportTestCase

@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Import\Entity\Properties\ForeignReference;
 
 class ParkingFacilityRepository extends Repository
 {
@@ -38,25 +36,5 @@ class ParkingFacilityRepository extends Repository
         $querySettings->setRespectStoragePage(false);
 
         $this->setDefaultQuerySettings($querySettings);
-    }
-
-    public function findByEntity(object $entity): ?QueryResultInterface
-    {
-        if (method_exists($entity, 'getParkingFacilitiesNearBy') === false) {
-            return null;
-        }
-
-        $remoteIds = array_map(function (ForeignReference $reference) {
-            return $reference->getId();
-        }, $entity->getParkingFacilitiesNearBy());
-
-        if ($remoteIds === []) {
-            return null;
-        }
-
-        $query = $this->createQuery();
-
-        $query->matching($query->in('remoteId', $remoteIds));
-        return $query->execute();
     }
 }

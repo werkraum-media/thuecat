@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 use Exception;
-use WerkraumMedia\ThueCat\Domain\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 
 class SavingEntity extends ImportLogEntry
 {
