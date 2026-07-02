@@ -647,9 +647,7 @@ class Resolver
         }
 
         foreach ($entries as $entry) {
-            if (is_array($entry)) {
-                $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
-            }
+            $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
         }
     }
 
