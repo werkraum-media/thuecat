@@ -85,4 +85,20 @@ interface EntityInterface
      * @return list<EntityInterface>
      */
     public function getChildren(): array;
+
+    /**
+     * Categories the parent derived during parse(), for the resolver to wire.
+     * remoteId is prefixed by source field to avoid collisions; title seeds a
+     * new category. Default: none.
+     *
+     * @return list<array{remoteId: string, title: string}>
+     */
+    public function getCategories(): array;
+
+    /**
+     * Match reports for the import report, one per field ('kind'). Default: none.
+     *
+     * @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    public function getMatchReports(): array;
 }

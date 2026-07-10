@@ -59,6 +59,20 @@ class DataHandlerPayload
     private array $translations = [];
 
     /**
+     * Categories per (table, remote_id), harvested during addEntity.
+     *
+     * @var array<string, array<string, list<array{remoteId: string, title: string}>>>
+     */
+    private array $categories = [];
+
+    /**
+     * Match reports for the import report; carried through mergeFrom.
+     *
+     * @var list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    private array $matchReports = [];
+
+    /**
      * Staged DataHandler cmdmap entries. Outer key is the table; second key
      * is the target uid (as string, since cmdmap targets are existing rows);
      * inner is a list of `[$command, $value]` tuples. The Importer fans these
@@ -107,6 +121,15 @@ class DataHandlerPayload
         if ($entityTranslations !== []) {
             $this->translations[$table][$remoteId] = $entityTranslations;
         }
+
+        $entityCategories = $entity->getCategories();
+        if ($entityCategories !== []) {
+            $this->categories[$table][$remoteId] = $entityCategories;
+        }
+
+        foreach ($entity->getMatchReports() as $matchReport) {
+            $this->matchReports[] = $matchReport;
+        }
     }
 
     /**
@@ -124,6 +147,7 @@ class DataHandlerPayload
             $this->dataMap[$table][$key],
             $this->transients[$table][$key],
             $this->translations[$table][$key],
+            $this->categories[$table][$key],
             $this->defaultLanguageKeys[$table][$key]
         );
 
@@ -135,6 +159,9 @@ class DataHandlerPayload
         }
         if (($this->translations[$table] ?? []) === []) {
             unset($this->translations[$table]);
+        }
+        if (($this->categories[$table] ?? []) === []) {
+            unset($this->categories[$table]);
         }
         if (($this->defaultLanguageKeys[$table] ?? []) === []) {
             unset($this->defaultLanguageKeys[$table]);
@@ -362,6 +389,10 @@ class DataHandlerPayload
                 }
             }
         }
+
+        foreach ($other->matchReports as $matchReport) {
+            $this->matchReports[] = $matchReport;
+        }
     }
 
     /**
@@ -427,6 +458,22 @@ class DataHandlerPayload
     public function getTranslations(): array
     {
         return $this->translations;
+    }
+
+    /**
+     * @return array<string, array<string, list<array{remoteId: string, title: string}>>>
+     */
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    public function getMatchReports(): array
+    {
+        return $this->matchReports;
     }
 
     /**

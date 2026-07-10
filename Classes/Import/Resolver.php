@@ -28,8 +28,11 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
@@ -38,6 +41,7 @@ use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 
 #[Autoconfigure(public: true)]
 class Resolver
@@ -47,7 +51,7 @@ class Resolver
      * [target table, target relation field on the owning row].
      * Extend as new buckets get ref→uid resolution.
      */
-    private const BUCKET_MAP = [
+    protected const BUCKET_MAP = [
         'managedBy' => ['tx_thuecat_organisation', 'managed_by'],
         'containedInPlace' => ['tx_thuecat_town', 'town'],
         'parkingFacilityNearBy' => ['tx_thuecat_parking_facility', 'parking_facility_near_by'],
@@ -68,7 +72,7 @@ class Resolver
      * picks the inline field from a column on the child row (e.g. opening hours
      * route regular vs special to different fields). Keyed by child table.
      */
-    private const INLINE_CHILD_PARENTS = [
+    protected const INLINE_CHILD_PARENTS = [
         'tx_thuecat_opening_hours' => [
             'separator' => '::oh::',
             'column' => 'specification_type',
@@ -80,11 +84,14 @@ class Resolver
     ];
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool,
-        private readonly FetchData $fetchData,
-        private readonly Parser $parser,
-        private readonly TcaSchemaFactory $tcaSchemaFactory,
-        private readonly MediaFileDownloader $mediaFileDownloader,
+        protected readonly ConnectionPool $connectionPool,
+        protected readonly FetchData $fetchData,
+        protected readonly Parser $parser,
+        protected readonly TcaSchemaFactory $tcaSchemaFactory,
+        protected readonly MediaFileDownloader $mediaFileDownloader,
+        protected readonly SiteFinder $siteFinder,
+        protected readonly PageRepository $pageRepository,
+        protected readonly SysCategoryRepository $sysCategoryRepository,
     ) {
     }
 
@@ -99,9 +106,113 @@ class Resolver
     {
         $this->rekeyRowsAndInjectPid($payload, $context, 0);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
+        $this->wireCategories($payload, $context);
         $this->drainTranslationsAgainstExistingRows($payload, $context);
 
         return $payload;
+    }
+
+    /**
+     * Find-or-create a category per entry and append it to the row's relation,
+     * staged into the same payload. Off (both anchors unset) skips wiring; the
+     * on-but-invalid cases are rejected up front by ImportConfigurationValidator.
+     */
+    protected function wireCategories(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        $parentUid = $context->categoryParentUid;
+        $categoryPid = $context->categoryStoragePid;
+        if ($parentUid === 0 && $categoryPid === 0) {
+            return;
+        }
+
+        $sitePageIds = $this->sitePageIds($context->storagePid);
+
+        foreach ($payload->getCategories() as $table => $categoriesByOwner) {
+            foreach ($categoriesByOwner as $ownerRemoteId => $categories) {
+                $ownerKey = $context->remoteIdToKey[$ownerRemoteId] ?? null;
+                if ($ownerKey === null) {
+                    continue;
+                }
+
+                foreach ($categories as $category) {
+                    $categoryRemoteId = $category['remoteId'];
+                    // Reuse the key staged earlier this run (across roots) so a
+                    // recurring category yields one row.
+                    $categoryKey = $context->categoryKeyByRemoteId[$categoryRemoteId] ?? null;
+                    if ($categoryKey === null) {
+                        $existingUid = $this->findCategoryUid($parentUid, $sitePageIds, $categoryRemoteId);
+                        if ($existingUid > 0) {
+                            $categoryKey = (string)$existingUid;
+                        } else {
+                            $categoryKey = StringUtility::getUniqueId('NEW');
+                            $payload->addRow('sys_category', $categoryKey, [
+                                'pid' => $categoryPid,
+                                'parent' => $parentUid,
+                                'title' => $category['title'],
+                                'remote_id' => $categoryRemoteId,
+                            ]);
+                        }
+                        $context->categoryKeyByRemoteId[$categoryRemoteId] = $categoryKey;
+                    }
+
+                    $payload->setRelationField($table, $ownerKey, 'categories', $categoryKey);
+                }
+            }
+        }
+    }
+
+    /**
+     * All page uids within the site the given pid belongs to (rootPid tree,
+     * recursive). Empty when the pid maps to no site.
+     *
+     * @return list<int>
+     */
+    protected function sitePageIds(int $pid): array
+    {
+        try {
+            $rootPageId = $this->siteFinder->getSiteByPageId($pid)->getRootPageId();
+        } catch (SiteNotFoundException) {
+            return [];
+        }
+
+        return array_values($this->pageRepository->getPageIdsRecursive([$rootPageId], 99));
+    }
+
+    /**
+     * Existing category matching by remote_id (so it survives renames), accepted
+     * only when $parentUid is in its rootline — a match under a different parent
+     * is rejected so a fresh one is created under ours.
+     *
+     * @param list<int> $sitePageIds
+     */
+    protected function findCategoryUid(int $parentUid, array $sitePageIds, string $remoteId): int
+    {
+        foreach ($this->sysCategoryRepository->findUidsByRemoteId($remoteId, $sitePageIds) as $uid) {
+            if ($this->hasParentInRootline($uid, $parentUid)) {
+                return $uid;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Walk parent upward from $uid; true if $ancestorUid is met. Cycle-guarded.
+     */
+    protected function hasParentInRootline(int $uid, int $ancestorUid): bool
+    {
+        $seen = [];
+        $current = $uid;
+        while ($current > 0 && !isset($seen[$current])) {
+            $seen[$current] = true;
+            $current = $this->sysCategoryRepository->findParent($current);
+
+            if ($current === $ancestorUid) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -117,7 +228,7 @@ class Resolver
      * importer run: the translation status map on the context short-circuits
      * any later sighting via isTranslationUpdated().
      */
-    private function drainTranslationsAgainstExistingRows(
+    protected function drainTranslationsAgainstExistingRows(
         DataHandlerPayload $payload,
         ResolverContext $context
     ): void {
@@ -163,7 +274,7 @@ class Resolver
     /**
      * @return array<int, int> sys_language_uid => translation row uid
      */
-    private function findTranslationUidsByParent(string $table, int $parentUid): array
+    protected function findTranslationUidsByParent(string $table, int $parentUid): array
     {
         $language = $this->languageCapabilityFor($table);
         if ($language === null) {
@@ -200,7 +311,7 @@ class Resolver
     /**
      * replace remote_id with either NEW... placeholder or resolved uid
      */
-    private function rekeyRowsAndInjectPid(
+    protected function rekeyRowsAndInjectPid(
         DataHandlerPayload $payload,
         ResolverContext $context,
         int $depth
@@ -242,12 +353,12 @@ class Resolver
         $this->wireInlineChildrenToParents($payload, $context);
     }
 
-    private function isAlreadyRekeyed(string $outerKey): bool
+    protected function isAlreadyRekeyed(string $outerKey): bool
     {
         return ctype_digit($outerKey) || str_starts_with($outerKey, 'NEW');
     }
 
-    private function isFetchableUrl(string $reference): bool
+    protected function isFetchableUrl(string $reference): bool
     {
         if (filter_var($reference, FILTER_VALIDATE_URL) === false) {
             return false;
@@ -264,7 +375,7 @@ class Resolver
      *
      * @param array<string, string> $remoteIdToKey
      */
-    private function drainTransients(
+    protected function drainTransients(
         DataHandlerPayload $payload,
         ResolverContext $context,
         array &$remoteIdToKey
@@ -472,7 +583,7 @@ class Resolver
      *
      * @param array<string, string> $remoteIdToKey
      */
-    private function fetchAndMerge(
+    protected function fetchAndMerge(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $ownerTable,
@@ -516,7 +627,7 @@ class Resolver
      *
      * @param list<string>|list<array{kind: string, id: string}> $entries
      */
-    private function importMediaFiles(
+    protected function importMediaFiles(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $ownerTable,
@@ -651,7 +762,7 @@ class Resolver
         }
     }
 
-    private function stageFileReference(
+    protected function stageFileReference(
         DataHandlerPayload $payload,
         string $ownerTable,
         string $ownerKey,
@@ -673,7 +784,7 @@ class Resolver
         $payload->setRelationField($ownerTable, $ownerKey, $targetField, $referenceKey);
     }
 
-    private function wireInlineChildrenToParents(
+    protected function wireInlineChildrenToParents(
         DataHandlerPayload $payload,
         ResolverContext $context
     ): void {
@@ -705,7 +816,7 @@ class Resolver
      * stored filename: "https://thuecat.org/resources/dms_5159216"
      * → "dms_5159216".
      */
-    private function extractDmsId(string $reference): string
+    protected function extractDmsId(string $reference): string
     {
         $path = (string)(parse_url($reference, PHP_URL_PATH) ?: $reference);
         $segment = basename($path);
@@ -715,7 +826,7 @@ class Resolver
     /**
      * @param list<string>|list<array{kind: string, id: string}> $references
      */
-    private function shapeAccessibilityBlob(
+    protected function shapeAccessibilityBlob(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $ownerTable,
@@ -801,7 +912,7 @@ class Resolver
      *
      * @return array<string, mixed>
      */
-    private function fetchGraphNode(string $url, ResolverContext $context, string $expectedId): array
+    protected function fetchGraphNode(string $url, ResolverContext $context, string $expectedId): array
     {
         $response = $this->fetchData->jsonLDFromUrl($url, $context->apiKey);
         $graph = $response['@graph'] ?? [];
@@ -834,7 +945,7 @@ class Resolver
     /**
      * @return array<int, int> uid_local => sys_file_reference.uid
      */
-    private function findExistingReferences(
+    protected function findExistingReferences(
         string $ownerTable,
         int $ownerUid,
         string $ownerField
@@ -879,7 +990,7 @@ class Resolver
     /**
      * Look up the default-language row for a given remote_id.
      */
-    private function findUidByRemoteId(string $table, string $remoteId): int
+    protected function findUidByRemoteId(string $table, string $remoteId): int
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
@@ -909,7 +1020,7 @@ class Resolver
     /**
      * @return array{languageField: string, parent: string}|null
      */
-    private function languageCapabilityFor(string $table): ?array
+    protected function languageCapabilityFor(string $table): ?array
     {
         if (!$this->tcaSchemaFactory->has($table)) {
             return null;

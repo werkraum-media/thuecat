@@ -401,6 +401,18 @@ abstract class AbstractEntity implements EntityInterface
         return $this->children;
     }
 
+    /** @return list<array{remoteId: string, title: string}> */
+    public function getCategories(): array
+    {
+        return [];
+    }
+
+    /** @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}> */
+    public function getMatchReports(): array
+    {
+        return [];
+    }
+
     /**
      * Manufacture one OpeningHourSpecificationEntity child per
      * schema:OpeningHoursSpecification node and stage them as inline children.

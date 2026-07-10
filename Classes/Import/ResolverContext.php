@@ -90,6 +90,16 @@ final class ResolverContext
     public array $remoteIdToTable = [];
 
     /**
+     * Category remote_id → staged key (existing uid or NEW placeholder). Lives on
+     * the context because resolve() runs once per root but a category recurs
+     * across roots, and NEW rows aren't in the DB until the run flushes — without
+     * this the second sighting would stage a duplicate.
+     *
+     * @var array<string, string>
+     */
+    public array $categoryKeyByRemoteId = [];
+
+    /**
      * Maximum depth at which the resolver will fetch a transient reference
      * from the upstream API. Root URLs (the ones the Importer hands to the
      * Resolver) are depth 0; references they carry are depth 1. Any
@@ -148,6 +158,8 @@ final class ResolverContext
         public readonly array $translationLanguages = [],
         public readonly ?Folder $targetFolder = null,
         public readonly ?Folder $stagingFolder = null,
+        public readonly int $categoryParentUid = 0,
+        public readonly int $categoryStoragePid = 0,
     ) {
     }
 
@@ -199,6 +211,11 @@ final class ResolverContext
         foreach ($this->remoteIdToKey as $remoteId => $key) {
             if (isset($substNEWwithIDs[$key])) {
                 $this->remoteIdToKey[$remoteId] = (string)$substNEWwithIDs[$key];
+            }
+        }
+        foreach ($this->categoryKeyByRemoteId as $remoteId => $key) {
+            if (isset($substNEWwithIDs[$key])) {
+                $this->categoryKeyByRemoteId[$remoteId] = (string)$substNEWwithIDs[$key];
             }
         }
     }

@@ -67,6 +67,19 @@ interface ImportConfigurationInterface
     public function getStoragePid(): int;
 
     /**
+     * Parent category imported categories are placed under. 0 means unset (the
+     * group=pages field cannot store page 0). Must live within the storagePid's
+     * site. Category mapping is on when this or getCategoryStoragePid() is > 0.
+     */
+    public function getCategoryParent(): int;
+
+    /**
+     * PID new categories are created at; independent of getStoragePid(). 0 means
+     * unset. Must live within the storagePid's site.
+     */
+    public function getCategoryStoragePid(): int;
+
+    /**
      * Combined FAL folder identifier (e.g. "1:/thuecat/") imported media
      * files are written to.
      */

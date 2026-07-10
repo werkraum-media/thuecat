@@ -3,6 +3,14 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat FlexForms Labels">
         <header/>
         <body>
+            <!-- Shared across all import configuration types -->
+            <trans-unit id="importConfiguration.categoryStoragePid" xml:space="preserve">
+                <source>Storage page for imported categories</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.categoryParent" xml:space="preserve">
+                <source>Parent category for imported categories</source>
+            </trans-unit>
+
             <!-- Static Import Configuration -->
             <trans-unit id="importConfiguration.static.sheetTitle" xml:space="preserve">
                 <source>Static import configuration</source>

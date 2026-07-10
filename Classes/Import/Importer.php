@@ -24,15 +24,16 @@ use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 class Importer
 {
     public function __construct(
-        private readonly Parser $parser,
-        private readonly FetchData $fetchData,
-        private readonly SiteFinder $siteFinder,
-        private readonly Resolver $resolver,
-        private readonly FileFolderAccess $fileFolderAccess,
-        private readonly MediaFileStaging $mediaFileStaging,
-        private readonly ImportLogger $importLogger,
+        protected readonly Parser $parser,
+        protected readonly FetchData $fetchData,
+        protected readonly SiteFinder $siteFinder,
+        protected readonly Resolver $resolver,
+        protected readonly FileFolderAccess $fileFolderAccess,
+        protected readonly MediaFileStaging $mediaFileStaging,
+        protected readonly ImportLogger $importLogger,
+        protected readonly ImportConfigurationValidator $configurationValidator,
         #[AutowireLocator(services: 'import.url.provider')]
-        private readonly ServiceLocator $urlProviders
+        protected readonly ServiceLocator $urlProviders
     ) {
     }
 
@@ -44,6 +45,9 @@ class Importer
      */
     public function importConfiguration(ImportConfigurationInterface $configuration): string
     {
+        // Pre-flight: abort on a misconfiguration before touching the API.
+        $this->configurationValidator->validate($configuration);
+
         // Resolve the target folder (this runs the write-access probe) and
         // create a fresh per-run staging folder under it before touching the
         // API. Media is downloaded into staging and only promoted into the
@@ -59,7 +63,7 @@ class Importer
         }
     }
 
-    private function runImport(
+    protected function runImport(
         ImportConfigurationInterface $configuration,
         Folder $targetFolder,
         Folder $stagingFolder
@@ -89,6 +93,8 @@ class Importer
             $translationLanguages,
             $targetFolder,
             $stagingFolder,
+            $configuration->getCategoryParent(),
+            $configuration->getCategoryStoragePid(),
         );
         $accumulatedPayload = new DataHandlerPayload();
         foreach ($urlProvider->getUrls($apiDomain) as $url) {
@@ -117,7 +123,13 @@ class Importer
         // default-language records the user expects to see counted.
         $loggerPayload = $accumulatedPayload->getDefaultLanguageDataMap();
 
+        // Snapshot before the loop drains it; recorded after the loop so matched
+        // entries can carry the uids promoted once persisting has run.
+        $matchReports = $accumulatedPayload->getMatchReports();
+
         if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
+            // Nothing persisted; still report the types seen.
+            $this->importLogger->recordMatchReports($matchReports);
             $this->importLogger->writeLog(
                 $configuration->getUid(),
                 $loggerPayload,
@@ -182,6 +194,8 @@ class Importer
             $iterations++;
         }
 
+        // The category map now holds real uids, so matched entries can point at them.
+        $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByRemoteId);
         $this->importLogger->writeLog(
             $configuration->getUid(),
             $loggerPayload,
@@ -195,7 +209,7 @@ class Importer
      * Promote staged media into the target folder when the run is clean. Else, staged
      * file remain and will be discarded.
      */
-    private function finishRun(Folder $targetFolder, Folder $stagingFolder): string
+    protected function finishRun(Folder $targetFolder, Folder $stagingFolder): string
     {
         $severity = $this->importLogger->getMaxSeverity();
         if ($severity !== ImportLogger::SEVERITY_ERROR) {
@@ -213,7 +227,7 @@ class Importer
      *
      * @return array<string, array<int|string, array<string, int|string>>>
      */
-    private function fanOutCmdMap(array $cmdMap): array
+    protected function fanOutCmdMap(array $cmdMap): array
     {
         $result = [];
         foreach ($cmdMap as $table => $entriesByKey) {
@@ -226,7 +240,7 @@ class Importer
         return $result;
     }
 
-    private function getProviderForConfiguration(ImportConfigurationInterface $configuration): ?UrlProvider
+    protected function getProviderForConfiguration(ImportConfigurationInterface $configuration): ?UrlProvider
     {
         foreach ($this->urlProviders as $provider) {
             if (!$provider instanceof UrlProvider) {
@@ -240,7 +254,7 @@ class Importer
         return null;
     }
 
-    private function fetchDataFromApi(string $url, string $apiKey): array
+    protected function fetchDataFromApi(string $url, string $apiKey): array
     {
         $response = $this->fetchData->jsonLDFromUrl($url, $apiKey === '' ? null : $apiKey);
         $graph = $response['@graph'] ?? [];

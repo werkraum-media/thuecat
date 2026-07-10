@@ -7,6 +7,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\Events\Service\DestinationDataImportService\DatesFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StubImport;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
@@ -53,6 +54,20 @@ class EventEntity extends AbstractEventsEntity
      */
     protected array $_dates = [];
 
+    /**
+     * Read by the resolver to wire the category relation; not a DB column.
+     *
+     * @var list<array{remoteId: string, title: string}>
+     */
+    protected array $_categories = [];
+
+    /**
+     * Feeds the import report; not a DB column.
+     *
+     * @var list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    protected array $_matchReports = [];
+
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         parent::parse($node, $language, $parserContext, $translationLanguages);
@@ -67,6 +82,27 @@ class EventEntity extends AbstractEventsEntity
         $this->ticket = $this->extractTypedValue($offers['schema:url'] ?? null);
 
         $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null);
+
+        $types = $node['@type'] ?? [];
+        $types = is_array($types) ? array_values(array_filter($types, 'is_string')) : [];
+        $mapper = new EventCategoryMapper();
+        $this->_categories = array_map(
+            static fn (array $category): array => [
+                'remoteId' => $mapper->prefixed($category['remoteId']),
+                'title' => $category['title'],
+            ],
+            $mapper->categoriesFor($types)
+        );
+
+        $report = $mapper->reportMatchStatus($types);
+        $this->_matchReports = [
+            [
+                'kind' => $mapper->kind(),
+                'sourcePrefix' => $mapper->sourcePrefix(),
+                'matched' => $report['matched'],
+                'unmatched' => $report['unmatched'],
+            ],
+        ];
     }
 
     public function handlesTypes(): array
@@ -100,10 +136,26 @@ class EventEntity extends AbstractEventsEntity
         return $this->_dates;
     }
 
+    /**
+     * @return list<array{remoteId: string, title: string}>
+     */
+    public function getCategories(): array
+    {
+        return $this->_categories;
+    }
+
+    /**
+     * @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    public function getMatchReports(): array
+    {
+        return $this->_matchReports;
+    }
+
     public function toArray(): array
     {
         $array = parent::toArray();
-        unset($array['_dates']);
+        unset($array['_dates'], $array['_categories'], $array['_matchReports']);
         return $array;
     }
 

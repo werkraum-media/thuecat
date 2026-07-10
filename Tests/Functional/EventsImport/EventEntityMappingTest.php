@@ -56,5 +56,6 @@ class EventEntityMappingTest extends AbstractImportTestCase
         self::assertIsArray($expected);
         self::assertSame($expected['event'], $entity->toArray());
         self::assertSame($expected['dates'], $entity->getDates());
+        self::assertSame($expected['categories'], $entity->getCategories());
     }
 }

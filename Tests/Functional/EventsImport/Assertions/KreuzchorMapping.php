@@ -25,4 +25,10 @@ return [
             'canceled' => 'no',
         ],
     ],
+    // @type: schema:Thing, schema:Event, thuecat:CultureEvent, dcmitype:Event,
+    // ttgds:Event — only thuecat:CultureEvent maps. remoteId carries the 'type:'
+    // source prefix.
+    'categories' => [
+        ['remoteId' => 'type:thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
+    ],
 ];

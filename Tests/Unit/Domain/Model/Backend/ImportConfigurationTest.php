@@ -156,6 +156,101 @@ class ImportConfigurationTest extends TestCase
     }
 
     #[Test]
+    public function returnsCategoryParentWhenSet(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="categoryParent">',
+            '<value index="vDEF">42</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame(42, $subject->getCategoryParent());
+    }
+
+    #[Test]
+    public function returnsZeroAsCategoryParentWhenNoConfigurationExists(): void
+    {
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', '');
+
+        self::assertSame(0, $subject->getCategoryParent());
+    }
+
+    #[Test]
+    public function returnsZeroAsCategoryParentWhenNoneNumericValueIsConfigured(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="categoryParent">',
+            '<value index="vDEF">abc</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame(0, $subject->getCategoryParent());
+    }
+
+    #[Test]
+    public function returnsCategoryStoragePidWhenSet(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="categoryStoragePid">',
+            '<value index="vDEF">7</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame(7, $subject->getCategoryStoragePid());
+    }
+
+    #[Test]
+    public function returnsZeroAsCategoryStoragePidWhenNoConfigurationExists(): void
+    {
+        $subject = new ImportConfiguration();
+
+        $subject->_setProperty('configuration', '');
+
+        self::assertSame(0, $subject->getCategoryStoragePid());
+    }
+
+    #[Test]
     public function returnsFileFolderWhenSet(): void
     {
         $flexForm = implode(PHP_EOL, [
