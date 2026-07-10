@@ -89,7 +89,7 @@ class ImportConfigurationValidatorTest extends AbstractImportTestCase
         int $categoryParent,
         int $categoryStoragePid
     ): ImportConfigurationInterface {
-        return new class ($storagePid, $categoryParent, $categoryStoragePid) implements ImportConfigurationInterface {
+        return new class($storagePid, $categoryParent, $categoryStoragePid) implements ImportConfigurationInterface {
             public function __construct(
                 private readonly int $storagePid,
                 private readonly int $categoryParent,
@@ -147,6 +147,7 @@ class ImportConfigurationValidatorTest extends AbstractImportTestCase
                 return 'thuecat';
             }
 
+            // @phpstan-ignore return.unusedType (interface is nullable; stub always has a uid)
             public function getUid(): ?int
             {
                 return 1;

@@ -48,9 +48,10 @@ class ImportConfigurationValidator
     /**
      * All page uids within the storagePid's site.
      *
-     * @return list<int>
      *
      * @throws StoragePidConfigurationException
+     *
+     * @return list<int>
      */
     protected function sitePageIds(int $storagePid): array
     {
