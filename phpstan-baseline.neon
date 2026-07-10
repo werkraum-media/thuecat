@@ -37,42 +37,6 @@ parameters:
 			path: Classes/Domain/Model/Backend/ImportConfiguration.php
 
 		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: non\-falsy\-string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLog.php
-
-		-
-			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Import\\Parser\\Entity\\EntityInterface\:\:\$table\.$#'
-			identifier: property.notFound
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Import\\Parser\\Entity\\EntityInterface\:\:getRemoteId\(\) invoked with 0 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportLogEntry\\SavingEntity\:\:\$errorsAsArray \(array\<string\>\) does not accept array\<mixed\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
-
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportLogEntry\\SavingEntity\:\:\$tableName \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportLogEntry/SavingEntity.php
-
-		-
 			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\AccessiblitySpecification\:\:getCertificationDeaf\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1

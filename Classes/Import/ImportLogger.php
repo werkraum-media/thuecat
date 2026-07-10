@@ -107,6 +107,66 @@ class ImportLogger
         ]);
     }
 
+    /**
+     * Stage one report entry per distinct source value per kind, de-duplicated
+     * run-wide. Matched entries store the resolved uid (available only after
+     * persist), not the title, so the report reads the current title live and
+     * survives editor renames.
+     *
+     * @param list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}> $matchReports
+     * @param array<string, string> $categoryUidBySourceValue prefixed source value → uid
+     */
+    public function recordMatchReports(array $matchReports, array $categoryUidBySourceValue = []): void
+    {
+        /** @var array<string, array<string, string>> $matchedByKind */
+        $matchedByKind = [];
+        /** @var array<string, array<string, true>> $unmatchedByKind */
+        $unmatchedByKind = [];
+        /** @var array<string, string> $prefixByKind */
+        $prefixByKind = [];
+
+        foreach ($matchReports as $report) {
+            $kind = $report['kind'];
+            $prefixByKind[$kind] = $report['sourcePrefix'];
+            foreach ($report['matched'] as $value => $title) {
+                $matchedByKind[$kind][$value] = $title;
+            }
+            foreach ($report['unmatched'] as $value) {
+                $unmatchedByKind[$kind][$value] = true;
+            }
+        }
+
+        foreach ($matchedByKind as $kind => $byValue) {
+            foreach (array_keys($byValue) as $value) {
+                // Rebuild the prefixed key the resolver staged the uid under.
+                $prefixedValue = ($prefixByKind[$kind] ?? '') . $value;
+                $resolvedKey = $categoryUidBySourceValue[$prefixedValue] ?? '';
+                $recordUid = ctype_digit($resolvedKey) ? (int)$resolvedKey : 0;
+                $this->stage([
+                    'type' => 'categoryMatched',
+                    'severity' => self::SEVERITY_INFO,
+                    'kind' => $kind,
+                    'remote_id' => $value,
+                    'table_name' => 'sys_category',
+                    'record_uid' => $recordUid,
+                    'context' => (string)(json_encode(['kind' => $kind, 'matched' => true]) ?: '{}'),
+                ]);
+            }
+        }
+
+        foreach ($unmatchedByKind as $kind => $byValue) {
+            foreach (array_keys($byValue) as $value) {
+                $this->stage([
+                    'type' => 'categoryUnmatched',
+                    'severity' => self::SEVERITY_INFO,
+                    'kind' => $kind,
+                    'remote_id' => $value,
+                    'context' => (string)(json_encode(['kind' => $kind, 'matched' => false]) ?: '{}'),
+                ]);
+            }
+        }
+    }
+
     public function getMaxSeverity(): string
     {
         $rank = $this->maxSeverityRank;
@@ -189,6 +249,7 @@ class ImportLogger
     {
         $entry += [
             'pid' => 0,
+            'kind' => '',
             'remote_id' => '',
             'table_name' => '',
             'record_uid' => 0,

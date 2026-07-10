@@ -25,8 +25,10 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Backend;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
 class ImportLogTest extends TestCase
 {
@@ -63,5 +65,33 @@ class ImportLogTest extends TestCase
         $subject = new ImportLog();
 
         self::assertSame(0, $subject->getConfigurationUid());
+    }
+
+    #[Test]
+    public function summaryOfEntriesSplitsInsertedAndUpdatedPerTable(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->savingEntry('tx_events_domain_model_event', true));
+        $subject->addEntry($this->savingEntry('tx_events_domain_model_event', false));
+        $subject->addEntry($this->savingEntry('tx_events_domain_model_event', false));
+        $subject->addEntry($this->savingEntry('tx_thuecat_organisation', true));
+
+        self::assertSame(
+            [
+                'tx_events_domain_model_event' => ['total' => 3, 'inserted' => 1, 'updated' => 2],
+                'tx_thuecat_organisation' => ['total' => 1, 'inserted' => 1, 'updated' => 0],
+            ],
+            $subject->getSummaryOfEntries()
+        );
+    }
+
+    private function savingEntry(string $table, bool $insertion): SavingEntity
+    {
+        // Bypass the entity-dependent constructor; set the DB-hydrated fields directly.
+        $entry = (new ReflectionClass(SavingEntity::class))->newInstanceWithoutConstructor();
+        $entry->_setProperty('tableName', $table);
+        $entry->_setProperty('insertion', $insertion ? 1 : 0);
+
+        return $entry;
     }
 }

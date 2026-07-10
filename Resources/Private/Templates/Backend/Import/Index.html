@@ -30,8 +30,8 @@
                     <tr>
                         <th>{f:translate(id: 'module.imports.th.created')}</th>
                         <th>{f:translate(id: 'module.imports.th.configuration')}</th>
-                        <th>{f:translate(id: 'module.imports.th.amountOfRecords')}</th>
                         <th>{f:translate(id: 'module.imports.th.summary')}</th>
+                        <th>{f:translate(id: 'module.imports.th.information')}</th>
                         <th>{f:translate(id: 'module.imports.th.errors')}</th>
                     </tr>
                 </thead>
@@ -57,10 +57,27 @@
                     </f:else>
                 </f:if>
             </td>
-            <td>{import.entries -> f:count()}</td>
-            <td><f:for each="{import.summaryOfEntries}" key="tableName" as="amount">
-                {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount}<br>
+            <td>
+                total: {import.countOfSavingEntries}<br />
+                <f:for each="{import.summaryOfEntries}" key="tableName" as="amount">
+                {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount.total}
+                ({f:translate(id: 'module.imports.summary.inserted', arguments: {0: amount.inserted})},
+                {f:translate(id: 'module.imports.summary.updated', arguments: {0: amount.updated})})<br>
             </f:for></td>
+            <td>
+                <strong>Matched types</strong>
+                <ul>
+                    <f:for each="{import.matchedCategories}" key="type" as="title">
+                        <li>{type} &rarr; {title}</li>
+                    </f:for>
+                </ul>
+                <strong>Not matched types</strong>
+                <ul>
+                    <f:for each="{import.unmatchedCategories}" as="type">
+                        <li>{type}</li>
+                    </f:for>
+                </ul>
+            </td>
             <td><f:for each="{import.listOfErrors}" as="error">
                 {error}<br>
             </f:for></td>

@@ -54,7 +54,22 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.dataHandlerError',
                             'value' => 'dataHandlerError',
                         ],
+                        [
+                            'label' => $languagePath . '.type.categoryMatched',
+                            'value' => 'categoryMatched',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.categoryUnmatched',
+                            'value' => 'categoryUnmatched',
+                        ],
                     ],
+                ],
+            ],
+            'kind' => [
+                'label' => $languagePath . '.kind',
+                'config' => [
+                    'type' => 'input',
+                    'readOnly' => true,
                 ],
             ],
             'remote_id' => [
@@ -68,13 +83,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.insertion',
                 'config' => [
                     'type' => 'check',
-                    'renderType' => 'checkboxLabeledToggle',
-                    'items' => [
-                        [
-                            'labelChecked' => $languagePath . '.insertion.yes',
-                            'labelUnchecked' => $languagePath . '.insertion.no',
-                        ],
-                    ],
                     'readOnly' => true,
                 ],
             ],

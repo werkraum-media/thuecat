@@ -5,7 +5,11 @@ declare(strict_types=1);
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\DataHandlerError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
@@ -40,6 +44,10 @@ return [
         'subclasses' => [
             'savingEntity' => SavingEntity::class,
             'fetchingError' => FetchingError::class,
+            'dataHandlerError' => DataHandlerError::class,
+            'mappingError' => MappingError::class,
+            'categoryMatched' => CategoryMatched::class,
+            'categoryUnmatched' => CategoryUnmatched::class,
         ],
     ],
     SavingEntity::class => [
@@ -49,6 +57,22 @@ return [
     FetchingError::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'fetchingError',
+    ],
+    DataHandlerError::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'dataHandlerError',
+    ],
+    MappingError::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'mappingError',
+    ],
+    CategoryMatched::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoryMatched',
+    ],
+    CategoryUnmatched::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoryUnmatched',
     ],
 
     FrontendTouristAttraction::class => [

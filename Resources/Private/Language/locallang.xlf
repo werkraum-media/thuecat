@@ -117,8 +117,8 @@
             <trans-unit id="module.imports.th.created" xml:space="preserve">
                 <source>Created</source>
             </trans-unit>
-            <trans-unit id="module.imports.th.amountOfRecords" xml:space="preserve">
-                <source>Number of records</source>
+            <trans-unit id="module.imports.th.information" xml:space="preserve">
+                <source>Information</source>
             </trans-unit>
             <trans-unit id="module.imports.th.configuration" xml:space="preserve">
                 <source>Configuration</source>
@@ -131,6 +131,12 @@
             </trans-unit>
             <trans-unit id="module.imports.configuration.notAvailable" xml:space="preserve">
                 <source>Not available</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.inserted" xml:space="preserve">
+                <source>%1$s new</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.updated" xml:space="preserve">
+                <source>%1$s updated</source>
             </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
@@ -146,6 +152,12 @@
             </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_parking_facility" xml:space="preserve">
                 <source>Parking Facility</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_events_domain_model_event" xml:space="preserve">
+                <source>Event</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_events_domain_model_date" xml:space="preserve">
+                <source>Date</source>
             </trans-unit>
 
             <trans-unit id="controller.backend.import.import.success.title" xml:space="preserve">

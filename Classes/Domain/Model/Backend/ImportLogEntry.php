@@ -27,21 +27,29 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 abstract class ImportLogEntry extends AbstractEntity
 {
+    protected string $message = '';
+
+    protected string $severity = '';
+
     abstract public function getRemoteId(): string;
-
-    abstract public function getErrors(): array;
-
-    abstract public function hasErrors(): bool;
 
     /**
      * The type as defined within TCA.
      */
     abstract public function getType(): string;
 
-    /**
-     * Return an column -> value array used for insertion into the database.
-     * Only return special for the concrete instance, or empty array.
-     * Defaults inherited by this class are already handled.
-     */
-    abstract public function getInsertion(): array;
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function getSeverity(): string
+    {
+        return $this->severity;
+    }
+
+    public function isError(): bool
+    {
+        return $this->severity === 'error';
+    }
 }

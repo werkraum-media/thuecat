@@ -316,6 +316,15 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.dataHandlerError" xml:space="preserve">
                 <source>DataHandler Error</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoryMatched" xml:space="preserve">
+                <source>Category Matched</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoryUnmatched" xml:space="preserve">
+                <source>Category Not Matched</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.kind" xml:space="preserve">
+                <source>Field</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.severity" xml:space="preserve">
                 <source>Severity</source>
             </trans-unit>
@@ -354,12 +363,6 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.insertion" xml:space="preserve">
                 <source>Was inserted or updated</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_import_log_entry.insertion.yes" xml:space="preserve">
-                <source>Inserted</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_import_log_entry.insertion.no" xml:space="preserve">
-                <source>Updated</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.table_name" xml:space="preserve">
                 <source>Table name (record type)</source>

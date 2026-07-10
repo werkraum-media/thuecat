@@ -23,16 +23,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
-use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 
 class ImportLogRepository extends Repository
 {
     public function __construct(
-        private readonly DataHandler $dataHandler,
         Typo3QuerySettings $querySettings
     ) {
         parent::__construct();
@@ -43,43 +40,5 @@ class ImportLogRepository extends Repository
         $this->setDefaultOrderings([
             'crdate' => QueryInterface::ORDER_DESCENDING,
         ]);
-    }
-
-    public function addLog(ImportLog $log): void
-    {
-        $dataHandler = clone $this->dataHandler;
-        $dataHandler->start([
-            'tx_thuecat_import_log' => [
-                'NEW0' => [
-                    'pid' => 0,
-                    'configuration' => $log->getConfigurationUid(),
-                ],
-            ],
-            'tx_thuecat_import_log_entry' => $this->getLogEntries($log),
-        ], []);
-        $dataHandler->process_datamap();
-    }
-
-    private function getLogEntries(ImportLog $log): array
-    {
-        $number = 1;
-        $entries = [];
-
-        foreach ($log->getEntries() as $entry) {
-            $number++;
-
-            $entries['NEW' . $number] = array_merge(
-                $entry->getInsertion(),
-                [
-                    'pid' => 0,
-                    'import_log' => 'NEW0',
-                    'type' => $entry->getType(),
-                    'remote_id' => $entry->getRemoteId(),
-                    'errors' => json_encode($entry->getErrors(), JSON_THROW_ON_ERROR),
-                ]
-            );
-        }
-
-        return $entries;
     }
 }

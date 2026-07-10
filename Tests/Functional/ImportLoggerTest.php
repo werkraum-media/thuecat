@@ -10,6 +10,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 
 /**
@@ -66,6 +68,29 @@ final class ImportLoggerTest extends AbstractImportTestCase
         self::assertSame('fetchingError', $rows[0]['type']);
         self::assertSame('error', $rows[0]['severity']);
         self::assertSame('upstream returned 500', $rows[0]['message']);
+    }
+
+    #[Test]
+    public function reportSurfacesRecordedErrorsThroughTheHydratedLog(): void
+    {
+        $logger = $this->get(ImportLogger::class);
+        $logger->reset();
+
+        $logger->recordDataHandlerErrors(['[1.2]: DataHandler refused the row'], 0);
+        $logger->recordException(
+            'fetchingError',
+            new RuntimeException('upstream returned 500', 1700000001)
+        );
+        $logger->writeLog(null, [], []);
+
+        $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
+        self::assertInstanceOf(ImportLog::class, $log);
+
+        self::assertTrue($log->hasErrors());
+        $errors = $log->getListOfErrors();
+        self::assertNotSame([], $errors);
+        self::assertStringContainsString('DataHandler refused the row', implode("\n", $errors));
+        self::assertStringContainsString('upstream returned 500', implode("\n", $errors));
     }
 
     #[Test]

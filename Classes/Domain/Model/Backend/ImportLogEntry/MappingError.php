@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * Copyright (C) 2025 Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2026 werkraum-media
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
-class FetchingError extends AbstractError
+class MappingError extends AbstractError
 {
     public function getType(): string
     {
-        return 'fetchingError';
+        return 'mappingError';
     }
 }
