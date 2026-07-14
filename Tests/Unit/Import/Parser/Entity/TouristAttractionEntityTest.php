@@ -481,6 +481,22 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function mapsKnownTypesToCategoriesInFirstSeenOrder(): void
+    {
+        // Three @types are mapped; order follows the @type array; the rest drop out.
+        $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
+        self::assertNotNull($node);
+        $entity = new TouristAttractionEntity();
+        $entity->parse($node, 'de', new ParserContext(0));
+
+        self::assertSame([
+            ['field' => 'categories', 'remoteId' => 'type:schema:Museum', 'title' => 'Museum'],
+            ['field' => 'categories', 'remoteId' => 'type:schema:Synagogue', 'title' => 'Synagoge'],
+            ['field' => 'categories', 'remoteId' => 'type:thuecat:CultureHistoricalMuseum', 'title' => 'Kulturhistorisches Museum'],
+        ], $entity->getCategories());
+    }
+
+    #[Test]
     public function offersIsAbsentWhenNodeLacksMakesOffer(): void
     {
         $entity = new TouristAttractionEntity();

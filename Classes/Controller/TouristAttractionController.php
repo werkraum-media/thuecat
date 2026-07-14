@@ -13,6 +13,7 @@ use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
@@ -104,10 +105,12 @@ class TouristAttractionController extends ActionController
         $formTargetPid = $this->determineSearchActionTargetPid($listPluginOnSamePage, $pageId);
         // @todo Any future record-backed filter option needs the same storage scoping.
         $towns = $this->adjustFilterTownValuesToGivenStoragePid($listPluginOnSamePage);
+        $categories = $this->adjustFilterCategoryValuesToGivenStoragePid($listPluginOnSamePage);
 
         $this->view->assignMultiple([
             'demand' => $demand,
             'towns' => $towns,
+            'categories' => $categories,
             // pre-selected filters render hidden; listAction re-forces them so a tampered value can't widen.
             'lockedMap' => $listPluginOnSamePage?->getEditorFilter()->getLockedMap() ?? [],
             'formTargetPid' => $formTargetPid,
@@ -236,5 +239,18 @@ class TouristAttractionController extends ActionController
         return $storagePageIds === []
             ? $this->townRepository->findAllForSearchFormSortedByTitle()
             : $this->touristAttractionRepository->findTownsInStorageSortedByTitle($storagePageIds);
+    }
+
+    /**
+     * Offer only categories the list on this page can actually return; the tree
+     * over all attractions otherwise.
+     *
+     * @return CategoryNode[]
+     */
+    public function adjustFilterCategoryValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array
+    {
+        return $this->touristAttractionRepository->findCategoryTreeForSearchForm(
+            $listPluginOnSamePage?->getStoragePageIds() ?? []
+        );
     }
 }

@@ -19,6 +19,11 @@ class TouristAttractionDemand
      */
     protected array $towns = [];
 
+    /**
+     * @var int[]
+     */
+    protected array $categories = [];
+
     protected bool $petsAllowed = false;
 
     protected bool $isAccessibleForFree = false;
@@ -49,6 +54,22 @@ class TouristAttractionDemand
     public function setTowns(array $towns): void
     {
         $this->towns = $towns;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param int[] $categories
+     */
+    public function setCategories(array $categories): void
+    {
+        $this->categories = $categories;
     }
 
     public function getPetsAllowed(): bool

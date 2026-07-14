@@ -94,6 +94,20 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function importsTouristAttractionWithCategories(): void
+    {
+        // Two @types map to categories (Museum, Synagogue), one is unmapped
+        // (Building), the rest are ignored structural types. Both categories are
+        // created under the configured parent and wired via sys_category_record_mm.
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithCategories.php');
+        $this->expectFetch('attraction-with-category.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithCategories.php');
+    }
+
+    #[Test]
     public function importsTouristAttractionWithSloganArray(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSloganArray.php');

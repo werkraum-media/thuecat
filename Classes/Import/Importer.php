@@ -171,6 +171,7 @@ class Importer
             }
             $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->enableLogging = false;
             $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
             $dataHandler->process_datamap();
             $dataHandler->process_cmdmap();
@@ -196,6 +197,7 @@ class Importer
 
         // The category map now holds real uids, so matched entries can point at them.
         $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByRemoteId);
+        $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
         $this->importLogger->writeLog(
             $configuration->getUid(),
             $loggerPayload,

@@ -135,6 +135,15 @@ class Resolver
                 }
 
                 foreach ($categories as $category) {
+                    $field = $category['field'];
+                    // Guard: a mapper produced categories but the table lacks the
+                    // destination field. Skip the write (DataHandler would fail on
+                    // an unknown column) and flag it for the Importer to log once.
+                    if (!$this->tableHasField($table, $field)) {
+                        $context->categoriesFieldMissing[$table . '.' . $field] = true;
+                        continue;
+                    }
+
                     $categoryRemoteId = $category['remoteId'];
                     // Reuse the key staged earlier this run (across roots) so a
                     // recurring category yields one row.
@@ -155,7 +164,7 @@ class Resolver
                         $context->categoryKeyByRemoteId[$categoryRemoteId] = $categoryKey;
                     }
 
-                    $payload->setRelationField($table, $ownerKey, 'categories', $categoryKey);
+                    $payload->setRelationField($table, $ownerKey, $field, $categoryKey);
                 }
             }
         }
@@ -1015,6 +1024,14 @@ class Resolver
 
         $result = $queryBuilder->executeQuery()->fetchOne();
         return is_numeric($result) ? (int)$result : 0;
+    }
+
+    protected function tableHasField(string $table, string $field): bool
+    {
+        if (!$this->tcaSchemaFactory->has($table)) {
+            return false;
+        }
+        return $this->tcaSchemaFactory->get($table)->hasField($field);
     }
 
     /**

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AddressEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
@@ -191,6 +192,8 @@ class TouristAttractionEntity extends AbstractEntity
             $node['schema:image'] ?? null,
             $node['schema:video'] ?? null,
         );
+
+        $this->applyCategoryMapper(new PlaceCategoryMapper(), $node);
     }
 
     public function handlesTypes(): array

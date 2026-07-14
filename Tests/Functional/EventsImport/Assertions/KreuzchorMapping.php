@@ -29,6 +29,6 @@ return [
     // ttgds:Event — only thuecat:CultureEvent maps. remoteId carries the 'type:'
     // source prefix.
     'categories' => [
-        ['remoteId' => 'type:thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
+        ['field' => 'categories', 'remoteId' => 'type:thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
     ],
 ];

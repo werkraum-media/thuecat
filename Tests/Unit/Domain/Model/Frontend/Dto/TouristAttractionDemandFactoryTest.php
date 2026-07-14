@@ -70,6 +70,37 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     }
 
     #[Test]
+    public function categoriesSettingParsesCsvAndLocksCategories(): void
+    {
+        $filter = $this->subject->fromSettings(['categories' => '10, 12']);
+
+        self::assertSame([10, 12], $filter->getDemand()->getCategories());
+        self::assertTrue($filter->isLocked('categories'));
+    }
+
+    #[Test]
+    public function nonStringCategoriesSettingIsIgnored(): void
+    {
+        $filter = $this->subject->fromSettings(['categories' => [10, 12]]);
+
+        self::assertSame([], $filter->getDemand()->getCategories());
+        self::assertFalse($filter->isLocked('categories'));
+    }
+
+    #[Test]
+    public function applyForcesLockedCategoryOverVisitorInput(): void
+    {
+        // Visitor asks for 5,6; editor locked 10 -> visitor cannot widen.
+        $filter = $this->subject->fromSettings(['categories' => '10']);
+        $demand = new TouristAttractionDemand();
+        $demand->setCategories([5, 6]);
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        self::assertSame([10], $demand->getCategories());
+    }
+
+    #[Test]
     public function booleanSettingsSetAndLockTheirProperty(): void
     {
         $filter = $this->subject->fromSettings([

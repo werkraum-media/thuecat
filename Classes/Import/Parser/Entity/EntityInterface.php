@@ -88,10 +88,10 @@ interface EntityInterface
 
     /**
      * Categories the parent derived during parse(), for the resolver to wire.
-     * remoteId is prefixed by source field to avoid collisions; title seeds a
-     * new category. Default: none.
+     * field is the destination relation column; remoteId is prefixed by source
+     * field to avoid collisions; title seeds a new category. Default: none.
      *
-     * @return list<array{remoteId: string, title: string}>
+     * @return list<array{field: string, remoteId: string, title: string}>
      */
     public function getCategories(): array;
 

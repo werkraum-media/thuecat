@@ -50,8 +50,10 @@ class EventEntityMappingTest extends AbstractImportTestCase
         self::assertArrayHasKey(0, $graph);
         self::assertIsArray($graph[0]);
 
+        /** @var array<string, mixed> $node JSON objects decode to string-keyed arrays. */
+        $node = $graph[0];
         $entity = new EventEntity();
-        $entity->parse($graph[0], 'de', new ParserContext(0), []);
+        $entity->parse($node, 'de', new ParserContext(0), []);
 
         self::assertIsArray($expected);
         self::assertSame($expected['event'], $entity->toArray());

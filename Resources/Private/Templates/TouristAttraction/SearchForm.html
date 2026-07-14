@@ -10,6 +10,11 @@
         <f:else><f:form.select property="towns" options="{towns}" optionValueField="uid" optionLabelField="title" multiple="1" /></f:else>
     </f:if>
 
+    <f:if condition="{lockedMap.categories}">
+        <f:then><f:for each="{demand.categories}" as="category" iteration="i"><f:form.hidden property="categories.{i.index}" /></f:for></f:then>
+        <f:else><f:render partial="TouristAttraction/CategoryTree" arguments="{nodes: categories, nested: 0}" /></f:else>
+    </f:if>
+
     <f:if condition="{lockedMap.petsAllowed}">
         <f:then><f:form.hidden property="petsAllowed" /></f:then>
         <f:else><label><f:form.checkbox property="petsAllowed" value="1" /> <f:translate key="content.search.petsAllowed" extensionName="thuecat" /></label></f:else>

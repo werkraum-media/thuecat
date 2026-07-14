@@ -72,6 +72,14 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
 
+            'categories' => [
+                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.categories',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'category',
+                ],
+            ],
+
             'title' => [
                 'label' => $languagePath . '.title',
                 'l10n_mode' => '',
@@ -390,8 +398,9 @@ return (static function (string $extensionKey, string $tableName) {
                 other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
                 photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
                 opening_hours_inline, special_opening_hours_inline, opening_hours, special_opening_hours, offers, accessibility_specification, address, url,
-                 media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by, 
-                parking_facility_near_by, 
+                 media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
+                parking_facility_near_by,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories,
                 --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],
         ],

@@ -547,12 +547,6 @@ parameters:
 			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Functional\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHookTest\:\:executeDataHandler\(\) should return array\<string\> but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
 			message: '#^Parameter \#1 \$string of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:xml2array\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1

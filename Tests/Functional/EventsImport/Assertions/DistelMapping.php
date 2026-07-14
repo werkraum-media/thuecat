@@ -34,7 +34,7 @@ return [
     // (unmapped) and thuecat:CultureEvent (Kulturveranstaltung); first-seen order.
     // remoteId carries the 'type:' source prefix.
     'categories' => [
-        ['remoteId' => 'type:schema:EventSeries', 'title' => 'Veranstaltungsserie'],
-        ['remoteId' => 'type:thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
+        ['field' => 'categories', 'remoteId' => 'type:schema:EventSeries', 'title' => 'Veranstaltungsserie'],
+        ['field' => 'categories', 'remoteId' => 'type:thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
     ],
 ];

@@ -1,0 +1,29 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-category",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "schema:Museum",
+                "schema:Synagogue",
+                "thuecat:Building"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Museum mit Kategorien"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Zwei @type-Werte werden auf Kategorien gemappt, einer bleibt ungemappt."
+            }
+        }
+    ]
+}

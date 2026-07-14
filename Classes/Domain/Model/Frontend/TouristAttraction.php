@@ -24,10 +24,16 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class TouristAttraction extends Place
 {
     protected string $slogan = '';
+
+    /**
+     * @var ObjectStorage<Category>
+     */
+    protected ObjectStorage $categories;
 
     protected ?Offers $offers = null;
 
@@ -58,6 +64,20 @@ class TouristAttraction extends Place
     protected string $isAccessibleForFree = '';
 
     protected string $publicAccess = '';
+
+    public function initializeObject(): void
+    {
+        parent::initializeObject();
+        $this->categories = new ObjectStorage();
+    }
+
+    /**
+     * @return ObjectStorage<Category>
+     */
+    public function getCategories(): ObjectStorage
+    {
+        return $this->categories;
+    }
 
     public function getSlogan(): string
     {

@@ -1,0 +1,19 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:comment>Renders itself per level; sys_category nesting is not depth-capped.</f:comment>
+<ul>
+    <f:for each="{nodes}" as="node">
+        <li>
+            <label>
+                <f:form.checkbox property="categories" value="{node.category.uid}" multiple="1" />
+                {node.category.title}
+            </label>
+            <f:if condition="{node.children}">
+                <f:render partial="TouristAttraction/CategoryTree" arguments="{nodes: node.children, nested: 1}" />
+            </f:if>
+        </li>
+    </f:for>
+</ul>
+</html>

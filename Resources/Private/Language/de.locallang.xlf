@@ -580,6 +580,14 @@
                 <source>Hold Ctrl (Cmd) to select multiple towns.</source>
                 <target>Strg (Cmd) gedrückt halten, um mehrere Orte auszuwählen.</target>
             </trans-unit>
+            <trans-unit id="content.search.category" xml:space="preserve">
+                <source>Category</source>
+                <target>Kategorie</target>
+            </trans-unit>
+            <trans-unit id="content.search.category.hint" xml:space="preserve">
+                <source>Select any number of categories.</source>
+                <target>Beliebig viele Kategorien auswählen.</target>
+            </trans-unit>
             <trans-unit id="content.search.petsAllowed" xml:space="preserve">
                 <source>Pets allowed</source>
                 <target>Tiere erlaubt</target>

@@ -88,6 +88,28 @@ class TouristAttractionFilterTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function filtersByCategory(): void
+    {
+        // Category 10 (Museum) is related only to Stadtmuseum Erfurt.
+        $body = $this->requestWithSearch(['categories' => ['10']]);
+
+        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        self::assertStringNotContainsString('Domberg Erfurt', $body);
+        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+    }
+
+    #[Test]
+    public function filtersByMultipleCategories(): void
+    {
+        // Museum (10) → Stadtmuseum, Haus (12) → Goethehaus; Kirche (11) excluded.
+        $body = $this->requestWithSearch(['categories' => ['10', '12']]);
+
+        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        self::assertStringContainsString('Goethehaus Weimar', $body);
+        self::assertStringNotContainsString('Domberg Erfurt', $body);
+    }
+
+    #[Test]
     public function combinesTownAndFlagWithAndLogic(): void
     {
         $body = $this->requestWithSearch(['towns' => ['1'], 'petsAllowed' => '1']);

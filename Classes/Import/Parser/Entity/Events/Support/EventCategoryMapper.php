@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Category\SysCategoryMapper;
+
 // Maps event @type URIs to the `categories` field. Grows as more mappings are requested.
 class EventCategoryMapper extends SysCategoryMapper
 {

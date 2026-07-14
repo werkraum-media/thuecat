@@ -59,9 +59,10 @@ class DataHandlerPayload
     private array $translations = [];
 
     /**
-     * Categories per (table, remote_id), harvested during addEntity.
+     * Categories per (table, remote_id), harvested during addEntity. Each entry
+     * carries its own destination `field` so the resolver stays generic.
      *
-     * @var array<string, array<string, list<array{remoteId: string, title: string}>>>
+     * @var array<string, array<string, list<array{field: string, remoteId: string, title: string}>>>
      */
     private array $categories = [];
 
@@ -461,7 +462,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, list<array{remoteId: string, title: string}>>>
+     * @return array<string, array<string, list<array{field: string, remoteId: string, title: string}>>>
      */
     public function getCategories(): array
     {

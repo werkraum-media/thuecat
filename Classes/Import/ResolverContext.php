@@ -100,6 +100,17 @@ final class ResolverContext
     public array $categoryKeyByRemoteId = [];
 
     /**
+     * Tables whose entities produced categories but that carry no `categories`
+     * field in the schema. The Resolver flags them here instead of writing a
+     * relation to a nonexistent column; the Importer reads them after resolve()
+     * to log one notice per table. A set (table => true) so repeated sightings
+     * across owners/roots collapse to a single entry.
+     *
+     * @var array<string, true>
+     */
+    public array $categoriesFieldMissing = [];
+
+    /**
      * Maximum depth at which the resolver will fetch a transient reference
      * from the upstream API. Root URLs (the ones the Importer hands to the
      * Resolver) are depth 0; references they carry are depth 1. Any

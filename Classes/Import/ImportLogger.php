@@ -167,6 +167,25 @@ class ImportLogger
         }
     }
 
+    /**
+     * One notice per `table.field` whose entity produced categories but whose
+     * schema lacks that relation field. Lets a model opt out of category
+     * mapping without failing the write. Keys are the resolver's set keys.
+     *
+     * @param array<string, true> $tableFields set of "table.field" keys
+     */
+    public function recordCategoriesFieldMissing(array $tableFields): void
+    {
+        foreach (array_keys($tableFields) as $tableField) {
+            $this->stage([
+                'type' => 'categoriesFieldMissing',
+                'severity' => self::SEVERITY_NOTICE,
+                'message' => 'Categories were mapped but "' . $tableField . '" does not exist; mapping skipped.',
+                'context' => (string)(json_encode(['tableField' => $tableField]) ?: '{}'),
+            ]);
+        }
+    }
+
     public function getMaxSeverity(): string
     {
         $rank = $this->maxSeverityRank;

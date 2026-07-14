@@ -14,6 +14,8 @@ module {
 plugin.tx_thuecat {
     view {
         templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+        partialRootPaths.10 = EXT:thuecat/Resources/Private/Partials/
+        layoutRootPaths.10 = EXT:thuecat/Resources/Private/Layouts/
     }
 }
 

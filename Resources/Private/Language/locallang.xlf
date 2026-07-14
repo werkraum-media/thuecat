@@ -159,6 +159,9 @@
             <trans-unit id="module.imports.summary.tableName.tx_events_domain_model_date" xml:space="preserve">
                 <source>Date</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_opening_hours" xml:space="preserve">
+                <source>Opening Hours</source>
+            </trans-unit>
 
             <trans-unit id="controller.backend.import.import.success.title" xml:space="preserve">
                 <source>Import finished</source>
@@ -517,6 +520,12 @@
             </trans-unit>
             <trans-unit id="content.search.town.hint" xml:space="preserve">
                 <source>Hold Ctrl (Cmd) to select multiple towns.</source>
+            </trans-unit>
+            <trans-unit id="content.search.category" xml:space="preserve">
+                <source>Category</source>
+            </trans-unit>
+            <trans-unit id="content.search.category.hint" xml:space="preserve">
+                <source>Select any number of categories.</source>
             </trans-unit>
             <trans-unit id="content.search.petsAllowed" xml:space="preserve">
                 <source>Pets allowed</source>

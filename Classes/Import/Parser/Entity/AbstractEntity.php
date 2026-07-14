@@ -23,11 +23,26 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Category\SysCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
 
 abstract class AbstractEntity implements EntityInterface
 {
     protected int $priority = 10;
+
+    /**
+     * Category relations wired by the resolver; not DB columns.
+     *
+     * @var list<array{field: string, remoteId: string, title: string}>
+     */
+    protected array $_categories = [];
+
+    /**
+     * Feeds the import report; not DB columns.
+     *
+     * @var list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
+     */
+    protected array $_matchReports = [];
 
     /**
      * Per-record side channel for unresolved references (e.g. schema:containedInPlace).
@@ -377,6 +392,8 @@ abstract class AbstractEntity implements EntityInterface
             $array['priority'],
             $array['translations'],
             $array['children'],
+            $array['_categories'],
+            $array['_matchReports'],
         );
 
         /** @var array<string, string|int|float> $filtered */
@@ -401,16 +418,49 @@ abstract class AbstractEntity implements EntityInterface
         return $this->children;
     }
 
-    /** @return list<array{remoteId: string, title: string}> */
+    /** @return list<array{field: string, remoteId: string, title: string}> */
     public function getCategories(): array
     {
-        return [];
+        return $this->_categories;
     }
 
     /** @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}> */
     public function getMatchReports(): array
     {
-        return [];
+        return $this->_matchReports;
+    }
+
+    /**
+     * Derive category relations + a match report from the node's @type list.
+     * Prefixed remote_ids keep values from different sources from colliding.
+     * Each entry carries its destination field (the mapper's kind) so the
+     * resolver stays generic over which relation column it writes.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function applyCategoryMapper(SysCategoryMapper $mapper, array $node): void
+    {
+        $types = $node['@type'] ?? [];
+        $types = is_array($types) ? array_values(array_filter($types, 'is_string')) : [];
+
+        $this->_categories = array_map(
+            static fn (array $category): array => [
+                'field' => $mapper->kind(),
+                'remoteId' => $mapper->prefixed($category['remoteId']),
+                'title' => $category['title'],
+            ],
+            $mapper->categoriesFor($types)
+        );
+
+        $report = $mapper->reportMatchStatus($types);
+        $this->_matchReports = [
+            [
+                'kind' => $mapper->kind(),
+                'sourcePrefix' => $mapper->sourcePrefix(),
+                'matched' => $report['matched'],
+                'unmatched' => $report['unmatched'],
+            ],
+        ];
     }
 
     /**

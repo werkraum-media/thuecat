@@ -23,6 +23,10 @@ class TouristAttractionDemandFactory
             $demand->setTowns(GeneralUtility::intExplode(',', $settings['towns'], true));
             $locked[] = 'towns';
         }
+        if (!empty($settings['categories']) && is_string($settings['categories'])) {
+            $demand->setCategories(GeneralUtility::intExplode(',', $settings['categories'], true));
+            $locked[] = 'categories';
+        }
         if (!empty($settings['petsAllowed'])) {
             $demand->setPetsAllowed(true);
             $locked[] = 'petsAllowed';
@@ -50,6 +54,9 @@ class TouristAttractionDemandFactory
         // @todo each new filter needs its own condition here
         if ($filter->isLocked('towns')) {
             $demand->setTowns($locked->getTowns());
+        }
+        if ($filter->isLocked('categories')) {
+            $demand->setCategories($locked->getCategories());
         }
         if ($filter->isLocked('petsAllowed')) {
             $demand->setPetsAllowed($locked->getPetsAllowed());

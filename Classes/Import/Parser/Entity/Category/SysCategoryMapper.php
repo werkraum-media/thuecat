@@ -11,7 +11,7 @@ declare(strict_types=1);
  * of the License, or (at your option) any later version.
  */
 
-namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support;
+namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Category;
 
 /**
  * Maps source values (e.g. an event @type) to sys_category titles. Mechanics
