@@ -553,6 +553,15 @@ parameters:
 			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
 
 		-
+            # Only v13 reports this: v14 core annotates DataHandler::$errorLog as
+			# list<non-empty-string>, v13 leaves it untyped.
+			message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Functional\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHookTest\:\:executeDataHandler\(\) should return array\<string\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
+			reportUnmatched: false
+            
+		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
