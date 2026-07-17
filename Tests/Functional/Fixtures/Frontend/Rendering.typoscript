@@ -1,23 +1,21 @@
 page = PAGE
 page.10 < styles.content.get
 
-tt_content.thuecat_tourist_attraction =< lib.contentElement
+# FLUIDTEMPLATE inlined instead of lib.contentElement, which only EXT:fluid_styled_content defines.
+tt_content.thuecat_tourist_attraction = FLUIDTEMPLATE
 tt_content.thuecat_tourist_attraction {
     templateName = TouristAttraction
+    templateRootPaths {
+        10 = EXT:example/Resources/Private/Templates/ContentElement/
+    }
+    partialRootPaths {
+        10 = EXT:example/Resources/Private/Partials/ContentElement/
+    }
     dataProcessing {
         10 = WerkraumMedia\ThueCat\Frontend\DataProcessing\ResolveEntities
         10 {
             table = tx_thuecat_tourist_attraction
             uids.data = field:records
         }
-    }
-}
-
-lib.contentElement {
-    partialRootPaths {
-        10 = EXT:example/Resources/Private/Partials/ContentElement/
-    }
-    templateRootPaths {
-        10 = EXT:example/Resources/Private/Templates/ContentElement/
     }
 }

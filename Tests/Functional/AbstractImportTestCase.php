@@ -79,7 +79,6 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         'backend',
         'extbase',
         'frontend',
-        'fluid_styled_content',
         'install',
         'filelist',
         'filemetadata',

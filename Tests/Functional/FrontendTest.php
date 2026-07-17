@@ -41,7 +41,6 @@ class FrontendTest extends FunctionalTestCase
             'extbase',
             'filelist',
             'filemetadata',
-            'fluid_styled_content',
             'frontend',
             'install',
         ];
@@ -60,7 +59,6 @@ class FrontendTest extends FunctionalTestCase
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/Content.php');
         $this->setUpFrontendRootPage(1, [
-            'EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript',
             'EXT:thuecat/Configuration/TypoScript/ContentElements/setup.typoscript',
             'EXT:thuecat/Tests/Functional/Fixtures/Frontend/Rendering.typoscript',
         ]);

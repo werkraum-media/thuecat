@@ -19,7 +19,6 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
             'extbase',
             'filelist',
             'filemetadata',
-            'fluid_styled_content',
             'frontend',
             'install',
         ];
@@ -37,7 +36,6 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
 
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Frontend/' . $this->getDataSetFileName());
         $this->setUpFrontendRootPage(1, [
-            'EXT:fluid_styled_content/Configuration/TypoScript/setup.typoscript',
             'EXT:thuecat/Configuration/TypoScript/Default/Setup.typoscript',
             'EXT:thuecat/Tests/Functional/Fixtures/Frontend/' . $this->getRenderingTypoScript(),
         ]);
