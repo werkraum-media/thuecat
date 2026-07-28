@@ -159,4 +159,77 @@ final class ResolverContextTest extends TestCase
             'Empty remoteIdToKey must stay empty regardless of subst contents.'
         );
     }
+
+    #[Test]
+    public function markedReferenceIsReportedAsFailed(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+
+        $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
+
+        self::assertTrue(
+            $context->hasReferenceFailed(self::REMOTE_A),
+            'A URL marked as failed must be reported as failed for the rest of the run. '
+            . 'This is what suppresses a second HTTP request for a reference already '
+            . 'known to be broken.'
+        );
+    }
+
+    #[Test]
+    public function unmarkedReferenceIsNotReportedAsFailed(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+
+        $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
+
+        self::assertFalse(
+            $context->hasReferenceFailed(self::REMOTE_B),
+            'Marking one URL must not mark unrelated URLs. A false positive here would '
+            . 'silently drop healthy references.'
+        );
+    }
+
+    #[Test]
+    public function failureReasonIsRetrievable(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+
+        $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
+
+        self::assertSame(
+            'ResourceNotFoundException: 404',
+            $context->getReferenceFailureReason(self::REMOTE_A),
+            'The reason is logged per affected parent. A suppressed second occurrence '
+            . 'never re-fetches, so it can only report why by reading it back here.'
+        );
+    }
+
+    #[Test]
+    public function firstFailureReasonWins(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+
+        $context->markReferenceFailed(self::REMOTE_A, 'first');
+        $context->markReferenceFailed(self::REMOTE_A, 'second');
+
+        self::assertSame(
+            'first',
+            $context->getReferenceFailureReason(self::REMOTE_A),
+            'Only the first attempt actually hit the network; later parents reuse that '
+            . 'result, so the recorded reason must not be overwritten by a caller that '
+            . 'never made a request.'
+        );
+    }
+
+    #[Test]
+    public function failureReasonForUnmarkedReferenceIsNull(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+
+        self::assertNull(
+            $context->getReferenceFailureReason(self::REMOTE_A),
+            'An unmarked URL has no reason. Callers distinguish "never failed" from '
+            . '"failed with empty reason" on this.'
+        );
+    }
 }

@@ -154,6 +154,13 @@ final class ResolverContext
     public array $translationStatus = [];
 
     /**
+     * URL → failure reason. Suppresses re-fetching across roots, not logging.
+     *
+     * @var array<string, string>
+     */
+    public array $failedReferenceUrls = [];
+
+    /**
      * @param array<string, int> $translationLanguages Two-letter language
      *        code → sys_language_uid for every additional site language.
      *        Forwarded to the Parser whenever the Resolver fetches a
@@ -190,6 +197,22 @@ final class ResolverContext
     public function isUpdated(string $remoteId): bool
     {
         return ($this->defaultStatus[$remoteId] ?? null) === self::STATUS_UPDATED;
+    }
+
+    // First reason wins; later parents reuse it without re-fetching.
+    public function markReferenceFailed(string $url, string $reason): void
+    {
+        $this->failedReferenceUrls[$url] ??= $reason;
+    }
+
+    public function hasReferenceFailed(string $url): bool
+    {
+        return isset($this->failedReferenceUrls[$url]);
+    }
+
+    public function getReferenceFailureReason(string $url): ?string
+    {
+        return $this->failedReferenceUrls[$url] ?? null;
     }
 
     public function markTranslationCreated(string $remoteId, int $sysLanguageUid): void

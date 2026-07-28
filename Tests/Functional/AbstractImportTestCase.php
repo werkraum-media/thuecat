@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
+use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -201,6 +202,20 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     {
         $url = sprintf('https://%s/%s/%s', $domain, $path, $segment);
         GuzzleClientFaker::expectNotFoundForUrl($url);
+    }
+
+    /**
+     * Stage a failing response other than 404 — server error, non-JSON body,
+     * empty graph.
+     */
+    protected function expectFailure(string $segment, int $status, string $body = ''): void
+    {
+        $url = sprintf('https://%s/%s/%s', $this->fixtureDomain, $this->fixturePath, $segment);
+        GuzzleClientFaker::expectUrl(
+            $url,
+            new Response($status, [], $body),
+            $status . ' ' . $url
+        );
     }
 
     /**

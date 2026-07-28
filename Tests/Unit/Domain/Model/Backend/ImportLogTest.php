@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
 class ImportLogTest extends TestCase
@@ -83,6 +85,56 @@ class ImportLogTest extends TestCase
             ],
             $subject->getSummaryOfEntries()
         );
+    }
+
+    #[Test]
+    public function listOfErrorsSurfacesWarningsWhenThereAreNoErrors(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
+
+        self::assertSame(
+            ['Resource: remote-a Warning: Skipped reference'],
+            $subject->getListOfErrors(),
+            'A warning-only run showed an empty Errors column, so the referenceSkipped '
+            . 'rows were invisible in the BE module — the only place their detail lives.'
+        );
+    }
+
+    #[Test]
+    public function listOfErrorsHidesWarningsWhenErrorsArePresent(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
+        $subject->addEntry($this->entryWithSeverity('error', 'remote-b', 'Mapping failed'));
+
+        self::assertSame(
+            ['Resource: remote-b Error: Mapping failed'],
+            $subject->getListOfErrors(),
+            'Errors take precedence: a run with both shows only what blocks it.'
+        );
+    }
+
+    #[Test]
+    public function hasErrorsStaysFalseForWarningsOnly(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
+
+        self::assertFalse(
+            $subject->hasErrors(),
+            'A warning must not mark the row as danger; it is not a failure.'
+        );
+    }
+
+    private function entryWithSeverity(string $severity, string $remoteId, string $message): ImportLogEntry
+    {
+        $entry = (new ReflectionClass(ReferenceSkipped::class))->newInstanceWithoutConstructor();
+        $entry->_setProperty('severity', $severity);
+        $entry->_setProperty('remoteId', $remoteId);
+        $entry->_setProperty('message', $message);
+
+        return $entry;
     }
 
     private function savingEntry(string $table, bool $insertion): SavingEntity

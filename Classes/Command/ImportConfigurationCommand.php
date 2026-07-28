@@ -29,6 +29,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Core\Bootstrap;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
@@ -71,8 +72,31 @@ class ImportConfigurationCommand extends Command
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
         $severity = $this->importer->importConfiguration($configuration);
+        $io = new SymfonyStyle($input, $output);
 
-        return $this->isFailureSeverity($severity) ? Command::FAILURE : Command::SUCCESS;
+        if ($this->isFailureSeverity($severity)) {
+            $io->error(sprintf(
+                'Import of configuration %d failed (severity: %s). See the import log for details.',
+                $configurationUid,
+                $severity
+            ));
+
+            return Command::FAILURE;
+        }
+
+        if ($severity === ImportLogger::SEVERITY_WARNING) {
+            $io->success(sprintf(
+                'Import of configuration %d completed with warnings. Records were '
+                . 'imported; see the import log for what caused the warnings.',
+                $configurationUid
+            ));
+
+            return Command::SUCCESS;
+        }
+
+        $io->success(sprintf('Import of configuration %d completed.', $configurationUid));
+
+        return Command::SUCCESS;
     }
 
     /**

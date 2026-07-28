@@ -21,7 +21,24 @@ Features
 Fixes
 -----
 
-Nothing
+* A referenced resource that cannot be fetched no longer aborts the whole root URL. Previously any failure while
+  resolving a reference (a resource deleted upstream, a server error, a malformed response, a network failure)
+  propagated out of the resolver and the importer discarded every record belonging to that root. Now only the
+  affected reference is dropped: the owning record is imported without that relation, and all other records under
+  the same root are unaffected.
+
+  Each affected parent record gets its own :sql:`tx_thuecat_import_log_entry` row of the new type
+  ``referenceSkipped`` at severity ``warning``, carrying the owner's ``remote_id`` and ``table_name`` alongside the
+  reference URL, the target field and the failure reason — so the log names the records to fix, not merely the URL
+  that failed. A URL already found to be failing is not fetched again for the rest of the run, but every parent that
+  loses a reference is still logged.
+
+  Because these runs report ``warning`` rather than ``error``, :bash:`thuecat:importviaconfiguration` now exits 0
+  for them. Failures of the outer calls — the sync-scope/contains-place listing and the root URL fetches — are
+  unchanged and still fail the run, so a genuine upstream outage remains distinguishable.
+
+* :bash:`thuecat:importviaconfiguration` now prints a closing message stating whether the run completed, completed
+  with warnings, or failed. It previously exited silently, so a non-zero exit arrived with no explanation.
 
 Tasks
 -----

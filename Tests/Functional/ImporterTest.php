@@ -5,8 +5,19 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
+use WerkraumMedia\ThueCat\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
+use WerkraumMedia\ThueCat\Import\Parser\Parser;
+use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
+use WerkraumMedia\ThueCat\Import\Resolver;
 
 class ImporterTest extends AbstractImportTestCase
 {
@@ -46,6 +57,57 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithRelation.php');
+    }
+
+    #[Test]
+    public function importsTownWhenManagedByReferenceIsMissing(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $this->importConfiguration(1);
+
+        // The town is the point: a dead managedBy reference must cost the
+        // relation, not the record that holds it.
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
+    }
+
+    #[Test]
+    public function importsTownWhenManagedByReferenceFailsWithServerError(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
+    }
+
+    #[Test]
+    public function importsTownWhenManagedByReferenceReturnsNonJson(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        // 200 with an HTML error page — decoding throws, not the HTTP layer.
+        $this->expectFailure('018132452787-ngbe', 200, '<html><body>Gateway</body></html>');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
+    }
+
+    #[Test]
+    public function importsTownWhenManagedByReferenceReturnsEmptyGraph(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFailure('018132452787-ngbe', 200, '{"@graph": []}');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
     }
 
     #[Test]
@@ -141,6 +203,133 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTwoAttractionsSharingOrg.php');
+    }
+
+    /**
+     * Regression test for the production defect: two roots referenced one
+     * dead resource and BOTH roots were discarded, twice over.
+     *
+     * The 404 is staged exactly once. A second fetch of a URL already known
+     * to be missing would drain the faker's bag and fail the test — which is
+     * what proves the dedup suppresses re-fetching across roots.
+     */
+    #[Test]
+    public function importsTwoAttractionsWhenSharedOrgIsMissing(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
+        $this->expectFetch('attraction-with-single-slogan.json');
+        $this->expectFetch('attraction-with-slogan-array.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTwoAttractionsSharingMissingOrg.php');
+    }
+
+    #[Test]
+    public function runWithOnlySkippedReferencesReportsWarning(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame(
+            'warning',
+            $severity,
+            'A vanished upstream reference is data drift, not an operator error. '
+            . 'Anything at error or above makes the command exit non-zero and any '
+            . 'scheduler treat a healthy import as broken.'
+        );
+    }
+
+    /**
+     * Outer-call failures are outages, not drift — the warning treatment
+     * stops at the reference seam.
+     */
+    #[Test]
+    public function failingRootFetchStillReportsError(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectNotFound('043064193523-jcyt');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame(
+            'error',
+            $severity,
+            'A root that cannot be fetched is an outage. If this ever reports warning, '
+            . 'a scheduler would treat a run that imported nothing as healthy.'
+        );
+    }
+
+    #[Test]
+    public function failingUrlProviderFetchFailsTheRun(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSyncScope.php');
+        GuzzleClientFaker::expectNotFoundForUrl(
+            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db&showTotal=true'
+        );
+
+        $this->expectException(ResourceNotFoundException::class);
+
+        $this->importConfigurationReturningSeverity(1);
+    }
+
+    #[Test]
+    public function programmingErrorWhileResolvingIsNotSwallowed(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(Resolver::class, $this->buildResolverThrowingError());
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame(
+            'error',
+            $severity,
+            'An Error is our own defect, not upstream drift. Demoting it to a skipped '
+            . 'reference would hide our bugs behind a run that reports success.'
+        );
+    }
+
+    #[Test]
+    public function runWithSkippedReferenceAndMappingErrorReportsError(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsWithSkipAndMappingError.php');
+        $this->expectFetch('unfetchable-reference.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame(
+            'error',
+            $severity,
+            'A skipped reference must not mask a real failure: the run carries the '
+            . 'highest severity seen, so the mapping error still decides the exit code.'
+        );
+    }
+
+    /**
+     * The log must name each affected record, not just the dead URL — the
+     * production log left table_name and remote_id empty, so nothing said
+     * which record to fix upstream.
+     */
+    #[Test]
+    public function logsSkippedReferenceOncePerOwningParent(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
+        $this->expectFetch('attraction-with-single-slogan.json');
+        $this->expectFetch('attraction-with-slogan-array.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/LogsSkippedReferencePerParent.php');
     }
 
     /**
@@ -287,11 +476,31 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
     }
 
+    private function buildResolverThrowingError(): ResolverThrowingErrorStub
+    {
+        return new ResolverThrowingErrorStub(
+            $this->get(ConnectionPool::class),
+            $this->get(FetchData::class),
+            $this->get(Parser::class),
+            $this->get(TcaSchemaFactory::class),
+            $this->get(MediaFileDownloader::class),
+            $this->get(SiteFinder::class),
+            $this->get(PageRepository::class),
+            $this->get(SysCategoryRepository::class),
+            $this->get(ImportLogger::class),
+        );
+    }
+
     private function importConfiguration(int $uid): void
+    {
+        $this->importConfigurationReturningSeverity($uid);
+    }
+
+    private function importConfigurationReturningSeverity(int $uid): string
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
         self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        $this->get(Importer::class)->importConfiguration($configuration);
+        return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

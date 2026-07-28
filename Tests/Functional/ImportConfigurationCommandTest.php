@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
@@ -45,6 +46,70 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
+    }
+
+    #[Test]
+    public function reportsSuccessOnCleanRun(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $tester = new CommandTester($subject);
+        $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertStringContainsString('completed', $tester->getDisplay());
+    }
+
+    #[Test]
+    public function reportsWarningRunAsSuccess(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $tester = new CommandTester($subject);
+        $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        $display = $tester->getDisplay();
+
+        self::assertSame(
+            Command::SUCCESS,
+            $exitCode,
+            'Skipped references must not fail the run.'
+        );
+        self::assertStringContainsString(
+            'completed with warnings',
+            $display,
+            'Severity carries no cause, so the message must not claim the warning '
+            . 'came from a skipped reference — it holds for any warning source.'
+        );
+        self::assertStringContainsString('import log', $display);
+    }
+
+    #[Test]
+    public function reportsFailureOnFailedRun(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectNotFound('043064193523-jcyt');
+
+        $tester = new CommandTester($subject);
+        $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        self::assertSame(Command::FAILURE, $exitCode);
+        self::assertStringContainsString('failed', $tester->getDisplay());
     }
 
     #[Test]

@@ -80,19 +80,25 @@ class ImportLog extends Typo3AbstractEntity
     }
 
     /**
+     * Errors, or the warnings when there are none — otherwise a warning-only
+     * run renders an empty column and its entries stay invisible.
+     *
      * @return list<string>
      */
     public function getListOfErrors(): array
     {
         $errors = [];
+        $warnings = [];
 
         foreach ($this->getEntries() as $entry) {
             if ($entry->isError()) {
                 $errors[] = 'Resource: ' . $entry->getRemoteId() . ' Error: ' . $entry->getMessage();
+            } elseif ($entry->getSeverity() === 'warning') {
+                $warnings[] = 'Resource: ' . $entry->getRemoteId() . ' Warning: ' . $entry->getMessage();
             }
         }
 
-        return array_values(array_unique($errors));
+        return array_values(array_unique($errors === [] ? $warnings : $errors));
     }
 
     public function hasErrors(): bool

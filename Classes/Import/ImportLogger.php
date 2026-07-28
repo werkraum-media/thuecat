@@ -108,6 +108,36 @@ class ImportLogger
     }
 
     /**
+     * Stage one entry per parent that lost a reference. Warning, not error:
+     * the owner still imports, only the relation is missing.
+     */
+    public function recordSkippedReference(
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $field,
+        string $url,
+        string $reason
+    ): void {
+        $this->stage([
+            'type' => 'referenceSkipped',
+            'severity' => self::SEVERITY_WARNING,
+            'remote_id' => $ownerRemoteId,
+            'table_name' => $ownerTable,
+            'message' => sprintf(
+                'Skipped reference "%s" for field "%s": %s',
+                $url,
+                $field,
+                $reason
+            ),
+            'context' => (string)(json_encode([
+                'url' => $url,
+                'field' => $field,
+                'reason' => $reason,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
      * Stage one report entry per distinct source value per kind, de-duplicated
      * run-wide. Matched entries store the resolved uid (available only after
      * persist), not the title, so the report reads the current title live and

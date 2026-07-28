@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Exception;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
@@ -92,6 +93,7 @@ class Resolver
         protected readonly SiteFinder $siteFinder,
         protected readonly PageRepository $pageRepository,
         protected readonly SysCategoryRepository $sysCategoryRepository,
+        protected readonly ImportLogger $importLogger,
     ) {
     }
 
@@ -522,7 +524,7 @@ class Resolver
                                     continue;
                                 }
 
-                                $this->fetchAndMerge(
+                                $this->resolveReferenceOrSkip(
                                     $payload,
                                     $context,
                                     $ownerTable,
@@ -558,7 +560,7 @@ class Resolver
                                 continue;
                             }
 
-                            $this->fetchAndMerge(
+                            $this->resolveReferenceOrSkip(
                                 $payload,
                                 $context,
                                 $ownerTable,
@@ -587,12 +589,14 @@ class Resolver
     }
 
     /**
-     * Fetch + parse a transient reference and merge whatever the parser
-     * produced into the real payload.
+     * Fetch + parse a transient reference and merge it into the payload, or
+     * skip the reference if any of that fails. Catches Exception, not
+     * Throwable: an Error is our own defect and must still fail the run.
+     * The caller drains the transient either way.
      *
      * @param array<string, string> $remoteIdToKey
      */
-    protected function fetchAndMerge(
+    protected function resolveReferenceOrSkip(
         DataHandlerPayload $payload,
         ResolverContext $context,
         string $ownerTable,
@@ -603,29 +607,52 @@ class Resolver
         string $reference,
         array &$remoteIdToKey
     ): void {
-        $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
-        $graph = $response['@graph'] ?? [];
-        if (!is_array($graph)) {
-            $graph = [];
+        if ($context->hasReferenceFailed($reference)) {
+            $this->importLogger->recordSkippedReference(
+                $ownerTable,
+                $ownerRemoteId,
+                $targetField,
+                $reference,
+                (string)$context->getReferenceFailureReason($reference)
+            );
+            return;
         }
 
-        $fetchedPayload = $this->parser->parseFresh(
-            $graph,
-            $context->parserContext,
-            $context->language,
-            $context->translationLanguages
-        );
-        $payload->mergeFrom($fetchedPayload);
+        try {
+            $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
+            $graph = $response['@graph'] ?? [];
+            if (!is_array($graph)) {
+                $graph = [];
+            }
 
-        $childDepth = ($context->depthByRemoteId[$ownerRemoteId] ?? 0) + 1;
-        $this->rekeyRowsAndInjectPid($payload, $context, $childDepth);
+            $fetchedPayload = $this->parser->parseFresh(
+                $graph,
+                $context->parserContext,
+                $context->language,
+                $context->translationLanguages
+            );
+            $payload->mergeFrom($fetchedPayload);
 
-        if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
-            $payload->setRelationField(
+            $childDepth = ($context->depthByRemoteId[$ownerRemoteId] ?? 0) + 1;
+            $this->rekeyRowsAndInjectPid($payload, $context, $childDepth);
+
+            if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
+                $payload->setRelationField(
+                    $ownerTable,
+                    $ownerKey,
+                    $targetField,
+                    $remoteIdToKey[$reference]
+                );
+            }
+        } catch (Exception $e) {
+            $reason = $e::class . ': ' . $e->getMessage();
+            $context->markReferenceFailed($reference, $reason);
+            $this->importLogger->recordSkippedReference(
                 $ownerTable,
-                $ownerKey,
+                $ownerRemoteId,
                 $targetField,
-                $remoteIdToKey[$reference]
+                $reference,
+                $reason
             );
         }
     }
@@ -945,7 +972,7 @@ class Resolver
             return $fallback;
         }
 
-        throw new RuntimeException(
+        throw new MalformedGraphException(
             sprintf('Fetched graph for "%s" is empty or malformed.', $url),
             1745100003
         );

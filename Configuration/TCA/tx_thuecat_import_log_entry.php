@@ -55,6 +55,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'dataHandlerError',
                         ],
                         [
+                            'label' => $languagePath . '.type.referenceSkipped',
+                            'value' => 'referenceSkipped',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -175,6 +179,9 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'dataHandlerError' => [
                 'showitem' => '--palette--;;always, table_name, record_uid, message, context',
+            ],
+            'referenceSkipped' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
             ],
         ],
     ];

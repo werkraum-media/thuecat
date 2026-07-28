@@ -45,7 +45,7 @@ $GLOBALS['TCA']['tx_events_domain_model_event']['palettes']['remote_identifier']
 // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 $showitem = $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] ?? '';
 if (is_string($showitem)) {
-    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
     $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] = str_replace(
         'global_id',
         '--palette--;;remote_identifier',

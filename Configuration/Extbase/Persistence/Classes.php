@@ -10,6 +10,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\DataHandlerError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
@@ -49,6 +50,7 @@ return [
             'mappingError' => MappingError::class,
             'categoryMatched' => CategoryMatched::class,
             'categoryUnmatched' => CategoryUnmatched::class,
+            'referenceSkipped' => ReferenceSkipped::class,
         ],
     ],
     SavingEntity::class => [
@@ -74,6 +76,10 @@ return [
     CategoryUnmatched::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'categoryUnmatched',
+    ],
+    ReferenceSkipped::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'referenceSkipped',
     ],
 
     FrontendTouristAttraction::class => [

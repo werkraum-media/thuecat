@@ -21,10 +21,14 @@ declare(strict_types=1);
  * 02110-1301, USA.
  */
 
-namespace WerkraumMedia\ThueCat\Import\UrlProvider;
+namespace WerkraumMedia\ThueCat\Import;
 
 use RuntimeException;
 
-final class InvalidUrlProviderException extends RuntimeException
+/**
+ * Thrown when a fetched resource yields no usable JSON-LD node — the graph is
+ * empty or malformed.
+ */
+final class MalformedGraphException extends RuntimeException
 {
 }
