@@ -15,7 +15,7 @@ class TownEntityTest extends AbstractImportTestCase
     {
         $subject = new TownEntity();
 
-        self::assertSame('tx_thuecat_town', $subject->table);
+        self::assertSame('tx_thuecat_town', $subject::TABLE);
     }
 
     #[Test]

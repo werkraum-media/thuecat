@@ -21,16 +21,14 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 #[Autoconfigure(public: true)]
 class StaleDateReaper
 {
-    private readonly string $eventTable;
+    // The entities own their table names; nothing else may hardcode them.
+    private const EVENT_TABLE = EventEntity::TABLE;
 
-    private readonly string $dateTable;
+    private const DATE_TABLE = DateEntity::TABLE;
 
     public function __construct(
         private readonly ConnectionPool $connectionPool,
     ) {
-        // The entities own their table names; nothing else may hardcode them.
-        $this->eventTable = (new EventEntity())->table;
-        $this->dateTable = (new DateEntity())->table;
     }
 
     /**
@@ -41,13 +39,13 @@ class StaleDateReaper
     public function reap(DataHandlerPayload $payload): void
     {
         $dataMap = $payload->getDataMap();
-        $eventRows = $dataMap[$this->eventTable] ?? [];
+        $eventRows = $dataMap[self::EVENT_TABLE] ?? [];
         if ($eventRows === []) {
             return;
         }
 
         $importedDates = [];
-        foreach ($dataMap[$this->dateTable] ?? [] as $dateRow) {
+        foreach ($dataMap[self::DATE_TABLE] ?? [] as $dateRow) {
             $remoteId = (string)($dateRow['remote_id'] ?? '');
             if ($remoteId !== '') {
                 $importedDates[$remoteId] = true;
@@ -62,7 +60,7 @@ class StaleDateReaper
 
             foreach ($this->findOwnedDates($eventRemoteId) as $dateUid => $dateRemoteId) {
                 if (!isset($importedDates[$dateRemoteId])) {
-                    $payload->addCmdMap($this->dateTable, (string)$dateUid, 'delete', 1);
+                    $payload->addCmdMap(self::DATE_TABLE, (string)$dateUid, 'delete', 1);
                 }
             }
         }
@@ -73,13 +71,13 @@ class StaleDateReaper
      */
     private function findOwnedDates(string $eventRemoteId): array
     {
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->dateTable);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::DATE_TABLE);
         $queryBuilder->getRestrictions()
             ->removeAll()
             ->add(new DeletedRestriction())
         ;
         $rows = $queryBuilder->select('uid', 'remote_id')
-            ->from($this->dateTable)
+            ->from(self::DATE_TABLE)
             ->where(
                 $queryBuilder->expr()->like(
                     'remote_id',

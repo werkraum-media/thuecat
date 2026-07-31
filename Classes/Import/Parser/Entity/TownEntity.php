@@ -8,14 +8,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 class TownEntity extends AbstractEntity
 {
-    public string $table = 'tx_thuecat_town';
+    public const TABLE = 'tx_thuecat_town';
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
 
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
 
         $localisedFields = [

@@ -1,0 +1,45 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_referenced_media-tdm",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "schema:MusicEvent",
+                "schema:TheaterEvent",
+                "thuecat:CultureEvent",
+                "thuecat:FamilyEvent",
+                "thuecat:ClassicalMusic",
+                "thuecat:OperaEvent",
+                "dcmitype:Event",
+                "ttgds:Event",
+                "thuecat:SeniorsEvent"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Referenced Media Event"
+            },
+            "schema:image": {
+                "@id": "https://cdb.int.thuecat.org/api/resources/dms_167631738"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Event referencing a shared media resource."
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "www.theater-erfurt.de"
+            }
+        }
+    ]
+}

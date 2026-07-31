@@ -391,12 +391,6 @@ parameters:
 			path: Classes/Frontend/DataProcessing/ResolveEntities.php
 
 		-
-			message: '#^Access to an undefined property WerkraumMedia\\ThueCat\\Import\\Parser\\Entity\\EntityInterface\:\:\$table\.$#'
-			identifier: property.notFound
-			count: 1
-			path: Classes/Import/Parser/DataHandlerPayload.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 10

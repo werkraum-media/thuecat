@@ -74,6 +74,15 @@ class DataHandlerPayload
     private array $matchReports = [];
 
     /**
+     * Inline media per owner row, keyed table => remote_id. Kept apart from
+     * transients: these need no fetch, so they are consumed in the rekey pass
+     * rather than drained.
+     *
+     * @var array<string, array<string, list<array{kind: string, node: array<string, mixed>}>>>
+     */
+    protected array $inlineMedia = [];
+
+    /**
      * Staged DataHandler cmdmap entries. Outer key is the table; second key
      * is the target uid (as string, since cmdmap targets are existing rows);
      * inner is a list of `[$command, $value]` tuples. The Importer fans these
@@ -101,8 +110,7 @@ class DataHandlerPayload
 
     public function addEntity(EntityInterface $entity): void
     {
-        /** @var string $table */
-        $table = $entity->table;
+        $table = $entity::TABLE;
         $row = $entity->toArray();
         $remoteId = (string)$row['remote_id'];
 
@@ -126,6 +134,11 @@ class DataHandlerPayload
         $entityCategories = $entity->getCategories();
         if ($entityCategories !== []) {
             $this->categories[$table][$remoteId] = $entityCategories;
+        }
+
+        $entityInlineMedia = $entity->getInlineMedia();
+        if ($entityInlineMedia !== []) {
+            $this->inlineMedia[$table][$remoteId] = $entityInlineMedia;
         }
 
         foreach ($entity->getMatchReports() as $matchReport) {
@@ -383,6 +396,15 @@ class DataHandlerPayload
             }
         }
 
+        foreach ($other->inlineMedia as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $entries) {
+                if (isset($this->inlineMedia[$table][$remoteId])) {
+                    continue;
+                }
+                $this->inlineMedia[$table][$remoteId] = $entries;
+            }
+        }
+
         foreach ($other->cmdMap as $table => $entriesByKey) {
             foreach ($entriesByKey as $key => $entries) {
                 foreach ($entries as $entry) {
@@ -467,6 +489,26 @@ class DataHandlerPayload
     public function getCategories(): array
     {
         return $this->categories;
+    }
+
+    /**
+     * @return array<string, array<string, list<array{kind: string, node: array<string, mixed>}>>>
+     */
+    public function getInlineMedia(): array
+    {
+        return $this->inlineMedia;
+    }
+
+    /**
+     * Drop an owner's inline media once imported, so a further resolve pass
+     * does not download it again.
+     */
+    public function clearInlineMedia(string $table, string $remoteId): void
+    {
+        unset($this->inlineMedia[$table][$remoteId]);
+        if (($this->inlineMedia[$table] ?? []) === []) {
+            unset($this->inlineMedia[$table]);
+        }
     }
 
     /**

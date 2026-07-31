@@ -21,7 +21,7 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 // re-imports upsert the same Date row instead of accumulating duplicates.
 class DateEntity extends AbstractEntity
 {
-    public string $table = 'tx_events_domain_model_date';
+    public const TABLE = 'tx_events_domain_model_date';
 
     protected string $remote_id = '';
     protected string $start = '';

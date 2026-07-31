@@ -30,6 +30,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 
@@ -62,6 +63,100 @@ class MediaFileDownloaderTest extends TestCase
     public function returnsNoFileOnEmptyBody(): void
     {
         self::assertNull($this->download($this->clientReturning(200, '')));
+    }
+
+    #[Test]
+    public function sendsTheApiKeyToTheAssetHostThatRequiresIt(): void
+    {
+        $client = $this->capturingClient();
+
+        $this->downloadFrom(
+            $client,
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg',
+            'secret-key',
+            'https://cdb.thuecat.org'
+        );
+
+        self::assertSame('api_key=secret-key', $client->lastRequest?->getUri()->getQuery());
+    }
+
+    #[Test]
+    public function sendsNoApiKeyToOtherHosts(): void
+    {
+        $client = $this->capturingClient();
+
+        $this->downloadFrom(
+            $client,
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'secret-key',
+            'https://cdb.thuecat.org'
+        );
+
+        self::assertSame('', $client->lastRequest?->getUri()->getQuery());
+    }
+
+    #[Test]
+    public function neverSendsTheJsonLdFormatParameter(): void
+    {
+        foreach ([
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg',
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+        ] as $url) {
+            $client = $this->capturingClient();
+
+            $this->downloadFrom($client, $url, 'secret-key', 'https://cdb.thuecat.org');
+
+            self::assertStringNotContainsString(
+                'format=',
+                (string)$client->lastRequest?->getUri()->getQuery(),
+                $url
+            );
+        }
+    }
+
+    #[Test]
+    public function keepsQueryParametersTheAssetUrlAlreadyCarries(): void
+    {
+        $client = $this->capturingClient();
+
+        $this->downloadFrom(
+            $client,
+            'https://cdb.thuecat.org/assets/foo/bar.jpg?v=2',
+            'secret-key',
+            'https://cdb.thuecat.org'
+        );
+
+        $query = (string)$client->lastRequest?->getUri()->getQuery();
+        self::assertStringContainsString('v=2', $query);
+        self::assertStringContainsString('api_key=secret-key', $query);
+    }
+
+    private function capturingClient(): CapturingClient
+    {
+        return new CapturingClient();
+    }
+
+    private function downloadFrom(
+        CapturingClient $client,
+        string $downloadUrl,
+        string $apiKey,
+        string $apiDomain
+    ): void {
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(false);
+        $staging = self::createStub(Folder::class);
+        $staging->method('hasFile')->willReturn(false);
+        $staging->method('createFile')->willReturn(self::createStub(File::class));
+
+        (new MediaFileDownloader($client))->download(
+            $target,
+            $staging,
+            $downloadUrl,
+            'dms_1',
+            'Foo.jpg',
+            $apiKey,
+            $apiDomain,
+        );
     }
 
     private function clientReturning(int $status, string $body): ClientInterface

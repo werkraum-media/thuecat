@@ -1,0 +1,484 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://cdb.int.thuecat.org/api/resources/dms_167631738",
+            "@type": [
+                "schema:Thing",
+                "schema:CreativeWork",
+                "schema:MediaObject",
+                "schema:ImageObject",
+                "dcmitype:Image"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Luftaufnahme Theater Erfurt"
+            },
+            "schema:identifier": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b14",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:PropertyValue"
+                ],
+                "rdfs:label": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                },
+                "schema:name": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                },
+                "schema:value": {
+                    "@type": "xsd:string",
+                    "@value": "167631738"
+                },
+                "dcterms:title": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                }
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Luftaufnahme Theater Erfurt"
+            },
+            "schema:height": {
+                "@type": "xsd:string",
+                "@value": "6466"
+            },
+            "schema:copyrightHolder": {
+                "@id": "https://thuecat.org/resources/466496784284-hoha"
+            },
+            "schema:sameAs": {
+                "@type": "xsd:anyURI",
+                "@value": "https://wbk.thuecat.org"
+            },
+            "schema:exifData": [
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b0",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:ResolutionUnit"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:ResolutionUnit"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "Inch"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:ResolutionUnit"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:Flash"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:Flash"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "false"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:Flash"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b10",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:IsoSpeedRatings"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:IsoSpeedRatings"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "110"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:IsoSpeedRatings"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b11",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Model"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Model"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "FC3582"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Model"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b12",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:ExposureTime"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:ExposureTime"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "6.25E-4"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:ExposureTime"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b13",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FNumber"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FNumber"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "1.7"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FNumber"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Orientation"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Orientation"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "1"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Orientation"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b3",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Software"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Software"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "Adobe Photoshop 24.7 (Windows)"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Software"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b4",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Make"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Make"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "DJI"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:Make"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b5",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:YResolution"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:YResolution"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "300.0"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:YResolution"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b6",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FocalLength"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FocalLength"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "6.72"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:FocalLength"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b7",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:XResolution"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:XResolution"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "300.0"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:XResolution"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b8",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:SamplesPerPixel"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:SamplesPerPixel"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "3"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "tiff:SamplesPerPixel"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b9",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue"
+                    ],
+                    "rdfs:label": {
+                        "@type": "xsd:string",
+                        "@value": "exif:DateTimeOriginal"
+                    },
+                    "schema:name": {
+                        "@type": "xsd:string",
+                        "@value": "exif:DateTimeOriginal"
+                    },
+                    "schema:value": {
+                        "@type": "xsd:string",
+                        "@value": "2023-09-10T10:45:10"
+                    },
+                    "dcterms:title": {
+                        "@type": "xsd:string",
+                        "@value": "exif:DateTimeOriginal"
+                    }
+                }
+            ],
+            "schema:description": {
+                "@language": "de",
+                "@value": "Die weitwinklige Luftaufnahme des Theaters Erfurt zeigt das markante Gebäude mit seiner modernen Architektur und den davorliegenden Theaterplatz als großzügigen Stadtraum. Die klare Formensprache des Bauwerks, die offenen Platzflächen und die umgebende Begrünung verdeutlichen die Verbindung zwischen zeitgenössischer Kulturstätte und urbanem Umfeld. Die Perspektive aus der Höhe vermittelt einen umfassenden Eindruck der räumlichen Wirkung des Theaters und seiner prägenden Rolle im Erfurter Stadtbild."
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/167631738/Preview-1280x0/image"
+            },
+            "schema:author": {
+                "@id": "https://cdb.int.thuecat.org/api/resources/902877780916-bgnt"
+            },
+            "schema:keywords": {
+                "@type": "xsd:string",
+                "@value": "Erfurt"
+            },
+            "schema:bitrate": {
+                "@type": "xsd:string",
+                "@value": "8"
+            },
+            "schema:width": {
+                "@type": "xsd:string",
+                "@value": "11485"
+            },
+            "schema:thumbnailUrl": {
+                "@type": "schema:URL",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/167631738/Thumbnail-300x300/image"
+            },
+            "schema:license": {
+                "@type": "xsd:string",
+                "@value": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            "dcterms:identifier": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c2321524-b14",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:PropertyValue"
+                ],
+                "rdfs:label": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                },
+                "schema:name": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                },
+                "schema:value": {
+                    "@type": "xsd:string",
+                    "@value": "167631738"
+                },
+                "dcterms:title": {
+                    "@type": "xsd:string",
+                    "@value": "fileEntryId"
+                }
+            },
+            "dcterms:title": {
+                "@language": "de",
+                "@value": "Luftaufnahme Theater Erfurt"
+            },
+            "dcterms:description": {
+                "@language": "de",
+                "@value": "Die weitwinklige Luftaufnahme des Theaters Erfurt zeigt das markante Gebäude mit seiner modernen Architektur und den davorliegenden Theaterplatz als großzügigen Stadtraum. Die klare Formensprache des Bauwerks, die offenen Platzflächen und die umgebende Begrünung verdeutlichen die Verbindung zwischen zeitgenössischer Kulturstätte und urbanem Umfeld. Die Perspektive aus der Höhe vermittelt einen umfassenden Eindruck der räumlichen Wirkung des Theaters und seiner prägenden Rolle im Erfurter Stadtbild."
+            }
+        }
+    ]
+}

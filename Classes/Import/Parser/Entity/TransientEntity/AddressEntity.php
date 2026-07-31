@@ -28,7 +28,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity;
 // constructs, configures, and json_encodes it into one of its own fields.
 class AddressEntity extends AbstractTransientEntity
 {
-    public string $table = 'tx_thuecat_address';
+    public const TABLE = 'tx_thuecat_address';
 
     protected string $remote_id = '';
     protected string $street = '';

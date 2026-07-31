@@ -32,7 +32,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 // buildDistanceToPublicTransport / collectIds live on AbstractEntity.
 class ParkingFacilityEntity extends AbstractEntity
 {
-    public string $table = 'tx_thuecat_parking_facility';
+    public const TABLE = 'tx_thuecat_parking_facility';
+
+    public const MEDIA_FIELDS = [
+        'photo' => 'main_image',
+        'image' => 'media_files',
+    ];
+
     // Higher than the default 10 — ParkingFacility nodes also carry
     // schema:Organization in @type, so without priority the generic
     // OrganisationEntity would win the resolver tie-break.
@@ -54,7 +60,6 @@ class ParkingFacilityEntity extends AbstractEntity
      */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
 
         $localisedFields = [

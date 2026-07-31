@@ -1,0 +1,72 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_mixed_media-tdm",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "thuecat:GuidedTour",
+                "thuecat:GuidedTourEvent",
+                "thuecat:CityTour",
+                "dcmitype:Event",
+                "ttgds:Event",
+                "thuecat:WalkaboutEvent"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Mixed Media Event"
+            },
+            "schema:image": {
+                "@id": "https://cdb.int.thuecat.org/api/resources/dms_167631738"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Event carrying an inline node and a referenced resource."
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "www.erfurt-tourismus.de"
+            },
+            "schema:photo": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:ImageObject",
+                    "dcmitype:Image"
+                ],
+                "schema:position": {
+                    "@type": "schema:Integer",
+                    "@value": "1"
+                },
+                "schema:author": {
+                    "@language": "de",
+                    "@value": "©ETMG, Michael Kremer"
+                },
+                "schema:contentUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg"
+                },
+                "schema:thumbnailUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/medium/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/917f773b-b975-4f56-aa58-df6e4efa5aa3.jpg"
+                },
+                "schema:license": {
+                    "@type": "schema:URL",
+                    "@value": "http://creativecommons.org/licenses/by/4.0/"
+                }
+            }
+        }
+    ]
+}

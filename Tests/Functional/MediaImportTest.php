@@ -96,6 +96,121 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function relatesPhotoToMainImageAndImageToMediaFiles(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithPhotoAndImage.php');
+        $this->expectFetch('attraction-with-photo-and-image.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $downloadUrl = 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image';
+        $this->expectFetchForUrl($downloadUrl, 'cms.thuecat.org/image.jpg');
+        $this->expectFetchForUrl($downloadUrl, 'cms.thuecat.org/image.jpg');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            ['main_image', 'media_files'],
+            $this->fetchReferenceFields(),
+            'schema:photo belongs in main_image, schema:image in media_files.'
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function fetchReferenceFields(): array
+    {
+        $rows = $this->getConnectionPool()
+            ->getConnectionForTable('sys_file_reference')
+            ->select(['fieldname'], 'sys_file_reference', [], [], ['uid' => 'ASC'])
+            ->fetchAllAssociative()
+        ;
+
+        $fields = [];
+        foreach ($rows as $row) {
+            if (is_string($row['fieldname'])) {
+                $fields[] = $row['fieldname'];
+            }
+        }
+        sort($fields);
+        return $fields;
+    }
+
+    #[Test]
+    public function relatesInlineImageOnAPointOfInterest(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithInlineImage.php');
+        $this->expectFetch('attraction-with-inline-image.json');
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/poi-inline/1a2b3c4d-0000-4000-8000-000000000001.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        // Inline is a capability of the media import, not an event feature: a
+        // POI carrying one lands it in the field that POI declares.
+        self::assertSame(
+            ['media_files'],
+            $this->fetchReferenceFields()
+        );
+    }
+
+    #[Test]
+    public function relatesBothShapesMixedInsideOnePoiCollectionField(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMixedGallery.php');
+        $this->expectFetch('attraction-with-mixed-gallery.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/poi-inline/1a2b3c4d-0000-4000-8000-000000000001.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        // A collection field makes no promise that its entries share a shape.
+        $names = $this->fetchRelatedFileNamesInOrder();
+        sort($names);
+        self::assertSame(
+            [
+                '1a2b3c4d-0000-4000-8000-000000000001.jpg',
+                'image-with-author-string_Bild-mit-author.jpg',
+            ],
+            $names
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function fetchRelatedFileNamesInOrder(): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('f.name')
+            ->from('sys_file_reference', 'r')
+            ->join('r', 'sys_file', 'f', $queryBuilder->expr()->eq('f.uid', $queryBuilder->quoteIdentifier('r.uid_local')))
+            ->orderBy('r.sorting_foreign', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $names = [];
+        foreach ($rows as $row) {
+            if (is_string($row['name'])) {
+                $names[] = $row['name'];
+            }
+        }
+        return $names;
+    }
+
+    #[Test]
     public function reimportKeepsMediaReferencesIdempotent(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportTouristAttractionWithMedia.php');

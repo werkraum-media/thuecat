@@ -37,7 +37,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 // with how the abstract resolves core singletons elsewhere.
 class EventEntity extends AbstractEventsEntity
 {
-    public string $table = 'tx_events_domain_model_event';
+    public const TABLE = 'tx_events_domain_model_event';
+
+    // One field for every slot: events rank images but do not single one out.
+    public const MEDIA_FIELDS = [
+        'photo' => 'images',
+        'image' => 'images',
+    ];
 
     protected string $remote_id = '';
     protected string $title = '';
@@ -62,14 +68,18 @@ class EventEntity extends AbstractEventsEntity
     {
         parent::parse($node, $language, $parserContext, $translationLanguages);
 
-        $this->translations = [];
-
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
         $this->details = $this->extractHtmlDescription($node['schema:description'] ?? null, $language);
         $this->web = $this->extractTypedValue($node['schema:url'] ?? null);
         $offers = is_array($node['schema:offers'] ?? null) ? $node['schema:offers'] : [];
         $this->ticket = $this->extractTypedValue($offers['schema:url'] ?? null);
+
+        $this->recordMediaTransient(
+            $node['schema:photo'] ?? null,
+            $node['schema:image'] ?? null,
+            $node['schema:video'] ?? null,
+        );
 
         $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null, $parserContext);
 
@@ -105,13 +115,6 @@ class EventEntity extends AbstractEventsEntity
     public function getChildren(): array
     {
         return $this->_dates;
-    }
-
-    public function toArray(): array
-    {
-        $array = parent::toArray();
-        unset($array['_dates']);
-        return $array;
     }
 
     /**

@@ -45,6 +45,8 @@ final class MediaFileDownloaderStub extends MediaFileDownloader
         string $downloadUrl,
         string $dmsId,
         string $originalName,
+        string $apiKey = '',
+        string $apiDomain = '',
     ): ?File {
         return null;
     }

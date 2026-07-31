@@ -32,6 +32,14 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 interface EntityInterface
 {
     /**
+     * DB table this entity writes into. A constant, not a property: it is a
+     * class-level fact, so callers need no instance and it stays out of
+     * get_object_vars().
+     */
+    /** @var non-empty-string|'' */
+    public const TABLE = '';
+
+    /**
      * @param array<string, int> $translationLanguages Two-letter language
      *        code → target sys_language_uid. The default-language row goes
      *        into the entity's data; for each entry here, fields whose
@@ -39,6 +47,12 @@ interface EntityInterface
      *        into the translations bucket via recordTranslation().
      */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages): void;
+
+    /**
+     * Drop the previous record's values. Instances are shared, so the parser
+     * calls this before each parse().
+     */
+    public function resetPerRecordState(): void;
 
     public function getRemoteId(array $node): string;
 
@@ -58,6 +72,20 @@ interface EntityInterface
      * @return array<string, list<string>|list<array{kind: string, id: string}>>
      */
     public function getTransients(): array;
+
+    /**
+     * Field an imported image occupies on this entity's table, given the
+     * source slot it came from. Empty when the entity stores no media.
+     */
+    public function getMediaFieldFor(string $kind): string;
+
+    /**
+     * Media supplied inline rather than by reference. Carries its own data, so
+     * it is consumed without a fetch and never enters the transient buckets.
+     *
+     * @return list<array{kind: string, node: array<string, mixed>}>
+     */
+    public function getInlineMedia(): array;
 
     /**
      * Translated scalar values gathered during parse(), keyed by

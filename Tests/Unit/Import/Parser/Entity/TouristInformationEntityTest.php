@@ -34,7 +34,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     {
         $subject = new TouristInformationEntity();
 
-        self::assertSame('tx_thuecat_tourist_information', $subject->table);
+        self::assertSame('tx_thuecat_tourist_information', $subject::TABLE);
     }
 
     #[Test]

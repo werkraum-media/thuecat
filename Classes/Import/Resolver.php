@@ -40,6 +40,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
@@ -96,6 +97,7 @@ class Resolver
         protected readonly SysCategoryRepository $sysCategoryRepository,
         protected readonly ImportLogger $importLogger,
         protected readonly StaleDateReaper $staleDateReaper,
+        protected readonly MediaFieldMap $mediaFieldMap,
     ) {
     }
 
@@ -365,6 +367,7 @@ class Resolver
         }
 
         $this->wireInlineChildrenToParents($payload, $context);
+        $this->importInlineMedia($payload, $context);
     }
 
     protected function isAlreadyRekeyed(string $outerKey): bool
@@ -662,7 +665,8 @@ class Resolver
 
     /**
      * Download each media entry's file and stage a sys_file_reference on the
-     * owner: photo → main_image, image → media_files. video skipped (no file).
+     * owner, in the field that owner declares for the entry's slot. Video is
+     * skipped (no file).
      *
      * @param list<string>|list<array{kind: string, id: string}> $entries
      */
@@ -690,36 +694,38 @@ class Resolver
 
         $existingReferences = [];
         $claimedReferences = [];
+        $stagedByField = [];
         if (MathUtility::canBeInterpretedAsInteger($ownerKey)) {
             $ownerUid = (int)$ownerKey;
-            foreach (['main_image', 'media_files'] as $field) {
+            foreach ($this->mediaFieldMap->fieldsFor($ownerTable) as $field) {
                 $existingReferences[$field] = $this->findExistingReferences($ownerTable, $ownerUid, $field);
             }
         }
 
         foreach ($entries as $entry) {
+            // An entry we cannot interpret costs that entry only: upstream
+            // authoring is data drift, like an image that will not download.
             if (!is_array($entry)) {
-                throw new InvalidTransientReferenceException(
-                    sprintf(
-                        'Media bucket entry on %s[%s] is not a {kind,id} tuple.',
-                        $ownerTable,
-                        $ownerRemoteId
-                    ),
-                    1745100001
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    '',
+                    $entry,
+                    'Media entry is not a {kind,id} tuple.'
                 );
+                continue;
             }
 
             $reference = $entry['id'];
             if (!$this->isFetchableUrl($reference)) {
-                throw new InvalidTransientReferenceException(
-                    sprintf(
-                        'Media reference "%s" on %s[%s] is not a fetchable URL.',
-                        $reference,
-                        $ownerTable,
-                        $ownerRemoteId
-                    ),
-                    1745100002
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']),
+                    $reference,
+                    'Media reference is neither a fetchable URL nor an inline node.'
                 );
+                continue;
             }
 
             if ($entry['kind'] === 'video') {
@@ -752,7 +758,7 @@ class Resolver
             }
 
             // Derived before the download so the skip below can name the field.
-            $targetField = $mediaEntity->isMainImage() ? 'main_image' : 'media_files';
+            $targetField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
 
             $file = $this->mediaFileDownloader->download(
                 $target,
@@ -760,6 +766,8 @@ class Resolver
                 $downloadUrl,
                 $this->extractDmsId($reference),
                 $mediaEntity->getOriginalFileName(),
+                (string)$context->apiKey,
+                $context->parserContext->apiDomain,
             );
             if ($file === null) {
                 $this->importLogger->recordSkippedReference(
@@ -780,6 +788,13 @@ class Resolver
             ], static fn (string $value): bool => $value !== ''));
 
             $fileUid = $file->getUid();
+            // One reference per file per field: upstream may name the same
+            // asset in several slots that share a target field.
+            if (isset($stagedByField[$targetField][$fileUid])) {
+                continue;
+            }
+            $stagedByField[$targetField][$fileUid] = true;
+
             $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
             if ($existingRefUid !== null) {
                 $claimedReferences[$existingRefUid] = true;
@@ -805,8 +820,15 @@ class Resolver
             }
         }
 
+        // Skipped entries reach here too, so both shapes must drain — a
+        // survivor would spin drainTransients() forever.
         foreach ($entries as $entry) {
-            $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
+            $payload->removeTransient(
+                $ownerTable,
+                $ownerRemoteId,
+                'media',
+                is_array($entry) ? $entry['id'] : $entry
+            );
         }
     }
 
@@ -830,6 +852,110 @@ class Resolver
             'description' => $media->getDescription(),
         ]);
         $payload->setRelationField($ownerTable, $ownerKey, $targetField, $referenceKey);
+    }
+
+    /**
+     * Download inline media and relate it to its owner. Runs where the owner
+     * row is already in hand: an inline node carries its own data, so it needs
+     * no fetch and must not go through the drain loop.
+     */
+    protected function importInlineMedia(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        $target = $context->targetFolder;
+        $staging = $context->stagingFolder;
+        if ($target === null || $staging === null) {
+            return;
+        }
+
+        foreach ($payload->getInlineMedia() as $ownerTable => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $ownerRemoteId => $entries) {
+                $ownerKey = $context->remoteIdToKey[$ownerRemoteId] ?? null;
+                if ($ownerKey === null) {
+                    continue;
+                }
+
+                // Reuse the reference an earlier run stored for the same file,
+                // else a re-import stacks a second one on the same owner.
+                $existingReferences = [];
+                $stagedByField = [];
+                if (MathUtility::canBeInterpretedAsInteger($ownerKey)) {
+                    foreach ($this->mediaFieldMap->fieldsFor($ownerTable) as $field) {
+                        $existingReferences[$field] = $this->findExistingReferences($ownerTable, (int)$ownerKey, $field);
+                    }
+                }
+
+                foreach ($entries as $entry) {
+                    if ($entry['kind'] === 'video') {
+                        continue;
+                    }
+
+                    $mediaEntity = new MediaEntity();
+                    $mediaEntity->configure($entry['node'], $entry['kind'], $context->language);
+
+                    $downloadUrl = $mediaEntity->getUrl();
+                    if ($downloadUrl === '') {
+                        continue;
+                    }
+
+                    $targetField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
+                    // The node's @id is a per-response blank-node label, so the
+                    // content URL's filename is the stable identity. Inline
+                    // media names no title, so the extension comes from the URL.
+                    $file = $this->mediaFileDownloader->download(
+                        $target,
+                        $staging,
+                        $downloadUrl,
+                        pathinfo($this->extractDmsId($downloadUrl), PATHINFO_FILENAME),
+                        $mediaEntity->getOriginalFileName(),
+                        (string)$context->apiKey,
+                        $context->parserContext->apiDomain,
+                    );
+                    if ($file === null) {
+                        $this->importLogger->recordSkippedReference(
+                            $ownerTable,
+                            $ownerRemoteId,
+                            $targetField,
+                            $downloadUrl,
+                            'Image could not be downloaded.'
+                        );
+                        continue;
+                    }
+
+                    $file->getMetaData()->add(array_filter([
+                        'title' => $mediaEntity->getOriginalFileName(),
+                        'description' => $mediaEntity->getDescription(),
+                        'creator' => $mediaEntity->getAuthor(),
+                        'copyright' => $mediaEntity->getCopyright(),
+                    ], static fn (string $value): bool => $value !== ''));
+
+                    $fileUid = $file->getUid();
+                    // One reference per file per field: upstream may name the
+                    // same asset in several slots that share a target field.
+                    if (isset($stagedByField[$targetField][$fileUid])) {
+                        continue;
+                    }
+                    $stagedByField[$targetField][$fileUid] = true;
+
+                    $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
+                    $this->stageFileReference(
+                        $payload,
+                        $ownerTable,
+                        $ownerKey,
+                        $targetField,
+                        $fileUid,
+                        $mediaEntity,
+                        $context->storagePid,
+                        $existingRefUid,
+                    );
+                }
+
+                // No reap here: this runs before the referenced path has
+                // claimed anything, so an owner carrying both shapes would
+                // lose the references that path is about to reuse. Reaping
+                // both shapes together needs one pass that sees all claims.
+                $payload->clearInlineMedia($ownerTable, $ownerRemoteId);
+            }
+        }
     }
 
     protected function wireInlineChildrenToParents(

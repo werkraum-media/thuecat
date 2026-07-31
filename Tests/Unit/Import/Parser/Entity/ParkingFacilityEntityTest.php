@@ -34,7 +34,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     {
         $entity = new ParkingFacilityEntity();
 
-        self::assertSame('tx_thuecat_parking_facility', $entity->table);
+        self::assertSame('tx_thuecat_parking_facility', $entity::TABLE);
     }
 
     #[Test]

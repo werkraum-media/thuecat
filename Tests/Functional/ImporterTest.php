@@ -16,6 +16,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Resolver;
@@ -109,6 +110,55 @@ class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
+    }
+
+    #[Test]
+    public function doesNotCarryARelationOverToARecordThatDeclaresNone(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsOnlyOneWithTown.php');
+        $this->expectFetch('attraction-with-town.json');
+        $this->expectFetch('attraction-without-town.json');
+        $this->expectFetch('043064193523-jcyt.json');
+
+        $this->importConfiguration(1);
+
+        // Shared entity instances: an unfilled bucket keeps the previous
+        // record's. Not media-specific.
+        self::assertSame(
+            [
+                'https://thuecat.org/resources/attraction-with-town' => 1,
+                'https://thuecat.org/resources/attraction-without-town' => 0,
+            ],
+            $this->fetchTownByAttractionRemoteId()
+        );
+    }
+
+    /**
+     * Town uid per attraction, 0 when unset.
+     *
+     * @return array<string, int>
+     */
+    private function fetchTownByAttractionRemoteId(): array
+    {
+        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable('tx_thuecat_tourist_attraction');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('remote_id', 'town')
+            ->from('tx_thuecat_tourist_attraction')
+            ->orderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $towns = [];
+        foreach ($rows as $row) {
+            if (!is_string($row['remote_id'])) {
+                continue;
+            }
+            $towns[$row['remote_id']] = is_numeric($row['town']) ? (int)$row['town'] : 0;
+        }
+
+        return $towns;
     }
 
     #[Test]
@@ -572,6 +622,7 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(SysCategoryRepository::class),
             $this->get(ImportLogger::class),
             $this->get(StaleDateReaper::class),
+            $this->get(MediaFieldMap::class),
         );
     }
 

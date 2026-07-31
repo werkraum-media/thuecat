@@ -1,0 +1,51 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://cdb.int.thuecat.org/api/resources/902877780916-bgnt",
+            "@type": [
+                "schema:Thing",
+                "schema:Person",
+                "thuecat:Author",
+                "foaf:Person",
+                "ttgds:Author"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Lutz Edelhoff"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Lutz Edelhoff"
+            },
+            "schema:familyName": {
+                "@language": "de",
+                "@value": "Edelhoff"
+            },
+            "schema:givenName": {
+                "@language": "de",
+                "@value": "Lutz"
+            },
+            "schema:jobTitle": {
+                "@type": "thuecat:Profession",
+                "@value": "thuecat:Photographer"
+            },
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/018132452787-ngbe"
+            },
+            "dcterms:title": {
+                "@language": "de",
+                "@value": "Lutz Edelhoff"
+            }
+        }
+    ]
+}

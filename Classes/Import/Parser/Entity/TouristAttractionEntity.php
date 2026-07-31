@@ -29,7 +29,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
 {
-    public string $table = 'tx_thuecat_tourist_attraction';
+    public const TABLE = 'tx_thuecat_tourist_attraction';
+
+    public const MEDIA_FIELDS = [
+        'photo' => 'main_image',
+        'image' => 'media_files',
+    ];
+
     protected int $priority = 20;
     protected string $remote_id = '';
     protected string $title = '';
@@ -59,7 +65,6 @@ class TouristAttractionEntity extends AbstractEntity
      */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
 
         // Localised text fields (schema:name, schema:description, …): pick the

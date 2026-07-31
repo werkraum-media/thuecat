@@ -1,0 +1,63 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-inline-image",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "thuecat:Building",
+                "thuecat:ReligiousBuilding",
+                "thuecat:Cathedral",
+                "thuecat:CatholicChurch",
+                "thuecat:Dome"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Attraction with inline image"
+            },
+            "schema:image": {
+                "@id": "genid-poi-inline-b1",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:ImageObject",
+                    "dcmitype:Image"
+                ],
+                "schema:position": {
+                    "@type": "schema:Integer",
+                    "@value": "2"
+                },
+                "schema:author": {
+                    "@language": "de",
+                    "@value": "©ETMG, Michael Kremer"
+                },
+                "schema:contentUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/poi-inline/1a2b3c4d-0000-4000-8000-000000000001.jpg"
+                },
+                "schema:license": {
+                    "@type": "schema:URL",
+                    "@value": "http://creativecommons.org/licenses/by/4.0/"
+                }
+            }
+        }
+    ]
+}

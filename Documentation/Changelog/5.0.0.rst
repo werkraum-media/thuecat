@@ -11,6 +11,26 @@ Features
 
 * Add support for TYPO3 v14.
 * Handle images and other files properly via FAL upon import. Target file directory is now part of the import configuration.
+* Events are imported with their images. An event's ``schema:photo`` and ``schema:image`` both land in the
+  ``images`` field of :sql:`tx_events_domain_model_event`; events have no separate main image, so the source
+  ranking decides the order — the photo comes first. The previous cap of eight images per event is removed:
+  every image upstream publishes is imported.
+
+* Media uploaded directly to a record is imported. Alongside the established form, where a record points at a
+  reusable media resource, upstream also lets editors upload a file into the record itself. Such a file was
+  previously rejected before any download was attempted, and — because the rejection was fatal — it cost the
+  whole root URL every one of its records. It is now imported like any other image, with its author and licence.
+
+  This applies to every record type, not only events. A point of interest carrying a direct upload imports it
+  into ``main_image`` / ``media_files`` as it would a referenced image.
+
+  A directly uploaded file is identified by its file name in the delivered address, which stays stable across
+  runs, so re-importing reuses the stored file instead of downloading it again.
+
+  These files are served from the API host, which refuses anonymous requests, so the configured API key is sent
+  when an image is fetched from that host. Images on other hosts — every referenced media resource so far — are
+  requested unchanged, without a key.
+
 * Import opening hours as inline database records (:sql:`tx_thuecat_opening_hours`) and expose a display-ready,
   computed shape via :php:`Domain\Model\Frontend\Place::getComputedOpeningHours()` and
   :php:`getComputedSpecialOpeningHours()`. The shape groups records into validity periods, lists every weekday
@@ -36,6 +56,22 @@ Fixes
   Because these runs report ``warning`` rather than ``error``, :bash:`thuecat:importviaconfiguration` now exits 0
   for them. Failures of the outer calls — the sync-scope/contains-place listing and the root URL fetches — are
   unchanged and still fail the run, so a genuine upstream outage remains distinguishable.
+
+* A record no longer inherits relations from the record imported before it.
+
+  Records that said nothing about a relation kept whatever the previous record in the same run had declared. The
+  effect was visible with images — several events ending up with the same picture, none of which named it — but it
+  applied to every imported relation: town, responsible organisation, nearby parking, categories. A record silent
+  about a relation is now imported without it.
+
+  Relations already stored from earlier runs are not corrected by this. The import stops writing them; removing
+  one whose source is gone is a separate matter, and images that were wrongly related need to be removed by hand.
+
+* A media entry the import cannot interpret no longer costs the whole root URL. Upstream may publish an entry that
+  is neither a reference to a media resource nor a direct upload. Such an entry previously aborted the import of
+  every record under that root. It is now skipped like an image that cannot be downloaded: the record is imported,
+  its usable images are related, and a :sql:`tx_thuecat_import_log_entry` of type ``referenceSkipped`` at severity
+  ``warning`` names the record and the entry. A run whose only problem is an entry of this kind exits 0.
 
 * An image that cannot be downloaded no longer costs the run its media. Previously the download raised on any error
   status, the exception escaped the resolver and the importer discarded the whole root URL; because promotion of

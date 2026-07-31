@@ -40,7 +40,7 @@ class OpeningHourSpecificationEntity extends AbstractEntity
     public const TYPE_REGULAR = 'regular';
     public const TYPE_SPECIAL = 'special';
 
-    public string $table = 'tx_thuecat_opening_hours';
+    public const TABLE = 'tx_thuecat_opening_hours';
 
     protected string $remote_id = '';
     protected string $specification_type = self::TYPE_REGULAR;

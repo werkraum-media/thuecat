@@ -1,0 +1,89 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_two_inline_media-tdm",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "schema:MusicEvent",
+                "schema:Festival",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Two Inline Media Event"
+            },
+            "schema:photo": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6316393-b3",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:ImageObject",
+                    "dcmitype:Image"
+                ],
+                "schema:position": {
+                    "@type": "schema:Integer",
+                    "@value": "1"
+                },
+                "schema:author": {
+                    "@language": "de",
+                    "@value": "©Erfurt Tourismus und Marketing GmbH"
+                },
+                "schema:contentUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/19c21523-343f-4b72-b13c-756ac4bde8c5/ad455b3e-dbfd-488a-92d5-9679fab51418.jpg"
+                },
+                "schema:license": {
+                    "@type": "schema:URL",
+                    "@value": "http://creativecommons.org/licenses/by/4.0/"
+                }
+            },
+            "schema:image": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:ImageObject",
+                    "dcmitype:Image"
+                ],
+                "schema:position": {
+                    "@type": "schema:Integer",
+                    "@value": "1"
+                },
+                "schema:author": {
+                    "@language": "de",
+                    "@value": "©ETMG, Michael Kremer"
+                },
+                "schema:contentUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg"
+                },
+                "schema:license": {
+                    "@type": "schema:URL",
+                    "@value": "http://creativecommons.org/licenses/by/4.0/"
+                }
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Event with a distinct inline image in each slot."
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "www.erfurt-tourismus.de"
+            }
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "@context": {
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-town",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Attraction with town"
+            },
+            "schema:containedInPlace": {
+                "@id": "https://thuecat.org/resources/043064193523-jcyt"
+            }
+        }
+    ]
+}

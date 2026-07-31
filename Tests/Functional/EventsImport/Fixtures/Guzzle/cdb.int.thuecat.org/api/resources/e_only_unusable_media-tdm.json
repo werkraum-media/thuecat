@@ -1,0 +1,39 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_only_unusable_media-tdm",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "thuecat:GuidedTour",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Only Unusable Media Event"
+            },
+            "schema:image": {
+                "@id": "urn:uuid:8f14e45f-ceea-467a-9ba7-1a4b9f2c0d31"
+            },
+            "schema:description": {
+                "@language": "de",
+                "@value": "Event whose only media entry is unusable."
+            },
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "www.erfurt-tourismus.de"
+            }
+        }
+    ]
+}

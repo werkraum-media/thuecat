@@ -27,7 +27,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 class TouristInformationEntity extends AbstractEntity
 {
-    public string $table = 'tx_thuecat_tourist_information';
+    public const TABLE = 'tx_thuecat_tourist_information';
+
+    public const MEDIA_FIELDS = [
+        'photo' => 'main_image',
+        'image' => 'media_files',
+    ];
+
     // Higher than the default 10 — TouristInformation nodes also carry
     // schema:Organization in @type, so without priority the generic
     // OrganisationEntity would win the resolver tie-break.
@@ -38,7 +44,6 @@ class TouristInformationEntity extends AbstractEntity
 
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
 
         $localisedFields = [

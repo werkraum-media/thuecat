@@ -34,7 +34,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         $entity = new TouristAttractionEntity();
 
-        self::assertSame('tx_thuecat_tourist_attraction', $entity->table);
+        self::assertSame('tx_thuecat_tourist_attraction', $entity::TABLE);
     }
 
     #[Test]

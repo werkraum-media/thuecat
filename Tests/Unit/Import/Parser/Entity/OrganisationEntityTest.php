@@ -34,7 +34,7 @@ final class OrganisationEntityTest extends AbstractImportTestCase
     {
         $subject = new OrganisationEntity();
 
-        self::assertSame('tx_thuecat_organisation', $subject->table);
+        self::assertSame('tx_thuecat_organisation', $subject::TABLE);
     }
 
     #[Test]

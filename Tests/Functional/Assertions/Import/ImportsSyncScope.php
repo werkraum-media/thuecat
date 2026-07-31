@@ -42,7 +42,7 @@ Montag bis Samstag findet hier außerdem der Wochenmarkt statt.
 Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants zum Verweilen und Genießen ein.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => null,
         ],
         [
             'uid' => 3,
@@ -60,7 +60,7 @@ Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants
             'description' => 'Beispiel Beschreibung',
             'slogan' => 'Highlight',
             'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]},"shortDescriptionAccessibilityDeaf":"Deutsche Beschreibung von shortDescriptionAccessibilityDeaf","shortDescriptionAccessibilityMental":"Deutsche Beschreibung von shortDescriptionAccessibilityMental","shortDescriptionAccessibilityVisual":"Deutsche Beschreibung von shortDescriptionAccessibilityVisual","shortDescriptionAccessibilityWalking":"Deutsche Beschreibung von shortDescriptionAccessibilityWalking"}',
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => null,
         ],
         [
             'uid' => 4,
@@ -79,7 +79,7 @@ Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants
 Heute spielt die Waagegasse vor allem als "Schleichweg" zwischen Michaelis- und Allerheiligenstraße, als Zugang zur Alten Synagoge und natürlich bei zahlreichen Stadtführungen eine Rolle.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => null,
         ],
         [
             'uid' => 5,
@@ -96,7 +96,7 @@ Heute spielt die Waagegasse vor allem als "Schleichweg" zwischen Michaelis- und 
             'opening_hours' => null,
             'description' => 'Ein bekanntes Wahrzeichen Erfurts ist die Krämerbrücke, die längste bebaute und bewohnte Brücke Europas.Die Krämerbrücke wurde zu Beginn aus Holz und 1325 aus Stein erbaut. Zunächst war die 120 m lange Brücke mit 62 schmalen Häusern bebaut. Später wurden einige der Häuser auf nun mehr 32 zusammengefasst. An beiden Enden der Brücke standen zwei Brückenkopfkirchen. Heute existiert nur noch eine der beiden, die östlich gelegene Ägidienkirche.Auf der Krämerbrücke kann man in Galerien und Boutiquen sehr schön bummeln gehen. Man kann Thüringer Handwerksmeistern bei ihrer Arbeit über die Schulter schauen. Keramik, Porzellan und Holzschnitzereien, Blaudruck und Lauschaer Glas sind beliebte Souvenirs. Cafès, Weinhändler und Feinkostgeschäfte mit Thüringer Spezialitäten laden zum Verweilen ein.',
             'slogan' => null,
-            'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]},"shortDescriptionAccessibilityDeaf":"Deutsche Beschreibung von shortDescriptionAccessibilityDeaf","shortDescriptionAccessibilityMental":"Deutsche Beschreibung von shortDescriptionAccessibilityMental","shortDescriptionAccessibilityVisual":"Deutsche Beschreibung von shortDescriptionAccessibilityVisual","shortDescriptionAccessibilityWalking":"Deutsche Beschreibung von shortDescriptionAccessibilityWalking"}',
+            'accessibility_specification' => null,
             'parking_facility_near_by' => '1,2',
         ],
         [
@@ -115,7 +115,7 @@ Heute spielt die Waagegasse vor allem als "Schleichweg" zwischen Michaelis- und 
             'description' => 'Der Wenigemarkt befindet sich am östlichen Zugang der Krämerbrücke. Hier finden Sie eine Vielzahl Cafés und Restaurants, die zum Verbleiben und Entspannen einladen.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1,2',
+            'parking_facility_near_by' => null,
         ],
         [
             'uid' => 7,
@@ -155,7 +155,7 @@ Des marchands de la région vous proposent chaque jour, de 7 à 14h, des produit
 ',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 9,
@@ -173,7 +173,7 @@ Des marchands de la région vous proposent chaque jour, de 7 à 14h, des produit
             'description' => 'La vieille synagogue (datant des années 1100) est la synagogue la plus vieille d’Europe totalement conservée, dans laquelle est exposé un trésor datant des 13/14èmes siècles avec une alliance juive unique et des écritures hébraïques (datant des 12ème, 13ème et 14èmes siècles). Après la redécouverte du Mikwé, Erfurt abrite des témoins uniques et fascinants d’une communauté juive médiévale. ',
             'slogan' => 'Highlight',
             'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]}}',
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 10,
@@ -192,7 +192,7 @@ Des marchands de la région vous proposent chaque jour, de 7 à 14h, des produit
 Aujourd\'hui, la Waagegasse joue surtout un rôle de "chemin de traverse" entre la Michaelisstrasse et l\'Allerheiligenstrasse, d\'accès à l\'ancienne synagogue et, bien sûr, dans de nombreuses visites de la ville.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 11,
@@ -209,7 +209,7 @@ Aujourd\'hui, la Waagegasse joue surtout un rôle de "chemin de traverse" entre 
             'opening_hours' => null,
             'description' => 'Le pont de l’épicier est un des symboles de la ville d’Erfurt, le plus grand pont habité en continu d’Europe. A l’origine, le pont de l’épicier faisait 120 m de long et comptait 62 maisons étroites, qui furent plus tard regroupées en 32 maisons. Sur le pont de l’épicier se trouvent des galeries et des petites échoppes proposant des étoffes à motifs bleu indigo de Thuringe, des céramiques peintes main, du verre de Lauscha, des bijoux et des sculptures en bois.',
             'slogan' => null,
-            'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]}}',
+            'accessibility_specification' => null,
             'parking_facility_near_by' => '1,2',
         ],
         [
@@ -228,7 +228,7 @@ Aujourd\'hui, la Waagegasse joue surtout un rôle de "chemin de traverse" entre 
             'description' => 'Le Wenigemarkt est situé à l\'entrée orientale du Krämerbrücke. Vous y trouverez une variété de cafés et de restaurants qui vous invitent à rester et à vous détendre.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1,2',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 13,
@@ -265,7 +265,7 @@ Aujourd\'hui, la Waagegasse joue surtout un rôle de "chemin de traverse" entre 
 From Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 15,
@@ -283,7 +283,7 @@ From Domplatz square, Marktstrasse - which follows the centuries-old trading rou
             'description' => 'The Old Synagogue is one of very few preserved medieval synagogues in Europe. Thanks to the extensive preservation of the original structure, it has a special place in the history of art and architecture and is among the most impressive and highly rated architectural monuments in Erfurt and Thuringia. The synagogue was constructed during the Middle Ages on the "via regia", one of the major European trade routes, at the heart of the historical old quarter very close to the Merchants Bridge and the town hall. Many parts of the structure still remain today, including all four thick outer walls, the Roman­esque gemel window, the Gothic rose window and the entrance to the synagogue room. ',
             'slogan' => 'Highlight',
             'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]},"shortDescriptionAccessibilityDeaf":"English description of shortDescriptionAccessibilityDeaf","shortDescriptionAccessibilityMental":"English description of shortDescriptionAccessibilityMental","shortDescriptionAccessibilityVisual":"English description of shortDescriptionAccessibilityVisual","shortDescriptionAccessibilityWalking":"English description of shortDescriptionAccessibilityWalking"}',
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 16,
@@ -302,7 +302,7 @@ From Domplatz square, Marktstrasse - which follows the centuries-old trading rou
 Today, the Waagegasse plays a role primarily as a "sneak path" between Michaelisstrasse and Allerheiligenstrasse, as access to the Old Synagogue and, of course, on numerous city tours.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1',
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 17,
@@ -319,7 +319,7 @@ Today, the Waagegasse plays a role primarily as a "sneak path" between Michaelis
             'opening_hours' => null,
             'description' => 'Another Erfurt landmark is the Merchants\' Bridge (Krämerbrücke), the longest series of inhabited buildings on any bridge in Europe. The Merchants\' Bridge is Erfurts most interesting secular construction, initially in wood but rebuilt in stone in 1325. There were originally 62 narrow buildings along its 120-metre length, but subsequent redevelopment left just 32 buildings. Of what was once a pair of bridgehead churches, only the Church of St. Aegidius remains at the eastern end of the bridge today. The Merchants\' Bridge is lined with galleries, cafés and boutiques offering traditional crafts, Thuringian blue printed fabrics, hand-painted ceramics, handblown glassware, jewellery, wood carvings, antiques and delicious Thuringian specialities - perfect for browsing.',
             'slogan' => null,
-            'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]},"shortDescriptionAccessibilityDeaf":"English description of shortDescriptionAccessibilityDeaf","shortDescriptionAccessibilityMental":"English description of shortDescriptionAccessibilityMental","shortDescriptionAccessibilityVisual":"English description of shortDescriptionAccessibilityVisual","shortDescriptionAccessibilityWalking":"English description of shortDescriptionAccessibilityWalking"}',
+            'accessibility_specification' => null,
             'parking_facility_near_by' => '1,2',
         ],
         [
@@ -338,7 +338,7 @@ Today, the Waagegasse plays a role primarily as a "sneak path" between Michaelis
             'description' => 'The Wenigemarkt is located at the eastern entrance of the Krämerbrücke. Here you will find a variety of cafes and restaurants that invite you to stay and relax.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => '1,2',
+            'parking_facility_near_by' => '',
         ],
     ],
     'tx_thuecat_town' => [

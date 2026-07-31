@@ -96,6 +96,7 @@ class Parser
             return;
         }
 
+        $entity->resetPerRecordState();
         $entity->parse($node, $this->language, $parserContext, $this->translationLanguages);
         $this->dataHandlerPayload->addEntity($entity);
 

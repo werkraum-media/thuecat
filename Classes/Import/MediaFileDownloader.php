@@ -44,7 +44,7 @@ use TYPO3\CMS\Core\Resource\Folder;
 class MediaFileDownloader
 {
     public function __construct(
-        private readonly ClientInterface $httpClient,
+        protected readonly ClientInterface $httpClient,
     ) {
     }
 
@@ -55,6 +55,7 @@ class MediaFileDownloader
      *
      * @param string $dmsId        stable ThueCat resource id, e.g. "dms_5159216"
      * @param string $originalName source filename incl. extension, e.g. "Foo.jpg"
+     * @param string $apiKey       sent only to $apiDomain, which refuses anonymous requests
      */
     public function download(
         Folder $target,
@@ -62,8 +63,10 @@ class MediaFileDownloader
         string $downloadUrl,
         string $dmsId,
         string $originalName,
+        string $apiKey = '',
+        string $apiDomain = '',
     ): ?File {
-        $fileName = $this->buildFileName($dmsId, $originalName);
+        $fileName = $this->buildFileName($dmsId, $originalName, $downloadUrl);
 
         // Promoted by an earlier successful run — reuse, don't re-download.
         if ($target->hasFile($fileName)) {
@@ -77,7 +80,7 @@ class MediaFileDownloader
             return $existing instanceof File ? $existing : null;
         }
 
-        $contents = $this->fetchContents($downloadUrl);
+        $contents = $this->fetchContents($this->authenticate($downloadUrl, $apiKey, $apiDomain));
         if ($contents === null || $contents === '') {
             return null;
         }
@@ -89,13 +92,33 @@ class MediaFileDownloader
     }
 
     /**
+     * The API host refuses anonymous requests. Keyed on host, not on caller.
+     */
+    protected function authenticate(string $downloadUrl, string $apiKey, string $apiDomain): string
+    {
+        if ($apiKey === '' || $apiDomain === '') {
+            return $downloadUrl;
+        }
+
+        $assetHost = parse_url($downloadUrl, PHP_URL_HOST);
+        $apiHost = parse_url($apiDomain, PHP_URL_HOST) ?: $apiDomain;
+        if (!is_string($assetHost) || $assetHost !== $apiHost) {
+            return $downloadUrl;
+        }
+
+        $separator = str_contains($downloadUrl, '?') ? '&' : '?';
+
+        return $downloadUrl . $separator . http_build_query(['api_key' => $apiKey]);
+    }
+
+    /**
      * A failed download is data drift, not a run-ending fault, so it is reported
      * by returning null rather than by raising.
      */
-    private function fetchContents(string $downloadUrl): ?string
+    protected function fetchContents(string $downloadUrl): ?string
     {
         // Built directly, not via Import\RequestFactory: that one appends
-        // format=jsonld and the api key, which an image URL must not carry.
+        // format=jsonld, which an image URL must not carry.
         $request = new Request($downloadUrl, 'GET');
 
         try {
@@ -112,9 +135,17 @@ class MediaFileDownloader
         return (string)$response->getBody();
     }
 
-    private function buildFileName(string $dmsId, string $originalName): string
+    protected function buildFileName(string $dmsId, string $originalName, string $downloadUrl = ''): string
     {
+        // The name upstream gave the file, else what the URL says it serves.
+        // jpg only as a last resort — png and webp are just as likely.
         $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        if ($extension === '') {
+            $extension = strtolower(pathinfo(
+                (string)(parse_url($downloadUrl, PHP_URL_PATH) ?: ''),
+                PATHINFO_EXTENSION
+            ));
+        }
         if ($extension === '') {
             $extension = 'jpg';
         }

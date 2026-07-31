@@ -31,6 +31,16 @@ abstract class AbstractEntity implements EntityInterface
     protected int $priority = 10;
 
     /**
+     * Image fields keyed by source slot. Empty means no media; entities that
+     * import media name their own — inheriting another table's columns would
+     * be silently wrong. A constant, not a property: it is a class-level fact
+     * and stays out of get_object_vars().
+     *
+     * @var array<string, string>
+     */
+    public const MEDIA_FIELDS = [];
+
+    /**
      * Category relations wired by the resolver; not DB columns.
      *
      * @var list<array{field: string, remoteId: string, title: string}>
@@ -43,6 +53,15 @@ abstract class AbstractEntity implements EntityInterface
      * @var list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
      */
     protected array $_matchReports = [];
+
+    /**
+     * Media supplied inline rather than by reference. Not a transient: these
+     * need no fetch, so they are consumed where the owner row is already in
+     * hand instead of through the drain loop.
+     *
+     * @var list<array{kind: string, node: array<string, mixed>}>
+     */
+    protected array $_inlineMedia = [];
 
     /**
      * Per-record side channel for unresolved references (e.g. schema:containedInPlace).
@@ -71,8 +90,6 @@ abstract class AbstractEntity implements EntityInterface
      * string. The parser hands the entity a `[code => sysLanguageUid]` map
      * during parse() and recordTranslation() fills this bucket.
      *
-     * Reset at the start of each parse() so a reused entity instance does
-     * not leak translations between nodes.
      *
      * @var array<int, array<string, string>>
      */
@@ -84,6 +101,35 @@ abstract class AbstractEntity implements EntityInterface
      * @var list<EntityInterface>
      */
     protected array $children = [];
+
+    /**
+     * Declared property defaults, captured before the first record.
+     *
+     * @var array<string, mixed>
+     */
+    protected array $_pristineState = [];
+
+    /**
+     * Restore every property to its declared default.
+     *
+     * Entities are shared instances and writers return early when a record
+     * declares nothing, so a record silent about a value would keep its
+     * predecessor's. Read off the class, not a maintained list — a property
+     * added later is covered without being registered anywhere.
+     */
+    public function resetPerRecordState(): void
+    {
+        if ($this->_pristineState === []) {
+            /** @var array<string, mixed> $defaults */
+            $defaults = get_class_vars(static::class);
+            unset($defaults['_pristineState']);
+            $this->_pristineState = $defaults;
+        }
+
+        foreach ($this->_pristineState as $name => $default) {
+            $this->{$name} = $default;
+        }
+    }
 
     public function getRemoteId(array $node): string
     {
@@ -261,14 +307,18 @@ abstract class AbstractEntity implements EntityInterface
     protected function recordMediaTransient(mixed $photo, mixed $image, mixed $video): void
     {
         $entries = [];
-        foreach ($this->collectIds($photo) as $id) {
-            $entries[] = ['kind' => 'photo', 'id' => $id];
+        $inline = [];
+        foreach ([['photo', $photo], ['image', $image], ['video', $video]] as [$kind, $value]) {
+            foreach ($this->splitMediaByShape($value) as $node) {
+                $inline[] = ['kind' => $kind, 'node' => $node];
+            }
+            foreach ($this->collectIds($this->bareReferencesOnly($value)) as $id) {
+                $entries[] = ['kind' => $kind, 'id' => $id];
+            }
         }
-        foreach ($this->collectIds($image) as $id) {
-            $entries[] = ['kind' => 'image', 'id' => $id];
-        }
-        foreach ($this->collectIds($video) as $id) {
-            $entries[] = ['kind' => 'video', 'id' => $id];
+
+        if ($inline !== []) {
+            $this->_inlineMedia = $inline;
         }
 
         if ($entries === []) {
@@ -276,6 +326,66 @@ abstract class AbstractEntity implements EntityInterface
         }
 
         $this->transients['media'] = $entries;
+    }
+
+    /**
+     * Media nodes that carry their own data rather than only pointing at a
+     * separately addressable resource. They need no fetch, so they must not be
+     * staged as a transient — and their `@id` is a per-response blank-node
+     * label, which collectIds() must not treat as a reference.
+     *
+     * Judged on shape, not on the `@id` looking like a blank node: a reference
+     * is a node with nothing in it but its identity.
+     *
+     * @return list<array<string, mixed>>
+     */
+    protected function splitMediaByShape(mixed $value): array
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return [];
+        }
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+
+        $inline = [];
+        foreach ($items as $item) {
+            if (!is_array($item) || $this->isBareReference($item)) {
+                continue;
+            }
+            /** @var array<string, mixed> $item */
+            $inline[] = $item;
+        }
+        return $inline;
+    }
+
+    /**
+     * @param array<mixed> $node
+     */
+    protected function isBareReference(array $node): bool
+    {
+        return array_keys($node) === ['@id'];
+    }
+
+    /**
+     * Counterpart to splitMediaByShape(): the entries that ARE references, so
+     * collectIds() sees only what it can resolve.
+     *
+     * @return list<array<string, mixed>>
+     */
+    protected function bareReferencesOnly(mixed $value): array
+    {
+        if ($value === null || $value === '' || $value === []) {
+            return [];
+        }
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+
+        $references = [];
+        foreach ($items as $item) {
+            if (is_array($item) && $this->isBareReference($item)) {
+                /** @var array<string, mixed> $item */
+                $references[] = $item;
+            }
+        }
+        return $references;
     }
 
     /**
@@ -374,6 +484,17 @@ abstract class AbstractEntity implements EntityInterface
         return $this->transients;
     }
 
+    /** @return list<array{kind: string, node: array<string, mixed>}> */
+    public function getInlineMedia(): array
+    {
+        return $this->_inlineMedia;
+    }
+
+    public function getMediaFieldFor(string $kind): string
+    {
+        return static::MEDIA_FIELDS[$kind] ?? '';
+    }
+
     /** @return array<int, array<string, string>> */
     public function getTranslations(): array
     {
@@ -384,17 +505,19 @@ abstract class AbstractEntity implements EntityInterface
     public function toArray(): array
     {
         $array = get_object_vars($this);
-        // table / transients / priority / translations / children are framework
-        // metadata, not DB columns.
+        // Framework metadata, not DB columns. Underscore-prefixed properties
+        // are per-parse side output and never columns.
         unset(
-            $array['table'],
             $array['transients'],
             $array['priority'],
             $array['translations'],
             $array['children'],
-            $array['_categories'],
-            $array['_matchReports'],
         );
+        foreach (array_keys($array) as $name) {
+            if (str_starts_with($name, '_')) {
+                unset($array[$name]);
+            }
+        }
 
         /** @var array<string, string|int|float> $filtered */
         $filtered = array_filter($array);

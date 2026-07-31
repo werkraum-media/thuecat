@@ -30,14 +30,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 class OrganisationEntity extends AbstractEntity
 {
-    public string $table = 'tx_thuecat_organisation';
+    public const TABLE = 'tx_thuecat_organisation';
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
 
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->translations = [];
         $this->remote_id = $this->getRemoteId($node);
 
         // Field-name → JSON-LD key map; drives both the default-language

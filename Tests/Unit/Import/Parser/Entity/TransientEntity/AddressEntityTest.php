@@ -34,7 +34,7 @@ class AddressEntityTest extends TestCase
     {
         $entity = new AddressEntity();
 
-        self::assertSame('tx_thuecat_address', $entity->table);
+        self::assertSame('tx_thuecat_address', $entity::TABLE);
     }
 
     #[Test]
