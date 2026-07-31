@@ -12,6 +12,8 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDayDropped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDaySkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
@@ -51,6 +53,8 @@ return [
             'categoryMatched' => CategoryMatched::class,
             'categoryUnmatched' => CategoryUnmatched::class,
             'referenceSkipped' => ReferenceSkipped::class,
+            'scheduleDaySkipped' => ScheduleDaySkipped::class,
+            'scheduleDayDropped' => ScheduleDayDropped::class,
         ],
     ],
     SavingEntity::class => [
@@ -80,6 +84,14 @@ return [
     ReferenceSkipped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'referenceSkipped',
+    ],
+    ScheduleDaySkipped::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'scheduleDaySkipped',
+    ],
+    ScheduleDayDropped::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'scheduleDayDropped',
     ],
 
     FrontendTouristAttraction::class => [

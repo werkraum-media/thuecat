@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -34,11 +37,122 @@ class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventImportKreuzchorPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Kreuzchor import configuration not found in pre-state.');
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventImportKreuzchor.php');
+    }
+
+    #[Test]
+    public function reimportDeletesOccurrencesTheScheduleNoLongerProduces(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportStaleDatesPreState.php');
+        $this->expectFetch('e_19542-hubev.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportStaleDates.php');
+    }
+
+    #[Test]
+    public function reimportLeavesDatesOfEventsOutsideTheRunUntouched(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportOtherEventPreState.php');
+        $this->expectFetch('e_19542-hubev.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportOtherEvent.php');
+    }
+
+    #[Test]
+    public function reimportDeletesAnOccurrenceThatBecameExcepted(): void
+    {
+        $this->getContainer()->get(Context::class)->setAspect(
+            'date',
+            new DateTimeAspect(new DateTimeImmutable('2026-12-01T00:00:00+00:00'))
+        );
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportExceptedDatePreState.php');
+        $this->expectFetch('e_7cbe5bb1-tdm.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportExceptedDate.php');
+    }
+
+    #[Test]
+    public function reimportDeletesOccurrencesAfterAShortenedSeriesEnd(): void
+    {
+        $this->getContainer()->get(Context::class)->setAspect(
+            'date',
+            new DateTimeAspect(new DateTimeImmutable('2026-12-01T00:00:00+00:00'))
+        );
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportShortenedSeriesPreState.php');
+        $this->expectFetch('e_7cbe5bb1-shortened-tdm.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportShortenedSeries.php');
+    }
+
+    #[Test]
+    public function logsSkippedScheduleDayAsWarningWithoutFailingTheRun(): void
+    {
+        $this->getContainer()->get(Context::class)->setAspect(
+            'date',
+            new DateTimeAspect(new DateTimeImmutable('2026-12-01T00:00:00+00:00'))
+        );
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportExceptedDatePreState.php');
+        $this->expectFetch('e_7cbe5bb1-tdm.json');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame('warning', $severity);
+        self::assertSame(
+            [
+                [
+                    'type' => 'scheduleDaySkipped',
+                    'severity' => 'warning',
+                    'table_name' => 'tx_events_domain_model_event',
+                    'remote_id' => 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm',
+                    'message' => 'Skipped schedule day(s) "PublicHolidays": no date series can be built from them.',
+                ],
+            ],
+            $this->getLogEntriesOfType('scheduleDaySkipped')
+        );
+        self::assertSame([], $this->getLogEntriesOfType('scheduleDayDropped'));
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getLogEntriesOfType(string $type): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'table_name', 'remote_id', 'message'],
+                'tx_thuecat_import_log_entry',
+                ['type' => $type],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
+        ;
+    }
+
+    private function importConfigurationReturningSeverity(int $uid): string
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
+        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        return $this->get(Importer::class)->importConfiguration($configuration);
+    }
+
+    private function importConfiguration(int $uid): void
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
+        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

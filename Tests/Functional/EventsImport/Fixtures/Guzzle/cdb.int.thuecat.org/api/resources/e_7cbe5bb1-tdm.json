@@ -1,0 +1,333 @@
+  {
+  "@context": {
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/",
+    "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+    "tourism": "https://web-of-data.org/tourism/",
+    "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm",
+      "@type": [
+        "schema:Thing",
+        "schema:Event",
+        "thuecat:GuidedTour",
+        "thuecat:GuidedTourEvent",
+        "thuecat:CityTour",
+        "dcmitype:Event",
+        "ttgds:Event",
+        "thuecat:WalkaboutEvent"
+      ],
+      "rdfs:label": {
+        "@language": "de",
+        "@value": "Test-Altstadtführung"
+      },
+      "schema:identifier": [
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b2",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "TDM"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b3",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "7cbe5bb1-160b-4916-802c-c64dd2f1bf9e"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          }
+        }
+      ],
+      "schema:name": {
+        "@language": "de",
+        "@value": "Test-Altstadtführung"
+      },
+      "schema:image": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b5",
+        "@type": [
+          "schema:Thing",
+          "schema:CreativeWork",
+          "schema:MediaObject",
+          "schema:ImageObject",
+          "dcmitype:Image"
+        ],
+        "schema:position": {
+          "@type": "schema:Integer",
+          "@value": "1"
+        },
+        "schema:author": {
+          "@language": "de",
+          "@value": "©ETMG, Michael Kremer"
+        },
+        "schema:contentUrl": {
+          "@type": "schema:URL",
+          "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg"
+        },
+        "schema:thumbnailUrl": {
+          "@type": "schema:URL",
+          "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/medium/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/917f773b-b975-4f56-aa58-df6e4efa5aa3.jpg"
+        },
+        "schema:license": {
+          "@type": "schema:URL",
+          "@value": "http://creativecommons.org/licenses/by/4.0/"
+        }
+      },
+      "schema:inLanguage": {
+        "@type": "xsd:string",
+        "@value": "tourism:German"
+      },
+      "schema:location": {
+        "@id": "https://thuecat.org/resources/333039283321-xxwg"
+      },
+      "schema:eventSchedule": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b1",
+        "@type": [
+          "schema:Thing",
+          "schema:Schedule",
+          "schema:Intangible"
+        ],
+        "schema:frequency": {
+          "@type": "schema:Duration",
+          "@value": "P1W"
+        },
+        "schema:startTime": {
+          "@type": "schema:Time",
+          "@value": "14:00:00"
+        },
+        "schema:endTime": {
+          "@type": "schema:Time",
+          "@value": "16:00:00"
+        },
+        "schema:startDate": {
+          "@type": "schema:Date",
+          "@value": "2026-12-03"
+        },
+        "schema:exceptDate": {
+          "@type": "schema:Date",
+          "@value": "2026-12-17"
+        },
+        "schema:repeatFrequency": {
+          "@type": "schema:Duration",
+          "@value": "P1W"
+        },
+        "schema:endDate": {
+          "@type": "schema:Date",
+          "@value": "2026-12-31"
+        },
+        "schema:byDay": [
+          {
+            "@type": "schema:DayOfWeek",
+            "@value": "schema:Thursday"
+          },
+          {
+            "@type": "schema:DayOfWeek",
+            "@value": "schema:PublicHolidays"
+          }
+        ]
+      },
+      "schema:offers": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b4",
+        "@type": [
+          "schema:Thing",
+          "schema:Offer",
+          "schema:Intangible",
+          "tourism:OfferReference"
+        ],
+        "schema:itemOffered": {
+          "@id": "https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "https://erfurt-booking.inet-mainz.de/ot/formular"
+        }
+      },
+      "schema:description": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b0",
+        "@type": [
+          "schema:Thing",
+          "schema:CreativeWork",
+          "schema:MediaObject",
+          "schema:TextObject",
+          "dcmitype:Text",
+          "tourism:WebTextObject",
+          "tourism:MainText"
+        ],
+        "schema:additionalType": {
+          "@id": "https://web-of-data.org/tourism/MainText"
+        },
+        "schema:text": {
+          "@language": "de",
+          "@value": "Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH."
+        },
+        "tourism:html": {
+          "@language": "de",
+          "@value": "<p>Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH.</p>"
+        }
+      },
+      "schema:url": {
+        "@type": "schema:URL",
+        "@value": "www.erfurt-tourismus.de"
+      },
+      "schema:keywords": [
+        {
+          "@id": "https://thuecat.org/resources/619041692574-gewe"
+        },
+        {
+          "@id": "https://thuecat.org/resources/537010241706-gncn"
+        }
+      ],
+      "schema:photo": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b5",
+        "@type": [
+          "schema:Thing",
+          "schema:CreativeWork",
+          "schema:MediaObject",
+          "schema:ImageObject",
+          "dcmitype:Image"
+        ],
+        "schema:position": {
+          "@type": "schema:Integer",
+          "@value": "1"
+        },
+        "schema:author": {
+          "@language": "de",
+          "@value": "©ETMG, Michael Kremer"
+        },
+        "schema:contentUrl": {
+          "@type": "schema:URL",
+          "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg"
+        },
+        "schema:thumbnailUrl": {
+          "@type": "schema:URL",
+          "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/medium/7cbe5bb1-160b-4916-802c-c64dd2f1bf9e/917f773b-b975-4f56-aa58-df6e4efa5aa3.jpg"
+        },
+        "schema:license": {
+          "@type": "schema:URL",
+          "@value": "http://creativecommons.org/licenses/by/4.0/"
+        }
+      },
+      "thuecat:contentResponsible": {
+        "@id": "https://thuecat.org/resources/018132452787-ngbe"
+      },
+      "dcterms:identifier": [
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b2",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "TDM"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "thirdparty_source"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b3",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          },
+          "schema:value": {
+            "@type": "xsd:string",
+            "@value": "7cbe5bb1-160b-4916-802c-c64dd2f1bf9e"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "tdm_id"
+          }
+        }
+      ],
+      "dcterms:title": {
+        "@language": "de",
+        "@value": "Test-Altstadtführung"
+      },
+      "dcterms:description": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b0",
+        "@type": [
+          "schema:Thing",
+          "schema:CreativeWork",
+          "schema:MediaObject",
+          "schema:TextObject",
+          "dcmitype:Text",
+          "tourism:WebTextObject",
+          "tourism:MainText"
+        ],
+        "schema:additionalType": {
+          "@id": "https://web-of-data.org/tourism/MainText"
+        },
+        "schema:text": {
+          "@language": "de",
+          "@value": "Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH."
+        },
+        "tourism:html": {
+          "@language": "de",
+          "@value": "<p>Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH.</p>"
+        }
+      }
+    }
+  ]
+}

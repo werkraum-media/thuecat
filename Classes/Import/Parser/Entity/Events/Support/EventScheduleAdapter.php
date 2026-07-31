@@ -36,21 +36,26 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 final class EventScheduleAdapter
 {
     /**
+     * The only day values a date series can be seeded from.
+     */
+    private const WEEKDAY_NAMES = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+    ];
+
+    /**
      * @return list<array<string, mixed>>
      */
     public function toTimeIntervals(mixed $schedule): array
     {
-        if ($schedule === null) {
-            return [];
-        }
-        $items = is_array($schedule) && array_is_list($schedule) ? $schedule : [$schedule];
-
         $intervals = [];
-        foreach ($items as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-            $interval = $this->toInterval($item);
+        foreach ($this->scheduleNodes($schedule) as $node) {
+            $interval = $this->toInterval($node);
             if ($interval === null) {
                 continue;
             }
@@ -61,6 +66,123 @@ final class EventScheduleAdapter
     }
 
     /**
+     * Dates the schedule excludes, as Y-m-d. Kept out of the interval map so the
+     * DatesFactory contract stays as it is; the caller drops the occurrences.
+     *
+     * @return list<string>
+     */
+    public function toExcludedDates(mixed $schedule): array
+    {
+        $excluded = [];
+        foreach ($this->scheduleNodes($schedule) as $node) {
+            $value = $node['schema:exceptDate'] ?? null;
+            if ($value === null) {
+                continue;
+            }
+            $values = is_array($value) && array_is_list($value) ? $value : [$value];
+            foreach ($values as $entry) {
+                $raw = $this->extractTypedValue($entry);
+                if ($raw === '') {
+                    continue;
+                }
+                $excluded[$raw] = true;
+            }
+        }
+
+        return array_keys($excluded);
+    }
+
+    /**
+     * Day values that name no weekday, so cannot seed a series.
+     *
+     * @return list<string>
+     */
+    public function toUnusableDays(mixed $schedule): array
+    {
+        $unusable = [];
+        foreach ($this->scheduleNodes($schedule) as $node) {
+            foreach ($this->dayNames($node) as $name) {
+                if (!in_array($name, self::WEEKDAY_NAMES, true)) {
+                    $unusable[$name] = true;
+                }
+            }
+        }
+
+        return array_keys($unusable);
+    }
+
+    /**
+     * Usable weekdays beyond the one a monthly schedule can carry. Weekly
+     * carries every day, so it never drops any.
+     *
+     * @return list<string>
+     */
+    public function toDroppedDays(mixed $schedule): array
+    {
+        $dropped = [];
+        foreach ($this->scheduleNodes($schedule) as $node) {
+            if ($this->resolveFrequency($node) !== 'Monthly') {
+                continue;
+            }
+            $usable = $this->resolveWeekdays($node);
+            foreach (array_slice($usable, 1) as $name) {
+                $dropped[$name] = true;
+            }
+        }
+
+        return array_keys($dropped);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function scheduleNodes(mixed $schedule): array
+    {
+        if ($schedule === null) {
+            return [];
+        }
+        $items = is_array($schedule) && array_is_list($schedule) ? $schedule : [$schedule];
+
+        $nodes = [];
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                /** @var array<string, mixed> $item JSON-LD nodes are string-keyed. */
+                $nodes[] = $item;
+            }
+        }
+        return $nodes;
+    }
+
+    /**
+     * Bare day names as given, with no usability filtering.
+     *
+     * @param array<string, mixed> $node
+     *
+     * @return list<string>
+     */
+    private function dayNames(array $node): array
+    {
+        $value = $node['schema:byDay'] ?? null;
+        if ($value === null) {
+            return [];
+        }
+        $items = is_array($value) && array_is_list($value) ? $value : [$value];
+
+        $names = [];
+        foreach ($items as $item) {
+            $raw = $this->extractTypedValue($item);
+            if ($raw === '') {
+                continue;
+            }
+            $colon = strrpos($raw, ':');
+            $names[] = $colon === false ? $raw : substr($raw, $colon + 1);
+        }
+        return $names;
+    }
+
+    /**
+     * @param array<string, mixed> $node
+     *
      * @return array<string, mixed>|null
      */
     private function toInterval(array $node): ?array
@@ -92,6 +214,9 @@ final class EventScheduleAdapter
             $interval['weekdays'] = $this->resolveWeekdays($node);
         }
         if ($freq === 'Monthly') {
+            // Already filtered to weekday names, so the first is usable — the
+            // point of taking it here is that position no longer decides.
+            // A monthly series carries one day; any further ones are dropped.
             $interval['weekday'] = $this->resolveWeekdays($node)[0] ?? '';
             $ordinal = $this->extractTypedValue($node['schema:byMonthWeek'] ?? null);
             $interval['dayOrdinal'] = $ordinal === '' ? 0 : (int)$ordinal;
@@ -149,25 +274,21 @@ final class EventScheduleAdapter
      * schema:byDay is a single typed @value or list of typed @values, each
      * `schema:Sunday`/`schema:Monday`/...; the factory expects bare names.
      *
+     * Values that name no weekday are dropped: schema:PublicHolidays is valid
+     * upstream but cannot seed a date series, and the factory expands a day by
+     * feeding it to DateTimeImmutable::modify(). Matched against the closed set
+     * rather than probing modify(), which also accepts "+1 day" and "now".
+     *
+     * @param array<string, mixed> $node
+     *
      * @return list<string>
      */
     private function resolveWeekdays(array $node): array
     {
-        $value = $node['schema:byDay'] ?? null;
-        if ($value === null) {
-            return [];
-        }
-        $items = is_array($value) && array_is_list($value) ? $value : [$value];
-        $names = [];
-        foreach ($items as $item) {
-            $raw = $this->extractTypedValue($item);
-            if ($raw === '') {
-                continue;
-            }
-            $colon = strrpos($raw, ':');
-            $names[] = $colon === false ? $raw : substr($raw, $colon + 1);
-        }
-        return $names;
+        return array_values(array_filter(
+            $this->dayNames($node),
+            static fn (string $name): bool => in_array($name, self::WEEKDAY_NAMES, true)
+        ));
     }
 
     private function extractTypedValue(mixed $value): string

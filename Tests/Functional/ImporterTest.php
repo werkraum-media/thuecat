@@ -15,6 +15,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Resolver;
@@ -476,6 +477,88 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
     }
 
+    #[Test]
+    public function mappingErrorNamesTheRootUrlItWasProcessing(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsWithSkipAndMappingError.php');
+        $this->expectFetch('unfetchable-reference.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $this->importConfigurationReturningSeverity(1);
+
+        $entries = $this->getLogEntriesOfType('mappingError');
+
+        self::assertCount(1, $entries);
+        self::assertSame(
+            'https://thuecat.org/resources/unfetchable-reference',
+            $entries[0]['remote_id']
+        );
+    }
+
+    #[Test]
+    public function mappingErrorRetainsExceptionDetailAndSeverity(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsWithSkipAndMappingError.php');
+        $this->expectFetch('unfetchable-reference.json');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectNotFound('018132452787-ngbe');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        $entries = $this->getLogEntriesOfType('mappingError');
+
+        self::assertSame('error', $severity);
+        self::assertSame('error', $entries[0]['severity']);
+        self::assertNotSame('', $entries[0]['message']);
+
+        self::assertIsString($entries[0]['context']);
+        $context = json_decode($entries[0]['context'], true);
+        self::assertIsArray($context);
+        self::assertArrayHasKey('file', $context);
+        self::assertArrayHasKey('line', $context);
+        self::assertSame(
+            'https://thuecat.org/resources/unfetchable-reference',
+            $context['url'] ?? null
+        );
+    }
+
+    #[Test]
+    public function fetchingErrorNamesTheRootUrlItWasProcessing(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        // 401 is what FetchData turns into an InvalidResponseException.
+        $this->expectFailure('018132452787-ngbe', 401);
+
+        $this->importConfigurationReturningSeverity(1);
+
+        $entries = $this->getLogEntriesOfType('fetchingError');
+
+        self::assertCount(1, $entries);
+        self::assertSame(
+            'https://thuecat.org/resources/018132452787-ngbe',
+            $entries[0]['remote_id']
+        );
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getLogEntriesOfType(string $type): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'remote_id', 'message', 'context'],
+                'tx_thuecat_import_log_entry',
+                ['type' => $type],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
+        ;
+    }
+
     private function buildResolverThrowingError(): ResolverThrowingErrorStub
     {
         return new ResolverThrowingErrorStub(
@@ -488,6 +571,7 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(PageRepository::class),
             $this->get(SysCategoryRepository::class),
             $this->get(ImportLogger::class),
+            $this->get(StaleDateReaper::class),
         );
     }
 

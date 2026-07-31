@@ -90,18 +90,25 @@ class ImportLogger
      * Stage one log entry for an exception caught by the importer (mapping
      * error during parse, fetch error during URL load, etc.). The type
      * argument matches the existing TCA values 'mappingError' / 'fetchingError'.
+     *
+     * The root URL goes into remote_id so the abandoned root is identifiable
+     * from the log alone. A record-level remote id is not reliably known here:
+     * the raise may happen before any row was keyed, and claiming a record we
+     * cannot name would be worse than naming none.
      */
-    public function recordException(string $type, Throwable $exception): void
+    public function recordException(string $type, Throwable $exception, string $url = ''): void
     {
         $context = [
             'class' => $exception::class,
             'code' => $exception->getCode(),
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
+            'url' => $url,
         ];
         $this->stage([
             'type' => $type,
             'severity' => self::SEVERITY_ERROR,
+            'remote_id' => $url,
             'message' => $exception->getMessage(),
             'context' => (string)(json_encode($context) ?: '{}'),
         ]);
@@ -212,6 +219,52 @@ class ImportLogger
                 'severity' => self::SEVERITY_NOTICE,
                 'message' => 'Categories were mapped but "' . $tableField . '" does not exist; mapping skipped.',
                 'context' => (string)(json_encode(['tableField' => $tableField]) ?: '{}'),
+            ]);
+        }
+    }
+
+    /**
+     * One entry per event whose schedule named a day no series can be built
+     * from. Warning, not error: the event still imports, only that day is lost.
+     *
+     * @param array<string, list<string>> $daysByEvent event remote_id => day values
+     */
+    public function recordUnusableScheduleDays(array $daysByEvent): void
+    {
+        foreach ($daysByEvent as $eventRemoteId => $days) {
+            $this->stage([
+                'type' => 'scheduleDaySkipped',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $eventRemoteId,
+                'table_name' => 'tx_events_domain_model_event',
+                'message' => sprintf(
+                    'Skipped schedule day(s) "%s": no date series can be built from them.',
+                    implode('", "', $days)
+                ),
+                'context' => (string)(json_encode(['days' => $days]) ?: '{}'),
+            ]);
+        }
+    }
+
+    /**
+     * One entry per event whose schedule supplied more usable weekdays than the
+     * import can carry. The days are valid; the limit is on our side.
+     *
+     * @param array<string, list<string>> $daysByEvent event remote_id => weekday names
+     */
+    public function recordDroppedScheduleDays(array $daysByEvent): void
+    {
+        foreach ($daysByEvent as $eventRemoteId => $days) {
+            $this->stage([
+                'type' => 'scheduleDayDropped',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $eventRemoteId,
+                'table_name' => 'tx_events_domain_model_event',
+                'message' => sprintf(
+                    'Dropped schedule day(s) "%s": the schedule carries only one.',
+                    implode('", "', $days)
+                ),
+                'context' => (string)(json_encode(['days' => $days]) ?: '{}'),
             ]);
         }
     }

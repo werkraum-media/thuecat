@@ -105,14 +105,14 @@ class Importer
             try {
                 $inputData = $this->fetchDataFromApi($url, $apiKey);
             } catch (InvalidResponseException $e) {
-                $this->importLogger->recordException('fetchingError', $e);
+                $this->importLogger->recordException('fetchingError', $e, $url);
                 continue;
             }
             try {
                 $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
                 $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
             } catch (Throwable $e) {
-                $this->importLogger->recordException('mappingError', $e);
+                $this->importLogger->recordException('mappingError', $e, $url);
                 continue;
             }
             $accumulatedPayload->mergeFrom($resolved);
@@ -198,6 +198,8 @@ class Importer
         // The category map now holds real uids, so matched entries can point at them.
         $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByRemoteId);
         $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
+        $this->importLogger->recordUnusableScheduleDays($parserContext->unusableScheduleDays);
+        $this->importLogger->recordDroppedScheduleDays($parserContext->droppedScheduleDays);
         $this->importLogger->writeLog(
             $configuration->getUid(),
             $loggerPayload,

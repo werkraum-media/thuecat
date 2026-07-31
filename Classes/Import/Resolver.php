@@ -39,6 +39,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
@@ -94,6 +95,7 @@ class Resolver
         protected readonly PageRepository $pageRepository,
         protected readonly SysCategoryRepository $sysCategoryRepository,
         protected readonly ImportLogger $importLogger,
+        protected readonly StaleDateReaper $staleDateReaper,
     ) {
     }
 
@@ -110,6 +112,7 @@ class Resolver
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
         $this->wireCategories($payload, $context);
         $this->drainTranslationsAgainstExistingRows($payload, $context);
+        $this->staleDateReaper->reap($payload);
 
         return $payload;
     }

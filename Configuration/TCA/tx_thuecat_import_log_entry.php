@@ -59,6 +59,14 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'referenceSkipped',
                         ],
                         [
+                            'label' => $languagePath . '.type.scheduleDaySkipped',
+                            'value' => 'scheduleDaySkipped',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.scheduleDayDropped',
+                            'value' => 'scheduleDayDropped',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -181,6 +189,12 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, record_uid, message, context',
             ],
             'referenceSkipped' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'scheduleDaySkipped' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'scheduleDayDropped' => [
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
         ],

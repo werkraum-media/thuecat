@@ -71,7 +71,7 @@ class EventEntity extends AbstractEventsEntity
         $offers = is_array($node['schema:offers'] ?? null) ? $node['schema:offers'] : [];
         $this->ticket = $this->extractTypedValue($offers['schema:url'] ?? null);
 
-        $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null);
+        $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null, $parserContext);
 
         $this->applyCategoryMapper(new EventCategoryMapper(), $node);
     }
@@ -124,13 +124,24 @@ class EventEntity extends AbstractEventsEntity
      *
      * @return list<DateEntity>
      */
-    private function buildDateRows(mixed $schedule): array
+    private function buildDateRows(mixed $schedule, ParserContext $parserContext): array
     {
         $adapter = GeneralUtility::makeInstance(EventScheduleAdapter::class);
+
+        $unusableDays = $adapter->toUnusableDays($schedule);
+        if ($unusableDays !== []) {
+            $parserContext->unusableScheduleDays[$this->remote_id] = $unusableDays;
+        }
+        $droppedDays = $adapter->toDroppedDays($schedule);
+        if ($droppedDays !== []) {
+            $parserContext->droppedScheduleDays[$this->remote_id] = $droppedDays;
+        }
+
         $intervals = $adapter->toTimeIntervals($schedule);
         if ($intervals === []) {
             return [];
         }
+        $excludedDates = $adapter->toExcludedDates($schedule);
 
         // StubImport's getRepeatUntil() is consulted only when a recurring
         // schedule omits its own repeatUntil/repeatCount. Distel's Monthly
@@ -141,6 +152,11 @@ class EventEntity extends AbstractEventsEntity
         foreach ($datesFactory->createDates(new StubImport(), $intervals, false) as $date) {
             $start = $date->getStart();
             $end = $date->getEnd();
+            // Excepted dates are date-only, occurrences carry a time — compare
+            // the calendar day, not the instant.
+            if (in_array($start->format('Y-m-d'), $excludedDates, true)) {
+                continue;
+            }
             $entity = new DateEntity();
             $entity->configure(
                 $this->remote_id,

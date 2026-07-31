@@ -6,6 +6,18 @@ namespace WerkraumMedia\ThueCat\Import\Parser;
 
 class ParserContext
 {
+    /**
+     * Parsing has no logger; collected here and flushed after the run.
+     *
+     * @var array<string, list<string>> event remote_id => day values that could not seed a series
+     */
+    public array $unusableScheduleDays = [];
+
+    /**
+     * @var array<string, list<string>> event remote_id => usable weekdays the import could not carry
+     */
+    public array $droppedScheduleDays = [];
+
     public function __construct(
         public readonly int $importConfigurationUid,
         public readonly string $apiDomain = '',

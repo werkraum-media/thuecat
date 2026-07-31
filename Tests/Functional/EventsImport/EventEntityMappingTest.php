@@ -38,6 +38,14 @@ class EventEntityMappingTest extends AbstractImportTestCase
         $this->assertFixtureMapsTo('e_100771372-hubev', 'DistelMapping');
     }
 
+    #[Test]
+    public function mapsWeeklyScheduleWithNonWeekdayByDayToExpectedRows(): void
+    {
+        $dateTime = new DateTimeImmutable('2026-12-01T00:00:00+00:00');
+        $this->getContainer()->get(Context::class)->setAspect('date', new DateTimeAspect($dateTime));
+        $this->assertFixtureMapsTo('e_7cbe5bb1-tdm', 'NonWeekdayByDayMapping');
+    }
+
     private function assertFixtureMapsTo(string $fixtureId, string $assertionFile): void
     {
         $fixture = __DIR__ . '/Fixtures/Guzzle/cdb.int.thuecat.org/api/resources/' . $fixtureId . '.json';

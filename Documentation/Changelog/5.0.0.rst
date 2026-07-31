@@ -61,6 +61,46 @@ Fixes
 * :bash:`thuecat:importviaconfiguration` now prints a closing message stating whether the run completed, completed
   with warnings, or failed. It previously exited silently, so a non-zero exit arrived with no explanation.
 
+* A schedule day that cannot seed a date series no longer aborts the event import.
+
+  ``schema:byDay`` may carry values that are valid upstream but name no weekday — ``schema:PublicHolidays`` among
+  them. These were passed on for date expansion, where they raised and cost the whole root URL its records. Such a
+  value is now skipped: the event imports with the dates its remaining weekdays produce, and a
+  :sql:`tx_thuecat_import_log_entry` of the new type ``scheduleDaySkipped`` at severity ``warning`` names the event
+  and the value. Editors keep the information that upstream asked for something the import cannot express.
+
+  Where a schedule supplies more usable weekdays than the import can carry — a monthly schedule holds one — the
+  surplus days are recorded separately as ``scheduleDayDropped``, also at ``warning``. The two are deliberately
+  distinct: one is an upstream value we cannot use, the other a usable value our own import discards, and they call
+  for different editor action.
+
+* ``schema:exceptDate`` is honoured.
+
+  Dates a schedule explicitly excludes were imported like any other occurrence. They are now dropped, for every
+  frequency. The comparison is by calendar day in the schedule's timezone, since an exception is date-only while
+  occurrences carry a time.
+
+* An event's stored dates are reconciled with its schedule on re-import.
+
+  Only new occurrences were ever written; one that stopped being produced stayed in the database indefinitely. Dates
+  the import owns are now compared against what the current schedule yields, and the difference is deleted. This is
+  the observable change of this release: occurrences that became excepted, fell after a shortened series end, or
+  vanished with a changed schedule disappear on the next run, where they previously lingered.
+
+  Only the import's own rows are affected — ownership is established through the ``remote_id`` the import assigns —
+  so dates created in the backend survive. The reconciliation is scoped to the events actually imported by the run:
+  an event outside the run, or one whose root URL was abandoned, keeps its dates.
+
+* A failed root URL is identifiable from the import log.
+
+  ``mappingError`` and ``fetchingError`` entries recorded the exception's message and origin but not which
+  configured URL produced them, so a run with several roots left the failure unattributable. Both now carry the root
+  URL in ``remote_id`` and repeat it in the entry's context alongside the existing detail. Severity is unchanged:
+  an abandoned root remains an ``error`` and still fails the run.
+
+  The failing record itself is not named. It is not reliably known at the point the failure is caught — parsing may
+  raise before any record is identified — and naming the wrong record would mislead more than naming none.
+
 Tasks
 -----
 
