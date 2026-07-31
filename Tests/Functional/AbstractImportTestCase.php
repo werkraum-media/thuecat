@@ -219,6 +219,19 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     }
 
     /**
+     * Stage a failing response for a URL that doesn't fit the
+     * `<domain>/<path>/<segment>` convention — image downloads, for instance.
+     */
+    protected function expectFailureForUrl(string $url, int $status, string $body = ''): void
+    {
+        GuzzleClientFaker::expectUrl(
+            $url,
+            new Response($status, [], $body),
+            $status . ' ' . $url
+        );
+    }
+
+    /**
      * @return string[]
      */
     private function getLogFiles(): array

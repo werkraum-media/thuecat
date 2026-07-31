@@ -208,17 +208,14 @@ class Importer
     }
 
     /**
-     * Promote staged media into the target folder when the run is clean. Else, staged
-     * file remain and will be discarded.
+     * Promote staged media unconditionally: a staged file downloaded successfully,
+     * so a failure elsewhere in the run says nothing about it.
      */
     protected function finishRun(Folder $targetFolder, Folder $stagingFolder): string
     {
-        $severity = $this->importLogger->getMaxSeverity();
-        if ($severity !== ImportLogger::SEVERITY_ERROR) {
-            $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
-        }
+        $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
 
-        return $severity;
+        return $this->importLogger->getMaxSeverity();
     }
 
     /**

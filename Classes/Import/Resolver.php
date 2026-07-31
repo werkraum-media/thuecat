@@ -748,6 +748,9 @@ class Resolver
                 continue;
             }
 
+            // Derived before the download so the skip below can name the field.
+            $targetField = $mediaEntity->isMainImage() ? 'main_image' : 'media_files';
+
             $file = $this->mediaFileDownloader->download(
                 $target,
                 $staging,
@@ -756,6 +759,13 @@ class Resolver
                 $mediaEntity->getOriginalFileName(),
             );
             if ($file === null) {
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $targetField,
+                    $downloadUrl,
+                    'Image could not be downloaded.'
+                );
                 continue;
             }
 
@@ -766,7 +776,6 @@ class Resolver
                 'copyright' => $mediaEntity->getCopyright(),
             ], static fn (string $value): bool => $value !== ''));
 
-            $targetField = $mediaEntity->isMainImage() ? 'main_image' : 'media_files';
             $fileUid = $file->getUid();
             $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
             if ($existingRefUid !== null) {

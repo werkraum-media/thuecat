@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
-use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Http\Request;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 
@@ -34,12 +36,15 @@ use TYPO3\CMS\Core\Resource\Folder;
  * stable ThueCat dms id (plus a sanitised original name) so re-imports dedupe:
  * an already-present file — in the target folder from a prior run, or in
  * staging from this run — is reused instead of fetched again.
+ *
+ * Sends via the PSR-18 client, not RequestFactory::request(): a 4xx/5xx must
+ * come back as a response so one unfetchable image can be skipped.
  */
 #[Autoconfigure(public: true)]
 class MediaFileDownloader
 {
     public function __construct(
-        private readonly RequestFactory $requestFactory,
+        private readonly ClientInterface $httpClient,
     ) {
     }
 
@@ -83,9 +88,23 @@ class MediaFileDownloader
         return $file;
     }
 
+    /**
+     * A failed download is data drift, not a run-ending fault, so it is reported
+     * by returning null rather than by raising.
+     */
     private function fetchContents(string $downloadUrl): ?string
     {
-        $response = $this->requestFactory->request($downloadUrl);
+        // Built directly, not via Import\RequestFactory: that one appends
+        // format=jsonld and the api key, which an image URL must not carry.
+        $request = new Request($downloadUrl, 'GET');
+
+        try {
+            $response = $this->httpClient->sendRequest($request);
+        } catch (ClientExceptionInterface) {
+            // No status at all — DNS, refused connection, timeout.
+            return null;
+        }
+
         if ($response->getStatusCode() !== 200) {
             return null;
         }

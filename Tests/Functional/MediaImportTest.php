@@ -54,12 +54,22 @@ class MediaImportTest extends AbstractImportTestCase
             $basePath,
             'absolute'
         );
-        // Folder may survive on disk from a prior test method in this run (the
-        // DB resets between methods, the fileadmin path does not).
-        $storage = $this->get(StorageRepository::class)->getStorageObject($storageUid);
-        if (!$storage->hasFolder('thuecat')) {
-            $storage->createFolder('thuecat');
-        }
+        $this->get(StorageRepository::class)
+            ->getStorageObject($storageUid)
+            ->createFolder('thuecat')
+        ;
+    }
+
+    /**
+     * The DB resets between test methods, the fileadmin path does not. A leftover
+     * file makes download() short-circuit on hasFile(), so a later test staging a
+     * fetch would silently never perform it.
+     */
+    protected function tearDown(): void
+    {
+        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat', true);
+
+        parent::tearDown();
     }
 
     #[Test]
@@ -106,6 +116,141 @@ class MediaImportTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ReimportTouristAttractionWithMedia.php');
     }
 
+    // 400 carries an HTML stub, not image bytes: the status must decide, not the body.
+    // The sibling node shares the root, so it also pins that one bad image doesn't
+    // cost the other records in the same response.
+    #[Test]
+    public function skipsOnlyTheImageThatFailsToDownload(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFailingImage.php');
+        $this->expectFetch('attraction-with-failing-image.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-served-before-failure.json');
+        $this->expectFetch('image-failing-download.json');
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetch('image-of-sibling.json');
+
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFailureForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image',
+            400,
+            '<html><head><title>Redirect</title></head><body></body></html>'
+        );
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099198/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithFailingImage.php');
+    }
+
+    #[Test]
+    public function logsSkippedImageAsWarningWithoutFailingTheRun(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFailingImage.php');
+        $this->expectFetch('attraction-with-failing-image.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-served-before-failure.json');
+        $this->expectFetch('image-failing-download.json');
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetch('image-of-sibling.json');
+
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFailureForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image',
+            400,
+            '<html><head><title>Redirect</title></head><body></body></html>'
+        );
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099198/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $severity = $this->importConfiguration(1);
+
+        // Unfetchable images are data drift: the command must still exit 0.
+        self::assertSame('warning', $severity);
+
+        // Queried rather than asserted as a data set: the surrounding savingEntity
+        // rows are noise here, and only the skip entry is this test's subject.
+        self::assertSame(
+            [
+                [
+                    'type' => 'referenceSkipped',
+                    'severity' => 'warning',
+                    'table_name' => 'tx_thuecat_tourist_attraction',
+                    'remote_id' => 'https://thuecat.org/resources/attraction-with-failing-image',
+                    'message' => 'Skipped reference "https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image" for field "media_files": Image could not be downloaded.',
+                ],
+            ],
+            $this->getSkippedReferenceLogEntries()
+        );
+    }
+
+    // Promotion was gated on the run's overall severity while the finally
+    // discarded staging regardless, so one failed root deleted every root's media.
+    #[Test]
+    public function promotesStagedMediaEvenWhenAnotherRootFailed(): void
+    {
+        $this->expectErrors = true;
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/PromotesMediaDespiteFailedRoot.php');
+        $this->expectFetch('attraction-with-unmappable-relation.json');
+        $this->expectFetch('attraction-under-healthy-root.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-under-healthy-root.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099199/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $severity = $this->importConfiguration(1);
+
+        self::assertSame('error', $severity, 'The failed root must still be reported.');
+        self::assertFileExists(
+            $this->instancePath . '/fileadmin-thuecat/thuecat/image-under-healthy-root_Bild-unter-heilem-Root.jpg',
+            'Media of the healthy root must be promoted despite the other root failing.'
+        );
+        self::assertSame(
+            [],
+            glob($this->instancePath . '/fileadmin-thuecat/thuecat/_thuecat_import_*') ?: [],
+            'The per-run staging folder must not outlive the run.'
+        );
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getSkippedReferenceLogEntries(): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'table_name', 'remote_id', 'message'],
+                'tx_thuecat_import_log_entry',
+                ['type' => 'referenceSkipped'],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
+        ;
+    }
+
     private function seedExistingMediaFiles(): void
     {
         $folder = $this->instancePath . '/fileadmin-thuecat/thuecat';
@@ -120,11 +265,14 @@ class MediaImportTest extends AbstractImportTestCase
         }
     }
 
-    private function importConfiguration(int $uid): void
+    /**
+     * @return string highest severity recorded, in PSR-3 vocabulary
+     */
+    private function importConfiguration(int $uid): string
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
         self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        $this->get(Importer::class)->importConfiguration($configuration);
+        return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

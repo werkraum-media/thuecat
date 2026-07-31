@@ -37,6 +37,27 @@ Fixes
   for them. Failures of the outer calls — the sync-scope/contains-place listing and the root URL fetches — are
   unchanged and still fail the run, so a genuine upstream outage remains distinguishable.
 
+* An image that cannot be downloaded no longer costs the run its media. Previously the download raised on any error
+  status, the exception escaped the resolver and the importer discarded the whole root URL; because promotion of
+  downloaded files was gated on the run's overall severity, that single failure also deleted every image already
+  downloaded under all other roots. A run could finish having imported thousands of records and not one image.
+
+  Now only the affected image is dropped: the owning record is imported without that file, its other images are
+  related as usual, and records under the same root are unaffected. This holds for every failure mode — an error
+  status, a refused connection, a timeout, or an empty body. Each affected record gets a
+  :sql:`tx_thuecat_import_log_entry` row of type ``referenceSkipped`` at severity ``warning``, naming the record and
+  the URL that could not be fetched, so runs whose only problems are unfetchable images exit 0.
+
+  The image download now sends through the PSR-18 client rather than :php:`RequestFactory::request()`, whose Guzzle
+  default raises on a 4xx/5xx before the response can be inspected. JSON-LD fetches are unchanged and still fail
+  loudly.
+
+* Staged media is now promoted into the target folder even when the run recorded an error elsewhere. A file in
+  staging downloaded successfully, so an unrelated mapping failure says nothing about it. This is observable: a run
+  ending in ``error`` now leaves promoted files where it previously left none. A promoted file that no record ended
+  up referencing is reused by name on the next run rather than downloaded again. The per-run staging folder is still
+  discarded on every exit path, so a crashed run leaves no orphans.
+
 * :bash:`thuecat:importviaconfiguration` now prints a closing message stating whether the run completed, completed
   with warnings, or failed. It previously exited silently, so a non-zero exit arrived with no explanation.
 
