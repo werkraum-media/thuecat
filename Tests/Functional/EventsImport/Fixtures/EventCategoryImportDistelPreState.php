@@ -6,8 +6,9 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 // Multi-category case: the Distel fixture (e_100771372-hubev) maps to TWO
 // categories — schema:EventSeries (Veranstaltungsserie) and thuecat:CultureEvent
-// (Kulturveranstaltung); schema:ComedyEvent is unmapped and dropped. Both must
-// be created under parent 100 and both wired onto the one event. No categories
+// (Kulturveranstaltung). The fixture's test: type is unmappable by construction
+// and dropped. Both categories must be created under parent 100 and wired onto
+// the one event. No categories
 // pre-exist. Points the static config at the Distel URL.
 return [
     'pages' => [

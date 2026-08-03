@@ -46,7 +46,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
     #[Test]
     public function createsAndWiresEveryMappedCategoryOfAMultiTypeEvent(): void
     {
-        // Distel maps to two categories; schema:ComedyEvent is unmapped.
+        // Distel maps to two categories; the fixture's test: type is unmappable
+        // by construction, so no real URI can silently start matching it.
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
@@ -64,8 +65,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
         self::assertSame('Veranstaltungsserie', $series[0]['title']);
         self::assertSame('Kulturveranstaltung', $culture[0]['title']);
 
-        // The one event carries both categories, and nothing was created for the
-        // unmapped schema:ComedyEvent (exactly two category rows under parent 100).
+        // The one event carries both categories, and the unmappable type
+        // created nothing: exactly two rows under parent 100.
         self::assertSame(2, $this->countCategoriesUnderParent(100), 'Only the two mapped categories exist.');
         $this->assertEventHasCategory((int)$series[0]['uid']);
         $this->assertEventHasCategory((int)$culture[0]['uid']);
@@ -93,7 +94,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
     #[Test]
     public function logsMatchedAndUnmatchedTypesForTheIntegratorReport(): void
     {
-        // Distel: thuecat:CultureEvent + schema:EventSeries map; schema:ComedyEvent
+        // Distel: thuecat:CultureEvent + schema:EventSeries map; test:UnmappedByConstruction
         // is unmatched; structural types (schema:Thing/Event, dcmitype/ttgds:Event)
         // are consciously ignored and must not appear.
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
@@ -128,7 +129,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         // Containment, not exact lists: the ignore list is intentionally sparse
         // and will grow, so pinning the full unmatched set would be brittle.
         self::assertContains(
-            'schema:ComedyEvent',
+            'test:UnmappedByConstruction',
             array_column($unmatched, 'remote_id'),
             'An unmappable type is logged as unmatched.'
         );

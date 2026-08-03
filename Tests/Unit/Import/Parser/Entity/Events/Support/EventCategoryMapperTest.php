@@ -39,13 +39,17 @@ class EventCategoryMapperTest extends TestCase
         self::assertSame('type:thuecat:CultureEvent', $this->mapper->prefixed('thuecat:CultureEvent'));
     }
 
+    /**
+     * `test:` is no ThueCat prefix, so the unmappable value stays unmappable.
+     * A real URI here breaks these tests the day it gets a mapping.
+     */
     #[Test]
     public function categoriesForKeepsOnlyMappedMembersOfATypeArray(): void
     {
         $types = [
             'schema:Thing',
             'schema:Event',
-            'schema:ComedyEvent',
+            'test:UnmappedByConstruction',
             'thuecat:CultureEvent',
             'dcmitype:Event',
             'ttgds:Event',
@@ -101,7 +105,7 @@ class EventCategoryMapperTest extends TestCase
         $types = [
             'schema:Thing',        // ignored (structural)
             'schema:Event',        // ignored (structural)
-            'schema:ComedyEvent',  // unmatched
+            'test:UnmappedByConstruction',  // unmatched
             'thuecat:CultureEvent', // matched
             'dcmitype:Event',      // ignored (structural)
             'ttgds:Event',         // ignored (structural)
@@ -110,7 +114,7 @@ class EventCategoryMapperTest extends TestCase
         self::assertSame(
             [
                 'matched' => ['thuecat:CultureEvent' => 'Kulturveranstaltung'],
-                'unmatched' => ['schema:ComedyEvent'],
+                'unmatched' => ['test:UnmappedByConstruction'],
             ],
             $this->mapper->reportMatchStatus($types)
         );
@@ -120,8 +124,8 @@ class EventCategoryMapperTest extends TestCase
     public function reportDeduplicatesUnmatchedTypes(): void
     {
         self::assertSame(
-            ['matched' => [], 'unmatched' => ['schema:ComedyEvent']],
-            $this->mapper->reportMatchStatus(['schema:ComedyEvent', 'schema:ComedyEvent'])
+            ['matched' => [], 'unmatched' => ['test:UnmappedByConstruction']],
+            $this->mapper->reportMatchStatus(['test:UnmappedByConstruction', 'test:UnmappedByConstruction'])
         );
     }
 
@@ -131,11 +135,11 @@ class EventCategoryMapperTest extends TestCase
         // schema:Thing is a representative ignored structural type. We assert it
         // lands in neither list rather than pinning the whole ignore set, so the
         // (intentionally sparse, growing) list can change without touching tests.
-        $report = $this->mapper->reportMatchStatus(['schema:Thing', 'schema:ComedyEvent']);
+        $report = $this->mapper->reportMatchStatus(['schema:Thing', 'test:UnmappedByConstruction']);
 
         self::assertArrayNotHasKey('schema:Thing', $report['matched']);
         self::assertNotContains('schema:Thing', $report['unmatched']);
         // The non-ignored unmappable type is still reported.
-        self::assertContains('schema:ComedyEvent', $report['unmatched']);
+        self::assertContains('test:UnmappedByConstruction', $report['unmatched']);
     }
 }

@@ -19,7 +19,7 @@
         "schema:Event",
         "schema:Series",
         "schema:EventSeries",
-        "schema:ComedyEvent",
+        "test:UnmappedByConstruction",
         "thuecat:CultureEvent",
         "dcmitype:Event",
         "ttgds:Event"

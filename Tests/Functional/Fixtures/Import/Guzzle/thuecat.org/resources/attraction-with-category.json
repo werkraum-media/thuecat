@@ -13,8 +13,7 @@
                 "schema:TouristAttraction",
                 "ttgds:PointOfInterest",
                 "schema:Museum",
-                "schema:Synagogue",
-                "thuecat:Building"
+                "schema:Synagogue"
             ],
             "schema:name": {
                 "@language": "de",

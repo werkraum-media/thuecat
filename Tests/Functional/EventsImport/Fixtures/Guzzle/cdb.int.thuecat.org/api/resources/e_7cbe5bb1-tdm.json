@@ -15,12 +15,9 @@
             "@type": [
                 "schema:Thing",
                 "schema:Event",
-                "thuecat:GuidedTour",
                 "thuecat:GuidedTourEvent",
-                "thuecat:CityTour",
                 "dcmitype:Event",
-                "ttgds:Event",
-                "thuecat:WalkaboutEvent"
+                "ttgds:Event"
             ],
             "rdfs:label": {
                 "@language": "de",

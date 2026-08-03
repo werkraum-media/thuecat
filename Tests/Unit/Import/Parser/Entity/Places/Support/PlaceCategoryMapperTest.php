@@ -30,7 +30,7 @@ class PlaceCategoryMapperTest extends TestCase
     {
         self::assertNull($this->mapper->titleFor('schema:Place'));
         self::assertNull($this->mapper->titleFor('schema:TouristAttraction'));
-        self::assertNull($this->mapper->titleFor('thuecat:Building'));
+        self::assertNull($this->mapper->titleFor('test:UnmappedByConstruction'));
     }
 
     #[Test]
@@ -39,6 +39,10 @@ class PlaceCategoryMapperTest extends TestCase
         self::assertSame('type:schema:Museum', $this->mapper->prefixed('schema:Museum'));
     }
 
+    /**
+     * `test:` is no ThueCat prefix, so the unmappable value stays unmappable.
+     * A real URI here breaks these tests the day it gets a mapping.
+     */
     #[Test]
     public function categoriesForKeepsOnlyMappedMembersOfATypeArray(): void
     {
@@ -47,7 +51,7 @@ class PlaceCategoryMapperTest extends TestCase
             'schema:Place',
             'schema:TouristAttraction',
             'ttgds:PointOfInterest',
-            'thuecat:Building',
+            'test:UnmappedByConstruction',
             'schema:Museum',
         ];
 
@@ -83,14 +87,14 @@ class PlaceCategoryMapperTest extends TestCase
             'schema:Place',              // ignored (structural)
             'schema:TouristAttraction',  // ignored (structural)
             'ttgds:PointOfInterest',     // ignored (structural)
-            'thuecat:Building',          // unmatched
+            'test:UnmappedByConstruction',          // unmatched
             'schema:Museum',             // matched
         ];
 
         self::assertSame(
             [
                 'matched' => ['schema:Museum' => 'Museum'],
-                'unmatched' => ['thuecat:Building'],
+                'unmatched' => ['test:UnmappedByConstruction'],
             ],
             $this->mapper->reportMatchStatus($types)
         );
@@ -100,10 +104,10 @@ class PlaceCategoryMapperTest extends TestCase
     public function reportExcludesAnIgnoredTypeFromBothLists(): void
     {
         // Assert absence rather than pinning the whole (growing) ignore set.
-        $report = $this->mapper->reportMatchStatus(['schema:Place', 'thuecat:Building']);
+        $report = $this->mapper->reportMatchStatus(['schema:Place', 'test:UnmappedByConstruction']);
 
         self::assertArrayNotHasKey('schema:Place', $report['matched']);
         self::assertNotContains('schema:Place', $report['unmatched']);
-        self::assertContains('thuecat:Building', $report['unmatched']);
+        self::assertContains('test:UnmappedByConstruction', $report['unmatched']);
     }
 }

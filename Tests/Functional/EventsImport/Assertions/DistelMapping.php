@@ -30,8 +30,8 @@ return [
         ['start' => '2026-11-22T19:00:00+01:00', 'end' => '2026-11-22T20:30:00+01:00', 'canceled' => 'no'],
         ['start' => '2026-12-27T19:00:00+01:00', 'end' => '2026-12-27T20:30:00+01:00', 'canceled' => 'no'],
     ],
-    // @type includes schema:EventSeries (Veranstaltungsserie), schema:ComedyEvent
-    // (unmapped) and thuecat:CultureEvent (Kulturveranstaltung); first-seen order.
+    // @type includes schema:EventSeries (Veranstaltungsserie), an unmappable
+    // test: type and thuecat:CultureEvent (Kulturveranstaltung); first-seen order.
     // remoteId carries the 'type:' source prefix.
     'categories' => [
         ['field' => 'categories', 'remoteId' => 'type:schema:EventSeries', 'title' => 'Veranstaltungsserie'],
