@@ -2,11 +2,13 @@
         xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
         data-namespace-typo3-fluid="true"
 >
-<f:if condition="{list.paginatedItems}">
+<f:if condition="{items}">
     <f:then>
-        <f:for each="{list.paginatedItems}" as="attraction">
-            <h2><f:link.action action="show" arguments="{attraction: attraction}" pageUid="{settings.page.pid.thuecat_attraction_show}">{attraction.title}</f:link.action></h2>
-            <p>{attraction.description}</p>
+        <f:for each="{items}" as="item">
+            <f:comment>
+                Teasers are rendered using Resources/Private/Templates/TouristAttraction/ListItem.html
+            </f:comment>
+            <f:format.raw>{item}</f:format.raw>
         </f:for>
         <f:if condition="{list.pagination.lastPageNumber} > 1">
             <nav>

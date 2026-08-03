@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat;
 
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 
 class Extension
 {
@@ -34,6 +36,21 @@ class Extension
     final public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
 
     final public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
+
+    final public const CACHE_TEASER = 'tx_thuecat_teaser';
+
+    final public const CACHE_LIST = 'tx_thuecat_list';
+
+    final public const CACHE_SEARCH_MASK = 'tx_thuecat_searchmask';
+
+    /** One year; invalidation is by tag. */
+    private const FRONTEND_CACHE_LIFETIME = 31536000;
+
+    private const FRONTEND_CACHE_IDENTIFIERS = [
+        self::CACHE_TEASER,
+        self::CACHE_LIST,
+        self::CACHE_SEARCH_MASK,
+    ];
 
     public static function getLanguagePath(): string
     {
@@ -59,5 +76,29 @@ class Extension
         if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'])) {
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'] = TransientMemoryBackend::class;
         }
+
+        foreach (self::FRONTEND_CACHE_IDENTIFIERS as $identifier) {
+            self::addFrontendCache($identifier);
+        }
+    }
+
+    /**
+     * Group `pages` is load-bearing: DataHandler flushes that whole group by the
+     * tags it emits on save, which is the entire invalidation mechanism.
+     */
+    private static function addFrontendCache(string $identifier): void
+    {
+        if (isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier])) {
+            return;
+        }
+
+        $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier] = [
+            'frontend' => VariableFrontend::class,
+            'backend' => Typo3DatabaseBackend::class,
+            'groups' => ['pages'],
+            'options' => [
+                'defaultLifetime' => self::FRONTEND_CACHE_LIFETIME,
+            ],
+        ];
     }
 }

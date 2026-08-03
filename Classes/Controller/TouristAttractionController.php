@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
@@ -20,10 +25,20 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
+use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
+use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
+use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
 
+/**
+ * v13 types $view as a union, v14 as ViewInterface. Narrowing it here keeps
+ * render() a string on both.
+ *
+ * @property ViewInterface $view
+ */
 class TouristAttractionController extends ActionController
 {
     public function __construct(
@@ -33,6 +48,10 @@ class TouristAttractionController extends ActionController
         protected PaginationFactory $paginationFactory,
         protected ExtensionService $extensionService,
         protected SiblingListPluginLocator $siblingListPluginLocator,
+        protected TeaserRenderer $teaserRenderer,
+        protected CacheManager $cacheManager,
+        protected CacheIdentifierFactory $cacheIdentifierFactory,
+        protected CacheTagCollector $cacheTagCollector,
     ) {
     }
 
@@ -60,14 +79,118 @@ class TouristAttractionController extends ActionController
 
         $this->redirectPostToGet($demand);
 
+        $cache = $this->cacheManager->getCache(Extension::CACHE_LIST);
+        $identifier = $this->cacheIdentifierFactory->forList(
+            $this->pluginUid(),
+            $demand,
+            $currentPage,
+            $this->languageId()
+        );
+
+        $cached = $cache->get($identifier);
+        if (is_string($cached)) {
+            return $this->htmlResponse($cached);
+        }
+
         $attractions = $this->touristAttractionRepository->findByDemand($demand);
         $pagination = $this->paginationFactory->fromSettings($attractions, $currentPage, $this->settings);
+        // Materialised once: needed for rendering and for tagging.
+        $paginatedItems = $pagination->getPaginatedItems();
+        $displayedRecords = is_array($paginatedItems)
+            ? array_values($paginatedItems)
+            : iterator_to_array($paginatedItems, false);
 
         $this->view->assignMultiple([
             'list' => $pagination,
+            'items' => $this->renderItems($displayedRecords),
             'demand' => $demand,
         ]);
-        return $this->htmlResponse();
+        $html = $this->view->render();
+
+        // One tag per displayed record; an empty result falls back to the table.
+        $cache->set($identifier, $html, $this->cacheTagCollector->forRecords(
+            $displayedRecords,
+            $this->cacheTagCollector->tableForModel(TouristAttraction::class)
+        ));
+
+        return $this->htmlResponse($html);
+    }
+
+    protected function pluginUid(): int
+    {
+        $contentObject = $this->request->getAttribute('currentContentObject');
+        if (!$contentObject instanceof ContentObjectRenderer) {
+            return 0;
+        }
+        $uid = $contentObject->data['uid'] ?? null;
+
+        return is_scalar($uid) ? (int)$uid : 0;
+    }
+
+    protected function languageId(): int
+    {
+        return $this->request->getAttribute('language')?->getLanguageId() ?? 0;
+    }
+
+    /**
+     * Renders each record's item template, serving stored HTML where it exists.
+     *
+     * @param iterable<mixed> $records
+     *
+     * @return list<string>
+     */
+    protected function renderItems(iterable $records): array
+    {
+        $detailPageUid = $this->pageUidFromSettings('thuecat_attraction_show');
+        $languageId = $this->languageId();
+        $viewPaths = $this->resolveViewPaths();
+        /** @var array<string, mixed> $settings */
+        $settings = $this->settings;
+
+        $items = [];
+        foreach ($records as $record) {
+            if (!$record instanceof Base) {
+                continue;
+            }
+            $items[] = $this->teaserRenderer->render(
+                $record,
+                $detailPageUid,
+                $languageId,
+                $settings,
+                $viewPaths,
+                $this->request
+            );
+        }
+
+        return $items;
+    }
+
+    /** A page uid from `settings.page.pid.*`, 0 when unconfigured. */
+    protected function pageUidFromSettings(string $name): int
+    {
+        $pageSettings = $this->settings['page'] ?? [];
+        $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
+        $pid = is_array($pidSettings) ? ($pidSettings[$name] ?? null) : null;
+
+        return is_scalar($pid) ? (int)$pid : 0;
+    }
+
+    /**
+     * The plugin's own template paths, so overrides apply to separately
+     * rendered items too.
+     *
+     * @return array{templateRootPaths?: array<int, string>, partialRootPaths?: array<int, string>, layoutRootPaths?: array<int, string>}
+     */
+    protected function resolveViewPaths(): array
+    {
+        $framework = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+        );
+
+        /** @var array{templateRootPaths?: array<int, string>, partialRootPaths?: array<int, string>, layoutRootPaths?: array<int, string>} $paths */
+        $paths = is_array($framework['view'] ?? null) ? $framework['view'] : [];
+
+        return $paths;
     }
 
     public function showAction(?TouristAttraction $attraction = null): ResponseInterface
@@ -87,9 +210,10 @@ class TouristAttractionController extends ActionController
             ? GeneralUtility::intExplode(',', $selectedRecordsSetting, true)
             : [];
 
-        $this->view->assignMultiple([
-            'attractions' => $this->touristAttractionRepository->findBySelectedRecords($uids),
-        ]);
+        $this->view->assign(
+            'items',
+            $this->renderItems($this->touristAttractionRepository->findBySelectedRecords($uids))
+        );
         return $this->htmlResponse();
     }
 
@@ -101,6 +225,22 @@ class TouristAttractionController extends ActionController
         $contentObject = $this->request->getAttribute('currentContentObject');
         $routing = $this->request->getAttribute('routing');
         $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
+
+        $cache = $this->cacheManager->getCache(Extension::CACHE_SEARCH_MASK);
+        // Keyed on the demand as sent: the sibling lookup below mutates it, and
+        // resolving that sibling is the work a hit skips.
+        $identifier = $this->cacheIdentifierFactory->forSearchMask(
+            $this->pluginUid(),
+            $pageId,
+            $demand,
+            $this->languageId()
+        );
+
+        $cached = $cache->get($identifier);
+        if (is_string($cached)) {
+            return $this->htmlResponse($cached);
+        }
+
         $listPluginOnSamePage = $this->detectSiblingListAndApplyTheirFilters($contentObject, $pageId, $demand);
         $formTargetPid = $this->determineSearchActionTargetPid($listPluginOnSamePage, $pageId);
         // @todo Any future record-backed filter option needs the same storage scoping.
@@ -115,7 +255,20 @@ class TouristAttractionController extends ActionController
             'lockedMap' => $listPluginOnSamePage?->getEditorFilter()->getLockedMap() ?? [],
             'formTargetPid' => $formTargetPid,
         ]);
-        return $this->htmlResponse();
+        $html = $this->view->render();
+
+        // Table-level: the mask depends on the whole set. Tables are named
+        // because an empty option list cannot say where it would have drawn.
+        $cache->set($identifier, $html, $this->cacheTagCollector->forRecordSets(
+            [
+                $this->cacheTagCollector->tableForModel(Town::class),
+                $this->cacheTagCollector->tableForModel(Category::class),
+            ],
+            $towns,
+            $categories
+        ));
+
+        return $this->htmlResponse($html);
     }
 
     /**

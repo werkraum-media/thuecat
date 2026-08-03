@@ -28,6 +28,9 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class TouristAttraction extends Place
 {
+    /** Established template variable, shorter than the model name. */
+    public const TEMPLATE_VARIABLE_NAME = 'attraction';
+
     protected string $slogan = '';
 
     /**

@@ -29,6 +29,12 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 abstract class Base extends AbstractEntity
 {
+    /**
+     * Name this record is assigned under in its own item template. Optional;
+     * defaults to the lower-cased model name.
+     */
+    public const TEMPLATE_VARIABLE_NAME = '';
+
     protected string $title = '';
 
     protected string $description = '';

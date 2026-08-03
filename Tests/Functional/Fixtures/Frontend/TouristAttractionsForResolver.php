@@ -3,6 +3,29 @@
 declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+/**
+ * A translation row. The language and origin-pointer columns are read from the
+ * schema because they differ per table.
+ *
+ * @param array<string, string> $row
+ *
+ * @return array<string, string>
+ */
+$translationOf = static function (string $table, array $row, int $originUid, int $language = 1): array {
+    $capability = GeneralUtility::makeInstance(TcaSchemaFactory::class)
+        ->get($table)
+        ->getCapability(TcaSchemaCapability::Language)
+    ;
+
+    $row[$capability->getLanguageField()->getName()] = (string)$language;
+    $row[$capability->getTranslationOriginPointerField()->getName()] = (string)$originUid;
+
+    return $row;
+};
 
 // Combined pages exercising SiblingListPluginLocator through the search form:
 //  page 10 search + FILTERED list (towns=1) -> town hidden+locked, stays on page
@@ -136,10 +159,24 @@ return [
         ['uid' => '4', 'pid' => '11', 'title' => 'Jena'],
         // Lives in the other folder (12) -> outside a list restricted to 11.
         ['uid' => '3', 'pid' => '12', 'title' => 'Gera'],
+        // Translation of Erfurt, so a mask rendered in en offers an option too.
+        $translationOf('tx_thuecat_town', [
+            'uid' => '5',
+            'pid' => '11',
+            'title' => 'Erfurt (en)',
+        ], 1),
     ],
     'tx_thuecat_tourist_attraction' => [
         ['uid' => '1', 'pid' => '11', 'title' => 'Stadtmuseum Erfurt', 'town' => '1'],
         ['uid' => '2', 'pid' => '11', 'title' => 'Goethehaus Weimar', 'town' => '2'],
         ['uid' => '3', 'pid' => '12', 'title' => 'Gera Museum', 'town' => '3'],
+        // Carries the town relation into en; without it the translated town is
+        // never offered, since only towns an attraction references appear.
+        $translationOf('tx_thuecat_tourist_attraction', [
+            'uid' => '4',
+            'pid' => '11',
+            'title' => 'Stadtmuseum Erfurt (en)',
+            'town' => '5',
+        ], 1),
     ],
 ];

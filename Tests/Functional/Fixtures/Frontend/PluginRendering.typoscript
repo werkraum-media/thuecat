@@ -21,3 +21,9 @@ tt_content.werkraummedia_thuecatattractionsearch {
     extensionName = ThueCat
     pluginName = TouristAttractionSearch
 }
+
+tt_content.werkraummedia_thuecatattractionlistselected = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlistselected {
+    extensionName = ThueCat
+    pluginName = TouristAttractionListSelected
+}

@@ -59,7 +59,6 @@ class FrontendTest extends FunctionalTestCase
 
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/Content.php');
         $this->setUpFrontendRootPage(1, [
-            'EXT:thuecat/Configuration/TypoScript/ContentElements/setup.typoscript',
             'EXT:thuecat/Tests/Functional/Fixtures/Frontend/Rendering.typoscript',
         ]);
     }

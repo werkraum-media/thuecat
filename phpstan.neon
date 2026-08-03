@@ -2,6 +2,9 @@ includes:
   - 'phpstan-baseline.neon'
 parameters:
   level: 'max'
+  # Core types differ between v13 and v14; a guard one version needs is
+  # "already narrowed" on the other.
+  treatPhpDocTypesAsCertain: false
   paths:
     - 'Classes'
     - 'Configuration'

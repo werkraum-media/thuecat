@@ -6,8 +6,76 @@ Breaking
 
 * Remove support for TYPO3 v12.
 
+* The list item moved from a partial to a template:
+  :file:`Resources/Private/Partials/TouristAttraction/ListItem.html` is now
+  :file:`Resources/Private/Templates/TouristAttraction/ListItem.html`. The name is unchanged; only the
+  directory differs.
+
+  **Integrators overriding the list item must move their override accordingly.** An override left in
+  ``Partials/`` is silently ignored — the file is no longer read from there, and the shipped template renders
+  instead. Nothing errors, so check this explicitly when upgrading.
+
+  The reason is caching: the attraction list now renders each item separately and caches the resulting HTML per
+  attraction, so an item is rendered once and reused by every list showing it. A separately rendered item is a
+  template rather than a partial.
+
+  **This also changes what the list templates receive.** :file:`List.html` and :file:`SelectedList.html` no longer
+  iterate attractions — the controller renders the items and assigns them as ready HTML in ``{items}``:
+
+  .. code-block:: html
+
+     <f:for each="{items}" as="item">
+         <f:format.raw>{item}</f:format.raw>
+     </f:for>
+
+  An override still iterating ``{list.paginatedItems}`` or ``{attractions}`` renders **nothing**, without an error.
+  ``{list}`` remains assigned for pagination; ``{attractions}`` is gone from the curated list entirely.
+
+  Both actions share one cache, so an attraction shown by a filtered list and a curated one is rendered once.
+
+  Template paths are unchanged otherwise: the item is resolved through the plugin's configured
+  ``templateRootPaths``, so an override in an extension or sitepackage keeps working once it sits in
+  ``Templates/``.
+
 Features
 --------
+
+* Attraction lists are cached, so a visitor rarely waits for one to be built twice.
+
+  Three caches do the work, all in the ``pages`` cache group:
+
+  :sql:`tx_thuecat_teaser`
+      One rendered list item, keyed by the record, the detail page it links to and the language.
+      An attraction shown by several lists — filtered, curated, on different pages — is rendered once
+      and reused by all of them.
+
+  :sql:`tx_thuecat_list`
+      A whole rendered list, keyed by the plugin, the filter selection, the pagination page and the
+      language.
+
+  :sql:`tx_thuecat_searchmask`
+      A rendered filter form, keyed by the plugin, its page, the selection and the language.
+      Deliberately not by the pagination page, so paging through results reuses one form.
+
+  Because they belong to the ``pages`` group, everything that already clears page caches clears these
+  too: the "Clear cache" buttons in the backend, and any editor saving a record. Editors need do
+  nothing differently — a changed attraction, town or category takes its cached output with it and the
+  next visitor sees the new content.
+
+  Entries are discarded by the records they show rather than by age, so nothing goes stale waiting for
+  a lifetime to run out. A filter combination nobody has requested before is still built from scratch,
+  but only its unseen items cost anything: the rest come from the teaser cache.
+
+  The three caches therefore configure a lifetime of one year. This is not a staleness setting —
+  invalidation by tag is what keeps content current — it exists because TYPO3's default would otherwise
+  expire entries after an hour. Override it per cache in :file:`ext_localconf.php` or
+  :file:`config/system/additional.php` via
+  ``$GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][<identifier>]['options']['defaultLifetime']``,
+  though shortening it only costs rebuilds without making anything fresher.
+
+  Note that an import currently discards the caches of every record it visits, whether or not that
+  record changed, so lists are rebuilt after each import run. A known limitation, to be addressed
+  separately; it costs speed, never correctness.
 
 * Add support for TYPO3 v14.
 * Handle images and other files properly via FAL upon import. Target file directory is now part of the import configuration.
@@ -40,6 +108,19 @@ Features
 
 Fixes
 -----
+
+* Paging through an attraction list no longer shows the wrong page.
+
+  Every pagination page and every filter combination of one list plugin shared a single page-cache
+  entry, because ``currentPage`` and ``demand`` were excluded from the cache identifier. Whichever
+  page was requested first was then served for all of them, until that entry expired.
+
+  The symptom only appeared once a page had been cached, so it was reliably invisible on a
+  developer machine and in tests, where every request starts from a cold cache.
+
+  The list and search actions are now non-cacheable and serve their output from the caches described
+  under *Features*, each keyed by the plugin, the filter selection, the pagination page and the
+  language. Filter and pagination URLs are unchanged.
 
 * A referenced resource that cannot be fetched no longer aborts the whole root URL. Previously any failure while
   resolving a reference (a resource deleted upstream, a server error, a malformed response, a network failure)

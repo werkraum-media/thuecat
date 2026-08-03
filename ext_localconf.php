@@ -32,11 +32,12 @@ Extension::registerExtLocalconfConfigConfig();
         ];
     }
 
+    // Non-cacheable: the plugin's own caches serve the rendered result.
     ExtensionUtility::registerControllerActions(
         'ThueCat',
         'TouristAttractionList',
         [TouristAttractionController::class => ['list']],
-        []
+        [TouristAttractionController::class => ['list']]
     );
     ExtensionUtility::registerControllerActions(
         'ThueCat',
@@ -48,7 +49,7 @@ Extension::registerExtLocalconfConfigConfig();
         'ThueCat',
         'TouristAttractionSearch',
         [TouristAttractionController::class => ['searchForm']],
-        []
+        [TouristAttractionController::class => ['searchForm']]
     );
     ExtensionUtility::registerControllerActions(
         'ThueCat',
@@ -57,7 +58,10 @@ Extension::registerExtLocalconfConfigConfig();
         []
     );
 
-    // Demand + paging are non-cacheable, per native plugin namespace.
+    // Both actions are USER_INT, so these never reach a cache identifier.
+    // Excluding them waives only the cHash validation, which would otherwise 404
+    // every filter and pagination URL; Extbase maps them into a typed demand and
+    // listAction re-forces locked filters.
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[demand]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[currentPage]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionsearch[demand]';
