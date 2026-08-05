@@ -18,6 +18,11 @@ class ParserContext
      */
     public array $droppedScheduleDays = [];
 
+    /**
+     * @var array<string, string> event remote_id => title, for events that ended up with no date at all
+     */
+    public array $eventsWithoutDates = [];
+
     public function __construct(
         public readonly int $importConfigurationUid,
         public readonly string $apiDomain = '',

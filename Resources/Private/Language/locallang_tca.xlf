@@ -325,6 +325,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.scheduleDayDropped" xml:space="preserve">
                 <source>Schedule Day Dropped</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.eventWithoutDates" xml:space="preserve">
+                <source>Event Without Dates</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryMatched" xml:space="preserve">
                 <source>Category Matched</source>
             </trans-unit>

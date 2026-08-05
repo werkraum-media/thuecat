@@ -9,8 +9,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
@@ -591,24 +589,6 @@ class ImporterTest extends AbstractImportTestCase
         );
     }
 
-    /**
-     * @return list<array<string, mixed>>
-     */
-    private function getLogEntriesOfType(string $type): array
-    {
-        return $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log_entry')
-            ->select(
-                ['type', 'severity', 'remote_id', 'message', 'context'],
-                'tx_thuecat_import_log_entry',
-                ['type' => $type],
-                [],
-                ['uid' => 'ASC']
-            )
-            ->fetchAllAssociative()
-        ;
-    }
-
     private function buildResolverThrowingError(): ResolverThrowingErrorStub
     {
         return new ResolverThrowingErrorStub(
@@ -624,18 +604,5 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(StaleDateReaper::class),
             $this->get(MediaFieldMap::class),
         );
-    }
-
-    private function importConfiguration(int $uid): void
-    {
-        $this->importConfigurationReturningSeverity($uid);
-    }
-
-    private function importConfigurationReturningSeverity(int $uid): string
-    {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

@@ -8,8 +8,6 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // End-to-end import test: stages a static-URL ImportConfiguration that points
@@ -115,44 +113,11 @@ class EventImportTest extends AbstractImportTestCase
                     'table_name' => 'tx_events_domain_model_event',
                     'remote_id' => 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm',
                     'message' => 'Skipped schedule day(s) "PublicHolidays": no date series can be built from them.',
+                    'context' => '{"days":["PublicHolidays"]}',
                 ],
             ],
             $this->getLogEntriesOfType('scheduleDaySkipped')
         );
         self::assertSame([], $this->getLogEntriesOfType('scheduleDayDropped'));
-    }
-
-    /**
-     * @return list<array<string, mixed>>
-     */
-    private function getLogEntriesOfType(string $type): array
-    {
-        return $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log_entry')
-            ->select(
-                ['type', 'severity', 'table_name', 'remote_id', 'message'],
-                'tx_thuecat_import_log_entry',
-                ['type' => $type],
-                [],
-                ['uid' => 'ASC']
-            )
-            ->fetchAllAssociative()
-        ;
-    }
-
-    private function importConfigurationReturningSeverity(int $uid): string
-    {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        return $this->get(Importer::class)->importConfiguration($configuration);
-    }
-
-    private function importConfiguration(int $uid): void
-    {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

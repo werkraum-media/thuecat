@@ -82,6 +82,11 @@ class EventEntity extends AbstractEventsEntity
         );
 
         $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null, $parserContext);
+        // Every route to zero dates converges here: no schedule, no usable day,
+        // all excepted, all past. An event without dates cannot be displayed.
+        if ($this->_dates === []) {
+            $parserContext->eventsWithoutDates[$this->remote_id] = $this->title;
+        }
 
         $this->applyCategoryMapper(new EventCategoryMapper(), $node);
     }

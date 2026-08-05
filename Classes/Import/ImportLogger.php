@@ -269,6 +269,28 @@ class ImportLogger
         }
     }
 
+    /**
+     * One entry per event that finished the import with no dates. Warning, not
+     * error: the event imported, it just cannot be displayed.
+     *
+     * @param array<string, string> $titleByEvent event remote_id => title
+     */
+    public function recordEventsWithoutDates(array $titleByEvent): void
+    {
+        foreach ($titleByEvent as $eventRemoteId => $title) {
+            // No title in the imported language would render 'Event ""'.
+            $name = $title !== '' ? $title : $eventRemoteId;
+            $this->stage([
+                'type' => 'eventWithoutDates',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $eventRemoteId,
+                'table_name' => 'tx_events_domain_model_event',
+                'message' => sprintf('Event "%s" was imported without any dates.', $name),
+                'context' => (string)(json_encode(['title' => $title]) ?: '{}'),
+            ]);
+        }
+    }
+
     public function getMaxSeverity(): string
     {
         $rank = $this->maxSeverityRank;

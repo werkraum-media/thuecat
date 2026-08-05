@@ -106,6 +106,19 @@ Features
   marks days without hours as closed. A ``OpeningHours/PerDayTable`` partial renders it. The current open/closed
   status is intentionally left to client-side logic.
 
+* An event imported without a single date is named in the import log. Such an event is stored but cannot appear
+  anywhere dates are shown, and until now nothing said so — the absence had to be noticed in the frontend and
+  traced back by hand. Each one now gets a :sql:`tx_thuecat_import_log_entry` row of the new type
+  ``eventWithoutDates`` at severity ``warning``, naming the event and the record to look at.
+
+  The reason is deliberately not distinguished: an event publishing no schedule, one whose schedule yields no
+  usable day, and one whose dates are all excepted are reported alike, because the outcome is the same. The event
+  still imports and a run whose only findings are dateless events exits 0.
+
+  Events whose dates have **all passed** are included, so a finished event will produce this warning. That is
+  intended — the log entry says "this event shows nothing", which is true of a past event as well — but it means
+  the type is expected to appear routinely on sites with older data.
+
 Fixes
 -----
 

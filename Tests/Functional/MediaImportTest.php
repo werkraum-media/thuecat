@@ -26,8 +26,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
-use WerkraumMedia\ThueCat\Import\Importer;
 
 /**
  * Exercises the real media import — download → sys_file → sys_file_reference.
@@ -297,7 +295,7 @@ class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->importConfiguration(1);
+        $severity = $this->importConfigurationReturningSeverity(1);
 
         // Unfetchable images are data drift: the command must still exit 0.
         self::assertSame('warning', $severity);
@@ -334,7 +332,7 @@ class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->importConfiguration(1);
+        $severity = $this->importConfigurationReturningSeverity(1);
 
         self::assertSame('error', $severity, 'The failed root must still be reported.');
         self::assertFileExists(
@@ -378,16 +376,5 @@ class MediaImportTest extends AbstractImportTestCase
         ] as $name) {
             copy($source, $folder . '/' . $name);
         }
-    }
-
-    /**
-     * @return string highest severity recorded, in PSR-3 vocabulary
-     */
-    private function importConfiguration(int $uid): string
-    {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-        return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

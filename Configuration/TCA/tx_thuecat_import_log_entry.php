@@ -67,6 +67,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'scheduleDayDropped',
                         ],
                         [
+                            'label' => $languagePath . '.type.eventWithoutDates',
+                            'value' => 'eventWithoutDates',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -195,6 +199,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
             'scheduleDayDropped' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'eventWithoutDates' => [
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
         ],

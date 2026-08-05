@@ -29,7 +29,9 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
@@ -257,6 +259,38 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
 
         $this->get(ConfigurationManagerInterface::class)
             ->setRequest($fakeRequest)
+        ;
+    }
+
+    protected function importConfiguration(int $uid): void
+    {
+        $this->importConfigurationReturningSeverity($uid);
+    }
+
+    protected function importConfigurationReturningSeverity(int $uid): string
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
+        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+
+        return $this->get(Importer::class)->importConfiguration($configuration);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function getLogEntriesOfType(string $type): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'table_name', 'remote_id', 'message', 'context'],
+                'tx_thuecat_import_log_entry',
+                ['type' => $type],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
         ;
     }
 }
