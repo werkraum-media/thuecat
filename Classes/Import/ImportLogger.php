@@ -291,6 +291,32 @@ class ImportLogger
         }
     }
 
+    /**
+     * One entry per event publishing event-level date keys that could not be
+     * resolved. Such an event also ends up dateless, so it gets an
+     * eventWithoutDates entry too: this one says a published value was
+     * unusable, that one says the record is undisplayable.
+     *
+     * @param array<string, string> $titleByEvent event remote_id => title
+     */
+    public function recordUnresolvableEventDates(array $titleByEvent): void
+    {
+        foreach ($titleByEvent as $eventRemoteId => $title) {
+            $name = $title !== '' ? $title : $eventRemoteId;
+            $this->stage([
+                'type' => 'eventDateSkipped',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $eventRemoteId,
+                'table_name' => 'tx_events_domain_model_event',
+                'message' => sprintf(
+                    'Event "%s" publishes a date that could not be resolved: skipped.',
+                    $name
+                ),
+                'context' => (string)(json_encode(['title' => $title]) ?: '{}'),
+            ]);
+        }
+    }
+
     public function getMaxSeverity(): string
     {
         $rank = $this->maxSeverityRank;

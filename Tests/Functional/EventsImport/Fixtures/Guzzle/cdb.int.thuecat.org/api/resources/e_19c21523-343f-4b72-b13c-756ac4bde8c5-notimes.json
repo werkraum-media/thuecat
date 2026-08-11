@@ -1,0 +1,41 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-notimes",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Test-Festival ohne Zeitschluessel"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Test-Festival ohne Zeitschluessel"
+            },
+            "schema:inLanguage": {
+                "@type": "xsd:string",
+                "@value": "tourism:German"
+            },
+            "schema:startDate": {
+                "@type": "schema:DateTime",
+                "@value": "2026-12-01T08:00:00.000+01:00"
+            },
+            "schema:endDate": {
+                "@type": "schema:DateTime",
+                "@value": "2026-12-01T10:00:00.000+01:00"
+            }
+        }
+    ]
+}

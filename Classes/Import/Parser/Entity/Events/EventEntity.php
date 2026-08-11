@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\Events\Service\DestinationDataImportService\DatesFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventCategoryMapper;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventDateFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
-use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StubImport;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 // Writes into ext:events tables. v1: bare event row plus expanded date rows
@@ -23,14 +22,13 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 // `global_id` (sha256 of address parts on Location) is untouched here — that
 // concept belongs to ext:events' own importer and to nested Location rows.
 //
-// Date wiring delegates to ext:events' DatesFactory: it expands recurring
-// schedules into per-occurrence rows and filters past dates by the
-// TYPO3 Context date aspect. EventScheduleAdapter shapes JSON-LD
-// schema:Schedule nodes into the array form DatesFactory consumes; StubImport
-// stands in for DatesFactory's Import dependency (it only reads
-// getRepeatUntil()).
+// Date wiring goes through EventDateFactory, which owns both shapes — a
+// schedule (delegated to ext:events' DatesFactory) and dates on the event node
+// itself — and decides between them. EventScheduleAdapter is still consulted
+// here for the schedule DIAGNOSTICS, which are about the schedule value rather
+// than about the dates built from it.
 //
-// Collaborators (DatesFactory, EventScheduleAdapter) are resolved via
+// Collaborators are resolved via
 // GeneralUtility::makeInstance rather than constructor injection: the Parser
 // instantiates entities through a ServiceLocator that does not supply
 // arguments, so constructor DI is not available. makeInstance is consistent
@@ -81,9 +79,10 @@ class EventEntity extends AbstractEventsEntity
             $node['schema:video'] ?? null,
         );
 
-        $this->_dates = $this->buildDateRows($node['schema:eventSchedule'] ?? null, $parserContext);
+        $this->_dates = $this->buildDateRows($node, $parserContext);
         // Every route to zero dates converges here: no schedule, no usable day,
-        // all excepted, all past. An event without dates cannot be displayed.
+        // all excepted, all past, no resolvable event-level date. An event
+        // without dates cannot be displayed.
         if ($this->_dates === []) {
             $parserContext->eventsWithoutDates[$this->remote_id] = $this->title;
         }
@@ -123,17 +122,17 @@ class EventEntity extends AbstractEventsEntity
     }
 
     /**
-     * Hand each schema:Schedule node to DatesFactory via the adapter, then
-     * wrap each per-occurrence Date model in a DateEntity child so the Parser
-     * can flush them into the payload after the parent.
+     * Wrap each occurrence the factory yields in a DateEntity child so the
+     * Parser can flush them into the payload after the parent. Both date
+     * shapes converge here, so nothing downstream can tell them apart.
      *
-     * Past-date filtering is owned by DatesFactory (it consults the TYPO3
-     * Context date aspect — tests pin it via setDateAspect()).
+     * @param array<string, mixed> $node
      *
      * @return list<DateEntity>
      */
-    private function buildDateRows(mixed $schedule, ParserContext $parserContext): array
+    private function buildDateRows(array $node, ParserContext $parserContext): array
     {
+        $schedule = $node['schema:eventSchedule'] ?? null;
         $adapter = GeneralUtility::makeInstance(EventScheduleAdapter::class);
 
         $unusableDays = $adapter->toUnusableDays($schedule);
@@ -145,34 +144,21 @@ class EventEntity extends AbstractEventsEntity
             $parserContext->droppedScheduleDays[$this->remote_id] = $droppedDays;
         }
 
-        $intervals = $adapter->toTimeIntervals($schedule);
-        if ($intervals === []) {
-            return [];
-        }
-        $excludedDates = $adapter->toExcludedDates($schedule);
+        $factory = GeneralUtility::makeInstance(EventDateFactory::class);
+        $occurrences = $factory->toOccurrences($node);
 
-        // StubImport's getRepeatUntil() is consulted only when a recurring
-        // schedule omits its own repeatUntil/repeatCount. Distel's Monthly
-        // block carries schema:endDate, so the stub default never fires for
-        // current fixtures — it's a safety net.
-        $datesFactory = GeneralUtility::makeInstance(DatesFactory::class);
+        if ($factory->hadUnresolvableEventLevelDate()) {
+            $parserContext->unresolvableEventDates[$this->remote_id] = $this->title;
+        }
+
         $children = [];
-        foreach ($datesFactory->createDates(new StubImport(), $intervals, false) as $date) {
-            $start = $date->getStart();
-            $end = $date->getEnd();
-            // Excepted dates are date-only, occurrences carry a time — compare
-            // the calendar day, not the instant.
-            if (in_array($start->format('Y-m-d'), $excludedDates, true)) {
-                continue;
-            }
+        foreach ($occurrences as $occurrence) {
             $entity = new DateEntity();
             $entity->configure(
                 $this->remote_id,
-                $start->format('c'),
-                ($end ?? $start)->format('c'),
-                // Date::getCanceled() returns 'canceled' or 'no'; DateEntity
-                // mirrors that string shape into its own `canceled` column.
-                $date->getCanceled() === 'canceled'
+                $occurrence->start,
+                $occurrence->end,
+                $occurrence->canceled
             );
             $children[] = $entity;
         }

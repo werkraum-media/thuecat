@@ -8,6 +8,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\DataHandlerError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventDateSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
@@ -57,6 +58,7 @@ return [
             'scheduleDaySkipped' => ScheduleDaySkipped::class,
             'scheduleDayDropped' => ScheduleDayDropped::class,
             'eventWithoutDates' => EventWithoutDates::class,
+            'eventDateSkipped' => EventDateSkipped::class,
         ],
     ],
     SavingEntity::class => [
@@ -98,6 +100,10 @@ return [
     ScheduleDayDropped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'scheduleDayDropped',
+    ],
+    EventDateSkipped::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'eventDateSkipped',
     ],
 
     FrontendTouristAttraction::class => [

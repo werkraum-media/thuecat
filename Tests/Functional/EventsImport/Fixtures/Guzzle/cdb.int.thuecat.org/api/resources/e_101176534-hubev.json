@@ -1,0 +1,57 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_101176534-hubev",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "NaturErlebnisTag"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "NaturErlebnisTag"
+            },
+            "schema:eventSchedule": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c62852893-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Schedule",
+                    "schema:Intangible"
+                ],
+                "schema:startTime": {
+                    "@type": "schema:DateTime",
+                    "@value": "2026-09-20T11:00:00+02:00"
+                },
+                "schema:endTime": {
+                    "@type": "schema:DateTime",
+                    "@value": "2026-09-20T17:00:00+02:00"
+                },
+                "schema:startDate": {
+                    "@type": "schema:DateTime",
+                    "@value": "2026-09-20T11:00:00+02:00"
+                },
+                "schema:endDate": {
+                    "@type": "schema:DateTime",
+                    "@value": "2026-09-20T17:00:00+02:00"
+                },
+                "schema:scheduleTimezone": {
+                    "@type": "xsd:string",
+                    "@value": "Europe/Berlin"
+                }
+            }
+        }
+    ]
+}

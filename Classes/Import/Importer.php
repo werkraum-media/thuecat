@@ -200,6 +200,7 @@ class Importer
         $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
         $this->importLogger->recordUnusableScheduleDays($parserContext->unusableScheduleDays);
         $this->importLogger->recordDroppedScheduleDays($parserContext->droppedScheduleDays);
+        $this->importLogger->recordUnresolvableEventDates($parserContext->unresolvableEventDates);
         $this->importLogger->recordEventsWithoutDates($parserContext->eventsWithoutDates);
         $this->importLogger->writeLog(
             $configuration->getUid(),

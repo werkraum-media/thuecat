@@ -1,0 +1,111 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-kcev",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Sagen unter und über Erfurt - Theaterspaziergang"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Sagen unter und über Erfurt - Theaterspaziergang"
+            },
+            "schema:startDate": {
+                "@type": "schema:Date",
+                "@value": "2026-12-08"
+            },
+            "schema:endDate": {
+                "@type": "schema:Date",
+                "@value": "2026-12-26"
+            },
+            "schema:eventSchedule": [
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c85628345-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Schedule",
+                        "schema:Intangible"
+                    ],
+                    "schema:startTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-08T16:00:00.000Z"
+                    },
+                    "schema:endTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-08T18:00:00.000Z"
+                    },
+                    "schema:startDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-08T16:00:00.000Z"
+                    },
+                    "schema:endDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-08T18:00:00.000Z"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c85628345-b10",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Schedule",
+                        "schema:Intangible"
+                    ],
+                    "schema:startTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-19T16:00:00.000Z"
+                    },
+                    "schema:endTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-19T18:00:00.000Z"
+                    },
+                    "schema:startDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-19T16:00:00.000Z"
+                    },
+                    "schema:endDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-19T18:00:00.000Z"
+                    }
+                },
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c85628345-b11",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Schedule",
+                        "schema:Intangible"
+                    ],
+                    "schema:startTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-26T16:00:00.000Z"
+                    },
+                    "schema:endTime": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-26T18:00:00.000Z"
+                    },
+                    "schema:startDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-26T16:00:00.000Z"
+                    },
+                    "schema:endDate": {
+                        "@type": "schema:DateTime",
+                        "@value": "2026-12-26T18:00:00.000Z"
+                    }
+                }
+            ]
+        }
+    ]
+}

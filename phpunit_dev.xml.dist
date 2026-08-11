@@ -25,16 +25,7 @@
         </include>
     </source>
 
-    <coverage
-        includeUncoveredFiles="true"
-        pathCoverage="false"
-    >
-        <report>
-            <html outputDirectory=".coverage/html"/>
-            <xml outputDirectory=".coverage/xml"/>
-            <clover outputFile=".coverage/clover.xml"/>
-        </report>
-    </coverage>
+    <coverage />
 
     <testsuites>
         <testsuite name="unit">

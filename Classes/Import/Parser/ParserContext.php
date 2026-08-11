@@ -23,6 +23,11 @@ class ParserContext
      */
     public array $eventsWithoutDates = [];
 
+    /**
+     * @var array<string, string> event remote_id => title, for events publishing event-level date keys that could not be resolved
+     */
+    public array $unresolvableEventDates = [];
+
     public function __construct(
         public readonly int $importConfigurationUid,
         public readonly string $apiDomain = '',

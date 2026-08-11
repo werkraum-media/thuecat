@@ -187,6 +187,10 @@ final class EventScheduleAdapter
      */
     private function toInterval(array $node): ?array
     {
+        // SCHEDULE nodes only. An event node carries the same key names with
+        // opposite meaning — its schema:endDate bounds one occurrence, not the
+        // series — so feeding one here reads it as repeatUntil below. Event
+        // level dates belong to EventLevelDateReader.
         $start = $this->extractTypedValue($node['schema:startTime'] ?? $node['schema:startDate'] ?? null);
         if ($start === '') {
             return null;

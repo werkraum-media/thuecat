@@ -71,6 +71,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'eventWithoutDates',
                         ],
                         [
+                            'label' => $languagePath . '.type.eventDateSkipped',
+                            'value' => 'eventDateSkipped',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -202,6 +206,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
             'eventWithoutDates' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'eventDateSkipped' => [
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
         ],

@@ -1,0 +1,47 @@
+{
+    "@context": {
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-emptysched",
+            "@type": [
+                "schema:Thing",
+                "schema:Event",
+                "dcmitype:Event",
+                "ttgds:Event"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Testreihe mit leerem Schedule"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Testreihe mit leerem Schedule"
+            },
+            "schema:startDate": {
+                "@type": "schema:Date",
+                "@value": "2026-12-08"
+            },
+            "schema:endDate": {
+                "@type": "schema:Date",
+                "@value": "2026-12-26"
+            },
+            "schema:eventSchedule": [
+                {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c85628345-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Schedule",
+                        "schema:Intangible"
+                    ]
+                }
+            ]
+        }
+    ]
+}
