@@ -6,6 +6,22 @@ Breaking
 
 * Remove support for TYPO3 v12.
 
+* Fetched API responses are now cached persistently. The ``thuecat_fetchdata`` cache defaulted to
+  :php:`TransientMemoryBackend`, which died with the process, so every run started cold. It now defaults to
+  :php:`Typo3DatabaseBackend` with a lifetime of 900 seconds.
+
+  **Anyone relying on the fetch cache being empty at process start no longer gets a cold cache.** Two runs
+  started within the lifetime can see the same upstream snapshot. That is the point — it makes re-running after
+  an abort cheap — but it means a run is no longer guaranteed to hit the API.
+
+  Use :bash:`--fresh` on :bash:`thuecat:importviaconfiguration` to force fetches against the API, or pass
+  ``$bypassCache`` to :php:`Import\Importer::importConfiguration()` from a caller that does not go through the
+  command. A bypassing run still writes what it fetches; only reading is skipped.
+
+  Installations that already configure ``thuecat_fetchdata`` see none of this: the backend and lifetime are only
+  set where nothing is configured. Restore the previous behaviour by configuring the transient backend
+  explicitly.
+
 * The list item moved from a partial to a template:
   :file:`Resources/Private/Partials/TouristAttraction/ListItem.html` is now
   :file:`Resources/Private/Templates/TouristAttraction/ListItem.html`. The name is unchanged; only the
@@ -39,6 +55,38 @@ Breaking
 
 Features
 --------
+
+* Import runs are bounded and report their progress.
+
+  A run previously printed nothing between start and its closing line, while neither the JSON-LD fetches nor the
+  media downloads set an HTTP timeout. One unresponsive host blocked the run forever, and because the import log
+  is written at the very end, a hung or killed run left no trace at all. Operators could not tell a healthy long
+  run from a dead one, and terminated working imports.
+
+  :bash:`thuecat:importviaconfiguration` now reports what it is doing while it does it. By default it answers
+  "how much longer": phases with a known position report progress, and a phase whose size cannot be known is
+  announced once rather than emitting a meaningless tally. With :bash:`-vvv` it answers "what is it doing now",
+  naming each item and prefixing the time since the previous one, so a slow request shows up as a gap. Output
+  that is not going to a terminal prints phase transitions only, without redraw.
+
+  Every outbound request now carries a connect and a read timeout, and transient failures — transport errors and
+  5xx responses — are retried up to ``maxAttempts`` times. A 4xx is never retried. Timeouts and exhausted retries
+  are recorded in the import log naming the URL, the cause and the attempt count, at the severity that failure
+  already had: a JSON-LD fetch remains an ``error``, a media download remains a ``warning``.
+
+  Requests that recovered — failed once, succeeded on a later attempt — are summarised in one
+  ``retriesRecovered`` entry per run, naming how many requests recovered and how many extra attempts they cost.
+  Only exhausted retries were recorded otherwise, which left a run against a struggling upstream looking exactly
+  like a healthy one. The entry is a ``notice``: the resources were fetched, nothing was skipped, and the run
+  still exits 0. A run in which nothing needed retrying writes no entry at all, so seeing one is itself the
+  signal.
+
+  A run also has an overall budget (``runBudget``). When it is exceeded the run aborts at the next phase
+  boundary — never mid-pass — writes its import log with a ``runAborted`` entry naming the exhausted budget and
+  the phase reached, and exits non-zero. Any other run-ending failure is recorded the same way as ``runFailed``
+  before being re-raised, so a run that dies no longer disappears without a diagnostic.
+
+  All of this is configurable per installation and per import configuration; see :ref:`import-tuning`.
 
 * Attraction lists are cached, so a visitor rarely waits for one to be built twice.
 

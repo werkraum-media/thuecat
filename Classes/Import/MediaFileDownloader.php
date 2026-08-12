@@ -24,19 +24,18 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Http\Request;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
+use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
+use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
+use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 
 /**
- * Downloads a single POI media file from its source URL into the import's FAL
- * staging folder and returns the resulting sys_file. Files are named by their
- * stable ThueCat dms id (plus a sanitised original name) so re-imports dedupe:
- * an already-present file — in the target folder from a prior run, or in
- * staging from this run — is reused instead of fetched again.
+ * Downloads one imported record's media file into the FAL staging folder.
  *
+ * Names files by their stable dms id so re-imports reuse instead of re-fetch.
  * Sends via the PSR-18 client, not RequestFactory::request(): a 4xx/5xx must
  * come back as a response so one unfetchable image can be skipped.
  */
@@ -44,18 +43,18 @@ use TYPO3\CMS\Core\Resource\Folder;
 class MediaFileDownloader
 {
     public function __construct(
-        protected readonly ClientInterface $httpClient,
+        protected readonly ImportHttpClient $httpClient,
     ) {
     }
 
     /**
-     * Return the file for $dmsId/$originalName, downloading it into $staging
-     * when neither the target nor staging already holds it. Returns null when
-     * the download yields no usable bytes.
+     * Null when the download yields no usable bytes.
      *
      * @param string $dmsId        stable ThueCat resource id, e.g. "dms_5159216"
      * @param string $originalName source filename incl. extension, e.g. "Foo.jpg"
      * @param string $apiKey       sent only to $apiDomain, which refuses anonymous requests
+     * @param string|null $failureDetail out-param: extra diagnosis on failure,
+     *        null when there is nothing worth saying beyond "it failed"
      */
     public function download(
         Folder $target,
@@ -65,7 +64,9 @@ class MediaFileDownloader
         string $originalName,
         string $apiKey = '',
         string $apiDomain = '',
+        ?string &$failureDetail = null,
     ): ?File {
+        $failureDetail = null;
         $fileName = $this->buildFileName($dmsId, $originalName, $downloadUrl);
 
         // Promoted by an earlier successful run — reuse, don't re-download.
@@ -80,7 +81,10 @@ class MediaFileDownloader
             return $existing instanceof File ? $existing : null;
         }
 
-        $contents = $this->fetchContents($this->authenticate($downloadUrl, $apiKey, $apiDomain));
+        $contents = $this->fetchContents(
+            $this->authenticate($downloadUrl, $apiKey, $apiDomain),
+            $failureDetail
+        );
         if ($contents === null || $contents === '') {
             return null;
         }
@@ -115,7 +119,7 @@ class MediaFileDownloader
      * A failed download is data drift, not a run-ending fault, so it is reported
      * by returning null rather than by raising.
      */
-    protected function fetchContents(string $downloadUrl): ?string
+    protected function fetchContents(string $downloadUrl, ?string &$failureDetail = null): ?string
     {
         // Built directly, not via Import\RequestFactory: that one appends
         // format=jsonld, which an image URL must not carry.
@@ -123,12 +127,19 @@ class MediaFileDownloader
 
         try {
             $response = $this->httpClient->sendRequest($request);
+        } catch (RetryExhaustedException $exhausted) {
+            $failureDetail = sprintf('gave up after %d attempts', $exhausted->attempts);
+            return null;
         } catch (ClientExceptionInterface) {
             // No status at all — DNS, refused connection, timeout.
             return null;
         }
 
         if ($response->getStatusCode() !== 200) {
+            $attempts = (int)$response->getHeaderLine(RetryingClient::ATTEMPTS_HEADER);
+            if ($attempts > 1) {
+                $failureDetail = sprintf('gave up after %d attempts', $attempts);
+            }
             return null;
         }
 

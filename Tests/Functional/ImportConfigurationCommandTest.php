@@ -65,6 +65,25 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         self::assertStringContainsString('completed', $tester->getDisplay());
     }
 
+    /** A recovered retry raises severity to `notice`; that must not reach the exit code. */
+    #[Test]
+    public function reportsRecoveredRetryRunAsSuccess(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        $this->expectFailure('018132452787-ngbe', 503, 'Service Unavailable');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $tester = new CommandTester($subject);
+        $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertStringContainsString('completed', $tester->getDisplay());
+    }
+
     #[Test]
     public function reportsWarningRunAsSuccess(): void
     {
@@ -110,6 +129,106 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
 
         self::assertSame(Command::FAILURE, $exitCode);
         self::assertStringContainsString('failed', $tester->getDisplay());
+    }
+
+    #[Test]
+    public function reportsPhaseTransitionsWhileImporting(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $tester = new CommandTester($subject);
+        $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        $display = $tester->getDisplay();
+
+        self::assertStringContainsString('Fetching', $display, 'The run names the phase it is in.');
+        self::assertStringContainsString('Persisting', $display);
+        self::assertStringContainsString('completed', $display, 'The closing line still prints.');
+    }
+
+    /**
+     * CommandTester has no TTY, which is what a cron or CI run looks like.
+     * Per-item churn there would flood the log.
+     */
+    #[Test]
+    public function nonInteractiveOutputOmitsPerItemProgress(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $tester = new CommandTester($subject);
+        $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        $display = $tester->getDisplay();
+
+        self::assertStringNotContainsString(
+            'https://thuecat.org/resources/018132452787-ngbe',
+            $display,
+            'Individual fetched resources are not listed when output is not a terminal.'
+        );
+        self::assertStringNotContainsString("\r", $display, 'No ANSI redraw without a terminal.');
+        self::assertStringContainsString('Fetching', $display, 'Phase transitions still print.');
+    }
+
+    /**
+     * Smoke-level only: this fixture emits one event per phase, so re-entry is
+     * covered by ConsoleProgressRendererTest instead.
+     */
+    #[Test]
+    public function eachPhaseIsAnnouncedOnlyOnce(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTown.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $tester = new CommandTester($subject);
+        $tester->execute(
+            ['configuration' => 1],
+            ['capture_stderr_separately' => true, 'decorated' => true]
+        );
+
+        $display = $tester->getDisplay();
+
+        self::assertSame(
+            1,
+            substr_count($display, 'Fetching configured URLs'),
+            'The fetch phase is announced once, not once per URL.'
+        );
+        self::assertSame(
+            1,
+            substr_count($display, 'Resolving references and media'),
+            'The resolve phase is announced once, however often it is re-entered.'
+        );
+    }
+
+    #[Test]
+    public function progressRenderingLeavesExitCodesUnchanged(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+
+        $subject = $this->getContainer()->get(ImportConfigurationCommand::class);
+
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
+        $this->expectNotFound('043064193523-jcyt');
+
+        $tester = new CommandTester($subject);
+        $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
+
+        self::assertSame(Command::FAILURE, $exitCode, 'A failed run still exits non-zero.');
     }
 
     #[Test]

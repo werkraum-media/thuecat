@@ -1,0 +1,20 @@
+# cat=basic; type=string; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:apiKey
+apiKey =
+
+# Mirrors of WerkraumMedia\ThueCat\Import\Settings\ImportSetting::default();
+# shown so an integrator sees what a run uses. Change both together.
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:readTimeout
+readTimeout = 120
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:connectTimeout
+connectTimeout = 30
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:maxAttempts
+maxAttempts = 3
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:runBudget
+runBudget = 86400
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:fetchCacheLifetime
+fetchCacheLifetime = 900

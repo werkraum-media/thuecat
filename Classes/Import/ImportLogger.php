@@ -11,6 +11,10 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
+use WerkraumMedia\ThueCat\Import\Http\RetryTally;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
+use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 
 class ImportLogger
 {
@@ -60,7 +64,8 @@ class ImportLogger
     private int $maxSeverityRank = 0;
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool
+        private readonly ConnectionPool $connectionPool,
+        private readonly RetryTally $retryTally
     ) {
     }
 
@@ -104,13 +109,95 @@ class ImportLogger
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
             'url' => $url,
-        ];
+        ] + $this->retryContext($exception);
         $this->stage([
             'type' => $type,
             'severity' => self::SEVERITY_ERROR,
             'remote_id' => $url,
             'message' => $exception->getMessage(),
             'context' => (string)(json_encode($context) ?: '{}'),
+        ]);
+    }
+
+    /**
+     * Machine-readable cause and attempt count, so an operator can tell a
+     * timed-out host from a rejected request without parsing the message.
+     *
+     * @return array<string, int|string>
+     */
+    private function retryContext(Throwable $exception): array
+    {
+        $exhausted = $exception instanceof RetryExhaustedException
+            ? $exception
+            : $exception->getPrevious();
+
+        if (!$exhausted instanceof RetryExhaustedException) {
+            return [];
+        }
+
+        return [
+            'cause' => 'retryExhausted',
+            'attempts' => $exhausted->attempts,
+        ];
+    }
+
+    public function recordRunFailed(Throwable $failure, ImportPhase $phaseReached): void
+    {
+        $this->stage([
+            'type' => 'runFailed',
+            'severity' => self::SEVERITY_ERROR,
+            'message' => $failure->getMessage(),
+            'context' => (string)(json_encode([
+                'phase' => $phaseReached->value,
+                'class' => $failure::class,
+                'code' => $failure->getCode(),
+                'file' => $failure->getFile(),
+                'line' => $failure->getLine(),
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
+     * One summary per run rather than one entry per request: a degrading
+     * upstream would otherwise bury the log it is meant to warn through.
+     * Notice, not warning — the resources were fetched, so the run's severity
+     * and exit code must not move.
+     */
+    private function recordRecoveredRetries(): void
+    {
+        if (!$this->retryTally->hasRecoveries()) {
+            return;
+        }
+
+        $recovered = $this->retryTally->recoveredRequests();
+        $this->stage([
+            'type' => 'retriesRecovered',
+            'severity' => self::SEVERITY_NOTICE,
+            'message' => sprintf(
+                '%d request(s) succeeded only after being retried, costing %d extra attempt(s).',
+                $recovered,
+                $this->retryTally->wastedAttempts()
+            ),
+            'context' => (string)(json_encode([
+                'recoveredRequests' => $recovered,
+                'wastedAttempts' => $this->retryTally->wastedAttempts(),
+            ]) ?: '{}'),
+        ]);
+        $this->retryTally->reset();
+    }
+
+    // The phase reached is the diagnosis: it says where the run ran out.
+    public function recordRunAborted(RunBudgetExhaustedException $exception): void
+    {
+        $this->stage([
+            'type' => 'runAborted',
+            'severity' => self::SEVERITY_ERROR,
+            'message' => $exception->getMessage(),
+            'context' => (string)(json_encode([
+                'phase' => $exception->phase->value,
+                'budgetSeconds' => $exception->budgetSeconds,
+                'elapsedSeconds' => round($exception->elapsedSeconds, 1),
+            ]) ?: '{}'),
         ]);
     }
 
@@ -341,6 +428,7 @@ class ImportLogger
      */
     public function writeLog(int|null $configurationUid, array $payload, array $substNEWwithIDs): void
     {
+        $this->recordRecoveredRetries();
         $logKey = StringUtility::getUniqueId('NEW');
         $datamap = [
             'tx_thuecat_import_log' => [
@@ -390,6 +478,7 @@ class ImportLogger
     {
         $this->pendingEntries = [];
         $this->maxSeverityRank = 0;
+        $this->retryTally->reset();
     }
 
     /**

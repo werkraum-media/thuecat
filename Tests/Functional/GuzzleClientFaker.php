@@ -111,6 +111,12 @@ class GuzzleClientFaker
         return self::$lastRequest;
     }
 
+    /** How many requests actually reached the handler; a cache hit adds none. */
+    public static function countConsumed(): int
+    {
+        return count(self::$consumed);
+    }
+
     private static function reset(): void
     {
         self::$expected = [];

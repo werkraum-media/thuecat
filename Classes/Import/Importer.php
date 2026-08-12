@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Psr\Http\Client\ClientExceptionInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -18,11 +19,22 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
+use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
+use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
+use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
+use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
+use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
+use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
+use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 
 class Importer
 {
+    // Last phase entered, so a run-ending throwable can say where it died.
+    protected ImportPhase $phaseReached = ImportPhase::Fetch;
+
     public function __construct(
         protected readonly Parser $parser,
         protected readonly FetchData $fetchData,
@@ -32,6 +44,7 @@ class Importer
         protected readonly MediaFileStaging $mediaFileStaging,
         protected readonly ImportLogger $importLogger,
         protected readonly ImportConfigurationValidator $configurationValidator,
+        protected readonly ImportSettings $settings,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -43,8 +56,17 @@ class Importer
      * `error` if any DataHandler call complained or the URL loop swallowed
      * an exception). Callers (Command) decide on an exit code from that.
      */
-    public function importConfiguration(ImportConfigurationInterface $configuration): string
-    {
+    public function importConfiguration(
+        ImportConfigurationInterface $configuration,
+        ?ImportProgressListener $listener = null,
+        ?RunDeadline $deadline = null,
+        bool $bypassCache = false
+    ): string {
+        $listener ??= new NullProgressListener();
+        $deadline ??= new RunDeadline(
+            $this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget())
+        );
+
         // Pre-flight: abort on a misconfiguration before touching the API.
         $this->configurationValidator->validate($configuration);
 
@@ -56,9 +78,22 @@ class Importer
         $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
         $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
 
+        $this->fetchData->configureForRun(
+            $bypassCache,
+            $this->settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
+        );
+
         try {
-            return $this->runImport($configuration, $targetFolder, $stagingFolder);
+            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $deadline);
+        } catch (Throwable $failure) {
+            // Rethrown after logging: the caller still sees the failure, but the
+            // run no longer disappears without a trace.
+            $this->importLogger->recordRunFailed($failure, $this->phaseReached);
+            $this->importLogger->writeLog($configuration->getUid(), [], []);
+
+            throw $failure;
         } finally {
+            $this->fetchData->resetRunConfiguration();
             $this->mediaFileStaging->discard($stagingFolder);
         }
     }
@@ -66,8 +101,12 @@ class Importer
     protected function runImport(
         ImportConfigurationInterface $configuration,
         Folder $targetFolder,
-        Folder $stagingFolder
+        Folder $stagingFolder,
+        ?ImportProgressListener $listener = null,
+        ?RunDeadline $deadline = null
     ): string {
+        $listener ??= new NullProgressListener();
+        $deadline ??= new RunDeadline(0);
         $urlProvider = $this->getProviderForConfiguration($configuration);
         if (!$urlProvider instanceof UrlProvider) {
             throw new InvalidUrlProviderException('No URL Provider available for given configuration.', 1629296635);
@@ -95,16 +134,35 @@ class Importer
             $stagingFolder,
             $configuration->getCategoryParent(),
             $configuration->getCategoryStoragePid(),
+            $listener,
         );
         $accumulatedPayload = new DataHandlerPayload();
-        foreach ($urlProvider->getUrls($apiDomain) as $url) {
+        $urls = $urlProvider->getUrls($apiDomain);
+        $urlCount = count($urls);
+        $urlNumber = 0;
+        $aborted = false;
+        foreach ($urls as $url) {
+            // Between roots: whatever is accumulated so far still gets written.
+            if ($deadline->isExpired()) {
+                $this->recordAbort($deadline, ImportPhase::Fetch);
+                $aborted = true;
+                break;
+            }
+            $urlNumber++;
+            $this->phaseReached = ImportPhase::Fetch;
+            $listener->progressed(new ImportProgress(
+                ImportPhase::Fetch,
+                $url,
+                $urlNumber,
+                $urlCount
+            ));
             // Per-URL try/catch so a single broken root doesn't abort the
             // run. The exception is staged into the import log and the
             // loop moves on; the run finishes with severity 'error' so the
             // command surfaces a non-zero exit code.
             try {
                 $inputData = $this->fetchDataFromApi($url, $apiKey);
-            } catch (InvalidResponseException $e) {
+            } catch (InvalidResponseException | ClientExceptionInterface $e) {
                 $this->importLogger->recordException('fetchingError', $e, $url);
                 continue;
             }
@@ -128,6 +186,7 @@ class Importer
         $matchReports = $accumulatedPayload->getMatchReports();
 
         if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
+            $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
             // Nothing persisted; still report the types seen.
             $this->importLogger->recordMatchReports($matchReports);
             $this->importLogger->writeLog(
@@ -135,6 +194,8 @@ class Importer
                 $loggerPayload,
                 []
             );
+            $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
+
             return $this->finishRun($targetFolder, $stagingFolder);
         }
 
@@ -162,6 +223,13 @@ class Importer
         // instead of re-querying or re-fetching.
         $substNEWwithIDs = [];
         while ($accumulatedPayload->getDataMap() !== [] || $accumulatedPayload->getCmdMap() !== []) {
+            $this->phaseReached = ImportPhase::Persist;
+            // Between passes: a pass under way is never interrupted mid-write.
+            if (!$aborted && $deadline->isExpired()) {
+                $this->recordAbort($deadline, ImportPhase::Persist);
+                $aborted = true;
+                break;
+            }
             if ($iterations >= $maxIterations) {
                 throw new RuntimeException(
                     'Importer loop exceeded ' . $maxIterations . ' iterations; translations bucket: '
@@ -169,6 +237,13 @@ class Importer
                     1777148664
                 );
             }
+            $this->phaseReached = ImportPhase::Persist;
+            $listener->progressed(new ImportProgress(
+                ImportPhase::Persist,
+                'Writing records',
+                $iterations + 1,
+                $maxIterations
+            ));
             $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
             $dataHandler->enableLogging = false;
@@ -195,6 +270,8 @@ class Importer
             $iterations++;
         }
 
+        $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
+
         // The category map now holds real uids, so matched entries can point at them.
         $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByRemoteId);
         $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
@@ -207,6 +284,8 @@ class Importer
             $loggerPayload,
             $substNEWwithIDs
         );
+
+        $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
 
         return $this->finishRun($targetFolder, $stagingFolder);
     }
@@ -255,6 +334,19 @@ class Importer
         }
 
         return null;
+    }
+
+    /**
+     * Staged, not thrown: the run must still reach writeLog(), or an aborted
+     * run leaves nothing behind — which is the failure this exists to fix.
+     */
+    protected function recordAbort(RunDeadline $deadline, ImportPhase $phase): void
+    {
+        try {
+            $deadline->assertNotExpired($phase);
+        } catch (RunBudgetExhaustedException $exception) {
+            $this->importLogger->recordRunAborted($exception);
+        }
     }
 
     protected function fetchDataFromApi(string $url, string $apiKey): array

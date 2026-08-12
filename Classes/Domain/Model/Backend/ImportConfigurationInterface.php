@@ -105,4 +105,11 @@ interface ImportConfigurationInterface
     public function getUid(): ?int;
 
     public function getFetchLastXDays(): int;
+
+    // Both return the editor's explicit choice; 0 means "not set". Consumers
+    // resolve the fallback chain via ImportSettings.
+
+    public function getRunBudget(): int;
+
+    public function getFetchCacheLifetime(): int;
 }

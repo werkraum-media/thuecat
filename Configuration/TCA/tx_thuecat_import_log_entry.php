@@ -55,6 +55,18 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'dataHandlerError',
                         ],
                         [
+                            'label' => $languagePath . '.type.runAborted',
+                            'value' => 'runAborted',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.runFailed',
+                            'value' => 'runFailed',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.retriesRecovered',
+                            'value' => 'retriesRecovered',
+                        ],
+                        [
                             'label' => $languagePath . '.type.referenceSkipped',
                             'value' => 'referenceSkipped',
                         ],
@@ -210,6 +222,15 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'eventDateSkipped' => [
                 'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'runAborted' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'runFailed' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'retriesRecovered' => [
+                'showitem' => '--palette--;;always, message, context',
             ],
         ],
     ];

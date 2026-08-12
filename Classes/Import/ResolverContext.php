@@ -25,6 +25,9 @@ namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Resource\Folder;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
+use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
+use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 
 final class ResolverContext
 {
@@ -178,7 +181,16 @@ final class ResolverContext
         public readonly ?Folder $stagingFolder = null,
         public readonly int $categoryParentUid = 0,
         public readonly int $categoryStoragePid = 0,
+        public readonly ?ImportProgressListener $progressListener = null,
     ) {
+    }
+
+    // The run-scoped carrier already; cheaper than a parameter on every method.
+    public function reportProgress(string $label): void
+    {
+        $this->progressListener?->progressed(
+            new ImportProgress(ImportPhase::Resolve, $label)
+        );
     }
 
     public function markFound(string $remoteId): void

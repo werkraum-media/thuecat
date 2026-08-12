@@ -28,6 +28,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -54,6 +55,13 @@ class ImportConfigurationCommand extends Command
             InputArgument::REQUIRED,
             'The UID of the import configuration to use'
         );
+
+        $this->addOption(
+            'fresh',
+            null,
+            InputOption::VALUE_NONE,
+            'Ignore cached API responses and fetch every resource from the API'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -71,7 +79,15 @@ class ImportConfigurationCommand extends Command
         if ($configuration === null) {
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
-        $severity = $this->importer->importConfiguration($configuration);
+        // Decoration, not input interactivity: it tracks whether a terminal is
+        // attached, which is what makes per-item churn readable rather than a
+        // flood in a cron or CI log.
+        $severity = $this->importer->importConfiguration(
+            $configuration,
+            new ConsoleProgressRenderer($output, $output->isDecorated()),
+            null,
+            $input->getOption('fresh') === true
+        );
         $io = new SymfonyStyle($input, $output);
 
         if ($this->isFailureSeverity($severity)) {

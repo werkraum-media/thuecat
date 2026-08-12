@@ -589,6 +589,37 @@ class ImporterTest extends AbstractImportTestCase
         );
     }
 
+    /**
+     * A root URL whose every attempt fails must be recorded and skipped like
+     * any other fetch failure, not escape and abort the run.
+     */
+    #[Test]
+    public function exhaustedRetryOnARootUrlIsRecordedAsAFetchingError(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        // One per attempt: maxAttempts defaults to 3.
+        $this->expectFailure('018132452787-ngbe', 500);
+        $this->expectFailure('018132452787-ngbe', 500);
+        $this->expectFailure('018132452787-ngbe', 500);
+
+        $this->importConfigurationReturningSeverity(1);
+
+        $entries = $this->getLogEntriesOfType('fetchingError');
+
+        self::assertCount(1, $entries);
+        self::assertSame(
+            'https://thuecat.org/resources/018132452787-ngbe',
+            $entries[0]['remote_id']
+        );
+        self::assertSame('error', $entries[0]['severity']);
+
+        self::assertIsString($entries[0]['context']);
+        $context = json_decode($entries[0]['context'], true);
+        self::assertIsArray($context);
+        self::assertSame(3, $context['attempts'] ?? null, 'Attempt count is recorded.');
+        self::assertSame('retryExhausted', $context['cause'] ?? null, 'Cause is machine-readable.');
+    }
+
     private function buildResolverThrowingError(): ResolverThrowingErrorStub
     {
         return new ResolverThrowingErrorStub(

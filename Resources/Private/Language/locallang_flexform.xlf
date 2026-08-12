@@ -106,6 +106,19 @@
                 <source>Overrides the global ThueCat API key from the extension configuration. Leave empty to use the global key.</source>
             </trans-unit>
 
+            <trans-unit id="importConfiguration.runBudget" xml:space="preserve">
+                <source>Run budget (seconds)</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.runBudget.description" xml:space="preserve">
+                <source>Overall time this import may take before it aborts deliberately and writes its log. Leave empty to use the extension configuration.</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.fetchCacheLifetime" xml:space="preserve">
+                <source>Fetch cache lifetime (seconds)</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.fetchCacheLifetime.description" xml:space="preserve">
+                <source>How long fetched API responses stay reusable by a later run. Leave empty to use the extension configuration.</source>
+            </trans-unit>
+
             <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>

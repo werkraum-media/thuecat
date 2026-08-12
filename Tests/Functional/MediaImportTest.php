@@ -316,6 +316,53 @@ class MediaImportTest extends AbstractImportTestCase
         );
     }
 
+    /**
+     * An exhausted retry must be distinguishable in the log from a rejected
+     * request; both skip one image, but only one means the host was failing.
+     */
+    #[Test]
+    public function skippedImageNamesTheExhaustedRetryAndItsAttemptCount(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithFailingImage.php');
+        $this->expectFetch('attraction-with-failing-image.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-served-before-failure.json');
+        $this->expectFetch('image-failing-download.json');
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetch('image-of-sibling.json');
+
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        // One per attempt: maxAttempts defaults to 3.
+        $failingImage = 'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image';
+        $this->expectFailureForUrl($failingImage, 503);
+        $this->expectFailureForUrl($failingImage, 503);
+        $this->expectFailureForUrl($failingImage, 503);
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099198/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        self::assertSame('warning', $severity, 'An unfetchable image stays a warning.');
+
+        $entries = $this->getSkippedReferenceLogEntries();
+        self::assertCount(1, $entries);
+        self::assertIsString($entries[0]['message']);
+        self::assertStringContainsString(
+            'after 3 attempts',
+            $entries[0]['message'],
+            'The message names how many attempts were made.'
+        );
+    }
+
     // Promotion was gated on the run's overall severity while the finally
     // discarded staging regardless, so one failed root deleted every root's media.
     #[Test]

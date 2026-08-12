@@ -25,13 +25,13 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Importer;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 
@@ -41,7 +41,7 @@ class FetchDataTest extends TestCase
     public function returnsParsedJsonLdBasedOnUrl(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $cache = self::createStub(FrontendInterface::class);
 
         $request = self::createStub(RequestInterface::class);
@@ -76,7 +76,7 @@ class FetchDataTest extends TestCase
     public function returnsEmptyArrayInCaseOfError(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $cache = self::createStub(FrontendInterface::class);
 
         $request = self::createStub(RequestInterface::class);
@@ -106,7 +106,7 @@ class FetchDataTest extends TestCase
     public function returnsResultFromCacheIfAvailable(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $cache = self::createStub(FrontendInterface::class);
 
         $cache->method('get')->willReturn([
@@ -137,7 +137,7 @@ class FetchDataTest extends TestCase
     public function throwsExceptionOn404(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $cache = self::createStub(FrontendInterface::class);
 
         $request = self::createStub(RequestInterface::class);
@@ -174,7 +174,7 @@ class FetchDataTest extends TestCase
     public function throwsExceptionOn401(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $cache = self::createStub(FrontendInterface::class);
 
         $request = self::createStub(RequestInterface::class);

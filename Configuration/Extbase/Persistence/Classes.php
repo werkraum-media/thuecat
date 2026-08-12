@@ -13,6 +13,9 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RetriesRecovered;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunAborted;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunFailed;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDayDropped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDaySkipped;
@@ -59,6 +62,9 @@ return [
             'scheduleDayDropped' => ScheduleDayDropped::class,
             'eventWithoutDates' => EventWithoutDates::class,
             'eventDateSkipped' => EventDateSkipped::class,
+            'runAborted' => RunAborted::class,
+            'runFailed' => RunFailed::class,
+            'retriesRecovered' => RetriesRecovered::class,
         ],
     ],
     SavingEntity::class => [
@@ -96,6 +102,18 @@ return [
     EventWithoutDates::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'eventWithoutDates',
+    ],
+    RunAborted::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'runAborted',
+    ],
+    RunFailed::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'runFailed',
+    ],
+    RetriesRecovered::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'retriesRecovered',
     ],
     ScheduleDayDropped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

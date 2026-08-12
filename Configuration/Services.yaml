@@ -8,6 +8,21 @@ services:
     resource: '../Classes/*'
     exclude: '..Classes/Domain/Model/*'
 
+  # Import classes type-hint ImportHttpClient, never PSR-18 ClientInterface, so
+  # the container cannot hand them the shared client — core leaves its read
+  # timeout unlimited and one stalled host would hang the whole run.
+  WerkraumMedia\ThueCat\Import\Http\ClientBudget:
+    factory:
+      - 'WerkraumMedia\ThueCat\Import\Http\ClientBudget'
+      - 'fromExtensionConfiguration'
+
+  WerkraumMedia\ThueCat\Import\Http\ImportHttpClient:
+    factory:
+      - '@WerkraumMedia\ThueCat\Import\Http\ImportClientFactory'
+      - 'build'
+    arguments:
+      - '@WerkraumMedia\ThueCat\Import\Http\ClientBudget'
+
   WerkraumMedia\ThueCat\Typo3\Hook\:
     resource: '../Classes/Typo3/Hook/*'
     public: true

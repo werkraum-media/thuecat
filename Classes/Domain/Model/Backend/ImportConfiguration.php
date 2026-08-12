@@ -200,6 +200,16 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return (int)$value;
     }
 
+    public function getRunBudget(): int
+    {
+        return $this->getPositiveIntFromFlexForm('runBudget');
+    }
+
+    public function getFetchCacheLifetime(): int
+    {
+        return $this->getPositiveIntFromFlexForm('fetchCacheLifetime');
+    }
+
     public function getContainsPlaceId(): string
     {
         $containsPlaceId = $this->getConfigurationValueFromFlexForm('containsPlaceId');
@@ -207,6 +217,17 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
             throw new Exception('Could not fetch containsPlaceId.', 1671027015);
         }
         return $containsPlaceId;
+    }
+
+    private function getPositiveIntFromFlexForm(string $fieldName): int
+    {
+        $value = $this->getConfigurationValueFromFlexForm($fieldName);
+
+        if (!is_numeric($value) || $value <= 0) {
+            return 0;
+        }
+
+        return (int)$value;
     }
 
     private function getEntries(): array

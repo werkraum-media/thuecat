@@ -625,6 +625,7 @@ class Resolver
         }
 
         try {
+            $context->reportProgress($reference);
             $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
             $graph = $response['@graph'] ?? [];
             if (!is_array($graph)) {
@@ -760,6 +761,8 @@ class Resolver
             // Derived before the download so the skip below can name the field.
             $targetField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
 
+            $context->reportProgress($downloadUrl);
+            $failureDetail = null;
             $file = $this->mediaFileDownloader->download(
                 $target,
                 $staging,
@@ -768,6 +771,7 @@ class Resolver
                 $mediaEntity->getOriginalFileName(),
                 (string)$context->apiKey,
                 $context->parserContext->apiDomain,
+                $failureDetail,
             );
             if ($file === null) {
                 $this->importLogger->recordSkippedReference(
@@ -775,7 +779,7 @@ class Resolver
                     $ownerRemoteId,
                     $targetField,
                     $downloadUrl,
-                    'Image could not be downloaded.'
+                    $this->downloadFailureReason($failureDetail)
                 );
                 continue;
             }
@@ -901,6 +905,8 @@ class Resolver
                     // The node's @id is a per-response blank-node label, so the
                     // content URL's filename is the stable identity. Inline
                     // media names no title, so the extension comes from the URL.
+                    $context->reportProgress($downloadUrl);
+                    $failureDetail = null;
                     $file = $this->mediaFileDownloader->download(
                         $target,
                         $staging,
@@ -909,6 +915,7 @@ class Resolver
                         $mediaEntity->getOriginalFileName(),
                         (string)$context->apiKey,
                         $context->parserContext->apiDomain,
+                        $failureDetail,
                     );
                     if ($file === null) {
                         $this->importLogger->recordSkippedReference(
@@ -916,7 +923,7 @@ class Resolver
                             $ownerRemoteId,
                             $targetField,
                             $downloadUrl,
-                            'Image could not be downloaded.'
+                            $this->downloadFailureReason($failureDetail)
                         );
                         continue;
                     }
@@ -990,6 +997,17 @@ class Resolver
      * stored filename: "https://thuecat.org/resources/dms_5159216"
      * → "dms_5159216".
      */
+    // Appends only what the downloader could add, so a plain rejection keeps
+    // the message it has always had.
+    protected function downloadFailureReason(?string $failureDetail): string
+    {
+        if ($failureDetail === null || $failureDetail === '') {
+            return 'Image could not be downloaded.';
+        }
+
+        return sprintf('Image could not be downloaded, %s.', $failureDetail);
+    }
+
     protected function extractDmsId(string $reference): string
     {
         $path = (string)(parse_url($reference, PHP_URL_PATH) ?: $reference);
@@ -1088,6 +1106,7 @@ class Resolver
      */
     protected function fetchGraphNode(string $url, ResolverContext $context, string $expectedId): array
     {
+        $context->reportProgress($url);
         $response = $this->fetchData->jsonLDFromUrl($url, $context->apiKey);
         $graph = $response['@graph'] ?? [];
         if (!is_array($graph)) {

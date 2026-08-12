@@ -26,12 +26,12 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
+use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 
 /**
@@ -44,7 +44,7 @@ class MediaFileDownloaderTest extends TestCase
     #[Test]
     public function returnsNoFileOnTransportFailure(): void
     {
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $httpClient->method('sendRequest')->willThrowException(
             new class('Connection refused', 1785395634) extends RuntimeException implements ClientExceptionInterface {
             }
@@ -159,7 +159,7 @@ class MediaFileDownloaderTest extends TestCase
         );
     }
 
-    private function clientReturning(int $status, string $body): ClientInterface
+    private function clientReturning(int $status, string $body): ImportHttpClient
     {
         $stream = self::createStub(StreamInterface::class);
         $stream->method('__toString')->willReturn($body);
@@ -168,7 +168,7 @@ class MediaFileDownloaderTest extends TestCase
         $response->method('getStatusCode')->willReturn($status);
         $response->method('getBody')->willReturn($stream);
 
-        $httpClient = self::createStub(ClientInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
         $httpClient->method('sendRequest')->willReturn($response);
 
         return $httpClient;
@@ -177,7 +177,7 @@ class MediaFileDownloaderTest extends TestCase
     /**
      * Neither folder holds the file, so download() always reaches the fetch.
      */
-    private function download(ClientInterface $httpClient): ?object
+    private function download(ImportHttpClient $httpClient): ?object
     {
         $target = self::createStub(Folder::class);
         $target->method('hasFile')->willReturn(false);

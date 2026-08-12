@@ -157,6 +157,16 @@ class ImportConfigurationValidatorTest extends AbstractImportTestCase
             {
                 return 0;
             }
+
+            public function getRunBudget(): int
+            {
+                return 0;
+            }
+
+            public function getFetchCacheLifetime(): int
+            {
+                return 0;
+            }
         };
     }
 }

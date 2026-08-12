@@ -6,6 +6,21 @@
             <trans-unit id="apiKey" xml:space="preserve">
                 <source>API-Key</source>
             </trans-unit>
+            <trans-unit id="readTimeout" xml:space="preserve">
+                <source>Read timeout (seconds): how long to wait for a response body before giving up. Empty uses the built-in default.</source>
+            </trans-unit>
+            <trans-unit id="connectTimeout" xml:space="preserve">
+                <source>Connect timeout (seconds): how long to wait for a connection before giving up. Empty uses the built-in default.</source>
+            </trans-unit>
+            <trans-unit id="maxAttempts" xml:space="preserve">
+                <source>Maximum attempts per request: total calls including the first one, so 3 means the original call plus 2 retries. 1 disables retrying. Only timeouts, connection failures and server errors are retried. Empty uses the built-in default.</source>
+            </trans-unit>
+            <trans-unit id="runBudget" xml:space="preserve">
+                <source>Run budget (seconds): overall time an import may take before it aborts deliberately and writes its log. Empty uses the built-in default.</source>
+            </trans-unit>
+            <trans-unit id="fetchCacheLifetime" xml:space="preserve">
+                <source>Fetch cache lifetime (seconds): how long fetched API responses stay reusable by a later run. Empty uses the built-in default.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

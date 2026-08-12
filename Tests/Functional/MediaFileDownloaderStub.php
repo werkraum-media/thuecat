@@ -39,6 +39,9 @@ final class MediaFileDownloaderStub extends MediaFileDownloader
         // No dependencies: the real download is skipped entirely.
     }
 
+    /**
+     * @param-out null $failureDetail
+     */
     public function download(
         Folder $target,
         Folder $staging,
@@ -47,7 +50,9 @@ final class MediaFileDownloaderStub extends MediaFileDownloader
         string $originalName,
         string $apiKey = '',
         string $apiDomain = '',
+        ?string &$failureDetail = null,
     ): ?File {
+        $failureDetail = null;
         return null;
     }
 }

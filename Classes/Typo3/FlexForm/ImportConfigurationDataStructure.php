@@ -22,6 +22,13 @@ class ImportConfigurationDataStructure
 {
     private const LLL = 'LLL:EXT:' . Extension::EXTENSION_KEY . '/Resources/Private/Language/locallang_flexform.xlf:';
 
+    // Optional ints on every type; empty falls back to extension config.
+    // Timeouts and attempts are deliberately absent: extension config only.
+    private const TUNABLES = [
+        'runBudget',
+        'fetchCacheLifetime',
+    ];
+
     /**
      * @return array<string, mixed>|null Null when the type is unknown.
      */
@@ -64,7 +71,7 @@ class ImportConfigurationDataStructure
             'apiDomain' => $this->apiDomainField(),
             'urls' => $this->urlsSection(),
             'apiKey' => $this->apiKeyField(),
-        ];
+        ] + $this->tunableFields();
     }
 
     /**
@@ -89,7 +96,7 @@ class ImportConfigurationDataStructure
                 'description' => self::LLL . 'importConfiguration.syncScope.fetchLastXDays.description',
                 'config' => ['type' => 'number'],
             ],
-        ];
+        ] + $this->tunableFields();
     }
 
     /**
@@ -110,7 +117,7 @@ class ImportConfigurationDataStructure
                 'config' => ['type' => 'input', 'eval' => 'trim', 'required' => true],
             ],
             'apiKey' => $this->apiKeyField(),
-        ];
+        ] + $this->tunableFields();
     }
 
     /**
@@ -201,6 +208,23 @@ class ImportConfigurationDataStructure
             'description' => self::LLL . 'importConfiguration.apiKey.description',
             'config' => ['type' => 'input', 'nullable' => false],
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function tunableFields(): array
+    {
+        $fields = [];
+        foreach (self::TUNABLES as $name) {
+            $fields[$name] = [
+                'label' => self::LLL . 'importConfiguration.' . $name,
+                'description' => self::LLL . 'importConfiguration.' . $name . '.description',
+                'config' => ['type' => 'number', 'range' => ['lower' => 0]],
+            ];
+        }
+
+        return $fields;
     }
 
     /**
