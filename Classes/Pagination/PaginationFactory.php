@@ -32,6 +32,17 @@ final class PaginationFactory
             $itemsPerPage = self::DEFAULT_ITEMS_PER_PAGE;
         }
 
+        return $this->withFixedItemsPerPage($items, $currentPage, $itemsPerPage);
+    }
+
+    /**
+     * For callers without plugin settings, e.g. backend modules.
+     */
+    public function withFixedItemsPerPage(
+        QueryResultInterface $items,
+        int $currentPage,
+        int $itemsPerPage
+    ): PaginationResult {
         $paginator = new QueryResultPaginator($items, $currentPage, $itemsPerPage);
 
         return new PaginationResult($paginator, new SimplePagination($paginator), $itemsPerPage);

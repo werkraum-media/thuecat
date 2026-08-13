@@ -8,7 +8,7 @@
 
         <f:flashMessages />
 
-        <f:if condition="{imports}">
+        <f:if condition="{imports.paginatedItems}">
             <f:then>
                 {f:render(section: 'Imports', arguments: {imports: imports})}
             </f:then>
@@ -24,6 +24,34 @@
     </f:section>
 
     <f:section name="Imports">
+        {f:render(section: 'Pagination', arguments: {imports: imports})}
+
+        <f:for each="{imports.paginatedItems}" as="import">
+            {f:render(section: 'Import', arguments: {import: import})}
+        </f:for>
+
+        {f:render(section: 'Pagination', arguments: {imports: imports})}
+    </f:section>
+
+    <f:section name="Pagination">
+        <f:if condition="{imports.pagination.lastPageNumber} > 1">
+            <nav class="pagination-wrap">
+                <ul class="pagination">
+                    <f:for each="{imports.pagination.allPageNumbers}" as="pageNumber">
+                        <li class="page-item {f:if(condition: '{pageNumber} == {imports.paginator.currentPageNumber}', then: 'active')}">
+                            <f:link.action
+                                class="page-link"
+                                action="index"
+                                arguments="{currentPage: pageNumber}"
+                            >{pageNumber}</f:link.action>
+                        </li>
+                    </f:for>
+                </ul>
+            </nav>
+        </f:if>
+    </f:section>
+
+    <f:section name="Import">
         <div class="panel panel-default table-fit">
             <table class="table table-striped table-hover">
                 <thead>
@@ -36,15 +64,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <f:for each="{imports}" as="import">
-                        {f:render(section: 'Import', arguments: {import: import})}
-                    </f:for>
-                </tbody>
-            </table>
-        </div>
-    </f:section>
-
-    <f:section name="Import">
         <tr class="{f:if(condition: import.errors, then: 'danger')}">
             <td>{import.created -> f:format.date(format: 'd.m.Y H:i:s')}</td>
             <td>
@@ -82,5 +101,8 @@
                 {error}<br>
             </f:for></td>
         </tr>
+                </tbody>
+            </table>
+        </div>
     </f:section>
 </html>

@@ -30,23 +30,31 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Import\Importer;
+use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 class ImportController extends AbstractController
 {
+    private const ITEMS_PER_PAGE = 5;
+
     public function __construct(
         // @todo get the importer back
         //        private readonly Importer $importer,
         private readonly ImportLogRepository $repository,
-        private readonly TranslationService $translation
+        private readonly TranslationService $translation,
+        private readonly PaginationFactory $paginationFactory
     ) {
     }
 
-    public function indexAction(): ResponseInterface
+    public function indexAction(int $currentPage = 1): ResponseInterface
     {
         $view = $this->initializeModuleTemplate($this->request);
         $view->assignMultiple([
-            'imports' => $this->repository->findAll(),
+            'imports' => $this->paginationFactory->withFixedItemsPerPage(
+                $this->repository->findAll(),
+                $currentPage,
+                self::ITEMS_PER_PAGE
+            ),
         ]);
 
         return $view->renderResponse('Backend/Import/Index');
