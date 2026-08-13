@@ -182,6 +182,9 @@ final class ResolverContext
         public readonly int $categoryParentUid = 0,
         public readonly int $categoryStoragePid = 0,
         public readonly ?ImportProgressListener $progressListener = null,
+        // Drops media before any API request: both the referenced bucket and
+        // inline nodes are discarded unresolved, undownloaded, unrelated.
+        public readonly bool $skipMedia = false,
     ) {
     }
 

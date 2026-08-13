@@ -165,3 +165,32 @@ lifetime — the defaults apply only where nothing is configured:
 .. code-block:: php
 
    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['thuecat_fetchdata']
+
+.. _import-without-media:
+
+Import without media
+--------------------
+
+Media dominates the cost of a run: every image is an API request for its
+metadata plus a download of the file, while the records carrying them are
+comparatively cheap. To import records without media:
+
+.. code-block:: bash
+
+   vendor/bin/typo3 thuecat:importviaconfiguration <uid> --no_media
+
+No media is fetched, downloaded or related, in either shape the API uses —
+images referenced by URL, which each cost a request, and images inlined into the
+record's own response. The file folder is not touched either: neither the
+write-access probe nor the per-run staging folder is created, so the run
+succeeds even where the configured folder is missing or read-only.
+
+Useful for restoring records after an aborted run, filling a fresh installation,
+or reproducing an import problem that has nothing to do with images.
+
+.. note::
+
+   Media already imported is not removed. The option controls what *this* run
+   imports, not what earlier runs stored, so records keep the file references
+   they already have. Running again without :bash:`--no_media` imports the media
+   that was skipped.

@@ -62,6 +62,13 @@ class ImportConfigurationCommand extends Command
             InputOption::VALUE_NONE,
             'Ignore cached API responses and fetch every resource from the API'
         );
+
+        $this->addOption(
+            'no_media',
+            null,
+            InputOption::VALUE_NONE,
+            'Import without media: no media resource is fetched, downloaded or related'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -86,7 +93,8 @@ class ImportConfigurationCommand extends Command
             $configuration,
             new ConsoleProgressRenderer($output, $output->isDecorated()),
             null,
-            $input->getOption('fresh') === true
+            $input->getOption('fresh') === true,
+            $input->getOption('no_media') === true
         );
         $io = new SymfonyStyle($input, $output);
 

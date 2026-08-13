@@ -411,7 +411,9 @@ class Resolver
                         $atCap = (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH);
 
                         if ($bucket === 'media') {
-                            if ($atCap) {
+                            // Same drop as the depth cap: emptying the bucket is
+                            // what makes the drain loop terminate.
+                            if ($atCap || $context->skipMedia) {
                                 foreach ($references as $entry) {
                                     if (is_array($entry)) {
                                         $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);
@@ -865,6 +867,15 @@ class Resolver
      */
     protected function importInlineMedia(DataHandlerPayload $payload, ResolverContext $context): void
     {
+        if ($context->skipMedia) {
+            foreach ($payload->getInlineMedia() as $ownerTable => $rowsByRemoteId) {
+                foreach (array_keys($rowsByRemoteId) as $ownerRemoteId) {
+                    $payload->clearInlineMedia($ownerTable, (string)$ownerRemoteId);
+                }
+            }
+            return;
+        }
+
         $target = $context->targetFolder;
         $staging = $context->stagingFolder;
         if ($target === null || $staging === null) {

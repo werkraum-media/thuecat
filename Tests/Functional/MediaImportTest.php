@@ -394,6 +394,90 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     /**
+     * The fixture carries both media shapes on one record: a referenced image
+     * (its own API fetch, drained via the transient bucket) and an inline node.
+     * Only the root is staged as an expected fetch, so any request either shape
+     * makes trips the faker — which is the point of the option, the downloads
+     * are merely what follows.
+     */
+    #[Test]
+    public function skippingMediaImportsTheRecordWithoutFetchingEitherMediaShape(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMixedGallery.php');
+        $this->expectFetch('attraction-with-mixed-gallery.json');
+
+        $this->importConfigurationSkippingMedia(1);
+
+        self::assertSame([], $this->fetchReferenceFields(), 'No media may be related.');
+        self::assertSame(0, $this->countRows('sys_file'), 'No media may be downloaded.');
+        self::assertSame(
+            ['Attraction with mixed gallery'],
+            $this->fetchAttractionTitles(),
+            'The record itself must still import.'
+        );
+    }
+
+    /**
+     * Skipping media must not cost the run its file folder: the option also
+     * bypasses the write-access probe, so an unresolvable folder is now
+     * survivable rather than an abort before the first API call.
+     */
+    #[Test]
+    public function skippingMediaImportsWithoutTouchingTheFileFolder(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMixedGallery.php');
+        $this->expectFetch('attraction-with-mixed-gallery.json');
+        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat/thuecat', true);
+
+        $this->importConfigurationSkippingMedia(1);
+
+        self::assertSame(
+            ['Attraction with mixed gallery'],
+            $this->fetchAttractionTitles(),
+            'The record must import even with the configured folder gone.'
+        );
+    }
+
+    private function countRows(string $table): int
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $count = $queryBuilder
+            ->count('uid')
+            ->from($table)
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($count) ? (int)$count : 0;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function fetchAttractionTitles(): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tx_thuecat_tourist_attraction');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('title')
+            ->from('tx_thuecat_tourist_attraction')
+            ->orderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $titles = [];
+        foreach ($rows as $row) {
+            if (is_string($row['title'])) {
+                $titles[] = $row['title'];
+            }
+        }
+        return $titles;
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     private function getSkippedReferenceLogEntries(): array

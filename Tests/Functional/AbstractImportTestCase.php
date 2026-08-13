@@ -286,6 +286,16 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
     }
 
+    /** The programmatic half of --no_media: no console command involved. */
+    protected function importConfigurationSkippingMedia(int $uid): string
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
+        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+
+        return $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
+    }
+
     /**
      * @return list<array<string, mixed>>
      */

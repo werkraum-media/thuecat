@@ -56,6 +56,30 @@ Breaking
 Features
 --------
 
+* Imports can be run without media.
+
+  Media is by far the most expensive part of a run: each image is a separate API request for its metadata plus a
+  download of the file itself, while the records carrying them are comparatively free. An import that only needs
+  the records — restoring after an aborted run, filling a fresh installation, reproducing an import problem — paid
+  for every image regardless.
+
+  :bash:`thuecat:importviaconfiguration <uid> --no_media` imports records without media:
+
+  .. code-block:: bash
+
+     vendor/bin/typo3 thuecat:importviaconfiguration <uid> --no_media
+
+  No media resource is fetched, downloaded or related, in either shape upstream uses — referenced images, which
+  each cost an API request, and images inlined into the record's own response. Callers that do not go through the
+  command pass ``$skipMedia`` to :php:`Import\Importer::importConfiguration()`.
+
+  The file folder is left untouched as well: neither the write-access probe nor the per-run staging folder is
+  created, so a run succeeds on an installation whose media folder is missing or read-only.
+
+  **Existing media is not removed.** The option governs what a run imports, not what earlier runs stored: records
+  already carrying media keep their file references, and a later run without :bash:`--no_media` imports the media
+  that was skipped. It is a way to import records cheaply, not a way to strip media from them.
+
 * Import runs are bounded and report their progress.
 
   A run previously printed nothing between start and its closing line, while neither the JSON-LD fetches nor the
