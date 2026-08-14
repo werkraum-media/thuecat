@@ -1,0 +1,155 @@
+{
+ "@context": {
+  "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+  "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+  "schema": "http://schema.org/",
+  "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "owl": "http://www.w3.org/2002/07/owl#",
+  "wod": "https://web-of-data.org/ontology/wod/1.0/",
+  "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+  "thuecatsh": "https://thuecat.org/shapes/thuecat/1.0/",
+  "cc": "http://creativecommons.org/ns#",
+  "sh": "http://www.w3.org/ns/shacl#",
+  "tourism": "https://web-of-data.org/tourism/",
+  "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+  "agg": "http://jena.apache.org/ARQ/function/aggregate#",
+  "geof": "http://www.opengis.net/def/function/geosparql/",
+  "prefix": "http://www.ontotext.com/connectors/lucene#",
+  "skos": "http://www.w3.org/2004/02/skos/core#",
+  "spif": "http://spinrdf.org/spif#",
+  "path": "http://www.ontotext.com/path#",
+  "apf": "http://jena.apache.org/ARQ/property#",
+  "dcterms": "http://purl.org/dc/terms/",
+  "rep": "http://www.openrdf.org/config/repository#",
+  "foaf": "http://xmlns.com/foaf/0.1/",
+  "wgs": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+  "void": "http://rdfs.org/ns/void#",
+  "list": "http://jena.apache.org/ARQ/list#",
+  "vb": "https://data.visitberlin.de/ontology/vb/1.0/",
+  "geoext": "http://rdf.useekm.com/ext#",
+  "sesame": "http://www.openrdf.org/schema/sesame#",
+  "math": "http://www.w3.org/2005/xpath-functions/math",
+  "sail": "http://www.openrdf.org/config/sail#",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "fn": "http://www.w3.org/2005/xpath-functions",
+  "sys": "http://www.ontotext.com/owlim/system#",
+  "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+  "array": "http://www.w3.org/2005/xpath-functions/array",
+  "similarity": "http://www.ontotext.com/graphdb/similarity/",
+  "similarity-index": "http://www.ontotext.com/graphdb/similarity/instance/",
+  "dcat": "http://www.w3.org/ns/dcat#",
+  "map": "http://www.w3.org/2005/xpath-functions/map",
+  "sr": "http://www.openrdf.org/config/repository/sail#",
+  "rdf4j": "http://rdf4j.org/schema/rdf4j#",
+  "gn": "http://www.geonames.org/ontology#",
+  "afn": "http://jena.apache.org/ARQ/function#",
+  "dcmitype": "http://purl.org/dc/dcmitype/",
+  "ofn": "http://www.ontotext.com/sparql/functions/",
+  "inst": "http://www.ontotext.com/connectors/lucene/instance#",
+  "graphdb": "http://www.ontotext.com/config/graphdb#",
+  "luc": "http://www.ontotext.com/connectors/lucene#",
+  "omgeo": "http://www.ontotext.com/owlim/geo#"
+ },
+ "@graph": [
+  {
+   "@id": "https://thuecat.org/resources/126981310364-xwgt",
+   "@type": [
+    "schema:Thing",
+    "schema:Place",
+    "schema:Organization",
+    "schema:LocalBusiness",
+    "schema:Store",
+    "schema:FoodEstablishment",
+    "schema:TouristAttraction",
+    "schema:Winery",
+    "thuecat:Vinotheque",
+    "thuecat:WineCellar",
+    "thuecat:WineStore",
+    "thuecat:Vineyard",
+    "thuecat:Manufacturer",
+    "ttgds:Manufacturer"
+   ],
+   "rdfs:label": [
+    {
+     "@language": "de",
+     "@value": "Weingut der Vereinigten Kirchen- und Klosterkammer"
+    },
+    {
+     "@language": "en",
+     "@value": "Winery of the United Church and Monastery Chamber"
+    }
+   ],
+   "schema:name": [
+    {
+     "@language": "de",
+     "@value": "Weingut der Vereinigten Kirchen- und Klosterkammer"
+    },
+    {
+     "@language": "en",
+     "@value": "Winery of the United Church and Monastery Chamber"
+    }
+   ],
+   "schema:description": [
+    {
+     "@id": "genid-e97f711763b2415fa6ccca3e243d0cdb1441869-b1",
+     "@type": [
+      "schema:Thing",
+      "schema:Intangible",
+      "schema:ComputerLanguage",
+      "thuecat:Html"
+     ],
+     "schema:value": {
+      "@language": "de",
+      "@value": "<p>DIE RENAISSANCE DES ERFURTER WEINBAUS</p><p>Das Wein aus Erfurt vom Mittelalter bis in die Renaissance mal in aller Munde war, weiß heute kaum noch jemand. Die Vereinigte Kirchen- und Klosterkammer Erfurt hat diese alte Weinbautradition wieder zurück in die Landeshauptstadt geholt und damit ein Stückchen Geschichte und Kultur wiederbelebt. Auf der Einzellage „Erfurter Pfaffenlehne“, entstand 2020 bis 2022 - nur wenige Minuten außerhalb des Altstadtkerns - ein neuer Weinberg. Hier werden auf 7,6ha die Rebsorten Riesling, Chardonnay, Spätburgunder sowie Goldmuskateller und Viognier kultiviert.</p><p>Das neue Weingut ist Mitglied beim Öko/Bio-Verband ECOVIN. Schritt für Schritt wurde der Anbau nach den äußerst strengen Richtlinien des ECOVIN-Anbaus ausgerichtet. Anbau, Kelterei und Vermarktung der Erfurter Weine erfolgen regional, denn es soll eine Weinkultur wiederaufleben, die nachhaltig, fair und – so wie es früher einmal war – für die Erfurterinnen und Erfurter gepflegt wird.</p><p>Nachhaltigkeit ist nicht nur Bioanbau und Regionalität, sondern auch ein fruchtbares soziales Miteinander. Getreu dem Motto der Vereinigten Kirchen- und Klosterkammer „Dem Willen der Stifter folgend, der Zukunft verpflichtet“ soll auch der Wein künftig Stiftungsmittel für die gute Sache erwirtschaften.</p><p>Biologisch - Regional - Sozial</p>"
+     }
+    },
+    {
+     "@id": "genid-e97f711763b2415fa6ccca3e243d0cdb1441869-b2",
+     "@type": [
+      "schema:Thing",
+      "schema:Intangible",
+      "schema:ComputerLanguage",
+      "thuecat:Html"
+     ],
+     "schema:value": {
+      "@language": "en",
+      "@value": "<p>THE RENAISSANCE OF WINE-GROWING IN ERFURT</p><p>Hardly anyone today knows that wine from Erfurt was on everyone's lips from the Middle Ages to the Renaissance. The United Church and Monastery Chamber of Erfurt has brought this old winegrowing tradition back to the state capital, reviving a piece of history and culture. A new vineyard was established between 2020 and 2022 on the single vineyard site \"Erfurter Pfaffenlehne,\" just a few minutes outside the old town center. Riesling, Chardonnay, Pinot Noir, Goldmuskateller, and Viognier grape varieties are cultivated here on 7.6 hectares.</p><p>The new winery is a member of the ECOVIN organic association. Step by step, cultivation has been aligned with the extremely strict guidelines of ECOVIN cultivation. The cultivation, pressing, and marketing of Erfurt wines are carried out regionally, as the aim is to revive a wine culture that is sustainable, fair, and – as it once was – cultivated for the people of Erfurt.</p><p>Sustainability is not only about organic farming and regionality, but also about fruitful social interaction. True to the motto of the United Church and Monastery Chamber, \"Following the will of the founders, committed to the future,\" the wine is also intended to generate funds for good causes in the future.</p><p>Organic – Regional – Social</p>"
+     }
+    },
+    {
+     "@id": "genid-e97f711763b2415fa6ccca3e243d0cdb1441869-b3",
+     "@type": [
+      "schema:Thing",
+      "schema:Intangible",
+      "schema:ComputerLanguage",
+      "thuecat:Html"
+     ],
+     "schema:value": {
+      "@language": "fr",
+      "@value": "<p>LA RENAISSANCE DE LA VITICULTURE À ERFURT</p><p>Peu de gens savent aujourd'hui que le vin d'Erfurt était très populaire du Moyen Âge à la Renaissance. La Vereinigte Kirchen- und Klosterkammer Erfurt (Chambre ecclésiastique et monastique d'Erfurt) a réintroduit cette ancienne tradition viticole dans la capitale régionale, faisant ainsi revivre un pan de l'histoire et de la culture locales. Sur le vignoble « Erfurter Pfaffenlehne », à quelques minutes seulement du centre historique, un nouveau vignoble a vu le jour entre 2020 et 2022. Sur 7,6 hectares, on y cultive les cépages Riesling, Chardonnay, Pinot Noir, Muscat doré et Viognier.</p><p>Le nouveau domaine viticole est membre de l'association écologique/biologique ECOVIN. Petit à petit, la culture a été alignée sur les directives extrêmement strictes de la culture ECOVIN. La culture, la vinification et la commercialisation des vins d'Erfurt se font au niveau régional, car l'objectif est de faire revivre une culture viticole durable, équitable et, comme autrefois, entretenue par les habitants d'Erfurt.</p><p>La durabilité ne se limite pas à l'agriculture biologique et à la régionalité, mais englobe également une cohabitation sociale fructueuse. Fidèle à la devise de la Chambre ecclésiastique et monastique unifiée « Suivre la volonté des fondateurs, s'engager pour l'avenir », le vin doit également générer à l'avenir des fonds pour la bonne cause.</p><p>Biologique - Régional - Social</p>"
+     }
+    },
+    {
+     "@language": "de",
+     "@value": "DIE RENAISSANCE DES ERFURTER WEINBAUS\nDas Wein aus Erfurt vom Mittelalter bis in die Renaissance mal in aller Munde war, weiß heute kaum noch jemand. Die Vereinigte Kirchen- und Klosterkammer Erfurt hat diese alte Weinbautradition wieder zurück in die Landeshauptstadt geholt und damit ein Stückchen Geschichte und Kultur wiederbelebt. Auf der Einzellage „Erfurter Pfaffenlehne“, entstand 2020 bis 2022 - nur wenige Minuten außerhalb des Altstadtkerns - ein neuer Weinberg. Hier werden auf 7,6ha die Rebsorten Riesling, Chardonnay, Spätburgunder sowie Goldmuskateller und Viognier kultiviert.\nDas neue Weingut ist Mitglied beim Öko/Bio-Verband ECOVIN. Schritt für Schritt wurde der Anbau nach den äußerst strengen Richtlinien des ECOVIN-Anbaus ausgerichtet. Anbau, Kelterei und Vermarktung der Erfurter Weine erfolgen regional, denn es soll eine Weinkultur wiederaufleben, die nachhaltig, fair und – so wie es früher einmal war – für die Erfurterinnen und Erfurter gepflegt wird.\nNachhaltigkeit ist nicht nur Bioanbau und Regionalität, sondern auch ein fruchtbares soziales Miteinander. Getreu dem Motto der Vereinigten Kirchen- und Klosterkammer „Dem Willen der Stifter folgend, der Zukunft verpflichtet“ soll auch der Wein künftig Stiftungsmittel für die gute Sache erwirtschaften.\nBiologisch - Regional - Sozial"
+    },
+    {
+     "@language": "fr",
+     "@value": "LA RENAISSANCE DE LA VITICULTURE À ERFURT\nPeu de gens savent aujourd'hui que le vin d'Erfurt était très populaire du Moyen Âge à la Renaissance. La Vereinigte Kirchen- und Klosterkammer Erfurt (Chambre ecclésiastique et monastique d'Erfurt) a réintroduit cette ancienne tradition viticole dans la capitale régionale, faisant ainsi revivre un pan de l'histoire et de la culture locales. Sur le vignoble « Erfurter Pfaffenlehne », à quelques minutes seulement du centre historique, un nouveau vignoble a vu le jour entre 2020 et 2022. Sur 7,6 hectares, on y cultive les cépages Riesling, Chardonnay, Pinot Noir, Muscat doré et Viognier.\nLe nouveau domaine viticole est membre de l'association écologique/biologique ECOVIN. Petit à petit, la culture a été alignée sur les directives extrêmement strictes de la culture ECOVIN. La culture, la vinification et la commercialisation des vins d'Erfurt se font au niveau régional, car l'objectif est de faire revivre une culture viticole durable, équitable et, comme autrefois, entretenue par les habitants d'Erfurt.\nLa durabilité ne se limite pas à l'agriculture biologique et à la régionalité, mais englobe également une cohabitation sociale fructueuse. Fidèle à la devise de la Chambre ecclésiastique et monastique unifiée « Suivre la volonté des fondateurs, s'engager pour l'avenir », le vin doit également générer à l'avenir des fonds pour la bonne cause.\nBiologique - Régional - Social"
+    },
+    {
+     "@language": "en",
+     "@value": "THE RENAISSANCE OF WINE-GROWING IN ERFURT\nHardly anyone today knows that wine from Erfurt was on everyone's lips from the Middle Ages to the Renaissance. The United Church and Monastery Chamber of Erfurt has brought this old winegrowing tradition back to the state capital, reviving a piece of history and culture. A new vineyard was established between 2020 and 2022 on the single vineyard site \"Erfurter Pfaffenlehne,\" just a few minutes outside the old town center. Riesling, Chardonnay, Pinot Noir, Goldmuskateller, and Viognier grape varieties are cultivated here on 7.6 hectares.\nThe new winery is a member of the ECOVIN organic association. Step by step, cultivation has been aligned with the extremely strict guidelines of ECOVIN cultivation. The cultivation, pressing, and marketing of Erfurt wines are carried out regionally, as the aim is to revive a wine culture that is sustainable, fair, and – as it once was – cultivated for the people of Erfurt.\nSustainability is not only about organic farming and regionality, but also about fruitful social interaction. True to the motto of the United Church and Monastery Chamber, \"Following the will of the founders, committed to the future,\" the wine is also intended to generate funds for good causes in the future.\nOrganic – Regional – Social"
+    }
+   ],
+   "schema:keywords": {
+    "@id": "https://thuecat.org/resources/475728955106-qdcc"
+   },
+   "schema:url": {
+    "@type": "schema:URL",
+    "@value": "https://www.wein-thueringen.de/"
+   }
+  }
+ ]
+}

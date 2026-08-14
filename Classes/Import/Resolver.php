@@ -40,7 +40,10 @@ use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
@@ -50,6 +53,9 @@ use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 #[Autoconfigure(public: true)]
 class Resolver
 {
+    /** Destination relation column for keyword categories. */
+    protected const KEYWORD_FIELD = 'keywords';
+
     /**
      * Hard-coded mapping from transient bucket name to
      * [target table, target relation field on the owning row].
@@ -99,6 +105,7 @@ class Resolver
         protected readonly ImportLogger $importLogger,
         protected readonly StaleDateReaper $staleDateReaper,
         protected readonly MediaFieldMap $mediaFieldMap,
+        protected readonly FetchFailureVerdict $fetchFailureVerdict,
     ) {
     }
 
@@ -118,6 +125,404 @@ class Resolver
         $this->staleDateReaper->reap($payload);
 
         return $payload;
+    }
+
+    /**
+     * Runs after the last root: a keyword shared across roots must not be
+     * staged by one and reaped by the next. Parents are created before their
+     * children so the tree exists top-down.
+     */
+    public function flushCollectedKeywords(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        if ($context->collectedKeywords === [] || $context->keywordParentUid === 0) {
+            return;
+        }
+
+        $sitePageIds = $this->sitePageIds($context->storagePid);
+
+        // Ancestors first: a term collected before its set would otherwise be
+        // created while the set has no key yet and silently hang off the anchor.
+        $byRemoteId = [];
+        foreach ($context->collectedKeywords as $keyword) {
+            $byRemoteId[$keyword->remoteId] = $keyword;
+        }
+        foreach ($context->collectedKeywords as $keyword) {
+            $this->createKeywordAncestors($payload, $context, $sitePageIds, $keyword, $byRemoteId, []);
+        }
+
+        foreach ($context->collectedKeywords as $keyword) {
+            // Ancestors are created above; relating them too would make every
+            // record look like it carries each group above its keywords.
+            if (!$keyword->isCited) {
+                continue;
+            }
+
+            $ownerKey = $context->remoteIdToKey[$keyword->ownerKey] ?? $keyword->ownerKey;
+            if (!$this->tableHasField($keyword->ownerTable, $keyword->targetField)) {
+                $context->categoriesFieldMissing[$keyword->ownerTable . '.' . $keyword->targetField] = true;
+                continue;
+            }
+
+            $categoryKey = $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword);
+            $payload->setRelationField(
+                $keyword->ownerTable,
+                $ownerKey,
+                $keyword->targetField,
+                $categoryKey
+            );
+        }
+
+        $this->preserveKeywordsBehindFailures($payload, $context);
+    }
+
+    /**
+     * Carry an owner's stored keyword uids into the submitted list where its
+     * resolution failed technically. Submitting the list is what removes, so a
+     * keyword left out by an outage would be dropped and restored on the next
+     * healthy run.
+     */
+    protected function preserveKeywordsBehindFailures(
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): void {
+        foreach (array_keys($context->keywordFailureByField) as $failedField) {
+            [$ownerTable, $ownerKey, $targetField] = explode('|', (string)$failedField, 3);
+
+            $resolvedOwnerKey = $context->remoteIdToKey[$ownerKey] ?? $ownerKey;
+            if (!MathUtility::canBeInterpretedAsInteger($resolvedOwnerKey)) {
+                // Never stored, so nothing can be lost.
+                continue;
+            }
+
+            foreach ($this->sysCategoryRepository->findRelatedUids(
+                $ownerTable,
+                (int)$resolvedOwnerKey,
+                $targetField
+            ) as $uid) {
+                $payload->setRelationField($ownerTable, $resolvedOwnerKey, $targetField, (string)$uid);
+            }
+        }
+    }
+
+    /**
+     * @param list<int> $sitePageIds
+     * @param array<string, CollectedKeyword> $byRemoteId
+     * @param list<string> $visited
+     */
+    protected function createKeywordAncestors(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        array $sitePageIds,
+        CollectedKeyword $keyword,
+        array $byRemoteId,
+        array $visited
+    ): void {
+        if (in_array($keyword->remoteId, $visited, true)) {
+            return;
+        }
+        $visited[] = $keyword->remoteId;
+
+        $parent = $keyword->parentRemoteId === null ? null : ($byRemoteId[$keyword->parentRemoteId] ?? null);
+        if ($parent !== null) {
+            $this->createKeywordAncestors($payload, $context, $sitePageIds, $parent, $byRemoteId, $visited);
+        }
+
+        $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword);
+    }
+
+    /**
+     * Find-or-create the category for one keyword; assumes its parent exists.
+     *
+     * @param list<int> $sitePageIds
+     */
+    protected function keywordCategoryKey(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        array $sitePageIds,
+        CollectedKeyword $keyword
+    ): string {
+        $existing = $context->keywordKeyByRemoteId[$keyword->remoteId] ?? null;
+        if ($existing !== null) {
+            return $existing;
+        }
+
+        $parentKey = (string)$context->keywordParentUid;
+        if ($keyword->parentRemoteId !== null) {
+            $parentKey = $context->keywordKeyByRemoteId[$keyword->parentRemoteId]
+                ?? (string)$context->keywordParentUid;
+        }
+
+        $uid = $this->findCategoryUid($context->keywordParentUid, $sitePageIds, $keyword->remoteId);
+        if ($uid > 0) {
+            $key = (string)$uid;
+        } else {
+            $key = StringUtility::getUniqueId('NEW');
+            $payload->addRow('sys_category', $key, [
+                'pid' => $context->keywordStoragePid,
+                'parent' => $parentKey,
+                'title' => $keyword->title,
+                'remote_id' => $keyword->remoteId,
+            ]);
+        }
+
+        $context->keywordKeyByRemoteId[$keyword->remoteId] = $key;
+
+        return $key;
+    }
+
+    /**
+     * Resolve keyword URIs to terms and collect them; nothing is staged here.
+     * Staging happens once at flush, which is the only point holding an owner's
+     * complete set — the precondition for deciding what to reap.
+     *
+     * @param list<string>|list<array{id: string, title?: string, usageType: string|null, field: string}> $references
+     */
+    protected function resolveKeywords(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $ownerKey,
+        array $references
+    ): void {
+        foreach ($references as $reference) {
+            if (!is_array($reference) || !is_string($reference['id'] ?? null)) {
+                continue;
+            }
+
+            $uri = $reference['id'];
+            $usageType = $reference['usageType'] ?? null;
+            $title = $reference['title'] ?? null;
+            // The owning entity names its own relation column.
+            $targetField = $reference['field'];
+
+            if (is_string($title)) {
+                // Free text arrives resolved; there is nothing to fetch.
+                $context->collectKeyword(new CollectedKeyword(
+                    $ownerTable,
+                    $ownerKey,
+                    $targetField,
+                    $uri,
+                    $title
+                ));
+            } else {
+                $this->collectKeywordChain(
+                    $context,
+                    $ownerTable,
+                    $ownerKey,
+                    $uri,
+                    is_string($usageType) ? $usageType : null,
+                    [],
+                    true,
+                    $targetField
+                );
+            }
+
+            $payload->removeTransient(
+                $ownerTable,
+                $ownerRemoteId,
+                AbstractEntity::KEYWORD_BUCKET,
+                $uri
+            );
+        }
+    }
+
+    /**
+     * Walk a term and its ancestors upward, collecting each. Terminates on a
+     * node without a parent, on a repeat (cycle) or at the depth bound.
+     *
+     * Skips unusable ancestors.
+     *
+     * @param list<string> $visited
+     */
+    protected function collectKeywordChain(
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerKey,
+        string $uri,
+        ?string $usageType,
+        array $visited,
+        bool $isCited = true,
+        string $targetField = self::KEYWORD_FIELD
+    ): ?string {
+        if (in_array($uri, $visited, true) || count($visited) >= ResolverContext::MAX_KEYWORD_DEPTH) {
+            return null;
+        }
+        $visited[] = $uri;
+
+        $term = $this->fetchKeywordTerm($context, $uri, $technicalFailure);
+        if ($term === null) {
+            if ($technicalFailure === true) {
+                $context->keywordFailureByField[
+                    $ownerTable . '|' . $ownerKey . '|' . $targetField
+                ] = true;
+            }
+
+            // Unreachable: nothing to climb from.
+            return null;
+        }
+
+        if (!$term->isUsable()) {
+            // Husk: climb on so the level below adopts a usable ancestor.
+            $parentUri = $term->getParentRemoteId();
+            if ($parentUri === null) {
+                return $usageType === null
+                    ? null
+                    : $this->collectUsageTypeGroup(
+                        $context,
+                        $ownerTable,
+                        $ownerKey,
+                        $usageType,
+                        $visited,
+                        $targetField
+                    );
+            }
+
+            return $this->collectKeywordChain(
+                $context,
+                $ownerTable,
+                $ownerKey,
+                $parentUri,
+                $usageType,
+                $visited,
+                false,
+                $targetField
+            );
+        }
+
+        $parentRemoteId = null;
+        if ($term->getParentRemoteId() !== null) {
+            $parentRemoteId = $this->collectKeywordChain(
+                $context,
+                $ownerTable,
+                $ownerKey,
+                $term->getParentRemoteId(),
+                null,
+                $visited,
+                false,
+                $targetField
+            );
+        } elseif ($usageType !== null) {
+            // Resolving the CURIE is what gives the enum an upstream title.
+            $parentRemoteId = $this->collectUsageTypeGroup(
+                $context,
+                $ownerTable,
+                $ownerKey,
+                $usageType,
+                $visited,
+                $targetField
+            );
+        }
+
+        $context->collectKeyword(new CollectedKeyword(
+            $ownerTable,
+            $ownerKey,
+            $targetField,
+            self::keywordRemoteId($uri),
+            $term->getTitle(),
+            $parentRemoteId,
+            $isCited,
+        ));
+
+        return self::keywordRemoteId($uri);
+    }
+
+    /**
+     * Resolve the enum a typed literal was used with (`thuecat:Ambiance`) into
+     * its own category, so the literal hangs off a titled group.
+     *
+     * An unresolvable prefix leaves the literal parentless, placing it under
+     * the anchor — better than a title-less group.
+     *
+     * @param list<string> $visited
+     */
+    protected function collectUsageTypeGroup(
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerKey,
+        string $usageType,
+        array $visited,
+        string $targetField = self::KEYWORD_FIELD
+    ): ?string {
+        $uri = (new CurieExpander())->expand($usageType);
+        if ($uri === null) {
+            $this->importLogger->recordSkippedReference(
+                'sys_category',
+                $usageType,
+                self::KEYWORD_FIELD,
+                $usageType,
+                'Keyword usage type uses an unknown CURIE prefix.'
+            );
+
+            return null;
+        }
+
+        // The enum groups the literal; it is never itself a cited keyword.
+        return $this->collectKeywordChain(
+            $context,
+            $ownerTable,
+            $ownerKey,
+            $uri,
+            null,
+            $visited,
+            false,
+            $targetField
+        );
+    }
+
+    /**
+     * Null only when unreachable. A label-less husk is returned parsed so the
+     * walk can read its parent and climb past it; callers check isUsable().
+     *
+     * $technicalFailure is set when the term could not be fetched for a reason
+     * that does not mean upstream withdrew it — see meansKeywordIsGone().
+     */
+    protected function fetchKeywordTerm(
+        ResolverContext $context,
+        string $uri,
+        ?bool &$technicalFailure = null
+    ): ?KeywordTermEntity {
+        $technicalFailure = false;
+
+        try {
+            $context->reportProgress($uri);
+            $response = $this->fetchData->jsonLDFromUrl($uri, $context->apiKey);
+        } catch (Exception $e) {
+            $technicalFailure = !$this->fetchFailureVerdict->failureMeansGone($e);
+            $this->importLogger->recordSkippedReference(
+                'sys_category',
+                $uri,
+                self::KEYWORD_FIELD,
+                $uri,
+                $e::class . ': ' . $e->getMessage()
+            );
+            return null;
+        }
+
+        // Resource URIs answer with an @graph; ontology terms answer with the
+        // bare node.
+        $graph = $response['@graph'] ?? null;
+        $node = is_array($graph) && isset($graph[0]) && is_array($graph[0]) ? $graph[0] : $response;
+
+        $term = new KeywordTermEntity();
+        $term->parse($node, $context->language, $context->parserContext, $context->translationLanguages);
+
+        if (!$term->isUsable()) {
+            $this->importLogger->recordSkippedReference(
+                'sys_category',
+                $uri,
+                self::KEYWORD_FIELD,
+                $uri,
+                'Keyword resource carries no usable label.'
+            );
+        }
+
+        return $term;
+    }
+
+    public static function keywordRemoteId(string $uri): string
+    {
+        return 'keyword:' . $uri;
     }
 
     /**
@@ -431,6 +836,7 @@ class Resolver
                                 $ownerTable,
                                 $ownerRemoteId,
                                 $ownerKey,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
                                 $references
                             );
                             $progress = true;
@@ -458,6 +864,25 @@ class Resolver
                                 $ownerTable,
                                 $ownerRemoteId,
                                 $ownerKey,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
+                                $references
+                            );
+                            $progress = true;
+                            continue;
+                        }
+
+                        if ($bucket === AbstractEntity::KEYWORD_BUCKET) {
+                            // Exempt from MAX_FETCH_DEPTH: terms sit at depth 1
+                            // and their sets at depth 2, so the generic cap
+                            // would drop every intermediate category. Bounded
+                            // instead by its own depth limit and cycle guard.
+                            $this->resolveKeywords(
+                                $payload,
+                                $context,
+                                $ownerTable,
+                                $ownerRemoteId,
+                                $ownerKey,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
                                 $references
                             );
                             $progress = true;
@@ -1031,7 +1456,7 @@ class Resolver
      */
     protected function meansAssetIsGone(?int $failureStatus): bool
     {
-        return $failureStatus === 404 || $failureStatus === 410;
+        return $this->fetchFailureVerdict->statusMeansGone($failureStatus);
     }
 
     // Appends only what the downloader could add, so a plain rejection keeps

@@ -37,6 +37,9 @@
             <trans-unit id="tx_thuecat_tourist_information.title" xml:space="preserve">
                 <source>Title</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.keywords" xml:space="preserve">
+                <source>Keywords</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.description" xml:space="preserve">
                 <source>Description</source>
             </trans-unit>
@@ -95,6 +98,9 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.title" xml:space="preserve">
                 <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.keywords" xml:space="preserve">
+                <source>Keywords</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.description" xml:space="preserve">
                 <source>Description</source>

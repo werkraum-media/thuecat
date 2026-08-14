@@ -66,6 +66,8 @@ class ImportConfigurationDataStructure
             'storagePid' => $this->storagePidField('static'),
             'categoryStoragePid' => $this->categoryStoragePidField(),
             'categoryParent' => $this->categoryParentField(),
+            'keywordStoragePid' => $this->keywordStoragePidField(),
+            'keywordParent' => $this->keywordParentField(),
             'fileFolder' => $this->fileFolderField('static'),
             'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
@@ -83,6 +85,8 @@ class ImportConfigurationDataStructure
             'storagePid' => $this->storagePidField('syncScope'),
             'categoryStoragePid' => $this->categoryStoragePidField(),
             'categoryParent' => $this->categoryParentField(),
+            'keywordStoragePid' => $this->keywordStoragePidField(),
+            'keywordParent' => $this->keywordParentField(),
             'fileFolder' => $this->fileFolderField('syncScope'),
             'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
@@ -108,6 +112,8 @@ class ImportConfigurationDataStructure
             'storagePid' => $this->storagePidField('containsPlace'),
             'categoryStoragePid' => $this->categoryStoragePidField(),
             'categoryParent' => $this->categoryParentField(),
+            'keywordStoragePid' => $this->keywordStoragePidField(),
+            'keywordParent' => $this->keywordParentField(),
             'fileFolder' => $this->fileFolderField('containsPlace'),
             'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
@@ -149,6 +155,18 @@ class ImportConfigurationDataStructure
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function keywordStoragePidField(): array
+    {
+        return [
+            'label' => self::LLL . 'importConfiguration.keywordStoragePid',
+            'displayCond' => 'FIELD:storagePid:>:0',
+            'config' => $this->pageSelectField(),
+        ];
+    }
+
+    /**
      * Single-page picker via the element-browser wizard. Stores one uid (the
      * model reads one).
      *
@@ -176,6 +194,24 @@ class ImportConfigurationDataStructure
     {
         return [
             'label' => self::LLL . 'importConfiguration.categoryParent',
+            'displayCond' => 'FIELD:storagePid:>:0',
+            'config' => [
+                'type' => 'group',
+                'allowed' => 'sys_category',
+                'maxitems' => 1,
+                'size' => 1,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function keywordParentField(): array
+    {
+        return [
+            'label' => self::LLL . 'importConfiguration.keywordParent',
+            'description' => self::LLL . 'importConfiguration.keywordParent.description',
             'displayCond' => 'FIELD:storagePid:>:0',
             'config' => [
                 'type' => 'group',

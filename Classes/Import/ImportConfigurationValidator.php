@@ -34,6 +34,7 @@ class ImportConfigurationValidator
     /**
      * @throws StoragePidConfigurationException storagePid maps to no site
      * @throws CategoryConfigurationException category mapping on but unusable
+     * @throws KeywordConfigurationException keyword mapping on but unusable
      */
     public function validate(ImportConfigurationInterface $configuration): void
     {
@@ -41,6 +42,11 @@ class ImportConfigurationValidator
         $this->validateCategoryConfiguration(
             $configuration->getCategoryParent(),
             $configuration->getCategoryStoragePid(),
+            $sitePageIds
+        );
+        $this->validateKeywordConfiguration(
+            $configuration->getKeywordParent(),
+            $configuration->getKeywordStoragePid(),
             $sitePageIds
         );
     }
@@ -104,6 +110,44 @@ class ImportConfigurationValidator
             throw new CategoryConfigurationException(
                 'categoryParent ' . $parentUid . ' is outside the storagePid\'s site.',
                 1752570003
+            );
+        }
+    }
+
+    /**
+     * Same rules as the category anchors, evaluated independently: keywords are
+     * a separate property, so one being configured says nothing about the other.
+     *
+     * @param list<int> $sitePageIds
+     *
+     * @throws KeywordConfigurationException
+     */
+    protected function validateKeywordConfiguration(int $parentUid, int $storagePid, array $sitePageIds): void
+    {
+        if ($parentUid === 0 && $storagePid === 0) {
+            return;
+        }
+
+        if ($parentUid === 0 || $storagePid === 0) {
+            throw new KeywordConfigurationException(
+                'Keyword mapping needs both keywordParent and keywordStoragePid;'
+                . ' got parent=' . $parentUid . ', storage=' . $storagePid . '.',
+                1786713820
+            );
+        }
+
+        if (!in_array($storagePid, $sitePageIds, true)) {
+            throw new KeywordConfigurationException(
+                'keywordStoragePid ' . $storagePid . ' is outside the storagePid\'s site.',
+                1786713821
+            );
+        }
+
+        $parentPid = $this->sysCategoryRepository->findPid($parentUid);
+        if (!in_array($parentPid, $sitePageIds, true)) {
+            throw new KeywordConfigurationException(
+                'keywordParent ' . $parentUid . ' is outside the storagePid\'s site.',
+                1786713822
             );
         }
     }

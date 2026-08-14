@@ -426,10 +426,6 @@
             "schema:author": {
                 "@id": "https://cdb.int.thuecat.org/api/resources/902877780916-bgnt"
             },
-            "schema:keywords": {
-                "@type": "xsd:string",
-                "@value": "Erfurt"
-            },
             "schema:bitrate": {
                 "@type": "xsd:string",
                 "@value": "8"

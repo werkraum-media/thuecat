@@ -64,6 +64,6 @@ Those can then be imported via the same module.
 
 ## Architecture notes
 
-* Importer overview: see [Readme.Importer.md](Readme.Importer.md) for a tour
+* Importer overview: see [Documentation/ImporterArchitecture.rst](Documentation/ImporterArchitecture.rst) for a tour
   of the import package — components, run flow, logging contract, and
   extension points.

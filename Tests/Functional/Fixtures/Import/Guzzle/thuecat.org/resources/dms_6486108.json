@@ -274,32 +274,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "6486108"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Tag"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Sommer"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Vorder- / Frontallicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Seitenperspektive"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Weitere Infrastruktur"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/licenses/by/4.0/"

@@ -45,7 +45,7 @@
             },
             "schema:description": {
                 "@language": "de",
-                "@value": "Stra\u00dfenansicht des Parkhauses Q-Park am Kaufhaus Anger 1, schr\u00e4g \u00fcber den Juri-Gagarin-Ring"
+                "@value": "Straßenansicht des Parkhauses Q-Park am Kaufhaus Anger 1, schräg über den Juri-Gagarin-Ring"
             },
             "schema:exifData": [
                 {
@@ -295,40 +295,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "5197164"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Tag"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Geb\u00e4ude / Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Vorder- / Frontallicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Seitenperspektive"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Weitere Infrastruktur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "parken"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "parkmoeglichkeit"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/licenses/by/4.0/"

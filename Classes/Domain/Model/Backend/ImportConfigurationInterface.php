@@ -102,6 +102,11 @@ interface ImportConfigurationInterface
      */
     public function getImportTarget(): string;
 
+    // Keywords anchor their own category tree, independent of getCategoryParent().
+    public function getKeywordParent(): int;
+
+    public function getKeywordStoragePid(): int;
+
     public function getUid(): ?int;
 
     public function getFetchLastXDays(): int;

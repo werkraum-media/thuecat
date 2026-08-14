@@ -228,48 +228,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "5099196"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Frontal"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Tag"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Gebäude / Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Sommer"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Bauwerk"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Vorder- / Frontallicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "jüdisches leben"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "synagoge"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Jüdische Kultur"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/licenses/by/4.0/"

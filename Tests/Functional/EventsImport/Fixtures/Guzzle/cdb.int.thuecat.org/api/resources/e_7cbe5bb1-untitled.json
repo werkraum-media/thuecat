@@ -121,14 +121,6 @@
                 "@type": "schema:URL",
                 "@value": "www.erfurt-tourismus.de"
             },
-            "schema:keywords": [
-                {
-                    "@id": "https://thuecat.org/resources/619041692574-gewe"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/537010241706-gncn"
-                }
-            ],
             "thuecat:contentResponsible": {
                 "@id": "https://thuecat.org/resources/018132452787-ngbe"
             },

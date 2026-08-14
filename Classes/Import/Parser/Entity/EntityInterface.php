@@ -40,6 +40,13 @@ interface EntityInterface
     public const TABLE = '';
 
     /**
+     * Relation column keywords occupy on this entity's table.
+     *
+     * @var non-empty-string
+     */
+    public const KEYWORD_FIELD = 'keywords';
+
+    /**
      * @param array<string, int> $translationLanguages Two-letter language
      *        code → target sys_language_uid. The default-language row goes
      *        into the entity's data; for each entry here, fields whose
@@ -64,12 +71,12 @@ interface EntityInterface
      * swap into real relation fields post-parse. Keyed by JSON-LD field name
      * with the schema:/thuecat: prefix stripped.
      *
-     * Most buckets carry list<string> (ref→uid lookups); the `media` bucket
-     * carries list<array{kind, id}> so the resolver can distinguish
-     * schema:photo vs schema:image vs schema:video origin on the shaped
-     * output.
+     * Most buckets carry list<string> (ref→uid lookups). Two carry arrays so
+     * the resolver keeps per-entry context the id alone cannot express: `media`
+     * tags each ref with its source slot, and `keywords` carries the usage type
+     * a term was referenced with, plus a title for entries needing no fetch.
      *
-     * @return array<string, list<string>|list<array{kind: string, id: string}>>
+     * @return array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>
      */
     public function getTransients(): array;
 

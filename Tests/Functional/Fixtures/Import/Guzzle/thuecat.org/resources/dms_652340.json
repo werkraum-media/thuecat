@@ -38,7 +38,7 @@
             },
             "schema:description": {
                 "@language": "de",
-                "@value": "Ansicht der Kr\u00e4merbr\u00fccke, Erfurt"
+                "@value": "Ansicht der Krämerbrücke, Erfurt"
             },
             "schema:exifData": [
                 {
@@ -288,60 +288,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "652340"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Tag"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Geb\u00e4ude / Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Sommer"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "St\u00e4dte und Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Fr\u00fchling"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "fachwerk"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "sehensw\u00fcrdigkeit"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "sightseeing"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "stadtansicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "haus"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "balkon"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "gesch\u00e4ft"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/publicdomain/zero/1.0/deed.de"

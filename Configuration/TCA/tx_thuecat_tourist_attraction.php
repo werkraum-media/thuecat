@@ -80,6 +80,15 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
 
+            // Own property, own anchor: never mixed with the categories above.
+            'keywords' => [
+                'label' => $languagePath . '.keywords',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'category',
+                ],
+            ],
+
             'title' => [
                 'label' => $languagePath . '.title',
                 'l10n_mode' => '',
@@ -400,7 +409,7 @@ return (static function (string $extensionKey, string $tableName) {
                 opening_hours_inline, special_opening_hours_inline, opening_hours, special_opening_hours, offers, accessibility_specification, address, url,
                  media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
                 parking_facility_near_by,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords,
                 --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],
         ],

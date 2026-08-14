@@ -161,6 +161,37 @@ final class ResolverContextTest extends TestCase
     }
 
     #[Test]
+    public function promoteRewritesKeywordKeys(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+        $context->keywordKeyByRemoteId['keyword:text:theater'] = 'NEW_kw';
+
+        $context->promoteNewKeys(['NEW_kw' => 77]);
+
+        self::assertSame(
+            '77',
+            $context->keywordKeyByRemoteId['keyword:text:theater'],
+            'Keyword keys staged in one round must carry their assigned uid into the next. '
+            . 'If this fails, round 2 reuses the NEW… placeholder and stages a second '
+            . 'sys_category row for a keyword that already exists — silently, since '
+            . 'nothing errors.'
+        );
+    }
+
+    #[Test]
+    public function promoteKeepsKeywordAndCategoryKeysApart(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+        $context->categoryKeyByRemoteId['type:schema:Museum'] = 'NEW_cat';
+        $context->keywordKeyByRemoteId['keyword:text:theater'] = 'NEW_kw';
+
+        $context->promoteNewKeys(['NEW_cat' => 5]);
+
+        self::assertSame('5', $context->categoryKeyByRemoteId['type:schema:Museum']);
+        self::assertSame('NEW_kw', $context->keywordKeyByRemoteId['keyword:text:theater']);
+    }
+
+    #[Test]
     public function markedReferenceIsReportedAsFailed(): void
     {
         $context = new ResolverContext(10, new ParserContext(0));

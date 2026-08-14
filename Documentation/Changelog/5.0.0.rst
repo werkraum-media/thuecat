@@ -63,6 +63,14 @@ Features
 * An event imported without a single date is named in the import log as ``eventWithoutDates``
   at severity ``warning``.
 
+* ``schema:keywords`` is imported as :sql:`sys_category` records in their own tree, for tourist
+  attractions, tourist information and events. Term references, typed ontology literals and
+  editor-typed free text all resolve to a localized title, and the upstream group structure is
+  mirrored as intermediate categories. Keywords stay separate from the categories derived from an
+  object's type: separate anchor, separate relation, separate identifier. Editor renames survive
+  re-import, and a keyword upstream stops supplying loses its relation while the category record
+  remains. See :ref:`import-keywords`.
+
 Fixes
 -----
 

@@ -199,6 +199,7 @@ class TouristAttractionEntity extends AbstractEntity
         );
 
         $this->applyCategoryMapper(new PlaceCategoryMapper(), $node);
+        $this->recordKeywords($node);
     }
 
     public function handlesTypes(): array

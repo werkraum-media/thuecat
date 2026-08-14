@@ -34,7 +34,7 @@
             },
             "schema:description": {
                 "@language": "de",
-                "@value": "Frontaler Blick auf die Hausfront/Hausfassade im Innenhof mit Zugang \u00fcber die Waagegasse"
+                "@value": "Frontaler Blick auf die Hausfront/Hausfassade im Innenhof mit Zugang über die Waagegasse"
             },
             "schema:exifData": [
                 {
@@ -233,48 +233,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "5099196"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Frontal"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Tag"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Geb\u00e4ude / Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Sommer"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Bauwerk"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Vorder- / Frontallicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "j\u00fcdisches leben"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "synagoge"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "J\u00fcdische Kultur"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/licenses/by/4.0/"

@@ -42,7 +42,7 @@ class DataHandlerPayload
      * `schema:video` origin of each ref to set `mainImage` and `type` on the
      * shaped JSON output — a flat list of ids would lose that information.
      *
-     * @var array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>>>>
+     * @var array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>>>
      */
     private array $transients = [];
 
@@ -468,7 +468,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>>>>
+     * @return array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>>>
      */
     public function getTransients(): array
     {

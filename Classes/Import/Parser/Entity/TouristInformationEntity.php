@@ -42,6 +42,10 @@ class TouristInformationEntity extends AbstractEntity
     protected string $title = '';
     protected string $description = '';
 
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->remote_id = $this->getRemoteId($node);
@@ -74,6 +78,8 @@ class TouristInformationEntity extends AbstractEntity
             $node['schema:image'] ?? null,
             $node['schema:video'] ?? null,
         );
+
+        $this->recordKeywords($node);
     }
 
     public function handlesTypes(): array

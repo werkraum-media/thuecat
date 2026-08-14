@@ -50,6 +50,45 @@ class SysCategoryRepository
     }
 
     /**
+     * Category uids currently related to one record field.
+     *
+     * @return list<int>
+     */
+    public function findRelatedUids(string $ownerTable, int $ownerUid, string $ownerField): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_category_record_mm');
+        $rows = $queryBuilder->select('uid_local')
+            ->from('sys_category_record_mm')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'tablenames',
+                    $queryBuilder->createNamedParameter($ownerTable)
+                ),
+                $queryBuilder->expr()->eq(
+                    'fieldname',
+                    $queryBuilder->createNamedParameter($ownerField)
+                ),
+                $queryBuilder->expr()->eq(
+                    'uid_foreign',
+                    $queryBuilder->createNamedParameter($ownerUid, Connection::PARAM_INT)
+                )
+            )
+            ->orderBy('sorting_foreign')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        $uids = [];
+        foreach ($rows as $uid) {
+            if (is_numeric($uid)) {
+                $uids[] = (int)$uid;
+            }
+        }
+
+        return $uids;
+    }
+
+    /**
      * Default-language uids with the given remote_id on any of the pages.
      *
      * @param list<int> $pageIds

@@ -83,7 +83,8 @@
     "scripts": {
         "post-autoload-dump": [
             "mkdir -p .Build/web/typo3conf/ext/",
-            "[ -L .Build/web/typo3conf/ext/thuecat ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/thuecat"
+            "[ -L .Build/web/typo3conf/ext/thuecat ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/thuecat",
+            "[ \"$IS_DDEV_PROJECT\" = \"true\" ] && [ -d ../events ] && [ ! -L vendor/werkraummedia/events ] && rm -rf vendor/werkraummedia/events && ln -snvf ../../../events vendor/werkraummedia/events || true"
         ]
     },
     "extra": {

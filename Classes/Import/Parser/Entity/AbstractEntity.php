@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Category\SysCategoryMapper;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\FreeTextKeyword;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\KeywordReader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
 
 abstract class AbstractEntity implements EntityInterface
@@ -39,6 +42,9 @@ abstract class AbstractEntity implements EntityInterface
      * @var array<string, string>
      */
     public const MEDIA_FIELDS = [];
+
+    /** Transient bucket carrying keyword URIs the resolver must fetch. */
+    public const KEYWORD_BUCKET = 'keywords';
 
     /**
      * Category relations wired by the resolver; not DB columns.
@@ -78,9 +84,11 @@ abstract class AbstractEntity implements EntityInterface
      * Most buckets are plain lists of @id strings. The `media` bucket is a
      * `list<array{kind, id}>` because the resolver needs to know whether a
      * ref came from schema:photo (mainImage:true), schema:image, or
-     * schema:video to shape the output correctly.
+     * schema:video to shape the output correctly. The `keywords` bucket
+     * likewise carries the usage type a term was referenced with, plus a title
+     * for entries that need no fetch.
      *
-     * @var array<string, list<string>|list<array{kind: string, id: string}>>
+     * @var array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>
      */
     protected array $transients = [];
 
@@ -495,6 +503,11 @@ abstract class AbstractEntity implements EntityInterface
         return static::MEDIA_FIELDS[$kind] ?? '';
     }
 
+    public function getKeywordField(): string
+    {
+        return static::KEYWORD_FIELD;
+    }
+
     /** @return array<int, array<string, string>> */
     public function getTranslations(): array
     {
@@ -545,6 +558,52 @@ abstract class AbstractEntity implements EntityInterface
     public function getCategories(): array
     {
         return $this->_categories;
+    }
+
+    /**
+     * Free text resolves here and now; referenced terms and ontology CURIEs go
+     * into the transient bucket for the resolver to fetch. Each entry carries the
+     * entity's own target field, since the resolver sees only the payload.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function recordKeywords(array $node): void
+    {
+        $references = [];
+
+        foreach ((new KeywordReader())->read($node) as $entry) {
+            // Free text needs no fetch, but still rides the bucket: the
+            // resolver never sees entity objects, only the payload.
+            if ($entry->shape === KeywordEntry::SHAPE_FREE_TEXT) {
+                $references[] = [
+                    'id' => FreeTextKeyword::remoteId($entry->value),
+                    'title' => FreeTextKeyword::title($entry->value),
+                    'usageType' => null,
+                    'field' => $this->getKeywordField(),
+                ];
+                continue;
+            }
+
+            $uri = $entry->shape === KeywordEntry::SHAPE_ONTOLOGY
+                ? (new CurieExpander())->expand($entry->value)
+                : $entry->value;
+            if ($uri === null) {
+                continue;
+            }
+
+            // Like the media bucket, entries are arrays: the usage type travels
+            // with its reference, because the fetched term cannot say which of
+            // its enums a given usage meant.
+            $references[] = [
+                'id' => $uri,
+                'usageType' => $entry->usageType,
+                'field' => $this->getKeywordField(),
+            ];
+        }
+
+        if ($references !== []) {
+            $this->transients[self::KEYWORD_BUCKET] = $references;
+        }
     }
 
     /** @return list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}> */

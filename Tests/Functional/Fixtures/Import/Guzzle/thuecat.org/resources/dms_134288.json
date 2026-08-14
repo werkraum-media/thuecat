@@ -38,7 +38,7 @@
             },
             "schema:description": {
                 "@language": "de",
-                "@value": "Kr\u00e4merbr\u00fccke in Erfurt"
+                "@value": "Krämerbrücke in Erfurt"
             },
             "schema:exifData": [
                 {
@@ -288,24 +288,6 @@
                 "@type": "schema:PropertyValue",
                 "@value": "134288"
             },
-            "schema:keywords": [
-                {
-                    "@type": "xsd:string",
-                    "@value": "Sommer"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Vorder- / Frontallicht"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "St\u00e4dte und Architektur"
-                },
-                {
-                    "@type": "xsd:string",
-                    "@value": "Erfurt"
-                }
-            ],
             "schema:license": {
                 "@language": "de",
                 "@value": "https://creativecommons.org/publicdomain/zero/1.0/deed.de"

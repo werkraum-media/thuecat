@@ -65,6 +65,13 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
+            // Own property, own anchor: never @type categories.
+            'keywords' => [
+                'label' => $languagePath . '.keywords',
+                'config' => [
+                    'type' => 'category',
+                ],
+            ],
             'remote_id' => [
                 'label' => $languagePath . '.remote_id',
                 'config' => [
@@ -108,7 +115,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, main_image, media_files, remote_id, town, managed_by',
+                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by',
             ],
         ],
     ];

@@ -145,6 +145,8 @@ class Importer
             $stagingFolder,
             $configuration->getCategoryParent(),
             $configuration->getCategoryStoragePid(),
+            $configuration->getKeywordParent(),
+            $configuration->getKeywordStoragePid(),
             $listener,
             $skipMedia,
         );
@@ -190,6 +192,7 @@ class Importer
 
         // Not during resolution: only now is the produced-set complete.
         $this->resolver->flushCollectedMedia($accumulatedPayload, $resolverContext);
+        $this->resolver->flushCollectedKeywords($accumulatedPayload, $resolverContext);
 
         // Snapshot before the loop drains the datamap. Translation rows added
         // by the resolver are excluded so the logger reports only the

@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use WerkraumMedia\ThueCat\Import\FetchFailureVerdict;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
@@ -634,6 +635,7 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(ImportLogger::class),
             $this->get(StaleDateReaper::class),
             $this->get(MediaFieldMap::class),
+            $this->get(FetchFailureVerdict::class),
         );
     }
 }

@@ -129,6 +129,14 @@ final class ResolverContext
     public const MAX_FETCH_DEPTH = 1;
 
     /**
+     * Keyword chains are exempt from MAX_FETCH_DEPTH — a term sits at depth 1
+     * and its set at depth 2, so the generic cap would drop every intermediate
+     * category. Bounded here instead; the vocabulary is small and closed, so it
+     * cannot fan out the way cross-referenced POIs do.
+     */
+    public const MAX_KEYWORD_DEPTH = 10;
+
+    /**
      * remote_id → tree depth at which the entity entered the payload. Roots
      * are 0; entities pulled in via a transient on a depth-N row are N+1.
      * Used by the Resolver to decide whether to fetch a transient reference
@@ -172,6 +180,31 @@ final class ResolverContext
     public array $collectedMedia = [];
 
     /**
+     * Run-scoped for the same reason as media: the flush after the last root
+     * needs every owner's complete set to decide what to reap.
+     *
+     * @var list<CollectedKeyword>
+     */
+    public array $collectedKeywords = [];
+
+    /**
+     * "<table>|<key>|<field>|<remoteId>" — one relation per keyword per field,
+     * first claim winning.
+     *
+     * @var array<string, true>
+     */
+    public array $claimedKeywordByField = [];
+
+    /**
+     * Keyword remote_id → staged key, so a keyword recurring across roots
+     * yields one row. Separate from the category map: the two trees must never
+     * hand each other a key.
+     *
+     * @var array<string, string>
+     */
+    public array $keywordKeyByRemoteId = [];
+
+    /**
      * Download URL → sys_file uid: one fetch per asset per run.
      *
      * @var array<string, int>
@@ -193,6 +226,15 @@ final class ResolverContext
      * @var array<string, true>
      */
     public array $mediaFailureByField = [];
+
+    /**
+     * "<table>|<key>|<field>" whose keyword resolution failed for a technical
+     * reason. Submitting a relation list is what removes, so such a field must
+     * carry its stored uids forward instead of dropping them.
+     *
+     * @var array<string, true>
+     */
+    public array $keywordFailureByField = [];
 
     /**
      * Download URL → whether its failure means the asset is gone. Needed
@@ -221,11 +263,45 @@ final class ResolverContext
         public readonly ?Folder $stagingFolder = null,
         public readonly int $categoryParentUid = 0,
         public readonly int $categoryStoragePid = 0,
+        public readonly int $keywordParentUid = 0,
+        public readonly int $keywordStoragePid = 0,
         public readonly ?ImportProgressListener $progressListener = null,
         // Drops media before any API request: both the referenced bucket and
         // inline nodes are discarded unresolved, undownloaded, unrelated.
         public readonly bool $skipMedia = false,
     ) {
+    }
+
+    /** Ignored when the owner field already claimed the keyword; first claim wins. */
+    public function collectKeyword(CollectedKeyword $keyword): void
+    {
+        $key = implode('|', [
+            $keyword->ownerTable,
+            $keyword->ownerKey,
+            $keyword->targetField,
+            $keyword->remoteId,
+        ]);
+        if (isset($this->claimedKeywordByField[$key])) {
+            // A record may cite a node already collected as an ancestor of
+            // another of its keywords; the citation must win.
+            if ($keyword->isCited) {
+                foreach ($this->collectedKeywords as $index => $collected) {
+                    if ($collected->remoteId === $keyword->remoteId
+                        && $collected->ownerTable === $keyword->ownerTable
+                        && $collected->ownerKey === $keyword->ownerKey
+                        && $collected->targetField === $keyword->targetField
+                        && !$collected->isCited
+                    ) {
+                        $this->collectedKeywords[$index] = $keyword;
+                        break;
+                    }
+                }
+            }
+
+            return;
+        }
+        $this->claimedKeywordByField[$key] = true;
+        $this->collectedKeywords[] = $keyword;
     }
 
     /** Ignored when the owner field already holds the file; first claim wins. */
@@ -300,9 +376,9 @@ final class ResolverContext
     }
 
     /**
-     * Rewrite NEW… placeholders in $remoteIdToKey to the uids assigned by
-     * DataHandler in the previous round. After the call the map only holds
-     * uid strings for any remote_id whose row has hit the DB.
+     * Rewrite NEW… placeholders to the uids DataHandler assigned in the
+     * previous round, across every run-scoped key map. A map left out here
+     * carries its placeholder into the next round and stages a duplicate row.
      *
      * @param array<string, int|string> $substNEWwithIDs
      */
@@ -316,6 +392,11 @@ final class ResolverContext
         foreach ($this->categoryKeyByRemoteId as $remoteId => $key) {
             if (isset($substNEWwithIDs[$key])) {
                 $this->categoryKeyByRemoteId[$remoteId] = (string)$substNEWwithIDs[$key];
+            }
+        }
+        foreach ($this->keywordKeyByRemoteId as $remoteId => $key) {
+            if (isset($substNEWwithIDs[$key])) {
+                $this->keywordKeyByRemoteId[$remoteId] = (string)$substNEWwithIDs[$key];
             }
         }
     }

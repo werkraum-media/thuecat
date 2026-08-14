@@ -1,0 +1,69 @@
+{
+    "@context": {
+        "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "schema": "http://schema.org/",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "wod": "https://web-of-data.org/ontology/wod/1.0/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+        "thuecatsh": "https://thuecat.org/shapes/thuecat/1.0/",
+        "cc": "http://creativecommons.org/ns#",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "tourism": "https://web-of-data.org/tourism/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "agg": "http://jena.apache.org/ARQ/function/aggregate#",
+        "geof": "http://www.opengis.net/def/function/geosparql/",
+        "prefix": "http://www.ontotext.com/connectors/lucene#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "spif": "http://spinrdf.org/spif#",
+        "path": "http://www.ontotext.com/path#",
+        "apf": "http://jena.apache.org/ARQ/property#",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rep": "http://www.openrdf.org/config/repository#",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "wgs": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "void": "http://rdfs.org/ns/void#",
+        "list": "http://jena.apache.org/ARQ/list#",
+        "vb": "https://data.visitberlin.de/ontology/vb/1.0/",
+        "geoext": "http://rdf.useekm.com/ext#",
+        "sesame": "http://www.openrdf.org/schema/sesame#",
+        "math": "http://www.w3.org/2005/xpath-functions/math",
+        "sail": "http://www.openrdf.org/config/sail#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "fn": "http://www.w3.org/2005/xpath-functions",
+        "sys": "http://www.ontotext.com/owlim/system#",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "array": "http://www.w3.org/2005/xpath-functions/array",
+        "similarity": "http://www.ontotext.com/graphdb/similarity/",
+        "similarity-index": "http://www.ontotext.com/graphdb/similarity/instance/",
+        "dcat": "http://www.w3.org/ns/dcat#",
+        "map": "http://www.w3.org/2005/xpath-functions/map",
+        "sr": "http://www.openrdf.org/config/repository/sail#",
+        "rdf4j": "http://rdf4j.org/schema/rdf4j#",
+        "gn": "http://www.geonames.org/ontology#",
+        "afn": "http://jena.apache.org/ARQ/function#",
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "ofn": "http://www.ontotext.com/sparql/functions/",
+        "inst": "http://www.ontotext.com/connectors/lucene/instance#",
+        "graphdb": "http://www.ontotext.com/config/graphdb#",
+        "luc": "http://www.ontotext.com/connectors/lucene#",
+        "omgeo": "http://www.ontotext.com/owlim/geo#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/husk-group-top",
+            "@type": [
+                "schema:DefinedTermSet",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Brauchbare Obergruppe"
+                }
+            ]
+        }
+    ]
+}

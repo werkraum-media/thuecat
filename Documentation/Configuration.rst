@@ -59,6 +59,51 @@ All configurations also provide an input to define the page where records should
 stored and updated. This page uid is also used to fetch accordingly site
 configuration. The related languages are used during the import.
 
+.. _import-keywords:
+
+Keywords
+--------
+
+ThueCat objects carry ``schema:keywords``: a controlled vocabulary of terms grouped
+into sets, alongside keywords editors typed by hand. The import stores them as
+:sql:`sys_category` records, so they can be selected in the backend and used to
+filter records in the frontend.
+
+Keywords are a **separate property from the categories** derived from an object's
+type. They never share a tree, a record or an identifier, even where a keyword and a
+category happen to carry the same title.
+
+Two fields on the import configuration switch keyword import on:
+
+Keyword parent
+   The category all imported keywords are created beneath. Create an empty category
+   to serve as this anchor, then select it here.
+
+Keyword storage pid
+   The page imported keyword categories are stored on.
+
+Both must be set, or neither. Leaving both empty switches keyword import off; setting
+only one is rejected before the import fetches anything. The anchor must lie inside
+the same site as the record storage page.
+
+An import configuration imports one kind of record, so places and events are kept
+apart by configuring them as separate imports with different keyword parents. Two
+imports pointing at the same parent share one tree.
+
+The upstream group structure is mirrored as intermediate categories, so a term appears
+beneath a category representing its set rather than in one flat list. Only the keyword
+a record actually carries becomes a relation; the groups above it exist to organise the
+tree.
+
+Editors may rename an imported keyword category. Renames survive re-import: matching is
+on the stored remote identifier, never on the title. Titles are taken from upstream only
+when the category is first created.
+
+Keywords no longer supplied by upstream lose their relation on the next import, while
+the category record itself remains for editors to keep using. A keyword that could not
+be fetched is left alone rather than removed, since a failed request cannot be
+distinguished from an upstream deletion.
+
 .. _import-tuning:
 
 Import tuning

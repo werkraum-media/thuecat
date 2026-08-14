@@ -22,5 +22,6 @@ Table of Contents
    FrontendOutput/Index
    ContentElementExample
    Changelog
+   ImporterArchitecture
    Maintenance
    Sitemap

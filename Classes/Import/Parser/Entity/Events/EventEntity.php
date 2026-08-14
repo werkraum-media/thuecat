@@ -37,6 +37,10 @@ class EventEntity extends AbstractEventsEntity
 {
     public const TABLE = 'tx_events_domain_model_event';
 
+    // ext:events already uses `keywords` for the plain-string field its own
+    // importer fills.
+    public const KEYWORD_FIELD = 'keywords_relation';
+
     // One field for every slot: events rank images but do not single one out.
     public const MEDIA_FIELDS = [
         'photo' => 'images',
@@ -88,6 +92,7 @@ class EventEntity extends AbstractEventsEntity
         }
 
         $this->applyCategoryMapper(new EventCategoryMapper(), $node);
+        $this->recordKeywords($node);
     }
 
     public function handlesTypes(): array
