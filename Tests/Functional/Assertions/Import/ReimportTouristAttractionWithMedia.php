@@ -28,19 +28,19 @@ return [
     'sys_file' => [
         0 => [
             'uid' => '2',
-            'identifier' => '/thuecat/image-with-foreign-author_Bild-mit-externem-Autor.jpg',
+            'identifier' => '/thuecat/image_6ab24be70ef3f2e8.jpg',
         ],
         1 => [
             'uid' => '3',
-            'identifier' => '/thuecat/image-with-author-string_Bild-mit-author.jpg',
+            'identifier' => '/thuecat/image_89d8f4e95612e13d.jpg',
         ],
         2 => [
             'uid' => '4',
-            'identifier' => '/thuecat/image-with-license-author_Bild-mit-license-author.jpg',
+            'identifier' => '/thuecat/image_718be403bf38b616.jpg',
         ],
         3 => [
             'uid' => '5',
-            'identifier' => '/thuecat/image-with-author-and-license-author_Bild-mit-author-und-license-author.jpg',
+            'identifier' => '/thuecat/image_1bd2daee00b7ee9c.jpg',
         ],
     ],
     'sys_file_reference' => [

@@ -188,6 +188,9 @@ class Importer
             $accumulatedPayload->mergeFrom($resolved);
         }
 
+        // Not during resolution: only now is the produced-set complete.
+        $this->resolver->flushCollectedMedia($accumulatedPayload, $resolverContext);
+
         // Snapshot before the loop drains the datamap. Translation rows added
         // by the resolver are excluded so the logger reports only the
         // default-language records the user expects to see counted.

@@ -65,6 +65,31 @@ class MediaFileDownloaderTest extends TestCase
         self::assertNull($this->download($this->clientReturning(200, '')));
     }
 
+    // The status decides whether a missing image costs its stored reference.
+    #[Test]
+    public function reportsTheStatusOfAFailedDownload(): void
+    {
+        $status = null;
+        $this->download($this->clientReturning(404, ''), $status);
+
+        self::assertSame(404, $status);
+    }
+
+    #[Test]
+    public function reportsNoStatusWhenNoResponseArrived(): void
+    {
+        $httpClient = self::createStub(ImportHttpClient::class);
+        $httpClient->method('sendRequest')->willThrowException(
+            new class('Connection refused', 1785395634) extends RuntimeException implements ClientExceptionInterface {
+            }
+        );
+
+        $status = 999;
+        $this->download($httpClient, $status);
+
+        self::assertNull($status, 'No response means no status to reason about.');
+    }
+
     #[Test]
     public function sendsTheApiKeyToTheAssetHostThatRequiresIt(): void
     {
@@ -131,6 +156,123 @@ class MediaFileDownloaderTest extends TestCase
         self::assertStringContainsString('api_key=secret-key', $query);
     }
 
+    /** The guard the production trace shows failing. */
+    #[Test]
+    public function reusesTheStagedFileInsteadOfDownloadingItAgain(): void
+    {
+        $client = $this->capturingClient();
+        $staged = self::createStub(File::class);
+
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(false);
+        $staging = self::createStub(Folder::class);
+        $staging->method('hasFile')->willReturn(true);
+        $staging->method('getFile')->willReturn($staged);
+
+        $downloader = new MediaFileDownloader($client);
+        $file = $downloader->download(
+            $target,
+            $staging,
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+        );
+
+        self::assertSame($staged, $file);
+        self::assertNull($client->lastRequest, 'A staged file must not be fetched again.');
+    }
+
+    /** One URL is one name; two URLs never collide. */
+    #[Test]
+    public function derivesTheStagedNameFromTheDownloadUrlAlone(): void
+    {
+        $url = 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image';
+
+        self::assertSame(
+            $this->stagedNameFor($url),
+            $this->stagedNameFor($url),
+            'One asset URL is one staged name.'
+        );
+        self::assertNotSame(
+            $this->stagedNameFor($url),
+            $this->stagedNameFor('https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image'),
+            'Two assets whose URLs differ must never collide.'
+        );
+    }
+
+    #[Test]
+    public function separatesTwoAssetsSharingAGenericUrlStem(): void
+    {
+        self::assertNotSame(
+            $this->stagedNameFor('https://cdb.thuecat.org/assets/ttg/a/original/image.jpg'),
+            $this->stagedNameFor('https://cdb.thuecat.org/assets/ttg/b/original/image.jpg')
+        );
+    }
+
+    #[Test]
+    public function takesTheFileExtensionFromTheUrl(): void
+    {
+        self::assertStringEndsWith(
+            '.webp',
+            $this->stagedNameFor('https://www.kulturcarre.de/media/foo.webp')
+        );
+    }
+
+    // Extensionless is the adaptive-media shape.
+    #[Test]
+    public function fallsBackToJpgWhenTheUrlNamesNoExtension(): void
+    {
+        self::assertStringEndsWith(
+            '.jpg',
+            $this->stagedNameFor('https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image')
+        );
+    }
+
+    #[Test]
+    public function reusesThePromotedFileInsteadOfDownloadingItAgain(): void
+    {
+        $client = $this->capturingClient();
+        $promoted = self::createStub(File::class);
+
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(true);
+        $target->method('getFile')->willReturn($promoted);
+        $staging = self::createStub(Folder::class);
+        $staging->method('hasFile')->willReturn(false);
+
+        $file = (new MediaFileDownloader($client))->download(
+            $target,
+            $staging,
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+        );
+
+        self::assertSame($promoted, $file);
+        self::assertNull($client->lastRequest, 'A promoted file must not be fetched again.');
+    }
+
+    /** Reads the name off the folder the download creates the file in. */
+    private function stagedNameFor(string $downloadUrl): string
+    {
+        $captured = '';
+
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(false);
+        $staging = self::createMock(Folder::class);
+        $staging->method('hasFile')->willReturn(false);
+        $staging->method('createFile')->willReturnCallback(
+            function (string $fileName) use (&$captured): File {
+                $captured = $fileName;
+                return self::createStub(File::class);
+            }
+        );
+
+        (new MediaFileDownloader($this->clientReturning(200, 'image-bytes')))->download(
+            $target,
+            $staging,
+            $downloadUrl,
+        );
+
+        return $captured;
+    }
+
     private function capturingClient(): CapturingClient
     {
         return new CapturingClient();
@@ -152,8 +294,6 @@ class MediaFileDownloaderTest extends TestCase
             $target,
             $staging,
             $downloadUrl,
-            'dms_1',
-            'Foo.jpg',
             $apiKey,
             $apiDomain,
         );
@@ -177,19 +317,23 @@ class MediaFileDownloaderTest extends TestCase
     /**
      * Neither folder holds the file, so download() always reaches the fetch.
      */
-    private function download(ImportHttpClient $httpClient): ?object
+    private function download(ImportHttpClient $httpClient, ?int &$failureStatus = null): ?object
     {
         $target = self::createStub(Folder::class);
         $target->method('hasFile')->willReturn(false);
         $staging = self::createStub(Folder::class);
         $staging->method('hasFile')->willReturn(false);
 
+        $failureDetail = null;
+
         return (new MediaFileDownloader($httpClient))->download(
             $target,
             $staging,
             'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image',
-            'dms_5159216',
-            'Foo.jpg',
+            '',
+            '',
+            $failureDetail,
+            $failureStatus,
         );
     }
 }

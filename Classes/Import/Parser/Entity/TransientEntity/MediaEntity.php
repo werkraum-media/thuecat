@@ -62,9 +62,9 @@ class MediaEntity extends AbstractTransientEntity
 
         $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
         $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
-        // A fetched media resource names its file in schema:url; an inline node
-        // carries schema:contentUrl instead.
-        $this->url = $this->extractStringValue($node['schema:url'] ?? $node['schema:contentUrl'] ?? null);
+        // contentUrl is the asset as delivered, url a rendition of it; the
+        // fallback is load-bearing, referenced nodes carry url only.
+        $this->url = $this->extractStringValue($node['schema:contentUrl'] ?? $node['schema:url'] ?? null);
         $this->author = $resolvedAuthor ?? $this->extractAuthorString($node['schema:author'] ?? null);
         $this->copyrightYear = (int)$this->extractLanguageValue($node['schema:copyrightYear'] ?? null);
         $this->license = [

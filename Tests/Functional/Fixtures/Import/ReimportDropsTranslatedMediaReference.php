@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-// State after a first import: scaffolding plus the attraction rows, sys_file
-// rows and the eight sys_file_reference rows the importer produced. Re-running
-// the import over this must keep the reference set flat.
+// As the reimport state, plus a fifth image pair (default-language ref 9 and
+// its translation 10) that upstream no longer supplies. Reaping the default
+// row must take the translation with it.
 return [
     'pages' => [
         0 => [
@@ -75,7 +75,7 @@ return [
             'sys_language_uid' => '0',
             'remote_id' => 'https://thuecat.org/resources/attraction-with-media',
             'title' => 'Attraktion mit Bildern',
-            'media_files' => '4',
+            'media_files' => '5',
         ],
         1 => [
             'uid' => '2',
@@ -84,7 +84,7 @@ return [
             'l18n_parent' => '1',
             'remote_id' => 'https://thuecat.org/resources/attraction-with-media',
             'title' => 'Attraction with media',
-            'media_files' => '4',
+            'media_files' => '5',
         ],
     ],
     'sys_file' => [
@@ -130,6 +130,17 @@ return [
             'name' => 'image_1bd2daee00b7ee9c.jpg',
             'identifier' => '/thuecat/image_1bd2daee00b7ee9c.jpg',
             'identifier_hash' => '8debee886f722bcabf1254239b7351195507dd62',
+            'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
+        ],
+        4 => [
+            'uid' => '6',
+            'storage' => '1',
+            'type' => '2',
+            'extension' => 'jpg',
+            'mime_type' => 'image/jpeg',
+            'name' => 'image_deadbeefdeadbeef.jpg',
+            'identifier' => '/thuecat/image_deadbeefdeadbeef.jpg',
+            'identifier_hash' => '0c8f5a1d2b3e4f60718293a4b5c6d7e8f9a0b1c2',
             'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
         ],
     ],
@@ -217,6 +228,26 @@ return [
             'sys_language_uid' => '1',
             'l10n_parent' => '4',
             'sorting_foreign' => '4',
+        ],
+        8 => [
+            'uid' => '9',
+            'pid' => '10',
+            'uid_local' => '6',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'media_files',
+            'sorting_foreign' => '5',
+        ],
+        9 => [
+            'uid' => '10',
+            'pid' => '10',
+            'uid_local' => '6',
+            'uid_foreign' => '2',
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'media_files',
+            'sys_language_uid' => '1',
+            'l10n_parent' => '9',
+            'sorting_foreign' => '5',
         ],
     ],
 ];

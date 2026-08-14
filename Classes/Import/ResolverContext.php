@@ -164,6 +164,46 @@ final class ResolverContext
     public array $failedReferenceUrls = [];
 
     /**
+     * Run-scoped, not per payload: payloads merge first-wins, which would drop
+     * a second root's claim on an owner already collected.
+     *
+     * @var list<CollectedMedia>
+     */
+    public array $collectedMedia = [];
+
+    /**
+     * Download URL → sys_file uid: one fetch per asset per run.
+     *
+     * @var array<string, int>
+     */
+    public array $fileUidByDownloadUrl = [];
+
+    /**
+     * "<table>|<key>|<field>|<fileUid>" — one reference per file per field,
+     * first claim winning.
+     *
+     * @var array<string, true>
+     */
+    public array $claimedByField = [];
+
+    /**
+     * "<table>|<key>|<field>" whose download failed for a technical reason.
+     * Such a field is not reaped: an outage says nothing about the asset.
+     *
+     * @var array<string, true>
+     */
+    public array $mediaFailureByField = [];
+
+    /**
+     * Download URL → whether its failure means the asset is gone. Needed
+     * because the failure cache short-circuits later owners of the same asset,
+     * which must still mark their own field.
+     *
+     * @var array<string, bool>
+     */
+    public array $assetGoneByUrl = [];
+
+    /**
      * @param array<string, int> $translationLanguages Two-letter language
      *        code → sys_language_uid for every additional site language.
      *        Forwarded to the Parser whenever the Resolver fetches a
@@ -186,6 +226,17 @@ final class ResolverContext
         // inline nodes are discarded unresolved, undownloaded, unrelated.
         public readonly bool $skipMedia = false,
     ) {
+    }
+
+    /** Ignored when the owner field already holds the file; first claim wins. */
+    public function collectMedia(CollectedMedia $media): void
+    {
+        $key = implode('|', [$media->ownerTable, $media->ownerKey, $media->targetField, $media->fileUid]);
+        if (isset($this->claimedByField[$key])) {
+            return;
+        }
+        $this->claimedByField[$key] = true;
+        $this->collectedMedia[] = $media;
     }
 
     // The run-scoped carrier already; cheaper than a parameter on every method.

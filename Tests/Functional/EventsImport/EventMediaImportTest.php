@@ -142,7 +142,7 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         copy(
             $this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg',
-            $this->instancePath . '/fileadmin-thuecat/thuecat/c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg'
+            $this->instancePath . '/fileadmin-thuecat/thuecat/c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg'
         );
     }
 
@@ -172,8 +172,8 @@ class EventMediaImportTest extends AbstractImportTestCase
         sort($names);
         self::assertSame(
             [
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg',
-                'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
+                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+                'image_3e6a3987344f6d38.jpg',
             ],
             $names
         );
@@ -204,8 +204,8 @@ class EventMediaImportTest extends AbstractImportTestCase
         sort($names);
         self::assertSame(
             [
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg',
-                'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
+                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+                'image_3e6a3987344f6d38.jpg',
             ],
             $names
         );
@@ -234,6 +234,188 @@ class EventMediaImportTest extends AbstractImportTestCase
         );
     }
 
+    // The old per-path staging could not express this: the inline path ran
+    // before the referenced path had claimed anything.
+    #[Test]
+    public function reapsOneImageOfEachShapeInTheSameRun(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventMixedMediaReimportPreState.php');
+        $this->seedMixedMediaFiles();
+        $this->expectFetch('e_mixed_media-tdm.json');
+        $this->expectFetch('dms_167631738.json');
+        $this->expectFetch('902877780916-bgnt.json');
+
+        $this->runImport();
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 0],
+                ['uid' => 2, 'deleted' => 0],
+                ['uid' => 3, 'deleted' => 1],
+                ['uid' => 4, 'deleted' => 1],
+            ],
+            $this->fetchReferenceState()
+        );
+    }
+
+    #[Test]
+    public function reimportingUnchangedMediaDoesNotGrowTheRelation(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventMixedMediaReimportPreState.php');
+        $this->seedMixedMediaFiles();
+        $this->expectFetch('e_mixed_media-tdm.json');
+        $this->expectFetch('dms_167631738.json');
+        $this->expectFetch('902877780916-bgnt.json');
+
+        $this->runImport();
+
+        // A type:file relation appends, so without the reap this climbs on
+        // every run.
+        self::assertSame(
+            2,
+            $this->countLiveReferences(),
+            'The two supplied images stay two references.'
+        );
+    }
+
+    // Reaping compares against what this run produced.
+    #[Test]
+    public function leavesReferencesOfRecordsTheRunDidNotImport(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventMediaReimportUntouchedOwnerPreState.php');
+        $this->seedExistingMediaFiles();
+        $this->expectFetch('e_referenced_media-tdm.json');
+        $this->expectFetch('dms_167631738.json');
+        $this->expectFetch('902877780916-bgnt.json');
+
+        $this->runImport();
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 0],
+                ['uid' => 2, 'deleted' => 1],
+                // Belongs to the event this run never fetched.
+                ['uid' => 3, 'deleted' => 0],
+            ],
+            $this->fetchReferenceState()
+        );
+    }
+
+    // A failing server says nothing about whether the asset still exists.
+    #[Test]
+    public function keepsTheReferenceWhenTheDownloadFailsWithAServerError(): void
+    {
+        $this->stageOwnerWithOneGoodImageAnd(503, 503, 503);
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 0],
+                ['uid' => 2, 'deleted' => 0],
+            ],
+            $this->fetchReferenceState(),
+            'A 5xx must never reap.'
+        );
+    }
+
+    // 404 is the one signal that positively means the asset is gone.
+    #[Test]
+    public function reapsTheReferenceWhenTheMediaServerReportsItGone(): void
+    {
+        $this->stageOwnerWithOneGoodImageAnd(404);
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 1],
+                ['uid' => 2, 'deleted' => 0],
+            ],
+            $this->fetchReferenceState(),
+            'A 404 means the asset is gone, so the reference goes with it.'
+        );
+    }
+
+    // 403 arrives for every asset on the host at once when a credential expires.
+    #[Test]
+    public function keepsTheReferenceWhenTheMediaServerRefusesAccess(): void
+    {
+        $this->stageOwnerWithOneGoodImageAnd(403);
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 0],
+                ['uid' => 2, 'deleted' => 0],
+            ],
+            $this->fetchReferenceState(),
+            'A refused request is a credential fault, not a removal.'
+        );
+    }
+
+    #[Test]
+    public function skippingMediaNeverReaps(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPartialDownloadFailurePreState.php');
+        $this->expectFetch('e_mixed_media-tdm.json');
+
+        $this->runImportSkippingMedia();
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'deleted' => 0],
+                ['uid' => 2, 'deleted' => 0],
+            ],
+            $this->fetchReferenceState(),
+            'Media was never retrieved, so nothing may be concluded about it.'
+        );
+    }
+
+    /** The success is what makes the owner reach the flush at all. */
+    private function stageOwnerWithOneGoodImageAnd(int ...$statuses): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPartialDownloadFailurePreState.php');
+        // Seeded, so the good image reuses its stored file and reference
+        // instead of creating a second one that orphans the first.
+        $this->seedInlineMediaFile();
+        $this->expectFetch('e_mixed_media-tdm.json');
+        $this->expectFetch('dms_167631738.json');
+        $this->expectFetch('902877780916-bgnt.json');
+        foreach ($statuses as $status) {
+            $this->expectFailureForUrl(
+                'https://cms.thuecat.org/o/adaptive-media/image/167631738/Preview-1280x0/image',
+                $status
+            );
+        }
+
+        $this->runImport();
+    }
+
+    private function countLiveReferences(): int
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()->removeAll();
+        $count = $queryBuilder
+            ->count('uid')
+            ->from('sys_file_reference')
+            ->where($queryBuilder->expr()->eq('deleted', 0))
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($count) ? (int)$count : 0;
+    }
+
+    private function seedMixedMediaFiles(): void
+    {
+        $folder = $this->instancePath . '/fileadmin-thuecat/thuecat';
+        $source = $this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg';
+        foreach ([
+            'image_3e6a3987344f6d38.jpg',
+            'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+            'dms_888888888_Referenziert-entfallen.jpg',
+            'aaaaaaaa-0000-4000-8000-00000000ffff_deadbeefdeadbeef.jpg',
+        ] as $name) {
+            copy($source, $folder . '/' . $name);
+        }
+    }
+
     #[Test]
     public function relatesPhotoBeforeFurtherImagesInTheSingleField(): void
     {
@@ -257,8 +439,8 @@ class EventMediaImportTest extends AbstractImportTestCase
         // distinguishes them: schema:photo before schema:image.
         self::assertSame(
             [
-                'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
-                'dms_5099196_Erfurt-Alte-Synagoge.jpg',
+                'image_3e6a3987344f6d38.jpg',
+                'image_6ab24be70ef3f2e8.jpg',
             ],
             $this->fetchRelatedFileNamesInOrder()
         );
@@ -279,7 +461,7 @@ class EventMediaImportTest extends AbstractImportTestCase
         $this->runImport();
 
         self::assertSame(
-            ['e_unusable_media-tdm' => ['dms_167631738_Luftaufnahme-Theater-Erfurt.jpg']],
+            ['e_unusable_media-tdm' => ['image_3e6a3987344f6d38.jpg']],
             $this->fetchFileNamesByEventRemoteId(),
             'An uninterpretable entry costs that entry, not the root URL.'
         );
@@ -342,10 +524,14 @@ class EventMediaImportTest extends AbstractImportTestCase
         // Upstream usually repeats ONE node across both slots, which dedupes to
         // a single reference. Distinct nodes must not: both belong to the
         // editor, photo ranked first.
+        //
+        // The fixture's schema:position values contradict the delivery order
+        // (photo carries 2, image 1), so an implementation sorting by position
+        // would return these reversed.
         self::assertSame(
             [
-                'ad455b3e-dbfd-488a-92d5-9679fab51418.jpg',
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg',
+                'ad455b3e-dbfd-488a-92d5-9679fab51418_85662d8758cdca09.jpg',
+                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
             ],
             $this->fetchRelatedFileNamesInOrder()
         );
@@ -374,8 +560,8 @@ class EventMediaImportTest extends AbstractImportTestCase
         self::assertSame(
             [
                 'e_mixed_media-tdm' => [
-                    'c4915c4a-9a68-4a51-8d4e-782158f6887d.jpg',
-                    'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
+                    'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+                    'image_3e6a3987344f6d38.jpg',
                 ],
                 'e_no_media-tdm' => [],
             ],
@@ -498,7 +684,7 @@ class EventMediaImportTest extends AbstractImportTestCase
         $folder = $this->instancePath . '/fileadmin-thuecat/thuecat';
         $source = $this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg';
         foreach ([
-            'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
+            'image_3e6a3987344f6d38.jpg',
             'dms_999999999_Nicht-mehr-geliefert.jpg',
         ] as $name) {
             copy($source, $folder . '/' . $name);
@@ -531,6 +717,14 @@ class EventMediaImportTest extends AbstractImportTestCase
     private function runImport(): void
     {
         $this->runImportReturningSeverity();
+    }
+
+    private function runImportSkippingMedia(): void
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
+        self::assertNotNull($configuration, 'Fixture configuration uid=1 not found');
+        $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
     }
 
     private function runImportReturningSeverity(): string

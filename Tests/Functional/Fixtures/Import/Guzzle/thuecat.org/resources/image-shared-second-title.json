@@ -16,7 +16,7 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/image-with-foreign-author",
+            "@id": "https://thuecat.org/resources/image-shared-second-title",
             "@type": [
                 "schema:CreativeWork",
                 "schema:MediaObject",
@@ -24,34 +24,16 @@
                 "schema:ImageObject",
                 "http://purl.org/dc/dcmitype/Image"
             ],
-            "schema:license": {
-                "@language": "de",
-                "@value": "https://creativecommons.org/licenses/by/4.0/"
-            },
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "Bild mit license author"
-                },
-                {
-                    "@language": "en",
-                    "@value": "Image with license author"
+                    "@value": "Zweiter Titel"
                 }
             ],
             "schema:url": {
                 "@type": "xsd:anyURI",
-                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5099202/Preview-1280x0/image"
-            },
-            "thuecat:licenseAuthor": [
-                {
-                    "@language": "de",
-                    "@value": "Autor aus Lizenz"
-                },
-                {
-                    "@language": "en",
-                    "@value": "License Author"
-                }
-            ]
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5099200/Preview-1280x0/image"
+            }
         }
     ]
 }

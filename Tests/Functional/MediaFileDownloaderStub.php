@@ -41,18 +41,19 @@ final class MediaFileDownloaderStub extends MediaFileDownloader
 
     /**
      * @param-out null $failureDetail
+     * @param-out null $failureStatus
      */
     public function download(
         Folder $target,
         Folder $staging,
         string $downloadUrl,
-        string $dmsId,
-        string $originalName,
         string $apiKey = '',
         string $apiDomain = '',
         ?string &$failureDetail = null,
+        ?int &$failureStatus = null,
     ): ?File {
         $failureDetail = null;
+        $failureStatus = null;
         return null;
     }
 }

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -695,16 +696,6 @@ class Resolver
             );
         }
 
-        $existingReferences = [];
-        $claimedReferences = [];
-        $stagedByField = [];
-        if (MathUtility::canBeInterpretedAsInteger($ownerKey)) {
-            $ownerUid = (int)$ownerKey;
-            foreach ($this->mediaFieldMap->fieldsFor($ownerTable) as $field) {
-                $existingReferences[$field] = $this->findExistingReferences($ownerTable, $ownerUid, $field);
-            }
-        }
-
         foreach ($entries as $entry) {
             // An entry we cannot interpret costs that entry only: upstream
             // authoring is data drift, like an image that will not download.
@@ -763,67 +754,17 @@ class Resolver
             // Derived before the download so the skip below can name the field.
             $targetField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
 
-            $context->reportProgress($downloadUrl);
-            $failureDetail = null;
-            $file = $this->mediaFileDownloader->download(
+            $this->downloadAndCollect(
+                $context,
                 $target,
                 $staging,
+                $mediaEntity,
                 $downloadUrl,
-                $this->extractDmsId($reference),
-                $mediaEntity->getOriginalFileName(),
-                (string)$context->apiKey,
-                $context->parserContext->apiDomain,
-                $failureDetail,
-            );
-            if ($file === null) {
-                $this->importLogger->recordSkippedReference(
-                    $ownerTable,
-                    $ownerRemoteId,
-                    $targetField,
-                    $downloadUrl,
-                    $this->downloadFailureReason($failureDetail)
-                );
-                continue;
-            }
-
-            $file->getMetaData()->add(array_filter([
-                'title' => $mediaEntity->getOriginalFileName(),
-                'description' => $mediaEntity->getDescription(),
-                'creator' => $mediaEntity->getAuthor(),
-                'copyright' => $mediaEntity->getCopyright(),
-            ], static fn (string $value): bool => $value !== ''));
-
-            $fileUid = $file->getUid();
-            // One reference per file per field: upstream may name the same
-            // asset in several slots that share a target field.
-            if (isset($stagedByField[$targetField][$fileUid])) {
-                continue;
-            }
-            $stagedByField[$targetField][$fileUid] = true;
-
-            $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
-            if ($existingRefUid !== null) {
-                $claimedReferences[$existingRefUid] = true;
-            }
-            $this->stageFileReference(
-                $payload,
                 $ownerTable,
+                $ownerRemoteId,
                 $ownerKey,
                 $targetField,
-                $fileUid,
-                $mediaEntity,
-                $context->storagePid,
-                $existingRefUid,
             );
-        }
-
-        // Delete references the upstream set no longer contain
-        foreach ($existingReferences as $byFile) {
-            foreach ($byFile as $refUid) {
-                if (!isset($claimedReferences[$refUid])) {
-                    $payload->addCmdMap('sys_file_reference', (string)$refUid, 'delete', 1);
-                }
-            }
         }
 
         // Skipped entries reach here too, so both shapes must drain — a
@@ -838,13 +779,64 @@ class Resolver
         }
     }
 
+    /**
+     * Runs after the last root: an asset shared across roots must not be
+     * reaped by one and recreated by the next. Entries keep collection order;
+     * schema:position is not consulted.
+     */
+    public function flushCollectedMedia(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        $entriesByOwnerField = [];
+        foreach ($context->collectedMedia as $media) {
+            $entriesByOwnerField[$media->ownerTable][$media->ownerKey][$media->targetField][] = $media;
+        }
+
+        foreach ($entriesByOwnerField as $ownerTable => $byOwnerKey) {
+            foreach ($byOwnerKey as $ownerKey => $byField) {
+                $ownerKey = (string)$ownerKey;
+                // A NEW… owner has never been stored: nothing to reuse.
+                $isStored = MathUtility::canBeInterpretedAsInteger($ownerKey);
+
+                foreach ($byField as $targetField => $entries) {
+                    $existing = $isStored
+                        ? $this->findExistingReferences($ownerTable, (int)$ownerKey, (string)$targetField)
+                        : [];
+
+                    foreach ($entries as $media) {
+                        $this->stageFileReference(
+                            $payload,
+                            $ownerTable,
+                            $ownerKey,
+                            (string)$targetField,
+                            $media,
+                            $context->storagePid,
+                            $existing[$media->fileUid] ?? null,
+                        );
+                        unset($existing[$media->fileUid]);
+                    }
+
+                    // A technical failure cannot be told from a removal, so keep.
+                    if (isset($context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $targetField])) {
+                        continue;
+                    }
+
+                    // A type:file relation appends, so unsubmitted references
+                    // survive unless deleted explicitly.
+                    foreach ($existing as $staleRefUid) {
+                        $payload->addCmdMap('sys_file_reference', (string)$staleRefUid, 'delete', 1);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Reusing the stored uid keeps a re-import from stacking a second row. */
     protected function stageFileReference(
         DataHandlerPayload $payload,
         string $ownerTable,
         string $ownerKey,
         string $targetField,
-        int $fileUid,
-        MediaEntity $media,
+        CollectedMedia $media,
         int $pid,
         ?int $existingRefUid = null
     ): void {
@@ -853,11 +845,94 @@ class Resolver
             : StringUtility::getUniqueId('NEW');
         $payload->addRow('sys_file_reference', $referenceKey, [
             'pid' => $pid,
-            'uid_local' => $fileUid,
-            'title' => $media->getOriginalFileName(),
-            'description' => $media->getDescription(),
+            'uid_local' => $media->fileUid,
+            'title' => $media->title,
+            'description' => $media->description,
         ]);
         $payload->setRelationField($ownerTable, $ownerKey, $targetField, $referenceKey);
+    }
+
+    /** Shared by both media shapes; the URL cache is what removes repeat downloads. */
+    protected function downloadAndCollect(
+        ResolverContext $context,
+        Folder $target,
+        Folder $staging,
+        MediaEntity $mediaEntity,
+        string $downloadUrl,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $ownerKey,
+        string $targetField,
+    ): void {
+        $fileUid = $context->fileUidByDownloadUrl[$downloadUrl] ?? null;
+
+        if ($fileUid === null) {
+            if (isset($context->failedReferenceUrls[$downloadUrl])) {
+                // Marked from the first attempt's verdict, since this owner
+                // never retried. Unclassified = not a media download, so keep.
+                if (($context->assetGoneByUrl[$downloadUrl] ?? false) !== true) {
+                    $context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $targetField] = true;
+                }
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $targetField,
+                    $downloadUrl,
+                    $context->failedReferenceUrls[$downloadUrl]
+                );
+                return;
+            }
+
+            $context->reportProgress($downloadUrl);
+            $failureDetail = null;
+            $failureStatus = null;
+            $file = $this->mediaFileDownloader->download(
+                $target,
+                $staging,
+                $downloadUrl,
+                (string)$context->apiKey,
+                $context->parserContext->apiDomain,
+                $failureDetail,
+                $failureStatus,
+            );
+            if ($file === null) {
+                $assetIsGone = $this->meansAssetIsGone($failureStatus);
+                $context->assetGoneByUrl[$downloadUrl] = $assetIsGone;
+                if (!$assetIsGone) {
+                    $context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $targetField] = true;
+                }
+                $reason = $this->downloadFailureReason($failureDetail);
+                $context->markReferenceFailed($downloadUrl, $reason);
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $targetField,
+                    $downloadUrl,
+                    $reason
+                );
+                return;
+            }
+
+            // Several owners may claim one file; the last title written wins.
+            $file->getMetaData()->add(array_filter([
+                'title' => $mediaEntity->getOriginalFileName(),
+                'description' => $mediaEntity->getDescription(),
+                'creator' => $mediaEntity->getAuthor(),
+                'copyright' => $mediaEntity->getCopyright(),
+            ], static fn (string $value): bool => $value !== ''));
+
+            $fileUid = $file->getUid();
+            $context->fileUidByDownloadUrl[$downloadUrl] = $fileUid;
+        }
+
+        $context->collectMedia(new CollectedMedia(
+            $ownerTable,
+            $ownerKey,
+            $targetField,
+            $fileUid,
+            $mediaEntity->getOriginalFileName(),
+            $mediaEntity->getDescription(),
+        ));
     }
 
     /**
@@ -889,16 +964,6 @@ class Resolver
                     continue;
                 }
 
-                // Reuse the reference an earlier run stored for the same file,
-                // else a re-import stacks a second one on the same owner.
-                $existingReferences = [];
-                $stagedByField = [];
-                if (MathUtility::canBeInterpretedAsInteger($ownerKey)) {
-                    foreach ($this->mediaFieldMap->fieldsFor($ownerTable) as $field) {
-                        $existingReferences[$field] = $this->findExistingReferences($ownerTable, (int)$ownerKey, $field);
-                    }
-                }
-
                 foreach ($entries as $entry) {
                     if ($entry['kind'] === 'video') {
                         continue;
@@ -912,65 +977,21 @@ class Resolver
                         continue;
                     }
 
-                    $targetField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
                     // The node's @id is a per-response blank-node label, so the
-                    // content URL's filename is the stable identity. Inline
-                    // media names no title, so the extension comes from the URL.
-                    $context->reportProgress($downloadUrl);
-                    $failureDetail = null;
-                    $file = $this->mediaFileDownloader->download(
+                    // download URL is the stable identity.
+                    $this->downloadAndCollect(
+                        $context,
                         $target,
                         $staging,
-                        $downloadUrl,
-                        pathinfo($this->extractDmsId($downloadUrl), PATHINFO_FILENAME),
-                        $mediaEntity->getOriginalFileName(),
-                        (string)$context->apiKey,
-                        $context->parserContext->apiDomain,
-                        $failureDetail,
-                    );
-                    if ($file === null) {
-                        $this->importLogger->recordSkippedReference(
-                            $ownerTable,
-                            $ownerRemoteId,
-                            $targetField,
-                            $downloadUrl,
-                            $this->downloadFailureReason($failureDetail)
-                        );
-                        continue;
-                    }
-
-                    $file->getMetaData()->add(array_filter([
-                        'title' => $mediaEntity->getOriginalFileName(),
-                        'description' => $mediaEntity->getDescription(),
-                        'creator' => $mediaEntity->getAuthor(),
-                        'copyright' => $mediaEntity->getCopyright(),
-                    ], static fn (string $value): bool => $value !== ''));
-
-                    $fileUid = $file->getUid();
-                    // One reference per file per field: upstream may name the
-                    // same asset in several slots that share a target field.
-                    if (isset($stagedByField[$targetField][$fileUid])) {
-                        continue;
-                    }
-                    $stagedByField[$targetField][$fileUid] = true;
-
-                    $existingRefUid = $existingReferences[$targetField][$fileUid] ?? null;
-                    $this->stageFileReference(
-                        $payload,
-                        $ownerTable,
-                        $ownerKey,
-                        $targetField,
-                        $fileUid,
                         $mediaEntity,
-                        $context->storagePid,
-                        $existingRefUid,
+                        $downloadUrl,
+                        $ownerTable,
+                        (string)$ownerRemoteId,
+                        $ownerKey,
+                        $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']),
                     );
                 }
 
-                // No reap here: this runs before the referenced path has
-                // claimed anything, so an owner carrying both shapes would
-                // lose the references that path is about to reuse. Reaping
-                // both shapes together needs one pass that sees all claims.
                 $payload->clearInlineMedia($ownerTable, $ownerRemoteId);
             }
         }
@@ -1004,10 +1025,15 @@ class Resolver
     }
 
     /**
-     * Last path segment of a dms_* resource URL, the stable basis for the
-     * stored filename: "https://thuecat.org/resources/dms_5159216"
-     * → "dms_5159216".
+     * Only "the asset is gone" may cost a stored reference. 401/403 and 429
+     * arrive for every asset on a host at once, so treating them as removals
+     * would wipe one provider's media on a single fault.
      */
+    protected function meansAssetIsGone(?int $failureStatus): bool
+    {
+        return $failureStatus === 404 || $failureStatus === 410;
+    }
+
     // Appends only what the downloader could add, so a plain rejection keeps
     // the message it has always had.
     protected function downloadFailureReason(?string $failureDetail): string
@@ -1017,13 +1043,6 @@ class Resolver
         }
 
         return sprintf('Image could not be downloaded, %s.', $failureDetail);
-    }
-
-    protected function extractDmsId(string $reference): string
-    {
-        $path = (string)(parse_url($reference, PHP_URL_PATH) ?: $reference);
-        $segment = basename($path);
-        return $segment !== '' ? $segment : $reference;
     }
 
     /**

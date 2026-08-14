@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-// Pre-state for the event media import tests. Carries a fileFolder so the
-// real FAL path runs; the per-test fixture decides which event is fetched.
+// Pre-state for a failure alongside a success: the owner still collects
+// media, so it enters the flush and the failed image's reference is at risk.
 return [
     'pages' => [
         0 => [
@@ -33,7 +33,7 @@ return [
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
             'disable' => '0',
-            'title' => 'Event inline media reimport',
+            'title' => 'Event mixed media reimport',
             'type' => 'static',
             'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
             <T3FlexForms>
@@ -48,11 +48,11 @@ return [
                             </field>
                             <field index="urls">
                                 <el index="el">
-                                    <field index="evt-inline-media">
+                                    <field index="evt-mixed-media">
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_inline_media-tdm</value>
+                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_mixed_media-tdm</value>
                                                 </field>
                                             </el>
                                         </value>
@@ -73,14 +73,27 @@ return [
             'pid' => '10',
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
-            'remote_id' => 'https://thuecat.org/resources/e_inline_media-tdm',
-            'title' => 'Inline Media Event',
-            'images' => '1',
+            'remote_id' => 'https://thuecat.org/resources/e_mixed_media-tdm',
+            'title' => 'Mixed Media Event',
+            'images' => '2',
         ],
     ],
     'sys_file' => [
+        // Still supplied: the referenced image.
         0 => [
             'uid' => '2',
+            'storage' => '1',
+            'type' => '2',
+            'extension' => 'jpg',
+            'mime_type' => 'image/jpeg',
+            'name' => 'image_3e6a3987344f6d38.jpg',
+            'identifier' => '/thuecat/image_3e6a3987344f6d38.jpg',
+            'identifier_hash' => 'ddab589f6efe1b16558b40e15094410a0c5e99e9',
+            'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
+        ],
+        // Still supplied: the inline image.
+        1 => [
+            'uid' => '3',
             'storage' => '1',
             'type' => '2',
             'extension' => 'jpg',
@@ -100,6 +113,15 @@ return [
             'tablenames' => 'tx_events_domain_model_event',
             'fieldname' => 'images',
             'sorting_foreign' => '1',
+        ],
+        1 => [
+            'uid' => '2',
+            'pid' => '10',
+            'uid_local' => '3',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_events_domain_model_event',
+            'fieldname' => 'images',
+            'sorting_foreign' => '2',
         ],
     ],
 ];

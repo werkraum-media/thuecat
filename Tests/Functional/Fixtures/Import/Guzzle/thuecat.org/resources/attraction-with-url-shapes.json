@@ -1,0 +1,116 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dcmitype": "http://purl.org/dc/dcmitype/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-url-shapes",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "thuecat:Building"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Attraction with url shapes"
+            },
+            "schema:image": [
+                {
+                    "@id": "genid-url-shapes-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:MediaObject",
+                        "schema:ImageObject",
+                        "dcmitype:Image"
+                    ],
+                    "schema:name": {
+                        "@language": "de",
+                        "@value": "Beide, Groesse unterschiedlich"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "http://img.oastatic.com/img/1250/625/16864060/.jpg"
+                    },
+                    "schema:contentUrl": {
+                        "@type": "schema:URL",
+                        "@value": "http://img.oastatic.com/img/16864060/.jpg"
+                    }
+                },
+                {
+                    "@id": "genid-url-shapes-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:MediaObject",
+                        "schema:ImageObject",
+                        "dcmitype:Image"
+                    ],
+                    "schema:name": {
+                        "@language": "de",
+                        "@value": "Nur url"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "http://img.oastatic.com/img/22900410/.jpg"
+                    }
+                },
+                {
+                    "@id": "genid-url-shapes-b3",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:MediaObject",
+                        "schema:ImageObject",
+                        "dcmitype:Image"
+                    ],
+                    "schema:name": {
+                        "@language": "de",
+                        "@value": "Nur contentUrl"
+                    },
+                    "schema:contentUrl": {
+                        "@type": "schema:URL",
+                        "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/url-shapes/9f8e7d6c-0000-4000-8000-000000000003.jpg"
+                    }
+                },
+                {
+                    "@id": "genid-url-shapes-b4",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:CreativeWork",
+                        "schema:MediaObject",
+                        "schema:ImageObject",
+                        "dcmitype:Image"
+                    ],
+                    "schema:name": {
+                        "@language": "de",
+                        "@value": "Beide, Format unterschiedlich"
+                    },
+                    "schema:url": {
+                        "@type": "schema:URL",
+                        "@value": "https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.jpg"
+                    },
+                    "schema:contentUrl": {
+                        "@type": "schema:URL",
+                        "@value": "https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp"
+                    }
+                }
+            ]
+        }
+    ]
+}

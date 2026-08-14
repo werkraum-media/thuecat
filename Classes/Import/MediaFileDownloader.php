@@ -35,7 +35,8 @@ use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 /**
  * Downloads one imported record's media file into the FAL staging folder.
  *
- * Names files by their stable dms id so re-imports reuse instead of re-fetch.
+ * Names files after the download URL so re-imports and shared assets reuse
+ * instead of re-fetch.
  * Sends via the PSR-18 client, not RequestFactory::request(): a 4xx/5xx must
  * come back as a response so one unfetchable image can be skipped.
  */
@@ -50,24 +51,25 @@ class MediaFileDownloader
     /**
      * Null when the download yields no usable bytes.
      *
-     * @param string $dmsId        stable ThueCat resource id, e.g. "dms_5159216"
-     * @param string $originalName source filename incl. extension, e.g. "Foo.jpg"
      * @param string $apiKey       sent only to $apiDomain, which refuses anonymous requests
      * @param string|null $failureDetail out-param: extra diagnosis on failure,
      *        null when there is nothing worth saying beyond "it failed"
+     * @param int|null $failureStatus out-param: HTTP status of a failed
+     *        download, null when no response arrived. Decides whether the
+     *        asset counts as removed upstream.
      */
     public function download(
         Folder $target,
         Folder $staging,
         string $downloadUrl,
-        string $dmsId,
-        string $originalName,
         string $apiKey = '',
         string $apiDomain = '',
         ?string &$failureDetail = null,
+        ?int &$failureStatus = null,
     ): ?File {
         $failureDetail = null;
-        $fileName = $this->buildFileName($dmsId, $originalName, $downloadUrl);
+        $failureStatus = null;
+        $fileName = $this->buildFileName($downloadUrl);
 
         // Promoted by an earlier successful run — reuse, don't re-download.
         if ($target->hasFile($fileName)) {
@@ -83,7 +85,8 @@ class MediaFileDownloader
 
         $contents = $this->fetchContents(
             $this->authenticate($downloadUrl, $apiKey, $apiDomain),
-            $failureDetail
+            $failureDetail,
+            $failureStatus
         );
         if ($contents === null || $contents === '') {
             return null;
@@ -118,9 +121,17 @@ class MediaFileDownloader
     /**
      * A failed download is data drift, not a run-ending fault, so it is reported
      * by returning null rather than by raising.
+     *
+     * @param int|null $status out-param: HTTP status where there was one,
+     *        null when no response arrived at all.
      */
-    protected function fetchContents(string $downloadUrl, ?string &$failureDetail = null): ?string
-    {
+    protected function fetchContents(
+        string $downloadUrl,
+        ?string &$failureDetail = null,
+        ?int &$status = null
+    ): ?string {
+        $status = null;
+
         // Built directly, not via Import\RequestFactory: that one appends
         // format=jsonld, which an image URL must not carry.
         $request = new Request($downloadUrl, 'GET');
@@ -135,7 +146,8 @@ class MediaFileDownloader
             return null;
         }
 
-        if ($response->getStatusCode() !== 200) {
+        $status = $response->getStatusCode();
+        if ($status !== 200) {
             $attempts = (int)$response->getHeaderLine(RetryingClient::ATTEMPTS_HEADER);
             if ($attempts > 1) {
                 $failureDetail = sprintf('gave up after %d attempts', $attempts);
@@ -146,30 +158,22 @@ class MediaFileDownloader
         return (string)$response->getBody();
     }
 
-    protected function buildFileName(string $dmsId, string $originalName, string $downloadUrl = ''): string
+    /** Identity is the download URL; editorial text must not reach the name. */
+    protected function buildFileName(string $downloadUrl): string
     {
-        // The name upstream gave the file, else what the URL says it serves.
+        $path = (string)(parse_url($downloadUrl, PHP_URL_PATH) ?: '');
+
         // jpg only as a last resort — png and webp are just as likely.
-        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-        if ($extension === '') {
-            $extension = strtolower(pathinfo(
-                (string)(parse_url($downloadUrl, PHP_URL_PATH) ?: ''),
-                PATHINFO_EXTENSION
-            ));
-        }
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if ($extension === '') {
             $extension = 'jpg';
         }
-        $base = pathinfo($originalName, PATHINFO_FILENAME);
 
-        $base = (string)preg_replace('/[^A-Za-z0-9._-]+/', '-', $base);
-        $base = trim($base, '-');
+        // Stem for browsability only; upstream stems are generic, so the hash separates.
+        $stem = (string)preg_replace('/[^A-Za-z0-9._-]+/', '-', pathinfo($path, PATHINFO_FILENAME));
+        $stem = trim($stem, '-.');
+        $hash = substr(hash('sha256', $downloadUrl), 0, 16);
 
-        $name = $dmsId;
-        if ($base !== '') {
-            $name .= '_' . $base;
-        }
-
-        return $name . '.' . $extension;
+        return ($stem === '' ? $hash : $stem . '_' . $hash) . '.' . $extension;
     }
 }

@@ -45,8 +45,8 @@ return [
             'type' => '2',
             'extension' => 'jpg',
             'mime_type' => 'image/jpeg',
-            'name' => 'image-served-before-failure_Bild-vor-dem-Fehler.jpg',
-            'identifier' => '/thuecat/image-served-before-failure_Bild-vor-dem-Fehler.jpg',
+            'name' => 'image_6ab24be70ef3f2e8.jpg',
+            'identifier' => '/thuecat/image_6ab24be70ef3f2e8.jpg',
         ],
         1 => [
             'uid' => '3',
@@ -54,8 +54,8 @@ return [
             'type' => '2',
             'extension' => 'jpg',
             'mime_type' => 'image/jpeg',
-            'name' => 'image-served-after-failure_Bild-nach-dem-Fehler.jpg',
-            'identifier' => '/thuecat/image-served-after-failure_Bild-nach-dem-Fehler.jpg',
+            'name' => 'image_707f417a26e68985.jpg',
+            'identifier' => '/thuecat/image_707f417a26e68985.jpg',
         ],
         2 => [
             'uid' => '4',
@@ -63,8 +63,8 @@ return [
             'type' => '2',
             'extension' => 'jpg',
             'mime_type' => 'image/jpeg',
-            'name' => 'image-of-sibling_Bild-der-Nachbarattraktion.jpg',
-            'identifier' => '/thuecat/image-of-sibling_Bild-der-Nachbarattraktion.jpg',
+            'name' => 'image_34ca8e6e645bbbc5.jpg',
+            'identifier' => '/thuecat/image_34ca8e6e645bbbc5.jpg',
         ],
     ],
     'sys_file_reference' => [

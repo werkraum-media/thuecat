@@ -16,36 +16,23 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/image-with-author-string",
+            "@id": "https://thuecat.org/resources/attraction-sharing-asset-second",
             "@type": [
-                "schema:CreativeWork",
-                "schema:MediaObject",
+                "schema:Place",
                 "schema:Thing",
-                "schema:ImageObject",
-                "http://purl.org/dc/dcmitype/Image"
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest",
+                "thuecat:Building"
             ],
-            "schema:author": {
-                "@type": "xsd:string",
-                "@value": "Full Name"
-            },
-            "schema:license": {
+            "schema:name": {
                 "@language": "de",
-                "@value": "https://creativecommons.org/licenses/by/4.0/"
+                "@value": "Attraction sharing asset second"
             },
-            "schema:name": [
+            "schema:image": [
                 {
-                    "@language": "de",
-                    "@value": "Bild mit author"
-                },
-                {
-                    "@language": "en",
-                    "@value": "Image with author"
+                    "@id": "https://thuecat.org/resources/image-shared-second-title"
                 }
-            ],
-            "schema:url": {
-                "@type": "xsd:anyURI",
-                "@value": "https://cms.thuecat.org/o/adaptive-media/image/5099201/Preview-1280x0/image"
-            }
+            ]
         }
     ]
 }

@@ -87,9 +87,9 @@ return [
             'type' => '2',
             'extension' => 'jpg',
             'mime_type' => 'image/jpeg',
-            'name' => 'dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
-            'identifier' => '/thuecat/dms_167631738_Luftaufnahme-Theater-Erfurt.jpg',
-            'identifier_hash' => 'f37253d4eed16cc2331eec7f3f4b187f31734d4e',
+            'name' => 'image_3e6a3987344f6d38.jpg',
+            'identifier' => '/thuecat/image_3e6a3987344f6d38.jpg',
+            'identifier_hash' => 'ddab589f6efe1b16558b40e15094410a0c5e99e9',
             'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
         ],
         1 => [

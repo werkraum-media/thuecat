@@ -34,11 +34,11 @@
             },
             "schema:image": [
                 {
-                    "@id": "https://thuecat.org/resources/image-with-license-author"
+                    "@id": "https://thuecat.org/resources/image-for-image-slot"
                 }
             ],
             "schema:photo": {
-                "@id": "https://thuecat.org/resources/image-with-author-string"
+                "@id": "https://thuecat.org/resources/image-for-photo-slot"
             }
         }
     ]

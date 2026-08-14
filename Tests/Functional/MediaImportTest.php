@@ -81,11 +81,12 @@ class MediaImportTest extends AbstractImportTestCase
         $this->expectFetch('image-with-author-string.json');
         $this->expectFetch('image-with-license-author.json');
         $this->expectFetch('image-with-author-and-license-author.json');
-        // The four image nodes all reference the same adaptive-media URL; each
-        // produces a distinct sys_file (names differ), so four downloads.
-        $downloadUrl = 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image';
-        for ($i = 0; $i < 4; $i++) {
-            $this->expectFetchForUrl($downloadUrl, 'cms.thuecat.org/image.jpg');
+        // One asset per node: this test is about metadata variants, not sharing.
+        foreach ([5099196, 5099201, 5099202, 5099203] as $id) {
+            $this->expectFetchForUrl(
+                'https://cms.thuecat.org/o/adaptive-media/image/' . $id . '/Preview-1280x0/image',
+                'cms.thuecat.org/image.jpg'
+            );
         }
 
         $this->importConfiguration(1);
@@ -98,11 +99,14 @@ class MediaImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithPhotoAndImage.php');
         $this->expectFetch('attraction-with-photo-and-image.json');
-        $this->expectFetch('image-with-author-string.json');
-        $this->expectFetch('image-with-license-author.json');
-        $downloadUrl = 'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image';
-        $this->expectFetchForUrl($downloadUrl, 'cms.thuecat.org/image.jpg');
-        $this->expectFetchForUrl($downloadUrl, 'cms.thuecat.org/image.jpg');
+        $this->expectFetch('image-for-photo-slot.json');
+        $this->expectFetch('image-for-image-slot.json');
+        foreach ([5099210, 5099211] as $id) {
+            $this->expectFetchForUrl(
+                'https://cms.thuecat.org/o/adaptive-media/image/' . $id . '/Preview-1280x0/image',
+                'cms.thuecat.org/image.jpg'
+            );
+        }
 
         $this->importConfiguration(1);
 
@@ -159,9 +163,9 @@ class MediaImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMixedGallery.php');
         $this->expectFetch('attraction-with-mixed-gallery.json');
-        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-for-mixed-gallery.json');
         $this->expectFetchForUrl(
-            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'https://cms.thuecat.org/o/adaptive-media/image/5099212/Preview-1280x0/image',
             'cms.thuecat.org/image.jpg'
         );
         $this->expectFetchForUrl(
@@ -176,8 +180,8 @@ class MediaImportTest extends AbstractImportTestCase
         sort($names);
         self::assertSame(
             [
-                '1a2b3c4d-0000-4000-8000-000000000001.jpg',
-                'image-with-author-string_Bild-mit-author.jpg',
+                '1a2b3c4d-0000-4000-8000-000000000001_54eec04d6322ae4b.jpg',
+                'image_652e88519d22ddba.jpg',
             ],
             $names
         );
@@ -206,6 +210,229 @@ class MediaImportTest extends AbstractImportTestCase
             }
         }
         return $names;
+    }
+
+    // Two nodes, two titles, one asset URL; only one response is staged.
+    #[Test]
+    public function downloadsASharedAssetOnceWithinOneRecord(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSharedAssetTwiceOnOneRecord.php');
+        $this->expectFetch('attraction-with-shared-asset-twice.json');
+        $this->expectFetch('image-shared-first-title.json');
+        $this->expectFetch('image-shared-second-title.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099200/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
+        self::assertSame(
+            ['media_files'],
+            $this->fetchReferenceFields(),
+            'Same file, same field: the first node wins and the second is discarded.'
+        );
+        self::assertSame(
+            1,
+            $this->countRows('sys_file'),
+            'One asset URL is one file, whatever the editorial title says.'
+        );
+    }
+
+    #[Test]
+    public function downloadsASharedAssetOnceAcrossTwoRecords(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSharedAssetAcrossTwoRecords.php');
+        $this->expectFetch('attraction-sharing-asset-first.json');
+        $this->expectFetch('attraction-sharing-asset-second.json');
+        $this->expectFetch('image-shared-first-title.json');
+        $this->expectFetch('image-shared-second-title.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099200/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
+        self::assertSame(
+            ['media_files', 'media_files'],
+            $this->fetchReferenceFields(),
+            'Each record keeps its own reference to the shared file.'
+        );
+        self::assertSame(
+            1,
+            $this->countRows('sys_file'),
+            'Two owners of one asset share one file.'
+        );
+    }
+
+    // Only the expected URL of each pair is staged, so a wrong pick trips the faker.
+    #[Test]
+    public function downloadsTheOriginalRatherThanTheRendition(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithUrlShapes.php');
+        $this->expectFetch('attraction-with-url-shapes.json');
+        foreach ([
+            // both present, differing by size → the unsized contentUrl
+            'http://img.oastatic.com/img/16864060/.jpg',
+            // url only, and it carries no size segment → it is the original
+            'http://img.oastatic.com/img/22900410/.jpg',
+            // contentUrl only
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/url-shapes/9f8e7d6c-0000-4000-8000-000000000003.jpg',
+            // both present, differing by format → contentUrl, not the .jpg
+            'https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp',
+        ] as $url) {
+            $this->expectFetchForUrl($url, 'cms.thuecat.org/image.jpg');
+        }
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getFailureLogEntries(), 'No rendition may be requested.');
+        self::assertSame(
+            // oastatic paths end in "/.jpg", so those two have no stem to keep.
+            [
+                '1234967583140fb6.jpg',
+                '9f8e7d6c-0000-4000-8000-000000000003_89383b9aeef7c2c7.jpg',
+                'ansicht_08ad060dba414b14.webp',
+                'f8f8def6c6e900fe.jpg',
+            ],
+            $this->fetchFileNamesSorted()
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function fetchFileNamesSorted(): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_file');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('name')
+            ->from('sys_file')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $names = [];
+        foreach ($rows as $row) {
+            if (is_string($row['name'])) {
+                $names[] = $row['name'];
+            }
+        }
+        sort($names);
+        return $names;
+    }
+
+    // One asset in both slots: one download, one reference per field.
+    #[Test]
+    public function relatesOneAssetIntoEveryFieldItsKindsMapTo(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithOneAssetInBothSlots.php');
+        $this->expectFetch('attraction-with-one-asset-in-both-slots.json');
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/both-slots/5e4d3c2b-0000-4000-8000-000000000001.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
+        self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
+        self::assertSame(
+            ['main_image', 'media_files'],
+            $this->fetchReferenceFields(),
+            'photo and image map to separate fields, so both keep a reference.'
+        );
+        self::assertSame(
+            ['main_image' => 'Als photo', 'media_files' => 'Als image'],
+            $this->fetchReferenceTitlesByField(),
+            'Each reference carries the title of the slot it came from.'
+        );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function fetchReferenceTitlesByField(): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('fieldname', 'title')
+            ->from('sys_file_reference')
+            ->orderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $titles = [];
+        foreach ($rows as $row) {
+            if (is_string($row['fieldname']) && is_string($row['title'])) {
+                $titles[$row['fieldname']] = $row['title'];
+            }
+        }
+        ksort($titles);
+        return $titles;
+    }
+
+    // The reap names only the default row; Core is expected to cascade. Pinned
+    // because a surviving translation shows an image the default language lost.
+    #[Test]
+    public function reapingADefaultLanguageReferenceDiscardsItsTranslation(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportDropsTranslatedMediaReference.php');
+        $this->seedExistingMediaFiles();
+        $this->expectFetch('attraction-with-media.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('image-with-foreign-author.json');
+        $this->expectFetch('author-with-names.json');
+        $this->expectFetch('image-with-author-string.json');
+        $this->expectFetch('image-with-license-author.json');
+        $this->expectFetch('image-with-author-and-license-author.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            [
+                ['uid' => 1, 'lang' => 0, 'deleted' => 0],
+                ['uid' => 2, 'lang' => 0, 'deleted' => 0],
+                ['uid' => 3, 'lang' => 0, 'deleted' => 0],
+                ['uid' => 4, 'lang' => 0, 'deleted' => 0],
+                ['uid' => 5, 'lang' => 1, 'deleted' => 0],
+                ['uid' => 6, 'lang' => 1, 'deleted' => 0],
+                ['uid' => 7, 'lang' => 1, 'deleted' => 0],
+                ['uid' => 8, 'lang' => 1, 'deleted' => 0],
+                // No longer supplied: the default row and its translation go.
+                ['uid' => 9, 'lang' => 0, 'deleted' => 1],
+                ['uid' => 10, 'lang' => 1, 'deleted' => 1],
+            ],
+            $this->fetchReferenceStateWithLanguage()
+        );
+    }
+
+    /**
+     * @return list<array{uid: int, lang: int, deleted: int}>
+     */
+    private function fetchReferenceStateWithLanguage(): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()->removeAll();
+        $rows = $queryBuilder
+            ->select('uid', 'sys_language_uid', 'deleted')
+            ->from('sys_file_reference')
+            ->orderBy('uid', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        return array_map(static fn (array $row): array => [
+            'uid' => is_numeric($row['uid']) ? (int)$row['uid'] : 0,
+            'lang' => is_numeric($row['sys_language_uid']) ? (int)$row['sys_language_uid'] : 0,
+            'deleted' => is_numeric($row['deleted']) ? (int)$row['deleted'] : 0,
+        ], $rows);
     }
 
     #[Test]
@@ -383,7 +610,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         self::assertSame('error', $severity, 'The failed root must still be reported.');
         self::assertFileExists(
-            $this->instancePath . '/fileadmin-thuecat/thuecat/image-under-healthy-root_Bild-unter-heilem-Root.jpg',
+            $this->instancePath . '/fileadmin-thuecat/thuecat/image_2173acbddcfbcdb1.jpg',
             'Media of the healthy root must be promoted despite the other root failing.'
         );
         self::assertSame(
@@ -478,6 +705,26 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     /**
+     * A repeat fetch becomes a mappingError rather than a failed run.
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function getFailureLogEntries(): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'table_name', 'remote_id', 'message'],
+                'tx_thuecat_import_log_entry',
+                ['severity' => 'error'],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
+        ;
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     private function getSkippedReferenceLogEntries(): array
@@ -500,10 +747,10 @@ class MediaImportTest extends AbstractImportTestCase
         $folder = $this->instancePath . '/fileadmin-thuecat/thuecat';
         $source = $this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg';
         foreach ([
-            'image-with-foreign-author_Bild-mit-externem-Autor.jpg',
-            'image-with-author-string_Bild-mit-author.jpg',
-            'image-with-license-author_Bild-mit-license-author.jpg',
-            'image-with-author-and-license-author_Bild-mit-author-und-license-author.jpg',
+            'image_6ab24be70ef3f2e8.jpg',
+            'image_89d8f4e95612e13d.jpg',
+            'image_718be403bf38b616.jpg',
+            'image_1bd2daee00b7ee9c.jpg',
         ] as $name) {
             copy($source, $folder . '/' . $name);
         }

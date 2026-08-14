@@ -4,304 +4,99 @@
 Breaking
 --------
 
-* Remove support for TYPO3 v12.
+* Support for TYPO3 v12 removed.
 
-* Fetched API responses are now cached persistently. The ``thuecat_fetchdata`` cache defaulted to
-  :php:`TransientMemoryBackend`, which died with the process, so every run started cold. It now defaults to
-  :php:`Typo3DatabaseBackend` with a lifetime of 900 seconds.
+* API responses are cached persistently: ``thuecat_fetchdata`` now defaults to
+  :php:`Typo3DatabaseBackend` with a 900 second lifetime instead of dying with the process.
+  A run is no longer guaranteed to hit the API — see :ref:`fetch-cache` for the bypass options.
 
-  **Anyone relying on the fetch cache being empty at process start no longer gets a cold cache.** Two runs
-  started within the lifetime can see the same upstream snapshot. That is the point — it makes re-running after
-  an abort cheap — but it means a run is no longer guaranteed to hit the API.
+* Imported images are now the original asset (``schema:contentUrl`` over ``schema:url``), stored
+  under a filename derived from the download URL. Re-imported records point at a different file
+  under a new name; the previously imported files stay on disk unreferenced. No migration pass.
+  See :ref:`frontend-output-media-import`.
 
-  Use :bash:`--fresh` on :bash:`thuecat:importviaconfiguration` to force fetches against the API, or pass
-  ``$bypassCache`` to :php:`Import\Importer::importConfiguration()` from a caller that does not go through the
-  command. A bypassing run still writes what it fetches; only reading is skipped.
-
-  Installations that already configure ``thuecat_fetchdata`` see none of this: the backend and lifetime are only
-  set where nothing is configured. Restore the previous behaviour by configuring the transient backend
-  explicitly.
-
-* The list item moved from a partial to a template:
-  :file:`Resources/Private/Partials/TouristAttraction/ListItem.html` is now
-  :file:`Resources/Private/Templates/TouristAttraction/ListItem.html`. The name is unchanged; only the
-  directory differs.
-
-  **Integrators overriding the list item must move their override accordingly.** An override left in
-  ``Partials/`` is silently ignored — the file is no longer read from there, and the shipped template renders
-  instead. Nothing errors, so check this explicitly when upgrading.
-
-  The reason is caching: the attraction list now renders each item separately and caches the resulting HTML per
-  attraction, so an item is rendered once and reused by every list showing it. A separately rendered item is a
-  template rather than a partial.
-
-  **This also changes what the list templates receive.** :file:`List.html` and :file:`SelectedList.html` no longer
-  iterate attractions — the controller renders the items and assigns them as ready HTML in ``{items}``:
-
-  .. code-block:: html
-
-     <f:for each="{items}" as="item">
-         <f:format.raw>{item}</f:format.raw>
-     </f:for>
-
-  An override still iterating ``{list.paginatedItems}`` or ``{attractions}`` renders **nothing**, without an error.
-  ``{list}`` remains assigned for pagination; ``{attractions}`` is gone from the curated list entirely.
-
-  Both actions share one cache, so an attraction shown by a filtered list and a curated one is rendered once.
-
-  Template paths are unchanged otherwise: the item is resolved through the plugin's configured
-  ``templateRootPaths``, so an override in an extension or sitepackage keeps working once it sits in
-  ``Templates/``.
+* The list item moved from :file:`Partials/TouristAttraction/ListItem.html` to
+  :file:`Templates/TouristAttraction/ListItem.html`, and the list templates now receive rendered
+  items in ``{items}`` rather than iterating attractions. An override left in ``Partials/`` is
+  silently ignored. See :ref:`frontend-output`.
 
 Features
 --------
 
-* Imports can be run without media.
+* Support for TYPO3 v14 added.
 
-  Media is by far the most expensive part of a run: each image is a separate API request for its metadata plus a
-  download of the file itself, while the records carrying them are comparatively free. An import that only needs
-  the records — restoring after an aborted run, filling a fresh installation, reproducing an import problem — paid
-  for every image regardless.
+* Images and other files are imported via FAL; the target file directory is part of the import
+  configuration. See :ref:`frontend-output-media-import`.
 
-  :bash:`thuecat:importviaconfiguration <uid> --no_media` imports records without media:
+* One asset is downloaded once per run however many records use it, deduplicated on the download
+  URL before any request. Measured across two production configurations: 614 requests fell to 398,
+  and 144 to 71.
 
-  .. code-block:: bash
+* Media relations are cleaned up when upstream stops supplying an image, for inline and referenced
+  media alike. Re-importing an unchanged record no longer accumulates ``sys_file_reference`` rows.
+  See :ref:`frontend-output-media-ownership`.
 
-     vendor/bin/typo3 thuecat:importviaconfiguration <uid> --no_media
+* A failed download no longer removes the image it failed to fetch: only ``404`` and ``410`` count
+  as the asset being gone. See :ref:`frontend-output-media-ownership`.
 
-  No media resource is fetched, downloaded or related, in either shape upstream uses — referenced images, which
-  each cost an API request, and images inlined into the record's own response. Callers that do not go through the
-  command pass ``$skipMedia`` to :php:`Import\Importer::importConfiguration()`.
+* Events are imported with their images, both ``schema:photo`` and ``schema:image`` landing in
+  ``images``; the previous cap of eight images per event is gone.
 
-  The file folder is left untouched as well: neither the write-access probe nor the per-run staging folder is
-  created, so a run succeeds on an installation whose media folder is missing or read-only.
+* Media uploaded directly to a record is imported rather than rejected, for every record type,
+  with its author and licence. The configured API key is sent when fetching from the API host.
 
-  **Existing media is not removed.** The option governs what a run imports, not what earlier runs stored: records
-  already carrying media keep their file references, and a later run without :bash:`--no_media` imports the media
-  that was skipped. It is a way to import records cheaply, not a way to strip media from them.
+* Opening hours are imported as inline database records (:sql:`tx_thuecat_opening_hours`) and
+  exposed display-ready via :php:`Place::getComputedOpeningHours()`.
+  See :ref:`frontend-output-opening-hours`.
 
-* Import runs are bounded and report their progress.
+* Imports can be run without media via :bash:`--no_media`. See :ref:`import-without-media`.
 
-  A run previously printed nothing between start and its closing line, while neither the JSON-LD fetches nor the
-  media downloads set an HTTP timeout. One unresponsive host blocked the run forever, and because the import log
-  is written at the very end, a hung or killed run left no trace at all. Operators could not tell a healthy long
-  run from a dead one, and terminated working imports.
+* Import runs are bounded and report their progress: per-request connect and read timeouts, retries
+  for transient failures, an overall run budget, and progress output at three verbosity levels.
+  Aborted and failed runs write an import log instead of vanishing. See :ref:`import-tuning` and
+  :ref:`recovered-retries`.
 
-  :bash:`thuecat:importviaconfiguration` now reports what it is doing while it does it. By default it answers
-  "how much longer": phases with a known position report progress, and a phase whose size cannot be known is
-  announced once rather than emitting a meaningless tally. With :bash:`-vvv` it answers "what is it doing now",
-  naming each item and prefixing the time since the previous one, so a slow request shows up as a gap. Output
-  that is not going to a terminal prints phase transitions only, without redraw.
+* Attraction lists, list items and filter forms are cached in the ``pages`` cache group, so
+  everything that already clears page caches clears these too.
+  See :ref:`frontend-output-caching`.
 
-  Every outbound request now carries a connect and a read timeout, and transient failures — transport errors and
-  5xx responses — are retried up to ``maxAttempts`` times. A 4xx is never retried. Timeouts and exhausted retries
-  are recorded in the import log naming the URL, the cause and the attempt count, at the severity that failure
-  already had: a JSON-LD fetch remains an ``error``, a media download remains a ``warning``.
-
-  Requests that recovered — failed once, succeeded on a later attempt — are summarised in one
-  ``retriesRecovered`` entry per run, naming how many requests recovered and how many extra attempts they cost.
-  Only exhausted retries were recorded otherwise, which left a run against a struggling upstream looking exactly
-  like a healthy one. The entry is a ``notice``: the resources were fetched, nothing was skipped, and the run
-  still exits 0. A run in which nothing needed retrying writes no entry at all, so seeing one is itself the
-  signal.
-
-  A run also has an overall budget (``runBudget``). When it is exceeded the run aborts at the next phase
-  boundary — never mid-pass — writes its import log with a ``runAborted`` entry naming the exhausted budget and
-  the phase reached, and exits non-zero. Any other run-ending failure is recorded the same way as ``runFailed``
-  before being re-raised, so a run that dies no longer disappears without a diagnostic.
-
-  All of this is configurable per installation and per import configuration; see :ref:`import-tuning`.
-
-* Attraction lists are cached, so a visitor rarely waits for one to be built twice.
-
-  Three caches do the work, all in the ``pages`` cache group:
-
-  :sql:`tx_thuecat_teaser`
-      One rendered list item, keyed by the record, the detail page it links to and the language.
-      An attraction shown by several lists — filtered, curated, on different pages — is rendered once
-      and reused by all of them.
-
-  :sql:`tx_thuecat_list`
-      A whole rendered list, keyed by the plugin, the filter selection, the pagination page and the
-      language.
-
-  :sql:`tx_thuecat_searchmask`
-      A rendered filter form, keyed by the plugin, its page, the selection and the language.
-      Deliberately not by the pagination page, so paging through results reuses one form.
-
-  Because they belong to the ``pages`` group, everything that already clears page caches clears these
-  too: the "Clear cache" buttons in the backend, and any editor saving a record. Editors need do
-  nothing differently — a changed attraction, town or category takes its cached output with it and the
-  next visitor sees the new content.
-
-  Entries are discarded by the records they show rather than by age, so nothing goes stale waiting for
-  a lifetime to run out. A filter combination nobody has requested before is still built from scratch,
-  but only its unseen items cost anything: the rest come from the teaser cache.
-
-  The three caches therefore configure a lifetime of one year. This is not a staleness setting —
-  invalidation by tag is what keeps content current — it exists because TYPO3's default would otherwise
-  expire entries after an hour. Override it per cache in :file:`ext_localconf.php` or
-  :file:`config/system/additional.php` via
-  ``$GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][<identifier>]['options']['defaultLifetime']``,
-  though shortening it only costs rebuilds without making anything fresher.
-
-  Note that an import currently discards the caches of every record it visits, whether or not that
-  record changed, so lists are rebuilt after each import run. A known limitation, to be addressed
-  separately; it costs speed, never correctness.
-
-* Add support for TYPO3 v14.
-* Handle images and other files properly via FAL upon import. Target file directory is now part of the import configuration.
-* Events are imported with their images. An event's ``schema:photo`` and ``schema:image`` both land in the
-  ``images`` field of :sql:`tx_events_domain_model_event`; events have no separate main image, so the source
-  ranking decides the order — the photo comes first. The previous cap of eight images per event is removed:
-  every image upstream publishes is imported.
-
-* Media uploaded directly to a record is imported. Alongside the established form, where a record points at a
-  reusable media resource, upstream also lets editors upload a file into the record itself. Such a file was
-  previously rejected before any download was attempted, and — because the rejection was fatal — it cost the
-  whole root URL every one of its records. It is now imported like any other image, with its author and licence.
-
-  This applies to every record type, not only events. A point of interest carrying a direct upload imports it
-  into ``main_image`` / ``media_files`` as it would a referenced image.
-
-  A directly uploaded file is identified by its file name in the delivered address, which stays stable across
-  runs, so re-importing reuses the stored file instead of downloading it again.
-
-  These files are served from the API host, which refuses anonymous requests, so the configured API key is sent
-  when an image is fetched from that host. Images on other hosts — every referenced media resource so far — are
-  requested unchanged, without a key.
-
-* Import opening hours as inline database records (:sql:`tx_thuecat_opening_hours`) and expose a display-ready,
-  computed shape via :php:`Domain\Model\Frontend\Place::getComputedOpeningHours()` and
-  :php:`getComputedSpecialOpeningHours()`. The shape groups records into validity periods, lists every weekday
-  Monday-first, keeps all time spans of a day and
-  marks days without hours as closed. A ``OpeningHours/PerDayTable`` partial renders it. The current open/closed
-  status is intentionally left to client-side logic.
-
-* An event imported without a single date is named in the import log. Such an event is stored but cannot appear
-  anywhere dates are shown, and until now nothing said so — the absence had to be noticed in the frontend and
-  traced back by hand. Each one now gets a :sql:`tx_thuecat_import_log_entry` row of the new type
-  ``eventWithoutDates`` at severity ``warning``, naming the event and the record to look at.
-
-  The reason is deliberately not distinguished: an event publishing no schedule, one whose schedule yields no
-  usable day, and one whose dates are all excepted are reported alike, because the outcome is the same. The event
-  still imports and a run whose only findings are dateless events exits 0.
-
-  Events whose dates have **all passed** are included, so a finished event will produce this warning. That is
-  intended — the log entry says "this event shows nothing", which is true of a past event as well — but it means
-  the type is expected to appear routinely on sites with older data.
+* An event imported without a single date is named in the import log as ``eventWithoutDates``
+  at severity ``warning``.
 
 Fixes
 -----
 
-* Paging through an attraction list no longer shows the wrong page.
+* Paging through an attraction list no longer shows the wrong page. Every pagination page and
+  filter combination of one plugin previously shared a single page-cache entry.
 
-  Every pagination page and every filter combination of one list plugin shared a single page-cache
-  entry, because ``currentPage`` and ``demand`` were excluded from the cache identifier. Whichever
-  page was requested first was then served for all of them, until that entry expired.
+* A referenced resource that cannot be fetched no longer aborts the whole root URL. Only the
+  affected reference is dropped, logged per owning record as ``referenceSkipped`` at ``warning``.
 
-  The symptom only appeared once a page had been cached, so it was reliably invisible on a
-  developer machine and in tests, where every request starts from a cold cache.
+* A media entry the import cannot interpret no longer costs the whole root URL.
 
-  The list and search actions are now non-cacheable and serve their output from the caches described
-  under *Features*, each keyed by the plugin, the filter selection, the pagination page and the
-  language. Filter and pagination URLs are unchanged.
+* An image that cannot be downloaded no longer costs the run its media. Previously one failed
+  download discarded every image downloaded under all other roots.
 
-* A referenced resource that cannot be fetched no longer aborts the whole root URL. Previously any failure while
-  resolving a reference (a resource deleted upstream, a server error, a malformed response, a network failure)
-  propagated out of the resolver and the importer discarded every record belonging to that root. Now only the
-  affected reference is dropped: the owning record is imported without that relation, and all other records under
-  the same root are unaffected.
+* Staged media is promoted into the target folder even when the run recorded an error elsewhere.
 
-  Each affected parent record gets its own :sql:`tx_thuecat_import_log_entry` row of the new type
-  ``referenceSkipped`` at severity ``warning``, carrying the owner's ``remote_id`` and ``table_name`` alongside the
-  reference URL, the target field and the failure reason — so the log names the records to fix, not merely the URL
-  that failed. A URL already found to be failing is not fetched again for the rest of the run, but every parent that
-  loses a reference is still logged.
+* A record no longer inherits relations from the record imported before it — town, organisation,
+  parking, categories and images alike. Relations already stored from earlier runs are not
+  corrected by this.
 
-  Because these runs report ``warning`` rather than ``error``, :bash:`thuecat:importviaconfiguration` now exits 0
-  for them. Failures of the outer calls — the sync-scope/contains-place listing and the root URL fetches — are
-  unchanged and still fail the run, so a genuine upstream outage remains distinguishable.
+* A schedule day that cannot seed a date series no longer aborts the event import; the value is
+  logged as ``scheduleDaySkipped``, and surplus usable days as ``scheduleDayDropped``.
 
-* A record no longer inherits relations from the record imported before it.
+* ``schema:exceptDate`` is honoured, for every frequency.
 
-  Records that said nothing about a relation kept whatever the previous record in the same run had declared. The
-  effect was visible with images — several events ending up with the same picture, none of which named it — but it
-  applied to every imported relation: town, responsible organisation, nearby parking, categories. A record silent
-  about a relation is now imported without it.
+* An event's stored dates are reconciled with its schedule on re-import, so occurrences that
+  stopped being produced are removed. Only the import's own rows are affected; dates created in
+  the backend survive.
 
-  Relations already stored from earlier runs are not corrected by this. The import stops writing them; removing
-  one whose source is gone is a separate matter, and images that were wrongly related need to be removed by hand.
+* A failed root URL is identifiable from the import log: ``mappingError`` and ``fetchingError``
+  now carry the root URL.
 
-* A media entry the import cannot interpret no longer costs the whole root URL. Upstream may publish an entry that
-  is neither a reference to a media resource nor a direct upload. Such an entry previously aborted the import of
-  every record under that root. It is now skipped like an image that cannot be downloaded: the record is imported,
-  its usable images are related, and a :sql:`tx_thuecat_import_log_entry` of type ``referenceSkipped`` at severity
-  ``warning`` names the record and the entry. A run whose only problem is an entry of this kind exits 0.
-
-* An image that cannot be downloaded no longer costs the run its media. Previously the download raised on any error
-  status, the exception escaped the resolver and the importer discarded the whole root URL; because promotion of
-  downloaded files was gated on the run's overall severity, that single failure also deleted every image already
-  downloaded under all other roots. A run could finish having imported thousands of records and not one image.
-
-  Now only the affected image is dropped: the owning record is imported without that file, its other images are
-  related as usual, and records under the same root are unaffected. This holds for every failure mode — an error
-  status, a refused connection, a timeout, or an empty body. Each affected record gets a
-  :sql:`tx_thuecat_import_log_entry` row of type ``referenceSkipped`` at severity ``warning``, naming the record and
-  the URL that could not be fetched, so runs whose only problems are unfetchable images exit 0.
-
-  The image download now sends through the PSR-18 client rather than :php:`RequestFactory::request()`, whose Guzzle
-  default raises on a 4xx/5xx before the response can be inspected. JSON-LD fetches are unchanged and still fail
-  loudly.
-
-* Staged media is now promoted into the target folder even when the run recorded an error elsewhere. A file in
-  staging downloaded successfully, so an unrelated mapping failure says nothing about it. This is observable: a run
-  ending in ``error`` now leaves promoted files where it previously left none. A promoted file that no record ended
-  up referencing is reused by name on the next run rather than downloaded again. The per-run staging folder is still
-  discarded on every exit path, so a crashed run leaves no orphans.
-
-* :bash:`thuecat:importviaconfiguration` now prints a closing message stating whether the run completed, completed
-  with warnings, or failed. It previously exited silently, so a non-zero exit arrived with no explanation.
-
-* A schedule day that cannot seed a date series no longer aborts the event import.
-
-  ``schema:byDay`` may carry values that are valid upstream but name no weekday — ``schema:PublicHolidays`` among
-  them. These were passed on for date expansion, where they raised and cost the whole root URL its records. Such a
-  value is now skipped: the event imports with the dates its remaining weekdays produce, and a
-  :sql:`tx_thuecat_import_log_entry` of the new type ``scheduleDaySkipped`` at severity ``warning`` names the event
-  and the value. Editors keep the information that upstream asked for something the import cannot express.
-
-  Where a schedule supplies more usable weekdays than the import can carry — a monthly schedule holds one — the
-  surplus days are recorded separately as ``scheduleDayDropped``, also at ``warning``. The two are deliberately
-  distinct: one is an upstream value we cannot use, the other a usable value our own import discards, and they call
-  for different editor action.
-
-* ``schema:exceptDate`` is honoured.
-
-  Dates a schedule explicitly excludes were imported like any other occurrence. They are now dropped, for every
-  frequency. The comparison is by calendar day in the schedule's timezone, since an exception is date-only while
-  occurrences carry a time.
-
-* An event's stored dates are reconciled with its schedule on re-import.
-
-  Only new occurrences were ever written; one that stopped being produced stayed in the database indefinitely. Dates
-  the import owns are now compared against what the current schedule yields, and the difference is deleted. This is
-  the observable change of this release: occurrences that became excepted, fell after a shortened series end, or
-  vanished with a changed schedule disappear on the next run, where they previously lingered.
-
-  Only the import's own rows are affected — ownership is established through the ``remote_id`` the import assigns —
-  so dates created in the backend survive. The reconciliation is scoped to the events actually imported by the run:
-  an event outside the run, or one whose root URL was abandoned, keeps its dates.
-
-* A failed root URL is identifiable from the import log.
-
-  ``mappingError`` and ``fetchingError`` entries recorded the exception's message and origin but not which
-  configured URL produced them, so a run with several roots left the failure unattributable. Both now carry the root
-  URL in ``remote_id`` and repeat it in the entry's context alongside the existing detail. Severity is unchanged:
-  an abandoned root remains an ``error`` and still fails the run.
-
-  The failing record itself is not named. It is not reliably known at the point the failure is caught — parsing may
-  raise before any record is identified — and naming the wrong record would mislead more than naming none.
+* :bash:`thuecat:importviaconfiguration` prints a closing message stating whether the run
+  completed, completed with warnings, or failed.
 
 Tasks
 -----
@@ -311,38 +106,18 @@ Nothing
 Deprecation
 -----------
 
-* The json-based media storage has been superseeded by proper FAL handling. The json-based output logic is still in
-place. The next import will copy and relate the files as needed. With the next fitting version, the json-based fields
-will be removed.
+* The json-based media storage is superseded by FAL handling. The json read accessors
+  :php:`Media::getMainImage()`, :php:`getImages()`, :php:`getExtraImages()`,
+  :php:`getEditorialImages()`, :php:`getAllImages()` and :php:`Base::getMedia()` trigger
+  ``E_USER_DEPRECATED``. Use the FAL properties on ``Base`` instead and re-run the import.
+  See :ref:`frontend-output-media-model`.
 
-  Deprecated, triggering ``E_USER_DEPRECATED`` on use:
+* ``editorial_images`` is handled as the FAL field it always has been: replace
+  :html:`{entity.media.editorialImages}` with :html:`{entity.editorialImages}`.
 
-  - :php:`Domain\Model\Frontend\Media::getMainImage()`, :php:`getImages()`, :php:`getExtraImages()`,
-    :php:`getEditorialImages()` and :php:`getAllImages()` (the json-blob read accessors).
-  - :php:`Domain\Model\Frontend\Base::getMedia()` (hands out the json-blob carrier).
-
-  Use the FAL fields instead, available as native Extbase properties on ``Base``:
-  :php:`getMainImage()` (:sql:`main_image`), :php:`getMediaFiles()` (:sql:`media_files`) and
-  :php:`getEditorialImages()` (:sql:`editorial_images`). Re-run the import to populate :sql:`main_image` and
-  :sql:`media_files`; :sql:`editorial_images` is maintained in the backend. Templates should switch from
-  :html:`{record.media.*}` to these properties.
-
-* The editorial_images field is now handled as the FAL field it always has been. Replace template output from
-  :html:`{entity.media.editorialImages}` to :html:`{entity.editorialImages}` to make use of the full FAL provided
-  functionality.
-
-* The json-based opening hours storage has been superseeded by inline database records. The json-based output logic
-  is still in place. The next import will create the inline records as needed. With the next fitting version, the
-  json-based fields will be removed.
-
-  Deprecated, triggering ``E_USER_DEPRECATED`` on use:
-
-  - :php:`Domain\Model\Frontend\Place::getOpeningHours()`, :php:`getMergedOpeningHours()`,
-    :php:`getSpecialOpeningHours()` and :php:`getMergedSpecialOpeningHours()` (the json-blob read accessors).
-
-  The legacy :php:`Domain\Model\Frontend\OpeningHours`, :php:`MergedOpeningHours` and
-  :php:`MergedOpeningHourWeekDay` models are deprecated alongside them.
-
-  Use :php:`getComputedOpeningHours()` / :php:`getComputedSpecialOpeningHours()` instead. Re-run the import to
-  populate the inline records. Templates should switch from :html:`{record.openingHours}` /
-  :html:`{record.mergedOpeningHours}` to the ``OpeningHours/PerDayTable`` partial.
+* The json-based opening hours storage is superseded by inline database records.
+  :php:`Place::getOpeningHours()`, :php:`getMergedOpeningHours()`, :php:`getSpecialOpeningHours()`
+  and :php:`getMergedSpecialOpeningHours()` trigger ``E_USER_DEPRECATED``, as do the legacy
+  :php:`OpeningHours`, :php:`MergedOpeningHours` and :php:`MergedOpeningHourWeekDay` models.
+  Use :php:`getComputedOpeningHours()` / :php:`getComputedSpecialOpeningHours()` and re-run the
+  import. See :ref:`frontend-output-opening-hours-model`.

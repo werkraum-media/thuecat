@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-// Pre-state for the event media import tests. Carries a fileFolder so the
-// real FAL path runs; the per-test fixture decides which event is fetched.
+// Pre-state proving the reap stays inside the run's scope: a second event,
+// never fetched, must keep its reference.
 return [
     'pages' => [
         0 => [
@@ -33,7 +33,7 @@ return [
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
             'disable' => '0',
-            'title' => 'Event inline media reimport',
+            'title' => 'Event media reimport',
             'type' => 'static',
             'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
             <T3FlexForms>
@@ -48,11 +48,11 @@ return [
                             </field>
                             <field index="urls">
                                 <el index="el">
-                                    <field index="evt-inline-media">
+                                    <field index="evt-referenced-media">
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_inline_media-tdm</value>
+                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_referenced_media-tdm</value>
                                                 </field>
                                             </el>
                                         </value>
@@ -73,8 +73,17 @@ return [
             'pid' => '10',
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
-            'remote_id' => 'https://thuecat.org/resources/e_inline_media-tdm',
-            'title' => 'Inline Media Event',
+            'remote_id' => 'https://thuecat.org/resources/e_referenced_media-tdm',
+            'title' => 'Referenced Media Event',
+            'images' => '2',
+        ],
+        1 => [
+            'uid' => '2',
+            'pid' => '10',
+            'tstamp' => 1613400587,
+            'crdate' => 1613400558,
+            'remote_id' => 'https://thuecat.org/resources/e_untouched-tdm',
+            'title' => 'Event this run never fetches',
             'images' => '1',
         ],
     ],
@@ -85,18 +94,50 @@ return [
             'type' => '2',
             'extension' => 'jpg',
             'mime_type' => 'image/jpeg',
-            'name' => 'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-            'identifier' => '/thuecat/c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-            'identifier_hash' => '15c71f28533818439f319329f3fd9c58b3ea9e25',
+            'name' => 'image_3e6a3987344f6d38.jpg',
+            'identifier' => '/thuecat/image_3e6a3987344f6d38.jpg',
+            'identifier_hash' => 'ddab589f6efe1b16558b40e15094410a0c5e99e9',
+            'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
+        ],
+        1 => [
+            'uid' => '3',
+            'storage' => '1',
+            'type' => '2',
+            'extension' => 'jpg',
+            'mime_type' => 'image/jpeg',
+            'name' => 'dms_999999999_Nicht-mehr-geliefert.jpg',
+            'identifier' => '/thuecat/dms_999999999_Nicht-mehr-geliefert.jpg',
+            'identifier_hash' => '8c45ade12419e1c31c84a7e2b42fe3f86e186f7b',
             'folder_hash' => '7cd26a2efdc70daaac29904c75bc135bb21e3506',
         ],
     ],
     'sys_file_reference' => [
+        // Still supplied upstream — must survive, keeping its uid.
         0 => [
             'uid' => '1',
             'pid' => '10',
             'uid_local' => '2',
             'uid_foreign' => '1',
+            'tablenames' => 'tx_events_domain_model_event',
+            'fieldname' => 'images',
+            'sorting_foreign' => '1',
+        ],
+        // No longer supplied — the reap must delete it, which it can only do
+        // if it sweeps the field the owner declares.
+        1 => [
+            'uid' => '2',
+            'pid' => '10',
+            'uid_local' => '3',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_events_domain_model_event',
+            'fieldname' => 'images',
+            'sorting_foreign' => '2',
+        ],
+        2 => [
+            'uid' => '3',
+            'pid' => '10',
+            'uid_local' => '2',
+            'uid_foreign' => '2',
             'tablenames' => 'tx_events_domain_model_event',
             'fieldname' => 'images',
             'sorting_foreign' => '1',

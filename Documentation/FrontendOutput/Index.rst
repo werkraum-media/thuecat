@@ -66,7 +66,7 @@ wires its ``CType`` to a plugin via the ``ThueCat`` extension name:
 The list content element points at the storage folder through its ``pages`` field.
 
 A full, ready-to-use content element definition is shown in
-:doc:`ContentElementExample`.
+:doc:`/ContentElementExample`.
 
 Templates
 =========
@@ -89,11 +89,12 @@ The templates are
 * ``TouristAttraction/SearchForm``
 * ``TouristAttraction/Show``
 
-Field-specific output
-=====================
+Further topics
+==============
 
 Some fields carry richer data than a single value and have their own model
-accessors and partials. They are covered on their own pages:
+accessors and partials; rendered output is cached. These are covered on their own
+pages:
 
 .. toctree::
    :maxdepth: 1
@@ -101,6 +102,7 @@ accessors and partials. They are covered on their own pages:
 
    OpeningHours
    Media
+   Caching
 
 Site settings
 =============

@@ -3,6 +3,7 @@
         "cdb": "https://thuecat.org/ontology/cdb/1.0/",
         "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
         "dbo": "http://dbpedia.org/ontology/",
+        "dcmitype": "http://purl.org/dc/dcmitype/",
         "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
         "foaf": "http://xmlns.com/foaf/0.1/",
         "owl": "http://www.w3.org/2002/07/owl#",
@@ -16,28 +17,39 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/attraction-with-mixed-gallery",
+            "@id": "https://thuecat.org/resources/attraction-with-one-asset-in-both-slots",
             "@type": [
                 "schema:Place",
                 "schema:Thing",
                 "schema:TouristAttraction",
                 "ttgds:PointOfInterest",
-                "thuecat:Building",
-                "thuecat:ReligiousBuilding",
-                "thuecat:Cathedral",
-                "thuecat:CatholicChurch",
-                "thuecat:Dome"
+                "thuecat:Building"
             ],
             "schema:name": {
                 "@language": "de",
-                "@value": "Attraction with mixed gallery"
+                "@value": "Attraction with one asset in both slots"
+            },
+            "schema:photo": {
+                "@id": "genid-both-slots-b1",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:ImageObject",
+                    "dcmitype:Image"
+                ],
+                "schema:name": {
+                    "@language": "de",
+                    "@value": "Als photo"
+                },
+                "schema:contentUrl": {
+                    "@type": "schema:URL",
+                    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/both-slots/5e4d3c2b-0000-4000-8000-000000000001.jpg"
+                }
             },
             "schema:image": [
                 {
-                    "@id": "https://thuecat.org/resources/image-for-mixed-gallery"
-                },
-                {
-                    "@id": "genid-poi-inline-b1",
+                    "@id": "genid-both-slots-b2",
                     "@type": [
                         "schema:Thing",
                         "schema:CreativeWork",
@@ -45,21 +57,13 @@
                         "schema:ImageObject",
                         "dcmitype:Image"
                     ],
-                    "schema:position": {
-                        "@type": "schema:Integer",
-                        "@value": "2"
-                    },
-                    "schema:author": {
+                    "schema:name": {
                         "@language": "de",
-                        "@value": "©ETMG, Michael Kremer"
+                        "@value": "Als image"
                     },
                     "schema:contentUrl": {
                         "@type": "schema:URL",
-                        "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/poi-inline/1a2b3c4d-0000-4000-8000-000000000001.jpg"
-                    },
-                    "schema:license": {
-                        "@type": "schema:URL",
-                        "@value": "http://creativecommons.org/licenses/by/4.0/"
+                        "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/both-slots/5e4d3c2b-0000-4000-8000-000000000001.jpg"
                     }
                 }
             ]
