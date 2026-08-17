@@ -27,4 +27,4 @@ runs:
       run: './vendor/bin/phpstan analyse'
 
     - name: 'PHPUnit Tests'
-      run: './vendor/bin/phpunit --display-all-issues'
+      run: 'php -d xdebug.mode=off ./vendor/bin/phpunit --display-all-issues'

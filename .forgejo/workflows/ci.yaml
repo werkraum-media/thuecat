@@ -4,6 +4,7 @@ name: 'CI'
   push:
     branches:
       - 'main'
+      - 'debug-memory-issue-in-runner'
   pull_request:
 
 jobs:
