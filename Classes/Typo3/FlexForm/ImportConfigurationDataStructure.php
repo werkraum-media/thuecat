@@ -195,12 +195,7 @@ class ImportConfigurationDataStructure
         return [
             'label' => self::LLL . 'importConfiguration.categoryParent',
             'displayCond' => 'FIELD:storagePid:>:0',
-            'config' => [
-                'type' => 'group',
-                'allowed' => 'sys_category',
-                'maxitems' => 1,
-                'size' => 1,
-            ],
+            'config' => $this->getCategoryTreeConfig(),
         ];
     }
 
@@ -213,12 +208,7 @@ class ImportConfigurationDataStructure
             'label' => self::LLL . 'importConfiguration.keywordParent',
             'description' => self::LLL . 'importConfiguration.keywordParent.description',
             'displayCond' => 'FIELD:storagePid:>:0',
-            'config' => [
-                'type' => 'group',
-                'allowed' => 'sys_category',
-                'maxitems' => 1,
-                'size' => 1,
-            ],
+            'config' => $this->getCategoryTreeConfig(),
         ];
     }
 
@@ -319,6 +309,25 @@ class ImportConfigurationDataStructure
                             'config' => ['type' => 'input', 'eval' => 'trim', 'required' => true],
                         ],
                     ],
+                ],
+            ],
+        ];
+    }
+
+    private function getCategoryTreeConfig(): array
+    {
+        return [
+            'type' => 'select',
+            'foreign_table' => 'sys_category',
+            'maxitems' => 1,
+            'renderType' => 'selectTree',
+            'treeConfig' => [
+                'parentField' => 'parent',
+                'appearance' => [
+                    'expandAll' => false,
+                    'maxLevels' => 2,
+                    'nonSelectableLevels' => 0,
+                    'showHeader' => 'true',
                 ],
             ],
         ];
