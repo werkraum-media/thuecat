@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-// No category fields in the flexform → getCategoryParent()/getCategoryStoragePid()
-// both resolve to 0 → Resolver::wireCategories skips entirely. The event still
-// imports; no sys_category is touched.
+// No category anchors in the site settings, so both resolve to 0 and
+// Resolver::wireCategories skips entirely. The event still imports; no
+// sys_category is touched.
 return [
     'pages' => [
         [
-            'uid' => '1',
+            'uid' => '2000',
             'pid' => '0',
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Rootpage',
@@ -18,7 +18,7 @@ return [
         ],
         [
             'uid' => '10',
-            'pid' => '1',
+            'pid' => '2000',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'title' => 'Event storage folder',
         ],

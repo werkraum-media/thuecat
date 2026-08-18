@@ -19,4 +19,8 @@ final class NullProgressListener implements ImportProgressListener
     public function progressed(ImportProgress $progress): void
     {
     }
+
+    public function settingsResolved(array $settings): void
+    {
+    }
 }

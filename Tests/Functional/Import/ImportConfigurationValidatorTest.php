@@ -10,12 +10,12 @@ use WerkraumMedia\ThueCat\Import\CategoryConfigurationException;
 use WerkraumMedia\ThueCat\Import\ImportConfigurationValidator;
 use WerkraumMedia\ThueCat\Import\KeywordConfigurationException;
 use WerkraumMedia\ThueCat\Import\StoragePidConfigurationException;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
 
 // Pre-flight validation of the import configuration. storagePid 10 sits in the
-// 'example' site (rootPageId 1); category anchors 100/pid 20 are in-site, 900/
-// pid 91 and page 500 are out of it. See ValidatorScopePreState.
-class ImportConfigurationValidatorTest extends AbstractImportTestCase
+// site rooted at page 1; category anchors 100/pid 20 are in-site, 900/pid 91
+// and page 500 are out of it. See ValidatorScopePreState.
+class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCase
 {
     protected function setUp(): void
     {
@@ -143,6 +143,27 @@ class ImportConfigurationValidatorTest extends AbstractImportTestCase
         $this->validate(10, 0, 0, 900, 20);
     }
 
+    // The instance-wide fallback is one value across every site, so on a
+    // multi-site instance it is inside at most one of them.
+    #[Test]
+    public function throwsWhenInstanceWideFallbackPointsOutsideSite(): void
+    {
+        $this->writeSiteSettings([], 'validator_scope', 1);
+        $this->writeExtensionConfiguration([
+            'importCategoryParent' => '900',
+            'importCategoryStoragePid' => '91',
+        ]);
+
+        $this->expectException(CategoryConfigurationException::class);
+        $this->expectExceptionCode(1752570002);
+        $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
+    }
+
+    /**
+     * The anchors come from the site owning $storagePid. 0 stays "unset": the
+     * resolver skips a level that supplies nothing usable, so an omitted
+     * setting and a 0 are the same case.
+     */
     private function validate(
         int $storagePid,
         int $categoryParent,
@@ -150,56 +171,27 @@ class ImportConfigurationValidatorTest extends AbstractImportTestCase
         int $keywordParent = 0,
         int $keywordStoragePid = 0
     ): void {
-        $configuration = $this->configuration(
-            $storagePid,
-            $categoryParent,
-            $categoryStoragePid,
-            $keywordParent,
-            $keywordStoragePid
-        );
-        $this->get(ImportConfigurationValidator::class)->validate($configuration);
+        $this->writeSiteSettings([
+            'import' => [
+                'category' => ['storagePid' => $categoryStoragePid, 'parent' => $categoryParent],
+                'keywords' => ['storagePid' => $keywordStoragePid, 'parent' => $keywordParent],
+            ],
+        ], 'validator_scope', 1);
+
+        $this->get(ImportConfigurationValidator::class)->validate($this->configuration($storagePid));
     }
 
-    private function configuration(
-        int $storagePid,
-        int $categoryParent,
-        int $categoryStoragePid,
-        int $keywordParent = 0,
-        int $keywordStoragePid = 0
-    ): ImportConfigurationInterface {
-        return new class($storagePid, $categoryParent, $categoryStoragePid, $keywordParent, $keywordStoragePid) implements ImportConfigurationInterface {
+    private function configuration(int $storagePid): ImportConfigurationInterface
+    {
+        return new class($storagePid) implements ImportConfigurationInterface {
             public function __construct(
                 private readonly int $storagePid,
-                private readonly int $categoryParent,
-                private readonly int $categoryStoragePid,
-                private readonly int $keywordParent,
-                private readonly int $keywordStoragePid,
             ) {
             }
 
             public function getStoragePid(): int
             {
                 return $this->storagePid;
-            }
-
-            public function getCategoryParent(): int
-            {
-                return $this->categoryParent;
-            }
-
-            public function getCategoryStoragePid(): int
-            {
-                return $this->categoryStoragePid;
-            }
-
-            public function getKeywordParent(): int
-            {
-                return $this->keywordParent;
-            }
-
-            public function getKeywordStoragePid(): int
-            {
-                return $this->keywordStoragePid;
             }
 
             public function getType(): string

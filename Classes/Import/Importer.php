@@ -23,6 +23,8 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
+use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
+use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
@@ -45,6 +47,7 @@ class Importer
         protected readonly ImportLogger $importLogger,
         protected readonly ImportConfigurationValidator $configurationValidator,
         protected readonly ImportSettings $settings,
+        protected readonly CategoryAnchorResolver $anchorResolver,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -127,13 +130,19 @@ class Importer
         $apiDomain = $configuration->getApiDomain();
         $translationLanguages = [];
         $defaultLanguage = 'de'; // fallback
-        foreach ($this->siteFinder->getSiteByPageId($configuration->getStoragePid())->getLanguages() as $siteLanguage) {
+        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+        foreach ($site->getLanguages() as $siteLanguage) {
             if ($siteLanguage->getLanguageId() === 0) {
                 $defaultLanguage = $siteLanguage->getLocale()->getLanguageCode();
             } else {
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
+        $anchors = [];
+        foreach (CategoryAnchorSetting::cases() as $anchor) {
+            $anchors[$anchor->name] = $this->anchorResolver->resolve($anchor, $site);
+        }
+        $this->reportEffectiveSettings($configuration, $anchors, $listener);
         $parserContext = new ParserContext((int)$configuration->getUid(), $apiDomain);
         $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
@@ -143,10 +152,10 @@ class Importer
             $translationLanguages,
             $targetFolder,
             $stagingFolder,
-            $configuration->getCategoryParent(),
-            $configuration->getCategoryStoragePid(),
-            $configuration->getKeywordParent(),
-            $configuration->getKeywordStoragePid(),
+            $anchors[CategoryAnchorSetting::CategoryParent->name],
+            $anchors[CategoryAnchorSetting::CategoryStoragePid->name],
+            $anchors[CategoryAnchorSetting::KeywordParent->name],
+            $anchors[CategoryAnchorSetting::KeywordStoragePid->name],
             $listener,
             $skipMedia,
         );
@@ -361,6 +370,52 @@ class Importer
      * Staged, not thrown: the run must still reach writeLog(), or an aborted
      * run leaves nothing behind — which is the failure this exists to fix.
      */
+    /**
+     * What actually governs this run, assembled once before the first fetch.
+     * The values come from three levels (import configuration, site settings,
+     * extension configuration), so a run that behaves unexpectedly can be
+     * explained without tracing the chain by hand.
+     *
+     * There is deliberately no apiKey entry: excluding it by construction
+     * leaves no masking step to forget and no rendering path that could leak
+     * it. Reporting is wrapped because it is diagnostics, not a gate — a
+     * failure here must not abort an otherwise healthy run.
+     *
+     * @param array<string, int> $anchors CategoryAnchorSetting case name => resolved uid
+     */
+    protected function reportEffectiveSettings(
+        ImportConfigurationInterface $configuration,
+        array $anchors,
+        ImportProgressListener $listener
+    ): void {
+        try {
+            $settings = [
+                'storagePid' => $configuration->getStoragePid(),
+                'fileFolder' => $configuration->getFileFolder(),
+                'apiDomain' => $configuration->getApiDomain(),
+            ];
+            foreach (CategoryAnchorSetting::cases() as $anchor) {
+                $uid = $anchors[$anchor->name] ?? 0;
+                $settings[$anchor->settingsPath()] = $uid > 0 ? $uid : 'unset';
+            }
+            $settings += [
+                'readTimeout' => $this->settings->resolve(ImportSetting::ReadTimeout, 0),
+                'connectTimeout' => $this->settings->resolve(ImportSetting::ConnectTimeout, 0),
+                'maxAttempts' => $this->settings->resolve(ImportSetting::MaxAttempts, 0),
+                'runBudget' => $this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()),
+                'fetchCacheLifetime' => $this->settings->resolve(
+                    ImportSetting::FetchCacheLifetime,
+                    $configuration->getFetchCacheLifetime()
+                ),
+            ];
+
+            $this->importLogger->recordEffectiveSettings($settings);
+            $listener->settingsResolved($settings);
+        } catch (Throwable) {
+            // Diagnostics must never cost a run.
+        }
+    }
+
     protected function recordAbort(RunDeadline $deadline, ImportPhase $phase): void
     {
         try {

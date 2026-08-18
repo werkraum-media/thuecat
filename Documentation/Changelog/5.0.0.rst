@@ -6,6 +6,16 @@ Breaking
 
 * Support for TYPO3 v12 removed.
 
+* Category and keyword anchors moved from the import configuration to the target site.
+  The flexform fields ``categoryStoragePid``, ``categoryParent``, ``keywordStoragePid`` and
+  ``keywordParent`` are removed without replacement; values left in stored flexform XML are
+  ignored. Configure ``import.category.storagePid``, ``import.category.parent``,
+  ``import.keywords.storagePid`` and ``import.keywords.parent`` in the site settings instead —
+  or, on installations without ``thuecat_ces`` / ``events_ces``, in the Extension Configuration.
+  There is no upgrade wizard: **note the existing values before updating**, because an import
+  whose anchors are not configured runs with category and keyword mapping switched off rather
+  than failing. See :ref:`import-category-based-anchors`.
+
 * API responses are cached persistently: ``thuecat_fetchdata`` now defaults to
   :php:`Typo3DatabaseBackend` with a 900 second lifetime instead of dying with the process.
   A run is no longer guaranteed to hit the API — see :ref:`fetch-cache` for the bypass options.
@@ -55,6 +65,11 @@ Features
   for transient failures, an overall run budget, and progress output at three verbosity levels.
   Aborted and failed runs write an import log instead of vanishing. See :ref:`import-tuning` and
   :ref:`recovered-retries`.
+
+* Every import run reports the settings that drove it — storage page, file folder, API domain,
+  the category anchors and the tuning settings — as the first entry of its import log, in the
+  backend module's summary column, and on the console. The API key is never included.
+  See :ref:`effective-settings`.
 
 * Attraction lists, list items and filter forms are cached in the ``pages`` cache group, so
   everything that already clears page caches clears these too.

@@ -8,6 +8,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\DataHandlerError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EffectiveSettings;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventDateSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
@@ -65,6 +66,7 @@ return [
             'runAborted' => RunAborted::class,
             'runFailed' => RunFailed::class,
             'retriesRecovered' => RetriesRecovered::class,
+            'effectiveSettings' => EffectiveSettings::class,
         ],
     ],
     SavingEntity::class => [
@@ -86,6 +88,10 @@ return [
     CategoryMatched::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'categoryMatched',
+    ],
+    EffectiveSettings::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'effectiveSettings',
     ],
     CategoryUnmatched::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

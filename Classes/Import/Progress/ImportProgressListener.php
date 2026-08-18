@@ -17,4 +17,12 @@ namespace WerkraumMedia\ThueCat\Import\Progress;
 interface ImportProgressListener
 {
     public function progressed(ImportProgress $progress): void;
+
+    /**
+     * The effective settings for the run, handed over before the first fetch.
+     * A plain map so the importer needs no renderer type of its own.
+     *
+     * @param array<string, string|int> $settings setting name => effective value
+     */
+    public function settingsResolved(array $settings): void;
 }

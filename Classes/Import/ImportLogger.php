@@ -57,6 +57,14 @@ class ImportLogger
     private array $pendingEntries = [];
 
     /**
+     * Held apart from pendingEntries so it can be written first, whenever the
+     * importer resolves it. Cleared by writeLog() along with the rest.
+     *
+     * @var array<string, mixed>|null
+     */
+    private ?array $effectiveSettings = null;
+
+    /**
      * Highest severity seen across all record* calls in this run, in
      * SEVERITY_RANK terms. Reset by writeLog() so a logger instance can be
      * reused across runs without leaking state.
@@ -298,6 +306,33 @@ class ImportLogger
      *
      * @param array<string, true> $tableFields set of "table.field" keys
      */
+    /**
+     * The values driving this run, as resolved. Written as the log's first
+     * entry, so a reader sees what governed the run before its results, and a
+     * dataset can rely on the position. DEBUG is rank 0: a clean run reports
+     * 'debug', so anything higher would make the summary change the run's own
+     * outcome. The API key is absent from $settings by construction, so no
+     * masking happens here.
+     *
+     * @param array<string, string|int> $settings setting name => effective value
+     */
+    public function recordEffectiveSettings(array $settings): void
+    {
+        $this->effectiveSettings = [
+            'pid' => 0,
+            'kind' => '',
+            'remote_id' => '',
+            'table_name' => '',
+            'record_uid' => 0,
+            'insertion' => 0,
+            'errors' => '[]',
+            'type' => 'effectiveSettings',
+            'severity' => self::SEVERITY_DEBUG,
+            'message' => 'Effective settings for this run.',
+            'context' => (string)(json_encode($settings) ?: '{}'),
+        ];
+    }
+
     public function recordCategoriesFieldMissing(array $tableFields): void
     {
         foreach (array_keys($tableFields) as $tableField) {
@@ -439,6 +474,13 @@ class ImportLogger
             ],
             'tx_thuecat_import_log_entry' => [],
         ];
+
+        // First entry of the run, so the log opens with what drove it.
+        if ($this->effectiveSettings !== null) {
+            $this->effectiveSettings['import_log'] = $logKey;
+            $datamap['tx_thuecat_import_log_entry'][StringUtility::getUniqueId('NEW')] = $this->effectiveSettings;
+            $this->effectiveSettings = null;
+        }
 
         $threshold = time() - self::UPDATE_WINDOW_SECONDS;
 

@@ -138,6 +138,9 @@
             <trans-unit id="module.imports.summary.updated" xml:space="preserve">
                 <source>%1$s updated</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.effectiveSettings" xml:space="preserve">
+                <source>Settings used for this run</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
             </trans-unit>

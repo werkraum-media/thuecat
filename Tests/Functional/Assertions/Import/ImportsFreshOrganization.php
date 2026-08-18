@@ -22,6 +22,16 @@ return [
         0 => [
             'uid' => '1',
             'pid' => '0',
+            'type' => 'effectiveSettings',
+            'import_log' => '1',
+            'record_uid' => '0',
+            'table_name' => '',
+            'insertion' => '0',
+            'errors' => '[]',
+        ],
+        1 => [
+            'uid' => '2',
+            'pid' => '0',
             'import_log' => '1',
             'record_uid' => '1',
             'table_name' => 'tx_thuecat_organisation',

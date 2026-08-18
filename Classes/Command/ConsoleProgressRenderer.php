@@ -39,6 +39,24 @@ final class ConsoleProgressRenderer implements ImportProgressListener
     ) {
     }
 
+    /**
+     * Normal verbosity: the values governing the run are worth seeing without
+     * a flag. --quiet needs no handling here, OutputInterface suppresses it.
+     *
+     * @param array<string, string|int> $settings
+     */
+    public function settingsResolved(array $settings): void
+    {
+        $this->output->writeln('<info>Effective settings</info>');
+        $width = 0;
+        foreach (array_keys($settings) as $name) {
+            $width = max($width, strlen($name));
+        }
+        foreach ($settings as $name => $value) {
+            $this->output->writeln(sprintf('  %-' . $width . 's  %s', $name, $value));
+        }
+    }
+
     public function progressed(ImportProgress $progress): void
     {
         // Fetch and resolve interleave per URL, so a phase is announced on

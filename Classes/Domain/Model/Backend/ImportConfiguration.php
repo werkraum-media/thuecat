@@ -106,50 +106,6 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return 0;
     }
 
-    public function getCategoryParent(): int
-    {
-        $value = $this->getConfigurationValueFromFlexForm('categoryParent');
-
-        if (is_numeric($value) && $value > 0) {
-            return (int)$value;
-        }
-
-        return 0;
-    }
-
-    public function getCategoryStoragePid(): int
-    {
-        $value = $this->getConfigurationValueFromFlexForm('categoryStoragePid');
-
-        if (is_numeric($value) && $value > 0) {
-            return (int)$value;
-        }
-
-        return 0;
-    }
-
-    public function getKeywordParent(): int
-    {
-        $value = $this->getConfigurationValueFromFlexForm('keywordParent');
-
-        if (is_numeric($value) && $value > 0) {
-            return (int)$value;
-        }
-
-        return 0;
-    }
-
-    public function getKeywordStoragePid(): int
-    {
-        $value = $this->getConfigurationValueFromFlexForm('keywordStoragePid');
-
-        if (is_numeric($value) && $value > 0) {
-            return (int)$value;
-        }
-
-        return 0;
-    }
-
     public function getFileFolder(): string
     {
         $fileFolder = $this->getConfigurationValueFromFlexForm('fileFolder');

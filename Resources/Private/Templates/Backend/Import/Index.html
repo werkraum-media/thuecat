@@ -82,7 +82,19 @@
                 {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount.total}
                 ({f:translate(id: 'module.imports.summary.inserted', arguments: {0: amount.inserted})},
                 {f:translate(id: 'module.imports.summary.updated', arguments: {0: amount.updated})})<br>
-            </f:for></td>
+            </f:for>
+                <f:if condition="{import.effectiveSettings}">
+                    <details>
+                        <summary>{f:translate(id: 'module.imports.summary.effectiveSettings')}</summary>
+                        <dl>
+                            <f:for each="{import.effectiveSettings}" key="name" as="value">
+                                <dt>{name}</dt>
+                                <dd>{value}</dd>
+                            </f:for>
+                        </dl>
+                    </details>
+                </f:if>
+            </td>
             <td>
                 <strong>Matched types</strong>
                 <ul>

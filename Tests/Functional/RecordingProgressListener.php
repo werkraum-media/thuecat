@@ -24,9 +24,22 @@ final class RecordingProgressListener implements ImportProgressListener
      */
     public array $events = [];
 
+    /**
+     * @var array<string, string|int>
+     */
+    public array $settings = [];
+
     public function progressed(ImportProgress $progress): void
     {
         $this->events[] = $progress;
+    }
+
+    /**
+     * @param array<string, string|int> $settings
+     */
+    public function settingsResolved(array $settings): void
+    {
+        $this->settings = $settings;
     }
 
     /**

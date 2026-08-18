@@ -59,6 +59,55 @@ All configurations also provide an input to define the page where records should
 stored and updated. This page uid is also used to fetch accordingly site
 configuration. The related languages are used during the import.
 
+.. _import-category-based-anchors:
+
+Category based anchors
+----------------------
+
+Several imported properties are stored as :sql:`sys_category` records — the categories
+derived from an object's type, the :ref:`keywords <import-keywords>` it carries, and
+further filter properties as they are added. Each such property is anchored by a pair
+of settings: the folder its categories are stored in, and the parent category they are
+created beneath.
+
+Anchors are configured **per site**, not per import configuration. That is deliberate.
+They are structural data every imported object uses the same way, and a filter in the
+frontend has to be able to identify the parent category its selection rests on. With
+the anchors defined once per site, a plugin can.
+
+Every anchored property carries its own pair, resolved independently of the others.
+Properties may point at the same storage folder, but each pair stays separately
+configurable, because imported categories can legitimately live in different folders.
+The settings are grouped under :guilabel:`Import` in the site settings editor, one
+labelled pair per property.
+
+Each anchor is resolved from the first level that supplies a positive page or category
+uid:
+
+Site settings
+   Of the site owning the import configuration's storage page. Set them in
+   :guilabel:`Site Management > Sites`, where the output extensions
+   (``thuecat_ces``, ``events_ces``) declare them under :guilabel:`Import`.
+
+Extension Configuration
+   Installation-wide, via :guilabel:`Admin Tools > Settings > Extension Configuration >
+   thuecat`. Used only when the site supplies nothing — it is the fallback for
+   installations without one of the output extensions, since ``thuecat`` does not
+   require them. One value applies to every site, so it fits single-site installations
+   and installations where all imports share one category tree.
+
+Unset
+   ``0``, or nothing configured anywhere. That kind's mapping is switched off and the
+   import runs without it.
+
+Per kind, both anchors must be set or neither. Setting only one is rejected before the
+import fetches anything, as is an anchor outside the site that owns the storage page.
+The two kinds are validated independently: a broken keyword pair says nothing about the
+category pair.
+
+The values actually in effect are reported at the start of every run — see
+:ref:`effective-settings`.
+
 .. _import-keywords:
 
 Keywords
@@ -73,22 +122,15 @@ Keywords are a **separate property from the categories** derived from an object'
 type. They never share a tree, a record or an identifier, even where a keyword and a
 category happen to carry the same title.
 
-Two fields on the import configuration switch keyword import on:
-
-Keyword parent
-   The category all imported keywords are created beneath. Create an empty category
-   to serve as this anchor, then select it here.
-
-Keyword storage pid
-   The page imported keyword categories are stored on.
+Keyword import is switched on by the keyword pair of site settings — a storage folder
+and a parent category. See :ref:`import-category-based-anchors`.
 
 Both must be set, or neither. Leaving both empty switches keyword import off; setting
 only one is rejected before the import fetches anything. The anchor must lie inside
 the same site as the record storage page.
 
-An import configuration imports one kind of record, so places and events are kept
-apart by configuring them as separate imports with different keyword parents. Two
-imports pointing at the same parent share one tree.
+Because the anchors belong to the site, every import writing into that site shares one
+keyword tree. Places and events imported into the same site therefore share it too.
 
 The upstream group structure is mirrored as intermediate categories, so a term appears
 beneath a category representing its set rather than in one flat list. Only the keyword
@@ -166,6 +208,37 @@ backend returns to the fallback rather than meaning "unlimited".
    healthy runs, so the budget is a backstop against a hung run, not a performance
    target. Installations with large configurations should expect to raise it rather
    than assume the default fits.
+
+.. _effective-settings:
+
+Effective settings of a run
+---------------------------
+
+The values driving an import come from three places — the import configuration record,
+the site settings and the Extension Configuration — so each run reports what it actually
+used before it fetches anything.
+
+The report is written to the import log as its first entry, at severity ``debug``, and
+shown in the :guilabel:`Summary` column of the backend module. Command line runs print
+it as well, at normal verbosity; :bash:`--quiet` suppresses the console output while the
+log entry is still written.
+
+It covers the storage page, the file folder, the API domain, the four
+:ref:`category anchors <import-category-based-anchors>` and the five
+:ref:`tuning settings <import-tuning>`. An anchor nothing supplies is reported as
+``unset`` rather than ``0``, so a switched-off mapping is visible as a decision rather
+than a number.
+
+The API key is never part of the report — not its value, not a masked rendering, not its
+length.
+
+.. note::
+
+   This is the quickest way to answer "why did this run behave like that": the reported
+   values are the resolved ones, so a setting that never took effect is visible without
+   tracing the fallback chain by hand. A category kind reported as ``unset`` after the
+   site settings were filled in usually means the value was written for a different site
+   than the one owning the storage page.
 
 .. _recovered-retries:
 

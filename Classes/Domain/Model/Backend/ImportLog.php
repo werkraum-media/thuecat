@@ -29,6 +29,7 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity as Typo3AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EffectiveSettings;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 
@@ -137,6 +138,23 @@ class ImportLog extends Typo3AbstractEntity
         }
 
         return $summary;
+    }
+
+    /**
+     * The settings that governed this run. Empty for logs written before the
+     * summary existed, so the module renders them unchanged.
+     *
+     * @return array<string, string|int>
+     */
+    public function getEffectiveSettings(): array
+    {
+        foreach ($this->getEntries() as $entry) {
+            if ($entry instanceof EffectiveSettings) {
+                return $entry->getSettings();
+            }
+        }
+
+        return [];
     }
 
     /**

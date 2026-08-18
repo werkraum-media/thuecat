@@ -18,3 +18,21 @@ runBudget = 86400
 
 # cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:fetchCacheLifetime
 fetchCacheLifetime = 900
+
+# Instance-wide fallback for the sys_category anchors, used when the target
+# site's settings do not supply them. A single value across every site, so it
+# only fits installations where all imports share one category tree; anchors
+# outside the import's site are rejected before the run starts.
+# Mirrors WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting.
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importCategoryStoragePid
+importCategoryStoragePid = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importCategoryParent
+importCategoryParent = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importKeywordsStoragePid
+importKeywordsStoragePid = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importKeywordsParent
+importKeywordsParent = 0

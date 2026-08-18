@@ -80,12 +80,6 @@ return [
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
                             </field>
-                            <field index="categoryStoragePid">
-                                <value index="vDEF">20</value>
-                            </field>
-                            <field index="categoryParent">
-                                <value index="vDEF">100</value>
-                            </field>
                             <field index="urls">
                                 <el index="el">
                                     <field index="poi-with-category">

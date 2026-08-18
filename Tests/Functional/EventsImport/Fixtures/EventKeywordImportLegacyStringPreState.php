@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 return [
     'pages' => [
         [
-            'uid' => '1',
+            'uid' => '2200',
             'pid' => '0',
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Rootpage',
@@ -17,19 +17,19 @@ return [
         ],
         [
             'uid' => '10',
-            'pid' => '1',
+            'pid' => '2200',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'title' => 'Event storage folder',
         ],
         [
             'uid' => '20',
-            'pid' => '1',
+            'pid' => '2200',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'title' => 'Category storage folder',
         ],
         [
             'uid' => '30',
-            'pid' => '1',
+            'pid' => '2200',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'title' => 'Keyword storage folder',
         ],
@@ -72,18 +72,6 @@ return [
                         <language index="lDEF">
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
-                            </field>
-                            <field index="categoryStoragePid">
-                                <value index="vDEF">20</value>
-                            </field>
-                            <field index="categoryParent">
-                                <value index="vDEF">100</value>
-                            </field>
-                            <field index="keywordStoragePid">
-                                <value index="vDEF">30</value>
-                            </field>
-                            <field index="keywordParent">
-                                <value index="vDEF">200</value>
                             </field>
                             <field index="urls">
                                 <el index="el">

@@ -349,6 +349,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryMatched" xml:space="preserve">
                 <source>Category Matched</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.effectiveSettings" xml:space="preserve">
+                <source>Effective settings</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryUnmatched" xml:space="preserve">
                 <source>Category Not Matched</source>
             </trans-unit>

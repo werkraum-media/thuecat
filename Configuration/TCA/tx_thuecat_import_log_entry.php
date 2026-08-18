@@ -91,6 +91,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'categoryMatched',
                         ],
                         [
+                            'label' => $languagePath . '.type.effectiveSettings',
+                            'value' => 'effectiveSettings',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryUnmatched',
                             'value' => 'categoryUnmatched',
                         ],

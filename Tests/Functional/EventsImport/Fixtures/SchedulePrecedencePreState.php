@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 return [
     'pages' => [
         0 => [
-            'uid' => '1',
+            'uid' => '2000',
             'pid' => '0',
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
@@ -22,7 +22,7 @@ return [
         ],
         1 => [
             'uid' => '10',
-            'pid' => '1',
+            'pid' => '2000',
             'tstamp' => 1613400587,
             'crdate' => 1613400558,
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
