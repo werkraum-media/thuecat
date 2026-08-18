@@ -61,4 +61,38 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
+
+    // 4.1: the mask offers the keyword tree, grouped by parent — the nesting is
+    // what the grouping is, since a set renders as a checkbox owning its terms.
+    #[Test]
+    public function searchFormOffersTheKeywordTreeGroupedByParent(): void
+    {
+        $request = (new InternalRequest())->withPageId(12);
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][keywords][]"', $body);
+        self::assertStringContainsString('Ambiente', $body);
+        self::assertStringContainsString('romantisch', $body);
+        // The anchor itself is a container, never an option.
+        self::assertStringNotContainsString('>Keywords<', $body);
+    }
+
+    // 4.2: a keyword already chosen comes back checked, so the visitor sees what
+    // is filtering their result.
+    #[Test]
+    public function searchFormReflectsTheSelectedKeyword(): void
+    {
+        $request = (new InternalRequest())
+            ->withPageId(12)
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
+        ;
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertMatchesRegularExpression(
+            '#<input[^>]+value="501"[^>]+checked="checked"#',
+            $body
+        );
+    }
 }

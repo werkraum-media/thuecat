@@ -27,6 +27,10 @@ class TouristAttractionDemandFactory
             $demand->setCategories(GeneralUtility::intExplode(',', $settings['categories'], true));
             $locked[] = 'categories';
         }
+        if (!empty($settings['keywords']) && is_string($settings['keywords'])) {
+            $demand->setKeywords(GeneralUtility::intExplode(',', $settings['keywords'], true));
+            $locked[] = 'keywords';
+        }
         if (!empty($settings['petsAllowed'])) {
             $demand->setPetsAllowed(true);
             $locked[] = 'petsAllowed';
@@ -57,6 +61,9 @@ class TouristAttractionDemandFactory
         }
         if ($filter->isLocked('categories')) {
             $demand->setCategories($locked->getCategories());
+        }
+        if ($filter->isLocked('keywords')) {
+            $demand->setKeywords($locked->getKeywords());
         }
         if ($filter->isLocked('petsAllowed')) {
             $demand->setPetsAllowed($locked->getPetsAllowed());

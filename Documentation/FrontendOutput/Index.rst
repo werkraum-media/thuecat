@@ -170,6 +170,38 @@ A filtered list carries an editor preset in its FlexForm (for example a fixed se
 of towns). The list re-applies the preset on every request: a visitor search
 refines *within* the preset but can never widen it, even with a tampered URL.
 
+.. _frontend-output-keywords:
+
+Filtering by keyword
+====================
+
+Places can be filtered by the :ref:`keywords <import-keywords>` the import stored
+on them. The filter behaves like the category filter beside it: selecting several
+keywords widens the result, while adding a town or a category narrows it.
+
+Which keywords a plugin offers is chosen **per plugin**, in the FlexForm of the
+attraction list. A plugin with no keyword selected offers no keyword control and
+applies no keyword constraint, so existing plugins keep behaving as they did.
+
+The selection is bounded by the site's keyword anchor: the field offers the terms
+below :ref:`import.thuecat.keywords.parent <import-category-based-anchors>` and
+nothing else, so the type-category tree cannot be picked here by mistake. A site
+that configures no keyword anchor therefore offers nothing to choose.
+
+Because the anchor belongs to the site, one site running several imports into the
+same keyword parent shares one vocabulary across its plugins. Pointing separate
+imports at separate keyword parents gives each list its own.
+
+The chosen keywords survive pagination, and the filter mask shows them grouped by
+their parent set so long vocabularies stay navigable.
+
+Keyword meta tags
+=================
+
+A place detail view emits a ``keywords`` meta tag built from the record's related
+keyword categories, joined by ``", "``. A place with no keyword relations emits no
+keyword meta tag.
+
 How it works
 ============
 

@@ -59,6 +59,23 @@ Breaking
   items in ``{items}`` rather than iterating attractions. An override left in ``Partials/`` is
   silently ignored. See :ref:`frontend-output`.
 
+* The category and keyword fields on tourist attractions and tourist information are bounded by
+  the site's anchors instead of offering every :sql:`sys_category` in the installation. A site
+  that configures no anchor now offers **nothing** in these fields, where it previously offered
+  everything; configure ``import.thuecat.category.parent`` and ``import.thuecat.keywords.parent``
+  to restore a selection. The same bound applies to the keyword field of the attraction list
+  plugin. See :ref:`import-category-based-anchors`.
+
+* :php:`TouristAttractionRepository::findCategoryTreeForSearchForm()` takes the anchor category as
+  a second argument. Passing ``0`` returns an empty tree rather than every root in storage. The
+  partial :file:`Partials/TouristAttraction/CategoryTree.html` now requires a ``property``
+  argument naming the demand property its checkboxes bind to; an override without it renders
+  unbound checkboxes. Its element ids carry that property too, so a category and a keyword
+  sharing a uid no longer collide.
+
+* :php:`CategoryRepository::findByParents()` takes :php:`Category` objects instead of uids, since
+  ``parent`` is an object relation and a uid comparison matches nothing.
+
 Features
 --------
 
@@ -115,11 +132,33 @@ Features
   re-import, and a keyword upstream stops supplying loses its relation while the category record
   remains. See :ref:`import-keywords`.
 
+* Imported keywords are usable in the frontend: the attraction list filters by keyword, the filter
+  mask offers them grouped by their parent set, and the selection survives pagination. Selecting
+  several keywords widens the result while other filters continue to narrow it. Which keywords a
+  plugin offers is chosen per plugin and bounded by the site's keyword anchor, so a plugin without
+  a keyword selected behaves exactly as before. See :ref:`frontend-output-keywords`.
+
+* A place detail view emits a ``keywords`` meta tag built from its related keyword categories.
+  A place with no keyword relations emits no such tag.
+
 Fixes
 -----
 
 * Paging through an attraction list no longer shows the wrong page. Every pagination page and
   filter combination of one plugin previously shared a single page-cache entry.
+
+* The search form offers its category options again on a page whose plugin names no storage page.
+  The option tree was built with the default storage restriction, which resolves to page 0 and
+  matches nothing, so the form rendered an empty category list.
+
+* The search form shows the levels below a category's top level. Child categories were looked up
+  by comparing an object relation against uids, which matched nothing, so only the topmost entry
+  of each tree was offered.
+
+* Filtering by a category that groups others returns the records filed under those others.
+  Selecting a group previously matched only records related to the group itself — none, where a
+  vocabulary relates records to the terms it ends in — so every group selection came back empty.
+  Applies to the type categories and to keywords alike.
 
 * A referenced resource that cannot be fetched no longer aborts the whole root URL. Only the
   affected reference is dropped, logged per owning record as ``referenceSkipped`` at ``warning``.

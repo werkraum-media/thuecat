@@ -45,19 +45,3 @@ languages:
     languageId: 2
 rootPageId: 1
 websiteTitle: 'Example Website'
-settings:
-  import:
-    thuecat:
-      # The anchors the frontend filters resolve against. Fixtures place their
-      # category tree under 300 and their keyword tree under 500, both stored
-      # in the attraction storage folder (11).
-      #
-      # Each anchor must be a complete pair: the import validator treats a
-      # parent without a storagePid as a misconfiguration, and only both-zero
-      # as "mapping off". The frontend reads the parent alone.
-      category:
-        parent: 300
-        storagePid: 11
-      keywords:
-        parent: 500
-        storagePid: 11

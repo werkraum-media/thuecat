@@ -530,6 +530,12 @@
             <trans-unit id="content.search.category.hint" xml:space="preserve">
                 <source>Select any number of categories.</source>
             </trans-unit>
+            <trans-unit id="content.search.keyword" xml:space="preserve">
+                <source>Keyword</source>
+            </trans-unit>
+            <trans-unit id="content.search.keyword.hint" xml:space="preserve">
+                <source>Select any number of keywords.</source>
+            </trans-unit>
             <trans-unit id="content.search.petsAllowed" xml:space="preserve">
                 <source>Pets allowed</source>
             </trans-unit>

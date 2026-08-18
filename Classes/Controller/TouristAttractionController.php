@@ -29,7 +29,9 @@ use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
 use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
+use WerkraumMedia\ThueCat\Frontend\MetaInformation\TouristAttractionMetaInformationService;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
+use WerkraumMedia\ThueCat\Service\FrontendCategoryAnchors;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
 
@@ -52,6 +54,8 @@ class TouristAttractionController extends ActionController
         protected CacheManager $cacheManager,
         protected CacheIdentifierFactory $cacheIdentifierFactory,
         protected CacheTagCollector $cacheTagCollector,
+        protected FrontendCategoryAnchors $categoryAnchors,
+        protected TouristAttractionMetaInformationService $metaInformationService,
     ) {
     }
 
@@ -195,6 +199,10 @@ class TouristAttractionController extends ActionController
 
     public function showAction(?TouristAttraction $attraction = null): ResponseInterface
     {
+        if ($attraction instanceof TouristAttraction) {
+            $this->metaInformationService->setAttraction($attraction);
+        }
+
         $this->view->assign('attraction', $attraction);
         return $this->htmlResponse();
     }
@@ -246,11 +254,13 @@ class TouristAttractionController extends ActionController
         // @todo Any future record-backed filter option needs the same storage scoping.
         $towns = $this->adjustFilterTownValuesToGivenStoragePid($listPluginOnSamePage);
         $categories = $this->adjustFilterCategoryValuesToGivenStoragePid($listPluginOnSamePage);
+        $keywords = $this->adjustFilterKeywordValuesToGivenStoragePid($listPluginOnSamePage);
 
         $this->view->assignMultiple([
             'demand' => $demand,
             'towns' => $towns,
             'categories' => $categories,
+            'keywords' => $keywords,
             // pre-selected filters render hidden; listAction re-forces them so a tampered value can't widen.
             'lockedMap' => $listPluginOnSamePage?->getEditorFilter()->getLockedMap() ?? [],
             'formTargetPid' => $formTargetPid,
@@ -265,7 +275,8 @@ class TouristAttractionController extends ActionController
                 $this->cacheTagCollector->tableForModel(Category::class),
             ],
             $towns,
-            $categories
+            $categories,
+            $keywords
         ));
 
         return $this->htmlResponse($html);
@@ -403,7 +414,22 @@ class TouristAttractionController extends ActionController
     public function adjustFilterCategoryValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array
     {
         return $this->touristAttractionRepository->findCategoryTreeForSearchForm(
-            $listPluginOnSamePage?->getStoragePageIds() ?? []
+            $listPluginOnSamePage?->getStoragePageIds() ?? [],
+            $this->categoryAnchors->categoryParent($this->request)
+        );
+    }
+
+    /**
+     * Offer only keywords the list on this page can actually return, bounded by
+     * the site's keyword anchor.
+     *
+     * @return CategoryNode[]
+     */
+    public function adjustFilterKeywordValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array
+    {
+        return $this->touristAttractionRepository->findKeywordsTreeForSearchForm(
+            $listPluginOnSamePage?->getStoragePageIds() ?? [],
+            $this->categoryAnchors->keywordParent($this->request)
         );
     }
 }

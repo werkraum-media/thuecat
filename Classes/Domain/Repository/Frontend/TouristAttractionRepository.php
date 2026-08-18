@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Repository\Frontend;
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -40,11 +41,12 @@ class TouristAttractionRepository extends Repository
             $constraints[] = $query->in('town', $demand->getTowns());
         }
         if ($demand->getCategories() !== []) {
-            $categoryConstraints = [];
-            foreach ($demand->getCategories() as $category) {
-                $categoryConstraints[] = $query->contains('categories', $category);
-            }
-            $constraints[] = $query->logicalOr(...$categoryConstraints);
+            $constraints[] = $this->relatesToAnyOf($query, 'categories', $demand->getCategories());
+        }
+        // OR within keywords, AND against every other filter: one more entry in
+        // $constraints is all that takes.
+        if ($demand->getKeywords() !== []) {
+            $constraints[] = $this->relatesToAnyOf($query, 'keywords', $demand->getKeywords());
         }
         if ($demand->getPetsAllowed()) {
             $constraints[] = $query->equals('petsAllowed', 'true');
@@ -99,19 +101,91 @@ class TouristAttractionRepository extends Repository
     }
 
     /**
-     * Category tree for the search form: the roots of the categories used by
-     * attractions in $storagePageIds, expanded to their full subtrees, sorted by
-     * title per level.
+     * Matches a record related to any of $uids or to anything below them.
+     *
+     * The mask offers the groups of a tree while records carry the terms those
+     * groups contain, so an exact match on the selected uid alone would leave
+     * every group selection empty.
+     *
+     * @param int[] $uids
+     */
+    protected function relatesToAnyOf(QueryInterface $query, string $property, array $uids): ConstraintInterface
+    {
+        $constraints = [];
+        foreach ($this->categoryRepository->findWithDescendants($uids) as $uid) {
+            $constraints[] = $query->contains($property, $uid);
+        }
+
+        return $query->logicalOr(...$constraints);
+    }
+
+    /**
+     * Category tree for the search form: the categories used by attractions in
+     * $storagePageIds, lifted to their set below $anchor and expanded to their
+     * full subtrees, sorted by title per level.
      *
      * @param int[] $storagePageIds
+     * @param int $anchor configured category parent; 0 offers nothing
      *
      * @return CategoryNode[]
      */
-    public function findCategoryTreeForSearchForm(array $storagePageIds): array
+    public function findCategoryTreeForSearchForm(array $storagePageIds, int $anchor): array
     {
+        return $this->findTreeForSearchForm(
+            $storagePageIds,
+            static fn (TouristAttraction $attraction): iterable => $attraction->getCategories(),
+            $anchor
+        );
+    }
+
+    /**
+     * Keyword tree for the search form, built exactly like the category one but
+     * from the keyword relation and against the keyword anchor.
+     *
+     * @param int[] $storagePageIds
+     * @param int $anchor configured keyword parent; 0 offers nothing
+     *
+     * @return CategoryNode[]
+     */
+    public function findKeywordsTreeForSearchForm(array $storagePageIds, int $anchor): array
+    {
+        return $this->findTreeForSearchForm(
+            $storagePageIds,
+            static fn (TouristAttraction $attraction): iterable => $attraction->getKeywords(),
+            $anchor
+        );
+    }
+
+    /**
+     * The sets directly below $anchor that $relation's categories belong to,
+     * expanded to their full subtrees, sorted by title per level.
+     *
+     * The anchor is a container rather than a term an editor filters by, so the
+     * tree starts one level beneath it. Bounding by the anchor is also what
+     * keeps the trees apart: categories and keywords can share a storage folder,
+     * and only the anchor distinguishes them. Harvesting from used relations
+     * alone would let either tree leak into the other's form.
+     *
+     * @param int[] $storagePageIds
+     * @param callable(TouristAttraction): iterable<Category> $relation
+     * @param int $anchor
+     *
+     * @return CategoryNode[]
+     */
+    protected function findTreeForSearchForm(array $storagePageIds, callable $relation, int $anchor): array
+    {
+        if ($anchor <= 0) {
+            return [];
+        }
+
         $query = $this->createQuery();
+        // Without a configured storage the default settings fall back to pid 0,
+        // which matches nothing and would silently empty the whole mask — the
+        // same guard findByDemand() carries.
         if ($storagePageIds !== []) {
             $query->getQuerySettings()->setStoragePageIds($storagePageIds);
+        } else {
+            $query->getQuerySettings()->setRespectStoragePage(false);
         }
 
         $roots = [];
@@ -119,9 +193,9 @@ class TouristAttractionRepository extends Repository
             if (!$attraction instanceof TouristAttraction) {
                 continue;
             }
-            foreach ($attraction->getCategories() as $category) {
-                $root = $this->climbToRoot($category);
-                if ($root->getUid() !== null) {
+            foreach ($relation($attraction) as $category) {
+                $root = $this->climbToAnchoredSet($category, $anchor);
+                if ($root !== null && $root->getUid() !== null) {
                     $roots[$root->getUid()] = $root;
                 }
             }
@@ -133,21 +207,32 @@ class TouristAttractionRepository extends Repository
     }
 
     /**
-     * Guards against a parent cycle, which would otherwise loop forever.
+     * Climbs to the ancestor whose own parent is $anchor — the set the category
+     * belongs to within that tree.
+     *
+     * Null when the rootline never passes $anchor, which is how a category from
+     * another tree is skipped rather than offered. Guards against a parent
+     * cycle, which would otherwise loop forever.
      */
-    protected function climbToRoot(Category $category): Category
+    protected function climbToAnchoredSet(Category $category, int $anchor): ?Category
     {
         $seen = [];
-        while (($parent = $category->getParent()) instanceof Category) {
+        while (true) {
+            $parent = $category->getParent();
+            if ($parent instanceof Category && $parent->getUid() === $anchor) {
+                return $category;
+            }
+            if (!$parent instanceof Category) {
+                return null;
+            }
+
             $uid = $category->getUid();
             if ($uid !== null && isset($seen[$uid])) {
-                break;
+                return null;
             }
             $seen[$uid ?? 0] = true;
             $category = $parent;
         }
-
-        return $category;
     }
 
     /**
@@ -163,7 +248,7 @@ class TouristAttractionRepository extends Repository
         $ancestors[] = $uid;
         $children = array_map(
             fn (Category $child): CategoryNode => $this->buildNode($child, $ancestors),
-            $this->categoryRepository->findByParents([$uid])
+            $this->categoryRepository->findByParents([$category])
         );
 
         return new CategoryNode($category, $children);

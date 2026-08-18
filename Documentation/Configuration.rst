@@ -155,6 +155,13 @@ the category record itself remains for editors to keep using. A keyword that cou
 be fetched is left alone rather than removed, since a failed request cannot be
 distinguished from an upstream deletion.
 
+Places consume their keywords in the frontend — filtering and meta tags, see
+:ref:`frontend-output-keywords`. **Events do not yet.** Imported events receive keyword
+category relations, but nothing reads them: the event list cannot filter by keyword, and
+event keyword meta tags continue to come from the legacy ``keywords`` string column that
+the destination.one import writes. The relations accumulate unused until the event side
+is built; no migration will be needed then, because the data is already correct.
+
 .. _import-tuning:
 
 Import tuning

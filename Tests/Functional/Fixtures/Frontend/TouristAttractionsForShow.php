@@ -72,6 +72,101 @@ return [
             'offers' => '',
             'opening_hours' => '',
             'special_opening_hours' => '',
+            'sys_language_uid' => '0',
+            'keywords' => '2',
+        ],
+        // Extbase overlays a relation to the PARENT record's language, so the
+        // translated categories are only reachable through a translated parent.
+        [
+            'uid' => '22',
+            'pid' => '11',
+            'disable' => '0',
+            'title' => 'City Museum Erfurt',
+            'description' => 'Description of the city museum',
+            'town' => '0',
+            'media' => '',
+            'address' => '',
+            'url' => '',
+            'offers' => '',
+            'opening_hours' => '',
+            'special_opening_hours' => '',
+            'sys_language_uid' => '1',
+            'l18n_parent' => '21',
+            'keywords' => '2',
+        ],
+    ],
+    // Keyword tree under anchor 500. Attraction 21 carries two terms; 20 carries
+    // none, so the empty case has a record to render. "romantisch" is translated
+    // to prove the meta tag follows the rendering language.
+    'sys_category' => [
+        [
+            'uid' => 500,
+            'pid' => '11',
+            'parent' => '0',
+            'title' => 'Keywords',
+            'sys_language_uid' => '0',
+        ],
+        [
+            'uid' => 501,
+            'pid' => '11',
+            'parent' => 500,
+            'title' => 'romantisch',
+            'sys_language_uid' => '0',
+        ],
+        [
+            'uid' => 502,
+            'pid' => '11',
+            'parent' => 500,
+            'title' => 'barrierefrei',
+            'sys_language_uid' => '0',
+        ],
+        [
+            'uid' => 503,
+            'pid' => '11',
+            'parent' => 500,
+            'title' => 'romantic',
+            'sys_language_uid' => '1',
+            'l10n_parent' => 501,
+        ],
+        [
+            'uid' => 504,
+            'pid' => '11',
+            'parent' => 500,
+            'title' => 'accessible',
+            'sys_language_uid' => '1',
+            'l10n_parent' => 502,
+        ],
+    ],
+    'sys_category_record_mm' => [
+        [
+            'uid_local' => 501,
+            'uid_foreign' => 21,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid_local' => 502,
+            'uid_foreign' => 21,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '2',
+        ],
+        // The translation carries the same default-language relations; the
+        // overlay to language 1 happens when they are read.
+        [
+            'uid_local' => 501,
+            'uid_foreign' => 22,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid_local' => 502,
+            'uid_foreign' => 22,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '2',
         ],
     ],
     // Inline opening hours for attraction 21, resolved via parentid/parenttable.

@@ -12,7 +12,12 @@
 
     <f:if condition="{lockedMap.categories}">
         <f:then><f:for each="{demand.categories}" as="category" iteration="i"><f:form.hidden property="categories.{i.index}" /></f:for></f:then>
-        <f:else><f:render partial="TouristAttraction/CategoryTree" arguments="{nodes: categories, nested: 0}" /></f:else>
+        <f:else><f:render partial="TouristAttraction/CategoryTree" arguments="{nodes: categories, nested: 0, property: 'categories'}" /></f:else>
+    </f:if>
+
+    <f:if condition="{lockedMap.keywords}">
+        <f:then><f:for each="{demand.keywords}" as="keyword" iteration="i"><f:form.hidden property="keywords.{i.index}" /></f:for></f:then>
+        <f:else><f:render partial="TouristAttraction/CategoryTree" arguments="{nodes: keywords, nested: 0, property: 'keywords'}" /></f:else>
     </f:if>
 
     <f:if condition="{lockedMap.petsAllowed}">

@@ -6,6 +6,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 
 abstract class AbstractFrontendTestCase extends FunctionalTestCase
 {
@@ -50,5 +51,23 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
     protected function getRenderingTypoScript(): string
     {
         return 'PluginRendering.typoscript';
+    }
+
+    /**
+     * A CategoryNode tree as nested title => children arrays, so an assertion
+     * reads as the shape the search form renders.
+     *
+     * @param CategoryNode[] $nodes
+     *
+     * @return array<string, mixed>
+     */
+    protected function flatten(array $nodes): array
+    {
+        $result = [];
+        foreach ($nodes as $node) {
+            $result[$node->getCategory()->getTitle()] = $this->flatten($node->getChildren());
+        }
+
+        return $result;
     }
 }

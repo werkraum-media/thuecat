@@ -588,6 +588,14 @@
                 <source>Select any number of categories.</source>
                 <target>Beliebig viele Kategorien auswählen.</target>
             </trans-unit>
+            <trans-unit id="content.search.keyword" xml:space="preserve">
+                <source>Keyword</source>
+                <target>Schlagwort</target>
+            </trans-unit>
+            <trans-unit id="content.search.keyword.hint" xml:space="preserve">
+                <source>Select any number of keywords.</source>
+                <target>Beliebig viele Schlagworte auswählen.</target>
+            </trans-unit>
             <trans-unit id="content.search.petsAllowed" xml:space="preserve">
                 <source>Pets allowed</source>
                 <target>Tiere erlaubt</target>

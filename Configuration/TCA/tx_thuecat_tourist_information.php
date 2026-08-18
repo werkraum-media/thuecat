@@ -65,11 +65,15 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
-            // Own property, own anchor: never @type categories.
+            // Own property, own anchor: never @type categories. Bounded by the
+            // same keyword anchor the import writes beneath, per site.
             'keywords' => [
                 'label' => $languagePath . '.keywords',
                 'config' => [
                     'type' => 'category',
+                    'treeConfig' => [
+                        'startingPoints' => '###SITE:settings.import.thuecat.keywords.parent###',
+                    ],
                 ],
             ],
             'remote_id' => [

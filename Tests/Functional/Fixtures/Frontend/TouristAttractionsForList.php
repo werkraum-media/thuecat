@@ -98,6 +98,37 @@ return [
             'offers' => '',
             'opening_hours' => '',
             'special_opening_hours' => '',
+            'keywords' => '1',
+        ],
+    ],
+    // Keyword tree under anchor 500, matching the site settings. Stadtmuseum
+    // carries no keyword, so the mask must still offer the whole set.
+    'sys_category' => [
+        [
+            'uid' => 500,
+            'pid' => '11',
+            'parent' => '0',
+            'title' => 'Keywords',
+        ],
+        [
+            'uid' => 501,
+            'pid' => '11',
+            'parent' => 500,
+            'title' => 'Ambiente',
+        ],
+        [
+            'uid' => 502,
+            'pid' => '11',
+            'parent' => 501,
+            'title' => 'romantisch',
+        ],
+    ],
+    'sys_category_record_mm' => [
+        [
+            'uid_local' => 501,
+            'uid_foreign' => 11,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
         ],
     ],
 ];

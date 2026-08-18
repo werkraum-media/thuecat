@@ -101,6 +101,37 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     }
 
     #[Test]
+    public function keywordsSettingParsesCsvAndLocksCategories(): void
+    {
+        $filter = $this->subject->fromSettings(['keywords' => '22,75']);
+
+        self::assertSame([22, 75], $filter->getDemand()->getKeywords());
+        self::assertTrue($filter->isLocked('keywords'));
+    }
+
+    #[Test]
+    public function nonStringKeywordsSettingIsIgnored(): void
+    {
+        $filter = $this->subject->fromSettings(['keywords' => [22, 75]]);
+
+        self::assertSame([], $filter->getDemand()->getKeywords());
+        self::assertFalse($filter->isLocked('keywords'));
+    }
+
+    #[Test]
+    public function applyForcesLockedKeywordOverVisitorInput(): void
+    {
+        // Visitor asks for 1,2; editor locked 8 -> visitor cannot widen.
+        $filter = $this->subject->fromSettings(['categories' => '8']);
+        $demand = new TouristAttractionDemand();
+        $demand->setCategories([1, 2]);
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        self::assertSame([8], $demand->getCategories());
+    }
+
+    #[Test]
     public function booleanSettingsSetAndLockTheirProperty(): void
     {
         $filter = $this->subject->fromSettings([

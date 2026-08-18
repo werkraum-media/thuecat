@@ -53,9 +53,12 @@ class ImportWithoutChangesTest extends FunctionalTestCase
     ];
 
     protected array $pathsToLinkInTestInstance = [
-        // The FRONTEND site fixture: the import one uses an absolute base and
-        // never renders, so no site resolves for a test request.
-        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',
+        // A renderable site that carries no import settings. The import fixture
+        // uses an absolute base and never renders, so no site would resolve for
+        // a test request; the frontend one renders but declares category and
+        // keyword anchors pointing at pages and categories this fixture does
+        // not have, which the import validator rejects.
+        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Caching/Sites/' => 'typo3conf/sites',
     ];
 
     protected array $configurationToUseInTestInstance = [

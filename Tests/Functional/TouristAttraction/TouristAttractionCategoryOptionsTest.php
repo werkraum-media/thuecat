@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 
 // The search form's category tree: from the categories attractions in storage
-// actually use, walk up to their roots and offer those full subtrees. Roots no
-// attraction touches must not leak in.
+// actually use, walk up to the set below the configured anchor and offer those
+// full subtrees. Sets no attraction touches must not leak in, and neither may
+// anything outside the anchor.
 class TouristAttractionCategoryOptionsTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
@@ -23,7 +23,7 @@ class TouristAttractionCategoryOptionsTest extends AbstractFrontendTestCase
     {
         $repository = $this->get(TouristAttractionRepository::class);
 
-        $tree = $repository->findCategoryTreeForSearchForm([11]);
+        $tree = $repository->findCategoryTreeForSearchForm([11], 300);
 
         // Museum/Kirche hang below root Gebäudetyp, Haus is a root itself. Root
         // Region is untouched, so neither it nor Innenstadt appear.
@@ -47,25 +47,10 @@ class TouristAttractionCategoryOptionsTest extends AbstractFrontendTestCase
     {
         $repository = $this->get(TouristAttractionRepository::class);
 
-        $tree = $repository->findCategoryTreeForSearchForm([11]);
+        $tree = $repository->findCategoryTreeForSearchForm([11], 300);
 
         $root = $tree[0];
         self::assertSame('Gebäudetyp', $root->getCategory()->getTitle());
         self::assertSame(100, $root->getCategory()->getUid());
-    }
-
-    /**
-     * @param CategoryNode[] $nodes
-     *
-     * @return array<string, mixed>
-     */
-    private function flatten(array $nodes): array
-    {
-        $result = [];
-        foreach ($nodes as $node) {
-            $result[$node->getCategory()->getTitle()] = $this->flatten($node->getChildren());
-        }
-
-        return $result;
     }
 }

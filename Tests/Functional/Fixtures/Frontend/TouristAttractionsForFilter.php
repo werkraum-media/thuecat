@@ -73,6 +73,7 @@ return [
             'is_accessible_for_free' => 'true',
             'public_access' => 'true',
             'categories' => '1',
+            'keywords' => '1',
         ],
         [
             // Erfurt, no pets, not free, not public; category Kirche
@@ -84,6 +85,7 @@ return [
             'is_accessible_for_free' => 'false',
             'public_access' => 'false',
             'categories' => '1',
+            'keywords' => '1',
         ],
         [
             // Weimar, pets allowed, unset others; category Haus
@@ -98,11 +100,19 @@ return [
         ],
     ],
     'sys_category' => [
+        // The category anchor, mirroring the keyword one below: a container the
+        // import writes beneath, never offered as a filter option itself.
+        [
+            'uid' => 300,
+            'pid' => '11',
+            'parent' => '0',
+            'title' => 'Kategorien',
+        ],
         // Parent 100 groups building types; Burg (13) is a child but unused.
         [
             'uid' => '100',
             'pid' => '11',
-            'parent' => '0',
+            'parent' => 300,
             'title' => 'Gebäudetyp',
         ],
         [
@@ -130,12 +140,13 @@ return [
             'parent' => '10',
             'title' => 'Freilichtmuseum',
         ],
-        // Haus (12) sits at root (parent 0); Region (200) is a foreign branch,
-        // its child Innenstadt (14) must NOT appear as an option.
+        // Haus (12) is a set of its own directly below the anchor; Region (200)
+        // is a foreign branch outside it, so neither it nor its child
+        // Innenstadt (14) may appear as an option.
         [
             'uid' => '12',
             'pid' => '11',
-            'parent' => '0',
+            'parent' => 300,
             'title' => 'Haus',
         ],
         [
@@ -149,6 +160,43 @@ return [
             'pid' => '11',
             'parent' => '200',
             'title' => 'Innenstadt',
+        ],
+        // Keywords
+        [
+            'uid' => 500,
+            'pid' => 11,
+            'parent' => 0,
+            'title' => 'Keywords',
+        ],
+        [
+            'uid' => 501,
+            'pid' => 11,
+            'parent' => 500,
+            'title' => 'Ambiente',
+        ],
+        [
+            'uid' => 502,
+            'pid' => 11,
+            'parent' => 501,
+            'title' => 'romantisch',
+        ],
+        [
+            'uid' => 503,
+            'pid' => 11,
+            'parent' => 501,
+            'title' => 'modern',
+        ],
+        [
+            'uid' => 504,
+            'pid' => 11,
+            'parent' => 500,
+            'title' => 'Hauptstadt',
+        ],
+        [
+            'uid' => 505,
+            'pid' => 11,
+            'parent' => 504,
+            'title' => 'Erfurt',
         ],
     ],
     'sys_category_record_mm' => [
@@ -172,6 +220,20 @@ return [
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'categories',
             'sorting_foreign' => '1',
+        ],
+        // Records carry the TERMS, never the sets above them: upstream relates
+        // an object to a leaf, and the sets exist to group the vocabulary.
+        [
+            'uid_local' => 502,
+            'uid_foreign' => 1,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+        ],
+        [
+            'uid_local' => 505,
+            'uid_foreign' => 2,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
         ],
     ],
 ];

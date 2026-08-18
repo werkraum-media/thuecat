@@ -72,11 +72,18 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
 
+            // Both fields are bounded by the anchor their import writes beneath,
+            // so neither offers the other's tree. Core resolves ###SITE:### in
+            // treeConfig.startingPoints per site, which is where the anchors are
+            // configured; an unset anchor leaves the field offering nothing.
             'categories' => [
                 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_category.categories',
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'category',
+                    'treeConfig' => [
+                        'startingPoints' => '###SITE:settings.import.thuecat.category.parent###',
+                    ],
                 ],
             ],
 
@@ -86,6 +93,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'category',
+                    'treeConfig' => [
+                        'startingPoints' => '###SITE:settings.import.thuecat.keywords.parent###',
+                    ],
                 ],
             ],
 
