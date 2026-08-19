@@ -6,9 +6,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Import\FetchFailureVerdict;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
@@ -629,8 +627,6 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(Parser::class),
             $this->get(TcaSchemaFactory::class),
             $this->get(MediaFileDownloader::class),
-            $this->get(SiteFinder::class),
-            $this->get(PageRepository::class),
             $this->get(SysCategoryRepository::class),
             $this->get(ImportLogger::class),
             $this->get(StaleDateReaper::class),

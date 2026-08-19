@@ -252,6 +252,14 @@ final class ResolverContext
      *        transient and reparses it via parseFresh, so fetched entities
      *        (towns, organisations, …) emit translation rows in the same
      *        languages the configured roots do.
+     * @param list<int> $sitePageIds Every page of the site owning
+     *        $storagePid, soft-delete filtered only (see SitePageIds).
+     *        Resolved once by the Importer because the record lookup consults
+     *        it per record and per relation; deriving it there would walk the
+     *        page tree thousands of times in one run.
+     *        Importer::runImport is the only production caller and always
+     *        supplies it; the empty default exists for contexts built directly
+     *        in tests, and means the record lookup is unscoped.
      */
     public function __construct(
         public readonly int $storagePid,
@@ -269,6 +277,10 @@ final class ResolverContext
         // Drops media before any API request: both the referenced bucket and
         // inline nodes are discarded unresolved, undownloaded, unrelated.
         public readonly bool $skipMedia = false,
+        // Empty means "no site scope known": the record lookup then matches
+        // instance-wide, which is only ever the case for a context built
+        // outside the Importer (tests constructing one directly).
+        public readonly array $sitePageIds = [],
     ) {
     }
 

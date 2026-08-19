@@ -50,6 +50,7 @@ class Importer
         protected readonly ImportConfigurationValidator $configurationValidator,
         protected readonly ImportSettings $settings,
         protected readonly CategoryAnchorResolver $anchorResolver,
+        protected readonly SitePageIds $sitePageIds,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -159,6 +160,10 @@ class Importer
             $anchors->keywordStoragePid,
             $listener,
             $skipMedia,
+            // Once per run: the record lookup consults this per record and per
+            // relation, so deriving it there would rewalk the page tree for
+            // every one of them.
+            $this->sitePageIds->forRootPage($site->getRootPageId()),
         );
         $accumulatedPayload = new DataHandlerPayload();
         $urls = $urlProvider->getUrls($apiDomain);

@@ -1,0 +1,25 @@
+base: 'https://first-site.example.com'
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    base: /
+    typo3Language: de
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    websiteTitle: ''
+    languageId: 0
+rootPageId: 4000
+websiteTitle: 'First Site'
+settings:
+  import:
+    category:
+      storagePid: 4020
+      parent: 4100
+    keywords:
+      storagePid: 4030
+      parent: 4200

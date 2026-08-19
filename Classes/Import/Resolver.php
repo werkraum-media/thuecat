@@ -29,12 +29,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
@@ -99,8 +96,6 @@ class Resolver
         protected readonly Parser $parser,
         protected readonly TcaSchemaFactory $tcaSchemaFactory,
         protected readonly MediaFileDownloader $mediaFileDownloader,
-        protected readonly SiteFinder $siteFinder,
-        protected readonly PageRepository $pageRepository,
         protected readonly SysCategoryRepository $sysCategoryRepository,
         protected readonly ImportLogger $importLogger,
         protected readonly StaleDateReaper $staleDateReaper,
@@ -138,7 +133,7 @@ class Resolver
             return;
         }
 
-        $sitePageIds = $this->sitePageIds($context->storagePid);
+        $sitePageIds = $context->sitePageIds;
 
         // Ancestors first: a term collected before its set would otherwise be
         // created while the set has no key yet and silently hang off the anchor.
@@ -538,7 +533,7 @@ class Resolver
             return;
         }
 
-        $sitePageIds = $this->sitePageIds($context->storagePid);
+        $sitePageIds = $context->sitePageIds;
 
         foreach ($payload->getCategories() as $table => $categoriesByOwner) {
             foreach ($categoriesByOwner as $ownerRemoteId => $categories) {
@@ -581,23 +576,6 @@ class Resolver
                 }
             }
         }
-    }
-
-    /**
-     * All page uids within the site the given pid belongs to (rootPid tree,
-     * recursive). Empty when the pid maps to no site.
-     *
-     * @return list<int>
-     */
-    protected function sitePageIds(int $pid): array
-    {
-        try {
-            $rootPageId = $this->siteFinder->getSiteByPageId($pid)->getRootPageId();
-        } catch (SiteNotFoundException) {
-            return [];
-        }
-
-        return array_values($this->pageRepository->getPageIdsRecursive([$rootPageId], 99));
     }
 
     /**
@@ -756,7 +734,7 @@ class Resolver
                 if ($existingKey !== null) {
                     $newKey = $existingKey;
                 } else {
-                    $uid = $this->findUidByRemoteId($table, $remoteId);
+                    $uid = $this->findUidByRemoteId($table, $remoteId, $context->sitePageIds);
                     $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
                 }
 
@@ -945,7 +923,7 @@ class Resolver
                                 continue;
                             }
 
-                            $uid = $this->findUidByRemoteId($targetTable, $reference);
+                            $uid = $this->findUidByRemoteId($targetTable, $reference, $context->sitePageIds);
                             if ($uid > 0) {
                                 $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
                                 $remoteIdToKey[$reference] = (string)$uid;
@@ -1636,9 +1614,13 @@ class Resolver
     }
 
     /**
-     * Look up the default-language row for a given remote_id.
+     * Look up the default-language row for a given remote_id, within the
+     * importing site.
+     *
+     * @param list<int> $sitePageIds Pages of the importing site; empty means
+     *        no scope is known and the match stays instance-wide.
      */
-    protected function findUidByRemoteId(string $table, string $remoteId): int
+    protected function findUidByRemoteId(string $table, string $remoteId, array $sitePageIds): int
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
@@ -1652,6 +1634,17 @@ class Resolver
                 $queryBuilder->createNamedParameter($remoteId)
             ))
         ;
+
+        // A record of another site is not ours to read or update; treated as
+        // absent so the import creates its own within its own site. Empty
+        // means no scope is known (a context built outside the Importer), and
+        // the lookup stays instance-wide as it was before scoping.
+        if ($sitePageIds !== []) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in(
+                'pid',
+                $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+            ));
+        }
 
         $language = $this->languageCapabilityFor($table);
         if ($language !== null) {

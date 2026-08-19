@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
@@ -28,8 +26,7 @@ use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 class ImportConfigurationValidator
 {
     public function __construct(
-        protected readonly SiteFinder $siteFinder,
-        protected readonly PageRepository $pageRepository,
+        protected readonly SitePageIds $sitePageIdsResolver,
         protected readonly SysCategoryRepository $sysCategoryRepository,
         protected readonly CategoryAnchorResolver $anchorResolver,
     ) {
@@ -68,8 +65,8 @@ class ImportConfigurationValidator
     }
 
     /**
-     * All page uids within the storagePid's site.
-     *
+     * All page uids within the storagePid's site. Visibility plays no part:
+     * see SitePageIds for why enable-fields must not narrow an import scope.
      *
      * @throws StoragePidConfigurationException
      *
@@ -78,7 +75,7 @@ class ImportConfigurationValidator
     protected function sitePageIds(int $storagePid): array
     {
         try {
-            $rootPageId = $this->siteFinder->getSiteByPageId($storagePid)->getRootPageId();
+            return $this->sitePageIdsResolver->forStoragePid($storagePid);
         } catch (SiteNotFoundException $e) {
             throw new StoragePidConfigurationException(
                 'The configured storagePid ' . $storagePid . ' does not belong to any site.',
@@ -86,8 +83,6 @@ class ImportConfigurationValidator
                 $e
             );
         }
-
-        return array_values($this->pageRepository->getPageIdsRecursive([$rootPageId], 99));
     }
 
     /**

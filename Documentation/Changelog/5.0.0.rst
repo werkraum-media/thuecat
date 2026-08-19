@@ -34,6 +34,17 @@ Breaking
   target now aborts the run before it fetches anything, instead of importing with no categories.
   See :ref:`import-category-based-anchors`.
 
+* An imported record is identified within the site that imports it. Previously a ``remote_id``
+  matched any record carrying it anywhere in the installation, so two sites importing the same
+  upstream object shared one record: the second site's import updated the first site's record in
+  place — the record kept its page, so one site silently edited another's content — and the second
+  site never got a record of its own. Each site now holds its own record, and relation targets
+  resolve within the importing site too. On an installation where two sites import overlapping
+  data, the first run after the update creates the records the second site was missing, which
+  looks like duplication but is each site gaining what it should always have had. There is no
+  migration: records a foreign site's import wrote into keep whatever it last wrote, and editors
+  reconcile them.
+
 * API responses are cached persistently: ``thuecat_fetchdata`` now defaults to
   :php:`Typo3DatabaseBackend` with a 900 second lifetime instead of dying with the process.
   A run is no longer guaranteed to hit the API — see :ref:`fetch-cache` for the bypass options.
@@ -123,6 +134,15 @@ Fixes
 * A record no longer inherits relations from the record imported before it — town, organisation,
   parking, categories and images alike. Relations already stored from earlier runs are not
   corrected by this.
+
+* Hiding a storage folder no longer breaks the import that writes into it. Which pages count as
+  belonging to a site was derived with the frontend's visibility rules, so a hidden folder — or one
+  past its publication end time — dropped out of the site. Depending on which folder it was, the
+  run aborted with ``… is outside the storagePid's site`` for a page plainly inside the site, or
+  the import stopped recognising what it had already written and built a second copy beside it: a
+  hidden keyword or category folder produced a whole duplicate category tree, splitting records'
+  relations across both. Storage is now what decides, for records, categories and keywords alike;
+  only deleted pages fall out of scope.
 
 * A schedule day that cannot seed a date series no longer aborts the event import; the value is
   logged as ``scheduleDaySkipped``, and surplus usable days as ``scheduleDayDropped``.

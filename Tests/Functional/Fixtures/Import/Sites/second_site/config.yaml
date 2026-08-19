@@ -1,0 +1,25 @@
+base: 'https://second-site.example.com'
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    base: /
+    typo3Language: de
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    websiteTitle: ''
+    languageId: 0
+rootPageId: 5000
+websiteTitle: 'Second Site'
+settings:
+  import:
+    category:
+      storagePid: 5020
+      parent: 5100
+    keywords:
+      storagePid: 5030
+      parent: 5200
