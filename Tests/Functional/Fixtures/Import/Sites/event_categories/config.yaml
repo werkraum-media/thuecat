@@ -47,6 +47,7 @@ rootPageId: 2100
 websiteTitle: 'Event Category Import'
 settings:
   import:
-    category:
-      storagePid: 20
-      parent: 100
+    events:
+      category:
+        storagePid: 20
+        parent: 100

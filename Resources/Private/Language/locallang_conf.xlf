@@ -21,17 +21,29 @@
             <trans-unit id="fetchCacheLifetime" xml:space="preserve">
                 <source>Fetch cache lifetime (seconds): how long fetched API responses stay reusable by a later run. Empty uses the built-in default.</source>
             </trans-unit>
-            <trans-unit id="importCategoryStoragePid" xml:space="preserve">
-                <source>Category storage folder: page holding the imported categories. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category parent or category mapping stays off.</source>
+            <trans-unit id="importThuecatCategoryStoragePid" xml:space="preserve">
+                <source>ThueCat objects — category storage folder: page holding the categories imported for the thuecat target. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category parent or category mapping stays off.</source>
             </trans-unit>
-            <trans-unit id="importCategoryParent" xml:space="preserve">
-                <source>Category parent: category the imported categories are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category storage folder or category mapping stays off.</source>
+            <trans-unit id="importThuecatCategoryParent" xml:space="preserve">
+                <source>ThueCat objects — category parent: category the imported categories are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category storage folder or category mapping stays off.</source>
             </trans-unit>
-            <trans-unit id="importKeywordsStoragePid" xml:space="preserve">
-                <source>Keyword storage folder: page holding the imported keywords. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword parent or keyword mapping stays off.</source>
+            <trans-unit id="importThuecatKeywordsStoragePid" xml:space="preserve">
+                <source>ThueCat objects — keyword storage folder: page holding the keywords imported for the thuecat target. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword parent or keyword mapping stays off.</source>
             </trans-unit>
-            <trans-unit id="importKeywordsParent" xml:space="preserve">
-                <source>Keyword parent: category the imported keywords are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword storage folder or keyword mapping stays off.</source>
+            <trans-unit id="importThuecatKeywordsParent" xml:space="preserve">
+                <source>ThueCat objects — keyword parent: category the imported keywords are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword storage folder or keyword mapping stays off.</source>
+            </trans-unit>
+            <trans-unit id="importEventsCategoryStoragePid" xml:space="preserve">
+                <source>Events — category storage folder: page holding the categories imported for the events target. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category parent or category mapping stays off.</source>
+            </trans-unit>
+            <trans-unit id="importEventsCategoryParent" xml:space="preserve">
+                <source>Events — category parent: category the imported categories are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the category storage folder or category mapping stays off.</source>
+            </trans-unit>
+            <trans-unit id="importEventsKeywordsStoragePid" xml:space="preserve">
+                <source>Events — keyword storage folder: page holding the keywords imported for the events target. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword parent or keyword mapping stays off.</source>
+            </trans-unit>
+            <trans-unit id="importEventsKeywordsParent" xml:space="preserve">
+                <source>Events — keyword parent: category the imported keywords are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword storage folder or keyword mapping stays off.</source>
             </trans-unit>
         </body>
     </file>

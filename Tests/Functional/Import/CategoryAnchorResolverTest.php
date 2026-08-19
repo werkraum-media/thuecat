@@ -32,8 +32,10 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
     {
         $this->writeSiteSettings([
             'import' => [
-                'category' => ['storagePid' => 320, 'parent' => 100],
-                'keywords' => ['storagePid' => 330, 'parent' => 110],
+                'thuecat' => [
+                    'category' => ['storagePid' => 320, 'parent' => 100],
+                    'keywords' => ['storagePid' => 330, 'parent' => 110],
+                ],
             ],
         ], 'anchors', 300);
 
@@ -50,8 +52,8 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
     {
         $this->writeSiteSettings([], 'anchors', 300);
         $this->writeExtensionConfiguration([
-            'importKeywordsParent' => '110',
-            'importKeywordsStoragePid' => '330',
+            'importThuecatKeywordsParent' => '110',
+            'importThuecatKeywordsStoragePid' => '330',
         ]);
 
         $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(310));
@@ -60,6 +62,64 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
         self::assertSame(330, $anchors->keywordStoragePid);
         self::assertSame(0, $anchors->categoryParent);
         self::assertSame(0, $anchors->categoryStoragePid);
+    }
+
+    /**
+     * One site, one import configuration per target: each must find its own
+     * tree, which is the whole point of the target segment.
+     */
+    #[Test]
+    public function eachTargetResolvesItsOwnAnchorsWithinOneSite(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => [
+                    'category' => ['storagePid' => 320, 'parent' => 100],
+                    'keywords' => ['storagePid' => 330, 'parent' => 110],
+                ],
+                'events' => [
+                    'category' => ['storagePid' => 340, 'parent' => 120],
+                    'keywords' => ['storagePid' => 350, 'parent' => 130],
+                ],
+            ],
+        ], 'anchors', 300);
+
+        $resolver = $this->get(CategoryAnchorResolver::class);
+
+        $thuecat = $resolver->resolveFor($this->configurationWithStoragePid(310));
+        self::assertSame(100, $thuecat->categoryParent);
+        self::assertSame(320, $thuecat->categoryStoragePid);
+        self::assertSame(110, $thuecat->keywordParent);
+        self::assertSame(330, $thuecat->keywordStoragePid);
+
+        $events = $resolver->resolveFor($this->configurationWithStoragePid(310, 'events'));
+        self::assertSame(120, $events->categoryParent);
+        self::assertSame(340, $events->categoryStoragePid);
+        self::assertSame(130, $events->keywordParent);
+        self::assertSame(350, $events->keywordStoragePid);
+    }
+
+    // A target the site says nothing about resolves unset, never the other's.
+    #[Test]
+    public function targetWithoutSettingsDoesNotBorrowTheOthers(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => [
+                    'category' => ['storagePid' => 320, 'parent' => 100],
+                    'keywords' => ['storagePid' => 330, 'parent' => 110],
+                ],
+            ],
+        ], 'anchors', 300);
+
+        $anchors = $this->get(CategoryAnchorResolver::class)
+            ->resolveFor($this->configurationWithStoragePid(310, 'events'))
+        ;
+
+        self::assertSame(0, $anchors->categoryParent);
+        self::assertSame(0, $anchors->categoryStoragePid);
+        self::assertSame(0, $anchors->keywordParent);
+        self::assertSame(0, $anchors->keywordStoragePid);
     }
 
     #[Test]
@@ -80,10 +140,10 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
     public function resolvesTheAnchorsOfTheImportsOwnSite(): void
     {
         $this->writeSiteSettings([
-            'import' => ['keywords' => ['parent' => 110, 'storagePid' => 330]],
+            'import' => ['thuecat' => ['keywords' => ['parent' => 110, 'storagePid' => 330]]],
         ], 'anchors', 300);
         $this->writeSiteSettings([
-            'import' => ['keywords' => ['parent' => 910, 'storagePid' => 930]],
+            'import' => ['thuecat' => ['keywords' => ['parent' => 910, 'storagePid' => 930]]],
         ], 'other_anchors', 900);
 
         $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(910));
@@ -92,10 +152,13 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
         self::assertSame(930, $anchors->keywordStoragePid);
     }
 
-    private function configurationWithStoragePid(int $storagePid): ImportConfigurationInterface
-    {
+    private function configurationWithStoragePid(
+        int $storagePid,
+        string $importTarget = 'thuecat'
+    ): ImportConfigurationInterface {
         $configuration = self::createStub(ImportConfigurationInterface::class);
         $configuration->method('getStoragePid')->willReturn($storagePid);
+        $configuration->method('getImportTarget')->willReturn($importTarget);
 
         return $configuration;
     }

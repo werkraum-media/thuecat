@@ -32,17 +32,19 @@ class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
     {
         $this->writeSiteSettings([
             'import' => [
-                'keywords' => [
-                    'parent' => 100,
-                    'storagePid' => 30,
+                'thuecat' => [
+                    'keywords' => [
+                        'parent' => 100,
+                        'storagePid' => 30,
+                    ],
                 ],
             ],
         ], 'settings_helper', 200);
 
         $settings = $this->get(SiteFinder::class)->getSiteByPageId(210)->getSettings();
 
-        self::assertSame(100, $settings->get('import.keywords.parent'));
-        self::assertSame(30, $settings->get('import.keywords.storagePid'));
+        self::assertSame(100, $settings->get('import.thuecat.keywords.parent'));
+        self::assertSame(30, $settings->get('import.thuecat.keywords.storagePid'));
     }
 
     #[Test]
@@ -52,7 +54,7 @@ class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
 
         $settings = $this->get(SiteFinder::class)->getSiteByPageId(210)->getSettings();
 
-        self::assertNull($settings->get('import.keywords.parent'));
+        self::assertNull($settings->get('import.thuecat.keywords.parent'));
     }
 
     // The import suite reaches its site fixtures through a symlink, so a write

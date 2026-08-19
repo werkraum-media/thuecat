@@ -47,6 +47,7 @@ rootPageId: 3000
 websiteTitle: 'Attraction Category Import'
 settings:
   import:
-    category:
-      storagePid: 20
-      parent: 100
+    thuecat:
+      category:
+        storagePid: 20
+        parent: 100

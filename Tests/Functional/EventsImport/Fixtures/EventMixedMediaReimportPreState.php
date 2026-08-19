@@ -42,6 +42,9 @@ return [
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
                             </field>
+                            <field index="importTarget">
+                                <value index="vDEF">events</value>
+                            </field>
                             <field index="fileFolder">
                                 <value index="vDEF">1:/thuecat/</value>
                             </field>

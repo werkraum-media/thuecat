@@ -21,6 +21,7 @@ use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
+use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 // Values driving a run are spread over site settings, extension configuration
 // and the import configuration, so each run reports what it actually used.
@@ -112,11 +113,12 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $expected = ['storagePid', 'fileFolder', 'apiDomain'];
+        $expected = ['storagePid', 'fileFolder', 'apiDomain', 'importTarget'];
         // Anchors come from the enum, so a new pair is covered without editing
-        // this list — it only has to be reported.
+        // this list — it only has to be reported. Only the run's own target
+        // appears: reporting the other one would suggest it drove the run.
         foreach (CategoryAnchorSetting::cases() as $anchor) {
-            $expected[] = $anchor->settingsPath();
+            $expected[] = $anchor->settingsPath(ImportTarget::Thuecat);
         }
         $expected = array_merge($expected, [
             'readTimeout',
@@ -133,6 +135,32 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * The fixture imports as the thuecat target, so the events anchors are not
+     * merely unset in the report — they are absent from it.
+     */
+    #[Test]
+    public function theSummaryNamesOnlyTheRunsOwnTarget(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $this->importConfiguration(1);
+
+        $reported = array_keys($this->summaryContext());
+
+        self::assertContains('importTarget', $reported);
+        self::assertSame('thuecat', $this->summaryContext()['importTarget']);
+
+        foreach (CategoryAnchorSetting::cases() as $anchor) {
+            self::assertNotContains(
+                $anchor->settingsPath(ImportTarget::Events),
+                $reported,
+                'The events anchors must not appear in a thuecat run.'
+            );
+        }
+    }
+
     #[Test]
     public function unsetAnchorsAreReportedAsUnsetNotZero(): void
     {
@@ -146,11 +174,8 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         // This fixture configures no anchors at all, so every kind the enum
         // knows must report 'unset' — a new pair is covered automatically.
         foreach (CategoryAnchorSetting::cases() as $anchor) {
-            self::assertSame(
-                'unset',
-                $context[$anchor->settingsPath()] ?? null,
-                $anchor->settingsPath() . ' should report as unset.'
-            );
+            $path = $anchor->settingsPath(ImportTarget::Thuecat);
+            self::assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
         }
     }
 

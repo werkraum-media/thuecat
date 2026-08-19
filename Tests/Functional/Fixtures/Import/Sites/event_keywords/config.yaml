@@ -47,9 +47,10 @@ rootPageId: 2200
 websiteTitle: 'Event Keyword Import'
 settings:
   import:
-    category:
-      storagePid: 20
-      parent: 100
-    keywords:
-      storagePid: 30
-      parent: 200
+    events:
+      category:
+        storagePid: 20
+        parent: 100
+      keywords:
+        storagePid: 30
+        parent: 200

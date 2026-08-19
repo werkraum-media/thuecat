@@ -73,6 +73,9 @@ return [
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
                             </field>
+                            <field index="importTarget">
+                                <value index="vDEF">events</value>
+                            </field>
                             <field index="urls">
                                 <el index="el">
                                     <field index="evt-keywords">

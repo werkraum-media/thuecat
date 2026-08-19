@@ -1,0 +1,59 @@
+categories:
+    import:
+        label: 'Import'
+    import.thuecat:
+        label: 'Category anchors: ThueCat objects'
+        parent: 'import'
+    import.events:
+        label: 'Category anchors: Events'
+        parent: 'import'
+
+settings:
+    import.thuecat.category.storagePid:
+        label: 'Storage folder for imported categories'
+        description: 'Folder holding the categories a ThueCat object import creates. Set it together with the parent category below, or category mapping stays off.'
+        category: 'import.thuecat'
+        type: 'page'
+        default: 0
+    import.thuecat.category.parent:
+        label: 'Parent category for imported categories'
+        description: 'Category the imported categories are placed beneath. Enter the uid of an existing category.'
+        category: 'import.thuecat'
+        type: 'int'
+        default: 0
+    import.thuecat.keywords.storagePid:
+        label: 'Storage folder for imported keywords'
+        description: 'Folder holding the keywords a ThueCat object import creates. Set it together with the parent category below, or keyword mapping stays off.'
+        category: 'import.thuecat'
+        type: 'page'
+        default: 0
+    import.thuecat.keywords.parent:
+        label: 'Parent category for imported keywords'
+        description: 'Category the imported keywords are placed beneath. Keywords use their own tree, separate from the categories above.'
+        category: 'import.thuecat'
+        type: 'int'
+        default: 0
+    import.events.category.storagePid:
+        label: 'Storage folder for imported categories'
+        description: 'Folder holding the categories an event import creates. Set it together with the parent category below, or category mapping stays off.'
+        category: 'import.events'
+        type: 'page'
+        default: 0
+    import.events.category.parent:
+        label: 'Parent category for imported categories'
+        description: 'Category the imported categories are placed beneath. Enter the uid of an existing category.'
+        category: 'import.events'
+        type: 'int'
+        default: 0
+    import.events.keywords.storagePid:
+        label: 'Storage folder for imported keywords'
+        description: 'Folder holding the keywords an event import creates. Set it together with the parent category below, or keyword mapping stays off.'
+        category: 'import.events'
+        type: 'page'
+        default: 0
+    import.events.keywords.parent:
+        label: 'Parent category for imported keywords'
+        description: 'Category the imported keywords are placed beneath. Keywords use their own tree, separate from the categories above.'
+        category: 'import.events'
+        type: 'int'
+        default: 0

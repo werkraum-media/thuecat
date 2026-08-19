@@ -16,6 +16,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use TYPO3\CMS\Core\Configuration\SiteWriter;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
+use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 /**
  * Base for tests that inspect how an import is configured without running one:
@@ -81,8 +82,12 @@ abstract class AbstractImportConfigurationTestCase extends \TYPO3\TestingFramewo
      */
     private function withoutAnchors(array $configuration): array
     {
-        foreach (CategoryAnchorSetting::cases() as $setting) {
-            unset($configuration[$setting->extensionConfigurationKey()]);
+        // Every target's anchors: one left behind would serve as another
+        // target's fallback and hide a leak the tests exist to catch.
+        foreach (ImportTarget::cases() as $target) {
+            foreach (CategoryAnchorSetting::cases() as $setting) {
+                unset($configuration[$setting->extensionConfigurationKey($target)]);
+            }
         }
 
         return $configuration;

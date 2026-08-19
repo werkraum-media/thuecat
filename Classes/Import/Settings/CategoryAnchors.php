@@ -26,4 +26,15 @@ class CategoryAnchors
         public readonly int $keywordStoragePid = 0,
     ) {
     }
+
+    /** Lets a caller walk CategoryAnchorSetting::cases() instead of naming each field. */
+    public function for(CategoryAnchorSetting $setting): int
+    {
+        return match ($setting) {
+            CategoryAnchorSetting::CategoryParent => $this->categoryParent,
+            CategoryAnchorSetting::CategoryStoragePid => $this->categoryStoragePid,
+            CategoryAnchorSetting::KeywordParent => $this->keywordParent,
+            CategoryAnchorSetting::KeywordStoragePid => $this->keywordStoragePid,
+        };
+    }
 }

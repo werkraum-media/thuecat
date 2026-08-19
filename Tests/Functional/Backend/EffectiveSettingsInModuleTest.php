@@ -32,7 +32,8 @@ class EffectiveSettingsInModuleTest extends AbstractImportTestCase
         $settings = $this->latestLog()->getEffectiveSettings();
 
         self::assertSame(11, $settings['storagePid'] ?? null);
-        self::assertSame('unset', $settings['import.category.parent'] ?? null);
+        self::assertSame('thuecat', $settings['importTarget'] ?? null);
+        self::assertSame('unset', $settings['import.thuecat.category.parent'] ?? null);
         self::assertArrayNotHasKey('apiKey', $settings);
     }
 

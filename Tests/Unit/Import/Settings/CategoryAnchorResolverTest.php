@@ -25,28 +25,31 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
+use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 class CategoryAnchorResolverTest extends TestCase
 {
     #[Test]
     public function siteSettingsWinOverExtensionConfiguration(): void
     {
-        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importKeywordsParent' => 60]));
+        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
         self::assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings(['import.keywords.parent' => 42])
+            $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]),
+            ImportTarget::Thuecat
         ));
     }
 
     #[Test]
     public function extensionConfigurationServesAsFallback(): void
     {
-        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importKeywordsParent' => 60]));
+        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
         self::assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings([])
+            $this->siteWithSettings([]),
+            ImportTarget::Thuecat
         ));
     }
 
@@ -55,11 +58,12 @@ class CategoryAnchorResolverTest extends TestCase
     #[DataProvider('unusableValues')]
     public function unusableSiteSettingValueKeepsWalkingTheChain(mixed $unusable): void
     {
-        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importKeywordsParent' => 60]));
+        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
         self::assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings(['import.keywords.parent' => $unusable])
+            $this->siteWithSettings(['import.thuecat.keywords.parent' => $unusable]),
+            ImportTarget::Thuecat
         ));
     }
 
@@ -67,11 +71,14 @@ class CategoryAnchorResolverTest extends TestCase
     #[DataProvider('unusableValues')]
     public function unusableExtensionConfigurationValueResolvesToUnset(mixed $unusable): void
     {
-        $subject = $this->resolverWith($this->extensionConfigurationReturning(['importKeywordsParent' => $unusable]));
+        $subject = $this->resolverWith(
+            $this->extensionConfigurationReturning(['importThuecatKeywordsParent' => $unusable])
+        );
 
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings([])
+            $this->siteWithSettings([]),
+            ImportTarget::Thuecat
         ));
     }
 
@@ -82,7 +89,8 @@ class CategoryAnchorResolverTest extends TestCase
 
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings([])
+            $this->siteWithSettings([]),
+            ImportTarget::Thuecat
         ));
     }
 
@@ -93,7 +101,8 @@ class CategoryAnchorResolverTest extends TestCase
 
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings([])
+            $this->siteWithSettings([]),
+            ImportTarget::Thuecat
         ));
     }
 
@@ -102,12 +111,12 @@ class CategoryAnchorResolverTest extends TestCase
     public function levelsAreWalkedPerSettingNotPerKind(): void
     {
         $subject = $this->resolverWith($this->extensionConfigurationReturning([
-            'importKeywordsStoragePid' => 30,
+            'importThuecatKeywordsStoragePid' => 30,
         ]));
-        $site = $this->siteWithSettings(['import.keywords.parent' => 42]);
+        $site = $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]);
 
-        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site));
-        self::assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site));
+        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Thuecat));
+        self::assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, ImportTarget::Thuecat));
     }
 
     #[Test]
@@ -115,12 +124,58 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
         $site = $this->siteWithSettings([
-            'import.keywords.parent' => 42,
-            'import.keywords.storagePid' => 30,
+            'import.thuecat.keywords.parent' => 42,
+            'import.thuecat.keywords.storagePid' => 30,
         ]);
 
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site));
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site, ImportTarget::Thuecat));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, ImportTarget::Thuecat));
+    }
+
+    /**
+     * The reason the settings carry a target at all: one site holding an import
+     * of each target keeps two category trees, so a value declared for one
+     * target is invisible to the other.
+     */
+    #[Test]
+    public function targetsDoNotBleedIntoEachOther(): void
+    {
+        $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
+        $site = $this->siteWithSettings([
+            'import.thuecat.keywords.parent' => 42,
+            'import.thuecat.keywords.storagePid' => 30,
+        ]);
+
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Events));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, ImportTarget::Events));
+    }
+
+    #[Test]
+    public function eachTargetResolvesItsOwnValue(): void
+    {
+        $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
+        $site = $this->siteWithSettings([
+            'import.thuecat.keywords.parent' => 42,
+            'import.events.keywords.parent' => 77,
+        ]);
+
+        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Thuecat));
+        self::assertSame(77, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Events));
+    }
+
+    // Nor may the other target's value be borrowed one level down.
+    #[Test]
+    public function anotherTargetsExtensionConfigurationIsNeverBorrowed(): void
+    {
+        $subject = $this->resolverWith($this->extensionConfigurationReturning([
+            'importThuecatKeywordsParent' => 60,
+        ]));
+
+        self::assertSame(0, $subject->resolve(
+            CategoryAnchorSetting::KeywordParent,
+            $this->siteWithSettings([]),
+            ImportTarget::Events
+        ));
     }
 
     #[Test]
@@ -130,7 +185,8 @@ class CategoryAnchorResolverTest extends TestCase
 
         self::assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
-            $this->siteWithSettings(['import.keywords.parent' => '42'])
+            $this->siteWithSettings(['import.thuecat.keywords.parent' => '42']),
+            ImportTarget::Thuecat
         ));
     }
 

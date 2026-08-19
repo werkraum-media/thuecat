@@ -70,40 +70,49 @@ further filter properties as they are added. Each such property is anchored by a
 of settings: the folder its categories are stored in, and the parent category they are
 created beneath.
 
-Anchors are configured **per site**, not per import configuration. That is deliberate.
-They are structural data every imported object uses the same way, and a filter in the
-frontend has to be able to identify the parent category its selection rests on. With
-the anchors defined once per site, a plugin can.
+Anchors are configured **per site and per import target**, not per import configuration.
+That is deliberate. They are structural data every imported object uses the same way, and
+a filter in the frontend has to be able to identify the parent category its selection
+rests on. With the anchors defined once per site, a plugin can.
 
-Every anchored property carries its own pair, resolved independently of the others.
-Properties may point at the same storage folder, but each pair stays separately
-configurable, because imported categories can legitimately live in different folders.
-The settings are grouped under :guilabel:`Import` in the site settings editor, one
-labelled pair per property.
+The import target comes from the import configuration's :guilabel:`Import target` field
+and says which kind of records a run writes — ``thuecat`` objects or ``events``. One site
+can hold an import configuration of each, so every anchor setting names its target: an
+import reads only its own, and the two category trees stay apart. A configuration that
+carries no target counts as ``thuecat``; one carrying a value that matches no known target
+is rejected before the run fetches anything.
+
+Every anchored property carries its own pair per target, resolved independently of the
+others. Properties may point at the same storage folder, but each pair stays separately
+configurable, because imported categories can legitimately live in different folders. The
+settings are grouped under :guilabel:`Import` in the site settings editor, one labelled
+pair per property and target.
 
 Each anchor is resolved from the first level that supplies a positive page or category
 uid:
 
 Site settings
    Of the site owning the import configuration's storage page. Set them in
-   :guilabel:`Site Management > Sites`, where the output extensions
-   (``thuecat_ces``, ``events_ces``) declare them under :guilabel:`Import`.
+   :guilabel:`Site Management > Sites`. A site offers them once it lists the
+   ``werkraummedia/thuecat-import`` set among its own dependencies — importing is a
+   decision of the site, so no other set pulls it in.
 
 Extension Configuration
    Installation-wide, via :guilabel:`Admin Tools > Settings > Extension Configuration >
    thuecat`. Used only when the site supplies nothing — it is the fallback for
-   installations without one of the output extensions, since ``thuecat`` does not
-   require them. One value applies to every site, so it fits single-site installations
-   and installations where all imports share one category tree.
+   installations that declare no site set. One value per target applies to every site, so
+   it fits single-site installations and installations where all imports of that target
+   share one category tree.
 
 Unset
    ``0``, or nothing configured anywhere. That kind's mapping is switched off and the
-   import runs without it.
+   import runs without it. Reaching the end of the chain is the only way an anchor becomes
+   unset — no error condition is ever downgraded to it.
 
 Per kind, both anchors must be set or neither. Setting only one is rejected before the
-import fetches anything, as is an anchor outside the site that owns the storage page.
-The two kinds are validated independently: a broken keyword pair says nothing about the
-category pair.
+import fetches anything, as is an anchor outside the site that owns the storage page. The
+two kinds are validated independently: a broken keyword pair says nothing about the
+category pair. Failure messages name the settings to correct, including their target.
 
 The values actually in effect are reported at the start of every run — see
 :ref:`effective-settings`.
@@ -223,11 +232,12 @@ shown in the :guilabel:`Summary` column of the backend module. Command line runs
 it as well, at normal verbosity; :bash:`--quiet` suppresses the console output while the
 log entry is still written.
 
-It covers the storage page, the file folder, the API domain, the four
-:ref:`category anchors <import-category-based-anchors>` and the five
-:ref:`tuning settings <import-tuning>`. An anchor nothing supplies is reported as
-``unset`` rather than ``0``, so a switched-off mapping is visible as a decision rather
-than a number.
+It covers the storage page, the file folder, the API domain, the import target, that
+target's four :ref:`category anchors <import-category-based-anchors>` and the five
+:ref:`tuning settings <import-tuning>`. Only the run's own target appears; listing the
+other one's anchors would suggest they had a say in the run. An anchor nothing supplies is
+reported as ``unset`` rather than ``0``, so a switched-off mapping is visible as a decision
+rather than a number.
 
 The API key is never part of the report — not its value, not a masked rendering, not its
 length.
@@ -238,7 +248,8 @@ length.
    values are the resolved ones, so a setting that never took effect is visible without
    tracing the fallback chain by hand. A category kind reported as ``unset`` after the
    site settings were filled in usually means the value was written for a different site
-   than the one owning the storage page.
+   than the one owning the storage page — or under a different import target than the one
+   the report names.
 
 .. _recovered-retries:
 

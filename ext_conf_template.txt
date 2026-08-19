@@ -20,19 +20,34 @@ runBudget = 86400
 fetchCacheLifetime = 900
 
 # Instance-wide fallback for the sys_category anchors, used when the target
-# site's settings do not supply them. A single value across every site, so it
-# only fits installations where all imports share one category tree; anchors
-# outside the import's site are rejected before the run starts.
-# Mirrors WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting.
+# site's settings do not supply them. One set per import target, because a site
+# may hold an import of each and their category trees must stay apart. Within a
+# target a single value applies across every site, so it only fits installations
+# where all imports of that target share one category tree; anchors outside the
+# import's site are rejected before the run starts.
+# Mirrors WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting composed
+# with WerkraumMedia\ThueCat\Import\Settings\ImportTarget.
 
-# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importCategoryStoragePid
-importCategoryStoragePid = 0
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importThuecatCategoryStoragePid
+importThuecatCategoryStoragePid = 0
 
-# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importCategoryParent
-importCategoryParent = 0
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importThuecatCategoryParent
+importThuecatCategoryParent = 0
 
-# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importKeywordsStoragePid
-importKeywordsStoragePid = 0
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importThuecatKeywordsStoragePid
+importThuecatKeywordsStoragePid = 0
 
-# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importKeywordsParent
-importKeywordsParent = 0
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importThuecatKeywordsParent
+importThuecatKeywordsParent = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importEventsCategoryStoragePid
+importEventsCategoryStoragePid = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importEventsCategoryParent
+importEventsCategoryParent = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importEventsKeywordsStoragePid
+importEventsKeywordsStoragePid = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importEventsKeywordsParent
+importEventsKeywordsParent = 0

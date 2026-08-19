@@ -6,15 +6,33 @@ Breaking
 
 * Support for TYPO3 v12 removed.
 
-* Category and keyword anchors moved from the import configuration to the target site.
-  The flexform fields ``categoryStoragePid``, ``categoryParent``, ``keywordStoragePid`` and
-  ``keywordParent`` are removed without replacement; values left in stored flexform XML are
-  ignored. Configure ``import.category.storagePid``, ``import.category.parent``,
-  ``import.keywords.storagePid`` and ``import.keywords.parent`` in the site settings instead —
-  or, on installations without ``thuecat_ces`` / ``events_ces``, in the Extension Configuration.
+* Category and keyword anchors moved from the import configuration to the target site, and are
+  now scoped by import target. The flexform fields ``categoryStoragePid``, ``categoryParent``,
+  ``keywordStoragePid`` and ``keywordParent`` are removed without replacement; values left in
+  stored flexform XML are ignored. Configure the anchors in the site settings instead — eight
+  settings, one set per target, because a site may hold an import configuration of each and
+  their category trees have to stay apart:
+
+  * ``import.thuecat.category.storagePid``, ``import.thuecat.category.parent``,
+    ``import.thuecat.keywords.storagePid``, ``import.thuecat.keywords.parent``
+  * ``import.events.category.storagePid``, ``import.events.category.parent``,
+    ``import.events.keywords.storagePid``, ``import.events.keywords.parent``
+
+  A site opts into the settings editor for them by listing the ``werkraummedia/thuecat-import``
+  set among its own ``dependencies``. The anchors are no longer declared by ``thuecat_ces`` or
+  ``events_ces``. On installations without a site set they remain configurable instance-wide in
+  the Extension Configuration, where the four ``importCategory*`` / ``importKeywords*`` keys are
+  likewise replaced by eight ``importThuecat*`` / ``importEvents*`` ones.
+
   There is no upgrade wizard: **note the existing values before updating**, because an import
   whose anchors are not configured runs with category and keyword mapping switched off rather
-  than failing. See :ref:`import-category-based-anchors`.
+  than failing.
+
+  Check the ``importTarget`` of every import configuration while you are there. It decides which
+  anchors a run resolves, and a configuration that writes event records without it set counts as
+  the ``thuecat`` target — putting its categories in the ThueCat tree. A value matching no known
+  target now aborts the run before it fetches anything, instead of importing with no categories.
+  See :ref:`import-category-based-anchors`.
 
 * API responses are cached persistently: ``thuecat_fetchdata`` now defaults to
   :php:`Typo3DatabaseBackend` with a 900 second lifetime instead of dying with the process.

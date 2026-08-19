@@ -21,11 +21,16 @@ use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
+use WerkraumMedia\ThueCat\Import\ImportTargetConfigurationException;
 
 /**
  * Resolves a sys_category anchor for one import: the site owning the import's
  * storagePid decides first, the instance-wide extension configuration second.
  * An anchor no level supplies is 0, which switches its kind's mapping off.
+ *
+ * Every level is read under the name of the import's own target, so a run never
+ * sees another target's settings. One site can hold an import configuration per
+ * target, and each keeps its own category tree.
  *
  * Each setting walks the chain on its own, so the two halves of a kind's pair
  * may come from different levels.
@@ -41,23 +46,31 @@ class CategoryAnchorResolver
 
     /**
      * @throws SiteNotFoundException storagePid belongs to no site
+     * @throws ImportTargetConfigurationException target matches no known one
      */
     public function resolveFor(ImportConfigurationInterface $configuration): CategoryAnchors
     {
         $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+        $target = ImportTarget::tryFromConfigured($configuration->getImportTarget());
+        // Pre-flight validation rejects an unknown target before a run gets
+        // here. Guarding anyway: resolving under a target nobody declared would
+        // find nothing at any level and silently switch all mapping off.
+        if ($target === null) {
+            throw ImportTargetConfigurationException::forUnknownTarget($configuration->getImportTarget());
+        }
 
         return new CategoryAnchors(
-            $this->resolve(CategoryAnchorSetting::CategoryParent, $site),
-            $this->resolve(CategoryAnchorSetting::CategoryStoragePid, $site),
-            $this->resolve(CategoryAnchorSetting::KeywordParent, $site),
-            $this->resolve(CategoryAnchorSetting::KeywordStoragePid, $site),
+            $this->resolve(CategoryAnchorSetting::CategoryParent, $site, $target),
+            $this->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, $target),
+            $this->resolve(CategoryAnchorSetting::KeywordParent, $site, $target),
+            $this->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, $target),
         );
     }
 
-    public function resolve(CategoryAnchorSetting $setting, Site $site): int
+    public function resolve(CategoryAnchorSetting $setting, Site $site, ImportTarget $target): int
     {
-        return $this->asSetValue($site->getSettings()->get($setting->settingsPath()))
-            ?? $this->fromExtensionConfiguration($setting)
+        return $this->asSetValue($site->getSettings()->get($setting->settingsPath($target)))
+            ?? $this->fromExtensionConfiguration($setting, $target)
             ?? 0;
     }
 
@@ -65,10 +78,10 @@ class CategoryAnchorResolver
      * Both exceptions mean "nothing set at this level": the extension has no
      * configuration at all, or none carrying these keys.
      */
-    private function fromExtensionConfiguration(CategoryAnchorSetting $setting): ?int
+    private function fromExtensionConfiguration(CategoryAnchorSetting $setting, ImportTarget $target): ?int
     {
         try {
-            $value = $this->extensionConfiguration->get('thuecat', $setting->extensionConfigurationKey());
+            $value = $this->extensionConfiguration->get('thuecat', $setting->extensionConfigurationKey($target));
         } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
             return null;
         }
