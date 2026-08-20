@@ -504,6 +504,56 @@ class ImporterTest extends AbstractImportTestCase
         self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
     }
 
+    /**
+     * An outer relation on an earlier root points at a record that is a root
+     * itself later in the same run, so it enters the payload at depth 1. The
+     * generic fetch cap then drops its accessibility reference without
+     * fetching, and without logging. Shaping the blob stages no rows and
+     * follows no references, so the cap must not apply to it.
+     * Regression guard for #13027.
+     */
+    #[Test]
+    public function shapesAccessibilityOfAttractionSightedAsRelationBeforeItsOwnRoot(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAccessibilityForAttractionSightedAsRelationFirst.php');
+        $this->expectFetch('attraction-referencing-accessibility-root.json');
+        // Fetched once: resolving the relation marks it updated, so its own
+        // root turn short-circuits before fetching again.
+        $this->expectFetch('attraction-with-accessibility-sighted-as-relation-first.json');
+        $this->expectFetch('e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
+
+        $this->importConfiguration(1);
+
+        self::assertNotSame(
+            '',
+            $this->fetchAccessibilitySpecificationOf(
+                'https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first'
+            ),
+            'The relation-first attraction lost its accessibility specification.'
+        );
+    }
+
+    private function fetchAccessibilitySpecificationOf(string $remoteId): string
+    {
+        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable('tx_thuecat_tourist_attraction');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $value = $queryBuilder
+            ->select('accessibility_specification')
+            ->from('tx_thuecat_tourist_attraction')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                )
+            )
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_string($value) ? $value : '';
+    }
+
     #[Test]
     public function importsBasedOnSyncScope(): void
     {

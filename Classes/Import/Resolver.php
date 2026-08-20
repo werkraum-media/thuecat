@@ -792,8 +792,6 @@ class Resolver
                             continue;
                         }
 
-                        $atCap = (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH);
-
                         if ($bucket === 'media') {
                             // Exempt from MAX_FETCH_DEPTH: an asset fetch stages
                             // no rows and follows no references, so it cannot
@@ -832,20 +830,11 @@ class Resolver
                         }
 
                         if ($bucket === 'accessibilitySpecification') {
-                            if ($atCap) {
-                                foreach ($references as $reference) {
-                                    if (is_string($reference)) {
-                                        $payload->removeTransient(
-                                            $ownerTable,
-                                            $ownerRemoteId,
-                                            'accessibilitySpecification',
-                                            $reference
-                                        );
-                                    }
-                                }
-                                $progress = true;
-                                continue;
-                            }
+                            // Exempt from MAX_FETCH_DEPTH: shaping the blob
+                            // stages no rows and follows no references, so it
+                            // cannot fan out the way cross-referenced POIs do.
+                            // Under the cap a record discovered through a
+                            // relation would silently lose its specification.
                             $this->shapeAccessibilityBlob(
                                 $payload,
                                 $context,

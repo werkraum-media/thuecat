@@ -1,0 +1,29 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-referencing-accessibility-root",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Muschelbrunnen"
+                }
+            ],
+            "schema:containedInPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first"
+                }
+            ]
+        }
+    ]
+}

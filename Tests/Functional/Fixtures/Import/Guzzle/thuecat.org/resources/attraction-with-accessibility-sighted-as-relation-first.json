@@ -1,0 +1,27 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Hallenpark"
+                }
+            ],
+            "thuecat:accessibilitySpecification": {
+                "@id": "https://thuecat.org/resources/e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification"
+            }
+        }
+    ]
+}
