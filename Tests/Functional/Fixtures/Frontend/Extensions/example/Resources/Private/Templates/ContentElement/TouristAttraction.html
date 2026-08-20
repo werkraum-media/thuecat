@@ -7,7 +7,7 @@
             <div class="row thuecat__abstract">
                 <div class="col-12 col-md-6">
                     <f:if condition="{entity.slogan}"><span class="badge bg-danger">{entity.slogan}</span></f:if>
-                    <h1>{entity.title} ({entity.town.title})</h1>
+                    <h1>{entity.title} (<f:for each="{entity.towns}" as="town" iteration="i"><f:if condition="!{i.isFirst}">, </f:if>{town.title}</f:for>)</h1>
                     {entity.description -> f:format.html()}
                 </div>
                 <div class="col-12 col-md-6 order-first order-md-last">

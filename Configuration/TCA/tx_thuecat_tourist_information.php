@@ -88,15 +88,46 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.town',
                 'config' => [
                     'type' => 'select',
-                    'renderType' => 'selectSingle',
+                    'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_town',
-                    'default' => '0',
-                    'items' => [
-                        [
-                            'label' => $languagePath . '.town.unkown',
-                            'value' => 0,
-                        ],
-                    ],
+                    'readOnly' => true,
+                ],
+            ],
+            'contained_in_organisation' => [
+                'label' => $languagePath . '.contained_in_organisation',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_organisation',
+                    'readOnly' => true,
+                ],
+            ],
+            // See tx_thuecat_tourist_attraction: one relation per target table,
+            // because Extbase resolves a relation through a single class.
+            'contained_in_attraction' => [
+                'label' => $languagePath . '.contained_in_attraction',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_tourist_attraction',
+                    'readOnly' => true,
+                ],
+            ],
+            'contained_in_tourist_information' => [
+                'label' => $languagePath . '.contained_in_tourist_information',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_tourist_information',
+                    'readOnly' => true,
+                ],
+            ],
+            'contained_in_parking_facility' => [
+                'label' => $languagePath . '.contained_in_parking_facility',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_parking_facility',
                     'readOnly' => true,
                 ],
             ],
@@ -119,7 +150,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by',
+                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility',
             ],
         ],
     ];

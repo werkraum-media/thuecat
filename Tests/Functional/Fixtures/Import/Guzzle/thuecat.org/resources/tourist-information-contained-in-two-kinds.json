@@ -6,25 +6,25 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/attraction-contained-in-a-poi",
+            "@id": "https://thuecat.org/resources/tourist-information-contained-in-two-kinds",
             "@type": [
                 "schema:Place",
                 "schema:Thing",
-                "schema:TouristAttraction",
-                "ttgds:PointOfInterest"
+                "schema:TouristInformationCenter",
+                "thuecat:TouristInformation"
             ],
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "Muschelbrunnen"
+                    "@value": "Tourist-Information in zwei Arten"
                 }
             ],
             "schema:containedInPlace": [
                 {
-                    "@id": "https://thuecat.org/resources/a-park-not-a-town"
+                    "@id": "https://thuecat.org/resources/043064193523-jcyt"
                 },
                 {
-                    "@id": "https://thuecat.org/resources/never-modelled-place"
+                    "@id": "https://thuecat.org/resources/a-park-not-a-town"
                 }
             ]
         }

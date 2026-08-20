@@ -47,7 +47,40 @@ class TouristAttraction extends Place
 
     protected ?Offers $offers = null;
 
-    protected ?Town $town = null;
+    /**
+     * Upstream puts whatever contains a record behind schema:containedInPlace,
+     * and a record can belong to more than one town (an airport serving two
+     * cities). Both are sets, not single values.
+     *
+     * @var ObjectStorage<Town>
+     */
+    protected ObjectStorage $towns;
+
+    /**
+     * @var ObjectStorage<Organisation>
+     */
+    protected ObjectStorage $containedInOrganisation;
+
+    /**
+     * containedInPlace gets one relation per target table: Extbase resolves a
+     * relation through a single concrete, table-mapped class (its only
+     * polymorphism is a recordType column choosing a subclass WITHIN one
+     * table), so "any place" cannot be one property. The resolver already
+     * knows which table each reference imported into and routes accordingly.
+     *
+     * @var ObjectStorage<TouristAttraction>
+     */
+    protected ObjectStorage $containedInAttraction;
+
+    /**
+     * @var ObjectStorage<TouristInformation>
+     */
+    protected ObjectStorage $containedInTouristInformation;
+
+    /**
+     * @var ObjectStorage<ParkingFacility>
+     */
+    protected ObjectStorage $containedInParkingFacility;
 
     protected string $startOfConstruction = '';
 
@@ -80,6 +113,11 @@ class TouristAttraction extends Place
         parent::initializeObject();
         $this->categories = new ObjectStorage();
         $this->keywords = new ObjectStorage();
+        $this->towns = new ObjectStorage();
+        $this->containedInOrganisation = new ObjectStorage();
+        $this->containedInAttraction = new ObjectStorage();
+        $this->containedInTouristInformation = new ObjectStorage();
+        $this->containedInParkingFacility = new ObjectStorage();
     }
 
     /**
@@ -116,9 +154,59 @@ class TouristAttraction extends Place
         return $this->offers;
     }
 
-    public function getTown(): ?Town
+    /**
+     * @return ObjectStorage<Town>
+     */
+    public function getTowns(): ObjectStorage
     {
-        return $this->town;
+        return $this->towns;
+    }
+
+    /**
+     * @return ObjectStorage<Organisation>
+     */
+    public function getContainedInOrganisation(): ObjectStorage
+    {
+        return $this->containedInOrganisation;
+    }
+
+    /**
+     * @return ObjectStorage<TouristAttraction>
+     */
+    public function getContainedInAttraction(): ObjectStorage
+    {
+        return $this->containedInAttraction;
+    }
+
+    /**
+     * @return ObjectStorage<TouristInformation>
+     */
+    public function getContainedInTouristInformation(): ObjectStorage
+    {
+        return $this->containedInTouristInformation;
+    }
+
+    /**
+     * @return ObjectStorage<ParkingFacility>
+     */
+    public function getContainedInParkingFacility(): ObjectStorage
+    {
+        return $this->containedInParkingFacility;
+    }
+
+    /**
+     * Every containing place, whatever table it came from — the template wants
+     * one list, the storage is split because Extbase types a relation per table.
+     *
+     * @return list<Place>
+     */
+    public function getContainedInPlaces(): array
+    {
+        return array_merge(
+            array_values(iterator_to_array($this->containedInAttraction)),
+            array_values(iterator_to_array($this->containedInTouristInformation)),
+            array_values(iterator_to_array($this->containedInParkingFacility))
+        );
     }
 
     public function getStartOfConstruction(): string

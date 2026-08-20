@@ -54,19 +54,44 @@ class Resolver
     protected const KEYWORD_FIELD = 'keywords';
 
     /**
-     * Hard-coded mapping from transient bucket name to
-     * [target table, target relation field on the owning row].
-     * Extend as new buckets get ref→uid resolution.
+     * Transient bucket → [target table → relation field on the owning row].
+     *
+     * Every target table gets its own field, because Extbase resolves a
+     * relation through one concrete class. Most buckets name exactly one
+     * table; containedInPlace names several, since upstream puts whatever
+     * contains a record behind that one property.
+     *
+     * The field is chosen by the table the referenced record ACTUALLY imported
+     * into. A reference whose table has no entry for its bucket is reported
+     * unrelatable rather than silently dropped, so this map doubles as the
+     * allowlist — adding a target table means adding it here AND adding its
+     * field to the TCA of every owner table.
+     *
+     * Order matters: the pre-fetch lookup probes a bucket's tables in
+     * sequence and takes the first hit, and the first entry is the default
+     * used while a reference's table is still unknown. Commonest kind first.
      */
     protected const BUCKET_MAP = [
-        'managedBy' => ['tx_thuecat_organisation', 'managed_by'],
-        'containedInPlace' => ['tx_thuecat_town', 'town'],
-        'parkingFacilityNearBy' => ['tx_thuecat_parking_facility', 'parking_facility_near_by'],
+        'managedBy' => [
+            'tx_thuecat_organisation' => 'managed_by',
+        ],
+        'containedInPlace' => [
+            'tx_thuecat_town' => 'town',
+            'tx_thuecat_organisation' => 'contained_in_organisation',
+            'tx_thuecat_tourist_attraction' => 'contained_in_attraction',
+            'tx_thuecat_tourist_information' => 'contained_in_tourist_information',
+            'tx_thuecat_parking_facility' => 'contained_in_parking_facility',
+        ],
+        'parkingFacilityNearBy' => [
+            'tx_thuecat_parking_facility' => 'parking_facility_near_by',
+        ],
         // Date → Event back-reference: child Date rows manufactured by
         // EventEntity stage the parent's remote_id under this bucket; the
         // Resolver dereferences it to the parent uid (which is in the same
         // payload) and writes the `event` FK on each Date row.
-        'event' => ['tx_events_domain_model_event', 'event'],
+        'event' => [
+            'tx_events_domain_model_event' => 'event',
+        ],
     ];
 
     /**
@@ -760,12 +785,12 @@ class Resolver
     }
 
     /**
-     * Write the relation when the referenced record parsed into the table the
-     * bucket targets. A bucket names exactly one target table while upstream
-     * may put any kind behind the property, so a record that imported into a
-     * different table is reported: it exists, and the relation to it is what
-     * was dropped. A reference with no table at all resolved to no model and
-     * was never imported, so there is nothing to report.
+     * Write the relation on the field the bucket gives the table the
+     * referenced record actually imported into. A record that imported into a
+     * table the bucket has no field for is reported: it exists, and the
+     * relation to it is what was dropped. A reference with no table at all
+     * resolved to no model and was never imported, so there is nothing to
+     * report.
      */
     protected function relateOrReport(
         DataHandlerPayload $payload,
@@ -773,14 +798,15 @@ class Resolver
         string $ownerTable,
         string $ownerKey,
         string $ownerRemoteId,
-        string $targetTable,
-        string $targetField,
+        string $bucket,
         string $reference,
         string|int $value
     ): void {
         $actualTable = $context->remoteIdToTable[$reference] ?? '';
-        if ($actualTable === $targetTable) {
-            $payload->setRelationField($ownerTable, $ownerKey, $targetField, $value);
+
+        $field = self::BUCKET_MAP[$bucket][$actualTable] ?? null;
+        if ($field !== null) {
+            $payload->setRelationField($ownerTable, $ownerKey, $field, $value);
             return;
         }
 
@@ -791,11 +817,26 @@ class Resolver
         $this->importLogger->recordUnrelatableReference(
             $ownerTable,
             $ownerRemoteId,
-            $targetField,
+            $this->defaultFieldFor($bucket),
             $reference,
-            $targetTable,
+            $this->defaultTableFor($bucket),
             $actualTable
         );
+    }
+
+    /**
+     * A bucket's first target table, used while a reference's own table is
+     * still unknown and as the "expected" table in the unrelatable report.
+     */
+    protected function defaultTableFor(string $bucket): string
+    {
+        return (string)(array_key_first(self::BUCKET_MAP[$bucket] ?? []) ?? '');
+    }
+
+    protected function defaultFieldFor(string $bucket): string
+    {
+        $fields = array_values(self::BUCKET_MAP[$bucket] ?? []);
+        return (string)($fields[0] ?? '');
     }
 
     protected function isFetchableUrl(string $reference): bool
@@ -919,8 +960,6 @@ class Resolver
                             );
                         }
 
-                        [$targetTable, $targetField] = self::BUCKET_MAP[$bucket];
-
                         foreach ($references as $reference) {
                             if (!is_string($reference)) {
                                 throw new InvalidTransientReferenceException(
@@ -954,8 +993,7 @@ class Resolver
                                     $ownerTable,
                                     $ownerKey,
                                     $ownerRemoteId,
-                                    $targetTable,
-                                    $targetField,
+                                    $bucket,
                                     $reference,
                                     $remoteIdToKey[$reference]
                                 );
@@ -964,11 +1002,16 @@ class Resolver
                                 continue;
                             }
 
-                            $uid = $this->findUidByRemoteId($targetTable, $reference, $context->sitePageIds);
+                            [$foundTable, $uid] = $this->findExistingRecord(
+                                $bucket,
+                                $reference,
+                                $context->sitePageIds
+                            );
                             if ($uid > 0) {
-                                $payload->setRelationField($ownerTable, $ownerKey, $targetField, $uid);
+                                $foundField = self::BUCKET_MAP[$bucket][$foundTable] ?? $this->defaultFieldFor($bucket);
+                                $payload->setRelationField($ownerTable, $ownerKey, $foundField, $uid);
                                 $remoteIdToKey[$reference] = (string)$uid;
-                                $context->remoteIdToTable[$reference] = $targetTable;
+                                $context->remoteIdToTable[$reference] = $foundTable;
                                 $context->markFound($reference);
 
                                 if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
@@ -983,8 +1026,7 @@ class Resolver
                                     $ownerTable,
                                     $ownerKey,
                                     $ownerRemoteId,
-                                    $targetTable,
-                                    $targetField,
+                                    $bucket,
                                     $reference,
                                     $remoteIdToKey
                                 );
@@ -1000,8 +1042,7 @@ class Resolver
                                     $ownerTable,
                                     $ownerKey,
                                     $ownerRemoteId,
-                                    $targetTable,
-                                    $targetField,
+                                    $bucket,
                                     $reference,
                                     $remoteIdToKey[$reference]
                                 );
@@ -1022,8 +1063,7 @@ class Resolver
                                 $ownerTable,
                                 $ownerKey,
                                 $ownerRemoteId,
-                                $targetTable,
-                                $targetField,
+                                $bucket,
                                 $reference,
                                 $remoteIdToKey
                             );
@@ -1058,8 +1098,7 @@ class Resolver
         string $ownerTable,
         string $ownerKey,
         string $ownerRemoteId,
-        string $targetTable,
-        string $targetField,
+        string $bucket,
         string $reference,
         array &$remoteIdToKey
     ): void {
@@ -1067,7 +1106,7 @@ class Resolver
             $this->importLogger->recordSkippedReference(
                 $ownerTable,
                 $ownerRemoteId,
-                $targetField,
+                $this->defaultFieldFor($bucket),
                 $reference,
                 (string)$context->getReferenceFailureReason($reference)
             );
@@ -1099,8 +1138,7 @@ class Resolver
                 $ownerTable,
                 $ownerKey,
                 $ownerRemoteId,
-                $targetTable,
-                $targetField,
+                $bucket,
                 $reference,
                 $remoteIdToKey[$reference] ?? ''
             );
@@ -1110,7 +1148,7 @@ class Resolver
             $this->importLogger->recordSkippedReference(
                 $ownerTable,
                 $ownerRemoteId,
-                $targetField,
+                $this->defaultFieldFor($bucket),
                 $reference,
                 $reason
             );
@@ -1658,6 +1696,32 @@ class Resolver
                 = (int)(is_numeric($row['uid']) ? $row['uid'] : 0);
         }
         return $byFile;
+    }
+
+    /**
+     * Locate an already-imported record for a reference by probing the
+     * bucket's target tables in map order, taking the first hit — remote_id is
+     * unique per record, so one hit settles the question and the order only
+     * decides how many queries run before it. Most buckets have one table.
+     *
+     * @param list<int> $sitePageIds
+     *
+     * @return array{0: string, 1: int} table the record was found in, and its
+     *         uid; uid 0 means no table holds it
+     */
+    protected function findExistingRecord(
+        string $bucket,
+        string $reference,
+        array $sitePageIds
+    ): array {
+        foreach (array_keys(self::BUCKET_MAP[$bucket] ?? []) as $candidate) {
+            $uid = $this->findUidByRemoteId($candidate, $reference, $sitePageIds);
+            if ($uid > 0) {
+                return [$candidate, $uid];
+            }
+        }
+
+        return [$this->defaultTableFor($bucket), 0];
     }
 
     /**

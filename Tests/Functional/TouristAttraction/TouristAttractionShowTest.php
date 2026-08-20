@@ -22,6 +22,31 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsContainingOrganisationsAndPlaces(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $organisations = $this->renderedSection($request, 'relation', 'containedInOrganisation');
+        self::assertStringContainsString('Erfurt Tourismus GmbH', $organisations);
+
+        $places = $this->renderedSection($request, 'relation', 'containedInPlace');
+        self::assertStringContainsString('Domplatz Erfurt', $places);
+    }
+
+    #[Test]
+    public function showsNoRelationSectionsWhenTheAttractionIsContainedInNothing(): void
+    {
+        // Attraction 24 carries neither relation: an empty set renders no
+        // container at all, rather than an empty one.
+        $body = (string)$this->executeFrontendSubRequest(
+            $this->generateRequestWithCHash('24')
+        )->getBody();
+
+        self::assertStringNotContainsString('data-relation="containedInOrganisation"', $body);
+        self::assertStringNotContainsString('data-relation="containedInPlace"', $body);
+    }
+
+    #[Test]
     public function showsAttractionTitle(): void
     {
         $request = $this->generateRequestWithCHash('21');

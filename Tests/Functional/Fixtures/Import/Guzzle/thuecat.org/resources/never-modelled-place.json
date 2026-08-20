@@ -1,22 +1,20 @@
 {
     "@context": {
         "schema": "http://schema.org/",
+        "test": "https://example.invalid/ontology/test/1.0/",
         "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
         "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/e_00000001-oatour",
+            "@id": "https://thuecat.org/resources/never-modelled-place",
             "@type": [
-                "schema:Thing",
-                "schema:Place",
-                "thuecat:Trail",
-                "ttgds:Trail"
+                "test:NeverModelled"
             ],
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "Ein Wanderweg"
+                    "@value": "Etwas, das nie ein Modell bekommt"
                 }
             ]
         }

@@ -354,15 +354,49 @@ return (static function (string $extensionKey, string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
-                    'renderType' => 'selectSingle',
+                    'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_town',
-                    'default' => '0',
-                    'items' => [
-                        [
-                            'label' => $languagePath . '.town.unkown',
-                            'value' => 0,
-                        ],
-                    ],
+                ],
+            ],
+            'contained_in_organisation' => [
+                'label' => $languagePath . '.contained_in_organisation',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_organisation',
+                ],
+            ],
+            // Upstream nests places within places. One relation per target
+            // table, not one field spanning them: Extbase resolves a relation
+            // through a single concrete class, so "any place" cannot be one
+            // property. A place table with no field here lands in the
+            // unrelatable report instead of being silently dropped.
+            'contained_in_attraction' => [
+                'label' => $languagePath . '.contained_in_attraction',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_tourist_attraction',
+                ],
+            ],
+            'contained_in_tourist_information' => [
+                'label' => $languagePath . '.contained_in_tourist_information',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_tourist_information',
+                ],
+            ],
+            'contained_in_parking_facility' => [
+                'label' => $languagePath . '.contained_in_parking_facility',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_parking_facility',
                 ],
             ],
             'managed_by' => [
@@ -418,7 +452,8 @@ return (static function (string $extensionKey, string $tableName) {
                 photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
                 opening_hours_inline, special_opening_hours_inline, opening_hours, special_opening_hours, offers, accessibility_specification, address, url,
                  media, remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
-                parking_facility_near_by,
+                parking_facility_near_by, contained_in_organisation, contained_in_attraction,
+                contained_in_tourist_information, contained_in_parking_facility,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords,
                 --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],

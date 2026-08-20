@@ -197,6 +197,9 @@
             <trans-unit id="content.address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
+            <trans-unit id="content.containedIn" xml:space="preserve">
+                <source>Part of</source>
+            </trans-unit>
             <trans-unit id="content.specialOpeningHours" xml:space="preserve">
                 <source>Special Opening hours</source>
             </trans-unit>

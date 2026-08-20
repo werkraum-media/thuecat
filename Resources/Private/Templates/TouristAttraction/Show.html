@@ -83,6 +83,30 @@
             <f:render partial="OpeningHours/MergedByWeekdayRanges" arguments="{openingHours: attraction.specialMergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
         </section>
 
+        <f:if condition="{attraction.towns}">
+            <section data-relation="towns">
+                <f:for each="{attraction.towns}" as="town">
+                    <span class="town">{town.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{attraction.containedInOrganisation}">
+            <section data-relation="containedInOrganisation">
+                <f:for each="{attraction.containedInOrganisation}" as="organisation">
+                    <span class="organisation">{organisation.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{attraction.containedInPlaces}">
+            <section data-relation="containedInPlace">
+                <f:for each="{attraction.containedInPlaces}" as="place">
+                    <span class="place">{place.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>
     </f:then>
     <f:else>

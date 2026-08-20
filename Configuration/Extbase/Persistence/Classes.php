@@ -27,8 +27,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Organisation as FrontendOrganisation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction as FrontendTouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristInformation as FrontendTouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town as FrontendTown;
 
 return [
@@ -138,9 +140,22 @@ return [
 
     FrontendTouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
+        'properties' => [
+            // The property is plural (a record can be in several towns) while
+            // the column keeps its historic singular name.
+            'towns' => [
+                'fieldName' => 'town',
+            ],
+        ],
     ],
     FrontendTown::class => [
         'tableName' => 'tx_thuecat_town',
+    ],
+    FrontendOrganisation::class => [
+        'tableName' => 'tx_thuecat_organisation',
+    ],
+    FrontendTouristInformation::class => [
+        'tableName' => 'tx_thuecat_tourist_information',
     ],
     FrontendParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',

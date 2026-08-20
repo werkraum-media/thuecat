@@ -18,9 +18,16 @@ class TouristAttractionRepository extends Repository
 {
     protected CategoryRepository $categoryRepository;
 
+    protected TownRepository $townRepository;
+
     public function injectCategoryRepository(CategoryRepository $categoryRepository): void
     {
         $this->categoryRepository = $categoryRepository;
+    }
+
+    public function injectTownRepository(TownRepository $townRepository): void
+    {
+        $this->townRepository = $townRepository;
     }
 
     public function findByDemand(TouristAttractionDemand $demand): QueryResultInterface
@@ -38,7 +45,7 @@ class TouristAttractionRepository extends Repository
             $constraints[] = $query->like('title', '%' . $demand->getSearchword() . '%');
         }
         if ($demand->getTowns() !== []) {
-            $constraints[] = $query->in('town', $demand->getTowns());
+            $constraints[] = $this->matchesAnyTown($query, $demand->getTowns());
         }
         if ($demand->getCategories() !== []) {
             $constraints[] = $this->relatesToAnyOf($query, 'categories', $demand->getCategories());
@@ -98,6 +105,38 @@ class TouristAttractionRepository extends Repository
         }
 
         return $ordered;
+    }
+
+    /**
+     * Matches an attraction carrying any of the given towns.
+     *
+     * `town` is a relation now, so `in()` — which compares a single-valued
+     * column — cannot express membership; each town needs its own `contains()`.
+     * The operands are Town objects: Extbase's plain-value helper happens to
+     * pass an int through unchanged, but that is a type-juggling fallback, not
+     * an interface it offers.
+     *
+     * A uid matching no stored town drops out. If every one drops out the
+     * filter must still narrow to nothing, so fall back to a constraint that
+     * cannot match rather than returning no constraint at all.
+     *
+     * @param int[] $uids
+     */
+    protected function matchesAnyTown(QueryInterface $query, array $uids): ConstraintInterface
+    {
+        $constraints = [];
+        foreach ($uids as $uid) {
+            $town = $this->townRepository->findByUid($uid);
+            if ($town instanceof Town) {
+                $constraints[] = $query->contains('towns', $town);
+            }
+        }
+
+        if ($constraints === []) {
+            return $query->equals('uid', 0);
+        }
+
+        return $query->logicalOr(...$constraints);
     }
 
     /**
@@ -268,16 +307,27 @@ class TouristAttractionRepository extends Repository
         if ($storagePageIds !== []) {
             $query->getQuerySettings()->setStoragePageIds($storagePageIds);
         }
-        $query->setOrderings(['town.title' => QueryInterface::ORDER_ASCENDING]);
 
+        // No `town.title` ordering: a record carries several towns now, so the
+        // relation cannot order the attraction query. Collect the union first,
+        // keyed by uid to list each town once, then sort by title here.
         $towns = [];
         foreach ($query->execute() as $attraction) {
-            $town = $attraction instanceof TouristAttraction ? $attraction->getTown() : null;
-            if ($town instanceof Town && $town->getUid() !== null) {
-                $towns[$town->getUid()] = $town;
+            if (!$attraction instanceof TouristAttraction) {
+                continue;
+            }
+            foreach ($attraction->getTowns() as $town) {
+                if ($town instanceof Town && $town->getUid() !== null) {
+                    $towns[$town->getUid()] = $town;
+                }
             }
         }
 
-        return array_values($towns);
+        usort(
+            $towns,
+            static fn (Town $a, Town $b): int => strcasecmp($a->getTitle(), $b->getTitle())
+        );
+
+        return $towns;
     }
 }

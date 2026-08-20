@@ -6,7 +6,7 @@
     },
     "@graph": [
         {
-            "@id": "https://thuecat.org/resources/attraction-contained-in-a-poi",
+            "@id": "https://thuecat.org/resources/attraction-contained-in-organisation",
             "@type": [
                 "schema:Place",
                 "schema:Thing",
@@ -16,15 +16,12 @@
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "Muschelbrunnen"
+                    "@value": "Attraktion in einer Organisation"
                 }
             ],
             "schema:containedInPlace": [
                 {
-                    "@id": "https://thuecat.org/resources/a-park-not-a-town"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/never-modelled-place"
+                    "@id": "https://thuecat.org/resources/018132452787-ngbe"
                 }
             ]
         }

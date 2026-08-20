@@ -536,44 +536,48 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     /**
-     * A bucket names one target table, but upstream puts any kind behind the
-     * property — containedInPlace routinely carries POIs alongside towns. A
-     * referenced record imported into another table is reported, since it
-     * exists and only the relation was dropped. A reference no entity handles
-     * produced no record at all and stays silent.
+     * containedInPlace routinely carries POIs alongside towns. A POI now has a
+     * field to land on, so it relates instead of being reported. A reference no
+     * entity handles produced no record at all: there is no relation to drop,
+     * so it stays silent.
+     *
+     * The silent case uses a type that is unmappable by construction — a
+     * `test:` namespace no entity handles now or later. Real unmapped types
+     * (trails, at the time of writing) eventually get a model, and the day
+     * they do this test would silently stop proving anything.
+     *
      * Regression guard for #13027.
      */
     #[Test]
-    public function reportsReferenceThatResolvedToAnUnrelatableTable(): void
+    public function containedInPlaceRelatesPoisAndStaysSilentOnReferencesThatImportedNothing(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAttractionContainedInAPoi.php');
         $this->expectFetch('attraction-contained-in-a-poi.json');
         $this->expectFetch('a-park-not-a-town.json');
-        // No entity handles ttgds:Trail, so it imports nothing to relate to.
-        $this->expectFetch('e_00000001-oatour.json');
+        // No entity handles test:NeverModelled, so it imports nothing.
+        $this->expectFetch('never-modelled-place.json');
 
         $this->importConfiguration(1);
 
-        $entries = $this->getLogEntriesOfType('referenceUnrelatable');
-        self::assertCount(1, $entries, 'Only the reference that produced a record is reported.');
-        self::assertSame('info', $entries[0]['severity'], 'Upstream mixing kinds is data drift, not a fault.');
-        self::assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
         self::assertSame(
-            'https://thuecat.org/resources/attraction-contained-in-a-poi',
-            $entries[0]['remote_id']
+            [],
+            $this->getLogEntriesOfType('referenceUnrelatable'),
+            'The POI relates now, and the unmodelled reference never produced a record.'
+        );
+        self::assertCount(0, $this->fetchImportLog()->getUnrelatableReferences());
+
+        // The park imported as an attraction and landed on contained_in_attraction.
+        $parkUid = $this->fetchUidByRemoteId(
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/a-park-not-a-town'
+        );
+        self::assertGreaterThan(0, $parkUid, 'The park imported as an attraction.');
+        self::assertSame(
+            (string)$parkUid,
+            $this->fetchContainedInAttractionOf('https://thuecat.org/resources/attraction-contained-in-a-poi')
         );
 
-        self::assertIsString($entries[0]['context']);
-        $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame('town', $context['field'] ?? null);
-        self::assertSame('tx_thuecat_town', $context['expectedTable'] ?? null);
-        self::assertSame('tx_thuecat_tourist_attraction', $context['actualTable'] ?? null);
-
-        // Info entries never reach getListOfErrors, so the Imports module
-        // surfaces them through their own accessor.
         self::assertSame([], $this->getLogEntriesOfType('mappingError'));
-        self::assertCount(1, $this->fetchImportLog()->getUnrelatableReferences());
     }
 
     private function fetchImportLog(): ImportLog
@@ -583,6 +587,48 @@ class ImporterTest extends AbstractImportTestCase
         self::assertInstanceOf(ImportLog::class, $log);
 
         return $log;
+    }
+
+    private function fetchUidByRemoteId(string $table, string $remoteId): int
+    {
+        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $value = $queryBuilder
+            ->select('uid')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                )
+            )
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($value) ? (int)$value : 0;
+    }
+
+    private function fetchContainedInAttractionOf(string $remoteId): string
+    {
+        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable('tx_thuecat_tourist_attraction');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $value = $queryBuilder
+            ->select('contained_in_attraction')
+            ->from('tx_thuecat_tourist_attraction')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                )
+            )
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_string($value) ? $value : '';
     }
 
     private function fetchAccessibilitySpecificationOf(string $remoteId): string

@@ -99,6 +99,10 @@
                 <source>Address</source>
                 <target>Anschrift</target>
             </trans-unit>
+            <trans-unit id="content.containedIn" xml:space="preserve">
+                <source>Part of</source>
+                <target>Teil von</target>
+            </trans-unit>
             <trans-unit id="content.specialOpeningHours" xml:space="preserve">
                 <source>Special Opening hours</source>
                 <target>Sonderöffnungszeiten</target>

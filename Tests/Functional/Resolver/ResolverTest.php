@@ -26,6 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Resolver;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
 use RuntimeException;
+use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\InvalidTransientReferenceException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
@@ -157,6 +158,232 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertSame(10, $orgRow['pid']);
 
         self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function containedInPlaceRoutesEachReferenceByTheTableItImportedInto(): void
+    {
+        // One containedInPlace naming three kinds: a town (jcyt), an
+        // organisation (ngbe) and another place (a-park-not-a-town, which
+        // imports as a tourist attraction). Each must land on its own field
+        // instead of the first town winning and the rest being dropped.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('018132452787-ngbe.json');
+        $this->expectFetch('a-park-not-a-town.json');
+
+        $payload = $this->parseFixture('attraction-contained-in-three-kinds.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
+
+        $data = $payload->getDataMap();
+        $keys = array_keys($data['tx_thuecat_tourist_attraction']);
+        $ownerKey = null;
+        foreach ($keys as $key) {
+            if (($data['tx_thuecat_tourist_attraction'][$key]['remote_id'] ?? '')
+                === 'https://thuecat.org/resources/attraction-contained-in-three-kinds'
+            ) {
+                $ownerKey = $key;
+            }
+        }
+        self::assertNotNull($ownerKey, 'Owner row is in the payload.');
+
+        $row = $data['tx_thuecat_tourist_attraction'][$ownerKey];
+
+        $townKey = array_key_first($data['tx_thuecat_town']);
+        self::assertSame((string)$townKey, $row['town'] ?? '');
+
+        $orgKey = array_key_first($data['tx_thuecat_organisation']);
+        self::assertSame((string)$orgKey, $row['contained_in_organisation'] ?? '');
+
+        $parkKey = null;
+        foreach ($keys as $key) {
+            if (($data['tx_thuecat_tourist_attraction'][$key]['remote_id'] ?? '')
+                === 'https://thuecat.org/resources/a-park-not-a-town'
+            ) {
+                $parkKey = $key;
+            }
+        }
+        self::assertNotNull($parkKey, 'The park imported as a tourist attraction.');
+        self::assertSame((string)$parkKey, $row['contained_in_attraction'] ?? '');
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function containedInPlaceHoldsEveryTownAndRelatesADuplicateOnlyOnce(): void
+    {
+        // An airport serving two cities: both towns must be held. The third
+        // reference repeats the first — a relation is a set, so it must not
+        // appear twice.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('second-town.json');
+
+        $payload = $this->parseFixture('attraction-in-two-towns.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
+
+        $data = $payload->getDataMap();
+        $ownerKey = $this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/attraction-in-two-towns'
+        );
+        self::assertNotNull($ownerKey);
+
+        $towns = explode(',', (string)($data['tx_thuecat_tourist_attraction'][$ownerKey]['town'] ?? ''));
+        self::assertCount(2, $towns, 'Both towns are held, the repeat is not a third entry.');
+        self::assertSame($towns, array_unique($towns));
+        self::assertContains(
+            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'),
+            $towns
+        );
+        self::assertContains(
+            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/second-town'),
+            $towns
+        );
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function containedInPlaceRelatesAnOrganisationAlreadyStoredOutsideThePayload(): void
+    {
+        // The organisation is preloaded at uid=7 and is not part of the parsed
+        // payload. The probe must find it under tx_thuecat_organisation — the
+        // second candidate table — and route it accordingly.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingOrganisationForTown.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $payload = $this->parseFixture('attraction-contained-in-organisation.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
+
+        $data = $payload->getDataMap();
+        $ownerKey = $this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/attraction-contained-in-organisation'
+        );
+        self::assertNotNull($ownerKey);
+
+        $row = $data['tx_thuecat_tourist_attraction'][$ownerKey];
+        self::assertSame('7', $row['contained_in_organisation'] ?? '');
+        self::assertSame('', $row['town'] ?? '', 'An organisation never lands on the town field.');
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function containedInPlaceRoutesTheSameWayForANonAttractionOwner(): void
+    {
+        // The drain has no owner-table branch, so routing must behave
+        // identically whichever table stages the bucket.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('043064193523-jcyt.json');
+        $this->expectFetch('a-park-not-a-town.json');
+
+        $payload = $this->parseFixture('tourist-information-contained-in-two-kinds.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
+
+        $data = $payload->getDataMap();
+        $ownerKey = $this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_information',
+            'https://thuecat.org/resources/tourist-information-contained-in-two-kinds'
+        );
+        self::assertNotNull($ownerKey, 'The tourist information imported.');
+
+        $row = $data['tx_thuecat_tourist_information'][$ownerKey];
+        self::assertSame(
+            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'),
+            $row['town'] ?? ''
+        );
+        self::assertSame(
+            (string)$this->findKeyByRemoteId(
+                $data,
+                'tx_thuecat_tourist_attraction',
+                'https://thuecat.org/resources/a-park-not-a-town'
+            ),
+            $row['contained_in_attraction'] ?? ''
+        );
+
+        self::assertSame([], $payload->getTransients());
+    }
+
+    #[Test]
+    public function containedInPlaceStillReportsAReferenceWhoseTableHasNoField(): void
+    {
+        // Every table the POI import can produce is routed, so the report is
+        // only reachable when a reference resolved into some other table. Seed
+        // that state directly rather than invent an upstream type for it: the
+        // point under test is relateOrReport()'s fallback, not the parser.
+        //
+        // The seeded reference must NOT be one the payload carries a row for:
+        // rekeyRowsAndInjectPid() rewrites remoteIdToKey for every row it sees,
+        // which would replace the seed before the drain reads it. The
+        // never-modelled reference imports nothing, so no row ever claims it.
+        // Seeded as already-known, it is never fetched either.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('a-park-not-a-town.json');
+
+        $payload = $this->parseFixture('attraction-contained-in-a-poi.json');
+
+        $unroutable = 'https://thuecat.org/resources/never-modelled-place';
+        $context = new ResolverContext(10, new ParserContext(0));
+        $context->remoteIdToTable[$unroutable] = 'tx_thuecat_unroutable';
+        $context->remoteIdToKey[$unroutable] = '42';
+
+        $this->get(Resolver::class)->resolve($payload, $context);
+
+        // recordUnrelatableReference() only stages the entry; the Importer
+        // flushes it. Calling resolve() directly skips that, so write the log
+        // the way the Importer does before reading it back.
+        $this->get(ImportLogger::class)->writeLog(null, [], []);
+
+        $entries = $this->getLogEntriesOfType('referenceUnrelatable');
+        self::assertCount(1, $entries, 'A table with no field is reported, not silently dropped.');
+
+        self::assertIsString($entries[0]['context']);
+        $reported = json_decode($entries[0]['context'], true);
+        self::assertIsArray($reported);
+        self::assertSame('tx_thuecat_unroutable', $reported['actualTable'] ?? null);
+        self::assertSame($unroutable, $reported['url'] ?? null);
+    }
+
+    #[Test]
+    public function containedInPlaceAcceptsARecordOfTheOwnersOwnTable(): void
+    {
+        // Upstream nests places within places: an attraction contained in
+        // another attraction is legitimate and must relate, not be reported.
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+        $this->expectFetch('a-park-not-a-town.json');
+        $this->expectFetch('never-modelled-place.json');
+
+        $payload = $this->parseFixture('attraction-contained-in-a-poi.json');
+
+        $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
+
+        $data = $payload->getDataMap();
+        $ownerKey = $this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/attraction-contained-in-a-poi'
+        );
+        $parkKey = $this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/a-park-not-a-town'
+        );
+        self::assertNotNull($ownerKey);
+        self::assertNotNull($parkKey);
+
+        self::assertSame(
+            (string)$parkKey,
+            $data['tx_thuecat_tourist_attraction'][$ownerKey]['contained_in_attraction'] ?? ''
+        );
     }
 
     #[Test]
@@ -737,6 +964,25 @@ final class ResolverTest extends AbstractImportTestCase
         $transients = $reflection->getValue($payload);
         $transients[$table][$remoteId][$bucket] = $references;
         $reflection->setValue($payload, $transients);
+    }
+
+    /**
+     * @param array<string, int> $translationLanguages
+     */
+    /**
+     * Outer datamap key of the row carrying $remoteId, or null.
+     *
+     * @param array<string, array<array-key, array<string, mixed>>> $data
+     */
+    private function findKeyByRemoteId(array $data, string $table, string $remoteId): string|int|null
+    {
+        foreach ($data[$table] ?? [] as $key => $row) {
+            if (($row['remote_id'] ?? '') === $remoteId) {
+                return $key;
+            }
+        }
+
+        return null;
     }
 
     /**

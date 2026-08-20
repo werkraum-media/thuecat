@@ -51,7 +51,7 @@ return [
             'disable' => '1',
             'title' => 'Verstecktes Stadtmuseum',
             'description' => 'Beschreibung des versteckten Stadtmuseums',
-            'town' => '0',
+            'town' => '',
             'media' => '',
             'address' => '',
             'url' => '',
@@ -65,7 +65,7 @@ return [
             'disable' => '0',
             'title' => 'Stadtmuseum Erfurt',
             'description' => 'Beschreibung des Stadtmuseums',
-            'town' => '0',
+            'town' => '',
             'media' => '',
             'address' => '',
             'url' => '',
@@ -74,6 +74,10 @@ return [
             'special_opening_hours' => '',
             'sys_language_uid' => '0',
             'keywords' => '2',
+            // Both new relation sets on the detail view: an organisation, and
+            // a place that is another attraction (self-referencing table).
+            'contained_in_organisation' => '1',
+            'contained_in_attraction' => '23',
         ],
         // Extbase overlays a relation to the PARENT record's language, so the
         // translated categories are only reachable through a translated parent.
@@ -83,7 +87,7 @@ return [
             'disable' => '0',
             'title' => 'City Museum Erfurt',
             'description' => 'Description of the city museum',
-            'town' => '0',
+            'town' => '',
             'media' => '',
             'address' => '',
             'url' => '',
@@ -93,6 +97,45 @@ return [
             'sys_language_uid' => '1',
             'l18n_parent' => '21',
             'keywords' => '2',
+        ],
+        [
+            // Target of attraction 21's contained_in_attraction.
+            'uid' => '23',
+            'pid' => '11',
+            'disable' => '0',
+            'title' => 'Domplatz Erfurt',
+            'description' => '',
+            'town' => '',
+            'media' => '',
+            'address' => '',
+            'url' => '',
+            'offers' => '',
+            'opening_hours' => '',
+            'special_opening_hours' => '',
+            'sys_language_uid' => '0',
+        ],
+        [
+            // Contained in nothing: the empty-set case for the detail view.
+            'uid' => '24',
+            'pid' => '11',
+            'disable' => '0',
+            'title' => 'Ort ohne Beziehungen',
+            'description' => '',
+            'town' => '',
+            'media' => '',
+            'address' => '',
+            'url' => '',
+            'offers' => '',
+            'opening_hours' => '',
+            'special_opening_hours' => '',
+            'sys_language_uid' => '0',
+        ],
+    ],
+    'tx_thuecat_organisation' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Erfurt Tourismus GmbH',
         ],
     ],
     // Keyword tree under anchor 500. Attraction 21 carries two terms; 20 carries

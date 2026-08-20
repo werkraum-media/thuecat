@@ -76,6 +76,20 @@ Breaking
 * :php:`CategoryRepository::findByParents()` takes :php:`Category` objects instead of uids, since
   ``parent`` is an object relation and a uid comparison matches nothing.
 
+* A record can be contained in more than one place. ``town`` is a multi-value relation instead of
+  a single select, so :php:`TouristAttraction::getTown()` is replaced by
+  :php:`getTowns()`, returning an :php:`ObjectStorage`. Templates reading
+  :html:`{attraction.town.title}` must iterate :html:`{attraction.towns}` instead. Existing rows
+  keep the town they held; a row that held none reads as an empty relation. Applies to tourist
+  attractions, tourist information and parking facilities alike.
+  See :ref:`import-contained-in-place`.
+
+* Every transient bucket reports a reference it cannot relate. Previously only ``containedInPlace``
+  logged ``referenceUnrelatable``; ``managedBy`` and ``parkingFacilityNearBy`` dropped a reference
+  whose record imported into another table without saying so. Expect new ``info`` entries in the
+  import log from those buckets on the first run — they name relations that were already being
+  lost, not new failures.
+
 Features
 --------
 
@@ -140,6 +154,18 @@ Features
 
 * A place detail view emits a ``keywords`` meta tag built from its related keyword categories.
   A place with no keyword relations emits no such tag.
+
+* ``schema:containedInPlace`` is imported in full. Upstream uses the property for whatever contains
+  a record — towns, organisations and other places — while only the first town was kept and the
+  rest discarded. Each reference now lands on a relation chosen by the kind of record it imported
+  into: ``town``, ``contained_in_organisation``, or one of ``contained_in_attraction``,
+  ``contained_in_tourist_information`` and ``contained_in_parking_facility``. One production
+  configuration was dropping 127 such relations per run. A record contained in a kind no relation
+  accepts is still reported as ``referenceUnrelatable``. The detail view renders the containing
+  organisations and places. See :ref:`import-contained-in-place`.
+
+* The town filter matches a record carrying several towns, and the search form offers every town
+  its records carry. An attraction in two towns is returned once when both are selected.
 
 Fixes
 -----
