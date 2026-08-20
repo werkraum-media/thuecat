@@ -1,0 +1,40 @@
+{
+    "@context": {
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/dms_relation_first",
+            "@type": [
+                "schema:CreativeWork",
+                "schema:MediaObject",
+                "schema:Thing",
+                "schema:ImageObject",
+                "http://purl.org/dc/dcmitype/Image"
+            ],
+            "schema:author": {
+                "@type": "xsd:string",
+                "@value": "Eine Fotografin"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Hallenpark.jpg"
+            },
+            "schema:url": {
+                "@type": "xsd:anyURI",
+                "@value": "https://cms.thuecat.org/o/adaptive-media/image/relation-first/Preview-1280x0/image"
+            },
+            "schema:height": {
+                "@type": "xsd:string",
+                "@value": "853"
+            },
+            "schema:width": {
+                "@type": "xsd:string",
+                "@value": "1280"
+            }
+        }
+    ]
+}

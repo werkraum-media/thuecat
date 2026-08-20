@@ -466,6 +466,9 @@ class ImporterTest extends AbstractImportTestCase
         // A sibling parking on the first root, fetched after drzt — its merge
         // re-rekeys the payload and drops drzt's not-yet-wired OH children.
         $this->expectFetch('000000000001-scnd.json');
+        // drzt keeps its media so the functional and unit copies of the record
+        // stay identical; reached through a relation, so it drains now.
+        $this->expectFetch('dms_6486108.json');
 
         $this->importConfiguration(1);
 
@@ -544,6 +547,9 @@ class ImporterTest extends AbstractImportTestCase
         // Resolver follows references in the dara graph to resources that
         // don't exist upstream and 404 in production.
         $this->expectNotFound('dms_5713563');
+        // drzt's asset, reached through a relation — drains now that media is
+        // exempt from the fetch depth cap.
+        $this->expectFetch('dms_6486108.json');
 
         $this->importConfiguration(1);
 

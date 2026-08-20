@@ -85,11 +85,11 @@
             "schema:description": [
                 {
                     "@language": "de",
-                    "@value": "Die Waagegasse mag zun\u00e4chst unspektakul\u00e4r erscheinen, ist aber eine bemerkenswert alte und f\u00fcr die Erfurter Geschichte sehr bedeutsame Stra\u00dfe. Denn hier wurden s\u00e4mtliche H\u00e4ndler, die Erfurt passieren und/oder in Erfurt handeln wollten, durchgef\u00fchrt. Die Stra\u00dfe ist genauso breit wie ein Fuhrwerk, sodass jeder einzeln durchgeschleust werden konnte. Jede Kutsche wurde hier gewogen, je nach Wert Steuern erhoben und die Ware wurde drei Tage in den heute noch sichtbaren Stapelh\u00e4usern gelagert.\nHeute spielt die Waagegasse vor allem als \"Schleichweg\" zwischen Michaelis- und Allerheiligenstra\u00dfe, als Zugang zur Alten Synagoge und nat\u00fcrlich bei zahlreichen Stadtf\u00fchrungen eine Rolle."
+                    "@value": "Die Waagegasse mag zunächst unspektakulär erscheinen, ist aber eine bemerkenswert alte und für die Erfurter Geschichte sehr bedeutsame Straße. Denn hier wurden sämtliche Händler, die Erfurt passieren und/oder in Erfurt handeln wollten, durchgeführt. Die Straße ist genauso breit wie ein Fuhrwerk, sodass jeder einzeln durchgeschleust werden konnte. Jede Kutsche wurde hier gewogen, je nach Wert Steuern erhoben und die Ware wurde drei Tage in den heute noch sichtbaren Stapelhäusern gelagert.\nHeute spielt die Waagegasse vor allem als \"Schleichweg\" zwischen Michaelis- und Allerheiligenstraße, als Zugang zur Alten Synagoge und natürlich bei zahlreichen Stadtführungen eine Rolle."
                 },
                 {
                     "@language": "fr",
-                    "@value": "La Waagegasse peut sembler peu spectaculaire au premier abord, mais il s'agit d'une rue remarquablement ancienne et tr\u00e8s importante pour l'histoire d'Erfurt. En effet, tous les marchands qui voulaient passer par Erfurt et/ou faire du commerce \u00e0 Erfurt passaient par ici. La rue est aussi large qu'un carrosse, de sorte que l'on pouvait faire passer chacun d'eux individuellement. Chaque chariot \u00e9tait pes\u00e9 ici, des taxes \u00e9taient pr\u00e9lev\u00e9es en fonction de sa valeur et les marchandises \u00e9taient stock\u00e9es pendant trois jours dans les maisons d'empilage qui sont encore visibles aujourd'hui.\nAujourd'hui, la Waagegasse joue surtout un r\u00f4le de \"chemin de traverse\" entre la Michaelisstrasse et l'Allerheiligenstrasse, d'acc\u00e8s \u00e0 l'ancienne synagogue et, bien s\u00fbr, dans de nombreuses visites de la ville."
+                    "@value": "La Waagegasse peut sembler peu spectaculaire au premier abord, mais il s'agit d'une rue remarquablement ancienne et très importante pour l'histoire d'Erfurt. En effet, tous les marchands qui voulaient passer par Erfurt et/ou faire du commerce à Erfurt passaient par ici. La rue est aussi large qu'un carrosse, de sorte que l'on pouvait faire passer chacun d'eux individuellement. Chaque chariot était pesé ici, des taxes étaient prélevées en fonction de sa valeur et les marchandises étaient stockées pendant trois jours dans les maisons d'empilage qui sont encore visibles aujourd'hui.\nAujourd'hui, la Waagegasse joue surtout un rôle de \"chemin de traverse\" entre la Michaelisstrasse et l'Allerheiligenstrasse, d'accès à l'ancienne synagogue et, bien sûr, dans de nombreuses visites de la ville."
                 },
                 {
                     "@language": "en",
@@ -105,7 +105,7 @@
                     ],
                     "schema:value": {
                         "@language": "de",
-                        "@value": "<p>Die Waagegasse mag zun\u00e4chst unspektakul\u00e4r erscheinen, ist aber eine bemerkenswert alte und f\u00fcr die Erfurter Geschichte sehr bedeutsame Stra\u00dfe. Denn hier wurden s\u00e4mtliche H\u00e4ndler, die Erfurt passieren und/oder in Erfurt handeln wollten, durchgef\u00fchrt. Die Stra\u00dfe ist genauso breit wie ein Fuhrwerk, sodass jeder einzeln durchgeschleust werden konnte. Jede Kutsche wurde hier gewogen, je nach Wert Steuern erhoben und die Ware wurde drei Tage in den heute noch sichtbaren Stapelh\u00e4usern gelagert.</p><p>Heute spielt die Waagegasse vor allem als \"Schleichweg\" zwischen Michaelis- und Allerheiligenstra\u00dfe, als Zugang zur Alten Synagoge und nat\u00fcrlich bei zahlreichen Stadtf\u00fchrungen eine Rolle.</p>"
+                        "@value": "<p>Die Waagegasse mag zunächst unspektakulär erscheinen, ist aber eine bemerkenswert alte und für die Erfurter Geschichte sehr bedeutsame Straße. Denn hier wurden sämtliche Händler, die Erfurt passieren und/oder in Erfurt handeln wollten, durchgeführt. Die Straße ist genauso breit wie ein Fuhrwerk, sodass jeder einzeln durchgeschleust werden konnte. Jede Kutsche wurde hier gewogen, je nach Wert Steuern erhoben und die Ware wurde drei Tage in den heute noch sichtbaren Stapelhäusern gelagert.</p><p>Heute spielt die Waagegasse vor allem als \"Schleichweg\" zwischen Michaelis- und Allerheiligenstraße, als Zugang zur Alten Synagoge und natürlich bei zahlreichen Stadtführungen eine Rolle.</p>"
                     }
                 },
                 {
@@ -131,7 +131,7 @@
                     ],
                     "schema:value": {
                         "@language": "fr",
-                        "@value": "<p>La Waagegasse peut sembler peu spectaculaire au premier abord, mais il s'agit d'une rue remarquablement ancienne et tr\u00e8s importante pour l'histoire d'Erfurt. En effet, tous les marchands qui voulaient passer par Erfurt et/ou faire du commerce \u00e0 Erfurt passaient par ici. La rue est aussi large qu'un carrosse, de sorte que l'on pouvait faire passer chacun d'eux individuellement. Chaque chariot \u00e9tait pes\u00e9 ici, des taxes \u00e9taient pr\u00e9lev\u00e9es en fonction de sa valeur et les marchandises \u00e9taient stock\u00e9es pendant trois jours dans les maisons d'empilage qui sont encore visibles aujourd'hui.</p><p>Aujourd'hui, la Waagegasse joue surtout un r\u00f4le de \"chemin de traverse\" entre la Michaelisstrasse et l'Allerheiligenstrasse, d'acc\u00e8s \u00e0 l'ancienne synagogue et, bien s\u00fbr, dans de nombreuses visites de la ville.</p>"
+                        "@value": "<p>La Waagegasse peut sembler peu spectaculaire au premier abord, mais il s'agit d'une rue remarquablement ancienne et très importante pour l'histoire d'Erfurt. En effet, tous les marchands qui voulaient passer par Erfurt et/ou faire du commerce à Erfurt passaient par ici. La rue est aussi large qu'un carrosse, de sorte que l'on pouvait faire passer chacun d'eux individuellement. Chaque chariot était pesé ici, des taxes étaient prélevées en fonction de sa valeur et les marchandises étaient stockées pendant trois jours dans les maisons d'empilage qui sont encore visibles aujourd'hui.</p><p>Aujourd'hui, la Waagegasse joue surtout un rôle de \"chemin de traverse\" entre la Michaelisstrasse et l'Allerheiligenstrasse, d'accès à l'ancienne synagogue et, bien sûr, dans de nombreuses visites de la ville.</p>"
                     }
                 }
             ],
@@ -156,26 +156,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9787007,11.0277439,21z"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_653435"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653458"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653546"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_653571"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319657"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319686"
-                }
-            ],
             "schema:name": {
                 "@language": "de",
                 "@value": "Waagegasse Erfurt"
@@ -183,9 +163,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5319686"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

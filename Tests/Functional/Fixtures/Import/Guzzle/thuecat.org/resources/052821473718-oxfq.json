@@ -79,15 +79,15 @@
             "schema:description": [
                 {
                     "@language": "de",
-                    "@value": "Der Wenigemarkt befindet sich am \u00f6stlichen Zugang der Kr\u00e4merbr\u00fccke. Hier finden Sie eine Vielzahl Caf\u00e9s und Restaurants, die zum Verbleiben und Entspannen einladen."
+                    "@value": "Der Wenigemarkt befindet sich am östlichen Zugang der Krämerbrücke. Hier finden Sie eine Vielzahl Cafés und Restaurants, die zum Verbleiben und Entspannen einladen."
                 },
                 {
                     "@language": "fr",
-                    "@value": "Le Wenigemarkt est situ\u00e9 \u00e0 l'entr\u00e9e orientale du Kr\u00e4merbr\u00fccke. Vous y trouverez une vari\u00e9t\u00e9 de caf\u00e9s et de restaurants qui vous invitent \u00e0 rester et \u00e0 vous d\u00e9tendre."
+                    "@value": "Le Wenigemarkt est situé à l'entrée orientale du Krämerbrücke. Vous y trouverez une variété de cafés et de restaurants qui vous invitent à rester et à vous détendre."
                 },
                 {
                     "@language": "en",
-                    "@value": "The Wenigemarkt is located at the eastern entrance of the Kr\u00e4merbr\u00fccke. Here you will find a variety of cafes and restaurants that invite you to stay and relax."
+                    "@value": "The Wenigemarkt is located at the eastern entrance of the Krämerbrücke. Here you will find a variety of cafes and restaurants that invite you to stay and relax."
                 },
                 {
                     "@id": "genid-0f944fd40aa04d3d85374be0fe18c485-b1",
@@ -99,7 +99,7 @@
                     ],
                     "schema:value": {
                         "@language": "de",
-                        "@value": "<p>Der Wenigemarkt befindet sich am \u00f6stlichen Zugang der Kr\u00e4merbr\u00fccke. Hier finden Sie eine Vielzahl Caf\u00e9s und Restaurants, die zum Verbleiben und Entspannen einladen.</p>"
+                        "@value": "<p>Der Wenigemarkt befindet sich am östlichen Zugang der Krämerbrücke. Hier finden Sie eine Vielzahl Cafés und Restaurants, die zum Verbleiben und Entspannen einladen.</p>"
                     }
                 },
                 {
@@ -112,7 +112,7 @@
                     ],
                     "schema:value": {
                         "@language": "en",
-                        "@value": "<p>The Wenigemarkt is located at the eastern entrance of the Kr\u00e4merbr\u00fccke. Here you will find a variety of cafes and restaurants that invite you to stay and relax.</p>"
+                        "@value": "<p>The Wenigemarkt is located at the eastern entrance of the Krämerbrücke. Here you will find a variety of cafes and restaurants that invite you to stay and relax.</p>"
                     }
                 },
                 {
@@ -125,7 +125,7 @@
                     ],
                     "schema:value": {
                         "@language": "fr",
-                        "@value": "<p>Le Wenigemarkt est situ\u00e9 \u00e0 l'entr\u00e9e orientale du Kr\u00e4merbr\u00fccke. Vous y trouverez une vari\u00e9t\u00e9 de caf\u00e9s et de restaurants qui vous invitent \u00e0 rester et \u00e0 vous d\u00e9tendre.</p>"
+                        "@value": "<p>Le Wenigemarkt est situé à l'entrée orientale du Krämerbrücke. Vous y trouverez une variété de cafés et de restaurants qui vous invitent à rester et à vous détendre.</p>"
                     }
                 }
             ],
@@ -150,9 +150,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9785793,11.0319168,21z"
             },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_5143698"
-            },
             "schema:name": {
                 "@language": "de",
                 "@value": "Wenigemarkt Erfurt"
@@ -160,9 +157,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5143698"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

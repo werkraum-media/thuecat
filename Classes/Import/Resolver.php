@@ -795,9 +795,19 @@ class Resolver
                         $atCap = (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH);
 
                         if ($bucket === 'media') {
-                            // Same drop as the depth cap: emptying the bucket is
-                            // what makes the drain loop terminate.
-                            if ($atCap || $context->skipMedia) {
+                            // Exempt from MAX_FETCH_DEPTH: an asset fetch stages
+                            // no rows and follows no references, so it cannot
+                            // fan out the way cross-referenced POIs do. Under
+                            // the cap a record discovered through a relation
+                            // would silently lose its own images.
+                            // Emptying the bucket is what makes the drain loop
+                            // terminate. Without folders there is nowhere to put
+                            // an asset, so the bucket is dropped rather than
+                            // drained.
+                            if ($context->skipMedia
+                                || $context->targetFolder === null
+                                || $context->stagingFolder === null
+                            ) {
                                 foreach ($references as $entry) {
                                     if (is_array($entry)) {
                                         $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry['id']);

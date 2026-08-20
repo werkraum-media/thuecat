@@ -9,7 +9,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 return [
     'pages' => [
         [
-            'uid' => '3000',
+            'uid' => '1',
             'pid' => '0',
             'doktype' => PageRepository::DOKTYPE_DEFAULT,
             'title' => 'Rootpage',
@@ -17,23 +17,9 @@ return [
         ],
         [
             'uid' => '10',
-            'pid' => '3000',
+            'pid' => '1',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
-            'title' => 'Attraction storage folder',
-        ],
-        [
-            'uid' => '20',
-            'pid' => '3000',
-            'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
-            'title' => 'Category storage folder',
-        ],
-    ],
-    'sys_category' => [
-        [
-            'uid' => '100',
-            'pid' => '20',
-            'parent' => '0',
-            'title' => 'POIs',
+            'title' => 'Storage folder',
         ],
     ],
     'tx_thuecat_import_configuration' => [
@@ -41,7 +27,7 @@ return [
             'uid' => '1',
             'pid' => '0',
             'disable' => '0',
-            'title' => 'Attraction sighted as relation before its own root',
+            'title' => 'Media on an attraction sighted as relation first',
             'type' => 'static',
             'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
             <T3FlexForms>
@@ -51,11 +37,8 @@ return [
                             <field index="storagePid">
                                 <value index="vDEF">10</value>
                             </field>
-                            <field index="categoryStoragePid">
-                                <value index="vDEF">20</value>
-                            </field>
-                            <field index="categoryParent">
-                                <value index="vDEF">100</value>
+                            <field index="fileFolder">
+                                <value index="vDEF">1:/thuecat/</value>
                             </field>
                             <field index="urls">
                                 <el index="el">
@@ -63,17 +46,17 @@ return [
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-referencing-later-root</value>
+                                                    <value index="vDEF">https://thuecat.org/resources/attraction-referencing-media-root</value>
                                                 </field>
                                             </el>
                                         </value>
                                         <value index="_TOGGLE">0</value>
                                     </field>
-                                    <field index="sighted-as-relation-first">
+                                    <field index="media-root-sighted-second">
                                         <value index="url">
                                             <el>
                                                 <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-sighted-as-relation-first</value>
+                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-media-sighted-as-relation-first</value>
                                                 </field>
                                             </el>
                                         </value>

@@ -354,6 +354,39 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     /**
+     * An outer relation on an earlier root points at a record that is a root
+     * itself later in the same run, so it enters the payload at depth 1. The
+     * generic fetch cap then empties its media bucket without fetching, and
+     * without logging. Media resolution cannot fan out — it stages no rows and
+     * follows no references — so the cap must not apply to it.
+     * Regression guard for #13027.
+     */
+    #[Test]
+    public function relatesMediaOfAttractionSightedAsRelationBeforeItsOwnRoot(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsMediaForAttractionSightedAsRelationFirst.php');
+        $this->expectFetch('attraction-referencing-media-root.json');
+        // Fetched once: resolving the relation marks it updated, so its own
+        // root turn short-circuits before fetching again.
+        $this->expectFetch('attraction-with-media-sighted-as-relation-first.json');
+        $this->expectFetch('dms_relation_first.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/relation-first/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched.');
+        self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
+        self::assertSame(
+            ['main_image', 'media_files'],
+            $this->fetchReferenceFields(),
+            'The relation-first attraction lost the media its slots map to.'
+        );
+    }
+
+    /**
      * @return array<string, string>
      */
     private function fetchReferenceTitlesByField(): array

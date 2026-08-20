@@ -94,15 +94,15 @@
             "schema:description": [
                 {
                     "@language": "de",
-                    "@value": "Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fu\u00dfe des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz f\u00fcr allerlei Feste und Veranstaltungen. \nMontag bis Samstag findet hier au\u00dferdem der Wochenmarkt statt.\nIm Osten und im S\u00fcden des Domplatzes laden eine Vielzahl Caf\u00e9s und Restaurants zum Verweilen und Genie\u00dfen ein."
+                    "@value": "Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fuße des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz für allerlei Feste und Veranstaltungen. \nMontag bis Samstag findet hier außerdem der Wochenmarkt statt.\nIm Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants zum Verweilen und Genießen ein."
                 },
                 {
                     "@language": "fr",
-                    "@value": "Avec pour toile de fond l\u2019imposante cath\u00e9drale Notre-Dame et l\u2019\u00e9glise Saint-S\u00e9v\u00e8re, la place de la cath\u00e9drale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.\nDes marchands de la r\u00e9gion vous proposent chaque jour, de 7 \u00e0 14h, des produits frais comme des fruits et l\u00e9gumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.\n"
+                    "@value": "Avec pour toile de fond l’imposante cathédrale Notre-Dame et l’église Saint-Sévère, la place de la cathédrale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.\nDes marchands de la région vous proposent chaque jour, de 7 à 14h, des produits frais comme des fruits et légumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.\n"
                 },
                 {
                     "@language": "en",
-                    "@value": "Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and caf\u00e9s. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.\nFrom Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre."
+                    "@value": "Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and cafés. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.\nFrom Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre."
                 },
                 {
                     "@id": "genid-443f86d2acdc469dad4b3588d31d0c49-b1",
@@ -114,7 +114,7 @@
                     ],
                     "schema:value": {
                         "@language": "de",
-                        "@value": "<p>Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fu\u00dfe des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz f\u00fcr allerlei Feste und Veranstaltungen. </p><p>Montag bis Samstag findet hier au\u00dferdem der Wochenmarkt statt.</p><p>Im Osten und im S\u00fcden des Domplatzes laden eine Vielzahl Caf\u00e9s und Restaurants zum Verweilen und Genie\u00dfen ein.</p>"
+                        "@value": "<p>Der Domplatz ist der wohl bekannteste Platz Erfurts, nicht zuletzt wegen des imposanten Ensembles aus dem Dom St. Marien und der St. Severikirche. Am Fuße des Petersbergs und am Rand der Altstadt gelegen, bietet er viel Platz für allerlei Feste und Veranstaltungen. </p><p>Montag bis Samstag findet hier außerdem der Wochenmarkt statt.</p><p>Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants zum Verweilen und Genießen ein.</p>"
                     }
                 },
                 {
@@ -127,7 +127,7 @@
                     ],
                     "schema:value": {
                         "@language": "fr",
-                        "@value": "<p>Avec pour toile de fond l\u2019imposante cath\u00e9drale Notre-Dame et l\u2019\u00e9glise Saint-S\u00e9v\u00e8re, la place de la cath\u00e9drale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.<br><br>Des marchands de la r\u00e9gion vous proposent chaque jour, de 7 \u00e0 14h, des produits frais comme des fruits et l\u00e9gumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.</p>"
+                        "@value": "<p>Avec pour toile de fond l’imposante cathédrale Notre-Dame et l’église Saint-Sévère, la place de la cathédrale vous attire avec ses charmants petits magasins et un large choix en terme de gastronomie.<br><br>Des marchands de la région vous proposent chaque jour, de 7 à 14h, des produits frais comme des fruits et légumes, de la viande et des saucisses ainsi que de nombreuses gourmandises.</p>"
                     }
                 },
                 {
@@ -140,7 +140,7 @@
                     ],
                     "schema:value": {
                         "@language": "en",
-                        "@value": "<p>Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and caf\u00e9s. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.</p><p>From Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre.</p>"
+                        "@value": "<p>Domplatz square is only a few seconds' walk from Kettenstrasse. Set against the majestic backdrop of the cathedral and the Church of St Severus, it boasts a host of attractive boutiques and a variety of restaurants and cafés. The square's daily market, which operates from 7am until 2pm sells fresh regional produce including fruit and vegetables, meat and sausage products and many other tasty treats.</p><p>From Domplatz square, Marktstrasse - which follows the centuries-old trading route the Via Regia - leads you back towards the city centre.</p>"
                     }
                 }
             ],
@@ -165,20 +165,6 @@
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/@50.9767896,11.023818,18.25z"
             },
-            "schema:image": [
-                {
-                    "@id": "https://thuecat.org/resources/dms_5122508"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319718"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319755"
-                },
-                {
-                    "@id": "https://thuecat.org/resources/dms_5319964"
-                }
-            ],
             "schema:name": [
                 {
                     "@language": "de",
@@ -186,7 +172,7 @@
                 },
                 {
                     "@language": "fr",
-                    "@value": "Place de la cath\u00e9drale et rue commer\u00e7ante"
+                    "@value": "Place de la cathédrale et rue commerçante"
                 },
                 {
                     "@language": "en",
@@ -195,14 +181,11 @@
             ],
             "schema:paymentAccepted": {
                 "@language": "de",
-                "@value": "Unterscheidet sich je nach Gesch\u00e4ft."
+                "@value": "Unterscheidet sich je nach Geschäft."
             },
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5319718"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

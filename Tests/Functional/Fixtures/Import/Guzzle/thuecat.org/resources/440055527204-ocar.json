@@ -80,15 +80,15 @@
             "schema:description": [
                 {
                     "@language": "fr",
-                    "@value": "Le Q-Park est situ\u00e9 directement derri\u00e8re le grand magasin Anger 1 dans le centre-ville d'Erfurt et peut \u00eatre atteint par la Juri-Gagarin-Ring/Meyfartstra\u00dfe."
+                    "@value": "Le Q-Park est situé directement derrière le grand magasin Anger 1 dans le centre-ville d'Erfurt et peut être atteint par la Juri-Gagarin-Ring/Meyfartstraße."
                 },
                 {
                     "@language": "en",
-                    "@value": "The Q-Park is located directly behind the department store Anger 1 in Erfurt's city centre and can be reached via Juri-Gagarin-Ring/Meyfartstra\u00dfe."
+                    "@value": "The Q-Park is located directly behind the department store Anger 1 in Erfurt's city centre and can be reached via Juri-Gagarin-Ring/Meyfartstraße."
                 },
                 {
                     "@language": "de",
-                    "@value": "Der Q-Park liegt direkt hinter dem Kaufhaus Anger 1 im Erfurter Stadtzentrum und ist \u00fcber Juri-Gagarin-Ring/Meyfartstra\u00dfe zu erreichen. Durch die direkte Anbindung an den Stadtring, ist das Parkhaus gut von au\u00dferhalb \u00fcber Schnellstra\u00dfen und Autobahnen zu erreichen und befindet sich gleichzeitig im unmittelbaren modernen Zentrum Erfurts."
+                    "@value": "Der Q-Park liegt direkt hinter dem Kaufhaus Anger 1 im Erfurter Stadtzentrum und ist über Juri-Gagarin-Ring/Meyfartstraße zu erreichen. Durch die direkte Anbindung an den Stadtring, ist das Parkhaus gut von außerhalb über Schnellstraßen und Autobahnen zu erreichen und befindet sich gleichzeitig im unmittelbaren modernen Zentrum Erfurts."
                 },
                 {
                     "@id": "genid-9de58329a0684feaa8b9b5ea70621af8-b1",
@@ -100,7 +100,7 @@
                     ],
                     "schema:value": {
                         "@language": "de",
-                        "@value": "<p>Der Q-Park liegt direkt hinter dem Kaufhaus Anger 1 im Erfurter Stadtzentrum und ist \u00fcber Juri-Gagarin-Ring/Meyfartstra\u00dfe zu erreichen. Durch die direkte Anbindung an den Stadtring, ist das Parkhaus gut von au\u00dferhalb \u00fcber Schnellstra\u00dfen und Autobahnen zu erreichen und befindet sich gleichzeitig im unmittelbaren modernen Zentrum Erfurts.</p>"
+                        "@value": "<p>Der Q-Park liegt direkt hinter dem Kaufhaus Anger 1 im Erfurter Stadtzentrum und ist über Juri-Gagarin-Ring/Meyfartstraße zu erreichen. Durch die direkte Anbindung an den Stadtring, ist das Parkhaus gut von außerhalb über Schnellstraßen und Autobahnen zu erreichen und befindet sich gleichzeitig im unmittelbaren modernen Zentrum Erfurts.</p>"
                     }
                 },
                 {
@@ -113,7 +113,7 @@
                     ],
                     "schema:value": {
                         "@language": "en",
-                        "@value": "The Q-Park is located directly behind the department store Anger 1 in Erfurt's city centre and can be reached via Juri-Gagarin-Ring/Meyfartstra\u00dfe."
+                        "@value": "The Q-Park is located directly behind the department store Anger 1 in Erfurt's city centre and can be reached via Juri-Gagarin-Ring/Meyfartstraße."
                     }
                 },
                 {
@@ -126,7 +126,7 @@
                     ],
                     "schema:value": {
                         "@language": "fr",
-                        "@value": "Le Q-Park est situ\u00e9 directement derri\u00e8re le grand magasin Anger 1 dans le centre-ville d'Erfurt et peut \u00eatre atteint par la Juri-Gagarin-Ring/Meyfartstra\u00dfe."
+                        "@value": "Le Q-Park est situé directement derrière le grand magasin Anger 1 dans le centre-ville d'Erfurt et peut être atteint par la Juri-Gagarin-Ring/Meyfartstraße."
                     }
                 }
             ],
@@ -150,9 +150,6 @@
             "schema:hasMap": {
                 "@type": "schema:URL",
                 "@value": "https://www.google.de/maps/place/Q-Park+Anger+1+Parkhaus/@50.9777795,11.036599,18.5z/data=!4m12!1m6!3m5!1s0x47a47295932dd6c5:0x619ce72e7a54f805!2sPredigerkirche!8m2!3d50.976505!4d11.0289217!3m4!1s0x47a472bc3ecf3a5d:0x88cb2943674c2ea2!8m2!3d50.978002!4d11.0375074"
-            },
-            "schema:image": {
-                "@id": "https://thuecat.org/resources/dms_5197164"
             },
             "schema:isAccessibleForFree": {
                 "@type": "schema:Boolean",
@@ -279,7 +276,7 @@
                 },
                 {
                     "@language": "fr",
-                    "@value": "Q-Park Anger 1 parking \u00e0 \u00e9tages"
+                    "@value": "Q-Park Anger 1 parking à étages"
                 }
             ],
             "schema:openingHoursSpecification": {
@@ -340,9 +337,6 @@
             "schema:petsAllowed": {
                 "@type": "schema:Boolean",
                 "@value": "true"
-            },
-            "schema:photo": {
-                "@id": "https://thuecat.org/resources/dms_5197164"
             },
             "schema:smokingAllowed": {
                 "@type": "schema:Boolean",

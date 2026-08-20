@@ -1,0 +1,32 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/attraction-with-media-sighted-as-relation-first",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Park",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Hallenpark"
+                }
+            ],
+            "schema:photo": {
+                "@id": "https://thuecat.org/resources/dms_relation_first"
+            },
+            "schema:image": {
+                "@id": "https://thuecat.org/resources/dms_relation_first"
+            }
+        }
+    ]
+}
