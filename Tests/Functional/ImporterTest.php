@@ -217,6 +217,32 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithCategories.php');
     }
 
+    /**
+     * An outer relation on an earlier root points at a record that is a root
+     * itself later in the same run. Resolving that relation fetches and stages
+     * the record at depth 1; its own root turn then finds it already updated
+     * and drops the row, taking the staged category bucket with it. The record
+     * must keep the categories its @types map to, whichever sighting wires
+     * them. Regression guard for #13027.
+     */
+    #[Test]
+    public function importsCategoriesForAttractionSightedAsRelationBeforeItsOwnRoot(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAttractionSightedAsRelationFirst.php');
+        $this->expectFetch('attraction-referencing-later-root.json');
+        // Fetched once: resolving the relation marks it updated, so its own
+        // root turn short-circuits before fetching again.
+        $this->expectFetch('attraction-sighted-as-relation-first.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            ['Bürgerpark', 'Park', 'Öffentlicher Park'],
+            $this->fetchCategoryTitlesOf('https://thuecat.org/resources/attraction-sighted-as-relation-first'),
+            'The relation-first attraction lost the categories its @types map to.'
+        );
+    }
+
     #[Test]
     public function importsTouristAttractionWithSloganArray(): void
     {
@@ -617,6 +643,63 @@ class ImporterTest extends AbstractImportTestCase
         self::assertIsArray($context);
         self::assertSame(3, $context['attempts'] ?? null, 'Attempt count is recorded.');
         self::assertSame('retryExhausted', $context['cause'] ?? null, 'Cause is machine-readable.');
+    }
+
+    /**
+     * Category titles related to an attraction, by its remote_id, sorted so the
+     * assertion does not depend on wiring order.
+     *
+     * @return list<string>
+     */
+    private function fetchCategoryTitlesOf(string $remoteId): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_category');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $rows = $queryBuilder
+            ->select('category.title')
+            ->from('sys_category', 'category')
+            ->join(
+                'category',
+                'sys_category_record_mm',
+                'mm',
+                $queryBuilder->expr()->eq('mm.uid_local', $queryBuilder->quoteIdentifier('category.uid'))
+            )
+            ->join(
+                'mm',
+                'tx_thuecat_tourist_attraction',
+                'attraction',
+                $queryBuilder->expr()->eq('mm.uid_foreign', $queryBuilder->quoteIdentifier('attraction.uid'))
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'attraction.remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                ),
+                $queryBuilder->expr()->eq(
+                    'mm.tablenames',
+                    $queryBuilder->createNamedParameter('tx_thuecat_tourist_attraction')
+                ),
+                // The table shares sys_category_record_mm between its category
+                // and keyword relations.
+                $queryBuilder->expr()->eq(
+                    'mm.fieldname',
+                    $queryBuilder->createNamedParameter('categories')
+                )
+            )
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $titles = [];
+        foreach ($rows as $row) {
+            if (is_string($row['title'])) {
+                $titles[] = $row['title'];
+            }
+        }
+        sort($titles);
+
+        return $titles;
     }
 
     private function buildResolverThrowingError(): ResolverThrowingErrorStub

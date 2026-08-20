@@ -396,6 +396,15 @@ class DataHandlerPayload
             }
         }
 
+        foreach ($other->categories as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $categories) {
+                if (isset($this->categories[$table][$remoteId])) {
+                    continue;
+                }
+                $this->categories[$table][$remoteId] = $categories;
+            }
+        }
+
         foreach ($other->inlineMedia as $table => $rowsByRemoteId) {
             foreach ($rowsByRemoteId as $remoteId => $entries) {
                 if (isset($this->inlineMedia[$table][$remoteId])) {
