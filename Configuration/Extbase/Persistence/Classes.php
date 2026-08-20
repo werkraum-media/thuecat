@@ -14,6 +14,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RetriesRecovered;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunAborted;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunFailed;
@@ -59,6 +60,7 @@ return [
             'categoryMatched' => CategoryMatched::class,
             'categoryUnmatched' => CategoryUnmatched::class,
             'referenceSkipped' => ReferenceSkipped::class,
+            'referenceUnrelatable' => ReferenceUnrelatable::class,
             'scheduleDaySkipped' => ScheduleDaySkipped::class,
             'scheduleDayDropped' => ScheduleDayDropped::class,
             'eventWithoutDates' => EventWithoutDates::class,
@@ -100,6 +102,10 @@ return [
     ReferenceSkipped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'referenceSkipped',
+    ],
+    ReferenceUnrelatable::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'referenceUnrelatable',
     ],
     ScheduleDaySkipped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

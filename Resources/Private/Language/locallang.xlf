@@ -141,6 +141,18 @@
             <trans-unit id="module.imports.summary.effectiveSettings" xml:space="preserve">
                 <source>Settings used for this run</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.unrelatableReferences" xml:space="preserve">
+                <source>References without a matching relation</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.matchedTypes" xml:space="preserve">
+                <source>Matched types</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.unmatchedTypes" xml:space="preserve">
+                <source>Not matched types</source>
+            </trans-unit>
+            <trans-unit id="module.imports.summary.listOfErrors">
+                <source>List of Errors</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
             </trans-unit>

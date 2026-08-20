@@ -240,6 +240,42 @@ class ImportLogger
     }
 
     /**
+     * A reference whose record imported into a table the bucket cannot relate
+     * to. Upstream mixes kinds in one property (a POI under a key that maps to
+     * towns, say), so this is data drift rather than a fault: the record is
+     * imported, only the relation is dropped. Info severity keeps a healthy run
+     * reporting healthy while the entry stays queryable.
+     */
+    public function recordUnrelatableReference(
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $field,
+        string $url,
+        string $expectedTable,
+        string $actualTable
+    ): void {
+        $this->stage([
+            'type' => 'referenceUnrelatable',
+            'severity' => self::SEVERITY_INFO,
+            'remote_id' => $ownerRemoteId,
+            'table_name' => $ownerTable,
+            'message' => sprintf(
+                'Reference "%s" for field "%s" was imported as %s, which cannot be related to %s.',
+                $url,
+                $field,
+                $actualTable,
+                $expectedTable
+            ),
+            'context' => (string)(json_encode([
+                'url' => $url,
+                'field' => $field,
+                'expectedTable' => $expectedTable,
+                'actualTable' => $actualTable,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
      * Stage one report entry per distinct source value per kind, de-duplicated
      * run-wide. Matched entries store the resolved uid (available only after
      * persist), not the title, so the report reads the current title live and

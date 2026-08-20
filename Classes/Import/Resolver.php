@@ -759,6 +759,45 @@ class Resolver
         return ctype_digit($outerKey) || str_starts_with($outerKey, 'NEW');
     }
 
+    /**
+     * Write the relation when the referenced record parsed into the table the
+     * bucket targets. A bucket names exactly one target table while upstream
+     * may put any kind behind the property, so a record that imported into a
+     * different table is reported: it exists, and the relation to it is what
+     * was dropped. A reference with no table at all resolved to no model and
+     * was never imported, so there is nothing to report.
+     */
+    protected function relateOrReport(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerKey,
+        string $ownerRemoteId,
+        string $targetTable,
+        string $targetField,
+        string $reference,
+        string|int $value
+    ): void {
+        $actualTable = $context->remoteIdToTable[$reference] ?? '';
+        if ($actualTable === $targetTable) {
+            $payload->setRelationField($ownerTable, $ownerKey, $targetField, $value);
+            return;
+        }
+
+        if ($actualTable === '') {
+            return;
+        }
+
+        $this->importLogger->recordUnrelatableReference(
+            $ownerTable,
+            $ownerRemoteId,
+            $targetField,
+            $reference,
+            $targetTable,
+            $actualTable
+        );
+    }
+
     protected function isFetchableUrl(string $reference): bool
     {
         if (filter_var($reference, FILTER_VALIDATE_URL) === false) {
@@ -909,14 +948,17 @@ class Resolver
                             }
 
                             if ($context->isUpdated($reference)) {
-                                if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
-                                    $payload->setRelationField(
-                                        $ownerTable,
-                                        $ownerKey,
-                                        $targetField,
-                                        $remoteIdToKey[$reference]
-                                    );
-                                }
+                                $this->relateOrReport(
+                                    $payload,
+                                    $context,
+                                    $ownerTable,
+                                    $ownerKey,
+                                    $ownerRemoteId,
+                                    $targetTable,
+                                    $targetField,
+                                    $reference,
+                                    $remoteIdToKey[$reference]
+                                );
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
@@ -952,14 +994,17 @@ class Resolver
                             }
 
                             if (isset($remoteIdToKey[$reference])) {
-                                if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
-                                    $payload->setRelationField(
-                                        $ownerTable,
-                                        $ownerKey,
-                                        $targetField,
-                                        $remoteIdToKey[$reference]
-                                    );
-                                }
+                                $this->relateOrReport(
+                                    $payload,
+                                    $context,
+                                    $ownerTable,
+                                    $ownerKey,
+                                    $ownerRemoteId,
+                                    $targetTable,
+                                    $targetField,
+                                    $reference,
+                                    $remoteIdToKey[$reference]
+                                );
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
@@ -1048,14 +1093,17 @@ class Resolver
             $childDepth = ($context->depthByRemoteId[$ownerRemoteId] ?? 0) + 1;
             $this->rekeyRowsAndInjectPid($payload, $context, $childDepth);
 
-            if (($context->remoteIdToTable[$reference] ?? null) === $targetTable) {
-                $payload->setRelationField(
-                    $ownerTable,
-                    $ownerKey,
-                    $targetField,
-                    $remoteIdToKey[$reference]
-                );
-            }
+            $this->relateOrReport(
+                $payload,
+                $context,
+                $ownerTable,
+                $ownerKey,
+                $ownerRemoteId,
+                $targetTable,
+                $targetField,
+                $reference,
+                $remoteIdToKey[$reference] ?? ''
+            );
         } catch (Exception $e) {
             $reason = $e::class . ': ' . $e->getMessage();
             $context->markReferenceFailed($reference, $reason);

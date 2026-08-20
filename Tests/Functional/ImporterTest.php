@@ -7,6 +7,8 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\FetchFailureVerdict;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
@@ -531,6 +533,56 @@ class ImporterTest extends AbstractImportTestCase
             ),
             'The relation-first attraction lost its accessibility specification.'
         );
+    }
+
+    /**
+     * A bucket names one target table, but upstream puts any kind behind the
+     * property — containedInPlace routinely carries POIs alongside towns. A
+     * referenced record imported into another table is reported, since it
+     * exists and only the relation was dropped. A reference no entity handles
+     * produced no record at all and stays silent.
+     * Regression guard for #13027.
+     */
+    #[Test]
+    public function reportsReferenceThatResolvedToAnUnrelatableTable(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAttractionContainedInAPoi.php');
+        $this->expectFetch('attraction-contained-in-a-poi.json');
+        $this->expectFetch('a-park-not-a-town.json');
+        // No entity handles ttgds:Trail, so it imports nothing to relate to.
+        $this->expectFetch('e_00000001-oatour.json');
+
+        $this->importConfiguration(1);
+
+        $entries = $this->getLogEntriesOfType('referenceUnrelatable');
+        self::assertCount(1, $entries, 'Only the reference that produced a record is reported.');
+        self::assertSame('info', $entries[0]['severity'], 'Upstream mixing kinds is data drift, not a fault.');
+        self::assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
+        self::assertSame(
+            'https://thuecat.org/resources/attraction-contained-in-a-poi',
+            $entries[0]['remote_id']
+        );
+
+        self::assertIsString($entries[0]['context']);
+        $context = json_decode($entries[0]['context'], true);
+        self::assertIsArray($context);
+        self::assertSame('town', $context['field'] ?? null);
+        self::assertSame('tx_thuecat_town', $context['expectedTable'] ?? null);
+        self::assertSame('tx_thuecat_tourist_attraction', $context['actualTable'] ?? null);
+
+        // Info entries never reach getListOfErrors, so the Imports module
+        // surfaces them through their own accessor.
+        self::assertSame([], $this->getLogEntriesOfType('mappingError'));
+        self::assertCount(1, $this->fetchImportLog()->getUnrelatableReferences());
+    }
+
+    private function fetchImportLog(): ImportLog
+    {
+        $logs = $this->get(ImportLogRepository::class)->findAll();
+        $log = $logs->getFirst();
+        self::assertInstanceOf(ImportLog::class, $log);
+
+        return $log;
     }
 
     private function fetchAccessibilitySpecificationOf(string $remoteId): string

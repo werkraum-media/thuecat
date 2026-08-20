@@ -30,6 +30,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EffectiveSettings;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 
@@ -189,6 +190,26 @@ class ImportLog extends Typo3AbstractEntity
         }
         sort($unmatched);
         return $unmatched;
+    }
+
+    /**
+     * Relations dropped because the referenced record parsed into a table the
+     * bucket cannot relate to. Reported separately from errors and warnings:
+     * upstream mixing kinds behind one property is data drift, and a run
+     * carrying these is still a healthy run.
+     *
+     * @return list<string>
+     */
+    public function getUnrelatableReferences(): array
+    {
+        $messages = [];
+        foreach ($this->getEntries() as $entry) {
+            if ($entry instanceof ReferenceUnrelatable) {
+                $messages[] = 'Resource: ' . $entry->getRemoteId() . ' ' . $entry->getMessage();
+            }
+        }
+
+        return array_values(array_unique($messages));
     }
 
     protected function categoryTitle(int $uid): string
