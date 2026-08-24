@@ -84,7 +84,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
         $certification = $node['thuecat:accessibilityCertification'] ?? null;
         if (is_array($certification)) {
             $this->accessibilityCertificationStatus = $this->stripNamespacePrefix(
-                $this->extractLanguageValue($certification['thuecat:accessibilityCertificationStatus'] ?? null)
+                $this->extractValue($certification['thuecat:accessibilityCertificationStatus'] ?? null, $language)
             );
             foreach (self::CERTIFICATION_KEYS as $key) {
                 // Two upstream shapes: legacy fixtures emit a flat
@@ -96,17 +96,17 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
                 $source = (is_array($wrapper) && isset($wrapper['schema:value']))
                     ? $wrapper['schema:value']
                     : $wrapper;
-                $value = $this->stripNamespacePrefix($this->extractLanguageValue($source));
+                $value = $this->stripNamespacePrefix($this->extractValue($source, $language));
                 if ($value !== '') {
                     $this->certifications[$key] = $value;
                 }
             }
         }
 
-        $this->searchCriteria = $this->groupSearchCriteria($node['thuecat:accessibilitySearchCriteria'] ?? null);
+        $this->searchCriteria = $this->groupSearchCriteria($node['thuecat:accessibilitySearchCriteria'] ?? null, $language);
 
         foreach (self::SHORT_DESCRIPTION_KEYS as $key) {
-            $value = $this->extractLocalisedValue($node['thuecat:' . $key] ?? null, $language);
+            $value = $this->extractValue($node['thuecat:' . $key] ?? null, $language);
             if ($value !== '') {
                 $this->shortDescriptions[$key] = $value;
             }
@@ -140,7 +140,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
      *
      * @return array<string, list<string>>
      */
-    private function groupSearchCriteria(mixed $value): array
+    private function groupSearchCriteria(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];
@@ -153,7 +153,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
                 continue;
             }
             $type = $this->stripNamespacePrefix(is_string($item['@type'] ?? null) ? $item['@type'] : '');
-            $member = $this->stripNamespacePrefix($this->extractLanguageValue($item));
+            $member = $this->stripNamespacePrefix($this->extractValue($item, $language));
             if ($type === '' || $member === '') {
                 continue;
             }

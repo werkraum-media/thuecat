@@ -22,12 +22,12 @@ class TownEntity extends AbstractEntity
             'description' => 'schema:description',
         ];
         foreach ($localisedFields as $field => $jsonldName) {
-            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+            $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
 
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
-                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $value = $this->extractValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
         }

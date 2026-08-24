@@ -168,6 +168,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'foreign_default_sortby' => 'valid_from, day_of_week, opens',
                 ],
             ],
+            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
             'address' => [
                 'label' => $languagePath . '.address',
                 'l10n_mode' => 'exclude',
@@ -175,6 +176,26 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'text',
                     'readOnly' => true,
                     'searchable' => false,
+                ],
+            ],
+            'address_inline' => [
+                'label' => $languagePath . '.address_inline',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_address',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'appearance' => [
+                        'enabledControls' => [
+                            'new' => false,
+                            'delete' => false,
+                        ],
+                        'collapseAll' => true,
+                        'expandSingle' => true,
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
                 ],
             ],
             'main_image' => [
@@ -307,7 +328,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;language, disable, title, description, main_image, media_files, sanitation, other_service, 
                 traffic_infrastructure, payment_accepted, distance_to_public_transport,
                 opening_hours_inline, special_opening_hours_inline, opening_hours,
-                special_opening_hours, offers, address,  media, remote_id, 
+                special_opening_hours, offers, address_inline, address,  media, remote_id, 
                 --div--;' . $languagePath . '.tab.relations, town, managed_by, contained_in_organisation,
                 contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility',
             ],

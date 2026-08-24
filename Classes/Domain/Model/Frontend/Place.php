@@ -31,7 +31,13 @@ use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
 abstract class Place extends Base
 {
-    protected ?Address $address = null;
+    /** @deprecated Legacy JSON blob; no longer written. Removed in the next major. */
+    protected ?LegacyAddress $address = null;
+
+    /**
+     * @var ObjectStorage<Address>
+     */
+    protected ObjectStorage $addressInline;
 
     protected string $url = '';
 
@@ -84,10 +90,41 @@ abstract class Place extends Base
         $this->parkingFacilityNearBy = new ObjectStorage();
         $this->openingHoursInline = new ObjectStorage();
         $this->specialOpeningHoursInline = new ObjectStorage();
+        $this->addressInline = new ObjectStorage();
     }
 
-    public function getAddress(): ?Address
+    /**
+     * @return ObjectStorage<Address>
+     */
+    public function getAddressInline(): ObjectStorage
     {
+        return $this->addressInline;
+    }
+
+    /** The first address, for the common single-address case. */
+    public function getFirstAddress(): ?Address
+    {
+        foreach ($this->addressInline as $address) {
+            return $address;
+        }
+
+        return null;
+    }
+
+    /**
+     * @deprecated Legacy JSON-blob address carrier. Use getAddressInline() or
+     *             getFirstAddress(); re-run the import to populate the inline
+     *             records. Removed in the next major.
+     */
+    public function getAddress(): ?LegacyAddress
+    {
+        trigger_error(
+            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getAddress() returns the deprecated'
+            . ' JSON-blob address carrier. Use getAddressInline() or getFirstAddress()'
+            . ' (re-run the import). Removed in the next major.',
+            E_USER_DEPRECATED
+        );
+
         return $this->address;
     }
 

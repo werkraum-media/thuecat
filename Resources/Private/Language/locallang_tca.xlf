@@ -178,6 +178,9 @@
                 <source>Special Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.address" xml:space="preserve">
+                <source>Address (deprecated)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.address_inline" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.url" xml:space="preserve">
@@ -263,6 +266,9 @@
                 <source>Special Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
+                <source>Address (deprecated)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.address_inline" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.main_image" xml:space="preserve">
@@ -470,6 +476,36 @@
             </trans-unit>
             <trans-unit id="pages.module.thuecat" xml:space="preserve">
                 <source>ThÜCAT</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.street" xml:space="preserve">
+                <source>Street</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.zip" xml:space="preserve">
+                <source>ZIP</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.city" xml:space="preserve">
+                <source>City</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.email" xml:space="preserve">
+                <source>Email</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.phone" xml:space="preserve">
+                <source>Phone</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.fax" xml:space="preserve">
+                <source>Fax</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.latitude" xml:space="preserve">
+                <source>Latitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.longitude" xml:space="preserve">
+                <source>Longitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_opening_hours" xml:space="preserve">
                 <source>Opening Hours</source>

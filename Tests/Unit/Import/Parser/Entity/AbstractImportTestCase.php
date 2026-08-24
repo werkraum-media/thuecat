@@ -5,10 +5,29 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity;
 
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 
 class AbstractImportTestCase extends TestCase
 {
     protected string $fixturePath = __DIR__ . '/../Fixtures/';
+
+    /**
+     * A parent stages children of several tables (opening hours, addresses, …),
+     * so a test asserting one kind must select it rather than count them all.
+     *
+     * @return list<array<string, string|int|float>>
+     */
+    protected function childRowsOf(EntityInterface $entity, string $table): array
+    {
+        $rows = [];
+        foreach ($entity->getChildren() as $child) {
+            if ($child::TABLE === $table) {
+                $rows[] = $child->toArray();
+            }
+        }
+
+        return $rows;
+    }
 
     /**
      * @return array<string, mixed>|null

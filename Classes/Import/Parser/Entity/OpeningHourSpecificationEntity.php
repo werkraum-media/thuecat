@@ -61,8 +61,11 @@ class OpeningHourSpecificationEntity extends AbstractEntity
     {
         $this->specification_type = $specificationType;
         $this->day_of_week = $dayOfWeek;
-        $this->opens = $this->extractStringValue($node['schema:opens'] ?? null);
-        $this->closes = $this->extractStringValue($node['schema:closes'] ?? null);
+        // Times and dates are untagged typed @values, so they resolve on the
+        // helper's fallback branch whatever language is requested; this entity
+        // is built outside any language pass and has none in scope.
+        $this->opens = $this->extractValue($node['schema:opens'] ?? null, '');
+        $this->closes = $this->extractValue($node['schema:closes'] ?? null, '');
         $this->valid_from = $this->extractDate($node['schema:validFrom'] ?? null);
         $this->valid_through = $this->extractDate($node['schema:validThrough'] ?? null);
 
@@ -103,7 +106,7 @@ class OpeningHourSpecificationEntity extends AbstractEntity
      */
     private function extractDate(mixed $value): ?string
     {
-        $raw = $this->extractStringValue($value);
+        $raw = $this->extractValue($value, '');
         return $raw === '' ? null : $raw;
     }
 }

@@ -136,67 +136,67 @@ parameters:
 			message: '#^Cannot access offset ''latitude'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
 			message: '#^Cannot access offset ''longitude'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getCity\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getCity\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getEmail\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getEmail\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getFax\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getFax\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getLatitute\(\) should return float but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getLatitute\(\) should return float but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getLongitude\(\) should return float but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getLongitude\(\) should return float but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getPhone\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getPhone\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getStreet\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getStreet\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:getZip\(\) should return string but returns mixed\.$#'
+			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getZip\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Address\:\:\$data \(array\<mixed\>\) does not accept mixed\.$#'
+			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:\$data \(array\<mixed\>\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
-			path: Classes/Domain/Model/Frontend/Address.php
+			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
 		-
 			message: '#^Cannot access offset ''author'' on mixed\.$#'
@@ -399,20 +399,8 @@ parameters:
 		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
-			count: 10
-			path: Classes/Import/Parser/Entity/AbstractEntity.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
 			count: 4
-			path: Classes/Import/Parser/Entity/TransientEntity/AbstractTransientEntity.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: Classes/Import/Parser/Entity/TransientEntity/AddressEntity.php
+			path: Classes/Import/Parser/Entity/AbstractEntity.php
 
 		-
 			message: '#^Cannot access offset ''schema\:containsPlace'' on mixed\.$#'
@@ -572,12 +560,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: Tests/Unit/Import/Parser/Entity/TouristAttractionEntityTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertStringNotContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Unit/Import/Parser/Entity/TransientEntity/AddressEntityTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'

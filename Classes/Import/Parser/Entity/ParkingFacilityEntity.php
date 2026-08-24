@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
-use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AddressEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 // Column set is narrower than TouristAttraction (no url, no slogan, no
@@ -52,7 +51,6 @@ class ParkingFacilityEntity extends AbstractEntity
     protected string $payment_accepted = '';
     protected string $distance_to_public_transport = '';
     protected string $offers = '';
-    protected string $address = '';
 
     /**
      * @param array<string, mixed> $node
@@ -73,7 +71,7 @@ class ParkingFacilityEntity extends AbstractEntity
             'payment_accepted' => 'schema:paymentAccepted',
         ];
         foreach ($localisedFields as $field => $jsonldName) {
-            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+            $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
         foreach ($concatenatedFields as $field => $jsonldName) {
             $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
@@ -90,7 +88,7 @@ class ParkingFacilityEntity extends AbstractEntity
         // not spawn an empty translation row driven purely by URI lists.
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
-                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $value = $this->extractValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
             if (!isset($this->translations[$sysLanguageUid])) {
@@ -111,15 +109,7 @@ class ParkingFacilityEntity extends AbstractEntity
 
         $this->buildOpeningHourSpecifications($node, $this->remote_id);
 
-        if (is_array($node['schema:address'] ?? null) && $node['schema:address'] !== []) {
-            $geo = $node['schema:geo'] ?? [];
-            $address = new AddressEntity();
-            $address->configure(
-                $node['schema:address'],
-                is_array($geo) ? $geo : []
-            );
-            $this->address = (string)(json_encode($address->toArray()) ?: '');
-        }
+        $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
 
         // town and managed_by live on the row but stay empty here — the
         // referenced @id stubs only carry ids, not types, so the resolver

@@ -411,7 +411,7 @@ final class ResolverTest extends AbstractImportTestCase
         // its JSON actually declares — tourist_attraction — alongside the
         // organisation refresh keyed by uid=7.
         self::assertSame(
-            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
+            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
             array_keys($data)
         );
 
@@ -460,6 +460,7 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertSame(
             [
                 'tx_thuecat_tourist_attraction',
+                'tx_thuecat_address',
                 'tx_thuecat_town',
                 'tx_thuecat_organisation',
                 'tx_thuecat_parking_facility',
@@ -502,7 +503,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $data = $payload->getDataMap();
         self::assertSame(
-            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_town', 'tx_thuecat_organisation'],
+            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'],
             array_keys($data)
         );
 
@@ -561,6 +562,7 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertSame(
             [
                 'tx_thuecat_tourist_attraction',
+                'tx_thuecat_address',
                 'tx_thuecat_town',
                 'tx_thuecat_organisation',
                 'tx_thuecat_parking_facility',
@@ -616,7 +618,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $data = $payload->getDataMap();
         self::assertSame(
-            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_town', 'tx_thuecat_organisation'],
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'],
             array_keys($data)
         );
 

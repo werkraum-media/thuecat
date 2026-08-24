@@ -71,11 +71,11 @@ class EventEntity extends AbstractEventsEntity
         parent::parse($node, $language, $parserContext, $translationLanguages);
 
         $this->remote_id = $this->getRemoteId($node);
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
+        $this->title = $this->extractValue($node['schema:name'] ?? null, $language);
         $this->details = $this->extractHtmlDescription($node['schema:description'] ?? null, $language);
-        $this->web = $this->extractTypedValue($node['schema:url'] ?? null);
+        $this->web = $this->extractValue($node['schema:url'] ?? null, $language);
         $offers = is_array($node['schema:offers'] ?? null) ? $node['schema:offers'] : [];
-        $this->ticket = $this->extractTypedValue($offers['schema:url'] ?? null);
+        $this->ticket = $this->extractValue($offers['schema:url'] ?? null, $language);
 
         $this->recordMediaTransient(
             $node['schema:photo'] ?? null,
@@ -189,23 +189,7 @@ class EventEntity extends AbstractEventsEntity
             if (!in_array('thuecat:Html', $types, true)) {
                 continue;
             }
-            return $this->extractLocalisedValue($item['schema:value'] ?? null, $language);
-        }
-        return '';
-    }
-
-    /**
-     * Read a single-typed @value(URLs, dates). Distinct from
-     * extractLocalisedValue: typed @values have no @language.
-     */
-    private function extractTypedValue(mixed $value): string
-    {
-        if (!is_array($value)) {
-            return '';
-        }
-        $raw = $value['@value'] ?? null;
-        if (is_string($raw) || is_int($raw) || is_float($raw)) {
-            return (string)$raw;
+            return $this->extractValue($item['schema:value'] ?? null, $language);
         }
         return '';
     }

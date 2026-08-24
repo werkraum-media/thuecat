@@ -83,6 +83,40 @@
             <f:render partial="OpeningHours/MergedByWeekdayRanges" arguments="{openingHours: attraction.specialMergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
         </section>
 
+        <f:if condition="{attraction.addressInline}">
+            <f:then>
+                <section data-relation="address">
+                    <f:for each="{attraction.addressInline}" as="address">
+                        <address>
+                            <f:if condition="{address.street}"><span class="street">{address.street -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.zip}"><span class="zip">{address.zip -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.city}"><span class="city">{address.city -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.email}"><span class="email">{address.email -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.phone}"><span class="phone">{address.phone -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.fax}"><span class="fax">{address.fax -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.latitude}"><span class="geo" data-lat="{address.latitude}" data-lon="{address.longitude}"></span></f:if>
+                        </address>
+                    </f:for>
+                </section>
+            </f:then>
+            <f:else>
+                <f:variable name="address" value="{attraction.address}" />
+                <f:if condition="{address}">
+                    <section data-relation="address">
+                        <address>
+                            <f:if condition="{address.street}"><span class="street">{address.street -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.zip}"><span class="zip">{address.zip -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.city}"><span class="city">{address.city -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.email}"><span class="email">{address.email -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.phone}"><span class="phone">{address.phone -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.fax}"><span class="fax">{address.fax -> f:format.htmlspecialchars()}</span></f:if>
+                            <f:if condition="{address.latitute}"><span class="geo" data-lat="{address.latitute}" data-lon="{address.longitude}"></span></f:if>
+                        </address>
+                    </section>
+                </f:if>
+            </f:else>
+        </f:if>
+
         <f:if condition="{attraction.towns}">
             <section data-relation="towns">
                 <f:for each="{attraction.towns}" as="town">

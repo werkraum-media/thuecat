@@ -148,10 +148,10 @@ final class ParserTest extends AbstractImportTestCase
 
         $data = $payload->getDataMap();
 
-        // Opening hours are now inline child rows in a separate table, not a
-        // column on the attraction.
+        // Opening hours and addresses are inline child rows in their own
+        // tables, not columns on the attraction.
         self::assertSame(
-            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours'],
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address'],
             array_keys($data)
         );
         self::assertSame(
@@ -184,7 +184,6 @@ final class ParserTest extends AbstractImportTestCase
                 'available_languages',
                 'distance_to_public_transport',
                 'offers',
-                'address',
                 'url',
             ],
             array_keys($row)
@@ -219,7 +218,7 @@ final class ParserTest extends AbstractImportTestCase
         self::assertSame('regular', $firstRow['specification_type']);
 
         // JSON blobs: we only spot-check shape here; the unit tests assert
-        // the full decoded structure for offers / address.
+        // the full decoded structure for offers.
 
         /** @var list<array<string, mixed>> $offers */
         $offers = json_decode((string)$row['offers'], true, 512, JSON_THROW_ON_ERROR);
@@ -227,8 +226,9 @@ final class ParserTest extends AbstractImportTestCase
         self::assertSame(['GuidedTourOffer'], $offers[0]['types']);
         self::assertSame(['EntryOffer'], $offers[1]['types']);
 
-        /** @var array<string, mixed> $address */
-        $address = json_decode((string)$row['address'], true, 512, JSON_THROW_ON_ERROR);
+        $addresses = $data['tx_thuecat_address'];
+        self::assertCount(1, $addresses);
+        $address = reset($addresses);
         self::assertSame('Waagegasse 8', $address['street']);
         self::assertSame('99084', $address['zip']);
         self::assertSame('Erfurt', $address['city']);

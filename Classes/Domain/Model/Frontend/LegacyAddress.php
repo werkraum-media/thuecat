@@ -23,69 +23,67 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Core\Type\TypeInterface;
 
 /**
- * One postal address of a place, resolved in the current site language.
- *
- * Coordinates live in a varchar column, written verbatim by the import: a
- * decimal column would be rounded on write, moving the point by kilometres.
+ * Legacy JSON-blob address carrier, readable for records not yet re-imported.
+ * Nothing writes it; it is removed with the column.
  */
-class Address extends AbstractEntity
+class LegacyAddress implements TypeInterface
 {
-    protected string $street = '';
+    /**
+     * @var mixed[]
+     */
+    private array $data;
 
-    protected string $zip = '';
-
-    protected string $city = '';
-
-    protected string $email = '';
-
-    protected string $phone = '';
-
-    protected string $fax = '';
-
-    protected float $latitude = 0.0;
-
-    protected float $longitude = 0.0;
+    public function __construct(
+        private readonly string $serialized
+    ) {
+        $this->data = json_decode($serialized, true) ?? [];
+    }
 
     public function getStreet(): string
     {
-        return $this->street;
+        return $this->data['street'] ?? '';
     }
 
     public function getZip(): string
     {
-        return $this->zip;
+        return $this->data['zip'] ?? '';
     }
 
     public function getCity(): string
     {
-        return $this->city;
+        return $this->data['city'] ?? '';
     }
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->data['email'] ?? '';
     }
 
     public function getPhone(): string
     {
-        return $this->phone;
+        return $this->data['phone'] ?? '';
     }
 
     public function getFax(): string
     {
-        return $this->fax;
+        return $this->data['fax'] ?? '';
     }
 
-    public function getLatitude(): float
+    public function getLatitute(): float
     {
-        return $this->latitude;
+        return $this->data['geo']['latitude'] ?? 0.0;
     }
 
     public function getLongitude(): float
     {
-        return $this->longitude;
+        return $this->data['geo']['longitude'] ?? 0.0;
+    }
+
+    public function __toString(): string
+    {
+        return $this->serialized;
     }
 }

@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
@@ -131,15 +133,72 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->parse($node, 'de', new ParserContext(0));
         $result = $entity->toArray();
 
-        $expectedAddress = '{"remote_id":"genid-39178cabb01c40e091809d730cb07b5a-b0","street":"Benediktsplatz 1","zip":"99084","city":"Erfurt","email":"info@erfurt-tourismus.de","phone":"+49 361 66400","fax":"+49 361 6640290","geo":{"latitude":50.9784118,"longitude":11.0298392}}';
-        self::assertSame($expectedAddress, $result['address']);
+        // The legacy blob column is never written any more; the address is a
+        // staged child row keyed by the derived remote_id.
+        self::assertArrayNotHasKey('address', $result);
+
+        $children = $this->childRowsOf($entity, AddressEntity::TABLE);
+        self::assertCount(1, $children);
+        self::assertSame([
+            'remote_id' => 'https://thuecat.org/resources/333039283321-xxwg::addr::0',
+            'street' => 'Benediktsplatz 1',
+            'zip' => '99084',
+            'city' => 'Erfurt',
+            'email' => 'info@erfurt-tourismus.de',
+            'phone' => '+49 361 66400',
+            'fax' => '+49 361 6640290',
+            'latitude' => '50.9784118',
+            'longitude' => '11.0298392',
+        ], $children[0]);
+    }
+
+    /**
+     * schema:address as a LIST yields one child per entry, each bound to the
+     * same parent and distinguished by its ordinal. The sibling schema:geo
+     * describes the record's location, so it belongs to the first address only.
+     */
+    #[Test]
+    public function createsOneChildPerAddressWhenSourceCarriesSeveral(): void
+    {
+        $node = [
+            '@id' => 'https://thuecat.org/resources/333039283321-xxwg',
+            'schema:name' => ['@language' => 'de', '@value' => 'Zwei Standorte'],
+            'schema:address' => [
+                [
+                    'schema:streetAddress' => ['@language' => 'de', '@value' => 'Benediktsplatz 1'],
+                    'schema:addressLocality' => ['@language' => 'de', '@value' => 'Erfurt'],
+                ],
+                [
+                    'schema:streetAddress' => ['@language' => 'de', '@value' => 'Domplatz 2'],
+                    'schema:addressLocality' => ['@language' => 'de', '@value' => 'Erfurt'],
+                ],
+            ],
+            'schema:geo' => [
+                'schema:latitude' => ['@type' => 'schema:Number', '@value' => '50.9784118'],
+                'schema:longitude' => ['@type' => 'schema:Number', '@value' => '11.0298392'],
+            ],
+        ];
+
+        $entity = new TouristAttractionEntity();
+        $entity->parse($node, 'de', new ParserContext(0));
+
+        $children = $this->childRowsOf($entity, AddressEntity::TABLE);
+        self::assertCount(2, $children);
+
+        self::assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::0', $children[0]['remote_id']);
+        self::assertSame('Benediktsplatz 1', $children[0]['street']);
+        self::assertSame('50.9784118', $children[0]['latitude']);
+
+        self::assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::1', $children[1]['remote_id']);
+        self::assertSame('Domplatz 2', $children[1]['street']);
+        self::assertArrayNotHasKey('latitude', $children[1]);
     }
 
     #[Test]
     public function extractsFlatEnumAndValueFields(): void
     {
         // Golden values are the sys_language_uid=0 row for 165868194223-zmqf in
-        // Tests/Unit/Import/Parser/Assertions/ImportsTouristAttractionsWithRelations.php.
+        // Tests/Functional/Assertions/Import/ImportsTouristAttractionsWithRelations.php.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();
@@ -265,7 +324,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
+        $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
         self::assertCount(2, $rows);
         foreach ($rows as $row) {
@@ -288,7 +347,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
+        $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
         self::assertCount(6, $rows);
         foreach ($rows as $row) {
@@ -308,7 +367,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->parse($node, 'de', new ParserContext(0));
 
         $special = array_values(array_filter(
-            array_map(static fn ($child) => $child->toArray(), $entity->getChildren()),
+            $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE),
             static fn (array $row) => $row['specification_type'] === 'special'
         ));
 
@@ -327,7 +386,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             '@type' => ['schema:TouristAttraction'],
         ], 'de', new ParserContext(0));
 
-        self::assertSame([], $entity->getChildren());
+        self::assertSame([], $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE));
         // Blob columns are no longer written either.
         self::assertArrayNotHasKey('opening_hours', $entity->toArray());
         self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
-use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AddressEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 class TouristAttractionEntity extends AbstractEntity
@@ -56,7 +55,6 @@ class TouristAttractionEntity extends AbstractEntity
     protected string $available_languages = '';
     protected string $distance_to_public_transport = '';
     protected string $offers = '';
-    protected string $address = '';
     protected string $url = '';
 
     /**
@@ -106,7 +104,7 @@ class TouristAttractionEntity extends AbstractEntity
             'available_languages' => 'schema:availableLanguage',
         ];
         foreach ($localisedFields as $field => $jsonldName) {
-            $this->$field = $this->extractLocalisedValue($node[$jsonldName] ?? null, $language);
+            $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
         foreach ($concatenatedFields as $field => $jsonldName) {
             $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
@@ -125,7 +123,7 @@ class TouristAttractionEntity extends AbstractEntity
         // empty fr translation row driven purely by URI-list values.
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
-                $value = $this->extractLocalisedValue($node[$jsonldName] ?? null, $code);
+                $value = $this->extractValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
             if (!isset($this->translations[$sysLanguageUid])) {
@@ -144,27 +142,16 @@ class TouristAttractionEntity extends AbstractEntity
             $this->recordTranslation('offers', $offers, $sysLanguageUid);
         }
 
-        $this->url = $this->extractStringValue($node['schema:url'] ?? null);
+        $this->url = $this->extractValue($node['schema:url'] ?? null, $language);
         // schema:isAccessibleForFree / schema:publicAccess are typed
-        // schema:Boolean values with no @language tag — extractStringValue
-        // pulls the bare @value without going through the localised path.
-        $this->is_accessible_for_free = $this->extractStringValue($node['schema:isAccessibleForFree'] ?? null);
-        $this->public_access = $this->extractStringValue($node['schema:publicAccess'] ?? null);
+        // schema:Boolean values with no @language tag — they land on the
+        // helper's untagged fallback branch.
+        $this->is_accessible_for_free = $this->extractValue($node['schema:isAccessibleForFree'] ?? null, $language);
+        $this->public_access = $this->extractValue($node['schema:publicAccess'] ?? null, $language);
 
         $this->buildOpeningHourSpecifications($node, $this->remote_id);
 
-        if (is_array($node['schema:address'] ?? null) && $node['schema:address'] !== []) {
-            // Address + geo are one logical record in TCA but two sibling keys in
-            // JSON-LD. The transient AddressEntity merges them into a single JSON
-            // blob stored on this entity's `address` column.
-            $geo = $node['schema:geo'] ?? [];
-            $address = new AddressEntity();
-            $address->configure(
-                $node['schema:address'],
-                is_array($geo) ? $geo : []
-            );
-            $this->address = (string)(json_encode($address->toArray()) ?: '');
-        }
+        $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
 
         // town, managed_by and parking_facility_near_by live on the row but stay
         // empty here — the referenced @id stubs only carry ids, not types, and

@@ -25,6 +25,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address as FrontendAddress;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Organisation as FrontendOrganisation;
@@ -162,6 +163,9 @@ return [
     ],
     OpeningHourSpecification::class => [
         'tableName' => 'tx_thuecat_opening_hours',
+    ],
+    FrontendAddress::class => [
+        'tableName' => 'tx_thuecat_address',
     ],
     FrontendCategory::class => [
         'tableName' => 'sys_category',

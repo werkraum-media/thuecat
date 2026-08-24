@@ -38,6 +38,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
@@ -102,7 +103,9 @@ class Resolver
      * fills the child's parentid + parenttable. The parent's remote_id is the
      * prefix of the child's own remote_id, split on `separator`. `fieldByValue`
      * picks the inline field from a column on the child row (e.g. opening hours
-     * route regular vs special to different fields). Keyed by child table.
+     * route regular vs special to different fields); `field` names one target
+     * field unconditionally, for children that have only one. Keyed by child
+     * table.
      */
     protected const INLINE_CHILD_PARENTS = [
         'tx_thuecat_opening_hours' => [
@@ -112,6 +115,12 @@ class Resolver
                 'regular' => 'opening_hours_inline',
                 'special' => 'special_opening_hours_inline',
             ],
+        ],
+        'tx_thuecat_address' => [
+            'separator' => AddressEntity::SEPARATOR,
+            'field' => 'address_inline',
+            // Opt-in: opening-hours removal is unspecified.
+            'reapOrphans' => true,
         ],
     ];
 
@@ -1490,6 +1499,9 @@ class Resolver
         ResolverContext $context
     ): void {
         foreach (self::INLINE_CHILD_PARENTS as $childTable => $config) {
+            // Survivor set the reaping below is judged against.
+            $stagedByParent = [];
+
             foreach ($payload->getDataMap()[$childTable] ?? [] as $childKey => $childRow) {
                 $childKey = (string)$childKey;
                 $childRemoteId = (string)($childRow['remote_id'] ?? '');
@@ -1501,15 +1513,104 @@ class Resolver
                     continue;
                 }
 
-                $columnValue = (string)($childRow[$config['column']] ?? '');
-                $inlineField = $config['fieldByValue'][$columnValue] ?? null;
+                // One target field, or one chosen by a column on the child row.
+                $inlineField = $config['field'] ?? null;
+                if ($inlineField === null) {
+                    $columnValue = (string)($childRow[$config['column'] ?? ''] ?? '');
+                    $inlineField = $config['fieldByValue'][$columnValue] ?? null;
+                }
                 if ($inlineField === null) {
                     continue;
                 }
 
+                $stagedByParent[$parentTable][$parentKey][$childRemoteId] = true;
                 $payload->setRelationField($parentTable, $parentKey, $inlineField, $childKey);
             }
+
+            if (($config['reapOrphans'] ?? false) === true) {
+                $this->reapOrphanedInlineChildren($payload, $childTable, $stagedByParent);
+            }
         }
+    }
+
+    /**
+     * Delete stored children the upstream record no longer carries.
+     *
+     * Judged only for parents whose payload carried children this round: a
+     * round staging nothing for a parent says nothing about upstream, and
+     * later rounds of the importer loop fill only translation rows.
+     *
+     * Child nodes ride inside the parent's payload rather than being fetched
+     * separately, so within such a round an absent child means upstream
+     * dropped it and no technical-failure guard is needed.
+     *
+     * @param array<string, array<string, array<string, true>>> $stagedByParent parentTable => parentKey => remoteId => true
+     */
+    protected function reapOrphanedInlineChildren(
+        DataHandlerPayload $payload,
+        string $childTable,
+        array $stagedByParent
+    ): void {
+        foreach ($stagedByParent as $parentTable => $byParentKey) {
+            foreach ($byParentKey as $parentKey => $survivors) {
+                $parentKey = (string)$parentKey;
+                // A NEW… parent has no stored children to reap.
+                if (!MathUtility::canBeInterpretedAsInteger($parentKey)) {
+                    continue;
+                }
+
+                foreach ($this->findStoredInlineChildren($childTable, $parentTable, (int)$parentKey) as $uid => $remoteId) {
+                    if (isset($survivors[$remoteId])) {
+                        continue;
+                    }
+                    $payload->addCmdMap($childTable, (string)$uid, 'delete', 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Stored children of one parent row, as uid => remote_id. Translations are
+     * excluded: they follow their default-language row and are removed with it.
+     *
+     * @return array<int, string>
+     */
+    protected function findStoredInlineChildren(string $childTable, string $parentTable, int $parentUid): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($childTable);
+        $queryBuilder->getRestrictions()
+            ->removeAll()
+            ->add(new DeletedRestriction())
+        ;
+        $queryBuilder->select('uid', 'remote_id')
+            ->from($childTable)
+            ->where(
+                $queryBuilder->expr()->eq('parentid', $queryBuilder->createNamedParameter($parentUid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->eq('parenttable', $queryBuilder->createNamedParameter($parentTable))
+            )
+        ;
+
+        $language = $this->languageCapabilityFor($childTable);
+        if ($language !== null) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq(
+                $language['languageField'],
+                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+            ));
+        }
+
+        $rows = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+        $children = [];
+        foreach ($rows as $row) {
+            $uid = $row['uid'] ?? null;
+            $remoteId = $row['remote_id'] ?? null;
+            if (!is_numeric($uid) || !is_string($remoteId)) {
+                continue;
+            }
+            $children[(int)$uid] = $remoteId;
+        }
+
+        return $children;
     }
 
     /**

@@ -53,9 +53,9 @@ class OfferEntity extends AbstractTransientEntity
         // "*Offer" entry, so we emit a single-element list here; the frontend
         // keeps its array-shaped `types` contract without us duplicating the
         // schema:Offer/Thing/Intangible noise from the @type array.
-        $this->types = $this->extractTypes($node['thuecat:offerType'] ?? null);
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
-        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
+        $this->types = $this->extractTypes($node['thuecat:offerType'] ?? null, $language);
+        $this->title = $this->extractValue($node['schema:name'] ?? null, $language);
+        $this->description = $this->extractValue($node['schema:description'] ?? null, $language);
         $this->prices = $this->extractPrices($node['schema:priceSpecification'] ?? null, $language);
     }
 
@@ -75,7 +75,7 @@ class OfferEntity extends AbstractTransientEntity
      *
      * @return list<string>
      */
-    private function extractTypes(mixed $value): array
+    private function extractTypes(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];
@@ -84,7 +84,7 @@ class OfferEntity extends AbstractTransientEntity
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
         $types = [];
         foreach ($items as $item) {
-            $raw = $this->extractStringValue($item);
+            $raw = $this->extractValue($item, $language);
             if ($raw === '') {
                 continue;
             }
@@ -115,11 +115,11 @@ class OfferEntity extends AbstractTransientEntity
                 continue;
             }
             $prices[] = [
-                'title' => $this->extractLocalisedValue($item['schema:name'] ?? null, $language),
-                'description' => $this->extractLocalisedValue($item['schema:description'] ?? null, $language),
-                'price' => (float)$this->extractStringValue($item['schema:price'] ?? null),
-                'currency' => $this->stripNamespacePrefix($this->extractStringValue($item['schema:priceCurrency'] ?? null)),
-                'rule' => $this->stripNamespacePrefix($this->extractStringValue($item['thuecat:calculationRule'] ?? null)),
+                'title' => $this->extractValue($item['schema:name'] ?? null, $language),
+                'description' => $this->extractValue($item['schema:description'] ?? null, $language),
+                'price' => (float)$this->extractValue($item['schema:price'] ?? null, $language),
+                'currency' => $this->stripNamespacePrefix($this->extractValue($item['schema:priceCurrency'] ?? null, $language)),
+                'rule' => $this->stripNamespacePrefix($this->extractValue($item['thuecat:calculationRule'] ?? null, $language)),
             ];
         }
 

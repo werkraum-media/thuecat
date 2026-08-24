@@ -60,16 +60,16 @@ class MediaEntity extends AbstractTransientEntity
         $this->mainImage = $kind === 'photo';
         $this->type = $kind === 'video' ? 'video' : 'image';
 
-        $this->title = $this->extractLocalisedValue($node['schema:name'] ?? null, $language);
-        $this->description = $this->extractLocalisedValue($node['schema:description'] ?? null, $language);
+        $this->title = $this->extractValue($node['schema:name'] ?? null, $language);
+        $this->description = $this->extractValue($node['schema:description'] ?? null, $language);
         // contentUrl is the asset as delivered, url a rendition of it; the
         // fallback is load-bearing, referenced nodes carry url only.
-        $this->url = $this->extractStringValue($node['schema:contentUrl'] ?? $node['schema:url'] ?? null);
-        $this->author = $resolvedAuthor ?? $this->extractAuthorString($node['schema:author'] ?? null);
-        $this->copyrightYear = (int)$this->extractLanguageValue($node['schema:copyrightYear'] ?? null);
+        $this->url = $this->extractValue($node['schema:contentUrl'] ?? $node['schema:url'] ?? null, $language);
+        $this->author = $resolvedAuthor ?? $this->extractAuthorString($node['schema:author'] ?? null, $language);
+        $this->copyrightYear = (int)$this->extractValue($node['schema:copyrightYear'] ?? null, $language);
         $this->license = [
-            'type' => $this->extractLanguageValue($node['schema:license'] ?? null),
-            'author' => $this->extractLocalisedValue($node['thuecat:licenseAuthor'] ?? null, $language),
+            'type' => $this->extractValue($node['schema:license'] ?? null, $language),
+            'author' => $this->extractValue($node['thuecat:licenseAuthor'] ?? null, $language),
         ];
     }
 
@@ -134,7 +134,7 @@ class MediaEntity extends AbstractTransientEntity
      * the shaped name in through configure(); this helper only handles the
      * literal-string case.
      */
-    private function extractAuthorString(mixed $value): string
+    private function extractAuthorString(mixed $value, string $language): string
     {
         if (!is_array($value)) {
             return '';
@@ -144,7 +144,7 @@ class MediaEntity extends AbstractTransientEntity
             return '';
         }
 
-        return $this->extractStringValue($value);
+        return $this->extractValue($value, $language);
     }
 
     /**

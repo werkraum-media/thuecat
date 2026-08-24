@@ -27,6 +27,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Category\SysCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\FreeTextKeyword;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\KeywordReader;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
 
 abstract class AbstractEntity implements EntityInterface
@@ -144,13 +145,10 @@ abstract class AbstractEntity implements EntityInterface
         return (string)$node['@id'];
     }
 
-    protected function extractStringValue(mixed $value): string
+    /** Stateless, so instantiated per call like the other Support collaborators. */
+    protected function extractValue(mixed $value, string $language): string
     {
-        if (is_array($value)) {
-            return (string)($value['@value'] ?? '');
-        }
-
-        return '';
+        return (new LocalisedValueReader())->read($value, $language);
     }
 
     /**
@@ -187,14 +185,12 @@ abstract class AbstractEntity implements EntityInterface
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
         $names = [];
         foreach ($items as $item) {
-            if (is_array($item)) {
-                if (isset($item['@language']) && $item['@language'] !== $language) {
-                    continue;
-                }
-                $raw = (string)($item['@value'] ?? '');
-            } else {
-                $raw = (string)$item;
+            // A non-matching @language is skipped; untagged items are accepted
+            // into every language's pass.
+            if (is_array($item) && isset($item['@language']) && $item['@language'] !== $language) {
+                continue;
             }
+            $raw = $this->extractValue($item, $language);
             if ($raw === '') {
                 continue;
             }
@@ -215,49 +211,6 @@ abstract class AbstractEntity implements EntityInterface
     protected function extractConcatenatedString(mixed $value, string $language): string
     {
         return implode(',', $this->extractConcatenatedMembers($value, $language));
-    }
-
-    /**
-     * Pick the @value whose @language tag matches the requested language.
-     *
-     * JSON-LD text fields (schema:name, schema:description, …) arrive as a flat
-     * list of {@language,@value} entries, one per locale. Each language appears
-     * at most once, so a match collapses the list to a single scalar for the DB.
-     * A bare {@language,@value} object (no list wrapper) is accepted for the
-     * common single-locale case. Lang-less entries (e.g. thuecat:Html blobs) are
-     * skipped — they appear alongside the plain lang strings and are not the
-     * display text.
-     *
-     * Returns '' when no entry matches the requested language (caller decides
-     * whether to fall back).
-     */
-    protected function extractLocalisedValue(mixed $value, string $language): string
-    {
-        if (!is_array($value)) {
-            return '';
-        }
-
-        if (array_is_list($value)) {
-            foreach ($value as $item) {
-                if (is_array($item) && ($item['@language'] ?? null) === $language && isset($item['@value'])) {
-                    return (string)$item['@value'];
-                }
-            }
-            return '';
-        }
-
-        if (($value['@language'] ?? null) === $language && isset($value['@value'])) {
-            return (string)$value['@value'];
-        }
-
-        // Typed @values without @language (e.g. schema:Boolean) — fall back to
-        // the plain @value so callers don't need a separate branch for booleans
-        // that share a field with lang strings (see schema:petsAllowed).
-        if (!isset($value['@language']) && isset($value['@value'])) {
-            return (string)$value['@value'];
-        }
-
-        return '';
     }
 
     /**
@@ -474,7 +427,7 @@ abstract class AbstractEntity implements EntityInterface
             return '';
         }
 
-        $distance = $this->extractStringValue($node['schema:value'] ?? null);
+        $distance = $this->extractValue($node['schema:value'] ?? null, $language);
         if ($distance === '') {
             return '';
         }
@@ -643,6 +596,47 @@ abstract class AbstractEntity implements EntityInterface
                 'unmatched' => $report['unmatched'],
             ],
         ];
+    }
+
+    /**
+     * Manufacture one AddressEntity child per schema:address node, each with a
+     * translation set per configured language.
+     *
+     * @param array<string, mixed> $node                 owning JSON-LD node
+     * @param array<string, int>   $translationLanguages code => sys_language_uid
+     */
+    protected function buildAddress(array $node, string $remoteId, string $language, array $translationLanguages = []): void
+    {
+        $value = $node['schema:address'] ?? null;
+        if (!is_array($value) || $value === []) {
+            return;
+        }
+
+        // Nothing upstream guarantees one address per record.
+        $addressNodes = array_is_list($value) ? $value : [$value];
+
+        // One geo node describes the record's location, so it can only belong
+        // to the first address.
+        $geo = $node['schema:geo'] ?? [];
+        /** @var array<string, mixed> $geo JSON-LD nodes are string-keyed. */
+        $geo = is_array($geo) ? $geo : [];
+
+        $ordinal = 0;
+        foreach ($addressNodes as $addressNode) {
+            if (!is_array($addressNode) || $addressNode === []) {
+                continue;
+            }
+            /** @var array<string, mixed> $addressNode JSON-LD nodes are string-keyed. */
+            $child = new AddressEntity();
+            $child->configure($addressNode, $language, $ordinal === 0 ? $geo : [], $remoteId, $ordinal);
+
+            foreach ($translationLanguages as $code => $sysLanguageUid) {
+                $child->configureTranslation($addressNode, $code, $sysLanguageUid);
+            }
+
+            $this->children[] = $child;
+            $ordinal++;
+        }
     }
 
     /**

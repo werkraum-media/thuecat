@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity;
 
 use PHPUnit\Framework\Attributes\Test;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
@@ -110,21 +112,27 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function createsChildAddressEntityAndJsonEncodes(): void
+    public function createsChildAddressEntity(): void
     {
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
         self::assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $address = $this->decodeJson($entity->toArray()['address']);
+        // The legacy blob column is never written any more; the address is a
+        // staged child row.
+        self::assertArrayNotHasKey('address', $entity->toArray());
 
+        $addresses = $this->childRowsOf($entity, AddressEntity::TABLE);
+        self::assertCount(1, $addresses);
+        $address = $addresses[0];
+
+        self::assertSame('https://thuecat.org/resources/396420044896-drzt::addr::0', $address['remote_id']);
         self::assertSame('Bechtheimer Str. 1', $address['street']);
         self::assertSame('99084', $address['zip']);
         self::assertSame('Erfurt', $address['city']);
         self::assertSame('+49 361 5640', $address['phone']);
-        // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame(50.977648905044, $address['geo']['latitude']);
+        self::assertSame('50.977648905044', $address['latitude']);
     }
 
     #[Test]
@@ -225,7 +233,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $rows = array_map(static fn ($child) => $child->toArray(), $entity->getChildren());
+        $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
         self::assertCount(8, $rows);
         $byDay = array_column($rows, null, 'day_of_week');

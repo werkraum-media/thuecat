@@ -435,6 +435,33 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSameAttractionTwice.php');
     }
 
+    // Each site language gets its own address row, from the source's @language tags.
+    #[Test]
+    public function importsAddressTranslations(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAddressTranslations.php');
+        $this->expectFetch('900000000001-goet.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsAddressTranslations.php');
+    }
+
+    /**
+     * DataHandler appends inline children, so a re-import must match on the
+     * derived remote_id to update rows in place rather than stacking them.
+     */
+    #[Test]
+    public function reimportingKeepsOneAddressRowPerParentPerLanguage(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportAddressTranslations.php');
+        $this->expectFetch('900000000001-goet.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsAddressTranslations.php');
+    }
+
     #[Test]
     public function importsTouristAttractionsWithSpecialOpeningHours(): void
     {

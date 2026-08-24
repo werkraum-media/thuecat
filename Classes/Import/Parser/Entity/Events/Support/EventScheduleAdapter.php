@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support;
 
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
 
 // Translate one or many schema:Schedule JSON-LD nodes into the array shape
 // WerkraumMedia\Events\Service\DestinationDataImportService\DatesFactory expects:
@@ -295,15 +296,14 @@ final class EventScheduleAdapter
         ));
     }
 
+    /**
+     * Schedules carry only untagged typed @values — times, dates, timezones —
+     * so every read lands on the reader's fallback branch and no language is
+     * in scope here. Delegates rather than re-implementing: see
+     * LocalisedValueReader, the import layer's one text extraction.
+     */
     private function extractTypedValue(mixed $value): string
     {
-        if (!is_array($value)) {
-            return '';
-        }
-        $typedValue = $value['@value'] ?? '';
-        if (!is_string($typedValue) && !is_int($typedValue) && !is_float($typedValue) && !is_bool($typedValue)) {
-            return '';
-        }
-        return (string)$typedValue;
+        return (new LocalisedValueReader())->read($value, '');
     }
 }

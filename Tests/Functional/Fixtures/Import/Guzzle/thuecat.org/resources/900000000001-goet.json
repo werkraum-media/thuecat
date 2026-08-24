@@ -1,0 +1,104 @@
+{
+    "@context": {
+        "cdb": "https://thuecat.org/ontology/cdb/1.0/",
+        "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+        "dbo": "http://dbpedia.org/ontology/",
+        "dsv": "http://ontologies.sti-innsbruck.at/dsv/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "schema": "http://schema.org/",
+        "sh": "http://www.w3.org/ns/shacl#",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/900000000001-goet",
+            "@type": [
+                "schema:Place",
+                "schema:TouristAttraction",
+                "schema:Thing"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Beispielhaus im Park"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Example house in the park"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Beispielhaus mit zwei Anschriften."
+                },
+                {
+                    "@language": "en",
+                    "@value": "Example house with two addresses."
+                }
+            ],
+            "schema:address": {
+                "@id": "genid-goethes-gartenhaus-address",
+                "@type": [
+                    "schema:PostalAddress",
+                    "schema:ContactPoint"
+                ],
+                "schema:streetAddress": [
+                    {
+                        "@language": "de",
+                        "@value": "Beispielweg 5"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Example Lane 5"
+                    }
+                ],
+                "schema:postalCode": [
+                    {
+                        "@language": "de",
+                        "@value": "99425"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "99423"
+                    }
+                ],
+                "schema:addressLocality": [
+                    {
+                        "@language": "de",
+                        "@value": "Beispielstadt"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Beispielstadt"
+                    }
+                ],
+                "schema:email": {
+                    "@language": "de",
+                    "@value": "info@example.com"
+                },
+                "schema:telephone": {
+                    "@language": "de",
+                    "@value": "+49 3643 545400"
+                }
+            },
+            "schema:geo": {
+                "@id": "genid-goethes-gartenhaus-geo",
+                "@type": "schema:GeoCoordinates",
+                "schema:latitude": {
+                    "@type": "schema:Number",
+                    "@value": "50.974722"
+                },
+                "schema:longitude": {
+                    "@type": "schema:Number",
+                    "@value": "11.331389"
+                }
+            }
+        }
+    ]
+}

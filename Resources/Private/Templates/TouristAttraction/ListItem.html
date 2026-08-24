@@ -4,4 +4,12 @@
 >
 <h2><f:link.action action="show" arguments="{attraction: attraction}" pageUid="{settings.page.pid.thuecat_attraction_show}">{attraction.title}</f:link.action></h2>
 <p>{attraction.description}</p>
+<f:if condition="{attraction.firstAddress}">
+    <f:then>
+        <f:render partial="Address/Summary" arguments="{address: attraction.firstAddress}" />
+    </f:then>
+    <f:else>
+        <f:render partial="Address/Summary" arguments="{address: attraction.address}" />
+    </f:else>
+</f:if>
 </html>

@@ -34,13 +34,13 @@ class KeywordTermEntity extends AbstractEntity
         $this->remote_id = $this->getRemoteId($node);
 
         $label = $node['rdfs:label'] ?? null;
-        $this->title = $this->extractLocalisedValue($label, $language);
+        $this->title = $this->extractValue($label, $language);
         if ($this->title === '' && $language !== self::FALLBACK_LANGUAGE) {
-            $this->title = $this->extractLocalisedValue($label, self::FALLBACK_LANGUAGE);
+            $this->title = $this->extractValue($label, self::FALLBACK_LANGUAGE);
         }
 
         foreach ($translationLanguages as $code => $sysLanguageUid) {
-            $this->recordTranslation('title', $this->extractLocalisedValue($label, $code), $sysLanguageUid);
+            $this->recordTranslation('title', $this->extractValue($label, $code), $sysLanguageUid);
         }
 
         // inDefinedTermSet and isPartOf agree in all surveyed data; prefer the
