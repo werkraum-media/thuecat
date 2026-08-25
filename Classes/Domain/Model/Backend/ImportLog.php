@@ -103,6 +103,37 @@ class ImportLog extends Typo3AbstractEntity
         return array_values(array_unique($errors === [] ? $warnings : $errors));
     }
 
+    /**
+     * Notices and warnings the errors column does not carry, keyed by entry
+     * type. Not a fallback like getListOfErrors(): an error elsewhere in the
+     * run must not hide why a vocabulary was stale.
+     *
+     * @return array<string, list<string>>
+     */
+    public function getGroupedNotices(): array
+    {
+        $grouped = [];
+
+        foreach ($this->getEntries() as $entry) {
+            if (!in_array($entry->getSeverity(), ['notice', 'warning'], true)) {
+                continue;
+            }
+
+            // remoteId names the class or resource the entry is about; entries
+            // without one (vocabulary-wide) read fine on their message alone.
+            $remoteId = $entry->getRemoteId();
+            $grouped[$entry->getType()][] = $remoteId === ''
+                ? $entry->getMessage()
+                : $remoteId . ': ' . $entry->getMessage();
+        }
+
+        foreach ($grouped as $type => $messages) {
+            $grouped[$type] = array_values(array_unique($messages));
+        }
+
+        return $grouped;
+    }
+
     public function hasErrors(): bool
     {
         foreach ($this->getEntries() as $entry) {

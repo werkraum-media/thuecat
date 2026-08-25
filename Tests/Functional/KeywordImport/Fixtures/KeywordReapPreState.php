@@ -68,6 +68,13 @@ return [
             'title' => 'Landeshauptstadt Erfurt',
             'remote_id' => 'keyword:https://thuecat.org/resources/475728955106-qdcc',
         ],
+        // Editor's own keyword: no remote_id, so outside the importer's reach.
+        [
+            'uid' => '204',
+            'pid' => '30',
+            'parent' => '200',
+            'title' => 'Handverschlagwortet',
+        ],
     ],
     'tx_thuecat_tourist_attraction' => [
         [
@@ -76,7 +83,7 @@ return [
             'sys_language_uid' => '0',
             'remote_id' => 'https://thuecat.org/resources/126981310364-xwgt',
             'title' => 'Weingut Zahn',
-            'keywords' => '2',
+            'keywords' => '3',
         ],
     ],
     'sys_category_record_mm' => [
@@ -93,6 +100,13 @@ return [
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'keywords',
             'sorting_foreign' => '2',
+        ],
+        [
+            'uid_local' => '204',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '3',
         ],
     ],
     'tx_thuecat_import_configuration' => [

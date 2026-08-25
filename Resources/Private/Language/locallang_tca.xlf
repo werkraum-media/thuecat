@@ -394,6 +394,24 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryMatched" xml:space="preserve">
                 <source>Category Matched</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoryParentChosen" xml:space="preserve">
+                <source>Category Parent Chosen</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoryParentUnpreferred" xml:space="preserve">
+                <source>Category Parent Not Preferred</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoryWithoutHierarchy" xml:space="preserve">
+                <source>Category Without Hierarchy</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.vocabularyStale" xml:space="preserve">
+                <source>Vocabulary Stale</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.vocabularyUnavailable" xml:space="preserve">
+                <source>Vocabulary Unavailable</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.categoriesFieldMissing" xml:space="preserve">
+                <source>Categories Field Missing</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.type.effectiveSettings" xml:space="preserve">
                 <source>Effective settings</source>
             </trans-unit>

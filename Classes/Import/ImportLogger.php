@@ -369,6 +369,132 @@ class ImportLogger
         ];
     }
 
+    /**
+     * A class whose parents genuinely branched, naming the one followed and the
+     * ones passed over. Debug: the tree is correct either way, and this fires
+     * once per branching class per run — 35 of them in a full import — so it
+     * would drown the log at any louder level. Its unhappy sibling
+     * recordUnpreferredParent() is the warning worth reading.
+     *
+     * @param list<string> $discarded
+     */
+    public function recordDiscardedParents(
+        string $class,
+        string $chosen,
+        array $discarded,
+        string $strategy
+    ): void {
+        $this->stage([
+            'type' => 'categoryParentChosen',
+            'severity' => self::SEVERITY_DEBUG,
+            'remote_id' => $class,
+            'table_name' => 'sys_category',
+            'message' => sprintf(
+                'Placed "%s" beneath "%s" by strategy "%s", passing over: %s',
+                $class,
+                $chosen,
+                $strategy,
+                implode(', ', $discarded)
+            ),
+            'context' => (string)(json_encode([
+                'class' => $class,
+                'chosen' => $chosen,
+                'discarded' => $discarded,
+                'strategy' => $strategy,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
+     * A class whose parents reach none of the roots its record kind belongs
+     * under, so no rule could place it and a fallback had to. Warning: the
+     * category lands somewhere arbitrary until a person decides where it
+     * belongs, either by extending the preferred roots or by asking upstream
+     * why the class sits where it does.
+     *
+     * @param list<string> $candidates
+     * @param list<string> $preferredRoots
+     */
+    public function recordUnpreferredParent(
+        string $class,
+        string $chosen,
+        array $candidates,
+        array $preferredRoots
+    ): void {
+        $this->stage([
+            'type' => 'categoryParentUnpreferred',
+            'severity' => self::SEVERITY_WARNING,
+            'remote_id' => $class,
+            'table_name' => 'sys_category',
+            'message' => sprintf(
+                'No parent of "%s" reaches %s; fell back to "%s". Candidates were: %s',
+                $class,
+                implode(' or ', $preferredRoots),
+                $chosen,
+                implode(', ', $candidates)
+            ),
+            'context' => (string)(json_encode([
+                'class' => $class,
+                'chosen' => $chosen,
+                'candidates' => $candidates,
+                'preferredRoots' => $preferredRoots,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
+     * A type the vocabularies know nothing about, so its category has no
+     * ancestry. Notice: the category exists and is related, only the tree is
+     * poorer for it.
+     */
+    public function recordMissingHierarchy(string $type): void
+    {
+        $this->stage([
+            'type' => 'categoryWithoutHierarchy',
+            'severity' => self::SEVERITY_NOTICE,
+            'remote_id' => $type,
+            'table_name' => 'sys_category',
+            'message' => sprintf('No class hierarchy available for "%s"; its category stays flat.', $type),
+            'context' => (string)(json_encode(['type' => $type]) ?: '{}'),
+        ]);
+    }
+
+    public function recordStaleVocabulary(string $vocabulary, int $ageInSeconds, string $reason): void
+    {
+        $this->stage([
+            'type' => 'vocabularyStale',
+            'severity' => self::SEVERITY_WARNING,
+            'message' => sprintf(
+                'Kept the stored "%s" vocabulary, %d days old, because refreshing it failed: %s',
+                $vocabulary,
+                intdiv($ageInSeconds, 86400),
+                $reason
+            ),
+            'context' => (string)(json_encode([
+                'vocabulary' => $vocabulary,
+                'ageInSeconds' => $ageInSeconds,
+                'reason' => $reason,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    public function recordUnavailableVocabulary(string $vocabulary, string $reason): void
+    {
+        $this->stage([
+            'type' => 'vocabularyUnavailable',
+            'severity' => self::SEVERITY_WARNING,
+            'message' => sprintf(
+                'No category hierarchy available from "%s": %s',
+                $vocabulary,
+                $reason
+            ),
+            'context' => (string)(json_encode([
+                'vocabulary' => $vocabulary,
+                'reason' => $reason,
+            ]) ?: '{}'),
+        ]);
+    }
+
     public function recordCategoriesFieldMissing(array $tableFields): void
     {
         foreach (array_keys($tableFields) as $tableField) {

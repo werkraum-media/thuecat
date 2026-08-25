@@ -19,6 +19,11 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Resolver;
+use WerkraumMedia\ThueCat\Import\SysCategory\ChainBuilder;
+use WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioner;
+use WerkraumMedia\ThueCat\Import\SysCategory\TitleResolver;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 
 class ImporterTest extends AbstractImportTestCase
 {
@@ -896,6 +901,11 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(StaleDateReaper::class),
             $this->get(MediaFieldMap::class),
             $this->get(FetchFailureVerdict::class),
+            $this->get(SysCategoryProvisioner::class),
+            $this->get(ChainBuilder::class),
+            $this->get(TitleResolver::class),
+            $this->get(ParentStrategies::class),
+            $this->get(VocabularyProvider::class),
         );
     }
 }

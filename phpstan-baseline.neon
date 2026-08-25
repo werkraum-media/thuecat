@@ -375,13 +375,7 @@ parameters:
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Extension.php
-
-		-
-			message: '#^Cannot access offset ''thuecat_fetchdata'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 4
 			path: Classes/Extension.php
 
 		-
@@ -431,6 +425,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Classes/Import/UrlProvider/SyncScopeUrlProvider.php
+
+		-
+			message: '#^Parameter \#3 \$labels of class WerkraumMedia\\ThueCat\\Import\\Vocabulary\\VocabularyClass constructor expects array\<string, string\>, array\<string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Classes/Import/Vocabulary/VocabularyIndexCache.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -541,14 +541,41 @@ parameters:
 			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
 
 		-
-            # Only v13 reports this: v14 core annotates DataHandler::$errorLog as
-			# list<non-empty-string>, v13 leaves it untyped.
-			message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Functional\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHookTest\:\:executeDataHandler\(\) should return array\<string\> but returns array\.$#'
-			identifier: return.type
+			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 6
+			path: Tests/Unit/ExtensionTest.php
+
+		-
+			message: '#^Cannot access offset ''cacheConfigurations'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/ExtensionTest.php
+
+		-
+			message: '#^Cannot access offset ''caching'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 6
+			path: Tests/Unit/ExtensionTest.php
+
+		-
+			message: '#^Cannot access offset ''defaultLifetime'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Tests/Unit/ExtensionTest.php
+
+		-
+			message: '#^Cannot access offset ''thuecat_vocabulary'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-			reportUnmatched: false
-            
+			path: Tests/Unit/ExtensionTest.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/Unit/ExtensionTest.php
+
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
@@ -566,3 +593,10 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Tests/Unit/Import/Parser/Entity/TransientEntity/OfferEntityTest.php
+
+		-
+			message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Unit\\Import\\Vocabulary\\VocabularyIndexCacheTest\:\:written\(\) should return array\<string, mixed\> but returns array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: Tests/Unit/Import/Vocabulary/VocabularyIndexCacheTest.php
+

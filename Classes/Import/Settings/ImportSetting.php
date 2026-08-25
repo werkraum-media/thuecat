@@ -36,8 +36,8 @@ enum ImportSetting: string
             self::ReadTimeout => 120,
             self::ConnectTimeout => 30,
             self::MaxAttempts => 3,
-            self::RunBudget => 86400,
-            self::FetchCacheLifetime => 900,
+            self::RunBudget => 86400, // 1 day
+            self::FetchCacheLifetime => 900, // 15 min
         };
     }
 }

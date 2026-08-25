@@ -46,6 +46,9 @@ class Extension
     /** One year; invalidation is by tag. */
     private const FRONTEND_CACHE_LIFETIME = 31536000;
 
+    /** One year. The index expires itself; this only stops the backend doing it first. */
+    private const VOCABULARY_CACHE_LIFETIME = 31536000;
+
     private const FRONTEND_CACHE_IDENTIFIERS = [
         self::CACHE_TEASER,
         self::CACHE_LIST,
@@ -69,23 +72,8 @@ class Extension
 
     private static function addCaching(): void
     {
-        $cacheIdentifier = 'thuecat_fetchdata';
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
-        }
-        // Persistent so an aborted run's responses survive into the retry. Runs
-        // in ext_localconf, before any configuration is known, so the lifetime
-        // here is the code default; a per-configuration value is applied per
-        // entry at write time instead.
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'])) {
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'] = Typo3DatabaseBackend::class;
-        }
-        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] ?? null)) {
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] = [];
-        }
-        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']['defaultLifetime'])) {
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']['defaultLifetime'] = ImportSetting::FetchCacheLifetime->default();
-        }
+        self::addImportCache('thuecat_fetchdata', ImportSetting::FetchCacheLifetime->default(), ['system']);
+        self::addImportCache('thuecat_vocabulary', self::VOCABULARY_CACHE_LIFETIME, ['system']);
 
         foreach (self::FRONTEND_CACHE_IDENTIFIERS as $identifier) {
             self::addFrontendCache($identifier);
@@ -93,7 +81,32 @@ class Extension
     }
 
     /**
-     * Group `pages` is load-bearing: DataHandler flushes that whole group by the
+     * Each key is defended separately so an integrator overriding one of them
+     * keeps that override rather than having the whole entry replaced.
+     *
+     * @param list<string> $groups
+     */
+    private static function addImportCache(string $cacheIdentifier, int $lifetime, array $groups): void
+    {
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] ?? null)) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
+        }
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['backend'] = Typo3DatabaseBackend::class;
+        }
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'] ?? null)) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['groups'] = $groups;
+        }
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] ?? null)) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options'] = [];
+        }
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']['defaultLifetime'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier]['options']['defaultLifetime'] = $lifetime;
+        }
+    }
+
+    /**
+     * DataHandler flushes only 'pages' group by the
      * tags it emits on save, which is the entire invalidation mechanism.
      */
     private static function addFrontendCache(string $identifier): void

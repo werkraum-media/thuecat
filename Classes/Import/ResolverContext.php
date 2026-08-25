@@ -114,6 +114,25 @@ final class ResolverContext
     public array $categoriesFieldMissing = [];
 
     /**
+     * Source value => whether the fallback map was consulted for its title.
+     * Run-scoped: the report is written once, after the last root.
+     *
+     * @var array<string, bool>
+     */
+    public array $fallbackUsedByType = [];
+
+    /**
+     * Classes already reported for a branch or a missing hierarchy. The report
+     * is about the class, which recurs on every record carrying it.
+     *
+     * @var array<string, true>
+     */
+    public array $reportedBranches = [];
+
+    /** @var array<string, true> */
+    public array $reportedMissingHierarchy = [];
+
+    /**
      * Maximum depth at which the resolver will fetch a transient reference
      * from the upstream API. Root URLs (the ones the Importer hands to the
      * Resolver) are depth 0; references they carry are depth 1. Any

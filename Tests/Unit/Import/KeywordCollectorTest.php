@@ -93,7 +93,7 @@ final class KeywordCollectorTest extends TestCase
             '42',
             'keywords',
             self::TERM,
-            'Landeshauptstadt Erfurt',
+            ['de' => 'Landeshauptstadt Erfurt'],
             'keyword:https://thuecat.org/resources/155933862969-mofh',
         ));
 
@@ -125,6 +125,6 @@ final class KeywordCollectorTest extends TestCase
         string $title,
         string $field = 'keywords'
     ): CollectedKeyword {
-        return new CollectedKeyword(self::OWNER, $ownerKey, $field, $remoteId, $title);
+        return new CollectedKeyword(self::OWNER, $ownerKey, $field, $remoteId, ['de' => $title]);
     }
 }

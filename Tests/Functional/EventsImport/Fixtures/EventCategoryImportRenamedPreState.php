@@ -37,6 +37,17 @@ return [
             'parent' => '0',
             'title' => 'Events',
         ],
+        // An editor renamed the English translation too, so a re-import can be
+        // judged on both languages at once.
+        [
+            'uid' => '102',
+            'pid' => '20',
+            'parent' => '100',
+            'sys_language_uid' => '1',
+            'l10n_parent' => '101',
+            'title' => 'Culture (renamed by editor)',
+            'remote_id' => 'type:thuecat:CultureEvent',
+        ],
         [
             'uid' => '101',
             'pid' => '20',

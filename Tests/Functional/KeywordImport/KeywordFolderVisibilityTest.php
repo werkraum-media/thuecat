@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\KeywordImport;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\Connection;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -92,7 +93,10 @@ class KeywordFolderVisibilityTest extends AbstractImportTestCase
         $rows = $queryBuilder
             ->select('uid', 'pid', 'parent', 'title', 'remote_id')
             ->from('sys_category')
-            ->where($queryBuilder->expr()->eq('remote_id', $queryBuilder->createNamedParameter($remoteId)))
+            ->where(
+                $queryBuilder->expr()->eq('remote_id', $queryBuilder->createNamedParameter($remoteId)),
+                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+            )
             ->orderBy('uid')
             ->executeQuery()
             ->fetchAllAssociative()

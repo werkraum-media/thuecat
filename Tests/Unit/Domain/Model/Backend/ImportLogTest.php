@@ -127,6 +127,81 @@ class ImportLogTest extends TestCase
         );
     }
 
+    #[Test]
+    public function groupedNoticesCollectsNoticesAndWarningsByType(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->typedEntry('vocabularyStale', 'warning', '', 'Vocabulary is 20 days old'));
+        $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
+
+        self::assertSame(
+            [
+                'vocabularyStale' => ['Vocabulary is 20 days old'],
+                'categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat'],
+            ],
+            $subject->getGroupedNotices(),
+            'Notices and warnings both belong here, keyed by type so one noisy type '
+            . 'cannot bury another.'
+        );
+    }
+
+    #[Test]
+    public function groupedNoticesSurvivesARunThatAlsoErrored(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->typedEntry('vocabularyStale', 'warning', '', 'Vocabulary is 20 days old'));
+        $subject->addEntry($this->entryWithSeverity('error', 'remote-b', 'Mapping failed'));
+
+        self::assertSame(
+            ['vocabularyStale' => ['Vocabulary is 20 days old']],
+            $subject->getGroupedNotices(),
+            'Unlike getListOfErrors(), this column is not a fallback: an error elsewhere '
+            . 'must not hide why the vocabulary was stale.'
+        );
+    }
+
+    #[Test]
+    public function groupedNoticesIgnoresDebugAndInfo(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->typedEntry('categoryParentChosen', 'debug', 'schema:Museum', 'Placed beneath Place'));
+        $subject->addEntry($this->typedEntry('categoryMatched', 'info', 'schema:Museum', 'Matched'));
+
+        self::assertSame(
+            [],
+            $subject->getGroupedNotices(),
+            'Debug fires once per branching class per run; it would drown the column.'
+        );
+    }
+
+    #[Test]
+    public function groupedNoticesDeduplicatesRepeatedMessages(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
+        $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
+
+        self::assertSame(
+            ['categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat']],
+            $subject->getGroupedNotices(),
+            'The same class recurs on every record carrying it.'
+        );
+    }
+
+    private function typedEntry(
+        string $type,
+        string $severity,
+        string $remoteId,
+        string $message
+    ): ImportLogEntry {
+        $entry = new TypedLogEntry($type);
+        $entry->_setProperty('severity', $severity);
+        $entry->_setProperty('remoteId', $remoteId);
+        $entry->_setProperty('message', $message);
+
+        return $entry;
+    }
+
     private function entryWithSeverity(string $severity, string $remoteId, string $message): ImportLogEntry
     {
         $entry = (new ReflectionClass(ReferenceSkipped::class))->newInstanceWithoutConstructor();

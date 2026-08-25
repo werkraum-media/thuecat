@@ -241,7 +241,10 @@ class Importer
         // the just-created translation row's fields. Budget: iter 0 for
         // defaults, 2 iters per translation language, plus one trailing
         // iter where the loop notices nothing is left and exits.
-        $maxIterations = count($translationLanguages) * 2 + 2;
+        // The +1 is for categories: they are created during the first pass, so
+        // their localize can only be staged from the pass after, one behind the
+        // records they hang on.
+        $maxIterations = count($translationLanguages) * 2 + 3;
         // DataHandler carries state across calls (substNEWwithIDs, datamap,
         // cmdmap, errors, …); reusing one instance across passes mixes state.
         // Each pass gets a fresh instance and the substNEWwithIDs maps get

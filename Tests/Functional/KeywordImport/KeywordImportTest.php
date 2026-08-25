@@ -316,6 +316,23 @@ class KeywordImportTest extends AbstractImportTestCase
         );
     }
 
+    // Submitting the relation list replaces it, so anything the importer omits
+    // is removed — including a keyword no import ever created.
+    #[Test]
+    public function keepsAKeywordAnEditorAddedToAnImportedRecord(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordReapPreState.php');
+        $this->expectKeywordFetches();
+
+        $this->runImport();
+
+        self::assertNotSame(
+            0,
+            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204),
+            'A keyword with no remote_id is outside the importer\'s reach.'
+        );
+    }
+
     // Editors may still use a keyword the import stopped delivering.
     #[Test]
     public function keepsTheCategoryRecordWhenItsLastRelationIsReaped(): void
@@ -635,7 +652,10 @@ class KeywordImportTest extends AbstractImportTestCase
         return $this->narrow($queryBuilder
             ->select('uid', 'pid', 'parent', 'title', 'remote_id')
             ->from('sys_category')
-            ->where($queryBuilder->expr()->eq('title', $queryBuilder->createNamedParameter($title)))
+            ->where(
+                $queryBuilder->expr()->eq('title', $queryBuilder->createNamedParameter($title)),
+                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+            )
             ->orderBy('uid')
             ->executeQuery()
             ->fetchAllAssociative());
@@ -652,6 +672,10 @@ class KeywordImportTest extends AbstractImportTestCase
         return $this->narrow($queryBuilder
             ->select('uid', 'pid', 'parent', 'title', 'remote_id')
             ->from('sys_category')
+            ->where($queryBuilder->expr()->eq(
+                'sys_language_uid',
+                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+            ))
             ->orderBy('uid')
             ->executeQuery()
             ->fetchAllAssociative());
@@ -890,7 +914,10 @@ class KeywordImportTest extends AbstractImportTestCase
         return $this->narrow($queryBuilder
             ->select('uid', 'pid', 'parent', 'title', 'remote_id')
             ->from('sys_category')
-            ->where($queryBuilder->expr()->eq('remote_id', $queryBuilder->createNamedParameter($remoteId)))
+            ->where(
+                $queryBuilder->expr()->eq('remote_id', $queryBuilder->createNamedParameter($remoteId)),
+                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+            )
             ->orderBy('uid')
             ->executeQuery()
             ->fetchAllAssociative());
@@ -907,10 +934,16 @@ class KeywordImportTest extends AbstractImportTestCase
         return $this->narrow($queryBuilder
             ->select('uid', 'pid', 'parent', 'title', 'remote_id')
             ->from('sys_category')
-            ->where($queryBuilder->expr()->eq(
-                'parent',
-                $queryBuilder->createNamedParameter($parent, Connection::PARAM_INT)
-            ))
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'parent',
+                    $queryBuilder->createNamedParameter($parent, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_language_uid',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                )
+            )
             ->orderBy('uid')
             ->executeQuery()
             ->fetchAllAssociative());

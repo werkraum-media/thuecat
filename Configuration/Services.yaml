@@ -52,3 +52,11 @@ services:
       - 'getCache'
     arguments:
       - 'thuecat_fetchdata'
+
+  'cache.thuecat_vocabulary':
+    class: 'TYPO3\CMS\Core\Cache\Frontend\FrontendInterface'
+    factory:
+      - '@TYPO3\CMS\Core\Cache\CacheManager'
+      - 'getCache'
+    arguments:
+      - 'thuecat_vocabulary'

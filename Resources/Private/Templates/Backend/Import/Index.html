@@ -141,6 +141,19 @@
                         </ul>
                     </details>
                 </f:if>
+
+                <f:if condition="{import.groupedNotices}">
+                    <f:for each="{import.groupedNotices}" key="type" as="messages">
+                        <details>
+                            <summary>{f:translate(id: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_import_log_entry.type.{type}', default: '{type}')} [{messages -> f:count()}]</summary>
+                            <ul>
+                                <f:for each="{messages}" as="message">
+                                    <li>{message}</li>
+                                </f:for>
+                            </ul>
+                        </details>
+                    </f:for>
+                </f:if>
             </td>
         </tr>
                 </tbody>

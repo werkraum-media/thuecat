@@ -13,3 +13,9 @@ parameters:
   ignoreErrors:
     - identifier: 'missingType.generics'
     - identifier: 'missingType.iterableValue'
+    # Version-dependent errors live here rather than in the baseline:
+    -
+      message: '#^Method WerkraumMedia\\ThueCat\\Tests\\Functional\\Typo3\\Hook\\AddTitleForStaticUrlsDataHandlerHookTest\:\:executeDataHandler\(\) should return array\<string\> but returns array\.$#'
+      identifier: return.type
+      path: 'Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php'
+      reportUnmatched: false

@@ -245,6 +245,131 @@ this extension does not model — is not reported, because there was never a rel
 distinction is the point of the report; a change that makes it fire for everything, or for nothing,
 has broken it.
 
+.. _sys-category-fields:
+
+Importing a ``sys_category``-backed field
+=========================================
+
+Several imported fields store their values as ``sys_category`` records: an attraction's
+``categories`` (derived from ``@type``), its ``keywords``, an event's ``keywords_relation``. They
+arrive from different places and mean different things, but the work is identical — find or create a
+record per value, nest it, translate it, relate the owner to some of them.
+
+One service does that work. **Reach for it when adding the next such field**; implementing it again
+is how the trees drifted apart before.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Class
+     - Responsibility
+   * - :php:`WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioner`
+     - Finds or creates one record and answers its datamap key, or ``null`` where the term cannot be
+       created.
+   * - :php:`WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryAnchor`
+     - Where a consumer's tree lives: parent uid, storage pid, and the identifier prefix (``type:``,
+       ``keyword:``) that keeps identifiers from colliding.
+   * - :php:`WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioningState`
+     - One consumer's deduplication for the run. **Never shared** — sharing it merges the trees.
+   * - :php:`WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryTerm`
+     - One term: source value, titles per language, and the source value of its parent.
+   * - :php:`WerkraumMedia\ThueCat\Import\SysCategory\TitleResolver`
+     - What a term is called in each language, and whether the fallback map was needed.
+
+What the provisioner guarantees
+-------------------------------
+
+- **Reuse by identifier**, so an editor's rename survives and no re-import duplicates a record. The
+  match is guarded by the anchor's rootline, so a record belonging to another tree is never taken.
+- **Movement, not replacement.** A stored record whose parent changed is re-parented in place.
+  ``sys_category`` uids appear in plugin flexforms; a replacement looks identical in the tree and is
+  wrong everywhere it is referenced.
+- **Translations** for the languages the site configures, and no others.
+- **Skipping.** A term with no default-language title is not created — a record an editor cannot read
+  is worse than none — and its children attach to the nearest ancestor that *was* created.
+
+Adding a field
+--------------
+
+1. Add the relation column to the owner table's TCA and list it in that entity's
+   ``RELATION_FIELDS``.
+2. Give the consumer its **own** :php:`SysCategoryAnchor` — own parent, storage pid, identifier
+   prefix — and its **own** :php:`SysCategoryProvisioningState`.
+3. Resolve titles through :php:`TitleResolver` if the values come from a vocabulary; pass them
+   directly if they do not.
+4. Call ``provision()`` per term, parents before children, and relate the owner only to the terms it
+   actually names.
+
+Bind the state to a map on :php:`WerkraumMedia\ThueCat\Import\ResolverContext` where keys must
+survive between DataHandler passes: ``promoteNewKeys()`` rewrites ``NEW…`` placeholders to real uids
+there, and a state still holding placeholders stages a second record on the next round.
+
+Two decisions the service does not make
+---------------------------------------
+
+**What a title means.** :php:`TitleResolver` asks upstream per language, treats a label carrying *no*
+language as English, and falls back to the mapper's ``titleMap`` for the default language only. That
+reading suits the class vocabularies and not keyword terms, whose untagged labels are German — the
+same JSON-LD shape means different things in different vocabularies, so one consumer is always
+served wrongly. Consulting the map for the default language is also what puts a value in the import
+report.
+
+**Which parent a value hangs from**, where its source offers several. See
+:ref:`category-hierarchy`.
+
+.. _category-hierarchy:
+
+Building the ``@type`` hierarchy
+================================
+
+The ``categories`` field is the one consumer whose values carry a hierarchy of their own: ``@type``
+values are classes, and upstream models ``schema:Museum`` as a ``CivicStructure``, under ``Place``,
+under ``Thing``. The import mirrors that so editors get a tree rather than a few hundred flat names.
+
+Where it comes from
+-------------------
+
+Two vocabularies, fetched whole and merged into one index by
+:php:`WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider`:
+
+- ``https://schema.org/version/latest/schemaorg-current-https.jsonld``
+- ``https://thuecat.org/ontology/thuecat/1.0/?format=jsonld``
+
+Whole documents rather than per-type lookups: the per-type endpoints are rate limited, and one climb
+would need a request per ancestor. ThueCat extends schema.org, so chains cross between them and the
+index must hold both to resolve one.
+
+:php:`WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache` keeps the distilled index for
+14 days, measured from a ``fetchedAt`` timestamp it stores itself rather than from the cache
+backend — TYPO3 cannot read an entry past its lifetime, and an expired entry is exactly what a failed
+refresh falls back on. A refresh is all or nothing: pairing a fresh vocabulary with a stale one drops
+the failed one's classes and breaks every chain crossing between them.
+
+Building one chain
+------------------
+
+:php:`WerkraumMedia\ThueCat\Import\SysCategory\ChainBuilder` walks upward from the type and
+returns the classes to create, ancestors first.
+
+- **Cut-off.** No category for ``schema:Thing`` or ``schema:Place``: every imported record belongs to
+  them, so they distinguish nothing. A type left without ancestors becomes a root.
+- **Redundant parents.** A class naming both ``CivicStructure`` and ``Museum``, where ``Museum`` is
+  itself a ``CivicStructure``, has named one chain and not a fork. The nearer parent wins; the
+  restated ancestor keeps its own level further up.
+- **Genuine branches.** Where the remaining parents do not meet, one is chosen — a tree cannot have
+  two. Which one depends on what the record is, so
+  :php:`WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies` holds a
+  :php:`WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategy` per owner table: attractions
+  prefer a branch reaching ``TouristAttraction``, then ``Place``; events prefer ``Event``; anything
+  else takes the deepest branch. A branch reaching no preferred root is logged at warning severity,
+  because no rule fits it and a person has to look.
+
+Preferred roots steer without appearing. ``TouristAttraction`` and ``Place`` sit in the mappers'
+``ignoredValues()`` as structural supertypes an editor should never see: the strategy uses them to
+choose a branch, the cut-off declines to create them, and the chain lands on the configured anchor.
+
+Only the types a record names become relations. Ancestors exist to give the tree its levels.
+
 Testing
 =======
 

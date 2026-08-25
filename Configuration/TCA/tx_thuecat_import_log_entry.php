@@ -67,6 +67,30 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'retriesRecovered',
                         ],
                         [
+                            'label' => $languagePath . '.type.categoryParentChosen',
+                            'value' => 'categoryParentChosen',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.categoryParentUnpreferred',
+                            'value' => 'categoryParentUnpreferred',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.categoryWithoutHierarchy',
+                            'value' => 'categoryWithoutHierarchy',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.vocabularyStale',
+                            'value' => 'vocabularyStale',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.vocabularyUnavailable',
+                            'value' => 'vocabularyUnavailable',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.categoriesFieldMissing',
+                            'value' => 'categoriesFieldMissing',
+                        ],
+                        [
                             'label' => $languagePath . '.type.referenceSkipped',
                             'value' => 'referenceSkipped',
                         ],
@@ -241,6 +265,33 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, message, context',
             ],
             'retriesRecovered' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'categoryMatched' => [
+                'showitem' => '--palette--;;always, kind, table_name, record_uid, context',
+            ],
+            'categoryUnmatched' => [
+                'showitem' => '--palette--;;always, kind, context',
+            ],
+            'effectiveSettings' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'categoryParentChosen' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'categoryParentUnpreferred' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'categoryWithoutHierarchy' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'vocabularyStale' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'vocabularyUnavailable' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'categoriesFieldMissing' => [
                 'showitem' => '--palette--;;always, message, context',
             ],
         ],

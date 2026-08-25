@@ -529,6 +529,18 @@ class DataHandlerPayload
     }
 
     /**
+     * The parser reports the types a record carried; only the resolver knows
+     * whether each one needed the fallback map, so it replaces the reports with
+     * that verdict applied.
+     *
+     * @param list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}> $matchReports
+     */
+    public function setMatchReports(array $matchReports): void
+    {
+        $this->matchReports = $matchReports;
+    }
+
+    /**
      * @return array<string, array<int|string, list<array{0: string, 1: int|string}>>>
      */
     public function getCmdMap(): array

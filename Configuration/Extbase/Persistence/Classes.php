@@ -5,8 +5,12 @@ declare(strict_types=1);
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoriesFieldMissing;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryParentChosen;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryParentUnpreferred;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryWithoutHierarchy;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\DataHandlerError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EffectiveSettings;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventDateSkipped;
@@ -21,6 +25,8 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunFailed;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDayDropped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDaySkipped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyStale;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyUnavailable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
@@ -72,6 +78,12 @@ return [
             'runFailed' => RunFailed::class,
             'retriesRecovered' => RetriesRecovered::class,
             'effectiveSettings' => EffectiveSettings::class,
+            'categoryParentChosen' => CategoryParentChosen::class,
+            'categoryParentUnpreferred' => CategoryParentUnpreferred::class,
+            'categoryWithoutHierarchy' => CategoryWithoutHierarchy::class,
+            'vocabularyStale' => VocabularyStale::class,
+            'vocabularyUnavailable' => VocabularyUnavailable::class,
+            'categoriesFieldMissing' => CategoriesFieldMissing::class,
         ],
     ],
     SavingEntity::class => [
@@ -137,6 +149,30 @@ return [
     EventDateSkipped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'eventDateSkipped',
+    ],
+    CategoryParentChosen::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoryParentChosen',
+    ],
+    CategoryParentUnpreferred::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoryParentUnpreferred',
+    ],
+    CategoryWithoutHierarchy::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoryWithoutHierarchy',
+    ],
+    VocabularyStale::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'vocabularyStale',
+    ],
+    VocabularyUnavailable::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'vocabularyUnavailable',
+    ],
+    CategoriesFieldMissing::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'categoriesFieldMissing',
     ],
 
     FrontendTouristAttraction::class => [

@@ -89,6 +89,57 @@ class SysCategoryRepository
     }
 
     /**
+     * Related categories the import never created, identified by carrying no
+     * remote_id. Submitting a relation list replaces the stored one, so these
+     * have to be carried through or an editor's own choice is removed.
+     *
+     * @return list<int>
+     */
+    public function findRelatedUidsWithoutRemoteId(string $ownerTable, int $ownerUid, string $ownerField): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_category_record_mm');
+        $rows = $queryBuilder->select('mm.uid_local')
+            ->from('sys_category_record_mm', 'mm')
+            ->join(
+                'mm',
+                'sys_category',
+                'c',
+                $queryBuilder->expr()->eq('c.uid', $queryBuilder->quoteIdentifier('mm.uid_local'))
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'mm.tablenames',
+                    $queryBuilder->createNamedParameter($ownerTable)
+                ),
+                $queryBuilder->expr()->eq(
+                    'mm.fieldname',
+                    $queryBuilder->createNamedParameter($ownerField)
+                ),
+                $queryBuilder->expr()->eq(
+                    'mm.uid_foreign',
+                    $queryBuilder->createNamedParameter($ownerUid, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->isNull('c.remote_id'),
+                    $queryBuilder->expr()->eq('c.remote_id', $queryBuilder->createNamedParameter(''))
+                )
+            )
+            ->orderBy('mm.sorting_foreign')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        $uids = [];
+        foreach ($rows as $uid) {
+            if (is_numeric($uid)) {
+                $uids[] = (int)$uid;
+            }
+        }
+
+        return $uids;
+    }
+
+    /**
      * Default-language uids with the given remote_id on any of the pages.
      *
      * @param list<int> $pageIds

@@ -47,12 +47,27 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpec
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
+use WerkraumMedia\ThueCat\Import\SysCategory\ChainBuilder;
+use WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryAnchor;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioner;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioningState;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryTerm;
+use WerkraumMedia\ThueCat\Import\SysCategory\TitleResolver;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 
 #[Autoconfigure(public: true)]
 class Resolver
 {
     /** Destination relation column for keyword categories. */
     protected const KEYWORD_FIELD = 'keywords';
+
+    /** Marks a sys_category identifier as this run's keyword tree. */
+    protected const KEYWORD_IDENTIFIER_PREFIX = 'keyword:';
+
+    /** Marks a sys_category identifier as this run's `@type` tree. */
+    protected const TYPE_IDENTIFIER_PREFIX = 'type:';
 
     /**
      * Transient bucket → [target table → relation field on the owning row].
@@ -135,6 +150,11 @@ class Resolver
         protected readonly StaleDateReaper $staleDateReaper,
         protected readonly MediaFieldMap $mediaFieldMap,
         protected readonly FetchFailureVerdict $fetchFailureVerdict,
+        protected readonly SysCategoryProvisioner $sysCategoryProvisioner,
+        protected readonly ChainBuilder $chainBuilder,
+        protected readonly TitleResolver $titleResolver,
+        protected readonly ParentStrategies $parentStrategies,
+        protected readonly VocabularyProvider $vocabularyProvider,
     ) {
     }
 
@@ -150,6 +170,9 @@ class Resolver
         $this->rekeyRowsAndInjectPid($payload, $context, 0);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
         $this->wireCategories($payload, $context);
+        $this->drainTranslationsUsing($payload, $context, $context->categoryKeyByRemoteId);
+        $this->amendMatchReports($payload, $context);
+        $this->preserveEditorRelations($payload, $this->categoryFieldsWritten($payload));
         $this->drainTranslationsAgainstExistingRows($payload, $context);
         $this->staleDateReaper->reap($payload);
 
@@ -201,7 +224,75 @@ class Resolver
             );
         }
 
+        $keywordFields = [];
+        foreach ($context->collectedKeywords as $keyword) {
+            $keywordFields[$keyword->targetField] = true;
+        }
+        $this->preserveEditorRelations($payload, array_keys($keywordFields));
+
         $this->preserveKeywordsBehindFailures($payload, $context);
+        // Keywords are staged after the last root, so their translations miss
+        // the per-root drain entirely.
+        $this->drainTranslationsUsing($payload, $context, $context->keywordKeyByRemoteId);
+    }
+
+    /**
+     * Category relation fields this payload writes into. Taken from the staged
+     * categories rather than a constant: the destination column comes from the
+     * mapper's kind() and differs per record kind.
+     *
+     * @return list<string>
+     */
+    protected function categoryFieldsWritten(DataHandlerPayload $payload): array
+    {
+        $fields = [];
+        foreach ($payload->getCategories() as $categoriesByOwner) {
+            foreach ($categoriesByOwner as $categories) {
+                foreach ($categories as $category) {
+                    $fields[$category['field']] = true;
+                }
+            }
+        }
+
+        return array_keys($fields);
+    }
+
+    /**
+     * Carry an owner's editor-added categories into every relation list this
+     * run submits. Submitting a list replaces the stored one, so a category the
+     * import never created is removed unless it is put back — silently, since
+     * nothing distinguishes it at the point of writing.
+     *
+     * Runs over the datamap rather than a register of writes: the fields worth
+     * examining are exactly the ones a value was written into.
+     *
+     * @param list<string> $fields
+     */
+    protected function preserveEditorRelations(DataHandlerPayload $payload, array $fields): void
+    {
+        foreach ($payload->getDataMap() as $table => $rows) {
+            foreach ($rows as $key => $row) {
+                $key = (string)$key;
+                // A NEW… owner has no stored relations to lose.
+                if (!MathUtility::canBeInterpretedAsInteger($key)) {
+                    continue;
+                }
+
+                foreach ($fields as $field) {
+                    if (!isset($row[$field]) || !$this->tableHasField($table, $field)) {
+                        continue;
+                    }
+
+                    foreach ($this->sysCategoryRepository->findRelatedUidsWithoutRemoteId(
+                        $table,
+                        (int)$key,
+                        $field
+                    ) as $uid) {
+                        $payload->setRelationField($table, $key, $field, (string)$uid);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -260,6 +351,28 @@ class Resolver
     }
 
     /**
+     * A term's titles keyed by language code. The entity records translations
+     * against sys_language_uid, which the run's language map inverts back to
+     * the codes a keyword is carried by.
+     *
+     * @return array<string, string>
+     */
+    protected function keywordTitles(ResolverContext $context, KeywordTermEntity $term): array
+    {
+        $titles = [$context->language => $term->getTitle()];
+
+        $translations = $term->getTranslations();
+        foreach ($context->translationLanguages as $language => $sysLanguageUid) {
+            $title = $translations[$sysLanguageUid]['title'] ?? null;
+            if (is_string($title) && $title !== '') {
+                $titles[$language] = $title;
+            }
+        }
+
+        return $titles;
+    }
+
+    /**
      * Find-or-create the category for one keyword; assumes its parent exists.
      *
      * @param list<int> $sitePageIds
@@ -270,33 +383,29 @@ class Resolver
         array $sitePageIds,
         CollectedKeyword $keyword
     ): string {
-        $existing = $context->keywordKeyByRemoteId[$keyword->remoteId] ?? null;
-        if ($existing !== null) {
-            return $existing;
-        }
+        // The state binds to the context's own map, so keys stay where
+        // promoteNewKeys() expects to find them between rounds.
+        $state = new SysCategoryProvisioningState($context->keywordKeyByRemoteId);
 
-        $parentKey = (string)$context->keywordParentUid;
-        if ($keyword->parentRemoteId !== null) {
-            $parentKey = $context->keywordKeyByRemoteId[$keyword->parentRemoteId]
-                ?? (string)$context->keywordParentUid;
-        }
+        $key = $this->sysCategoryProvisioner->provision(
+            $payload,
+            $state,
+            $this->keywordAnchor($context),
+            new SysCategoryTerm(
+                self::keywordSourceValue($keyword->remoteId),
+                $keyword->titles,
+                $keyword->parentRemoteId === null
+                    ? null
+                    : self::keywordSourceValue($keyword->parentRemoteId)
+            ),
+            $sitePageIds,
+            $context->language,
+            $context->translationLanguages
+        );
 
-        $uid = $this->findCategoryUid($context->keywordParentUid, $sitePageIds, $keyword->remoteId);
-        if ($uid > 0) {
-            $key = (string)$uid;
-        } else {
-            $key = StringUtility::getUniqueId('NEW');
-            $payload->addRow('sys_category', $key, [
-                'pid' => $context->keywordStoragePid,
-                'parent' => $parentKey,
-                'title' => $keyword->title,
-                'remote_id' => $keyword->remoteId,
-            ]);
-        }
-
-        $context->keywordKeyByRemoteId[$keyword->remoteId] = $key;
-
-        return $key;
+        // A keyword without a usable title never reaches here: the collector
+        // skips a husk before it is collected at all.
+        return (string)$key;
     }
 
     /**
@@ -326,13 +435,14 @@ class Resolver
             $targetField = $reference['field'];
 
             if (is_string($title)) {
-                // Free text arrives resolved; there is nothing to fetch.
+                // Free text arrives resolved; there is nothing to fetch, and
+                // nothing upstream to translate it with.
                 $context->collectKeyword(new CollectedKeyword(
                     $ownerTable,
                     $ownerKey,
                     $targetField,
                     $uri,
-                    $title
+                    [$context->language => $title]
                 ));
             } else {
                 $this->collectKeywordChain(
@@ -448,7 +558,7 @@ class Resolver
             $ownerKey,
             $targetField,
             self::keywordRemoteId($uri),
-            $term->getTitle(),
+            $this->keywordTitles($context, $term),
             $parentRemoteId,
             $isCited,
         ));
@@ -551,7 +661,27 @@ class Resolver
 
     public static function keywordRemoteId(string $uri): string
     {
-        return 'keyword:' . $uri;
+        return self::KEYWORD_IDENTIFIER_PREFIX . $uri;
+    }
+
+    /**
+     * The bare value behind a keyword identifier. Keywords are carried already
+     * prefixed, while the provisioner prefixes what it is given.
+     */
+    protected static function keywordSourceValue(string $remoteId): string
+    {
+        return str_starts_with($remoteId, self::KEYWORD_IDENTIFIER_PREFIX)
+            ? substr($remoteId, strlen(self::KEYWORD_IDENTIFIER_PREFIX))
+            : $remoteId;
+    }
+
+    protected function keywordAnchor(ResolverContext $context): SysCategoryAnchor
+    {
+        return new SysCategoryAnchor(
+            $context->keywordParentUid,
+            $context->keywordStoragePid,
+            self::KEYWORD_IDENTIFIER_PREFIX
+        );
     }
 
     /**
@@ -568,6 +698,11 @@ class Resolver
         }
 
         $sitePageIds = $context->sitePageIds;
+        $anchor = new SysCategoryAnchor($parentUid, $categoryPid, self::TYPE_IDENTIFIER_PREFIX);
+        // Bound to the context's map so keys survive promoteNewKeys() between
+        // rounds, as they did before the provisioner took this over.
+        $state = new SysCategoryProvisioningState($context->categoryKeyByRemoteId);
+        $index = $this->vocabularyProvider->index($context->apiKey);
 
         foreach ($payload->getCategories() as $table => $categoriesByOwner) {
             foreach ($categoriesByOwner as $ownerRemoteId => $categories) {
@@ -586,30 +721,167 @@ class Resolver
                         continue;
                     }
 
-                    $categoryRemoteId = $category['remoteId'];
-                    // Reuse the key staged earlier this run (across roots) so a
-                    // recurring category yields one row.
-                    $categoryKey = $context->categoryKeyByRemoteId[$categoryRemoteId] ?? null;
+                    $categoryKey = $this->provisionTypeChain(
+                        $payload,
+                        $context,
+                        $anchor,
+                        $state,
+                        $index,
+                        $category,
+                        $sitePageIds,
+                        $table,
+                        (string)$ownerRemoteId
+                    );
                     if ($categoryKey === null) {
-                        $existingUid = $this->findCategoryUid($parentUid, $sitePageIds, $categoryRemoteId);
-                        if ($existingUid > 0) {
-                            $categoryKey = (string)$existingUid;
-                        } else {
-                            $categoryKey = StringUtility::getUniqueId('NEW');
-                            $payload->addRow('sys_category', $categoryKey, [
-                                'pid' => $categoryPid,
-                                'parent' => $parentUid,
-                                'title' => $category['title'],
-                                'remote_id' => $categoryRemoteId,
-                            ]);
-                        }
-                        $context->categoryKeyByRemoteId[$categoryRemoteId] = $categoryKey;
+                        continue;
                     }
 
+                    // Only the type the payload names becomes a relation; its
+                    // ancestors exist to give the tree its levels.
                     $payload->setRelationField($table, $ownerKey, $field, $categoryKey);
                 }
             }
         }
+    }
+
+    /**
+     * Provision the type's whole ancestor chain and answer the key of the type
+     * itself, top-down so each level exists before the one hanging beneath it.
+     *
+     * A type the vocabulary knows nothing about still gets its own category:
+     * losing it would take away structure editors already have, and the missing
+     * hierarchy is the lesser degradation.
+     *
+     * @param array{field: string, remoteId: string, title: string} $category
+     * @param list<int>                                             $sitePageIds
+     */
+    protected function provisionTypeChain(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        SysCategoryAnchor $anchor,
+        SysCategoryProvisioningState $state,
+        VocabularyIndex $index,
+        array $category,
+        array $sitePageIds,
+        string $ownerTable,
+        string $ownerRemoteId
+    ): ?string {
+        $sourceValue = self::typeSourceValue($category['remoteId']);
+        $strategy = $this->parentStrategies->forTable($ownerTable);
+        $chain = $this->chainBuilder->build(
+            $index,
+            $sourceValue,
+            $strategy,
+            function (string $class, string $chosen, array $discarded) use ($context, $strategy): void {
+                // Once per class per run: the same branch recurs on every record
+                // carrying the type, and the report is about the class.
+                if (isset($context->reportedBranches[$class])) {
+                    return;
+                }
+                $context->reportedBranches[$class] = true;
+                $this->importLogger->recordDiscardedParents(
+                    $class,
+                    $chosen,
+                    $discarded,
+                    $strategy->name()
+                );
+            }
+        );
+        if ($chain === []) {
+            $chain = [$sourceValue];
+            if (!isset($context->reportedMissingHierarchy[$sourceValue])) {
+                $context->reportedMissingHierarchy[$sourceValue] = true;
+                $this->importLogger->recordMissingHierarchy($sourceValue);
+            }
+        }
+
+        $key = null;
+        $parentValue = null;
+        foreach ($chain as $class) {
+            $key = $this->sysCategoryProvisioner->provision(
+                $payload,
+                $state,
+                $anchor,
+                new SysCategoryTerm(
+                    $class,
+                    $this->typeTitles($context, $index, $class, $category),
+                    $parentValue
+                ),
+                $sitePageIds,
+                $context->language,
+                $context->translationLanguages
+            );
+            $parentValue = $class;
+        }
+
+        return $key;
+    }
+
+    /**
+     * Titles for one class of the chain. The mapper's title applies only to the
+     * type the record named; an ancestor is titled from upstream, or from the
+     * fallback map under its own source value.
+     *
+     * @param array{field: string, remoteId: string, title: string} $category
+     *
+     * @return array<string, string>
+     */
+    protected function typeTitles(
+        ResolverContext $context,
+        VocabularyIndex $index,
+        string $class,
+        array $category
+    ): array {
+        $languages = array_merge([$context->language], array_keys($context->translationLanguages));
+        $named = self::typeSourceValue($category['remoteId']);
+
+        $resolution = $this->titleResolver->resolve(
+            $class,
+            $index->get($class),
+            $languages,
+            $class === $named ? [$class => $category['title']] : [],
+            $context->language
+        );
+
+        // Only the type the record named is reported; an ancestor is nobody's
+        // to maintain.
+        if ($class === $named) {
+            $context->fallbackUsedByType[$named] = $resolution->usedFallback;
+        }
+
+        return $resolution->titles;
+    }
+
+    /**
+     * Drop from the report every type upstream titled by itself. What remains
+     * is what the fallback map was consulted for — mapped where it answered,
+     * unmatched where it did not — which is what someone still maintains.
+     */
+    protected function amendMatchReports(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        if ($context->fallbackUsedByType === []) {
+            return;
+        }
+
+        $amended = [];
+        foreach ($payload->getMatchReports() as $report) {
+            $report['matched'] = array_filter(
+                $report['matched'],
+                static fn (string $value): bool => $context->fallbackUsedByType[$value] ?? true,
+                ARRAY_FILTER_USE_KEY
+            );
+            $amended[] = $report;
+        }
+
+        $payload->setMatchReports($amended);
+    }
+
+    /** The bare type behind a category identifier. */
+    protected static function typeSourceValue(string $remoteId): string
+    {
+        return str_starts_with($remoteId, self::TYPE_IDENTIFIER_PREFIX)
+            ? substr($remoteId, strlen(self::TYPE_IDENTIFIER_PREFIX))
+            : $remoteId;
     }
 
     /**
@@ -666,9 +938,24 @@ class Resolver
         DataHandlerPayload $payload,
         ResolverContext $context
     ): void {
+        $this->drainTranslationsUsing($payload, $context, $context->remoteIdToKey);
+    }
+
+    /**
+     * Categories are keyed by their own identifiers rather than by a record's
+     * remote_id, so the map to resolve owners through is an argument: the same
+     * staging serves both, only the bookkeeping differs.
+     *
+     * @param array<string, string> $keyByIdentifier
+     */
+    protected function drainTranslationsUsing(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        array $keyByIdentifier
+    ): void {
         foreach ($payload->getTranslations() as $table => $rowsByRemoteId) {
             foreach ($rowsByRemoteId as $remoteId => $perLanguage) {
-                $ownerKey = $context->remoteIdToKey[$remoteId] ?? null;
+                $ownerKey = $keyByIdentifier[$remoteId] ?? null;
                 if ($ownerKey === null || !ctype_digit($ownerKey)) {
                     continue;
                 }

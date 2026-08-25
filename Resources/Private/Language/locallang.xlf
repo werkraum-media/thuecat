@@ -153,6 +153,9 @@
             <trans-unit id="module.imports.summary.listOfErrors">
                 <source>List of Errors</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.notices" xml:space="preserve">
+                <source>Notices and warnings</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
             </trans-unit>

@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
 use GuzzleHttp\Psr7\Response;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -33,6 +34,9 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
 abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
 {
@@ -112,6 +116,30 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         ],
     ];
 
+    /**
+     * Chains the fixtures actually carry, taken from the published
+     * vocabularies, as class => [parents, titles]. `schema:Thing` is present so
+     * the cutoff has something to cut.
+     *
+     * Titles are load-bearing: an ancestor has no entry in the fallback map, so
+     * without an upstream label it resolves to no title and is skipped.
+     *
+     * @var array<string, array{list<string>, array<string, string>}>
+     */
+    protected const VOCABULARY = [
+        'thuecat:CultureEvent' => [
+            ['schema:Event'],
+            ['de' => 'Kulturveranstaltung', 'en' => 'Culture event'],
+        ],
+        'thuecat:MusicEvent' => [['schema:MusicEvent'], ['de' => 'Musikveranstaltung']],
+        'schema:MusicEvent' => [['schema:Event'], ['de' => 'Musikereignis']],
+        'schema:Event' => [['schema:Thing'], ['de' => 'Veranstaltung', 'en' => 'Event']],
+        'schema:Museum' => [['schema:CivicStructure'], ['de' => 'Museum']],
+        'schema:CivicStructure' => [['schema:Place'], ['de' => 'Öffentliches Bauwerk']],
+        'schema:Place' => [['schema:Thing'], ['de' => 'Ort']],
+        'schema:Thing' => [[], ['de' => 'Ding']],
+    ];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -125,12 +153,35 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
             $this->getContainer()->set(MediaFileDownloader::class, new MediaFileDownloaderStub());
         }
+        $this->seedVocabularyIndex();
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/BackendUser.php');
         $this->setUpBackendUser(1);
         $GLOBALS['LANG'] = $this->getContainer()->get(LanguageServiceFactory::class)->create('en_US');
         foreach ($this->getLogFiles() as $logFile) {
             file_put_contents($logFile, '');
         }
+    }
+
+    /**
+     * The class hierarchy every import resolves against, written straight into
+     * the cache so no test stages a vocabulary fetch for it.
+     *
+     * Deliberately small: a test needing a particular chain seeds its own on
+     * top rather than this growing into a copy of the published vocabularies.
+     *
+     * @param array<string, array{list<string>, array<string, string>}> $classesById
+     */
+    protected function seedVocabularyIndex(array $classesById = self::VOCABULARY): void
+    {
+        $classes = [];
+        foreach ($classesById as $id => [$parents, $titles]) {
+            $classes[$id] = new VocabularyClass($id, $parents, $titles);
+        }
+
+        $cache = new VocabularyIndexCache(
+            $this->get(CacheManager::class)->getCache('thuecat_vocabulary')
+        );
+        $cache->write(new VocabularyIndex($classes), time());
     }
 
     protected function assertPostConditions(): void
