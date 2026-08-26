@@ -1,0 +1,30 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/685822377106-mbtz",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:DefinedTerm",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Familiengeeignet"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Suitable for families"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Adapté aux familles"
+                }
+            ],
+            "schema:inDefinedTermSet": {
+                "@id": "https://thuecat.org/resources/192875159827-xfqk"
+            }
+        }
+    ]
+}

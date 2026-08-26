@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 
 class DataHandlerPayload
@@ -111,7 +112,7 @@ class DataHandlerPayload
     public function addEntity(EntityInterface $entity): void
     {
         $table = $entity::TABLE;
-        $row = $entity->toArray();
+        $row = $this->resolveParsedEmpty($entity->toArray());
         $remoteId = (string)$row['remote_id'];
 
         if (!isset($this->dataMap[$table])) {
@@ -144,6 +145,27 @@ class DataHandlerPayload
         foreach ($entity->getMatchReports() as $matchReport) {
             $this->matchReports[] = $matchReport;
         }
+    }
+
+    /**
+     * Spend the parsed-empty sentinels: each names the type it stands in for,
+     * so the empty value to restore is known rather than guessed. They exist
+     * only to survive toArray()'s falsy filter, and end here — the datamap
+     * carries real values and nothing downstream knows about them.
+     *
+     * @param array<string, string|int|float> $row
+     *
+     * @return array<string, string|int|float>
+     */
+    private function resolveParsedEmpty(array $row): array
+    {
+        foreach ($row as $field => $value) {
+            if ($value === AbstractEntity::PARSED_EMPTY_INTEGER) {
+                $row[$field] = 0;
+            }
+        }
+
+        return $row;
     }
 
     /**

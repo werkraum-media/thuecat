@@ -16,6 +16,11 @@ An asset is downloaded once per run no matter how many records use it, and files
 are named after the URL they were downloaded from, so a re-import reuses what is
 already stored instead of fetching it again.
 
+Redirects are followed, up to five hops; some hosts serve every asset that way.
+The file is named after the URL upstream supplied, not the redirect target, so
+an asset stays one file across runs. A redirect without a target, or a longer
+chain, counts as a failed download and leaves stored relations alone.
+
 .. _frontend-output-media-ownership:
 
 Which fields the import owns

@@ -173,6 +173,13 @@ Features
 * The town filter matches a record carrying several towns, and the search form offers every town
   its records carry. An attraction in two towns is returned once when both are selected.
 
+* ``thuecat:Trail`` is imported into its own record type (:sql:`tx_thuecat_trail`), with its
+  descriptive texts, route and metrics each in their own column. Way-type segments, current
+  conditions and the start and end locations become inline records; seasons a multi-value field.
+  Trails carry keywords and images like any other record. An attraction contained in a trail
+  resolves to it through ``contained_in_trail``. No frontend output yet — the records exist in the
+  backend.
+
 Fixes
 -----
 
@@ -209,6 +216,11 @@ Fixes
 
 * An image that cannot be downloaded no longer costs the run its media. Previously one failed
   download discarded every image downloaded under all other roots.
+
+* Media served behind a redirect is imported. A ``301`` was previously logged as
+  ``Image could not be downloaded``, which cost every asset on a host that redirects — trail images
+  and logos come from one. Redirects are followed up to five hops. Re-run the import to fetch the
+  images earlier runs skipped. See :ref:`frontend-output-media-import`.
 
 * Staged media is promoted into the target folder even when the run recorded an error elsewhere.
 

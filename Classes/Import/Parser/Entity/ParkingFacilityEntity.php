@@ -25,11 +25,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-// Column set is narrower than TouristAttraction (no url, no slogan, no
-// accessibility_specification, no pets/public_access/…); see TCA
-// tx_thuecat_parking_facility. buildOpeningHourSpecifications / buildOffers /
-// buildDistanceToPublicTransport / collectIds live on AbstractEntity.
-class ParkingFacilityEntity extends AbstractEntity
+class ParkingFacilityEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_parking_facility';
 
@@ -38,9 +34,7 @@ class ParkingFacilityEntity extends AbstractEntity
         'image' => 'media_files',
     ];
 
-    // Higher than the default 10 — ParkingFacility nodes also carry
-    // schema:Organization in @type, so without priority the generic
-    // OrganisationEntity would win the resolver tie-break.
+    // OrganisationEntity would win the resolver tie-break if lower
     protected int $priority = 30;
     protected string $remote_id = '';
     protected string $title = '';
@@ -82,10 +76,6 @@ class ParkingFacilityEntity extends AbstractEntity
         );
         $this->offers = $this->buildOffers($node['schema:makesOffer'] ?? null, $language);
 
-        // Two-pass: only languages that picked up a localised field receive
-        // the lang-less concatenated/derived fields. A site language with
-        // no @language-tagged content stays out of the bucket so it does
-        // not spawn an empty translation row driven purely by URI lists.
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
                 $value = $this->extractValue($node[$jsonldName] ?? null, $code);
@@ -111,20 +101,9 @@ class ParkingFacilityEntity extends AbstractEntity
 
         $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
 
-        // town and managed_by live on the row but stay empty here — the
-        // referenced @id stubs only carry ids, not types, so the resolver
-        // must look each one up before deciding which table it points to.
-        // ParkingFacility uses thuecat:managedBy directly (unlike attractions,
-        // which encode the same relation as thuecat:contentResponsible).
         $this->recordTransient('containedInPlace', $node['schema:containedInPlace'] ?? null);
         $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
 
-        // schema:photo / schema:image / schema:video are bare {"@id": "dms_…"}
-        // stubs pointing at separate resources we don't have here. The resolver
-        // fetches each dms_* resource, shapes it into the legacy Media frontend
-        // model's JSON and writes the blob onto the parking facility's media
-        // column. The per-ref `kind` tag tells the resolver which source slot
-        // each entry came from so mainImage + type end up correct on output.
         $this->recordMediaTransient(
             $node['schema:photo'] ?? null,
             $node['schema:image'] ?? null,

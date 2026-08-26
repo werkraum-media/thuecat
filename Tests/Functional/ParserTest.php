@@ -517,6 +517,41 @@ final class ParserTest extends AbstractImportTestCase
         }
     }
 
+    #[Test]
+    public function claimsTrailNodeDespiteItsBroaderPlaceTypes(): void
+    {
+        $graph = $this->graphFromFixture('e_52469786-oatour.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, new ParserContext(0));
+        $result = $subject->getDataHandlerPayload()->getDataMap();
+
+        // The trail's own inline children are expected; another record kind's
+        // table would mean an entity stole the node.
+        $tables = array_filter(
+            array_keys($result),
+            static fn (string $table): bool => !str_starts_with($table, 'tx_thuecat_trail_')
+        );
+
+        self::assertSame(['tx_thuecat_trail'], array_values($tables));
+        self::assertArrayHasKey(
+            'https://thuecat.org/resources/e_52469786-oatour',
+            $result['tx_thuecat_trail']
+        );
+    }
+
+    #[Test]
+    public function doesNotClaimPlaceNodeWithoutTrailType(): void
+    {
+        $graph = $this->graphFromFixture('165868194223-zmqf.json');
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, new ParserContext(0));
+        $result = $subject->getDataHandlerPayload()->getDataMap();
+
+        self::assertArrayNotHasKey('tx_thuecat_trail', $result);
+    }
+
     private function graphFromFixture(string $filename): array
     {
         $path = self::FIXTURE_PATH . $filename;

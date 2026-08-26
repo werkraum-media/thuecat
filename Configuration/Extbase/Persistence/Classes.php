@@ -31,6 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\Trail;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address as FrontendAddress;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
@@ -52,6 +53,9 @@ return [
     ],
     ParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',
+    ],
+    Trail::class => [
+        'tableName' => 'tx_thuecat_trail',
     ],
     ImportConfiguration::class => [
         'tableName' => 'tx_thuecat_import_configuration',

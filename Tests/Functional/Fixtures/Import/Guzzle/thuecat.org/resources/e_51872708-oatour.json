@@ -1,0 +1,1326 @@
+{
+  "@context": {
+    "cdb": "https://cdb.join.de/ontology/cdb/1.0/",
+    "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+    "schema": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "wod": "https://web-of-data.org/ontology/wod/1.0/",
+    "epapp": "https://thuecat.org/ontology/epapp/1.0/",
+    "thuecatsh": "https://thuecat.org/shapes/thuecat/1.0/",
+    "cc": "http://creativecommons.org/ns#",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "tourism": "https://web-of-data.org/tourism/",
+    "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+    "agg": "http://jena.apache.org/ARQ/function/aggregate#",
+    "geof": "http://www.opengis.net/def/function/geosparql/",
+    "prefix": "http://www.ontotext.com/connectors/lucene#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "spif": "http://spinrdf.org/spif#",
+    "path": "http://www.ontotext.com/path#",
+    "apf": "http://jena.apache.org/ARQ/property#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "rep": "http://www.openrdf.org/config/repository#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "wgs": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "void": "http://rdfs.org/ns/void#",
+    "list": "http://jena.apache.org/ARQ/list#",
+    "vb": "https://data.visitberlin.de/ontology/vb/1.0/",
+    "geoext": "http://rdf.useekm.com/ext#",
+    "sesame": "http://www.openrdf.org/schema/sesame#",
+    "math": "http://www.w3.org/2005/xpath-functions/math",
+    "sail": "http://www.openrdf.org/config/sail#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "fn": "http://www.w3.org/2005/xpath-functions",
+    "sys": "http://www.ontotext.com/owlim/system#",
+    "dachkg": "https://thuecat.org/ontology/dachkg/1.0/",
+    "array": "http://www.w3.org/2005/xpath-functions/array",
+    "similarity": "http://www.ontotext.com/graphdb/similarity/",
+    "similarity-index": "http://www.ontotext.com/graphdb/similarity/instance/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "map": "http://www.w3.org/2005/xpath-functions/map",
+    "sr": "http://www.openrdf.org/config/repository/sail#",
+    "rdf4j": "http://rdf4j.org/schema/rdf4j#",
+    "gn": "http://www.geonames.org/ontology#",
+    "afn": "http://jena.apache.org/ARQ/function#",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "ofn": "http://www.ontotext.com/sparql/functions/",
+    "inst": "http://www.ontotext.com/connectors/lucene/instance#",
+    "graphdb": "http://www.ontotext.com/config/graphdb#",
+    "luc": "http://www.ontotext.com/connectors/lucene#",
+    "omgeo": "http://www.ontotext.com/owlim/geo#"
+  },
+  "@graph": [
+    {
+      "@id": "https://thuecat.org/resources/e_51872708-oatour",
+      "@type": [
+        "schema:Thing",
+        "schema:Place",
+        "thuecat:Trail",
+        "ttgds:Trail"
+      ],
+      "rdfs:label": [
+        {
+          "@language": "de",
+          "@value": "Radtour nach Holzdorf"
+        },
+        {
+          "@language": "en",
+          "@value": "Bike route to Holzdorf"
+        },
+        {
+          "@language": "fr",
+          "@value": "Parcours à vélo jusqu'à Holzdorf"
+        }
+      ],
+      "schema:identifier": {
+        "@type": "xsd:string",
+        "@value": "51872708"
+      },
+      "schema:name": [
+        {
+          "@language": "de",
+          "@value": "Radtour nach Holzdorf"
+        },
+        {
+          "@language": "en",
+          "@value": "Bike route to Holzdorf"
+        },
+        {
+          "@language": "fr",
+          "@value": "Parcours à vélo jusqu'à Holzdorf"
+        }
+      ],
+      "schema:subjectOf": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b29",
+        "@type": [
+          "schema:Thing",
+          "schema:CreativeWork",
+          "schema:DigitalDocument"
+        ],
+        "rdfs:label": {
+          "@type": "xsd:string",
+          "@value": "Tour_Radtour nach Holzdorf.gpx"
+        },
+        "schema:name": {
+          "@type": "xsd:string",
+          "@value": "Tour_Radtour nach Holzdorf.gpx"
+        },
+        "schema:about": {
+          "@id": "https://thuecat.org/resources/e_51872708-oatour"
+        },
+        "schema:url": {
+          "@type": "schema:URL",
+          "@value": "https://www.outdooractive.com/de/download.tour.gpx?i=51872708&exportWaypoints=true"
+        },
+        "schema:encodingFormat": {
+          "@type": "xsd:string",
+          "@value": "application/gpx+xml"
+        },
+        "dcterms:title": {
+          "@type": "xsd:string",
+          "@value": "Tour_Radtour nach Holzdorf.gpx"
+        }
+      },
+      "schema:geo": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b15",
+        "@type": [
+          "schema:Thing",
+          "schema:Intangible",
+          "schema:StructuredValue",
+          "schema:GeoShape"
+        ],
+        "schema:line": {
+          "@type": "xsd:string",
+          "@value": "11.288768,50.898713,269 11.289,50.899018,269 11.289231,50.899323,269 11.28927,50.899421,269 11.289289,50.899467,269 11.289208,50.89972,268 11.289061,50.900088,268 11.288913,50.900456,267 11.288777,50.900787,266 11.288641,50.901119,266 11.288536,50.901379,266 11.288431,50.90164,266 11.288338,50.901867,266 11.288244,50.902094,266 11.28818,50.902228,266 11.288061,50.902537,266 11.287942,50.902847,267 11.287838,50.903116,267 11.287822,50.903156,267 11.28828,50.903393,266 11.288738,50.903631,266 11.289196,50.903868,266 11.289465,50.904053,266 11.289769,50.90421,266 11.290332,50.904439,268 11.290277,50.904519,268 11.290242,50.904564,268 11.290309,50.90462,269 11.290343,50.904793,270 11.290226,50.905097,271 11.29011,50.905401,271 11.289993,50.905706,272 11.289949,50.906018,275 11.289904,50.906331,279 11.289799,50.906604,281 11.289583,50.906967,283 11.289533,50.907106,284 11.289537,50.907197,285 11.289629,50.907299,286 11.289713,50.907343,287 11.2899,50.907392,288 11.290078,50.907387,288 11.290257,50.907343,288 11.290667,50.907207,287 11.291171,50.907259,283 11.291725,50.907475,278 11.292278,50.907691,270 11.292521,50.907744,268 11.292605,50.907793,267 11.292672,50.908019,264 11.292738,50.908244,263 11.292889,50.908532,262 11.292958,50.908774,262 11.293031,50.909025,261 11.293145,50.909298,261 11.29326,50.90957,261 11.293316,50.909665,261 11.293372,50.909671,261 11.293546,50.909703,261 11.293698,50.909733,262 11.294002,50.909769,263 11.294307,50.909763,263 11.294838,50.909753,264 11.295368,50.909744,266 11.295713,50.909774,267 11.296131,50.909862,267 11.296548,50.909951,267 11.296957,50.910087,267 11.297153,50.910189,267 11.297314,50.910275,267 11.297735,50.910578,267 11.297817,50.910664,267 11.297998,50.910947,267 11.29818,50.91123,267 11.298355,50.911177,265 11.298885,50.911305,261 11.299061,50.911389,260 11.2993,50.911598,260 11.299539,50.911807,260 11.299742,50.911996,260 11.299968,50.912264,260 11.300053,50.912367,260 11.300255,50.912525,260 11.300677,50.912707,260 11.301027,50.912948,260 11.301207,50.913041,260 11.301231,50.913054,260 11.301389,50.913141,259 11.301243,50.913324,260 11.301163,50.913369,260 11.300929,50.913415,261 11.300543,50.913358,262 11.300263,50.913281,262 11.30008,50.913196,262 11.299579,50.913089,264 11.299163,50.913345,270 11.298833,50.913583,275 11.298775,50.913626,275 11.298719,50.91367,276 11.298648,50.91374,277 11.29854,50.91381,279 11.298067,50.914141,284 11.297717,50.914318,287 11.297446,50.914416,289 11.296877,50.914567,292 11.296308,50.914719,296 11.295987,50.914792,299 11.295436,50.914871,303 11.29477,50.914909,306 11.294105,50.914948,310 11.293565,50.914975,313 11.293025,50.915002,317 11.292486,50.915028,320 11.292076,50.91506,322 11.291667,50.915091,324 11.291022,50.915153,328 11.290377,50.915216,332 11.289732,50.915278,335 11.289176,50.915363,337 11.28889,50.915281,336 11.288563,50.915168,335 11.28837,50.915234,337 11.288091,50.915373,340 11.287853,50.915403,341 11.28758,50.915406,342 11.287069,50.915493,345 11.286559,50.91558,348 11.286239,50.915634,349 11.285862,50.915717,352 11.285277,50.915927,355 11.285014,50.916038,357 11.284652,50.91619,359 11.284248,50.916352,362 11.283799,50.916535,365 11.28335,50.916718,368 11.282901,50.916901,371 11.282569,50.91703,374 11.282236,50.917159,377 11.282173,50.91719,377 11.281772,50.917364,381 11.281585,50.917575,384 11.281449,50.917791,386 11.281313,50.918006,388 11.281317,50.918382,389 11.281263,50.918463,390 11.281231,50.918521,390 11.280963,50.918912,392 11.280679,50.919226,394 11.280314,50.919581,395 11.279949,50.919937,396 11.279598,50.920327,396 11.279328,50.920602,395 11.279059,50.920877,394 11.278732,50.921167,394 11.278487,50.921329,393 11.27799,50.921591,393 11.277494,50.921853,392 11.276997,50.922115,390 11.2765,50.922377,389 11.276004,50.922639,387 11.275507,50.922901,385 11.27501,50.923163,384 11.274514,50.923425,383 11.274017,50.923687,382 11.27352,50.923949,379 11.27298,50.924233,375 11.272439,50.924516,373 11.271899,50.924799,371 11.271358,50.925082,370 11.270818,50.925366,368 11.270277,50.925649,368 11.269737,50.925932,367 11.269509,50.926029,367 11.269057,50.926165,367 11.268906,50.926227,367 11.268822,50.926292,367 11.268807,50.926413,365 11.26885,50.926663,363 11.268894,50.926913,361 11.268902,50.927116,359 11.268847,50.927241,358 11.268692,50.927467,356 11.268564,50.927843,354 11.268437,50.928218,354 11.268675,50.928359,354 11.268728,50.928493,354 11.268711,50.928684,355 11.268643,50.928792,355 11.268526,50.929153,356 11.268531,50.929461,356 11.268475,50.929698,357 11.268394,50.929938,358 11.268312,50.930177,358 11.268209,50.930535,359 11.268106,50.930893,359 11.268002,50.931251,359 11.26798,50.931304,359 11.26786,50.931662,359 11.26774,50.932021,359 11.267621,50.93238,358 11.267501,50.932738,357 11.267382,50.933097,356 11.267257,50.933483,355 11.267133,50.933869,353 11.267009,50.934254,351 11.266884,50.93464,349 11.26676,50.935026,348 11.266752,50.935059,348 11.26673,50.93516,348 11.266826,50.935373,348 11.267123,50.935665,348 11.26742,50.935957,348 11.267717,50.93625,348 11.267977,50.936604,347 11.268237,50.936959,345 11.268394,50.937145,344 11.268787,50.9375,343 11.26918,50.937854,341 11.269573,50.938208,340 11.269903,50.938492,339 11.270234,50.938776,339 11.270564,50.93906,336 11.270894,50.939344,333 11.271082,50.939434,331 11.271293,50.93949,330 11.271795,50.93951,326 11.272297,50.93953,324 11.272625,50.939612,323 11.272729,50.939667,323 11.272793,50.939692,323 11.272846,50.939718,323 11.27307,50.93979,324 11.27329,50.939822,325 11.273881,50.939852,326 11.274472,50.939882,329 11.274787,50.939942,332 11.275069,50.94003,334 11.275289,50.940109,335 11.275745,50.940363,338 11.276202,50.940618,340 11.276268,50.940664,340 11.276436,50.94078,341 11.276943,50.941026,343 11.276578,50.941131,344 11.276213,50.941237,345 11.275618,50.941382,346 11.275022,50.941528,346 11.274427,50.941673,345 11.273967,50.941775,345 11.273631,50.94187,345 11.273243,50.941988,345 11.272727,50.942118,345 11.27221,50.942249,344 11.271694,50.942379,342 11.271467,50.942476,341 11.271379,50.942552,341 11.271264,50.942802,341 11.271143,50.943223,342 11.271022,50.943643,344 11.270901,50.944064,346 11.27078,50.944484,349 11.270659,50.944905,352 11.270538,50.945325,354 11.270417,50.945745,355 11.270343,50.945987,356 11.270269,50.946229,357 11.2701,50.946638,358 11.269955,50.946996,358 11.26981,50.947354,358 11.269707,50.94767,357 11.269667,50.947783,356 11.269644,50.947852,356 11.26962,50.94792,356 11.269584,50.948023,355 11.26941,50.94833,354 11.269235,50.948637,352 11.269061,50.948944,350 11.268982,50.949109,349 11.268807,50.94945,348 11.268633,50.949791,346 11.268458,50.950132,345 11.268283,50.950472,344 11.268145,50.950752,343 11.268006,50.951032,342 11.267818,50.951418,340 11.26763,50.951804,339 11.268211,50.951983,338 11.268821,50.952187,337 11.269431,50.95239,336 11.269749,50.952504,335 11.270067,50.952617,335 11.270363,50.952746,336 11.270396,50.95285,336 11.270352,50.953075,336 11.270308,50.953301,335 11.270291,50.953318,335 11.270157,50.953583,334 11.270024,50.953848,334 11.269897,50.954097,333 11.269771,50.954346,333 11.270259,50.95449,333 11.270747,50.954635,333 11.270883,50.954672,333 11.271201,50.954759,331 11.271608,50.954879,330 11.272207,50.955051,328 11.272806,50.955224,327 11.273405,50.955396,326 11.274004,50.955569,325 11.274603,50.955742,323 11.275202,50.955914,322 11.275802,50.956087,321 11.275908,50.956118,321 11.276444,50.956268,320 11.27698,50.956418,319 11.277516,50.956568,318 11.278052,50.956719,316 11.278588,50.956869,314 11.278988,50.956941,314 11.279389,50.957014,313 11.279869,50.957103,312 11.280273,50.957269,312 11.280462,50.957346,311 11.280678,50.957434,311 11.281048,50.95752,309 11.281446,50.957619,308 11.281957,50.957747,307 11.282103,50.957757,307 11.282248,50.95772,306 11.282368,50.957629,306 11.28241,50.957595,306 11.282473,50.957563,306 11.28288,50.957409,307 11.283275,50.957322,309 11.283729,50.957366,309 11.283999,50.957141,310 11.284178,50.956962,311 11.284431,50.956764,312 11.284518,50.956726,313 11.284828,50.956742,313 11.285017,50.956499,314 11.285103,50.956301,315 11.28514,50.955997,317 11.285178,50.955693,319 11.285215,50.955389,320 11.285226,50.955248,321 11.285312,50.955061,322 11.285482,50.954918,322 11.285821,50.95474,323 11.286362,50.954547,323 11.286902,50.954353,323 11.287442,50.95416,323 11.287982,50.953966,324 11.288523,50.953773,324 11.289063,50.953579,325 11.289435,50.953445,326 11.289807,50.953312,327 11.290116,50.9532,327 11.290426,50.953089,328 11.29084,50.95294,329 11.291215,50.952812,330 11.291589,50.952684,331 11.291922,50.952572,332 11.292255,50.95246,333 11.292864,50.952244,334 11.293472,50.952029,335 11.294081,50.951813,336 11.294689,50.951598,338 11.295298,50.951382,340 11.295906,50.951167,341 11.296515,50.950951,341 11.297123,50.950736,340 11.297667,50.950539,340 11.298211,50.950343,340 11.29849,50.950241,340 11.298853,50.950106,340 11.299216,50.949971,340 11.299592,50.94991,340 11.30027,50.949841,339 11.300687,50.949871,339 11.300982,50.949968,339 11.301021,50.949981,339 11.300852,50.949565,341 11.300684,50.949149,342 11.300516,50.948733,344 11.300348,50.948317,345 11.300217,50.947979,346 11.300212,50.947816,347 11.300028,50.94762,348 11.299844,50.947423,348 11.299741,50.947314,348 11.299409,50.94696,349 11.299078,50.946606,350 11.298746,50.946252,351 11.298425,50.945908,353 11.298105,50.945563,354 11.297928,50.945363,354 11.297851,50.945269,355 11.297589,50.944978,355 11.297326,50.944687,355 11.297063,50.944396,355 11.29698,50.944301,355 11.296927,50.94424,355 11.296876,50.944179,355 11.296779,50.944074,355 11.296557,50.943835,357 11.296334,50.943596,356 11.29625,50.943509,357 11.296232,50.943486,357 11.296052,50.94328,357 11.295941,50.94316,357 11.295683,50.94289,357 11.295425,50.94262,357 11.295288,50.942437,358 11.2951,50.942148,357 11.2949,50.941817,357 11.2947,50.941486,356 11.294533,50.941189,354 11.294366,50.940892,352 11.294901,50.94087,353 11.295437,50.940848,355 11.295973,50.940826,355 11.296471,50.940784,356 11.297057,50.940693,356 11.297644,50.940602,356 11.29823,50.940512,357 11.298775,50.940436,357 11.29932,50.94036,357 11.299865,50.940284,358 11.30041,50.940208,357 11.300978,50.940162,356 11.301547,50.940116,355 11.302116,50.94007,353 11.302685,50.940024,352 11.303253,50.939979,351 11.303835,50.939948,349 11.304416,50.939917,348 11.304998,50.939886,347 11.30563,50.939827,347 11.306263,50.939767,346 11.306896,50.939707,346 11.307528,50.939647,345 11.308161,50.939587,344 11.308606,50.939625,344 11.308687,50.939632,344 11.309051,50.939663,344 11.309519,50.939738,343 11.309988,50.939814,342 11.310535,50.939904,340 11.311081,50.939994,339 11.311185,50.940007,339 11.31121,50.939566,340 11.311284,50.93922,342 11.311359,50.938875,344 11.311481,50.938442,346 11.311532,50.938287,347 11.311544,50.93825,347 11.311572,50.938163,347 11.31168,50.937732,349 11.311788,50.937301,351 11.311895,50.936869,352 11.312003,50.936438,354 11.312192,50.93609,355 11.31238,50.935741,356 11.312569,50.935392,357 11.312757,50.935044,357 11.313456,50.93507,356 11.314155,50.935096,356 11.314854,50.935122,355 11.315553,50.935147,355 11.316252,50.935173,354 11.316951,50.935199,353 11.31765,50.935225,353 11.318352,50.935255,351 11.319055,50.935285,350 11.319758,50.935315,349 11.320461,50.935344,348 11.321164,50.935374,348 11.321828,50.935401,347 11.322492,50.935428,347 11.323157,50.935455,346 11.323517,50.935425,347 11.324102,50.935329,347 11.324727,50.935197,348 11.325353,50.935066,348 11.325978,50.934934,349 11.326603,50.934803,350 11.327229,50.934671,350 11.327854,50.93454,350 11.328479,50.934408,349 11.329105,50.934277,348 11.329248,50.934261,348 11.329584,50.934269,347 11.330025,50.934318,344 11.330466,50.934367,342 11.330477,50.934302,343 11.330565,50.93386,344 11.330485,50.933664,346 11.330387,50.933584,346 11.329892,50.933356,348 11.329397,50.933128,347 11.328852,50.932907,347 11.328307,50.932686,348 11.327761,50.932465,348 11.327202,50.932223,348 11.326642,50.93198,348 11.326444,50.931873,348 11.326296,50.931771,348 11.32612,50.931594,348 11.325978,50.931329,347 11.325836,50.931064,346 11.325721,50.930825,345 11.325606,50.930587,344 11.325583,50.930425,343 11.325652,50.930177,341 11.325798,50.930046,340 11.326065,50.929879,338 11.326331,50.929712,337 11.326823,50.929543,334 11.327035,50.929484,333 11.327498,50.929343,330 11.327962,50.929202,329 11.328425,50.929061,328 11.328816,50.928966,326 11.329207,50.92887,325 11.329787,50.928802,321 11.330367,50.928734,318 11.330838,50.928649,316 11.331309,50.928563,314 11.331934,50.928357,312 11.332422,50.928101,310 11.33291,50.927845,306 11.333292,50.927595,302 11.333675,50.927346,298 11.334058,50.927096,293 11.334339,50.926931,291 11.334621,50.926765,288 11.334903,50.926667,285 11.335208,50.92651,279 11.335426,50.92631,274 11.335416,50.92617,272 11.335311,50.926045,272 11.334857,50.925762,274 11.334578,50.925514,273 11.334437,50.925336,272 11.334269,50.925085,271 11.334138,50.924789,270 11.334007,50.924494,269 11.333902,50.924196,267 11.33383,50.923814,265 11.333758,50.923432,263 11.333568,50.923545,264 11.333309,50.923332,264 11.33305,50.923119,264 11.332589,50.922798,264 11.332364,50.92263,263 11.332262,50.922553,263 11.331934,50.922308,263 11.331728,50.922186,262 11.331625,50.922152,262 11.331477,50.92214,261 11.33135,50.922165,262 11.33125,50.922213,263 11.33136,50.922112,261 11.331431,50.921967,258 11.331016,50.922073,259 11.3306,50.922179,260 11.330054,50.9223,257 11.32942,50.922409,257 11.329141,50.922491,259 11.328501,50.922584,259 11.327861,50.922677,265 11.327221,50.92277,267 11.3269,50.922769,267 11.3266,50.922741,267 11.326025,50.922621,266 11.325613,50.922465,264 11.325201,50.922309,262 11.324797,50.922125,260 11.324392,50.921941,263 11.324089,50.921656,263 11.323966,50.92149,262 11.323939,50.921225,258 11.323912,50.92096,255 11.323865,50.92075,254 11.323797,50.920628,253 11.323642,50.920316,253 11.323487,50.920004,253 11.323332,50.919692,254 11.32316,50.919483,255 11.322988,50.919273,254 11.322583,50.919033,255 11.322178,50.918793,254 11.321666,50.918698,254 11.321361,50.91868,254 11.320841,50.918677,255 11.320321,50.918675,255 11.319873,50.918711,255 11.319348,50.918792,257 11.318824,50.918873,259 11.3183,50.918954,259 11.317809,50.919043,259 11.317318,50.919132,261 11.316827,50.919221,263 11.316465,50.919243,264 11.316054,50.919248,264 11.315694,50.919209,262 11.315333,50.91917,260 11.315284,50.919104,259 11.315213,50.919077,258 11.31459,50.918993,257 11.31442,50.918944,257 11.314231,50.918944,258 11.314012,50.918951,259 11.313856,50.9189,260 11.313773,50.918849,259 11.313703,50.918735,258 11.313706,50.918538,256 11.313641,50.918414,255 11.313501,50.918283,254 11.313199,50.918078,254 11.312684,50.917933,254 11.312431,50.917805,254 11.312261,50.91768,254 11.312024,50.917372,254 11.311947,50.917219,254 11.311864,50.916862,253 11.311719,50.916613,254 11.311575,50.916364,255 11.311052,50.916452,258 11.310529,50.916539,261 11.310006,50.916627,265 11.30966,50.916237,267 11.309315,50.915847,268 11.308969,50.915458,270 11.308623,50.915068,272 11.308278,50.914678,274 11.307932,50.914289,274 11.307587,50.913899,271 11.307535,50.913781,270 11.307475,50.913731,269 11.307367,50.913659,268 11.307241,50.913645,267 11.30672,50.913691,265 11.30629,50.913756,263 11.305859,50.91382,262 11.305604,50.913838,262 11.305235,50.913839,261 11.304775,50.913808,260 11.30438,50.913756,260 11.304288,50.913744,260 11.304232,50.913738,260 11.304148,50.913735,260 11.303705,50.913641,259 11.303189,50.913618,259 11.302675,50.913618,259 11.302435,50.913573,259 11.302048,50.913445,260 11.301718,50.913293,259 11.301389,50.913141,259 11.301207,50.913041,260 11.301027,50.912948,260 11.300677,50.912707,260 11.300255,50.912525,260 11.300053,50.912367,260 11.299968,50.912264,260 11.299742,50.911996,260 11.299539,50.911807,260 11.2993,50.911598,260 11.299061,50.911389,260 11.298885,50.911305,261 11.298355,50.911177,265 11.29818,50.91123,267 11.297998,50.910947,267 11.297817,50.910664,267 11.297735,50.910578,267 11.297314,50.910275,267 11.297153,50.910189,267 11.296957,50.910087,267 11.296548,50.909951,267 11.296131,50.909862,267 11.295713,50.909774,267 11.295368,50.909744,266 11.294838,50.909753,264 11.294307,50.909763,263 11.294002,50.909769,263 11.293698,50.909733,262 11.293546,50.909703,261 11.293372,50.909671,261 11.293316,50.909665,261 11.29326,50.90957,261 11.293145,50.909298,261 11.293031,50.909025,261 11.292958,50.908774,262 11.292889,50.908532,262 11.292738,50.908244,263 11.292672,50.908019,264 11.292605,50.907793,267 11.292521,50.907744,268 11.292278,50.907691,270 11.291725,50.907475,278 11.291171,50.907259,283 11.290667,50.907207,287 11.290257,50.907343,288 11.290078,50.907387,288 11.2899,50.907392,288 11.289713,50.907343,287 11.289629,50.907299,286 11.289537,50.907197,285 11.289533,50.907106,284 11.289583,50.906967,283 11.289799,50.906604,281 11.289904,50.906331,279 11.289949,50.906018,275 11.289993,50.905706,272 11.29011,50.905401,271 11.290226,50.905097,271 11.290343,50.904793,270 11.290309,50.90462,269 11.290242,50.904564,268 11.290277,50.904519,268 11.290332,50.904439,268 11.289769,50.90421,266 11.289465,50.904053,266 11.289196,50.903868,266 11.288738,50.903631,266 11.28828,50.903393,266 11.287822,50.903156,267 11.287942,50.902847,267 11.288,50.902694,266 11.288061,50.902537,266 11.28818,50.902228,266 11.288244,50.902094,266 11.288338,50.901867,266 11.288431,50.90164,266 11.288536,50.901379,266 11.288641,50.901119,266 11.288777,50.900787,266 11.288913,50.900456,267 11.289061,50.900088,268 11.289208,50.89972,268 11.289289,50.899467,269 11.28927,50.899421,269 11.289231,50.899323,269 11.289,50.899018,269 11.288768,50.898713,269 11.288761,50.898715,269"
+        }
+      },
+      "schema:description": [
+        {
+          "@language": "de",
+          "@value": "Nicht nur zu Fuß ist man in Bad Berka unterwegs - auch auf dem Rad kann man die malerische Landschaft um die Kurstadt Bad Berka erkunden. Mit der Wiedereröffnung der Tourist-Information hat man zusätzlich diverse Radwegtouren geschaffen, welche in allen Himmelsrichtungen von Bad Berka in verschiedene, anliegende Ortschaften führen. So können Kurz-, Mittel- und Langstrecken auf hervorragend ausgebauten Radwegen befahren werden."
+        },
+        {
+          "@language": "fr",
+          "@value": "On ne se déplace pas seulement à pied à Bad Berka - on peut également découvrir à vélo le paysage pittoresque autour de la ville thermale de Bad Berka. Avec la réouverture de l'Office de tourisme, plusieurs parcours cyclables ont été créés, qui mènent dans toutes les directions cardinales de Bad Berka vers différentes localités voisines. Des distances courtes, moyennes et longues peuvent ainsi être parcourues sur des pistes cyclables parfaitement aménagées."
+        },
+        {
+          "@language": "en",
+          "@value": "You can explore Bad Berka not only on foot but also by bike to enjoy the picturesque landscape around the spa town of Bad Berka. With the reopening of the Tourist Information, several bike route tours have been established, leading from Bad Berka in all directions to various nearby villages. Short, medium, and long distances can be traveled on excellently developed bike paths."
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b12",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "Nicht nur zu Fuß ist man in Bad Berka unterwegs - auch auf dem Rad kann man die malerische Landschaft um die Kurstadt Bad Berka erkunden. Mit der Wiedereröffnung der Tourist-Information hat man zusätzlich diverse Radwegtouren geschaffen, welche in allen Himmelsrichtungen von Bad Berka in verschiedene, anliegende Ortschaften führen. So können Kurz-, Mittel- und Langstrecken auf hervorragend ausgebauten Radwegen befahren werden. "
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b13",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "en",
+            "@value": "You can explore Bad Berka not only on foot but also by bike to enjoy the picturesque landscape around the spa town of Bad Berka. With the reopening of the Tourist Information, several bike route tours have been established, leading from Bad Berka in all directions to various nearby villages. Short, medium, and long distances can be traveled on excellently developed bike paths."
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b14",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "fr",
+            "@value": "On ne se déplace pas seulement à pied à Bad Berka - on peut également découvrir à vélo le paysage pittoresque autour de la ville thermale de Bad Berka. Avec la réouverture de l'Office de tourisme, plusieurs parcours cyclables ont été créés, qui mènent dans toutes les directions cardinales de Bad Berka vers différentes localités voisines. Des distances courtes, moyennes et longues peuvent ainsi être parcourues sur des pistes cyclables parfaitement aménagées. "
+          }
+        }
+      ],
+      "schema:additionalProperty": [
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b0",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "top"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "top"
+          },
+          "schema:value": {
+            "@type": "schema:Boolean",
+            "@value": "true"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "top"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b1",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "publicTransportFriendly"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "publicTransportFriendly"
+          },
+          "schema:value": {
+            "@type": "schema:Boolean",
+            "@value": "true"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "publicTransportFriendly"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b2",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "scenic"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "scenic"
+          },
+          "schema:description": {
+            "@type": "xsd:string",
+            "@value": "Aussichtsreich"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "scenic"
+          },
+          "dcterms:description": {
+            "@type": "xsd:string",
+            "@value": "Aussichtsreich"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b3",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "insiderTip"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "insiderTip"
+          },
+          "schema:description": {
+            "@type": "xsd:string",
+            "@value": "Geheimtipp"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "insiderTip"
+          },
+          "dcterms:description": {
+            "@type": "xsd:string",
+            "@value": "Geheimtipp"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b4",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "loopTour"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "loopTour"
+          },
+          "schema:description": {
+            "@type": "xsd:string",
+            "@value": "Rundtour"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "loopTour"
+          },
+          "dcterms:description": {
+            "@type": "xsd:string",
+            "@value": "Rundtour"
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b5",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:StructuredValue",
+            "schema:PropertyValue"
+          ],
+          "rdfs:label": {
+            "@type": "xsd:string",
+            "@value": "dining"
+          },
+          "schema:name": {
+            "@type": "xsd:string",
+            "@value": "dining"
+          },
+          "schema:description": {
+            "@type": "xsd:string",
+            "@value": "Einkehrmöglichkeit"
+          },
+          "dcterms:title": {
+            "@type": "xsd:string",
+            "@value": "dining"
+          },
+          "dcterms:description": {
+            "@type": "xsd:string",
+            "@value": "Einkehrmöglichkeit"
+          }
+        }
+      ],
+      "schema:potentialAction": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b16",
+        "@type": [
+          "schema:Thing",
+          "schema:Action",
+          "schema:PlayAction",
+          "schema:ExerciseAction"
+        ],
+        "schema:distance": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b17",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:QuantitativeValue",
+            "schema:StructuredValue"
+          ],
+          "schema:unitCode": {
+            "@type": "thuecat:Unit",
+            "@value": "thuecat:MTR"
+          },
+          "schema:value": {
+            "@type": "schema:Float",
+            "@value": "23125.145013"
+          }
+        },
+        "schema:exerciseType": {
+          "@type": "xsd:string",
+          "@value": "Radtour"
+        },
+        "thuecat:trailRatings": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b24",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:Rating",
+            "thuecat:TrailRatings"
+          ],
+          "thuecat:ratingCondition": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b26",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:maxValue": {
+              "@type": "schema:Integer",
+              "@value": "5"
+            },
+            "schema:minValue": {
+              "@type": "schema:Integer",
+              "@value": "1"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "4"
+            }
+          },
+          "thuecat:ratingDifficulty": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b27",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:maxValue": {
+              "@type": "schema:Integer",
+              "@value": "5"
+            },
+            "schema:minValue": {
+              "@type": "schema:Integer",
+              "@value": "1"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "2"
+            }
+          },
+          "thuecat:ratingQualityOfExperience": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b28",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:maxValue": {
+              "@type": "schema:Integer",
+              "@value": "5"
+            },
+            "schema:minValue": {
+              "@type": "schema:Integer",
+              "@value": "1"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "4"
+            }
+          },
+          "thuecat:landscape": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b25",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:maxValue": {
+              "@type": "schema:Integer",
+              "@value": "5"
+            },
+            "schema:minValue": {
+              "@type": "schema:Integer",
+              "@value": "1"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "4"
+            }
+          }
+        },
+        "thuecat:time": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b23",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:QuantitativeValue",
+            "schema:StructuredValue"
+          ],
+          "schema:unitCode": {
+            "@type": "thuecat:Unit",
+            "@value": "thuecat:MIN"
+          },
+          "schema:value": {
+            "@type": "schema:Float",
+            "@value": "107"
+          }
+        },
+        "thuecat:elevation": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b18",
+          "@type": [
+            "schema:Thing",
+            "schema:Action",
+            "schema:PlayAction",
+            "schema:ExerciseAction",
+            "thuecat:Elevation"
+          ],
+          "thuecat:minAltitude": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b22",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:unitCode": {
+              "@type": "thuecat:Unit",
+              "@value": "thuecat:MTR"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "253"
+            }
+          },
+          "thuecat:maxAltitude": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b21",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:unitCode": {
+              "@type": "thuecat:Unit",
+              "@value": "thuecat:MTR"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "396"
+            }
+          },
+          "thuecat:ascentElevation": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b19",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:unitCode": {
+              "@type": "thuecat:Unit",
+              "@value": "thuecat:MTR"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "259"
+            }
+          },
+          "thuecat:descentElevation": {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b20",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:QuantitativeValue",
+              "schema:StructuredValue"
+            ],
+            "schema:unitCode": {
+              "@type": "thuecat:Unit",
+              "@value": "thuecat:MTR"
+            },
+            "schema:value": {
+              "@type": "schema:Float",
+              "@value": "259"
+            }
+          }
+        }
+      },
+      "thuecat:trailOtherDescriptions": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b47",
+        "@type": [
+          "schema:Thing",
+          "schema:Intangible",
+          "schema:StructuredValue",
+          "thuecat:TrailOtherDescriptions"
+        ],
+        "thuecat:shortDescription": [
+          {
+            "@language": "de",
+            "@value": "Bad Berka (Tourist-Information) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Tourist-Information)"
+          },
+          {
+            "@language": "en",
+            "@value": "Bad Berka (Tourist Information) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Tourist Information)"
+          },
+          {
+            "@language": "fr",
+            "@value": "Bad Berka (Office de tourisme) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Office de tourisme)"
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b60",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Bad Berka (Tourist-Information) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Tourist-Information)"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b61",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "en",
+              "@value": "Bad Berka (Tourist Information) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Tourist Information)"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b62",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "fr",
+              "@value": "Bad Berka (Office de tourisme) - Hetschburg - Bergen - Schoppendorf - Holzdorf - Obergrunstedt - Niedergrunstedt - Gelmeroda - Possendorf - Vollersroda - Buchfart - Hetschburg - Bad Berka (Office de tourisme)"
+            }
+          }
+        ],
+        "thuecat:publicTransit": [
+          {
+            "@language": "de",
+            "@value": "Anreise mit Bus und Bahn möglich. Startpunkt ist fußläufig zu erreichen."
+          },
+          {
+            "@language": "en",
+            "@value": "Arrival by bus and train possible. Starting point is within walking distance."
+          },
+          {
+            "@language": "fr",
+            "@value": "Arrivée possible en bus et train. Le point de départ est accessible à pied."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b57",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Anreise mit Bus und Bahn möglich. Startpunkt ist fußläufig zu erreichen."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b58",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "en",
+              "@value": "Arrival by bus and train possible. Starting point is within walking distance."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b59",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "fr",
+              "@value": "Arrivée possible en bus et train. Le point de départ est accessible à pied."
+            }
+          }
+        ],
+        "thuecat:gettingThere": [
+          {
+            "@language": "de",
+            "@value": "Aus Richtung Weimar oder Rudolstadt (B 85) am Abzweig Ilmenau nach rechts bzw. llinks in die Innenstadt einbiegen und den Hinweisschildern bis zum Parkplatz folgen.\nAus Richtung Ilmenau am Abzweig nach Weimar/Rudolstadt geradeaus in die Innenstadt fahren und den Hinweisschildern bis zum Parkplatz folgen."
+          },
+          {
+            "@language": "fr",
+            "@value": "En venant de Weimar ou Rudolstadt (B 85), au détour vers Ilmenau, tourner à droite ou à gauche vers le centre-ville et suivre les panneaux jusqu'au parking.\nEn venant d'Ilmenau, au détour vers Weimar/Rudolstadt, continuer tout droit vers le centre-ville et suivre les panneaux jusqu'au parking."
+          },
+          {
+            "@language": "en",
+            "@value": "From the direction of Weimar or Rudolstadt (B 85) turn right or left at the Ilmenau junction into the city center and follow the signs to the parking lot.\nFrom the direction of Ilmenau, drive straight into the city center at the junction to Weimar/Rudolstadt and follow the signs to the parking lot."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b51",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "<p>Aus Richtung Weimar oder Rudolstadt (B 85) am Abzweig Ilmenau nach rechts bzw. llinks in die Innenstadt einbiegen und den Hinweisschildern bis zum Parkplatz folgen.</p>\r\n<p>Aus Richtung Ilmenau am Abzweig nach Weimar/Rudolstadt geradeaus in die Innenstadt fahren und den Hinweisschildern bis zum Parkplatz folgen.</p>"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b52",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "en",
+              "@value": "<p>From the direction of Weimar or Rudolstadt (B 85) turn right or left at the Ilmenau junction into the city center and follow the signs to the parking lot.</p>\r\n<p>From the direction of Ilmenau, drive straight into the city center at the junction to Weimar/Rudolstadt and follow the signs to the parking lot.</p>"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b53",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "fr",
+              "@value": "<p>En venant de Weimar ou Rudolstadt (B 85), au détour vers Ilmenau, tourner à droite ou à gauche vers le centre-ville et suivre les panneaux jusqu'au parking.</p>\r\n<p>En venant d'Ilmenau, au détour vers Weimar/Rudolstadt, continuer tout droit vers le centre-ville et suivre les panneaux jusqu'au parking.</p>"
+            }
+          }
+        ],
+        "thuecat:parking": [
+          {
+            "@language": "de",
+            "@value": "Parkplatz Innenstadt (auf den Wegweisern im Ort gut ausgeschildert); kostenfreies Parken sowie Caravanstellplatz; von dort ca. 400 m Fußweg bis zur Tourist-Information."
+          },
+          {
+            "@language": "en",
+            "@value": "City center parking lot (well signposted in the town); free parking and caravan parking; from there approx. 400 m walk to the Tourist Information."
+          },
+          {
+            "@language": "fr",
+            "@value": "Parking centre-ville (bien indiqué sur les panneaux dans la localité) ; stationnement gratuit ainsi qu'emplacement pour caravanes ; environ 400 m à pied de là jusqu'à l'Office de tourisme."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b54",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Parkplatz Innenstadt (auf den Wegweisern im Ort gut ausgeschildert); kostenfreies Parken sowie Caravanstellplatz; von dort ca. 400 m Fußweg bis zur Tourist-Information."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b55",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "en",
+              "@value": "City center parking lot (well signposted in the town); free parking and caravan parking; from there approx. 400 m walk to the Tourist Information."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b56",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "fr",
+              "@value": "Parking centre-ville (bien indiqué sur les panneaux dans la localité) ; stationnement gratuit ainsi qu'emplacement pour caravanes ; environ 400 m à pied de là jusqu'à l'Office de tourisme."
+            }
+          }
+        ],
+        "thuecat:directions": [
+          {
+            "@language": "en",
+            "@value": "The route begins at the Tourist Information Bad Berka and leads through the spa park onto the Ilm bike path towards Hetschburg. In Hetschburg, turn left towards Bergen. Caution is advised when crossing the main road (Bad Berka-Weimar). The ascent continues to the district of Bergen and further to Schoppendorf. The district of Schoppendorf is passed through until Holzdorf is reached shortly after. Holzdorf is then passed through continuing northwards to Ober- and later Niedergrunstedt. The next destination is Gelmeroda. Gelmeroda is reached shortly after and traveled through southwards to Possendorf. This village is reached shortly after, and then follow the path until Vollersroda is reached and continue rolling towards Buchfart. You are now back on the Ilm bike path, which leads back to Bad Berka via Hetschburg."
+          },
+          {
+            "@language": "fr",
+            "@value": "Le parcours commence à l'Office de tourisme Bad Berka et traverse le parc thermal pour rejoindre la piste cyclable de l'Ilm en direction d'Hetschburg. À Hetschburg, tourner à gauche en direction de Bergern. Il convient de faire attention en traversant la route principale (Bad Berka-Weimar). La montée mène jusqu'au quartier de Bergern puis continue vers Schoppendorf. Le quartier de Schoppendorf est traversé jusqu'à atteindre peu après Holzdorf. On continue à travers Holzdorf vers le nord en direction d'Ober- puis plus tard Niedergrunstedt. La prochaine destination est Gelmeroda. Gelmeroda est atteint après un court laps de temps et on continue vers le sud en traversant Possendorf. Cette localité est également vite atteinte puis on suit le chemin jusqu'à Vollersroda avant de rouler vers Buchfart. On se trouve alors de nouveau sur la piste cyclable de l'Ilm qui ramène à Bad Berka via Hetschburg."
+          },
+          {
+            "@language": "de",
+            "@value": "Die Tour beginnt an der Tourist-Information Bad Berka und führt durch den Kurpark auf den Ilmradweg in Richtung Hetschburg. In Hetschburg biegt man links in Richtung Bergern ab. Vorsicht ist beim Queren der Hauptstraße (Bad Berka-Weimar) geboten. Der Anstieg führt bis zum Ortsteil Bergern und weiter nach Schoppendorf. Der Ortsteil Schoppendorf wird durchfahren, bis man wenig später Holzdorf erreicht. Holzdorf durchfährt man weiter in nördlicher Richtung nach Ober- & später Niedergrunstedt. Nun heißt das nächste Ziel Gelmeroda. Gelmeroda wird nach kurzer Zeit erreicht und in südlicher Richtung nach Possendorf durchfahren. Dieser Ort wird kurz darauf angefahren und nun folgt man dem Weg ehe man Vollersroda erreicht und weiter in Richtung Buchfart rollt. Nun befindet man sich wieder auf dem Ilmradweg, welcher zurück nach Bad Berka über Hetschburg führt."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b48",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Die Tour beginnt an der Tourist-Information Bad Berka und führt durch den Kurpark auf den Ilmradweg in Richtung Hetschburg. In Hetschburg biegt man links in Richtung Bergern ab. Vorsicht ist beim Queren der Hauptstraße (Bad Berka-Weimar) geboten. Der Anstieg führt bis zum Ortsteil Bergern und weiter nach Schoppendorf. Der Ortsteil Schoppendorf wird durchfahren, bis man wenig später Holzdorf erreicht. Holzdorf durchfährt man weiter in nördlicher Richtung nach Ober- &amp; später Niedergrunstedt. Nun heißt das nächste Ziel Gelmeroda. Gelmeroda wird nach kurzer Zeit erreicht und in südlicher Richtung nach Possendorf durchfahren. Dieser Ort wird kurz darauf angefahren und nun folgt man dem Weg ehe man Vollersroda erreicht und weiter in Richtung Buchfart rollt. Nun befindet man sich wieder auf dem Ilmradweg, welcher zurück nach Bad Berka über Hetschburg führt."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b49",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "en",
+              "@value": "The route begins at the Tourist Information Bad Berka and leads through the spa park onto the Ilm bike path towards Hetschburg. In Hetschburg, turn left towards Bergen. Caution is advised when crossing the main road (Bad Berka-Weimar). The ascent continues to the district of Bergen and further to Schoppendorf. The district of Schoppendorf is passed through until Holzdorf is reached shortly after. Holzdorf is then passed through continuing northwards to Ober- and later Niedergrunstedt. The next destination is Gelmeroda. Gelmeroda is reached shortly after and traveled through southwards to Possendorf. This village is reached shortly after, and then follow the path until Vollersroda is reached and continue rolling towards Buchfart. You are now back on the Ilm bike path, which leads back to Bad Berka via Hetschburg."
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b50",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "fr",
+              "@value": "Le parcours commence à l'Office de tourisme Bad Berka et traverse le parc thermal pour rejoindre la piste cyclable de l'Ilm en direction d'Hetschburg. À Hetschburg, tourner à gauche en direction de Bergern. Il convient de faire attention en traversant la route principale (Bad Berka-Weimar). La montée mène jusqu'au quartier de Bergern puis continue vers Schoppendorf. Le quartier de Schoppendorf est traversé jusqu'à atteindre peu après Holzdorf. On continue à travers Holzdorf vers le nord en direction d'Ober- puis plus tard Niedergrunstedt. La prochaine destination est Gelmeroda. Gelmeroda est atteint après un court laps de temps et on continue vers le sud en traversant Possendorf. Cette localité est également vite atteinte puis on suit le chemin jusqu'à Vollersroda avant de rouler vers Buchfart. On se trouve alors de nouveau sur la piste cyclable de l'Ilm qui ramène à Bad Berka via Hetschburg."
+            }
+          }
+        ]
+      },
+      "thuecat:season": [
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Apr"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Aug"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Jul"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Jun"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:May"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Sep"
+        },
+        {
+          "@type": "thuecat:Season",
+          "@value": "thuecat:Oct"
+        }
+      ],
+      "thuecat:startLocation": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b42",
+        "@type": [
+          "schema:Thing",
+          "schema:Place"
+        ],
+        "rdfs:label": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ],
+        "schema:name": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ],
+        "schema:geo": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b43",
+          "@type": [
+            "schema:Thing",
+            "schema:GeoCoordinates",
+            "schema:Intangible",
+            "schema:StructuredValue"
+          ],
+          "schema:latitude": {
+            "@type": "schema:Float",
+            "@value": "50.898713"
+          },
+          "schema:longitude": {
+            "@type": "schema:Float",
+            "@value": "11.288768"
+          }
+        },
+        "dcterms:title": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ]
+      },
+      "thuecat:endLocation": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b41",
+        "@type": [
+          "schema:Thing",
+          "schema:Place"
+        ],
+        "rdfs:label": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ],
+        "schema:name": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ],
+        "dcterms:title": [
+          {
+            "@language": "de",
+            "@value": "Tourist-Information Bad Berka"
+          },
+          {
+            "@language": "en",
+            "@value": "Tourist Information Bad Berka"
+          },
+          {
+            "@language": "fr",
+            "@value": "Office de tourisme Bad Berka"
+          }
+        ]
+      },
+      "thuecat:elevationProfile": {
+        "@type": "schema:URL",
+        "@value": "https://www.outdooractive.com/api/v2/project/api-thue-cat/tour/51872708/export/elpro?key=1"
+      },
+      "thuecat:elevationProfileFallBack": {
+        "@type": "schema:URL",
+        "@value": "https://www.outdooractive.com/api/v2/project/api-thue-cat/tour/51872708/export/elpro?key=1&type=png"
+      },
+      "thuecat:openingStatus": {
+        "@type": "thuecat:OpeningStatus",
+        "@value": "thuecat:Closed"
+      },
+      "thuecat:trailCurrentConditions": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b44",
+        "@type": [
+          "schema:Thing",
+          "schema:Intangible",
+          "schema:StructuredValue",
+          "schema:PropertyValue",
+          "thuecat:TrailCurrentConditions"
+        ],
+        "rdfs:label": {
+          "@language": "de",
+          "@value": "Vollsperrung Ilmtal-Radweg zwischen Bad Berka und Hetschburg"
+        },
+        "schema:name": {
+          "@language": "de",
+          "@value": "Vollsperrung Ilmtal-Radweg zwischen Bad Berka und Hetschburg"
+        },
+        "schema:geo": {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b46",
+          "@type": [
+            "schema:Thing",
+            "schema:GeoCoordinates",
+            "schema:Intangible",
+            "schema:StructuredValue"
+          ],
+          "schema:latitude": {
+            "@type": "schema:Float",
+            "@value": "50.910847"
+          },
+          "schema:longitude": {
+            "@type": "schema:Float",
+            "@value": "11.297934"
+          }
+        },
+        "schema:description": [
+          {
+            "@language": "de",
+            "@value": "Wegen abwasserseitiger Erschließung wird der Ilmtal-Radweg zwischen Bad Berka und Hetschburg teilweise voll gesperrt. Eine entsprechende Umleitung erfolgt bei einer gleichzeitigen Reduzierung der zulässigen Höchstgeschwindigkeit im Mischverkehr auf der K 511."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b45",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Wegen abwasserseitiger Erschließung wird der Ilmtal-Radweg zwischen Bad Berka und Hetschburg teilweise voll gesperrt. Eine entsprechende Umleitung erfolgt bei einer gleichzeitigen Reduzierung der zulässigen Höchstgeschwindigkeit im Mischverkehr auf der K 511."
+            }
+          }
+        ],
+        "schema:validFrom": {
+          "@type": "schema:DateTime",
+          "@value": "2025-10-22T00:00:00"
+        },
+        "dcterms:title": {
+          "@language": "de",
+          "@value": "Vollsperrung Ilmtal-Radweg zwischen Bad Berka und Hetschburg"
+        },
+        "dcterms:description": [
+          {
+            "@language": "de",
+            "@value": "Wegen abwasserseitiger Erschließung wird der Ilmtal-Radweg zwischen Bad Berka und Hetschburg teilweise voll gesperrt. Eine entsprechende Umleitung erfolgt bei einer gleichzeitigen Reduzierung der zulässigen Höchstgeschwindigkeit im Mischverkehr auf der K 511."
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b45",
+            "@type": [
+              "schema:Thing",
+              "schema:Intangible",
+              "schema:ComputerLanguage",
+              "thuecat:Html"
+            ],
+            "schema:value": {
+              "@language": "de",
+              "@value": "Wegen abwasserseitiger Erschließung wird der Ilmtal-Radweg zwischen Bad Berka und Hetschburg teilweise voll gesperrt. Eine entsprechende Umleitung erfolgt bei einer gleichzeitigen Reduzierung der zulässigen Höchstgeschwindigkeit im Mischverkehr auf der K 511."
+            }
+          }
+        ]
+      },
+      "dcterms:identifier": {
+        "@type": "xsd:string",
+        "@value": "51872708"
+      },
+      "dcterms:title": [
+        {
+          "@language": "de",
+          "@value": "Radtour nach Holzdorf"
+        },
+        {
+          "@language": "en",
+          "@value": "Bike route to Holzdorf"
+        },
+        {
+          "@language": "fr",
+          "@value": "Parcours à vélo jusqu'à Holzdorf"
+        }
+      ],
+      "dcterms:description": [
+        {
+          "@language": "de",
+          "@value": "Nicht nur zu Fuß ist man in Bad Berka unterwegs - auch auf dem Rad kann man die malerische Landschaft um die Kurstadt Bad Berka erkunden. Mit der Wiedereröffnung der Tourist-Information hat man zusätzlich diverse Radwegtouren geschaffen, welche in allen Himmelsrichtungen von Bad Berka in verschiedene, anliegende Ortschaften führen. So können Kurz-, Mittel- und Langstrecken auf hervorragend ausgebauten Radwegen befahren werden."
+        },
+        {
+          "@language": "fr",
+          "@value": "On ne se déplace pas seulement à pied à Bad Berka - on peut également découvrir à vélo le paysage pittoresque autour de la ville thermale de Bad Berka. Avec la réouverture de l'Office de tourisme, plusieurs parcours cyclables ont été créés, qui mènent dans toutes les directions cardinales de Bad Berka vers différentes localités voisines. Des distances courtes, moyennes et longues peuvent ainsi être parcourues sur des pistes cyclables parfaitement aménagées."
+        },
+        {
+          "@language": "en",
+          "@value": "You can explore Bad Berka not only on foot but also by bike to enjoy the picturesque landscape around the spa town of Bad Berka. With the reopening of the Tourist Information, several bike route tours have been established, leading from Bad Berka in all directions to various nearby villages. Short, medium, and long distances can be traveled on excellently developed bike paths."
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b12",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "de",
+            "@value": "Nicht nur zu Fuß ist man in Bad Berka unterwegs - auch auf dem Rad kann man die malerische Landschaft um die Kurstadt Bad Berka erkunden. Mit der Wiedereröffnung der Tourist-Information hat man zusätzlich diverse Radwegtouren geschaffen, welche in allen Himmelsrichtungen von Bad Berka in verschiedene, anliegende Ortschaften führen. So können Kurz-, Mittel- und Langstrecken auf hervorragend ausgebauten Radwegen befahren werden. "
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b13",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "en",
+            "@value": "You can explore Bad Berka not only on foot but also by bike to enjoy the picturesque landscape around the spa town of Bad Berka. With the reopening of the Tourist Information, several bike route tours have been established, leading from Bad Berka in all directions to various nearby villages. Short, medium, and long distances can be traveled on excellently developed bike paths."
+          }
+        },
+        {
+          "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b14",
+          "@type": [
+            "schema:Thing",
+            "schema:Intangible",
+            "schema:ComputerLanguage",
+            "thuecat:Html"
+          ],
+          "schema:value": {
+            "@language": "fr",
+            "@value": "On ne se déplace pas seulement à pied à Bad Berka - on peut également découvrir à vélo le paysage pittoresque autour de la ville thermale de Bad Berka. Avec la réouverture de l'Office de tourisme, plusieurs parcours cyclables ont été créés, qui mènent dans toutes les directions cardinales de Bad Berka vers différentes localités voisines. Des distances courtes, moyennes et longues peuvent ainsi être parcourues sur des pistes cyclables parfaitement aménagées. "
+          }
+        }
+      ],
+      "schema:wayType": {
+        "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b30",
+        "@type": [
+          "thuecat:WayType"
+        ],
+        "thuecat:wayTypeLegend": [
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b31",
+            "@type": [
+              "thuecat:WayTypeSummary"
+            ],
+            "thuecat:wayTypeLength": {
+              "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b32",
+              "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:QuantitativeValue",
+                "schema:StructuredValue"
+              ],
+              "schema:unitCode": {
+                "@type": "thuecat:Unit",
+                "@value": "thuecat:MTR"
+              },
+              "schema:value": {
+                "@type": "schema:Float",
+                "@value": "13807.65252"
+              }
+            },
+            "thuecat:wayTypeTitle": {
+              "@language": "de",
+              "@value": "Asphalt"
+            },
+            "thuecat:wayTypeType": {
+              "@type": "schema:Float",
+              "@value": "1"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b33",
+            "@type": [
+              "thuecat:WayTypeSummary"
+            ],
+            "thuecat:wayTypeLength": {
+              "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b34",
+              "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:QuantitativeValue",
+                "schema:StructuredValue"
+              ],
+              "schema:unitCode": {
+                "@type": "thuecat:Unit",
+                "@value": "thuecat:MTR"
+              },
+              "schema:value": {
+                "@type": "schema:Float",
+                "@value": "2560.26076"
+              }
+            },
+            "thuecat:wayTypeTitle": {
+              "@language": "de",
+              "@value": "Schotterweg"
+            },
+            "thuecat:wayTypeType": {
+              "@type": "schema:Float",
+              "@value": "4"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b35",
+            "@type": [
+              "thuecat:WayTypeSummary"
+            ],
+            "thuecat:wayTypeLength": {
+              "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b36",
+              "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:QuantitativeValue",
+                "schema:StructuredValue"
+              ],
+              "schema:unitCode": {
+                "@type": "thuecat:Unit",
+                "@value": "thuecat:MTR"
+              },
+              "schema:value": {
+                "@type": "schema:Float",
+                "@value": "1055.07666"
+              }
+            },
+            "thuecat:wayTypeTitle": {
+              "@language": "de",
+              "@value": "Naturweg"
+            },
+            "thuecat:wayTypeType": {
+              "@type": "schema:Float",
+              "@value": "2"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b37",
+            "@type": [
+              "thuecat:WayTypeSummary"
+            ],
+            "thuecat:wayTypeLength": {
+              "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b38",
+              "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:QuantitativeValue",
+                "schema:StructuredValue"
+              ],
+              "schema:unitCode": {
+                "@type": "thuecat:Unit",
+                "@value": "thuecat:MTR"
+              },
+              "schema:value": {
+                "@type": "schema:Float",
+                "@value": "31.06684"
+              }
+            },
+            "thuecat:wayTypeTitle": {
+              "@language": "de",
+              "@value": "Pfad"
+            },
+            "thuecat:wayTypeType": {
+              "@type": "schema:Float",
+              "@value": "3"
+            }
+          },
+          {
+            "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b39",
+            "@type": [
+              "thuecat:WayTypeSummary"
+            ],
+            "thuecat:wayTypeLength": {
+              "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c103724509-b40",
+              "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:QuantitativeValue",
+                "schema:StructuredValue"
+              ],
+              "schema:unitCode": {
+                "@type": "thuecat:Unit",
+                "@value": "thuecat:MTR"
+              },
+              "schema:value": {
+                "@type": "schema:Float",
+                "@value": "5671.08823"
+              }
+            },
+            "thuecat:wayTypeTitle": {
+              "@language": "de",
+              "@value": "Straße"
+            },
+            "thuecat:wayTypeType": {
+              "@type": "schema:Float",
+              "@value": "7"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -28,7 +28,6 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\FreeTextKeyword;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\KeywordReader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
-use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
 
 abstract class AbstractEntity implements EntityInterface
 {
@@ -46,6 +45,31 @@ abstract class AbstractEntity implements EntityInterface
 
     /** Transient bucket carrying keyword URIs the resolver must fetch. */
     public const KEYWORD_BUCKET = 'keywords';
+
+    /**
+     * "I read this integer field and upstream has nothing in it" — as opposed
+     * to the field never having been touched.
+     *
+     * toArray() drops falsy values, so a legitimately empty column is
+     * indistinguishable from an unset one and the row simply omits it;
+     * DataHandler then leaves whatever was there before. For a value that can
+     * be emptied upstream that means stale data survives re-import.
+     *
+     * A parser assigns this sentinel instead of the empty value. It is truthy,
+     * so it survives the filter, and DataHandlerPayload::addEntity() converts
+     * it back to 0 on the way into the datamap — nothing downstream sees it.
+     *
+     * Integer-typed columns only: the sentinel has to name the type it stands
+     * in for, because the payload restores the empty value by that type and
+     * cannot guess it. A string field needing the same treatment gets its own
+     * PARSED_EMPTY_STRING rather than reusing this one.
+     *
+     * The value is a negative unix timestamp, per the convention used for
+     * exception codes. A small number like -1 is unusable only by luck; this
+     * cannot collide with a bitmask, a count or an id even if the column's
+     * range changes later.
+     */
+    public const PARSED_EMPTY_INTEGER = -1787735164;
 
     /**
      * Category relations wired by the resolver; not DB columns.
@@ -375,71 +399,6 @@ abstract class AbstractEntity implements EntityInterface
         return $ids;
     }
 
-    /**
-     * schema:makesOffer is a single Offer node or a list of them. Each carries
-     * its own nested priceSpecification plus localised name/description; the
-     * transient OfferEntity shapes each into the legacy Offer/Price frontend
-     * shape, and the list of arrays is json_encoded into the owning entity's
-     * `offers` column.
-     *
-     * Returns '' when the field is absent so AbstractEntity::toArray's
-     * array_filter drops the column rather than persisting a misleading "[]".
-     */
-    protected function buildOffers(mixed $value, string $language): string
-    {
-        if ($value === null || $value === '' || $value === []) {
-            return '';
-        }
-
-        $items = is_array($value) && array_is_list($value) ? $value : [$value];
-        $offers = [];
-        foreach ($items as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-            $entity = new OfferEntity();
-            $entity->configure($item, $language);
-            $offers[] = $entity->toArray();
-        }
-
-        if ($offers === []) {
-            return '';
-        }
-
-        return (string)(json_encode($offers) ?: '');
-    }
-
-    /**
-     * Flatten thuecat:distanceToPublicTransport into "value:unit[:mean1:mean2]".
-     *
-     * JSON-LD shape:
-     *   schema:value             -> numeric distance
-     *   schema:unitCode          -> single typed @value(e.g. thuecat:MTR)
-     *   thuecat:meansOfTransport -> string | {@value} | list of either
-     *
-     * meansOfTransport is optional; when absent the string is just "value:unit".
-     * The legacy importer colon-separates every means rather than comma-joining
-     * them (see Assertions fixture "350:MTR:Streetcar:CityBus").
-     */
-    protected function buildDistanceToPublicTransport(mixed $node, string $language): string
-    {
-        if (!is_array($node)) {
-            return '';
-        }
-
-        $distance = $this->extractValue($node['schema:value'] ?? null, $language);
-        if ($distance === '') {
-            return '';
-        }
-
-        $unit = $this->extractConcatenatedString($node['schema:unitCode'] ?? null, $language);
-        $means = $this->extractConcatenatedMembers($node['thuecat:meansOfTransport'] ?? null, $language);
-
-        $parts = array_merge([$distance, $unit], $means);
-
-        return implode(':', array_filter($parts, static fn ($part) => $part !== ''));
-    }
-
     public function getTransients(): array
     {
         return $this->transients;
@@ -596,116 +555,6 @@ abstract class AbstractEntity implements EntityInterface
                 'unmatched' => $report['unmatched'],
             ],
         ];
-    }
-
-    /**
-     * Manufacture one AddressEntity child per schema:address node, each with a
-     * translation set per configured language.
-     *
-     * @param array<string, mixed> $node                 owning JSON-LD node
-     * @param array<string, int>   $translationLanguages code => sys_language_uid
-     */
-    protected function buildAddress(array $node, string $remoteId, string $language, array $translationLanguages = []): void
-    {
-        $value = $node['schema:address'] ?? null;
-        if (!is_array($value) || $value === []) {
-            return;
-        }
-
-        // Nothing upstream guarantees one address per record.
-        $addressNodes = array_is_list($value) ? $value : [$value];
-
-        // One geo node describes the record's location, so it can only belong
-        // to the first address.
-        $geo = $node['schema:geo'] ?? [];
-        /** @var array<string, mixed> $geo JSON-LD nodes are string-keyed. */
-        $geo = is_array($geo) ? $geo : [];
-
-        $ordinal = 0;
-        foreach ($addressNodes as $addressNode) {
-            if (!is_array($addressNode) || $addressNode === []) {
-                continue;
-            }
-            /** @var array<string, mixed> $addressNode JSON-LD nodes are string-keyed. */
-            $child = new AddressEntity();
-            $child->configure($addressNode, $language, $ordinal === 0 ? $geo : [], $remoteId, $ordinal);
-
-            foreach ($translationLanguages as $code => $sysLanguageUid) {
-                $child->configureTranslation($addressNode, $code, $sysLanguageUid);
-            }
-
-            $this->children[] = $child;
-            $ordinal++;
-        }
-    }
-
-    /**
-     * Manufacture one OpeningHourSpecificationEntity child per
-     * schema:OpeningHoursSpecification node and stage them as inline children.
-     * Imported as-is (no merging/filtering) — display computes the rest. The
-     * Resolver wires each child's parentid FK back to this row.
-     *
-     * @param array<string, mixed> $node owning JSON-LD node
-     */
-    protected function buildOpeningHourSpecifications(array $node, string $remoteId): void
-    {
-        $this->collectOpeningHourSpecifications(
-            $node['schema:openingHoursSpecification'] ?? null,
-            $remoteId,
-            OpeningHourSpecificationEntity::TYPE_REGULAR
-        );
-        $this->collectOpeningHourSpecifications(
-            $node['schema:specialOpeningHoursSpecification'] ?? null,
-            $remoteId,
-            OpeningHourSpecificationEntity::TYPE_SPECIAL
-        );
-    }
-
-    private function collectOpeningHourSpecifications(mixed $value, string $remoteId, string $specificationType): void
-    {
-        if (!is_array($value)) {
-            return;
-        }
-        $items = array_is_list($value) ? $value : [$value];
-        foreach ($items as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-            /** @var array<string, mixed> $item JSON-LD nodes are string-keyed. */
-            // A spec may carry several weekdays; the table holds one weekday per
-            // row, so emit one child per day. Live data uses a single day, but
-            // schema:dayOfWeek may also be a list. A spec without any day still
-            // yields one row (empty day) so no hours are lost.
-            $days = $this->extractDaysOfWeek($item['schema:dayOfWeek'] ?? null);
-            foreach ($days === [] ? [''] : $days as $day) {
-                $child = new OpeningHourSpecificationEntity();
-                $child->configure($remoteId, $specificationType, $day, $item);
-                $this->children[] = $child;
-            }
-        }
-    }
-
-    /**
-     * schema:dayOfWeek is a single typed @value object or a list of them. Returns
-     * the bare day names (namespace prefix stripped), e.g. ["Monday"].
-     *
-     * @return list<string>
-     */
-    private function extractDaysOfWeek(mixed $value): array
-    {
-        if (!is_array($value)) {
-            return [];
-        }
-        $items = array_is_list($value) ? $value : [$value];
-        $days = [];
-        foreach ($items as $item) {
-            $raw = is_array($item) ? (string)($item['@value'] ?? '') : '';
-            if ($raw === '') {
-                continue;
-            }
-            $days[] = $this->stripNamespacePrefix($raw);
-        }
-        return $days;
     }
 
     abstract public function handlesTypes(): array;

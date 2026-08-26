@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 
 defined('TYPO3') or die();
 
@@ -11,9 +12,7 @@ return (static function (string $tableName) {
 
     return [
         'ctrl' => [
-            'label' => 'street',
-            'label_alt' => 'zip,city',
-            'label_alt_force' => true,
+            'label' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'delete' => 'deleted',
@@ -76,45 +75,32 @@ return (static function (string $tableName) {
                     ],
                 ],
             ],
-            'street' => [
-                'label' => $languagePath . '.street',
+            'location_type' => [
+                'label' => $languagePath . '.location_type',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [
+                            'label' => $languagePath . '.location_type.start',
+                            'value' => TrailLocationEntity::TYPE_START,
+                        ],
+                        [
+                            'label' => $languagePath . '.location_type.end',
+                            'value' => TrailLocationEntity::TYPE_END,
+                        ],
+                    ],
+                    'default' => TrailLocationEntity::TYPE_START,
+                ],
+            ],
+            'title' => [
+                'label' => $languagePath . '.title',
                 'config' => [
                     'type' => 'input',
                 ],
             ],
-            'zip' => [
-                'label' => $languagePath . '.zip',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 10,
-                ],
-            ],
-            'city' => [
-                'label' => $languagePath . '.city',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            'email' => [
-                'label' => $languagePath . '.email',
-                'config' => [
-                    'type' => 'email',
-                ],
-            ],
-            'phone' => [
-                'label' => $languagePath . '.phone',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            'fax' => [
-                'label' => $languagePath . '.fax',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            // Not type=number/decimal: DataHandler rounds those on write,
-            // which moves a coordinate by kilometres. Stored verbatim instead.
+            // stored as string to preserve precision
             'latitude' => [
                 'label' => $languagePath . '.latitude',
                 'l10n_mode' => 'exclude',
@@ -136,13 +122,14 @@ return (static function (string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
+                    'searchable' => false,
                 ],
             ],
         ],
         'types' => [
             '0' => [
-                'showitem' => 'street, zip, city, email, phone, fax, latitude, longitude, remote_id',
+                'showitem' => 'location_type, title, latitude, longitude, remote_id',
             ],
         ],
     ];
-})('tx_thuecat_address');
+})('tx_thuecat_trail_location');

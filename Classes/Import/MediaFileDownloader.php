@@ -43,6 +43,8 @@ use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 #[Autoconfigure(public: true)]
 class MediaFileDownloader
 {
+    private const MAX_REDIRECTS = 5;
+
     public function __construct(
         protected readonly ImportHttpClient $httpClient,
     ) {
@@ -132,30 +134,78 @@ class MediaFileDownloader
     ): ?string {
         $status = null;
 
-        // Built directly, not via Import\RequestFactory: that one appends
-        // format=jsonld, which an image URL must not carry.
-        $request = new Request($downloadUrl, 'GET');
+        $url = $downloadUrl;
 
-        try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (RetryExhaustedException $exhausted) {
-            $failureDetail = sprintf('gave up after %d attempts', $exhausted->attempts);
-            return null;
-        } catch (ClientExceptionInterface) {
-            // No status at all — DNS, refused connection, timeout.
-            return null;
-        }
+        // PSR-18 forbids sendRequest() from following redirects, so walk the hops.
+        for ($hop = 0; $hop <= self::MAX_REDIRECTS; $hop++) {
+            // Built directly, not via Import\RequestFactory: that one appends
+            // format=jsonld, which an image URL must not carry.
+            $request = new Request($url, 'GET');
 
-        $status = $response->getStatusCode();
-        if ($status !== 200) {
-            $attempts = (int)$response->getHeaderLine(RetryingClient::ATTEMPTS_HEADER);
-            if ($attempts > 1) {
-                $failureDetail = sprintf('gave up after %d attempts', $attempts);
+            try {
+                $response = $this->httpClient->sendRequest($request);
+            } catch (RetryExhaustedException $exhausted) {
+                $failureDetail = sprintf('gave up after %d attempts', $exhausted->attempts);
+                return null;
+            } catch (ClientExceptionInterface) {
+                // No status at all — DNS, refused connection, timeout.
+                return null;
             }
-            return null;
+
+            $status = $response->getStatusCode();
+
+            if ($status >= 300 && $status < 400) {
+                $location = trim($response->getHeaderLine('location'));
+                if ($location === '') {
+                    $failureDetail = sprintf('redirect %d carried no location', $status);
+                    return null;
+                }
+
+                $url = $this->resolveLocation($url, $location);
+                continue;
+            }
+
+            if ($status !== 200) {
+                $attempts = (int)$response->getHeaderLine(RetryingClient::ATTEMPTS_HEADER);
+                if ($attempts > 1) {
+                    $failureDetail = sprintf('gave up after %d attempts', $attempts);
+                }
+                return null;
+            }
+
+            return (string)$response->getBody();
         }
 
-        return (string)$response->getBody();
+        $failureDetail = sprintf('more than %d redirects', self::MAX_REDIRECTS);
+        $status = null;
+
+        return null;
+    }
+
+    /** A Location may be absolute, root-relative or path-relative. */
+    protected function resolveLocation(string $currentUrl, string $location): string
+    {
+        if (preg_match('#^https?://#i', $location) === 1) {
+            return $location;
+        }
+
+        $parts = parse_url($currentUrl);
+        $scheme = is_string($parts['scheme'] ?? null) ? $parts['scheme'] : 'https';
+        $host = is_string($parts['host'] ?? null) ? $parts['host'] : '';
+        if ($host === '') {
+            return $location;
+        }
+
+        $port = is_int($parts['port'] ?? null) ? ':' . $parts['port'] : '';
+        $base = $scheme . '://' . $host . $port;
+
+        if (str_starts_with($location, '/')) {
+            return $base . $location;
+        }
+
+        $path = is_string($parts['path'] ?? null) ? $parts['path'] : '/';
+
+        return $base . substr($path, 0, (int)strrpos($path, '/') + 1) . $location;
     }
 
     /** Identity is the download URL; editorial text must not reach the name. */

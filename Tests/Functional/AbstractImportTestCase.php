@@ -27,6 +27,7 @@ use Codappix\Typo3PhpDatasets\TestingFramework;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -363,5 +364,65 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             )
             ->fetchAllAssociative()
         ;
+    }
+
+    protected function countRows(string $table): int
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $count = $queryBuilder
+            ->count('uid')
+            ->from($table)
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($count) ? (int)$count : 0;
+    }
+
+    protected function fetchUidByRemoteId(string $table, string $remoteId): int
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $value = $queryBuilder
+            ->select('uid')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                )
+            )
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($value) ? (int)$value : 0;
+    }
+
+    /** @return array<string, mixed> */
+    protected function fetchRowByRemoteId(string $table, string $remoteId): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $row = $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                )
+            )
+            ->executeQuery()
+            ->fetchAssociative()
+        ;
+
+        self::assertIsArray($row, 'No record in ' . $table . ' for ' . $remoteId);
+
+        return $row;
     }
 }

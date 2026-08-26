@@ -1,0 +1,21 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/192875159827-xfqk",
+            "@type": [
+                "schema:DefinedTermSet",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "DZT Family & Friends in Nature"
+                },
+                {
+                    "@language": "en",
+                    "@value": "DZT Family & Friends in Nature"
+                }
+            ]
+        }
+    ]
+}

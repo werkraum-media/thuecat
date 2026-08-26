@@ -315,6 +315,85 @@ class MediaFileDownloaderTest extends TestCase
     }
 
     /**
+     * PSR-18 forbids sendRequest() from following 301 redirect, so the downloader must.
+     */
+    #[Test]
+    public function followsARedirectToTheRealAsset(): void
+    {
+        $client = $this->clientScripted([
+            [301, '', 'https://img.oastatic.com/img2/24836090/default/variant.jpg'],
+            [200, 'image-bytes', null],
+        ]);
+
+        $captured = '';
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(false);
+        $staging = self::createMock(Folder::class);
+        $staging->method('hasFile')->willReturn(false);
+        $staging->method('createFile')->willReturnCallback(
+            function (string $fileName) use (&$captured): File {
+                $captured = $fileName;
+                return self::createStub(File::class);
+            }
+        );
+
+        $file = (new MediaFileDownloader($client))->download(
+            $target,
+            $staging,
+            'http://img.oastatic.com/img/24836090/.jpg',
+        );
+
+        self::assertNotNull($file, 'A redirected asset must still be downloaded.');
+        self::assertSame(
+            'https://img.oastatic.com/img2/24836090/default/variant.jpg',
+            (string)$client->lastRequest?->getUri(),
+            'The second request must go to the Location target.'
+        );
+        // Identity stays the URL the payload delivered, so re-imports still match.
+        self::assertSame($this->stagedNameFor('http://img.oastatic.com/img/24836090/.jpg'), $captured);
+    }
+
+    #[Test]
+    public function stopsRatherThanFollowingARedirectWithoutALocation(): void
+    {
+        self::assertNull($this->download($this->clientReturning(301, '')));
+    }
+
+    #[Test]
+    public function doesNotFollowRedirectsForever(): void
+    {
+        $client = $this->clientScripted([
+            [301, '', 'https://img.oastatic.com/a.jpg'],
+            [301, '', 'https://img.oastatic.com/b.jpg'],
+            [301, '', 'https://img.oastatic.com/c.jpg'],
+            [301, '', 'https://img.oastatic.com/d.jpg'],
+            [301, '', 'https://img.oastatic.com/e.jpg'],
+            [301, '', 'https://img.oastatic.com/f.jpg'],
+        ]);
+
+        $target = self::createStub(Folder::class);
+        $target->method('hasFile')->willReturn(false);
+        $staging = self::createStub(Folder::class);
+        $staging->method('hasFile')->willReturn(false);
+
+        self::assertNull((new MediaFileDownloader($client))->download(
+            $target,
+            $staging,
+            'http://img.oastatic.com/img/1/.jpg',
+        ));
+    }
+
+    /**
+     * Responses in order, each as [status, body, location].
+     *
+     * @param list<array{0: int, 1: string, 2: string|null}> $script
+     */
+    private function clientScripted(array $script): CapturingClient
+    {
+        return new CapturingClient($script);
+    }
+
+    /**
      * Neither folder holds the file, so download() always reaches the fetch.
      */
     private function download(ImportHttpClient $httpClient, ?int &$failureStatus = null): ?object

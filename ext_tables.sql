@@ -31,9 +31,11 @@ CREATE TABLE tx_thuecat_parking_facility (
     distance_to_public_transport text,
 );
 
--- Coordinates keep the source's full precision as text; a decimal column
--- would be rounded to 2 places by DataHandler. Every other column is derived
--- from TCA, as for tx_thuecat_opening_hours.
+CREATE TABLE tx_thuecat_trail (
+    route_line mediumtext,
+);
+
+-- Coordinates keep the source's full precision as text
 CREATE TABLE tx_thuecat_address (
     latitude varchar(32) DEFAULT '' NOT NULL,
     longitude varchar(32) DEFAULT '' NOT NULL,

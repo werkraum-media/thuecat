@@ -621,27 +621,6 @@ class ImporterTest extends AbstractImportTestCase
         return $log;
     }
 
-    private function fetchUidByRemoteId(string $table, string $remoteId): int
-    {
-        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll();
-
-        $value = $queryBuilder
-            ->select('uid')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'remote_id',
-                    $queryBuilder->createNamedParameter($remoteId)
-                )
-            )
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($value) ? (int)$value : 0;
-    }
-
     private function fetchContainedInAttractionOf(string $remoteId): string
     {
         $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable('tx_thuecat_tourist_attraction');

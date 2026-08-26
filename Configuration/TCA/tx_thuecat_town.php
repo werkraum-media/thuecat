@@ -83,7 +83,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
-                    'searchable' => false,
                 ],
             ],
             'managed_by' => [

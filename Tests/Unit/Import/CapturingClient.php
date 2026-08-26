@@ -13,19 +13,36 @@ use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 /**
  * Records the outgoing request so a test can assert the URL that was built.
  * The faker cannot: it normalises api_key away before matching.
+ *
+ * Accepts a script of [status, contents, location] tuples; each request
+ * consumes the next entry, which lets a test stage a redirect chain. Without a
+ * script every request answers 200 with image bytes.
  */
 final class CapturingClient implements ImportHttpClient
 {
     public ?RequestInterface $lastRequest = null;
 
+    /** @var list<array{0: int, 1: string, 2: string|null}> */
+    private array $script;
+
+    /** @param list<array{0: int, 1: string, 2: string|null}> $script */
+    public function __construct(array $script = [])
+    {
+        $this->script = $script;
+    }
+
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $this->lastRequest = $request;
 
+        [$status, $contents, $location] = array_shift($this->script) ?? [200, 'image-bytes', null];
+
         $body = new Stream('php://temp', 'rw');
-        $body->write('image-bytes');
+        $body->write($contents);
         $body->rewind();
 
-        return new Response($body, 200);
+        $headers = $location === null ? [] : ['location' => [$location]];
+
+        return new Response($body, $status, $headers);
     }
 }

@@ -244,7 +244,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
-                    'searchable' => false,
                 ],
             ],
             'town' => [
@@ -299,6 +298,15 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'contained_in_trail' => [
+                'label' => $languagePath . '.contained_in_trail',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_trail',
+                ],
+            ],
             'managed_by' => [
                 'label' => $languagePath . '.managed_by',
                 'l10n_mode' => 'exclude',
@@ -330,7 +338,8 @@ return (static function (string $extensionKey, string $tableName) {
                 opening_hours_inline, special_opening_hours_inline, opening_hours,
                 special_opening_hours, offers, address_inline, address,  media, remote_id, 
                 --div--;' . $languagePath . '.tab.relations, town, managed_by, contained_in_organisation,
-                contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility',
+                contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility,
+                contained_in_trail',
             ],
         ],
     ];

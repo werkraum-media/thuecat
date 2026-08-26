@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TouristAttractionEntity extends AbstractEntity
+class TouristAttractionEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_tourist_attraction';
 

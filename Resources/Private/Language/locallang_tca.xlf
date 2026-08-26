@@ -74,6 +74,9 @@
                 <source>Contained in parking facility</source>
             </trans-unit>
 
+            <trans-unit id="tx_thuecat_tourist_information.contained_in_trail" xml:space="preserve">
+                <source>Contained in trail</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_town" xml:space="preserve">
                 <source>Town</source>
             </trans-unit>
@@ -222,7 +225,10 @@
             <trans-unit id="tx_thuecat_tourist_attraction.contained_in_parking_facility" xml:space="preserve">
                 <source>Contained in parking facility</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.parking_facility_near_by" xml:space="preserve">
+
+            <trans-unit id="tx_thuecat_tourist_attraction.contained_in_trail" xml:space="preserve">
+                <source>Contained in trail</source>
+            </trans-unit>            <trans-unit id="tx_thuecat_tourist_attraction.parking_facility_near_by" xml:space="preserve">
                 <source>Parking Facilities</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.editorial_images" xml:space="preserve">
@@ -304,11 +310,303 @@
             <trans-unit id="tx_thuecat_parking_facility.contained_in_parking_facility" xml:space="preserve">
                 <source>Contained in parking facility</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.palette.language" xml:space="preserve">
+
+            <trans-unit id="tx_thuecat_parking_facility.contained_in_trail" xml:space="preserve">
+                <source>Contained in trail</source>
+            </trans-unit>            <trans-unit id="tx_thuecat_parking_facility.palette.language" xml:space="preserve">
                 <source>Language</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.tab.relations" xml:space="preserve">
                 <source>Relations</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_trail" xml:space="preserve">
+                <source>Trail</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.opening_status" xml:space="preserve">
+                <source>Opening Status</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.opening_status.Open" xml:space="preserve">
+                <source>Open</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.opening_status.Closed" xml:space="preserve">
+                <source>Closed</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.opening_status.WeekendOnly" xml:space="preserve">
+                <source>Weekend only</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.opening_status.NoInformation" xml:space="preserve">
+                <source>No information</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season" xml:space="preserve">
+                <source>Season</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Jan" xml:space="preserve">
+                <source>January</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Feb" xml:space="preserve">
+                <source>February</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Mar" xml:space="preserve">
+                <source>March</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Apr" xml:space="preserve">
+                <source>April</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.May" xml:space="preserve">
+                <source>May</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Jun" xml:space="preserve">
+                <source>June</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Jul" xml:space="preserve">
+                <source>July</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Aug" xml:space="preserve">
+                <source>August</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Sep" xml:space="preserve">
+                <source>September</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Oct" xml:space="preserve">
+                <source>October</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Nov" xml:space="preserve">
+                <source>November</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.Dec" xml:space="preserve">
+                <source>December</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.season.AllYearRound" xml:space="preserve">
+                <source>All year round</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.short_description" xml:space="preserve">
+                <source>Short Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.directions" xml:space="preserve">
+                <source>Directions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.getting_there" xml:space="preserve">
+                <source>Getting There</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.parking" xml:space="preserve">
+                <source>Parking</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.public_transit" xml:space="preserve">
+                <source>Public Transit</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.safety_guidelines" xml:space="preserve">
+                <source>Safety Guidelines</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.equipment" xml:space="preserve">
+                <source>Equipment</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.additional_information" xml:space="preserve">
+                <source>Additional Information</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.tip" xml:space="preserve">
+                <source>Tip</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.elevation_profile" xml:space="preserve">
+                <source>Elevation Profile</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.elevation_profile_fall_back" xml:space="preserve">
+                <source>Elevation Profile (Fallback)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.route_line" xml:space="preserve">
+                <source>Route (Coordinate Track)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.gpx_url" xml:space="preserve">
+                <source>GPX Document</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.distance" xml:space="preserve">
+                <source>Distance</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.distance_unit" xml:space="preserve">
+                <source>Distance Unit</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.duration" xml:space="preserve">
+                <source>Duration</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.duration_unit" xml:space="preserve">
+                <source>Duration Unit</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.exercise_type" xml:space="preserve">
+                <source>Exercise Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.min_altitude" xml:space="preserve">
+                <source>Minimum Altitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.max_altitude" xml:space="preserve">
+                <source>Maximum Altitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.ascent_elevation" xml:space="preserve">
+                <source>Ascent</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.descent_elevation" xml:space="preserve">
+                <source>Descent</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_landscape" xml:space="preserve">
+                <source>Rating: Landscape</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_landscape_min" xml:space="preserve">
+                <source>Rating: Landscape (Scale Minimum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_landscape_max" xml:space="preserve">
+                <source>Rating: Landscape (Scale Maximum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_condition" xml:space="preserve">
+                <source>Rating: Condition</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_condition_min" xml:space="preserve">
+                <source>Rating: Condition (Scale Minimum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_condition_max" xml:space="preserve">
+                <source>Rating: Condition (Scale Maximum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_difficulty" xml:space="preserve">
+                <source>Rating: Difficulty</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_difficulty_min" xml:space="preserve">
+                <source>Rating: Difficulty (Scale Minimum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_difficulty_max" xml:space="preserve">
+                <source>Rating: Difficulty (Scale Maximum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_quality_of_experience" xml:space="preserve">
+                <source>Rating: Quality of Experience</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_quality_of_experience_min" xml:space="preserve">
+                <source>Rating: Quality of Experience (Scale Minimum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_quality_of_experience_max" xml:space="preserve">
+                <source>Rating: Quality of Experience (Scale Maximum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_technique" xml:space="preserve">
+                <source>Rating: Technique</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_technique_min" xml:space="preserve">
+                <source>Rating: Technique (Scale Minimum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.rating_technique_max" xml:space="preserve">
+                <source>Rating: Technique (Scale Maximum)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.palette.language" xml:space="preserve">
+                <source>Language</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.tab.descriptions" xml:space="preserve">
+                <source>Descriptions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.tab.route" xml:space="preserve">
+                <source>Route</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.tab.ratings" xml:space="preserve">
+                <source>Ratings</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.tab.conditions" xml:space="preserve">
+                <source>Current Conditions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.keywords" xml:space="preserve">
+                <source>Keywords</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.managed_by" xml:space="preserve">
+                <source>Content Responsible</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.managed_by.unkown" xml:space="preserve">
+                <source>Unknown</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.main_image" xml:space="preserve">
+                <source>Main Image</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.media_files" xml:space="preserve">
+                <source>Images</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.logo" xml:space="preserve">
+                <source>Logo</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.way_types" xml:space="preserve">
+                <source>Way Types</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.conditions" xml:space="preserve">
+                <source>Current Conditions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.start_location" xml:space="preserve">
+                <source>Start Location</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail.end_location" xml:space="preserve">
+                <source>End Location</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_trail_way_type" xml:space="preserve">
+                <source>Trail Way Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_way_type.title" xml:space="preserve">
+                <source>Surface</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_way_type.length" xml:space="preserve">
+                <source>Length</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_way_type.length_unit" xml:space="preserve">
+                <source>Length Unit</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_way_type.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_trail_condition" xml:space="preserve">
+                <source>Trail Condition</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.valid_from" xml:space="preserve">
+                <source>Valid From</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.latitude" xml:space="preserve">
+                <source>Latitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.longitude" xml:space="preserve">
+                <source>Longitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_condition.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_trail_location" xml:space="preserve">
+                <source>Trail Location</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.location_type" xml:space="preserve">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.location_type.start" xml:space="preserve">
+                <source>Start</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.location_type.end" xml:space="preserve">
+                <source>End</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.title" xml:space="preserve">
+                <source>Label</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.latitude" xml:space="preserve">
+                <source>Latitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.longitude" xml:space="preserve">
+                <source>Longitude</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_trail_location.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
             </trans-unit>
 
             <trans-unit id="tx_thuecat_import_configuration" xml:space="preserve">

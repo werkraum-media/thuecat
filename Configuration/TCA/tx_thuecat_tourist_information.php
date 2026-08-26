@@ -81,7 +81,6 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'input',
                     'readOnly' => true,
-                    'searchable' => false,
                 ],
             ],
             'town' => [
@@ -131,6 +130,15 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'contained_in_trail' => [
+                'label' => $languagePath . '.contained_in_trail',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_trail',
+                ],
+            ],
             'managed_by' => [
                 'label' => $languagePath . '.managed_by',
                 'config' => [
@@ -150,7 +158,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility',
+                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail',
             ],
         ],
     ];

@@ -1,0 +1,30 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/916373333853-mknj",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:DefinedTerm",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Entschleunigung"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Slowing down"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Ralentissement"
+                }
+            ],
+            "schema:inDefinedTermSet": {
+                "@id": "https://thuecat.org/resources/192875159827-xfqk"
+            }
+        }
+    ]
+}

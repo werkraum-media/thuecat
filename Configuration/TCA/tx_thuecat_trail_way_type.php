@@ -11,8 +11,8 @@ return (static function (string $tableName) {
 
     return [
         'ctrl' => [
-            'label' => 'street',
-            'label_alt' => 'zip,city',
+            'label' => 'title',
+            'label_alt' => 'length',
             'label_alt_force' => true,
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -76,59 +76,27 @@ return (static function (string $tableName) {
                     ],
                 ],
             ],
-            'street' => [
-                'label' => $languagePath . '.street',
+            'title' => [
+                'label' => $languagePath . '.title',
                 'config' => [
                     'type' => 'input',
                 ],
             ],
-            'zip' => [
-                'label' => $languagePath . '.zip',
+            // Metres, kept as text so the source's precision survives.
+            'length' => [
+                'label' => $languagePath . '.length',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'size' => 20,
+                ],
+            ],
+            'length_unit' => [
+                'label' => $languagePath . '.length_unit',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
                     'size' => 10,
-                ],
-            ],
-            'city' => [
-                'label' => $languagePath . '.city',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            'email' => [
-                'label' => $languagePath . '.email',
-                'config' => [
-                    'type' => 'email',
-                ],
-            ],
-            'phone' => [
-                'label' => $languagePath . '.phone',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            'fax' => [
-                'label' => $languagePath . '.fax',
-                'config' => [
-                    'type' => 'input',
-                ],
-            ],
-            // Not type=number/decimal: DataHandler rounds those on write,
-            // which moves a coordinate by kilometres. Stored verbatim instead.
-            'latitude' => [
-                'label' => $languagePath . '.latitude',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 20,
-                ],
-            ],
-            'longitude' => [
-                'label' => $languagePath . '.longitude',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'input',
-                    'size' => 20,
                 ],
             ],
             'remote_id' => [
@@ -136,13 +104,14 @@ return (static function (string $tableName) {
                 'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'input',
+                    'searchable' => false,
                 ],
             ],
         ],
         'types' => [
             '0' => [
-                'showitem' => 'street, zip, city, email, phone, fax, latitude, longitude, remote_id',
+                'showitem' => 'title, length, length_unit, remote_id',
             ],
         ],
     ];
-})('tx_thuecat_address');
+})('tx_thuecat_trail_way_type');

@@ -43,6 +43,9 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailConditionEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailWayTypeEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
@@ -97,6 +100,7 @@ class Resolver
             'tx_thuecat_tourist_attraction' => 'contained_in_attraction',
             'tx_thuecat_tourist_information' => 'contained_in_tourist_information',
             'tx_thuecat_parking_facility' => 'contained_in_parking_facility',
+            'tx_thuecat_trail' => 'contained_in_trail',
         ],
         'parkingFacilityNearBy' => [
             'tx_thuecat_parking_facility' => 'parking_facility_near_by',
@@ -134,7 +138,25 @@ class Resolver
         'tx_thuecat_address' => [
             'separator' => AddressEntity::SEPARATOR,
             'field' => 'address_inline',
-            // Opt-in: opening-hours removal is unspecified.
+            'reapOrphans' => true,
+        ],
+        'tx_thuecat_trail_way_type' => [
+            'separator' => TrailWayTypeEntity::SEPARATOR,
+            'field' => 'way_types',
+            'reapOrphans' => true,
+        ],
+        'tx_thuecat_trail_condition' => [
+            'separator' => TrailConditionEntity::SEPARATOR,
+            'field' => 'conditions',
+            'reapOrphans' => true,
+        ],
+        'tx_thuecat_trail_location' => [
+            'separator' => TrailLocationEntity::SEPARATOR,
+            'column' => 'location_type',
+            'fieldByValue' => [
+                TrailLocationEntity::TYPE_START => 'start_location',
+                TrailLocationEntity::TYPE_END => 'end_location',
+            ],
             'reapOrphans' => true,
         ],
     ];

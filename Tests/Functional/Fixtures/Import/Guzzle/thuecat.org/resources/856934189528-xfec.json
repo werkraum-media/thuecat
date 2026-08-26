@@ -1,0 +1,30 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/856934189528-xfec",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:DefinedTerm",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Familie"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Family"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Famille"
+                }
+            ],
+            "schema:inDefinedTermSet": {
+                "@id": "https://thuecat.org/resources/192875159827-xfqk"
+            }
+        }
+    ]
+}

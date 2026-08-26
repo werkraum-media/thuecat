@@ -9,6 +9,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristInformationEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailEntity;
 
 /**
  * Which field an imported image occupies on a given table. The entities own
@@ -28,6 +29,7 @@ class MediaFieldMap
         TouristInformationEntity::class,
         ParkingFacilityEntity::class,
         EventEntity::class,
+        TrailEntity::class,
     ];
 
     /**

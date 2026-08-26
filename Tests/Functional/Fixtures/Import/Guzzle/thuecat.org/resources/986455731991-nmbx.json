@@ -1,0 +1,30 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/986455731991-nmbx",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:DefinedTerm",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Freundesgruppe"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Group of friends"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "groupe d'amis"
+                }
+            ],
+            "schema:inDefinedTermSet": {
+                "@id": "https://thuecat.org/resources/192875159827-xfqk"
+            }
+        }
+    ]
+}

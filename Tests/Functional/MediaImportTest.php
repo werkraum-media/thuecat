@@ -117,14 +117,75 @@ class MediaImportTest extends AbstractImportTestCase
         );
     }
 
+    #[Test]
+    public function relatesTrailLogoSeparatelyFromItsImages(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        $this->expectFetch('e_39285647-oatour.json');
+        // The logo reuses one image's URL, so a single file backs two fields.
+        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+
+        $this->importConfiguration(1);
+
+        // Default language only: allowLanguageSynchronization gives every
+        // language row its own reference, so the whole table holds one set per
+        // language and the slot split is what this asserts.
+        self::assertSame(
+            ['logo', 'media_files', 'media_files'],
+            $this->fetchReferenceFields(0),
+            'The logo is editorially distinct and must not join the gallery.'
+        );
+    }
+
+    #[Test]
+    public function relatesTrailMediaOncePerLanguage(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        $this->expectFetch('e_39285647-oatour.json');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+
+        $this->importConfiguration(1);
+
+        foreach ([0, 1, 2] as $language) {
+            self::assertSame(
+                ['logo', 'media_files', 'media_files'],
+                $this->fetchReferenceFields($language),
+                'Language ' . $language . ' relates each slot once.'
+            );
+        }
+
+        // Two distinct URLs, so two files back the six references.
+        self::assertSame(2, $this->countRows('sys_file'));
+    }
+
+    #[Test]
+    public function trailWithoutImagesImports(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithoutMedia.php');
+        $this->expectFetch('e_16571065-oatour.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            1,
+            $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_16571065-oatour')
+        );
+        self::assertSame([], $this->fetchReferenceFields());
+    }
+
     /**
+     * @param int|null $language null counts every language's references
+     *
      * @return list<string>
      */
-    private function fetchReferenceFields(): array
+    private function fetchReferenceFields(?int $language = null): array
     {
+        $criteria = $language === null ? [] : ['sys_language_uid' => $language];
         $rows = $this->getConnectionPool()
             ->getConnectionForTable('sys_file_reference')
-            ->select(['fieldname'], 'sys_file_reference', [], [], ['uid' => 'ASC'])
+            ->select(['fieldname'], 'sys_file_reference', $criteria, [], ['uid' => 'ASC'])
             ->fetchAllAssociative()
         ;
 
@@ -696,21 +757,6 @@ class MediaImportTest extends AbstractImportTestCase
             $this->fetchAttractionTitles(),
             'The record must import even with the configured folder gone.'
         );
-    }
-
-    private function countRows(string $table): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll();
-
-        $count = $queryBuilder
-            ->count('uid')
-            ->from($table)
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($count) ? (int)$count : 0;
     }
 
     /**

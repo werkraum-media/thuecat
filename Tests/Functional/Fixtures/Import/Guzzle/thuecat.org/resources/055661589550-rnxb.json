@@ -1,0 +1,30 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/055661589550-rnxb",
+            "@type": [
+                "schema:Thing",
+                "schema:Intangible",
+                "schema:DefinedTerm",
+                "ttgds:Term"
+            ],
+            "rdfs:label": [
+                {
+                    "@language": "de",
+                    "@value": "Themenweg"
+                },
+                {
+                    "@language": "en",
+                    "@value": "theme trail"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "sentier thématique"
+                }
+            ],
+            "schema:inDefinedTermSet": {
+                "@id": "https://thuecat.org/resources/192875159827-xfqk"
+            }
+        }
+    ]
+}

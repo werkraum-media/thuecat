@@ -1,0 +1,113 @@
+{
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_106954656-oatour",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "thuecat:Trail",
+                "ttgds:Trail"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Goethe-Erlebnisweg"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Sentier d'expérience Goethe"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Themed hiking trail dedicated to Johann Wolfgang von Goethe"
+                }
+            ],
+            "schema:keywords": [
+                {
+                    "@id": "https://thuecat.org/resources/856934189528-xfec"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/685822377106-mbtz"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/055661589550-rnxb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/986455731991-nmbx"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/916373333853-mknj"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/887654277691-eatw"
+                }
+            ],
+            "thuecat:startLocation": {
+                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c92392597-b104",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Place"
+                ],
+                "rdfs:label": [
+                    {
+                        "@language": "de",
+                        "@value": "Am Poseckschen Garten in Weimar"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Au jardin de Poseck à Weimar"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "At the Poseck Garden in Weimar"
+                    }
+                ],
+                "schema:name": [
+                    {
+                        "@language": "de",
+                        "@value": "Am Poseckschen Garten in Weimar"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Au jardin de Poseck à Weimar"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "At the Poseck Garden in Weimar"
+                    }
+                ],
+                "schema:geo": {
+                    "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c92392597-b105",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:GeoCoordinates",
+                        "schema:Intangible",
+                        "schema:StructuredValue"
+                    ],
+                    "schema:latitude": {
+                        "@type": "schema:Float",
+                        "@value": "50.974887"
+                    },
+                    "schema:longitude": {
+                        "@type": "schema:Float",
+                        "@value": "11.327174"
+                    }
+                },
+                "dcterms:title": [
+                    {
+                        "@language": "de",
+                        "@value": "Am Poseckschen Garten in Weimar"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Au jardin de Poseck à Weimar"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "At the Poseck Garden in Weimar"
+                    }
+                ]
+            }
+        }
+    ]
+}
