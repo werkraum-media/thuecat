@@ -66,15 +66,20 @@ Breaking
   to restore a selection. The same bound applies to the keyword field of the attraction list
   plugin. See :ref:`import-category-based-anchors`.
 
-* :php:`TouristAttractionRepository::findCategoryTreeForSearchForm()` takes the anchor category as
-  a second argument. Passing ``0`` returns an empty tree rather than every root in storage. The
-  partial :file:`Partials/TouristAttraction/CategoryTree.html` now requires a ``property``
+* Filter options are built by :php:`SearchFilterOptionsService`. Removed without replacement:
+  :php:`TouristAttractionRepository::findCategoryTreeForSearchForm()`,
+  :php:`findKeywordsTreeForSearchForm()`, :php:`findTownsInStorageSortedByTitle()`,
+  :php:`TownRepository::findAllForSearchFormSortedByTitle()`, and the frontend
+  :php:`CategoryRepository`. :php:`Dto\CategoryNode` is replaced by :php:`Dto\FilterOption`, which
+  keeps its accessor names — template overrides need no change.
+
+  The partial :file:`Partials/TouristAttraction/CategoryTree.html` requires a ``property``
   argument naming the demand property its checkboxes bind to; an override without it renders
   unbound checkboxes. Its element ids carry that property too, so a category and a keyword
   sharing a uid no longer collide.
 
-* :php:`CategoryRepository::findByParents()` takes :php:`Category` objects instead of uids, since
-  ``parent`` is an object relation and a uid comparison matches nothing.
+* Filter options are scoped by site, not by the list's storage pages. A value outside those pages
+  but inside the site is now offered; a value from another site no longer is.
 
 * A record can be contained in more than one place. ``town`` is a multi-value relation instead of
   a single select, so :php:`TouristAttraction::getTown()` is replaced by
@@ -195,6 +200,9 @@ Fixes
 
 * Paging through an attraction list no longer shows the wrong page. Every pagination page and
   filter combination of one plugin previously shared a single page-cache entry.
+
+* The search mask no longer hydrates every record in storage to build its filter options. Measured
+  on 649 attractions: 31.8s to 0.04s, and the tree expansion from 375 queries to a fixed number.
 
 * The search form offers its category options again on a page whose plugin names no storage page.
   The option tree was built with the default storage restriction, which resolves to page 0 and

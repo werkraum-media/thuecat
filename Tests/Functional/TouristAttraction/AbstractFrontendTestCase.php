@@ -9,7 +9,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 
 abstract class AbstractFrontendTestCase extends FunctionalTestCase
 {
@@ -101,23 +100,5 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
         $end = strpos($rest, $marker);
 
         return $end === false ? $rest : substr($rest, 0, $end);
-    }
-
-    /**
-     * A CategoryNode tree as nested title => children arrays, so an assertion
-     * reads as the shape the search form renders.
-     *
-     * @param CategoryNode[] $nodes
-     *
-     * @return array<string, mixed>
-     */
-    protected function flatten(array $nodes): array
-    {
-        $result = [];
-        foreach ($nodes as $node) {
-            $result[$node->getCategory()->getTitle()] = $this->flatten($node->getChildren());
-        }
-
-        return $result;
     }
 }

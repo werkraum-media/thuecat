@@ -6,8 +6,10 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
-use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOption;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
+use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\CommaColumnOptionProvider;
+use WerkraumMedia\ThueCat\Service\FilterField\TownFilterField;
 
 class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
 {
@@ -78,13 +80,14 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
     #[Test]
     public function townFacetUnionsEveryTownItsAttractionsCarrySortedByTitle(): void
     {
-        $towns = $this->get(TouristAttractionRepository::class)
-            ->findTownsInStorageSortedByTitle([11])
-        ;
+        $options = $this->get(CommaColumnOptionProvider::class)->provide(
+            new TownFilterField(),
+            new FilterScope('tx_thuecat_tourist_attraction', [11], null, [], [1, 10, 11])
+        );
 
         $titles = array_map(
-            static fn (Town $town): string => $town->getTitle(),
-            $towns
+            static fn (FilterOption $town): string => $town->getTitle(),
+            $options->getOptions()
         );
 
         // Erfurt and Weimar each carried by two records, listed once; Jena is

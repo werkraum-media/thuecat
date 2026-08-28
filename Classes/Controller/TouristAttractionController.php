@@ -11,11 +11,10 @@ use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
@@ -26,7 +25,7 @@ use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
-use WerkraumMedia\ThueCat\Service\FrontendCategoryAnchors;
+use WerkraumMedia\ThueCat\Service\SearchFilterOptionsService;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
 
@@ -38,6 +37,9 @@ use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
  */
 class TouristAttractionController extends AbstractActionController
 {
+    /** The record kind this controller serves. */
+    protected const RECORD_TABLE = 'tx_thuecat_tourist_attraction';
+
     public function __construct(
         protected TouristAttractionRepository $touristAttractionRepository,
         protected TownRepository $townRepository,
@@ -48,7 +50,7 @@ class TouristAttractionController extends AbstractActionController
         protected CacheManager $cacheManager,
         protected CacheIdentifierFactory $cacheIdentifierFactory,
         protected CacheTagCollector $cacheTagCollector,
-        protected FrontendCategoryAnchors $categoryAnchors,
+        protected SearchFilterOptionsService $filterOptionsService,
     ) {
     }
 
@@ -178,33 +180,23 @@ class TouristAttractionController extends AbstractActionController
 
         $listPluginOnSamePage = $this->detectSiblingListAndApplyTheirFilters($contentObject, $pageId, $demand);
         $formTargetPid = $this->determineSearchActionTargetPid($listPluginOnSamePage, $pageId);
-        // @todo Any future record-backed filter option needs the same storage scoping.
-        $towns = $this->adjustFilterTownValuesToGivenStoragePid($listPluginOnSamePage);
-        $categories = $this->adjustFilterCategoryValuesToGivenStoragePid($listPluginOnSamePage);
-        $keywords = $this->adjustFilterKeywordValuesToGivenStoragePid($listPluginOnSamePage);
+        $filterOptions = $this->filterOptions($listPluginOnSamePage);
 
         $this->view->assignMultiple([
             'demand' => $demand,
-            'towns' => $towns,
-            'categories' => $categories,
-            'keywords' => $keywords,
+            ...$filterOptions,
             // pre-selected filters render hidden; listAction re-forces them so a tampered value can't widen.
             'lockedMap' => $listPluginOnSamePage?->getEditorFilter()->getLockedMap() ?? [],
             'formTargetPid' => $formTargetPid,
         ]);
         $html = $this->view->render();
 
-        // Table-level: the mask depends on the whole set. Tables are named
-        // because an empty option list cannot say where it would have drawn.
-        $cache->set($identifier, $html, $this->cacheTagCollector->forRecordSets(
-            [
-                $this->cacheTagCollector->tableForModel(Town::class),
-                $this->cacheTagCollector->tableForModel(Category::class),
-            ],
-            $towns,
-            $categories,
-            $keywords
-        ));
+        // Table-level: the mask depends on the whole set, and its options are
+        // DTOs carrying no table of their own, so the tables are named here.
+        $cache->set($identifier, $html, $this->cacheTagCollector->forRecordSets([
+            $this->cacheTagCollector->tableForModel(Town::class),
+            $this->cacheTagCollector->tableForModel(Category::class),
+        ]));
 
         return $this->htmlResponse($html);
     }
@@ -318,45 +310,19 @@ class TouristAttractionController extends AbstractActionController
     }
 
     /**
-     * Offer only towns the list on this page can actually return; all towns otherwise.
+     * What every filter of the mask offers, keyed by the name its template
+     * binds to. The sibling list narrows the scope; this controller names the
+     * record kind it searches.
      *
-     * @param SiblingListPluginContext|null $listPluginOnSamePage
-     *
-     * @return array<Town>|QueryResultInterface<Town>
+     * @return array<string, FilterOptions>
      */
-    public function adjustFilterTownValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array|QueryResultInterface
+    protected function filterOptions(?SiblingListPluginContext $listPluginOnSamePage): array
     {
-        $storagePageIds = $listPluginOnSamePage?->getStoragePageIds() ?? [];
-        return $storagePageIds === []
-            ? $this->townRepository->findAllForSearchFormSortedByTitle()
-            : $this->touristAttractionRepository->findTownsInStorageSortedByTitle($storagePageIds);
-    }
-
-    /**
-     * Offer only categories the list on this page can actually return; the tree
-     * over all attractions otherwise.
-     *
-     * @return CategoryNode[]
-     */
-    public function adjustFilterCategoryValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array
-    {
-        return $this->touristAttractionRepository->findCategoryTreeForSearchForm(
+        return $this->filterOptionsService->build(
+            $this->request,
+            self::RECORD_TABLE,
             $listPluginOnSamePage?->getStoragePageIds() ?? [],
-            $this->categoryAnchors->categoryParent($this->request)
-        );
-    }
-
-    /**
-     * Offer only keywords the list on this page can actually return, bounded by
-     * the site's keyword anchor.
-     *
-     * @return CategoryNode[]
-     */
-    public function adjustFilterKeywordValuesToGivenStoragePid(?SiblingListPluginContext $listPluginOnSamePage): array
-    {
-        return $this->touristAttractionRepository->findKeywordsTreeForSearchForm(
-            $listPluginOnSamePage?->getStoragePageIds() ?? [],
-            $this->categoryAnchors->keywordParent($this->request)
+            $listPluginOnSamePage?->getEditorFilter()
         );
     }
 }

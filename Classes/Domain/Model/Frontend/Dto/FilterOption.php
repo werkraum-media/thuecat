@@ -13,30 +13,42 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto;
 
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
-
-// One selectable node of the search form's category tree.
-final class CategoryNode
+/**
+ * One selectable value of a filter field: uid, title, and — for hierarchical
+ * fields — the options below it.
+ */
+final class FilterOption
 {
     /**
-     * @param CategoryNode[] $children
+     * @param FilterOption[] $children
      */
     public function __construct(
-        private readonly Category $category,
-        private readonly array $children,
+        private readonly int $uid,
+        private readonly string $title,
+        private readonly array $children = [],
     ) {
     }
 
-    public function getCategory(): Category
+    public function getUid(): int
     {
-        return $this->category;
+        return $this->uid;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**
-     * @return CategoryNode[]
+     * @return FilterOption[]
      */
     public function getChildren(): array
     {
         return $this->children;
+    }
+
+    public function getCategory(): self
+    {
+        return $this;
     }
 }

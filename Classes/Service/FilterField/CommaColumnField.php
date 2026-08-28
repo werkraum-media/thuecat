@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * Copyright (C) 2026 werkraum-media
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ */
+
+namespace WerkraumMedia\ThueCat\Service\FilterField;
+
+/**
+ * A filter field whose values live in a comma-separated uid column on the
+ * record itself.
+ */
+abstract class CommaColumnField implements FilterFieldDefinition
+{
+    public function __construct(
+        protected readonly string $name,
+        protected readonly string $recordColumn,
+        protected readonly string $optionTable,
+    ) {
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getRecordColumn(): string
+    {
+        return $this->recordColumn;
+    }
+
+    public function getOptionTable(): string
+    {
+        return $this->optionTable;
+    }
+}
