@@ -15,7 +15,7 @@ namespace WerkraumMedia\ThueCat\Frontend\MetaInformation;
 
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\MetaTag\MetaTagManagerRegistry;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
 
 /**
  * Connects a place detail view to TYPO3's meta information APIs, so the detail
@@ -25,22 +25,22 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
  * A place carrying no keyword relations emits no keyword meta tag.
  */
 #[Autoconfigure(public: true)]
-class TouristAttractionMetaInformationService
+class MetaInformationService
 {
     public function __construct(
         private readonly MetaTagManagerRegistry $metaTagManagerRegistry
     ) {
     }
 
-    public function setAttraction(TouristAttraction $attraction): void
+    public function setObject(Base $object): void
     {
-        $this->setKeywords($attraction);
+        $this->setKeywords($object);
     }
 
-    protected function setKeywords(TouristAttraction $attraction): void
+    protected function setKeywords(Base $object): void
     {
         $titles = [];
-        foreach ($attraction->getKeywords() as $keyword) {
+        foreach ($object->getKeywords() as $keyword) {
             $title = $keyword->getTitle();
             if ($title !== '') {
                 $titles[] = $title;

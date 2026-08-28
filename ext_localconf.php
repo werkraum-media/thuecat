@@ -6,6 +6,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
 use WerkraumMedia\ThueCat\Controller\TouristAttractionController;
+use WerkraumMedia\ThueCat\Controller\TrailController;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
@@ -55,6 +56,18 @@ Extension::registerExtLocalconfConfigConfig();
         'ThueCat',
         'TouristAttractionListSelected',
         [TouristAttractionController::class => ['selectedList']],
+        []
+    );
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TrailListSelected',
+        [TrailController::class => ['selectedList']],
+        []
+    );
+    ExtensionUtility::registerControllerActions(
+        'ThueCat',
+        'TrailShow',
+        [TrailController::class => ['show']],
         []
     );
 

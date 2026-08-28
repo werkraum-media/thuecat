@@ -4,6 +4,7 @@ page.10 < styles.content.get
 plugin.tx_thuecat {
     view {
         templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
+        partialRootPaths.10 = EXT:thuecat/Resources/Private/Partials/
     }
     settings {
         page.pid.thuecat_attraction_search = 10
@@ -26,4 +27,22 @@ tt_content.werkraummedia_thuecatattractionlistselected = EXTBASEPLUGIN
 tt_content.werkraummedia_thuecatattractionlistselected {
     extensionName = ThueCat
     pluginName = TouristAttractionListSelected
+}
+
+tt_content.werkraummedia_thuecatattractionshow = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionshow {
+    extensionName = ThueCat
+    pluginName = TouristAttractionShow
+}
+
+tt_content.werkraummedia_thuecattraillistselected = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecattraillistselected {
+    extensionName = ThueCat
+    pluginName = TrailListSelected
+}
+
+tt_content.werkraummedia_thuecattrailshow = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecattrailshow {
+    extensionName = ThueCat
+    pluginName = TrailShow
 }

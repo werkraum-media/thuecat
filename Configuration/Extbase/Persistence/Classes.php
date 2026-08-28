@@ -40,6 +40,10 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParki
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction as FrontendTouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristInformation as FrontendTouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town as FrontendTown;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Trail as FrontendTrail;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TrailCondition as FrontendTrailCondition;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TrailLocation as FrontendTrailLocation;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\TrailWayType as FrontendTrailWayType;
 
 return [
     Organisation::class => [
@@ -200,6 +204,18 @@ return [
     ],
     FrontendParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',
+    ],
+    FrontendTrail::class => [
+        'tableName' => 'tx_thuecat_trail',
+    ],
+    FrontendTrailWayType::class => [
+        'tableName' => 'tx_thuecat_trail_way_type',
+    ],
+    FrontendTrailCondition::class => [
+        'tableName' => 'tx_thuecat_trail_condition',
+    ],
+    FrontendTrailLocation::class => [
+        'tableName' => 'tx_thuecat_trail_location',
     ],
     OpeningHourSpecification::class => [
         'tableName' => 'tx_thuecat_opening_hours',

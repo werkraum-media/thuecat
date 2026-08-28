@@ -7,14 +7,13 @@ namespace WerkraumMedia\ThueCat\Domain\Repository\Frontend;
 use TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\Persistence\Repository;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 
-class TouristAttractionRepository extends Repository
+class TouristAttractionRepository extends AbstractThuecatObjectRepository
 {
     protected CategoryRepository $categoryRepository;
 
@@ -71,40 +70,6 @@ class TouristAttractionRepository extends Repository
 
         $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
         return $query->execute();
-    }
-
-    /**
-     * Returns the given records in the exact order of the passed uids.
-     *
-     * @param int[] $uids
-     *
-     * @return TouristAttraction[]
-     */
-    public function findBySelectedRecords(array $uids): array
-    {
-        if ($uids === []) {
-            return [];
-        }
-
-        $query = $this->createQuery();
-        $query->getQuerySettings()->setRespectStoragePage(false);
-        $query->matching($query->in('uid', $uids));
-
-        $byUid = [];
-        foreach ($query->execute() as $attraction) {
-            if ($attraction instanceof TouristAttraction && $attraction->getUid() !== null) {
-                $byUid[$attraction->getUid()] = $attraction;
-            }
-        }
-
-        $ordered = [];
-        foreach ($uids as $uid) {
-            if (isset($byUid[$uid])) {
-                $ordered[] = $byUid[$uid];
-            }
-        }
-
-        return $ordered;
     }
 
     /**

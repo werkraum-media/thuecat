@@ -49,14 +49,14 @@ abstract class Base extends AbstractEntity
     protected ObjectStorage $mediaFiles;
 
     /**
-     * @var ObjectStorage<FileReference>
+     * @var ObjectStorage<Category>
      */
-    protected ObjectStorage $editorialImages;
+    protected ObjectStorage $keywords;
 
     public function initializeObject(): void
     {
         $this->mediaFiles = new ObjectStorage();
-        $this->editorialImages = new ObjectStorage();
+        $this->keywords = new ObjectStorage();
     }
 
     public function getTitle(): string
@@ -100,10 +100,10 @@ abstract class Base extends AbstractEntity
     }
 
     /**
-     * @return ObjectStorage<FileReference>
+     * @return ObjectStorage<Category>
      */
-    public function getEditorialImages(): ObjectStorage
+    public function getKeywords(): ObjectStorage
     {
-        return $this->editorialImages;
+        return $this->keywords;
     }
 }

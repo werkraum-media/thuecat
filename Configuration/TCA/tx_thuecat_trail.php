@@ -84,7 +84,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'category',
                     'treeConfig' => [
-                        'startingPoints' => '###SITE:settings.import.thuecat.keywords.parent###',
+                        'startingPoints' => '###SITE:settings.import.trails.keywords.parent###',
                     ],
                 ],
             ],
@@ -197,7 +197,7 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
-            // Bitmask. Item order is a stored contract — see TrailEntity::SEASON_BITS.
+            // Bitmask. Item order is a stored contract — see TrailSeason.
             'season' => [
                 'label' => $languagePath . '.season',
                 'l10n_mode' => 'exclude',

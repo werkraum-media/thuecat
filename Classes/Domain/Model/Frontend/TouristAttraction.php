@@ -38,13 +38,6 @@ class TouristAttraction extends Place
      */
     protected ObjectStorage $categories;
 
-    /**
-     * Own tree, own anchor: never mixed with the categories above.
-     *
-     * @var ObjectStorage<Category>
-     */
-    protected ObjectStorage $keywords;
-
     protected ?Offers $offers = null;
 
     /**
@@ -112,7 +105,6 @@ class TouristAttraction extends Place
     {
         parent::initializeObject();
         $this->categories = new ObjectStorage();
-        $this->keywords = new ObjectStorage();
         $this->towns = new ObjectStorage();
         $this->containedInOrganisation = new ObjectStorage();
         $this->containedInAttraction = new ObjectStorage();
@@ -129,21 +121,8 @@ class TouristAttraction extends Place
     }
 
     /**
-     * @return ObjectStorage<Category>
-     */
-    public function getKeywords(): ObjectStorage
-    {
-        return $this->keywords;
-    }
-
-    public function getSlogan(): string
-    {
-        return explode(',', $this->slogan)[0];
-    }
-
-    /**
-     * @return string[]
-     */
+    * @return string[]
+    */
     public function getSlogans(): array
     {
         return explode(',', $this->slogan);
@@ -247,5 +226,10 @@ class TouristAttraction extends Place
     public function getPublicAccess(): string
     {
         return $this->publicAccess;
+    }
+
+    public function getSlogan(): string
+    {
+        return explode(',', $this->slogan)[0];
     }
 }

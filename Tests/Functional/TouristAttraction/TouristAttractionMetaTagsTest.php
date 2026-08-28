@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 
 class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
@@ -57,14 +55,6 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
 
     private function showRequest(string $attractionUid): InternalRequest
     {
-        $queryParams = ['tx_thuecat_touristattractionshow' => ['attraction' => $attractionUid]];
-
-        $cHash = GeneralUtility::makeInstance(CacheHashCalculator::class)->generateForParameters(
-            http_build_query($queryParams + ['id' => 10])
-        );
-
-        return (new InternalRequest('http://localhost/show/'))
-            ->withQueryParams($queryParams + ['cHash' => $cHash])
-        ;
+        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\MergedByWeekday;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\PerDayTable;
@@ -64,6 +65,11 @@ abstract class Place extends Base
     protected ObjectStorage $parkingFacilityNearBy;
 
     /**
+     * @var ObjectStorage<FileReference>
+     */
+    protected ObjectStorage $editorialImages;
+
+    /**
      * @var string
      */
     protected string $sanitation = '';
@@ -91,6 +97,7 @@ abstract class Place extends Base
         $this->openingHoursInline = new ObjectStorage();
         $this->specialOpeningHoursInline = new ObjectStorage();
         $this->addressInline = new ObjectStorage();
+        $this->editorialImages = new ObjectStorage();
     }
 
     /**
@@ -166,6 +173,14 @@ abstract class Place extends Base
             return null;
         }
         return $this->openingHours->getMerged();
+    }
+
+    /**
+     * @return ObjectStorage<FileReference>
+     */
+    public function getEditorialImages(): ObjectStorage
+    {
+        return $this->editorialImages;
     }
 
     /**

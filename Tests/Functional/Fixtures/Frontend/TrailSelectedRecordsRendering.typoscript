@@ -1,0 +1,4 @@
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
+
+# selectedRecords is the subject of the test, so it cannot live in the shared file.
+plugin.tx_thuecat.settings.selectedRecords = 3,1

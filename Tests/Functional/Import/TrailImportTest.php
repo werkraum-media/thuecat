@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailEntity;
+use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -88,14 +88,14 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $expected = TrailEntity::SEASON_BITS['Mar']
-            | TrailEntity::SEASON_BITS['Apr']
-            | TrailEntity::SEASON_BITS['May']
-            | TrailEntity::SEASON_BITS['Jun']
-            | TrailEntity::SEASON_BITS['Jul']
-            | TrailEntity::SEASON_BITS['Aug']
-            | TrailEntity::SEASON_BITS['Sep']
-            | TrailEntity::SEASON_BITS['Oct'];
+        $expected = TrailSeason::Mar->bit()
+            | TrailSeason::Apr->bit()
+            | TrailSeason::May->bit()
+            | TrailSeason::Jun->bit()
+            | TrailSeason::Jul->bit()
+            | TrailSeason::Aug->bit()
+            | TrailSeason::Sep->bit()
+            | TrailSeason::Oct->bit();
 
         self::assertSame($expected, $this->fetchTrailSeason());
     }

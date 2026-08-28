@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 /**
@@ -40,26 +41,6 @@ class TrailEntity extends AbstractEntity
         'photo' => 'main_image',
         'image' => 'media_files',
         'logo' => 'logo',
-    ];
-
-    /**
-     * Bit per season member.
-     * Append new members, never reorder.
-     */
-    public const SEASON_BITS = [
-        'Jan' => 1 << 0,
-        'Feb' => 1 << 1,
-        'Mar' => 1 << 2,
-        'Apr' => 1 << 3,
-        'May' => 1 << 4,
-        'Jun' => 1 << 5,
-        'Jul' => 1 << 6,
-        'Aug' => 1 << 7,
-        'Sep' => 1 << 8,
-        'Oct' => 1 << 9,
-        'Nov' => 1 << 10,
-        'Dec' => 1 << 11,
-        'AllYearRound' => 1 << 12,
     ];
 
     // Closed set of values, derived from the schema.org ontology
@@ -348,7 +329,7 @@ class TrailEntity extends AbstractEntity
     {
         $bits = 0;
         foreach ($this->extractConcatenatedMembers($node['thuecat:season'] ?? null, $language) as $member) {
-            $bits |= self::SEASON_BITS[$member] ?? 0;
+            $bits |= TrailSeason::tryFrom($member)?->bit() ?? 0;
         }
 
         // Upstream having no seasons must clear the column

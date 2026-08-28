@@ -1,0 +1,145 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:thuecat="http://typo3.org/ns/WerkraumMedia/ThueCat/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{trail}">
+    <f:then>
+        <f:comment>
+            Images render from the FileReference, never the raw file: the editor's
+            crop lives on the reference and is lost when the file is passed instead.
+        </f:comment>
+        <f:if condition="{trail.mainImage}">
+            <section data-relation="mainImage">
+                <figure>
+                    <f:image image="{trail.mainImage}" width="200" />
+                    <f:if condition="{trail.mainImage.originalResource.properties.copyright}">
+                        <figcaption>{trail.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+                    </f:if>
+                </figure>
+            </section>
+        </f:if>
+        <f:if condition="{trail.mediaFiles}">
+            <section data-relation="mediaFiles">
+                <f:for each="{trail.mediaFiles}" as="image">
+                    <figure>
+                        <f:image image="{image}" width="200" />
+                        <f:if condition="{image.originalResource.properties.copyright}">
+                            <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+                        </f:if>
+                    </figure>
+                </f:for>
+            </section>
+        </f:if>
+
+        <h2>{trail.title}</h2>
+        <p>{trail.description}</p>
+
+        <f:if condition="{trail.keywords}">
+            <section data-relation="keywords">
+                <f:for each="{trail.keywords}" as="keyword">
+                    <span class="keyword">{keyword.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{trail.logo}">
+            <section data-relation="logo">
+                <f:image image="{trail.logo}" width="100" />
+            </section>
+        </f:if>
+
+        <f:if condition="{trail.managedBy}">
+            <section data-relation="managedBy">
+                <span class="organisation">{trail.managedBy.title -> f:format.htmlspecialchars()}</span>
+            </section>
+        </f:if>
+
+        <section data-trail="descriptions">
+            <p class="short-description">{trail.shortDescription}</p>
+            <p class="directions">{trail.directions}</p>
+            <p class="getting-there">{trail.gettingThere}</p>
+            <p class="parking">{trail.parking}</p>
+            <p class="public-transit">{trail.publicTransit}</p>
+            <p class="safety-guidelines">{trail.safetyGuidelines}</p>
+            <p class="equipment">{trail.equipment}</p>
+            <p class="additional-information">{trail.additionalInformation}</p>
+            <p class="tip">{trail.tip}</p>
+        </section>
+
+        <f:variable name="seasons" value="{thuecat:trail.season(season: trail.season)}" />
+        <f:if condition="{seasons}">
+            <section data-trail="season">
+                <f:for each="{seasons}" as="month">
+                    <span class="season"><f:translate key="LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_trail.season.{month}" /></span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <section data-trail="metrics">
+            <span class="opening-status">{trail.openingStatus}</span>
+            <span class="distance">{trail.distance} {trail.distanceUnit}</span>
+            <span class="duration">{trail.duration} {trail.durationUnit}</span>
+            <span class="exercise-type">{trail.exerciseType}</span>
+            <span class="min-altitude">{trail.minAltitude}</span>
+            <span class="max-altitude">{trail.maxAltitude}</span>
+            <span class="ascent-elevation">{trail.ascentElevation}</span>
+            <span class="descent-elevation">{trail.descentElevation}</span>
+        </section>
+
+        <section data-trail="route">
+            <span class="elevation-profile">{trail.elevationProfile}</span>
+            <span class="elevation-profile-fallback">{trail.elevationProfileFallBack}</span>
+            <span class="route-line">{trail.routeLine}</span>
+            <span class="gpx-url">{trail.gpxUrl}</span>
+        </section>
+
+        <section data-trail="ratings">
+            <span class="landscape">{trail.ratingLandscape}/{trail.ratingLandscapeMax}</span>
+            <span class="condition">{trail.ratingCondition}/{trail.ratingConditionMax}</span>
+            <span class="difficulty">{trail.ratingDifficulty}/{trail.ratingDifficultyMax}</span>
+            <span class="quality-of-experience">{trail.ratingQualityOfExperience}/{trail.ratingQualityOfExperienceMax}</span>
+            <span class="technique">{trail.ratingTechnique}/{trail.ratingTechniqueMax}</span>
+            <span class="minima">{trail.ratingLandscapeMin}{trail.ratingConditionMin}{trail.ratingDifficultyMin}{trail.ratingQualityOfExperienceMin}{trail.ratingTechniqueMin}</span>
+        </section>
+
+        <f:if condition="{trail.wayTypes}">
+            <section data-relation="wayTypes">
+                <f:for each="{trail.wayTypes}" as="wayType">
+                    <span class="way-type">{wayType.title -> f:format.htmlspecialchars()} {wayType.length} {wayType.lengthUnit}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{trail.conditions}">
+            <section data-relation="conditions">
+                <f:for each="{trail.conditions}" as="condition">
+                    <span class="condition">
+                        {condition.title -> f:format.htmlspecialchars()}
+                        {condition.description -> f:format.htmlspecialchars()}
+                        <f:if condition="{condition.validFrom}">
+                            <f:format.date format="d.m.Y">{condition.validFrom}</f:format.date>
+                        </f:if>
+                    </span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{trail.startLocation}">
+            <section data-relation="startLocation">
+                <span class="location">{trail.startLocation.title -> f:format.htmlspecialchars()}</span>
+                <span class="geo" data-lat="{trail.startLocation.latitude}" data-lon="{trail.startLocation.longitude}"></span>
+            </section>
+        </f:if>
+
+        <f:if condition="{trail.endLocation}">
+            <section data-relation="endLocation">
+                <span class="location">{trail.endLocation.title -> f:format.htmlspecialchars()}</span>
+                <span class="geo" data-lat="{trail.endLocation.latitude}" data-lon="{trail.endLocation.longitude}"></span>
+            </section>
+        </f:if>
+    </f:then>
+    <f:else>
+        <p><f:translate key="content.show.empty" extensionName="thuecat" /></p>
+    </f:else>
+</f:if>

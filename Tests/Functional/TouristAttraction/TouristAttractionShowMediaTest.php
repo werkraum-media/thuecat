@@ -7,7 +7,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 
 /**
@@ -68,6 +67,16 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         self::assertStringContainsString('Foto: Main Author', $body);
     }
 
+    // Square 20x20 source, 2:1 crop: an uncropped render would be 20x20.
+    #[Test]
+    public function appliesTheEditorsCropToTheProcessedImage(): void
+    {
+        $body = (string)$this->executeFrontendSubRequest($this->requestForAttraction('21'))->getBody();
+
+        self::assertMatchesRegularExpression('#<img[^>]+width="10"#', $body);
+        self::assertMatchesRegularExpression('#<img[^>]+height="5"#', $body);
+    }
+
     #[Test]
     public function rendersGalleryFromFalMediaFiles(): void
     {
@@ -125,14 +134,6 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
 
     private function requestForAttraction(string $attractionUid): InternalRequest
     {
-        $queryParams = ['tx_thuecat_touristattractionshow' => ['attraction' => $attractionUid]];
-        $cHash = GeneralUtility::makeInstance(CacheHashCalculator::class)
-            ->generateForParameters(http_build_query($queryParams + ['id' => 10]))
-        ;
-
-        return (new InternalRequest())
-            ->withPageId(10)
-            ->withQueryParams($queryParams + ['cHash' => $cHash])
-        ;
+        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }

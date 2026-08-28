@@ -1,0 +1,17 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{items}">
+    <f:then>
+        <f:for each="{items}" as="item">
+            <f:comment>
+                Teasers are rendered using Resources/Private/Templates/Trail/ListItem.html
+            </f:comment>
+            <f:format.raw>{item}</f:format.raw>
+        </f:for>
+    </f:then>
+    <f:else>
+        <p><f:translate key="content.list.empty" extensionName="thuecat" /></p>
+    </f:else>
+</f:if>

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 
 class TouristAttractionShowTest extends AbstractFrontendTestCase
@@ -147,43 +145,8 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         self::assertStringNotContainsString('Montag, Dienstag', $section);
     }
 
-    /**
-     * Render the request and return only the markup of the
-     * <section data-{$attribute}="..."> block, so assertions cannot accidentally
-     * match a sibling section's output. The next marked section (same data
-     * attribute) bounds this one; partials may emit their own plain <section>, so
-     * the boundary keys on the data attribute, not on <section> alone.
-     */
-    private function renderedSection(InternalRequest $request, string $attribute, string $value): string
-    {
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
-
-        $marker = '<section data-' . $attribute . '="';
-        $open = $marker . $value . '">';
-        $start = strpos($body, $open);
-        self::assertNotFalse($start, 'Section ' . $attribute . '="' . $value . '" not rendered.');
-
-        $rest = substr($body, $start + strlen($open));
-        $end = strpos($rest, $marker);
-
-        return $end === false ? $rest : substr($rest, 0, $end);
-    }
-
-    /**
-     * The attraction parameter is cacheable, so the request needs a valid cHash
-     * (a real list link carries one); compute it the same way the core does.
-     */
     private function generateRequestWithCHash(string $attractionUid): InternalRequest
     {
-        $queryParams = ['tx_thuecat_touristattractionshow' => ['attraction' => $attractionUid]];
-        $cacheHashCalculator = GeneralUtility::makeInstance(CacheHashCalculator::class);
-        $cHash = $cacheHashCalculator->generateForParameters(
-            http_build_query($queryParams + ['id' => 10])
-        );
-
-        return (new InternalRequest())
-            ->withPageId(10)
-            ->withQueryParams($queryParams + ['cHash' => $cHash])
-        ;
+        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }

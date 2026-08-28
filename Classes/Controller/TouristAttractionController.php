@@ -10,13 +10,10 @@ use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewInterface;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\CategoryNode;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
@@ -28,8 +25,6 @@ use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
-use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
-use WerkraumMedia\ThueCat\Frontend\MetaInformation\TouristAttractionMetaInformationService;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 use WerkraumMedia\ThueCat\Service\FrontendCategoryAnchors;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
@@ -41,7 +36,7 @@ use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
  *
  * @property ViewInterface $view
  */
-class TouristAttractionController extends ActionController
+class TouristAttractionController extends AbstractActionController
 {
     public function __construct(
         protected TouristAttractionRepository $touristAttractionRepository,
@@ -50,12 +45,10 @@ class TouristAttractionController extends ActionController
         protected PaginationFactory $paginationFactory,
         protected ExtensionService $extensionService,
         protected SiblingListPluginLocator $siblingListPluginLocator,
-        protected TeaserRenderer $teaserRenderer,
         protected CacheManager $cacheManager,
         protected CacheIdentifierFactory $cacheIdentifierFactory,
         protected CacheTagCollector $cacheTagCollector,
         protected FrontendCategoryAnchors $categoryAnchors,
-        protected TouristAttractionMetaInformationService $metaInformationService,
     ) {
     }
 
@@ -106,7 +99,7 @@ class TouristAttractionController extends ActionController
 
         $this->view->assignMultiple([
             'list' => $pagination,
-            'items' => $this->renderItems($displayedRecords),
+            'items' => $this->renderItems($displayedRecords, 'thuecat_attraction_show'),
             'demand' => $demand,
         ]);
         $html = $this->view->render();
@@ -131,76 +124,10 @@ class TouristAttractionController extends ActionController
         return is_scalar($uid) ? (int)$uid : 0;
     }
 
-    protected function languageId(): int
-    {
-        return $this->request->getAttribute('language')?->getLanguageId() ?? 0;
-    }
-
-    /**
-     * Renders each record's item template, serving stored HTML where it exists.
-     *
-     * @param iterable<mixed> $records
-     *
-     * @return list<string>
-     */
-    protected function renderItems(iterable $records): array
-    {
-        $detailPageUid = $this->pageUidFromSettings('thuecat_attraction_show');
-        $languageId = $this->languageId();
-        $viewPaths = $this->resolveViewPaths();
-        /** @var array<string, mixed> $settings */
-        $settings = $this->settings;
-
-        $items = [];
-        foreach ($records as $record) {
-            if (!$record instanceof Base) {
-                continue;
-            }
-            $items[] = $this->teaserRenderer->render(
-                $record,
-                $detailPageUid,
-                $languageId,
-                $settings,
-                $viewPaths,
-                $this->request
-            );
-        }
-
-        return $items;
-    }
-
-    /** A page uid from `settings.page.pid.*`, 0 when unconfigured. */
-    protected function pageUidFromSettings(string $name): int
-    {
-        $pageSettings = $this->settings['page'] ?? [];
-        $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
-        $pid = is_array($pidSettings) ? ($pidSettings[$name] ?? null) : null;
-
-        return is_scalar($pid) ? (int)$pid : 0;
-    }
-
-    /**
-     * The plugin's own template paths, so overrides apply to separately
-     * rendered items too.
-     *
-     * @return array{templateRootPaths?: array<int, string>, partialRootPaths?: array<int, string>, layoutRootPaths?: array<int, string>}
-     */
-    protected function resolveViewPaths(): array
-    {
-        $framework = $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-        );
-
-        /** @var array{templateRootPaths?: array<int, string>, partialRootPaths?: array<int, string>, layoutRootPaths?: array<int, string>} $paths */
-        $paths = is_array($framework['view'] ?? null) ? $framework['view'] : [];
-
-        return $paths;
-    }
-
     public function showAction(?TouristAttraction $attraction = null): ResponseInterface
     {
         if ($attraction instanceof TouristAttraction) {
-            $this->metaInformationService->setAttraction($attraction);
+            $this->metaInformationService->setObject($attraction);
         }
 
         $this->view->assign('attraction', $attraction);
@@ -220,7 +147,7 @@ class TouristAttractionController extends ActionController
 
         $this->view->assign(
             'items',
-            $this->renderItems($this->touristAttractionRepository->findBySelectedRecords($uids))
+            $this->renderItems($this->touristAttractionRepository->findBySelectedRecords($uids), 'thuecat_attraction_show')
         );
         return $this->htmlResponse();
     }

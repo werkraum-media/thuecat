@@ -14,23 +14,6 @@ $crop = json_encode([
     ],
 ]);
 
-$legacyMain = json_encode([
-    [
-        'mainImage' => true,
-        'type' => 'image',
-        'url' => 'https://cms.thuecat.org/legacy-main/image',
-        'description' => 'Legacy main description',
-        'author' => 'Legacy Main Author',
-    ],
-    [
-        'mainImage' => false,
-        'type' => 'image',
-        'url' => 'https://cms.thuecat.org/legacy-extra/image',
-        'description' => 'Legacy extra description',
-        'author' => 'Legacy Extra Author',
-    ],
-]);
-
 return [
     'pages' => [
         [
@@ -54,7 +37,7 @@ return [
         [
             'uid' => '11',
             'pid' => '1',
-            'title' => 'Storage for Attractions',
+            'title' => 'Storage for Trails',
             'doktype' => PageRepository::DOKTYPE_SYSFOLDER,
             'sorting' => '512',
             'deleted' => '0',
@@ -64,41 +47,36 @@ return [
         [
             'uid' => '10',
             'pid' => '10',
-            'CType' => 'werkraummedia_thuecatattractionshow',
+            'CType' => 'werkraummedia_thuecattrailshow',
             'header' => 'Show Plugin',
             'colPos' => '0',
             'sorting' => '256',
             'sys_language_uid' => '0',
         ],
     ],
-    'tx_thuecat_tourist_attraction' => [
+    'tx_thuecat_trail' => [
         [
             'uid' => '21',
             'pid' => '11',
-            'title' => 'Stadtmuseum Erfurt',
-            'description' => 'Beschreibung des Stadtmuseums',
+            'disable' => '0',
+            'title' => 'Goethe-Erlebnisweg',
+            'description' => 'Beschreibung des Goethe-Erlebniswegs',
+            'sys_language_uid' => '0',
             'main_image' => '1',
             'media_files' => '1',
-            'editorial_images' => '1',
+            'logo' => '1',
         ],
         [
             'uid' => '22',
             'pid' => '11',
-            'title' => 'Attraktion mit Altdaten',
-            'description' => 'Beschreibung mit Altdaten',
-            'media' => $legacyMain,
-        ],
-        [
-            'uid' => '23',
-            'pid' => '11',
-            'title' => 'Attraktion ohne Medien',
-            'description' => 'Beschreibung ohne Medien',
-            'media' => '',
+            'disable' => '0',
+            'title' => 'Weg ohne Medien',
+            'description' => 'Beschreibung des Wegs ohne Medien',
+            'sys_language_uid' => '0',
         ],
     ],
-    // storage uid 1 is created at runtime via createLocalStorage() in the test setUp.
-    // Both files point at the same image on disk; distinct copyright proves each
-    // reference renders its own file's metadata.
+    // One file on disk behind every reference; each reference renders its own
+    // file's metadata.
     'sys_file' => [
         [
             'uid' => '1',
@@ -162,19 +140,21 @@ return [
         [
             'uid' => '3',
             'file' => '3',
-            'title' => 'Editorial image',
-            'description' => 'Editorial image description',
-            'copyright' => 'Foto: Editorial Author',
+            'title' => 'Logo',
+            'description' => 'Logo description',
+            'copyright' => 'Foto: Logo Author',
             'width' => '20',
             'height' => '20',
         ],
     ],
+    // Every reference carries the crop: an editor's crop must survive into the
+    // processed file, which it only can when the reference is rendered.
     'sys_file_reference' => [
         [
             'uid' => '1',
             'uid_local' => '1',
             'uid_foreign' => '21',
-            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'tablenames' => 'tx_thuecat_trail',
             'fieldname' => 'main_image',
             'sorting_foreign' => '1',
             'title' => 'Main image',
@@ -185,7 +165,7 @@ return [
             'uid' => '2',
             'uid_local' => '2',
             'uid_foreign' => '21',
-            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'tablenames' => 'tx_thuecat_trail',
             'fieldname' => 'media_files',
             'sorting_foreign' => '1',
             'title' => 'Gallery image',
@@ -196,11 +176,11 @@ return [
             'uid' => '3',
             'uid_local' => '3',
             'uid_foreign' => '21',
-            'tablenames' => 'tx_thuecat_tourist_attraction',
-            'fieldname' => 'editorial_images',
+            'tablenames' => 'tx_thuecat_trail',
+            'fieldname' => 'logo',
             'sorting_foreign' => '1',
-            'title' => 'Editorial image',
-            'description' => 'Editorial image description',
+            'title' => 'Logo',
+            'description' => 'Logo description',
             'crop' => $crop,
         ],
     ],
