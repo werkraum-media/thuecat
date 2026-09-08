@@ -24,26 +24,28 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
-use TYPO3\CMS\Extbase\Annotation\IgnoreValidation;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
-use WerkraumMedia\ThueCat\Extension;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
-use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
-class ImportController extends AbstractController
+class ImportController extends ActionController
 {
     private const ITEMS_PER_PAGE = 5;
 
     public function __construct(
-        // @todo get the importer back
-        //        private readonly Importer $importer,
         private readonly ImportLogRepository $repository,
-        private readonly TranslationService $translation,
-        private readonly PaginationFactory $paginationFactory
+        private readonly PaginationFactory $paginationFactory,
+        protected readonly ModuleTemplateFactory $moduleTemplateFactory
     ) {
+    }
+
+    protected function initializeModuleTemplate(
+        ServerRequestInterface $request,
+    ): ModuleTemplate {
+        return $this->moduleTemplateFactory->create($request);
     }
 
     public function indexAction(int $currentPage = 1): ResponseInterface
@@ -58,51 +60,5 @@ class ImportController extends AbstractController
         ]);
 
         return $view->renderResponse('Backend/Import/Index');
-    }
-
-    #[IgnoreValidation(['argumentName' => 'importConfiguration'])]
-    public function importAction(ImportConfiguration $importConfiguration): ResponseInterface
-    {
-        //        $importLog = $this->importer->importConfiguration($importConfiguration);
-        //
-        //        if ($importLog->hasErrors()) {
-        //            $this->createImportErrorFlashMessage($importConfiguration);
-        //        } else {
-        $this->createImportDoneFlashMessage($importConfiguration);
-        //        }
-
-        return $this->redirect('index', 'Backend\Configuration');
-    }
-
-    private function createImportErrorFlashMessage(ImportConfiguration $importConfiguration): void
-    {
-        $this->addFlashMessage(
-            $this->translation->translate(
-                'controller.backend.import.import.error.text',
-                Extension::EXTENSION_NAME,
-                [$importConfiguration->getTitle()]
-            ),
-            $this->translation->translate(
-                'controller.backend.import.import.error.title',
-                Extension::EXTENSION_NAME
-            ),
-            ContextualFeedbackSeverity::ERROR
-        );
-    }
-
-    private function createImportDoneFlashMessage(ImportConfiguration $importConfiguration): void
-    {
-        $this->addFlashMessage(
-            $this->translation->translate(
-                'controller.backend.import.import.success.text',
-                Extension::EXTENSION_NAME,
-                [$importConfiguration->getTitle()]
-            ),
-            $this->translation->translate(
-                'controller.backend.import.import.success.title',
-                Extension::EXTENSION_NAME
-            ),
-            ContextualFeedbackSeverity::OK
-        );
     }
 }
