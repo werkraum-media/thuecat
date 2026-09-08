@@ -111,12 +111,6 @@
                 <source>How long fetched API responses stay reusable by a later run. Leave empty to use the extension configuration.</source>
             </trans-unit>
 
-            <trans-unit id="pages.tourist_attraction.sheetTitle" xml:space="preserve">
-                <source>Tourist Attraction</source>
-            </trans-unit>
-            <trans-unit id="pages.tourist_attraction.tourist_attraction" xml:space="preserve">
-                <source>Tourist Attraction</source>
-            </trans-unit>
         </body>
     </file>
 </xliff>

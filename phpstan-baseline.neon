@@ -373,18 +373,6 @@ parameters:
 			path: Classes/Extension.php
 
 		-
-			message: '#^Parameter \#1 \$className of method TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Mapper\\DataMapper\:\:map\(\) expects class\-string\<TYPO3\\CMS\\Extbase\\DomainObject\\DomainObjectInterface\>, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
-			message: '#^Unable to resolve the template type T in call to method TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Mapper\\DataMapper\:\:map\(\)$#'
-			identifier: argument.templateType
-			count: 1
-			path: Classes/Frontend/DataProcessing/ResolveEntities.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 3
@@ -515,18 +503,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
-			message: '#^Parameter \#1 \$original of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:mergeRecursiveWithOverrule\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Configuration/TCA/Overrides/pages.php
-
-		-
-			message: '#^Parameter \#1 \$original of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:mergeRecursiveWithOverrule\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Configuration/TCA/Overrides/pages_tourist_attraction.php
 
 		-
 			message: '#^Binary operation "\." between ''Title for URL '' and mixed results in an error\.$#'

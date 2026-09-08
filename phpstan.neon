@@ -19,3 +19,9 @@ parameters:
       identifier: return.type
       path: 'Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php'
       reportUnmatched: false
+    # Guzzle's config shape is version-dependent; ours comes from
+    # TYPO3_CONF_VARS['HTTP'], so it stays array<string, mixed> by nature.
+    -
+      identifier: argument.type
+      path: 'Classes/Import/Http/ImportClientFactory.php'
+      reportUnmatched: false

@@ -35,8 +35,6 @@ class Extension
 
     final public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
 
-    final public const PAGE_DOKTYPE_TOURIST_ATTRACTION = 950;
-
     final public const CACHE_TEASER = 'tx_thuecat_teaser';
 
     final public const CACHE_LIST = 'tx_thuecat_list';

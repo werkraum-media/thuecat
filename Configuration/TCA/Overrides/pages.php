@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use WerkraumMedia\ThueCat\Extension;
 
@@ -12,55 +11,18 @@ defined('TYPO3') or die();
     $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName;
 
-    if (is_array($GLOBALS['TCA'])) { // just keep phpstan quiet
-        ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TCA'][$tableName], [
-            'ctrl' => [
-                'typeicon_classes' => [
-                    'contains-thuecat' => 'pages_module_thuecat',
-                ],
-            ],
-            'columns' => [
-                'tx_thuecat_flexform' => [
-                    'label' => $languagePath . '.tx_thuecat_flexform',
-                    'config' => [
-                        'type' => 'flex',
-                        'ds_pointerField' => 'doktype',
-                        'ds' => [
-                            'default' => '<T3DataStructure> <ROOT> <type>array</type> <el> <!-- Repeat an element like "xmlTitle" beneath for as many elements you like. Remember to name them uniquely --> <xmlTitle> <label>The Title:</label> <config> <type>input</type> <size>48</size> </config> </xmlTitle> </el> </ROOT> </T3DataStructure>',
-                        ],
-                    ],
-                ],
-            ],
-            'palettes' => [
-                'tx_thuecat' => [
-                    'label' => $languagePath . 'palette.tx_thuecat',
-                    'showitem' => 'tx_thuecat_flexform',
-                ],
-            ],
-            'types' => [
-                Extension::PAGE_DOKTYPE_TOURIST_ATTRACTION => [
-                    'allowedRecordTypes' => ['*'],
-                ],
-            ],
-        ]);
+    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
+    $GLOBALS['TCA'][$tableName]['ctrl']['typeicon_classes']['contains-thuecat'] = 'pages_module_thuecat';
 
-        ExtensionManagementUtility::addTcaSelectItemGroup(
-            $tableName,
-            'doktype',
-            Extension::TCA_SELECT_GROUP_IDENTIFIER,
-            $languagePath . '.group'
-        );
-
-        ExtensionManagementUtility::addTcaSelectItem(
-            $tableName,
-            'module',
-            [
-                'label' => $languagePath . '.module.thuecat',
-                'value' => 'thuecat',
-                'icon' => 'pages_module_thuecat',
-            ]
-        );
-    }
+    ExtensionManagementUtility::addTcaSelectItem(
+        $tableName,
+        'module',
+        [
+            'label' => $languagePath . '.module.thuecat',
+            'value' => 'thuecat',
+            'icon' => 'pages_module_thuecat',
+        ]
+    );
 })(
     Extension::EXTENSION_KEY,
     'pages'

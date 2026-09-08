@@ -781,9 +781,6 @@
             <trans-unit id="pages.group" xml:space="preserve">
                 <source>ThüCAT</source>
             </trans-unit>
-            <trans-unit id="pages.tourist_attraction" xml:space="preserve">
-                <source>Tourist Attraction</source>
-            </trans-unit>
             <trans-unit id="pages.palette.tx_thuecat" xml:space="preserve">
                 <source>ThüCAT</source>
             </trans-unit>
