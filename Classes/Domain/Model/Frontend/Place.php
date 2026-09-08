@@ -32,19 +32,12 @@ use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
 abstract class Place extends Base
 {
-    /** @deprecated Legacy JSON blob; no longer written. Removed in the next major. */
-    protected ?LegacyAddress $address = null;
-
     /**
      * @var ObjectStorage<Address>
      */
     protected ObjectStorage $addressInline;
 
     protected string $url = '';
-
-    protected ?OpeningHours $openingHours = null;
-
-    protected ?OpeningHours $specialOpeningHours = null;
 
     /**
      * Imported tx_thuecat_opening_hours child rows (regular). Mapped for the
@@ -118,61 +111,9 @@ abstract class Place extends Base
         return null;
     }
 
-    /**
-     * @deprecated Legacy JSON-blob address carrier. Use getAddressInline() or
-     *             getFirstAddress(); re-run the import to populate the inline
-     *             records. Removed in the next major.
-     */
-    public function getAddress(): ?LegacyAddress
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getAddress() returns the deprecated'
-            . ' JSON-blob address carrier. Use getAddressInline() or getFirstAddress()'
-            . ' (re-run the import). Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->address;
-    }
-
     public function getUrl(): string
     {
         return $this->url;
-    }
-
-    /**
-     * @deprecated Legacy JSON-blob opening hours carrier. Use getPerDayTable()
-     *             instead; re-run the import to populate the inline records. Removed in the next major.
-     */
-    public function getOpeningHours(): ?OpeningHours
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getOpeningHours() returns the deprecated'
-            . ' JSON-blob opening hours carrier. Use getPerDayTable() (re-run the import).'
-            . ' Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->openingHours;
-    }
-
-    /**
-     * @deprecated Legacy JSON-blob opening hours. Use getPerDayTable()
-     *             instead; re-run the import. Removed in the next major.
-     */
-    public function getMergedOpeningHours(): ?MergedOpeningHours
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedOpeningHours() returns the'
-            . ' deprecated merged JSON-blob opening hours. Use getPerDayTable() (re-run the'
-            . ' import). Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        if ($this->openingHours === null) {
-            return null;
-        }
-        return $this->openingHours->getMerged();
     }
 
     /**
@@ -181,41 +122,6 @@ abstract class Place extends Base
     public function getEditorialImages(): ObjectStorage
     {
         return $this->editorialImages;
-    }
-
-    /**
-     * @deprecated Legacy JSON-blob opening hours carrier. Use getSpecialPerDayTable()
-     *             instead; re-run the import to populate the inline records. Removed in the next major.
-     */
-    public function getSpecialOpeningHours(): ?OpeningHours
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getSpecialOpeningHours() returns the'
-            . ' deprecated JSON-blob opening hours carrier. Use getSpecialPerDayTable() (re-run'
-            . ' the import). Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->specialOpeningHours;
-    }
-
-    /**
-     * @deprecated Legacy JSON-blob opening hours. Use getSpecialPerDayTable()
-     *             instead; re-run the import. Removed in the next major.
-     */
-    public function getMergedSpecialOpeningHours(): ?MergedOpeningHours
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Place::getMergedSpecialOpeningHours() returns the'
-            . ' deprecated merged JSON-blob opening hours. Use getSpecialPerDayTable() (re-run the'
-            . ' import). Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        if ($this->specialOpeningHours === null) {
-            return null;
-        }
-        return $this->specialOpeningHours->getMerged();
     }
 
     /**

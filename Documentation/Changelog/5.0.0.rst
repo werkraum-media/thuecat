@@ -95,6 +95,28 @@ Breaking
   import log from those buckets on the first run — they name relations that were already being
   lost, not new failures.
 
+* The json-based media storage is removed in favour of FAL handling. The :php:`Media` model and
+  :php:`Base::getMedia()` are gone, as is the ``media`` database column. Use the FAL properties
+  on ``Base`` (:php:`getMainImage()`, :php:`getMediaFiles()`, :php:`getEditorialImages()`) and
+  re-run the import. See :ref:`frontend-output-media-model`.
+
+* ``editorial_images`` is handled as the FAL field it always has been: replace
+  :html:`{entity.media.editorialImages}` with :html:`{entity.editorialImages}`.
+
+* The json-based opening hours storage is removed in favour of inline database records.
+  :php:`Place::getOpeningHours()`, :php:`getMergedOpeningHours()`, :php:`getSpecialOpeningHours()`
+  and :php:`getMergedSpecialOpeningHours()` are gone, as are the :php:`OpeningHours`,
+  :php:`MergedOpeningHours` and :php:`MergedOpeningHourWeekDay` models and the ``opening_hours``
+  and ``special_opening_hours`` columns. Use :php:`getPerDayTable()` /
+  :php:`getSpecialPerDayTable()` and re-run the import.
+  See :ref:`frontend-output-opening-hours-model`.
+
+* The json-based address storage is removed in favour of inline database records.
+  :php:`Place::getAddress()` and the :php:`LegacyAddress` value object are gone, as is the
+  ``address`` column. Use :php:`getAddressInline()` for the full set, or :php:`getFirstAddress()`
+  where one address is expected, and re-run the import. The misspelled
+  :php:`Address::getLatitute()` is :php:`getLatitude()` on the new model.
+
 Features
 --------
 
@@ -268,26 +290,4 @@ Nothing
 Deprecation
 -----------
 
-* The json-based media storage is superseded by FAL handling. The json read accessors
-  :php:`Media::getMainImage()`, :php:`getImages()`, :php:`getExtraImages()`,
-  :php:`getEditorialImages()`, :php:`getAllImages()` and :php:`Base::getMedia()` trigger
-  ``E_USER_DEPRECATED``. Use the FAL properties on ``Base`` instead and re-run the import.
-  See :ref:`frontend-output-media-model`.
-
-* ``editorial_images`` is handled as the FAL field it always has been: replace
-  :html:`{entity.media.editorialImages}` with :html:`{entity.editorialImages}`.
-
-* The json-based opening hours storage is superseded by inline database records.
-  :php:`Place::getOpeningHours()`, :php:`getMergedOpeningHours()`, :php:`getSpecialOpeningHours()`
-  and :php:`getMergedSpecialOpeningHours()` trigger ``E_USER_DEPRECATED``, as do the legacy
-  :php:`OpeningHours`, :php:`MergedOpeningHours` and :php:`MergedOpeningHourWeekDay` models.
-  Use :php:`getComputedOpeningHours()` / :php:`getComputedSpecialOpeningHours()` and re-run the
-  import. See :ref:`frontend-output-opening-hours-model`.
-
-* The json-based address storage is superseded by inline database records.
-  :php:`Place::getAddress()` triggers ``E_USER_DEPRECATED`` and returns the legacy
-  :php:`LegacyAddress` value object. Use :php:`getAddressInline()` for the full set, or
-  :php:`getFirstAddress()` where one address is expected, and re-run the import. The ``address``
-  column is kept and still readable so records not yet re-imported keep rendering; it is no longer
-  written and is removed in a later major. The misspelled :php:`Address::getLatitute()` is
-  :php:`getLatitude()` on the new model; the legacy object keeps the old spelling.
+Nothing

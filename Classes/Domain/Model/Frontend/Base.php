@@ -39,8 +39,6 @@ abstract class Base extends AbstractEntity
 
     protected string $description = '';
 
-    protected ?Media $media = null;
-
     protected ?FileReference $mainImage = null;
 
     /**
@@ -67,23 +65,6 @@ abstract class Base extends AbstractEntity
     public function getDescription(): string
     {
         return $this->description;
-    }
-
-    /**
-     * @deprecated Legacy JSON-blob media carrier. Use the FAL fields main_image / media_files /
-     *             editorial_images (getMainImage() / getMediaFiles() / getEditorialImages())
-     *             instead; re-run the import to populate them. Removed in the next major.
-     */
-    public function getMedia(): ?Media
-    {
-        trigger_error(
-            'WerkraumMedia\ThueCat\Domain\Model\Frontend\Base::getMedia() returns the deprecated'
-            . ' JSON-blob media carrier. Use getMainImage() / getMediaFiles() / getEditorialImages()'
-            . ' (re-run the import). Removed in the next major.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->media;
     }
 
     public function getMainImage(): ?FileReference

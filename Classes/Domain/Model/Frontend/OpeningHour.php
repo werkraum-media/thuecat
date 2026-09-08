@@ -41,26 +41,32 @@ class OpeningHour
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $rawData
+     */
     public static function createFromArray(array $rawData): OpeningHour
     {
-        $from = null;
-        if (isset($rawData['from'])) {
-            $timeZone = new DateTimeZone($rawData['from']['timezone'] ?? 'Europe/Berlin');
-            $from = new DateTimeImmutable($rawData['from']['date'], $timeZone);
-        }
-        $through = null;
-        if (isset($rawData['through'])) {
-            $timeZone = new DateTimeZone($rawData['through']['timezone'] ?? 'Europe/Berlin');
-            $through = new DateTimeImmutable($rawData['through']['date'], $timeZone);
+        return new self(
+            is_string($rawData['opens'] ?? null) ? $rawData['opens'] : '',
+            is_string($rawData['closes'] ?? null) ? $rawData['closes'] : '',
+            is_array($rawData['daysOfWeek'] ?? null) ? $rawData['daysOfWeek'] : [],
+            self::createDate($rawData['from'] ?? null),
+            self::createDate($rawData['through'] ?? null)
+        );
+    }
+
+    /**
+     * Serialized DateTime blob: ['date' => …, 'timezone' => …].
+     */
+    protected static function createDate(mixed $rawDate): ?DateTimeImmutable
+    {
+        if (is_array($rawDate) === false || is_string($rawDate['date'] ?? null) === false) {
+            return null;
         }
 
-        return new self(
-            $rawData['opens'] ?? '',
-            $rawData['closes'] ?? '',
-            $rawData['daysOfWeek'] ?? [],
-            $from,
-            $through
-        );
+        $timeZone = is_string($rawDate['timezone'] ?? null) ? $rawDate['timezone'] : 'Europe/Berlin';
+
+        return new DateTimeImmutable($rawDate['date'], new DateTimeZone($timeZone));
     }
 
     public function getOpens(): string

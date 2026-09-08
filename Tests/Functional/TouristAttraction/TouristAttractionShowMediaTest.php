@@ -107,18 +107,6 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     }
 
     #[Test]
-    public function fallsBackToLegacyMediaBlob(): void
-    {
-        $body = (string)$this->executeFrontendSubRequest($this->requestForAttraction('22'))->getBody();
-
-        // No FAL relation -> blob path; raw url, no processing.
-        self::assertStringContainsString('https://cms.thuecat.org/legacy-main/image', $body);
-        self::assertStringContainsString('Legacy Main Author', $body);
-        self::assertStringContainsString('<section class="gallery">', $body);
-        self::assertStringContainsString('https://cms.thuecat.org/legacy-extra/image', $body);
-    }
-
-    #[Test]
     public function rendersWithoutAnyMedia(): void
     {
         $result = $this->executeFrontendSubRequest($this->requestForAttraction('23'));

@@ -126,83 +126,16 @@ parameters:
 			count: 1
 			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
 
-		-
-			message: '#^Cannot access offset ''latitude'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Cannot access offset ''longitude'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getCity\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getEmail\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getFax\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getLatitute\(\) should return float but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getLongitude\(\) should return float but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getPhone\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getStreet\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:getZip\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
 
-		-
-			message: '#^Property WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\LegacyAddress\:\:\$data \(array\<mixed\>\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: Classes/Domain/Model/Frontend/LegacyAddress.php
-
-		-
-			message: '#^Cannot access offset ''author'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Domain/Model/Frontend/Media.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/Media.php
 
 		-
 			message: '#^Parameter \#1 \$arrays of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:sortArraysByKey\(\) expects array, mixed given\.$#'
@@ -245,78 +178,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Classes/Domain/Model/Frontend/Offers.php
-
-		-
-			message: '#^Cannot access offset ''date'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Cannot access offset ''timezone'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTimeImmutable constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Parameter \#1 \$opens of class WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Parameter \#1 \$timezone of class DateTimeZone constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Parameter \#2 \$closes of class WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Parameter \#3 \$daysOfWeek of class WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour constructor expects array\<mixed\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHour.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHours\:\:current\(\) should return WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHours.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\MergedOpeningHourWeekDay given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHours.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, array\{''WerkraumMedia\\\\ThueCat\\\\Domain\\\\Model\\\\Frontend\\\\OpeningHour'', ''createFromArray''\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHours.php
-
-		-
-			message: '#^Parameter \#2 \$array of function array_map expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHours.php
-
-		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, Closure\(WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour, WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\OpeningHour\)\: int\<\-1, 1\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/OpeningHours.php
 
 		-
 			message: '#^Parameter \#1 \$title of class WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Price constructor expects string, mixed given\.$#'

@@ -15,12 +15,8 @@ for ($i = 1; $i <= 25; $i++) {
         'title' => sprintf('Attraction %02d', $i),
         'description' => '',
         'town' => '0',
-        'media' => '',
-        'address' => '',
         'url' => '',
         'offers' => '',
-        'opening_hours' => '',
-        'special_opening_hours' => '',
         'keywords' => $i % 2 === 1 ? '1' : '0',
     ];
 

@@ -197,8 +197,6 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     #[Test]
     public function extractsFlatEnumAndValueFields(): void
     {
-        // Golden values are the sys_language_uid=0 row for 165868194223-zmqf in
-        // Tests/Functional/Assertions/Import/ImportsTouristAttractionsWithRelations.php.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
         self::assertNotNull($node);
         $entity = new TouristAttractionEntity();

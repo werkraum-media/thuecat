@@ -120,26 +120,6 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
-            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
-            'opening_hours' => [
-                'label' => $languagePath . '.opening_hours',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'text',
-                    'readOnly' => true,
-                    'searchable' => false,
-                ],
-            ],
-            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
-            'special_opening_hours' => [
-                'label' => $languagePath . '.special_opening_hours',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'text',
-                    'readOnly' => true,
-                    'searchable' => false,
-                ],
-            ],
             'opening_hours_inline' => [
                 'label' => $languagePath . '.opening_hours_inline',
                 'l10n_mode' => 'exclude',
@@ -166,16 +146,6 @@ return (static function (string $extensionKey, string $tableName) {
                         'specification_type' => OpeningHourSpecificationEntity::TYPE_SPECIAL,
                     ],
                     'foreign_default_sortby' => 'valid_from, day_of_week, opens',
-                ],
-            ],
-            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
-            'address' => [
-                'label' => $languagePath . '.address',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'text',
-                    'readOnly' => true,
-                    'searchable' => false,
                 ],
             ],
             'address_inline' => [
@@ -217,16 +187,6 @@ return (static function (string $extensionKey, string $tableName) {
                     'behaviour' => [
                         'allowLanguageSynchronization' => true,
                     ],
-                ],
-            ],
-            // @deprecated legacy JSON blob, kept for un-reimported sites; no longer filled. Removed next major.
-            'media' => [
-                'label' => $languagePath . '.media',
-                'l10n_mode' => 'exclude',
-                'config' => [
-                    'type' => 'text',
-                    'readOnly' => true,
-                    'searchable' => false,
                 ],
             ],
             'offers' => [
@@ -335,8 +295,8 @@ return (static function (string $extensionKey, string $tableName) {
             '0' => [
                 'showitem' => '--palette--;;language, disable, title, description, main_image, media_files, sanitation, other_service, 
                 traffic_infrastructure, payment_accepted, distance_to_public_transport,
-                opening_hours_inline, special_opening_hours_inline, opening_hours,
-                special_opening_hours, offers, address_inline, address,  media, remote_id, 
+                opening_hours_inline, special_opening_hours_inline,
+                offers, address_inline, remote_id,
                 --div--;' . $languagePath . '.tab.relations, town, managed_by, contained_in_organisation,
                 contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility,
                 contained_in_trail',

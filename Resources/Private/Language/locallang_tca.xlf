@@ -168,20 +168,11 @@
             <trans-unit id="tx_thuecat_tourist_attraction.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.opening_hours" xml:space="preserve">
-                <source>Opening Hours</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.special_opening_hours" xml:space="preserve">
-                <source>Special Opening Hours</source>
-            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.opening_hours_inline" xml:space="preserve">
                 <source>Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.special_opening_hours_inline" xml:space="preserve">
                 <source>Special Opening Hours</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.address" xml:space="preserve">
-                <source>Address (deprecated)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.address_inline" xml:space="preserve">
                 <source>Address</source>
@@ -194,9 +185,6 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.media_files" xml:space="preserve">
                 <source>Images</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_tourist_attraction.media" xml:space="preserve">
-                <source>Media (legacy)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.offers" xml:space="preserve">
                 <source>Offers</source>
@@ -259,20 +247,11 @@
             <trans-unit id="tx_thuecat_parking_facility.distance_to_public_transport" xml:space="preserve">
                 <source>Distance to Public Transport</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.opening_hours" xml:space="preserve">
-                <source>Opening Hours</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.special_opening_hours" xml:space="preserve">
-                <source>Special Opening Hours</source>
-            </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.opening_hours_inline" xml:space="preserve">
                 <source>Opening Hours</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.special_opening_hours_inline" xml:space="preserve">
                 <source>Special Opening Hours</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.address" xml:space="preserve">
-                <source>Address (deprecated)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.address_inline" xml:space="preserve">
                 <source>Address</source>
@@ -282,9 +261,6 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.media_files" xml:space="preserve">
                 <source>Images</source>
-            </trans-unit>
-            <trans-unit id="tx_thuecat_parking_facility.media" xml:space="preserve">
-                <source>Media (legacy)</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.offers" xml:space="preserve">
                 <source>Offers</source>

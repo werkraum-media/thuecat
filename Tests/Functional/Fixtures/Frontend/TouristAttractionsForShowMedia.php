@@ -14,23 +14,6 @@ $crop = json_encode([
     ],
 ]);
 
-$legacyMain = json_encode([
-    [
-        'mainImage' => true,
-        'type' => 'image',
-        'url' => 'https://cms.thuecat.org/legacy-main/image',
-        'description' => 'Legacy main description',
-        'author' => 'Legacy Main Author',
-    ],
-    [
-        'mainImage' => false,
-        'type' => 'image',
-        'url' => 'https://cms.thuecat.org/legacy-extra/image',
-        'description' => 'Legacy extra description',
-        'author' => 'Legacy Extra Author',
-    ],
-]);
-
 return [
     'pages' => [
         [
@@ -86,14 +69,12 @@ return [
             'pid' => '11',
             'title' => 'Attraktion mit Altdaten',
             'description' => 'Beschreibung mit Altdaten',
-            'media' => $legacyMain,
         ],
         [
             'uid' => '23',
             'pid' => '11',
             'title' => 'Attraktion ohne Medien',
             'description' => 'Beschreibung ohne Medien',
-            'media' => '',
         ],
     ],
     // storage uid 1 is created at runtime via createLocalStorage() in the test setUp.

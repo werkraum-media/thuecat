@@ -79,12 +79,8 @@ $attraction = static function (int $uid, string $title, string $description, int
         'title' => $title,
         'description' => $description,
         'town' => '0',
-        'media' => '',
-        'address' => '',
         'url' => '',
         'offers' => '',
-        'opening_hours' => '',
-        'special_opening_hours' => '',
     ];
 };
 
