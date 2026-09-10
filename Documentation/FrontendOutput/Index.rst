@@ -116,19 +116,19 @@ Settings definition (``Configuration/Sets/<YourSet>/settings.definitions.yaml``)
 .. code-block:: yaml
 
    settings:
-     page.pid.thuecat_attraction_show:
+     thuecat.pois.pid_show:
        label: 'Detail Page for Tourist Attractions'
        description: 'The page providing the detail pages for tourist attractions'
        category: 'page.pids'
        type: 'int'
        default: 0
-     page.pid.thuecat_attraction_search:
+     thuecat.pois.pid_search:
        label: 'Search Result Page for Tourist Attractions'
        description: 'The page providing the list of tourist attractions, used as target for search form submissions'
        category: 'page.pids'
        type: 'int'
        default: 0
-     list.itemsPerPage:
+     thuecat.settings.itemsPerPage:
        label: 'Tourist Attractions per Page'
        description: 'Number of tourist attractions shown per page in the list view'
        category: 'list'
@@ -141,10 +141,10 @@ Mapping (``Configuration/Sets/<YourSet>/setup.typoscript``):
 
    plugin.tx_thuecat.settings {
        page.pid {
-           thuecat_attraction_show = {$page.pid.thuecat_attraction_show}
-           thuecat_attraction_search = {$page.pid.thuecat_attraction_search}
+           thuecat_attraction_show = {$thuecat.pois.pid_show}
+           thuecat_attraction_search = {$thuecat.pois.pid_search}
        }
-       itemsPerPage = {$page.settings.itemsPerPage}
+       itemsPerPage = {$thuecat.settings.itemsPerPage}
    }
 
 Search and list on one page
@@ -155,7 +155,7 @@ The search-and-filter form adapts to what shares its page:
 * **With a list (plain or filtered) on the page** the form posts to the same page
   and the list re-renders with the result.
 * **Without a list on the page** the form targets the configured list / search
-  page (``page.pid.thuecat_attraction_search``).
+  page (:typoscript:`page.pid.thuecat_attraction_search`).
 * **On a filtered list** the preset fields are not shown in the search form, but rendered as hidden fields to preserve
   the pre-selection. The
   visitor refines the remaining fields but cannot widen past the preset.

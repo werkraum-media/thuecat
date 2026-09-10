@@ -8,7 +8,6 @@ defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
     $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
-    $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
 
     return [
         'ctrl' => [
@@ -28,6 +27,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'ignoreRootLevelRestriction' => true,
             ],
             'rootLevel' => 1,
+            'hideTable' => true,
         ],
         'columns' => [
             'configuration' => [
