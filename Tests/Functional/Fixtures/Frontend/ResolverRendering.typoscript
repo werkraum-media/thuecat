@@ -4,10 +4,3 @@
 # the shared file's page 10: these tests assert the fallback is used.
 plugin.tx_thuecat.settings.page.pid.thuecat_attraction_search = 40
 plugin.tx_thuecat.settings.itemsPerPage = 10
-
-# Filtered CE rendered as plain EXTBASEPLUGIN (no content-blocks in tests).
-tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
-tt_content.werkraummedia_thuecatattractionlistfiltered {
-    extensionName = ThueCat
-    pluginName = TouristAttractionList
-}

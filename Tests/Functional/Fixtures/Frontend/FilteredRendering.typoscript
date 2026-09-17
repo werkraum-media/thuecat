@@ -2,10 +2,3 @@
 
 # The editor filter is the subject of the test, so it cannot live in the shared file.
 plugin.tx_thuecat.settings.towns = 1
-
-# Filtered CE rendered as plain EXTBASEPLUGIN (no content-blocks in tests).
-tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
-tt_content.werkraummedia_thuecatattractionlistfiltered {
-    extensionName = ThueCat
-    pluginName = TouristAttractionList
-}

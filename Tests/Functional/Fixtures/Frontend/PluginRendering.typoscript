@@ -17,6 +17,13 @@ tt_content.werkraummedia_thuecatattractionlist {
     pluginName = TouristAttractionList
 }
 
+# Content-blocks CEs render as plain EXTBASEPLUGIN in tests.
+tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
+tt_content.werkraummedia_thuecatattractionlistfiltered {
+    extensionName = ThueCat
+    pluginName = TouristAttractionList
+}
+
 tt_content.werkraummedia_thuecatattractionsearch = EXTBASEPLUGIN
 tt_content.werkraummedia_thuecatattractionsearch {
     extensionName = ThueCat

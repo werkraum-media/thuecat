@@ -20,11 +20,6 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
         return 'TouristAttractionsForStoragePidScenarios.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'StoragePidScenariosRendering.typoscript';
-    }
-
     #[Test]
     public function storagePidWithoutFilterBehavesLikeTheListPlugin(): void
     {
