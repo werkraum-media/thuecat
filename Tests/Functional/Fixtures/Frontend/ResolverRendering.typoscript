@@ -1,29 +1,11 @@
-page = PAGE
-page.10 < styles.content.get
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
 
-plugin.tx_thuecat {
-    view {
-        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
-    }
-    settings {
-        # Fallback target when no list shares the search form's page.
-        page.pid.thuecat_attraction_search = 40
-        itemsPerPage = 10
-    }
-}
+# Fallback target when no list shares the search form's page. Deliberately not
+# the shared file's page 10: these tests assert the fallback is used.
+plugin.tx_thuecat.settings.page.pid.thuecat_attraction_search = 40
+plugin.tx_thuecat.settings.itemsPerPage = 10
 
-tt_content.werkraummedia_thuecatattractionsearch = EXTBASEPLUGIN
-tt_content.werkraummedia_thuecatattractionsearch {
-    extensionName = ThueCat
-    pluginName = TouristAttractionSearch
-}
-
-tt_content.werkraummedia_thuecatattractionlist = EXTBASEPLUGIN
-tt_content.werkraummedia_thuecatattractionlist {
-    extensionName = ThueCat
-    pluginName = TouristAttractionList
-}
-
+# Filtered CE rendered as plain EXTBASEPLUGIN (no content-blocks in tests).
 tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
 tt_content.werkraummedia_thuecatattractionlistfiltered {
     extensionName = ThueCat

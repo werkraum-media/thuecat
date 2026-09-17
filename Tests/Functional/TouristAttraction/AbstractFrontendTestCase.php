@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
@@ -56,6 +59,18 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
     }
 
     /**
+     * A request for one page in one language.
+     *
+     * Language comes from the site's base path, the way the router resolves it.
+     * `InternalRequest::withLanguageId()` sets the v8 `L` parameter, which
+     * routing ignores: the shell renders translated while records do not.
+     */
+    protected function pageRequest(int $pageId, int $languageId = 0): InternalRequest
+    {
+        return (new InternalRequest($this->urlFor($pageId, $languageId)))->withPageId($pageId);
+    }
+
+    /**
      * A detail request for one record, carrying a valid cHash.
      *
      * The record argument is cacheable, so a request without a cHash 404s; a
@@ -68,18 +83,57 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
         string $plugin,
         string $argument,
         string $recordUid,
-        int $pageId = 10
+        int $pageId = 10,
+        int $languageId = 0
     ): InternalRequest {
         $queryParams = [$plugin => [$argument => $recordUid]];
 
+        // `id` stays in the hash base even for a slug URL: the calculator
+        // requires it as input, independent of how the page was routed.
         $cHash = GeneralUtility::makeInstance(CacheHashCalculator::class)->generateForParameters(
             http_build_query($queryParams + ['id' => $pageId])
         );
 
-        return (new InternalRequest())
+        return (new InternalRequest($this->urlFor($pageId, $languageId)))
             ->withPageId($pageId)
             ->withQueryParams($queryParams + ['cHash' => $cHash])
         ;
+    }
+
+    /** The page's own URL in one language, base path included. */
+    protected function urlFor(int $pageId, int $languageId = 0): string
+    {
+        return rtrim('http://localhost' . $this->languageBase($languageId), '/')
+            . $this->slugFor($pageId);
+    }
+
+    /** The site's base path for one language, read from its configuration. */
+    protected function languageBase(int $languageId): string
+    {
+        $site = $this->get(SiteFinder::class)->getSiteByPageId(1);
+
+        return rtrim($site->getLanguageById($languageId)->getBase()->getPath(), '/');
+    }
+
+    protected function slugFor(int $pageId): string
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('pages');
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $slug = $queryBuilder
+            ->select('slug')
+            ->from('pages')
+            ->where($queryBuilder->expr()->eq(
+                'uid',
+                $queryBuilder->createNamedParameter($pageId, Connection::PARAM_INT)
+            ))
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        self::assertIsString($slug, 'Page ' . $pageId . ' must carry a slug to be requested by URL.');
+
+        return $slug === '/' ? '/' : rtrim($slug, '/') . '/';
     }
 
     /**

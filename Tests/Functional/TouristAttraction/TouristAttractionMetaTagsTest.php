@@ -14,11 +14,6 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
         return 'TouristAttractionsForShow.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'ShowRendering.typoscript';
-    }
-
     #[Test]
     public function emitsKeywordsMetaTagFromRelatedCategories(): void
     {
@@ -38,18 +33,16 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 
-    // The sub-request renders English chrome but keeps resolving the default
-    // language record, so the relation never reaches the translated categories.
-    // Ruled out: the L parameter (site routes by path prefix), the /en path, and
-    // the fixture (row 22 carries sys_language_uid, l18n_parent and its own mm
-    // rows). No translated-record coverage exists in this suite to copy from.
     #[Test]
     public function keywordsMetaTagUsesTranslatedTitles(): void
     {
-        self::markTestSkipped(
-            'Translated records are not resolved by this suite\'s frontend sub-requests: the /en request renders'
-            . ' English chrome but keeps the default-language attraction, so the relation never reaches categories'
-            . ' 503/504. Expected content="romantic, accessible" from attraction 22.'
+        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertMatchesRegularExpression(
+            '#<meta[^>]+name="keywords"[^>]+content="romantic, accessible"#',
+            $body
         );
     }
 

@@ -40,10 +40,13 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function keywordsMetaTagUsesTranslatedTitles(): void
     {
-        self::markTestSkipped(
-            'Translated records are not resolved by this suite\'s frontend sub-requests: the /en request renders'
-            . ' English chrome but keeps the default-language trail, so the relation never reaches categories'
-            . ' 503/504. Expected content="themed trail, bicycle friendly" from trail 22.'
+        $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '21', 10, 1);
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertMatchesRegularExpression(
+            '#<meta[^>]+name="keywords"[^>]+content="themed trail, bicycle friendly"#',
+            $body
         );
     }
 }

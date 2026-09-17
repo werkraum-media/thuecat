@@ -1,15 +1,9 @@
-page = PAGE
-page.10 < styles.content.get
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
 
-plugin.tx_thuecat {
-    view {
-        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
-    }
-    settings {
-        towns = 1
-    }
-}
+# The editor filter is the subject of the test, so it cannot live in the shared file.
+plugin.tx_thuecat.settings.towns = 1
 
+# Filtered CE rendered as plain EXTBASEPLUGIN (no content-blocks in tests).
 tt_content.werkraummedia_thuecatattractionlistfiltered = EXTBASEPLUGIN
 tt_content.werkraummedia_thuecatattractionlistfiltered {
     extensionName = ThueCat

@@ -60,6 +60,40 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         $dataHandler->start([$table => [$uid => $values]], []);
         $dataHandler->process_datamap();
 
+        $this->assertDataHandlerSucceeded($dataHandler, 'save');
+    }
+
+    /**
+     * Deletes through DataHandler, which registers the record's cache tags
+     * before the row goes, so they are still emitted for it.
+     */
+    protected function deleteRecord(
+        int $uid,
+        string $table = 'tx_thuecat_tourist_attraction'
+    ): void {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start([], [$table => [$uid => ['delete' => 1]]]);
+        $dataHandler->process_cmdmap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, 'delete');
+    }
+
+    /** Undelete is a cmdmap command; writing the delete field would not restore. */
+    protected function undeleteRecord(
+        int $uid,
+        string $table = 'tx_thuecat_tourist_attraction'
+    ): void {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start([], [$table => [$uid => ['undelete' => 1]]]);
+        $dataHandler->process_cmdmap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, 'undelete');
+    }
+
+    protected function assertDataHandlerSucceeded(DataHandler $dataHandler, string $operation): void
+    {
         // v13 does not type errorLog's members.
         $errors = [];
         foreach ($dataHandler->errorLog as $error) {
@@ -69,7 +103,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         self::assertSame(
             [],
             $dataHandler->errorLog,
-            'DataHandler must save cleanly: ' . implode(', ', $errors)
+            'DataHandler must ' . $operation . ' cleanly: ' . implode(', ', $errors)
         );
     }
 

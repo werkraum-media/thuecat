@@ -31,11 +31,6 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         return 'TouristAttractionsForShowMedia.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'ShowRendering.typoscript';
-    }
-
     protected function setUp(): void
     {
         parent::setUp();

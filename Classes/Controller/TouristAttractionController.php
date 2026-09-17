@@ -128,8 +128,15 @@ class TouristAttractionController extends AbstractActionController
 
     public function showAction(?TouristAttraction $attraction = null): ResponseInterface
     {
+        if ($this->selectedRecordUid() > 0) {
+            $selected = $this->selectedRecord($this->touristAttractionRepository);
+            $attraction = $selected instanceof TouristAttraction ? $selected : null;
+        }
+
         if ($attraction instanceof TouristAttraction) {
             $this->metaInformationService->setObject($attraction);
+        } else {
+            $this->addCacheTagForEmptyDetailView(self::RECORD_TABLE);
         }
 
         $this->view->assign('attraction', $attraction);

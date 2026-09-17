@@ -200,6 +200,21 @@ Features
 * The town filter matches a record carrying several towns, and the search form offers every town
   its records carry. An attraction in two towns is returned once when both are selected.
 
+* A show content element can pin the record it displays. The attraction and trail detail elements
+  gain a backend field selecting one record; when it is set that record is shown and the frontend
+  query parameter is ignored entirely, so no URL can change what the page renders. Left empty, the
+  element resolves the record from the query parameter exactly as before, which is what existing
+  elements do. A pinned record that no longer resolves — hidden, deleted — renders the "no data"
+  message rather than falling back to the parameter, because an editor's pick must not be replaced
+  silently. The pinned uid is the default-language one and is the same in every language; the
+  record renders translated where a translation exists.
+
+* Detail pages are discarded when the record they show changes. A page rendering no record is
+  tagged from the uid its element pins, so it is discarded once that record exists again — without
+  that tag nothing could ever flush it, and the page would keep saying "no data" after the record
+  returned. **After deploying, clear the pages cache once**: entries cached by an earlier version
+  carry no record tag and would keep serving stale content until they expire.
+
 * ``thuecat:Trail`` is imported into its own record type (:sql:`tx_thuecat_trail`), with its
   descriptive texts, route and metrics each in their own column. Way-type segments, current
   conditions and the start and end locations become inline records; seasons a multi-value field.
@@ -213,6 +228,11 @@ Fixes
 * Imported coordinates keep their full precision. Latitude and longitude are stored as delivered
   rather than in a decimal column, which TYPO3 rounds to two decimal places on write — enough to
   move a point by roughly two kilometres. Re-run the import to correct stored coordinates.
+
+* A pinned record renders in the requested language. The record was looked up with a query matching
+  its uid, which in a translated request also demands the row's own language: the default-language
+  row failed the language test and its translation failed the uid test, so the detail view rendered
+  "no data" in every language but the default.
 
 * Translated records keep their own address. Address text was read with a helper that understood
   only a single ``{@language,@value}`` object, so a record whose upstream address was a *list* of

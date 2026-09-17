@@ -1,17 +1,4 @@
-page = PAGE
-page.10 < styles.content.get
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
 
-plugin.tx_thuecat {
-    view {
-        templateRootPaths.10 = EXT:thuecat/Resources/Private/Templates/
-    }
-    settings {
-        itemsPerPage = 10
-    }
-}
-
-tt_content.werkraummedia_thuecatattractionlist = EXTBASEPLUGIN
-tt_content.werkraummedia_thuecatattractionlist {
-    extensionName = ThueCat
-    pluginName = TouristAttractionList
-}
+# Page size is the subject of the test, so it cannot live in the shared file.
+plugin.tx_thuecat.settings.itemsPerPage = 10

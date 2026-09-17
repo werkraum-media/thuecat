@@ -14,11 +14,6 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         return 'TouristAttractionsForShow.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'ShowRendering.typoscript';
-    }
-
     #[Test]
     public function showsContainingOrganisationsAndPlaces(): void
     {

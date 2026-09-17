@@ -12,6 +12,9 @@ use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TrailRepository;
 
 class TrailController extends AbstractActionController
 {
+    /** The record kind this controller serves. */
+    protected const RECORD_TABLE = 'tx_thuecat_trail';
+
     public function __construct(protected TrailRepository $trailRepository)
     {
     }
@@ -25,8 +28,15 @@ class TrailController extends AbstractActionController
 
     public function showAction(?Trail $trail = null): ResponseInterface
     {
+        if ($this->selectedRecordUid() > 0) {
+            $selected = $this->selectedRecord($this->trailRepository);
+            $trail = $selected instanceof Trail ? $selected : null;
+        }
+
         if ($trail instanceof Trail) {
             $this->metaInformationService->setObject($trail);
+        } else {
+            $this->addCacheTagForEmptyDetailView(self::RECORD_TABLE);
         }
 
         $this->view->assign('trail', $trail);

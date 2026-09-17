@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Controller;
 
+use TYPO3\CMS\Core\Cache\CacheTag;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
 use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
 use WerkraumMedia\ThueCat\Frontend\MetaInformation\MetaInformationService;
@@ -60,6 +62,52 @@ class AbstractActionController extends ActionController
     protected function languageId(): int
     {
         return $this->request->getAttribute('language')?->getLanguageId() ?? 0;
+    }
+
+    /** The uid an editor pinned to the plugin, 0 when none. */
+    protected function selectedRecordUid(): int
+    {
+        $selected = $this->settings['selectedRecord'] ?? null;
+
+        return is_scalar($selected) ? (int)$selected : 0;
+    }
+
+    /**
+     * The pinned record, or null when the editor pinned none.
+     *
+     * The pick is a default-language uid, the same in every language: Extbase
+     * overlays it for the request's language.
+     *
+     * A pinned uid that no longer resolves also yields null; the caller must not
+     * fall back to its own argument, or an editor's pick could be replaced by a
+     * URL.
+     */
+    protected function selectedRecord(Repository $repository): ?Base
+    {
+        $uid = $this->selectedRecordUid();
+        if ($uid === 0) {
+            return null;
+        }
+
+        $record = $repository->findByUid($uid);
+
+        return $record instanceof Base ? $record : null;
+    }
+
+    /**
+     * Tags a detail view that resolved no record.
+     *
+     * Core tags the rows a query returns, so an empty result tags nothing and
+     * the entry could never be flushed. A configured uid tags that uid, which
+     * outlives the record and so brings the page back when it returns;
+     * otherwise the table is all there is to key on.
+     */
+    protected function addCacheTagForEmptyDetailView(string $table): void
+    {
+        $uid = $this->selectedRecordUid();
+        $tag = $uid > 0 ? $table . '_' . $uid : $table;
+
+        $this->request->getAttribute('frontend.cache.collector')?->addCacheTags(new CacheTag($tag));
     }
 
     /** A page uid from `settings.page.pid.*`, 0 when unconfigured. */
