@@ -215,6 +215,110 @@ class AddressEntityTest extends TestCase
     }
 
     #[Test]
+    public function keepsEstablishedFieldsWhenCountryAndRegionAreAdded(): void
+    {
+        $node = [
+            'schema:streetAddress' => ['@language' => 'de', '@value' => 'Benediktsplatz 1'],
+            'schema:postalCode' => ['@language' => 'de', '@value' => '99084'],
+            'schema:addressLocality' => ['@language' => 'de', '@value' => 'Erfurt'],
+            'schema:addressCountry' => ['@language' => 'de', '@value' => 'Deutschland'],
+            'schema:addressRegion' => ['@language' => 'de', '@value' => 'Thüringen'],
+            'schema:email' => ['@language' => 'de', '@value' => 'info@erfurt-tourismus.de'],
+            'schema:telephone' => ['@language' => 'de', '@value' => '+49 361 66400'],
+            'schema:faxNumber' => ['@language' => 'de', '@value' => '+49 361 6640290'],
+        ];
+        $geo = [
+            'schema:latitude' => ['@type' => 'schema:Number', '@value' => '50.9784118'],
+            'schema:longitude' => ['@type' => 'schema:Number', '@value' => '11.0298392'],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de', $geo, 'https://thuecat.org/resources/333039283321-xxwg');
+
+        self::assertSame([
+            'remote_id' => 'https://thuecat.org/resources/333039283321-xxwg::addr::0',
+            'street' => 'Benediktsplatz 1',
+            'zip' => '99084',
+            'city' => 'Erfurt',
+            'region' => 'Thüringen',
+            'country' => 'Deutschland',
+            'email' => 'info@erfurt-tourismus.de',
+            'phone' => '+49 361 66400',
+            'fax' => '+49 361 6640290',
+            'latitude' => '50.9784118',
+            'longitude' => '11.0298392',
+        ], $entity->toArray());
+    }
+
+    #[Test]
+    public function extractsCountryAndRegionFromLiteralEncoding(): void
+    {
+        $node = [
+            'schema:addressCountry' => ['@language' => 'de', '@value' => 'Deutschland'],
+            'schema:addressRegion' => ['@language' => 'de', '@value' => 'Thüringen'],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de');
+        $result = $entity->toArray();
+
+        self::assertSame('Deutschland', $result['country'] ?? '');
+        self::assertSame('Thüringen', $result['region'] ?? '');
+    }
+
+    /**
+     * A CURIE is a reference, not a label: it names an ontology class whose
+     * label only the Resolver can read. Parsing passes it on untouched, the way
+     * every other reference travels.
+     */
+    #[Test]
+    public function keepsCurieEncodedCountryAndRegionForTheResolver(): void
+    {
+        $node = [
+            'schema:addressCountry' => [
+                '@type' => 'thuecat:AddressCountry',
+                '@value' => 'thuecat:Germany',
+            ],
+            'schema:addressRegion' => [
+                '@type' => 'thuecat:AddressFederalState',
+                '@value' => 'thuecat:Thuringia',
+            ],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de');
+        $result = $entity->toArray();
+
+        self::assertSame('thuecat:Germany', $result['country'] ?? '');
+        self::assertSame('thuecat:Thuringia', $result['region'] ?? '');
+    }
+
+    #[Test]
+    public function keepsBareStringCountryAndRegion(): void
+    {
+        $entity = new AddressEntity();
+        $entity->configure([
+            'schema:addressCountry' => 'thuecat:Germany',
+            'schema:addressRegion' => 'Thüringen',
+        ], 'de');
+        $result = $entity->toArray();
+
+        self::assertSame('thuecat:Germany', $result['country'] ?? '');
+        self::assertSame('Thüringen', $result['region'] ?? '');
+    }
+
+    #[Test]
+    public function omitsCountryAndRegionWhenSourceCarriesNeither(): void
+    {
+        $entity = new AddressEntity();
+        $entity->configure(['schema:postalCode' => ['@language' => 'de', '@value' => '99084']], 'de');
+        $result = $entity->toArray();
+
+        self::assertSame('', $result['country'] ?? '');
+        self::assertSame('', $result['region'] ?? '');
+    }
+
+    #[Test]
     public function dropsPartialCoordinatePair(): void
     {
         $entity = new AddressEntity();
@@ -250,6 +354,81 @@ class AddressEntityTest extends TestCase
 
         self::assertSame(
             [1 => ['street' => 'Example Lane 5', 'zip' => '99423']],
+            $entity->getTranslations()
+        );
+    }
+
+    /**
+     * A CURIE names an ontology class whose label the resolver reads per
+     * language, so it travels into every language's row to be resolved there.
+     */
+    #[Test]
+    public function untaggedCurieTravelsToEachLanguage(): void
+    {
+        $node = [
+            'schema:addressCountry' => [
+                '@type' => 'thuecat:AddressCountry',
+                '@value' => 'thuecat:Germany',
+            ],
+            'schema:addressRegion' => [
+                '@type' => 'thuecat:AddressFederalState',
+                '@value' => 'thuecat:Thuringia',
+            ],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
+        $entity->configureTranslation($node, 'en', 1);
+
+        self::assertSame(
+            [1 => ['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany']],
+            $entity->getTranslations()
+        );
+    }
+
+    /**
+     * An untagged literal carries no language and nothing can resolve it, so
+     * recording it would claim a translation the source never delivered — one
+     * address row per configured language, all holding the same value.
+     */
+    #[Test]
+    public function untaggedLiteralIsNoTranslation(): void
+    {
+        $node = [
+            'schema:addressCountry' => ['@value' => 'Deutschland'],
+            'schema:addressLocality' => ['@value' => 'Erfurt'],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
+        $entity->configureTranslation($node, 'en', 1);
+
+        self::assertSame([], $entity->getTranslations());
+    }
+
+    /**
+     * A language-tagged country is a real translation and still travels.
+     */
+    #[Test]
+    public function recordsTranslatedCountryAndRegion(): void
+    {
+        $node = [
+            'schema:addressCountry' => [
+                ['@language' => 'de', '@value' => 'Deutschland'],
+                ['@language' => 'en', '@value' => 'Germany'],
+            ],
+            'schema:addressRegion' => [
+                ['@language' => 'de', '@value' => 'Thüringen'],
+                ['@language' => 'en', '@value' => 'Thuringia'],
+            ],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
+        $entity->configureTranslation($node, 'en', 1);
+
+        self::assertSame(
+            [1 => ['region' => 'Thuringia', 'country' => 'Germany']],
             $entity->getTranslations()
         );
     }

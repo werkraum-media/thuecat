@@ -453,6 +453,46 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     /**
+     * Country and region arrive as untagged CURIEs naming an ontology class.
+     * Each language's row holds that class's label in its own language, and no
+     * row is created for a language the address has no translation for.
+     */
+    #[Test]
+    public function resolvesCurieCountryAndRegionPerLanguage(): void
+    {
+        $this->seedVocabularyIndex(self::VOCABULARY + [
+            'https://thuecat.org/ontology/thuecat/1.0/Germany' => [
+                [],
+                ['de' => 'Deutschland', 'en' => 'Germany'],
+            ],
+            'https://thuecat.org/ontology/thuecat/1.0/Thuringia' => [
+                [],
+                ['de' => 'Thüringen', 'en' => 'Thuringia'],
+            ],
+        ]);
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAddressVocabularyValues.php');
+        $this->expectFetch('900000000002-curie.json');
+
+        $this->importConfiguration(1);
+
+        $remoteId = 'https://thuecat.org/resources/900000000002-curie::addr::0';
+        $default = $this->fetchRowByRemoteId('tx_thuecat_address', $remoteId);
+        self::assertSame('Deutschland', $default['country']);
+        self::assertSame('Thüringen', $default['region']);
+
+        $translations = $this->fetchTranslationsByParent(
+            'tx_thuecat_address',
+            $this->fetchUidByRemoteId('tx_thuecat_address', $remoteId)
+        );
+        self::assertSame('Germany', $translations[1]['country'] ?? null);
+        self::assertSame('Thuringia', $translations[1]['region'] ?? null);
+        // fr is configured and the vocabulary has no French label, so the bare
+        // member name stands in rather than the CURIE reaching the column.
+        self::assertSame('Germany', $translations[2]['country'] ?? null);
+        self::assertSame('Thuringia', $translations[2]['region'] ?? null);
+    }
+
+    /**
      * DataHandler appends inline children, so a re-import must match on the
      * derived remote_id to update rows in place rather than stacking them.
      */

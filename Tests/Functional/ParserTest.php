@@ -415,7 +415,13 @@ final class ParserTest extends AbstractImportTestCase
 
         $translations = $payload->getTranslations();
 
-        self::assertSame(['tx_thuecat_tourist_attraction'], array_keys($translations));
+        // The address joins the bucket because its country and region are
+        // untagged CURIEs: the resolver reads their label per language, so they
+        // travel into every language.
+        self::assertSame(
+            ['tx_thuecat_tourist_attraction', 'tx_thuecat_address'],
+            array_keys($translations)
+        );
         self::assertSame(
             ['https://thuecat.org/resources/165868194223-zmqf'],
             array_keys($translations['tx_thuecat_tourist_attraction'])
@@ -484,6 +490,20 @@ final class ParserTest extends AbstractImportTestCase
             self::assertArrayNotHasKey('l10n_source', $fields);
             self::assertArrayNotHasKey('pid', $fields);
             self::assertArrayNotHasKey('remote_id', $fields);
+        }
+
+        // The address carries only the two CURIEs into each language: its
+        // remaining fields are de-only, and an untagged literal would claim a
+        // translation the source never delivered.
+        $addressPerLanguage = $translations['tx_thuecat_address'][
+            'https://thuecat.org/resources/165868194223-zmqf::addr::0'
+        ];
+        self::assertSame([1, 2], array_keys($addressPerLanguage));
+        foreach ($addressPerLanguage as $fields) {
+            self::assertSame(
+                ['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany'],
+                $fields
+            );
         }
     }
 

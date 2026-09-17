@@ -43,6 +43,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\VocabularyLabelResolver;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailConditionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailWayTypeEntity;
@@ -161,6 +162,9 @@ class Resolver
         ],
     ];
 
+    /** Address columns whose value may arrive as a CURIE instead of a literal. */
+    protected const ADDRESS_VOCABULARY_FIELDS = ['country', 'region'];
+
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly FetchData $fetchData,
@@ -190,6 +194,8 @@ class Resolver
     public function resolve(DataHandlerPayload $payload, ResolverContext $context): DataHandlerPayload
     {
         $this->rekeyRowsAndInjectPid($payload, $context, 0);
+        // Before the translations are drained into rows and removed.
+        $this->resolveAddressVocabularyValues($payload, $context);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
         $this->wireCategories($payload, $context);
         $this->drainTranslationsUsing($payload, $context, $context->categoryKeyByRemoteId);
@@ -277,6 +283,63 @@ class Resolver
         }
 
         return array_keys($fields);
+    }
+
+    /**
+     * Country and region arrive either as a literal or as a CURIE naming an
+     * ontology class.
+     *
+     * The index is read once per run.
+     */
+    protected function resolveAddressVocabularyValues(
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): void {
+        $rows = $payload->getDataMap()[AddressEntity::TABLE] ?? [];
+        $translations = $payload->getTranslations()[AddressEntity::TABLE] ?? [];
+        if ($rows === [] && $translations === []) {
+            return;
+        }
+
+        $labels = new VocabularyLabelResolver($this->vocabularyProvider);
+
+        foreach ($rows as $key => $row) {
+            foreach (self::ADDRESS_VOCABULARY_FIELDS as $field) {
+                $value = (string)($row[$field] ?? '');
+                if ($value === '') {
+                    continue;
+                }
+                $payload->setField(
+                    AddressEntity::TABLE,
+                    (string)$key,
+                    $field,
+                    $labels->resolve($value, $context->language, $context->apiKey)
+                );
+            }
+        }
+
+        $languageByUid = array_flip($context->translationLanguages);
+        foreach ($translations as $remoteId => $perLanguage) {
+            foreach ($perLanguage as $sysLanguageUid => $fields) {
+                $language = $languageByUid[$sysLanguageUid] ?? null;
+                if ($language === null) {
+                    continue;
+                }
+                foreach (self::ADDRESS_VOCABULARY_FIELDS as $field) {
+                    $value = (string)($fields[$field] ?? '');
+                    if ($value === '') {
+                        continue;
+                    }
+                    $payload->addTranslationField(
+                        AddressEntity::TABLE,
+                        (string)$remoteId,
+                        $sysLanguageUid,
+                        $field,
+                        $labels->resolve($value, $language, $context->apiKey)
+                    );
+                }
+            }
+        }
     }
 
     /**
