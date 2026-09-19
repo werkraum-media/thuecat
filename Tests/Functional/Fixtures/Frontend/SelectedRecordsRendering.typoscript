@@ -1,7 +1,0 @@
-@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
-
-# @todo openspec change fix-selected-records-flexform-coverage: selectedRecords
-# is plugin-decision data an editor picks in the backend; no integrator sets it
-# in TypoScript. The fixture carries no pi_flexform, so this never exercises
-# flexform parsing.
-plugin.tx_thuecat.settings.selectedRecords = 3,1

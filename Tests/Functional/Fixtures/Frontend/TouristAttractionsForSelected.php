@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
+$selectedListFlexform = static function (string $selectedRecords): string {
+    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3FlexForms>
+    <data>
+        <sheet index="sDEF">
+            <language index="lDEF">
+                <field index="settings.selectedRecords">
+                    <value index="vDEF">' . $selectedRecords . '</value>
+                </field>
+            </language>
+        </sheet>
+    </data>
+</T3FlexForms>';
+};
+
 return [
     'pages' => [
         [
@@ -56,6 +71,7 @@ return [
             'sys_language_uid' => '0',
             'pages' => '11',
             'recursive' => '0',
+            'pi_flexform' => $selectedListFlexform('3,1'),
         ],
     ],
     'tx_thuecat_tourist_attraction' => [

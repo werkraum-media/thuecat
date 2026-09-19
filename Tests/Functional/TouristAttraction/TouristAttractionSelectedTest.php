@@ -14,11 +14,6 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
         return 'TouristAttractionsForSelected.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'SelectedRecordsRendering.typoscript';
-    }
-
     #[Test]
     public function showsOnlyEditorSelectedRecords(): void
     {
@@ -26,7 +21,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        // settings.selectedRecords = 3,1 -> Goethehaus (3) and Stadtmuseum (1)
+        // pi_flexform settings.selectedRecords = 3,1 -> Goethehaus (3) and Stadtmuseum (1)
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringContainsString('Goethehaus Weimar', $body);
         self::assertStringNotContainsString('Domberg Erfurt', $body);
@@ -39,7 +34,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        // settings.selectedRecords = 3,1 -> Goethehaus must appear before Stadtmuseum
+        // pi_flexform settings.selectedRecords = 3,1 -> Goethehaus must appear before Stadtmuseum
         self::assertLessThan(
             mb_strpos($body, 'Stadtmuseum Erfurt'),
             mb_strpos($body, 'Goethehaus Weimar'),

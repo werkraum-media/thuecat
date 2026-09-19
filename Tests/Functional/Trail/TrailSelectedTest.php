@@ -15,11 +15,6 @@ class TrailSelectedTest extends AbstractFrontendTestCase
         return 'TrailsForSelected.php';
     }
 
-    protected function getRenderingTypoScript(): string
-    {
-        return 'TrailSelectedRecordsRendering.typoscript';
-    }
-
     #[Test]
     public function showsOnlyEditorSelectedRecords(): void
     {
@@ -27,7 +22,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        // settings.selectedRecords = 3,1
+        // pi_flexform settings.selectedRecords = 3,1
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
         self::assertStringContainsString('Ilmtal-Radweg', $body);
         self::assertStringNotContainsString('Lutherweg Thüringen', $body);
@@ -40,7 +35,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
 
         $body = (string)$this->executeFrontendSubRequest($request)->getBody();
 
-        // settings.selectedRecords = 3,1
+        // pi_flexform settings.selectedRecords = 3,1
         self::assertLessThan(
             mb_strpos($body, 'Goethe-Erlebnisweg'),
             mb_strpos($body, 'Ilmtal-Radweg'),
