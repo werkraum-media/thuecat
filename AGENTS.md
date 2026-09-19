@@ -4,8 +4,8 @@ Conventions for coding agents working in this package. Instance-wide guidance, i
 commands, lives in the repository root `AGENTS.md`.
 
 This package is a **git submodule** and supports **TYPO3 v13.4 and v14** (`^13.4 || 14.*`); CI
-tests both. A v13 checkout for reading core source is at `/srv/typo3/v13`, a v14 one at
-`/srv/typo3/v14` — both carry their own `AGENTS.md`.
+tests both. Core source for either version is worth reading directly when behaviour differs
+between them; where a checkout lives is a local matter and not recorded here.
 
 ## Coding style
 

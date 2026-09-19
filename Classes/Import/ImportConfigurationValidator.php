@@ -19,6 +19,7 @@ use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
+use WerkraumMedia\ThueCat\Service\SitePageIds;
 
 // Pre-flight configuration checks, run once before the import fetches anything
 // (alongside the file-folder write probe) so a misconfiguration aborts the run

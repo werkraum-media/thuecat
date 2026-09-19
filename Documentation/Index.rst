@@ -19,6 +19,7 @@ Table of Contents
    Installation
    Configuration
    Integration
+   BackendRelationScoping
    FrontendOutput/Index
    ContentElementExample
    Changelog

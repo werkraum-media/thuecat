@@ -29,16 +29,7 @@ Allows to create new import configurations.
 
 Allows to inspect:
 
-* Current existing organisations and their towns and tourist information
-
-* Existing import configuration
-
 * past imports and possible errors, as well as number of affected records.
-
-.. figure:: /Images/BE-Module-Overview.png
-   :align: center
-
-   Figure 1-1: Overview of currently available configurations and Organisations.
 
 .. figure:: /Images/BE-Module-Imports.png
    :align: center
@@ -48,6 +39,5 @@ Allows to inspect:
 Frontend
 ========
 
-A dedicated content element is provided to display tourist attraction.
-
-A dedicated Page Type is provided to reference tourist attraction.
+The extension offers no frontend plugins, only registrations for extbase actions to deliver the data.
+How to make use of this is decribed in :ref:`content-element-example`.

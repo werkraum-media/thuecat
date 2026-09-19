@@ -1,6 +1,16 @@
 5.0.0
 =====
 
+Important
+---------
+
+* Backend relation fields offer only records of the edited record's site, and each record
+  once rather than once per language. Both the dropdown and the suggest wizard are bounded,
+  content element fields included. The wizard is bounded through a global
+  :typoscript:`TCEFORM.suggest.default.addWhere`, which disables the per-field
+  :php:`foreign_table_where` fallback for every suggest field in the installation.
+  See :ref:`backend-relation-scoping`.
+
 Breaking
 --------
 

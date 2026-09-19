@@ -1,0 +1,16 @@
+# Bounds the suggest wizard to the pages of the record's site, matching the
+# clause the TCA listener writes into every scoped relation field's
+# foreign_table_where. Both surfaces read ###PAGE_TSCONFIG_IDLIST###, whose
+# value SiteScopedRelationsPageTsConfigListener emits per field.
+#
+# The column is unqualified here while the listener's clause names the foreign
+# table: the wizard queries one table at a time and this block is shared by
+# every suggest field, whereas the dropdown's query joins and needs the
+# qualifier. Same condition, each written for the query it lands in.
+#
+# TRAP: SuggestWizardController uses a field's own foreign_table_where only
+# while TSconfig sets no addWhere. This block therefore disables that fallback
+# for every suggest field in the installation, including tables this extension
+# does not own — hence the language condition folded in below, which the three
+# thuecat_ces flexform fields would otherwise lose.
+TCEFORM.suggest.default.addWhere = AND {#pid} IN (###PAGE_TSCONFIG_IDLIST###) AND {#sys_language_uid} IN (0, -1)

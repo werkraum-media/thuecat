@@ -33,6 +33,7 @@ use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
+use WerkraumMedia\ThueCat\Service\SitePageIds;
 
 class Importer
 {

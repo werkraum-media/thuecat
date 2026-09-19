@@ -22,7 +22,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\EditorFilter;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\SitePageIds;
 use WerkraumMedia\ThueCat\Service\FilterField\FilterFieldDefinition;
 use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\FilterOptionProvider;
 

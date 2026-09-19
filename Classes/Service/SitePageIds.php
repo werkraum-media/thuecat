@@ -11,7 +11,7 @@ declare(strict_types=1);
  * of the License, or (at your option) any later version.
  */
 
-namespace WerkraumMedia\ThueCat\Import;
+namespace WerkraumMedia\ThueCat\Service;
 
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -81,6 +81,11 @@ class SitePageIds
         // Level by level, so the query count follows tree depth rather than
         // page count. Exits when a level adds nothing new; ids already seen
         // are never requeued, so a page pointing at an ancestor cannot loop.
+        //
+        // @todo QueryBuilder::typo3_withRecursive() would do this in one query,
+        //       on v13 and v14 and on every platform we run. It is `@internal`
+        //       and may change without notice, so it stays unused until core
+        //       settles it; this method is the intended first adopter.
         while (true) {
             $children = $this->childPageIds($current);
             $new = array_values(array_diff($children, $pageIds));
