@@ -25,3 +25,10 @@ parameters:
       identifier: argument.type
       path: 'Classes/Import/Http/ImportClientFactory.php'
       reportUnmatched: false
+    # FlexFormTools::parseDataStructureByIdentifier() only gained its $schema
+    # parameter in v14; passing it under v13 is a harmless extra argument.
+    -
+      message: '#^Method TYPO3\\CMS\\Core\\Configuration\\FlexForm\\FlexFormTools\:\:parseDataStructureByIdentifier\(\) invoked with 2 parameters, 1 required\.$#'
+      identifier: arguments.count
+      path: 'Classes/Typo3/EventListener/SiteScopedRelationsPageTsConfigListener.php'
+      reportUnmatched: false
