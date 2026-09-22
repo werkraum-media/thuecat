@@ -40,6 +40,27 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheEventsHostedAtTheAttraction(): void
+    {
+        $request = $this->generateRequestWithCHash('21');
+
+        $events = $this->renderedSection($request, 'relation', 'hostsEvents');
+
+        self::assertStringContainsString('Lange Nacht der Museen', $events);
+        self::assertStringContainsString('29.11.2026', $events);
+    }
+
+    #[Test]
+    public function showsNoEventSectionWhenTheAttractionHostsNone(): void
+    {
+        $body = (string)$this->executeFrontendSubRequest(
+            $this->generateRequestWithCHash('24')
+        )->getBody();
+
+        self::assertStringNotContainsString('data-relation="hostsEvents"', $body);
+    }
+
+    #[Test]
     public function showsAttractionTitle(): void
     {
         $request = $this->generateRequestWithCHash('21');

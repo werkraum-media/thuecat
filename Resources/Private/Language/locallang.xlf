@@ -104,6 +104,9 @@
             <trans-unit id="module.imports.summary.unrelatableReferences" xml:space="preserve">
                 <source>References without a matching relation</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.eventPlaceMatches" xml:space="preserve">
+                <source>Event place matches</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.matchedTypes" xml:space="preserve">
                 <source>Matched types</source>
             </trans-unit>
@@ -491,6 +494,10 @@
 
             <trans-unit id="content.backToList" xml:space="preserve">
                 <source>Back to list</source>
+            </trans-unit>
+
+            <trans-unit id="content.hostsEvents" xml:space="preserve">
+                <source>Events at this location</source>
             </trans-unit>
 
             <trans-unit id="content.search.submit" xml:space="preserve">

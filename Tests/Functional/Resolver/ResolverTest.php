@@ -41,6 +41,8 @@ final class ResolverTest extends AbstractImportTestCase
 
     private const ORG_REMOTE_ID = 'https://thuecat.org/resources/018132452787-ngbe';
 
+    private const ADDRESS_REMOTE_ID = self::ORG_REMOTE_ID . '::addr::0';
+
     #[Test]
     public function freshOrganisationGetsNewPlaceholderKey(): void
     {
@@ -51,7 +53,7 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        self::assertSame(['tx_thuecat_organisation', 'tx_thuecat_address'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_organisation']);
         self::assertCount(1, $keys);
@@ -103,9 +105,8 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        // Refreshed organisation merges in under its existing uid=7.
         self::assertSame(
-            ['tx_thuecat_town', 'tx_thuecat_organisation'],
+            ['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'],
             array_keys($data)
         );
 
@@ -138,7 +139,7 @@ final class ResolverTest extends AbstractImportTestCase
 
         $data = $payload->getDataMap();
         self::assertSame(
-            ['tx_thuecat_town', 'tx_thuecat_organisation'],
+            ['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'],
             array_keys($data)
         );
 
@@ -971,6 +972,74 @@ final class ResolverTest extends AbstractImportTestCase
     /**
      * @param array<string, int> $translationLanguages
      */
+    /**
+     * An inline child's translation has nowhere to attach until its parent
+     * exists, so the bucket entry waits for a later round rather than being
+     * staged against a placeholder.
+     */
+    #[Test]
+    public function addressTranslationStaysPendingWhileOrganisationIsStillNew(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BasicPages.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json', ['en' => 1]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
+        );
+
+        self::assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
+        self::assertArrayHasKey(
+            self::ADDRESS_REMOTE_ID,
+            $payload->getTranslations()['tx_thuecat_address'] ?? []
+        );
+    }
+
+    /**
+     * The untagged CURIE country and region read in every language pass, so
+     * the parser offers an English address for an organisation that has no
+     * English row. Creating it would leave a translated child under an
+     * untranslated parent.
+     */
+    #[Test]
+    public function addressGainsNoTranslationWhileOrganisationHasNone(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingUntranslatedOrganisationWithAddress.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json', ['en' => 1]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
+        );
+
+        self::assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
+        self::assertSame([], $payload->getTranslations());
+    }
+
+    /**
+     * With the parent translated, the child's bucket entry becomes a real
+     * translation row.
+     */
+    #[Test]
+    public function addressGainsTranslationWhenOrganisationHasOne(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ExistingTranslatedOrganisationWithAddress.php');
+
+        $payload = $this->parseFixture('018132452787-ngbe.json', ['en' => 1]);
+
+        $this->get(Resolver::class)->resolve(
+            $payload,
+            new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
+        );
+
+        self::assertSame(
+            [['localize', 1]],
+            $payload->getCmdMap()['tx_thuecat_address']['1'] ?? []
+        );
+    }
+
     /**
      * Outer datamap key of the row carrying $remoteId, or null.
      *

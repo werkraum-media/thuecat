@@ -38,5 +38,14 @@ return [
             'insertion' => '1',
             'errors' => '[]',
         ],
+        2 => [
+            'uid' => '3',
+            'pid' => '0',
+            'import_log' => '1',
+            'record_uid' => '1',
+            'table_name' => 'tx_thuecat_address',
+            'insertion' => '1',
+            'errors' => '[]',
+        ],
     ],
 ];

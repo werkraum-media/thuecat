@@ -1,0 +1,83 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_organizer-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Veranstaltung mit Veranstalter"
+   },
+   "schema:organizer": {
+    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e5334609-b13",
+    "@type": [
+     "schema:Thing",
+     "schema:Place",
+     "schema:Organization"
+    ],
+    "schema:name": {
+     "@language": "de",
+     "@value": "Erfurt Tourismus und Marketing GmbH"
+    },
+    "schema:address": {
+     "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e5334609-b14",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99084"
+     },
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Benediktsplatz 1"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Erfurt"
+     },
+     "schema:telephone": {
+      "@language": "de",
+      "@value": "+49 361 66 400"
+     },
+     "schema:email": {
+      "@language": "de",
+      "@value": "info@erfurt-tourismus.de"
+     }
+    },
+    "schema:url": {
+     "@type": "schema:URL",
+     "@value": "http://www.erfurt-tourismus.de/"
+    }
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e5334609-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-11-29T18:00:00+01:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-11-29"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   }
+  }
+ ]
+}

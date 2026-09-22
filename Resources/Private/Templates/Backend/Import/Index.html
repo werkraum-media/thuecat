@@ -131,6 +131,17 @@
                     </details>
                 </f:if>
 
+                <f:if condition="{import.eventPlaceMatches}">
+                    <details>
+                        <summary>{f:translate(id: 'module.imports.summary.eventPlaceMatches')} [{import.eventPlaceMatches -> f:count()}]</summary>
+                        <ul>
+                            <f:for each="{import.eventPlaceMatches}" as="match">
+                                <li>{match}</li>
+                            </f:for>
+                        </ul>
+                    </details>
+                </f:if>
+
                 <f:if condition="{import.unrelatableReferences}">
                     <details>
                         <summary>{f:translate(id: 'module.imports.summary.unrelatableReferences')} [{import.unrelatableReferences -> f:count()}]</summary>

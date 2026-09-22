@@ -283,6 +283,16 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
+            'hosts_events' => [
+                'label' => $languagePath . '.hosts_events',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_events_domain_model_event',
+                    'readOnly' => true,
+                ],
+            ],
             'url' => [
                 'label' => $languagePath . '.url',
                 'l10n_mode' => 'exclude',
@@ -447,6 +457,7 @@ return (static function (string $extensionKey, string $tableName) {
                 remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
                 parking_facility_near_by, contained_in_organisation, contained_in_attraction,
                 contained_in_tourist_information, contained_in_parking_facility, contained_in_trail,
+                --div--;' . $languagePath . '.tab.events, hosts_events,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords,
                 --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
             ],

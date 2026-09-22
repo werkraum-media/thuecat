@@ -18,6 +18,18 @@
             <trans-unit id="tx_thuecat_organisation.tstamp" xml:space="preserve">
                 <source>Last imported</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.address_inline" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.tab.events" xml:space="preserve">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.hosts_events" xml:space="preserve">
+                <source>Hosts events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_organisation.manages_event" xml:space="preserve">
+                <source>Manages events</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_organisation.div.manages" xml:space="preserve">
                 <source>Manages</source>
             </trans-unit>
@@ -51,6 +63,15 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.address_inline" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.tab.events" xml:space="preserve">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.hosts_events" xml:space="preserve">
+                <source>Hosts events</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.town" xml:space="preserve">
                 <source>Town</source>
@@ -89,6 +110,15 @@
             <trans-unit id="tx_thuecat_town.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_town.address_inline" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.tab.events" xml:space="preserve">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.hosts_events" xml:space="preserve">
+                <source>Hosts events</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_town.tourist_information" xml:space="preserve">
                 <source>Tourist Information</source>
             </trans-unit>
@@ -110,6 +140,12 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.tab.editorial_additions" xml:space="preserve">
                 <source>Editorial Additions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.tab.events" xml:space="preserve">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.hosts_events" xml:space="preserve">
+                <source>Hosts events</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.title" xml:space="preserve">
                 <source>Title</source>
@@ -692,6 +728,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryUnmatched" xml:space="preserve">
                 <source>Category Not Matched</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.eventPlaceMatch" xml:space="preserve">
+                <source>Event Place Match</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.kind" xml:space="preserve">
                 <source>Field</source>
             </trans-unit>
@@ -777,6 +816,12 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_address.city" xml:space="preserve">
                 <source>City</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.region" xml:space="preserve">
+                <source>Region</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_address.country" xml:space="preserve">
+                <source>Country</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_address.email" xml:space="preserve">
                 <source>Email</source>

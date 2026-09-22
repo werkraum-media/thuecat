@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\Events\Domain\Model\Event;
 
 class TouristAttraction extends Place
 {
@@ -75,6 +76,11 @@ class TouristAttraction extends Place
      */
     protected ObjectStorage $containedInParkingFacility;
 
+    /**
+     * @var ObjectStorage<Event>
+     */
+    protected ObjectStorage $hostsEvents;
+
     protected string $startOfConstruction = '';
 
     protected string $museumService = '';
@@ -110,6 +116,7 @@ class TouristAttraction extends Place
         $this->containedInAttraction = new ObjectStorage();
         $this->containedInTouristInformation = new ObjectStorage();
         $this->containedInParkingFacility = new ObjectStorage();
+        $this->hostsEvents = new ObjectStorage();
     }
 
     /**
@@ -139,6 +146,14 @@ class TouristAttraction extends Place
     public function getTowns(): ObjectStorage
     {
         return $this->towns;
+    }
+
+    /**
+     * @return ObjectStorage<Event>
+     */
+    public function getHostsEvents(): ObjectStorage
+    {
+        return $this->hostsEvents;
     }
 
     /**

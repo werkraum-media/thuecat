@@ -83,6 +83,36 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'address_inline' => [
+                'label' => $languagePath . '.address_inline',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_address',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'appearance' => [
+                        'enabledControls' => [
+                            'new' => false,
+                            'delete' => false,
+                        ],
+                        'collapseAll' => true,
+                        'expandSingle' => true,
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
+                ],
+            ],
+            'hosts_events' => [
+                'label' => $languagePath . '.hosts_events',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_events_domain_model_event',
+                    'readOnly' => true,
+                ],
+            ],
             'town' => [
                 'label' => $languagePath . '.town',
                 'config' => [
@@ -158,7 +188,9 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail',
+                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, address_inline, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail'
+                . ',--div--;' . $languagePath . '.tab.events'
+                . ',hosts_events',
             ],
         ],
     ];

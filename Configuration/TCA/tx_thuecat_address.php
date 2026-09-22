@@ -95,6 +95,18 @@ return (static function (string $tableName) {
                     'type' => 'input',
                 ],
             ],
+            'region' => [
+                'label' => $languagePath . '.region',
+                'config' => [
+                    'type' => 'input',
+                ],
+            ],
+            'country' => [
+                'label' => $languagePath . '.country',
+                'config' => [
+                    'type' => 'input',
+                ],
+            ],
             'email' => [
                 'label' => $languagePath . '.email',
                 'config' => [
@@ -141,7 +153,7 @@ return (static function (string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'street, zip, city, email, phone, fax, latitude, longitude, remote_id',
+                'showitem' => 'street, zip, city, region, country, email, phone, fax, latitude, longitude, remote_id',
             ],
         ],
     ];

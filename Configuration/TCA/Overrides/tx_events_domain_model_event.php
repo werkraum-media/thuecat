@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-// Extend ext:events' Event table with the remote_id column the ThueCat importer
-// uses for upsert by JSON-LD @id. Coexists with ext:events' native global_id —
-// they index different things (URI vs sha256 of address parts on Location).
 defined('TYPO3') || die();
 
 // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)

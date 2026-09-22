@@ -52,6 +52,7 @@ class Importer
         protected readonly ImportSettings $settings,
         protected readonly CategoryAnchorResolver $anchorResolver,
         protected readonly SitePageIds $sitePageIds,
+        protected readonly EventPlaceMatcher $eventPlaceMatcher,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -305,6 +306,20 @@ class Importer
             $resolverContext->promoteNewKeys($passSubst);
             $this->resolver->resolve($accumulatedPayload, $resolverContext);
             $iterations++;
+        }
+
+        // Only now do the events have uids the places can point at. Staged as
+        // ordinary update rows, so a final pass writes them.
+        $this->eventPlaceMatcher->flush($accumulatedPayload, $resolverContext);
+        if ($accumulatedPayload->getDataMap() !== []) {
+            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->enableLogging = false;
+            $dataHandler->start($accumulatedPayload->getDataMap(), []);
+            $dataHandler->process_datamap();
+            /** @var list<string> $matchErrorLog */
+            $matchErrorLog = $dataHandler->errorLog;
+            $this->importLogger->recordDataHandlerErrors($matchErrorLog, $iterations);
+            $accumulatedPayload->clearDataMap();
         }
 
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));

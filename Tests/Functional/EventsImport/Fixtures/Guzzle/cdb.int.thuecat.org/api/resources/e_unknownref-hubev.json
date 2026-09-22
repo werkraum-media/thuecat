@@ -1,0 +1,43 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_unknownref-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Veranstaltung an einem unbekannten Ort"
+   },
+   "schema:location": {
+    "@id": "https://thuecat.org/resources/900000000999-nope"
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-unknownref-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-10-02T10:00:00+02:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-10-02"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   }
+  }
+ ]
+}

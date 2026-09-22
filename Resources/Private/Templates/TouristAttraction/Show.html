@@ -94,6 +94,26 @@
             </section>
         </f:if>
 
+        <f:if condition="{attraction.hostsEvents}">
+            <section data-relation="hostsEvents">
+                <h3><f:translate key="content.hostsEvents" extensionName="thuecat" /></h3>
+                <ul>
+                    <f:for each="{attraction.hostsEvents}" as="event">
+                        <li class="event">
+                            <span class="title">{event.title -> f:format.htmlspecialchars()}</span>
+                            <f:for each="{event.dates}" as="date" iteration="dateIteration">
+                                <f:if condition="{dateIteration.isFirst}">
+                                    <time datetime="{date.start -> f:format.date(format: 'c')}">
+                                        <f:format.date format="d.m.Y">{date.start}</f:format.date>
+                                    </time>
+                                </f:if>
+                            </f:for>
+                        </li>
+                    </f:for>
+                </ul>
+            </section>
+        </f:if>
+
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>
     </f:then>
     <f:else>

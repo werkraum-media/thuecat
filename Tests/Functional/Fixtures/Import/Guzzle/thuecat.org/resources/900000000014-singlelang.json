@@ -1,0 +1,52 @@
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+    "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+  },
+  "@graph": [
+    {
+      "@id": "https://thuecat.org/resources/900000000014-singlelang",
+      "@type": [
+        "schema:Organization",
+        "schema:Thing",
+        "ttgds:Organization"
+      ],
+      "schema:name": {
+        "@language": "de",
+        "@value": "Nur deutschsprachige Organisation"
+      },
+      "schema:description": {
+        "@language": "de",
+        "@value": "Alle Felder tragen ausschließlich deutsche Sprachvarianten."
+      },
+      "schema:address": {
+        "@id": "genid-address-0",
+        "@type": [
+          "schema:PostalAddress",
+          "schema:Thing"
+        ],
+        "schema:streetAddress": {
+          "@language": "de",
+          "@value": "Benediktsplatz 1"
+        },
+        "schema:postalCode": {
+          "@language": "de",
+          "@value": "99084"
+        },
+        "schema:addressLocality": {
+          "@language": "de",
+          "@value": "Erfurt"
+        },
+        "schema:addressCountry": {
+          "@language": "de",
+          "@value": "Deutschland"
+        },
+        "schema:addressRegion": {
+          "@language": "de",
+          "@value": "Thüringen"
+        }
+      }
+    }
+  ]
+}

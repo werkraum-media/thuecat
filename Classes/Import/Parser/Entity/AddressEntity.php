@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 // Inline child of a Place entity: one row per schema:address node, one per
@@ -45,6 +46,8 @@ class AddressEntity extends AbstractEntity
     protected string $street = '';
     protected string $zip = '';
     protected string $city = '';
+    protected string $region = '';
+    protected string $country = '';
     protected string $email = '';
     protected string $phone = '';
     protected string $fax = '';
@@ -64,6 +67,8 @@ class AddressEntity extends AbstractEntity
         $this->street = $this->extractValue($node['schema:streetAddress'] ?? null, $language);
         $this->zip = $this->extractValue($node['schema:postalCode'] ?? null, $language);
         $this->city = $this->extractValue($node['schema:addressLocality'] ?? null, $language);
+        $this->region = $this->extractValue($node['schema:addressRegion'] ?? null, $language);
+        $this->country = $this->extractValue($node['schema:addressCountry'] ?? null, $language);
         $this->email = $this->extractValue($node['schema:email'] ?? null, $language);
         $this->phone = $this->extractValue($node['schema:telephone'] ?? null, $language);
         $this->fax = $this->extractValue($node['schema:faxNumber'] ?? null, $language);
@@ -83,14 +88,56 @@ class AddressEntity extends AbstractEntity
             'street' => 'schema:streetAddress',
             'zip' => 'schema:postalCode',
             'city' => 'schema:addressLocality',
+            'region' => 'schema:addressRegion',
+            'country' => 'schema:addressCountry',
             'email' => 'schema:email',
             'phone' => 'schema:telephone',
             'fax' => 'schema:faxNumber',
         ];
 
         foreach ($fields as $field => $jsonldName) {
-            $this->recordTranslation($field, $this->extractValue($node[$jsonldName] ?? null, $language), $sysLanguageUid);
+            $source = $node[$jsonldName] ?? null;
+            $value = $this->extractValue($source, $language);
+            // An untagged literal reads the same in every language, so recording
+            // it would claim a translation the source never delivered. An
+            // untagged CURIE is a reference: the resolver reads its label per
+            // language, so it travels on and only falls back to the bare member
+            // name when the vocabulary cannot answer.
+            if (!$this->carriesLanguage($source, $language) && !$this->isCurie($value)) {
+                continue;
+            }
+
+            $this->recordTranslation($field, $value, $sysLanguageUid);
         }
+    }
+
+    /**
+     * Whether the source states this value is in $language, rather than leaving
+     * it untagged.
+     */
+    protected function carriesLanguage(mixed $value, string $language): bool
+    {
+        if (!is_array($value) || $value === []) {
+            return false;
+        }
+
+        if (!array_is_list($value)) {
+            return ($value['@language'] ?? null) === $language;
+        }
+
+        foreach ($value as $item) {
+            if (is_array($item) && ($item['@language'] ?? null) === $language) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** A namespaced member name the resolver can look a label up for. */
+    protected function isCurie(string $value): bool
+    {
+        return (new CurieExpander())->expand($value) !== null;
     }
 
     /** No-op: manufactured by the parent, never dispatched from a node. */

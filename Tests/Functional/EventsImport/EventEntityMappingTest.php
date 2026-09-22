@@ -12,11 +12,14 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
-// Direct mapping smoke test: decode a Guzzle-fixture JSON-LD payload and feed
-// its single @graph node to EventEntity::parse(). Asserts the entity's flat
-// event row matches the expected shape and that getDates() returns the
-// expanded per-occurrence rows. v1 covers event row + dates only — nested
-// location/organizer rows land in a follow-up.
+/**
+ * Direct mapping smoke test: Asserts the entity's flat
+ * event row matches the expected shape and that getDates() returns the
+ * expanded per-occurrence rows.
+ * This is the pre-Resolver view, so the `location` column still holds the
+ * venue's content hash rather than its uid. The end-to-end result is asserted
+ * by EventLocationImportTest.
+ */
 class EventEntityMappingTest extends AbstractImportTestCase
 {
     protected array $testExtensionsToLoad = [

@@ -30,6 +30,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryMatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoryUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EffectiveSettings;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
@@ -241,6 +242,32 @@ class ImportLog extends Typo3AbstractEntity
         }
 
         return array_values(array_unique($messages));
+    }
+
+    /**
+     * One line per attempt to relate an event to a place, resolved ones first,
+     * so an editor sees what was related before what was not.
+     *
+     * @return list<string>
+     */
+    public function getEventPlaceMatches(): array
+    {
+        $resolved = [];
+        $unresolved = [];
+        foreach ($this->getEntries() as $entry) {
+            if (!$entry instanceof EventPlaceMatch) {
+                continue;
+            }
+
+            $line = $entry->getRemoteId() . ': ' . $entry->getMessage();
+            if ($entry->isResolved()) {
+                $resolved[] = $line;
+                continue;
+            }
+            $unresolved[] = $line;
+        }
+
+        return array_merge($resolved, $unresolved);
     }
 
     protected function categoryTitle(int $uid): string

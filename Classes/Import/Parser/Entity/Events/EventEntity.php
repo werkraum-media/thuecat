@@ -5,34 +5,17 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Import\EventPlaceMatcher;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventDateFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-// Writes into ext:events tables. v1: bare event row plus expanded date rows
-// for both single and recurring schedules. Nested location/organizer rows
-// still pending — they land in a follow-up that emits child entities
-// alongside the parent and wires FKs via the existing transient/Resolver path.
-//
-// `remote_id` is the JSON-LD @id and is the key the ThueCat Resolver uses to
-// look up existing rows for upsert. ext:events tables get a `remote_id` column
-// via TCA override + ext_tables.sql in this extension. ext:events' native
-// `global_id` (sha256 of address parts on Location) is untouched here — that
-// concept belongs to ext:events' own importer and to nested Location rows.
-//
-// Date wiring goes through EventDateFactory, which owns both shapes — a
-// schedule (delegated to ext:events' DatesFactory) and dates on the event node
-// itself — and decides between them. EventScheduleAdapter is still consulted
-// here for the schedule DIAGNOSTICS, which are about the schedule value rather
-// than about the dates built from it.
-//
-// Collaborators are resolved via
-// GeneralUtility::makeInstance rather than constructor injection: the Parser
-// instantiates entities through a ServiceLocator that does not supply
-// arguments, so constructor DI is not available. makeInstance is consistent
-// with how the abstract resolves core singletons elsewhere.
+/**
+ * Entity class for event imports.
+ * Collected via ServiceLocator, so don't use a constructor
+ */
 class EventEntity extends AbstractEventsEntity
 {
     public const TABLE = 'tx_events_domain_model_event';
@@ -52,6 +35,8 @@ class EventEntity extends AbstractEventsEntity
     protected string $details = '';
     protected string $web = '';
     protected string $ticket = '';
+    protected string $location = '';
+    protected string $organizer = '';
 
     /**
      * Per-occurrence Date child entities. Pushed into the payload by the
@@ -61,6 +46,25 @@ class EventEntity extends AbstractEventsEntity
      * @var list<DateEntity>
      */
     protected array $_dates = [];
+
+    /**
+     * The venue behind schema:location, when it arrives as an inline node.
+     */
+    protected ?LocationEntity $_location = null;
+
+    /**
+     * The organizer behind schema:organizer, when it arrives as an inline node.
+     */
+    protected ?OrganizerEntity $_organizer = null;
+
+    /**
+     * The place behind schema:location and schema:organizer, keyed by the
+     * relation field it fills: a remote_id when the node is a bare reference,
+     * otherwise the name and postal code the match rule needs.
+     *
+     * @var array<string, array<string, string>>
+     */
+    protected array $_placeReferences = [];
 
     /**
      * @param array<string, mixed> $node
@@ -83,9 +87,16 @@ class EventEntity extends AbstractEventsEntity
             $node['schema:video'] ?? null,
         );
 
+        $this->_location = $this->buildLocation($node, $language);
+        $this->location = $this->_location?->getGlobalId() ?? '';
+
+        $this->_organizer = $this->buildOrganizer($node, $language);
+        $this->organizer = $this->_organizer?->getGeneratedRemoteId() ?? '';
+
+        $this->recordPlaceReferences($node, $language);
+
         $this->_dates = $this->buildDateRows($node, $parserContext);
-        // Every route to zero dates converges here: no schedule, no usable day,
-        // all excepted, all past, no resolvable event-level date. An event
+        // Every route to zero dates converges here. An event
         // without dates cannot be displayed.
         if ($this->_dates === []) {
             $parserContext->eventsWithoutDates[$this->remote_id] = $this->title;
@@ -123,7 +134,127 @@ class EventEntity extends AbstractEventsEntity
      */
     public function getChildren(): array
     {
-        return $this->_dates;
+        $children = $this->_dates;
+
+        if ($this->_location !== null) {
+            $children[] = $this->_location;
+        }
+
+        if ($this->_organizer !== null) {
+            $children[] = $this->_organizer;
+        }
+
+        return $children;
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    public function getPlaceReferences(): array
+    {
+        return $this->_placeReferences;
+    }
+
+    /**
+     * A bare reference carries no address, so the venue cannot become a row of
+     * its own; it names a place that is imported separately.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function recordPlaceReferences(array $node, string $language): void
+    {
+        $references = [];
+        foreach ([
+            EventPlaceMatcher::FIELD_HOSTS => 'schema:location',
+            EventPlaceMatcher::FIELD_MANAGES => 'schema:organizer',
+        ] as $field => $property) {
+            $single = $this->singleNode($node, $property);
+            if ($single === null) {
+                continue;
+            }
+
+            if ($this->isBareReference($single)) {
+                $id = $single['@id'] ?? null;
+                if (is_string($id) && $id !== '') {
+                    $references[$field] = ['remoteId' => $id];
+                }
+                continue;
+            }
+
+            $address = $single['schema:address'] ?? [];
+            /** @var array<string, mixed> $address JSON-LD nodes are string-keyed. */
+            $address = is_array($address) ? $address : [];
+
+            $name = $this->extractValue($single['schema:name'] ?? null, $language);
+            $postalCode = $this->extractValue($address['schema:postalCode'] ?? null, $language);
+            if ($name === '' || $postalCode === '') {
+                continue;
+            }
+
+            $references[$field] = ['name' => $name, 'postalCode' => $postalCode];
+        }
+
+        $this->_placeReferences = $references;
+    }
+
+    /**
+     * The inline venue behind schema:location.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function buildLocation(array $node, string $language): ?LocationEntity
+    {
+        $locationNode = $this->singleNode($node, 'schema:location');
+        if ($locationNode === null) {
+            return null;
+        }
+
+        $entity = new LocationEntity();
+        $entity->configure($locationNode, $language);
+
+        return $entity->isValid() ? $entity : null;
+    }
+
+    /**
+     * The inline organizer behind schema:organizer.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function buildOrganizer(array $node, string $language): ?OrganizerEntity
+    {
+        $organizerNode = $this->singleNode($node, 'schema:organizer');
+        if ($organizerNode === null) {
+            return null;
+        }
+
+        $entity = new OrganizerEntity();
+        $entity->configure($organizerNode, $language);
+
+        return $entity->isValid() ? $entity : null;
+    }
+
+    /**
+     * Both relations are single-valued; where a list arrives the first node
+     * wins.
+     *
+     * @param array<string, mixed> $node
+     *
+     * @return array<string, mixed>|null
+     */
+    protected function singleNode(array $node, string $property): ?array
+    {
+        $value = $node[$property] ?? null;
+        if (!is_array($value) || $value === []) {
+            return null;
+        }
+
+        $single = array_is_list($value) ? ($value[0] ?? null) : $value;
+        if (!is_array($single) || $single === []) {
+            return null;
+        }
+
+        /** @var array<string, mixed> $single JSON-LD nodes are string-keyed. */
+        return $single;
     }
 
     /**

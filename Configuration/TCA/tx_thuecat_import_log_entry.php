@@ -126,6 +126,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.categoryUnmatched',
                             'value' => 'categoryUnmatched',
                         ],
+                        [
+                            'label' => $languagePath . '.type.eventPlaceMatch',
+                            'value' => 'eventPlaceMatch',
+                        ],
                     ],
                 ],
             ],
@@ -293,6 +297,9 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'categoriesFieldMissing' => [
                 'showitem' => '--palette--;;always, message, context',
+            ],
+            'eventPlaceMatch' => [
+                'showitem' => '--palette--;;always, kind, table_name, record_uid, message, context',
             ],
         ],
     ];

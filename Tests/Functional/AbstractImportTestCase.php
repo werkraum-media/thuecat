@@ -27,9 +27,12 @@ use Codappix\Typo3PhpDatasets\TestingFramework;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
@@ -424,5 +427,52 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
         self::assertIsArray($row, 'No record in ' . $table . ' for ' . $remoteId);
 
         return $row;
+    }
+
+    /**
+     * Translations of one default-language row, keyed by sys_language_uid.
+     * A language with no row is absent rather than empty, so a test can assert
+     * that none was created.
+     *
+     * Field names come from the schema: tables differ on l18n_parent vs
+     * l10n_parent, and naming the wrong one silently matches nothing.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function fetchTranslationsByParent(string $table, int $parentUid): array
+    {
+        $capability = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getCapability(TcaSchemaCapability::Language)
+        ;
+        $parentField = $capability->getTranslationOriginPointerField()->getName();
+        $languageField = $capability->getLanguageField()->getName();
+
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $rows = $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    $parentField,
+                    $queryBuilder->createNamedParameter($parentUid, Connection::PARAM_INT)
+                )
+            )
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $byLanguage = [];
+        foreach ($rows as $row) {
+            $language = $row[$languageField] ?? null;
+            if (!is_numeric($language)) {
+                continue;
+            }
+            $byLanguage[(int)$language] = $row;
+        }
+
+        return $byLanguage;
     }
 }

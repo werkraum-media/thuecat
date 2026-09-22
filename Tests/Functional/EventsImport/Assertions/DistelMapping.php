@@ -21,6 +21,7 @@ return [
         'title' => 'Distel-Comedy. Große Stand-up-Comedy-Show',
         'details' => '<p>Am 28. Juni findet ein CSD-Special statt.</p>',
         'ticket' => 'https://www.eventbrite.de/e/distel-comedy-tickets-1111060414609',
+        'location' => '09eae120e7ceebef53f50619e5b4a2c17b47088ac03997f9021003dd7e9b1b2b',
     ],
     'dates' => [
         ['start' => '2026-02-22T19:00:00+01:00', 'end' => '2026-02-22T21:00:00+01:00', 'canceled' => 'no'],

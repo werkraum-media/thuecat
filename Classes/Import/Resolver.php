@@ -34,15 +34,19 @@ use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\LocationEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\OrganizerEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\VocabularyLabelResolver;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailConditionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailWayTypeEntity;
@@ -161,6 +165,29 @@ class Resolver
         ],
     ];
 
+    /** Address columns whose value may arrive as a CURIE instead of a literal. */
+    protected const ADDRESS_VOCABULARY_FIELDS = ['country', 'region'];
+
+    /**
+     * Tables whose rows are identified by a column other than `remote_id`.
+     */
+    protected const IDENTITY_COLUMN = [
+        LocationEntity::TABLE => 'global_id',
+    ];
+
+    protected const PARENT_RELATION_FIELD = [
+        LocationEntity::TABLE => [
+            'tx_events_domain_model_event' => 'location',
+        ],
+        OrganizerEntity::TABLE => [
+            'tx_events_domain_model_event' => 'organizer',
+        ],
+    ];
+
+    protected const IDENTITY_REQUIRED_TABLES = [
+        OrganizerEntity::TABLE,
+    ];
+
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly FetchData $fetchData,
@@ -177,6 +204,7 @@ class Resolver
         protected readonly TitleResolver $titleResolver,
         protected readonly ParentStrategies $parentStrategies,
         protected readonly VocabularyProvider $vocabularyProvider,
+        protected readonly EventPlaceMatcher $eventPlaceMatcher,
     ) {
     }
 
@@ -190,9 +218,12 @@ class Resolver
     public function resolve(DataHandlerPayload $payload, ResolverContext $context): DataHandlerPayload
     {
         $this->rekeyRowsAndInjectPid($payload, $context, 0);
+        // Before the translations are drained into rows and removed.
+        $this->resolveAddressVocabularyValues($payload, $context);
         $this->drainTransients($payload, $context, $context->remoteIdToKey);
         $this->wireCategories($payload, $context);
         $this->drainTranslationsUsing($payload, $context, $context->categoryKeyByRemoteId);
+        $this->collectPlaceMatches($payload, $context);
         $this->amendMatchReports($payload, $context);
         $this->preserveEditorRelations($payload, $this->categoryFieldsWritten($payload));
         $this->drainTranslationsAgainstExistingRows($payload, $context);
@@ -277,6 +308,191 @@ class Resolver
         }
 
         return array_keys($fields);
+    }
+
+    /**
+     * Resolve each referenced place against the stored records of this site.
+     * The relation itself is written by the matcher's flush, once the persist
+     * loop has turned the events' NEW keys into uids.
+     */
+    protected function collectPlaceMatches(DataHandlerPayload $payload, ResolverContext $context): void
+    {
+        foreach ($payload->getPlaceReferences() as $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $eventRemoteId => $references) {
+                foreach ($references as $field => $reference) {
+                    $claim = $eventRemoteId . '|' . $field;
+                    if (isset($context->claimedPlaceMatch[$claim])) {
+                        continue;
+                    }
+                    $context->claimedPlaceMatch[$claim] = true;
+
+                    $place = $this->matchPlaceReference(
+                        $eventRemoteId,
+                        $field,
+                        $reference,
+                        $context
+                    );
+
+                    if ($place === null) {
+                        continue;
+                    }
+
+                    $context->collectedPlaceMatches[] = new CollectedPlaceMatch(
+                        $eventRemoteId,
+                        $place['table'],
+                        $place['uid'],
+                        $field
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * The place one reference names, recording the attempt with its outcome so
+     * an editor can see what was related and what was not.
+     *
+     * @param array<string, string> $reference
+     *
+     * @return array{table: string, uid: int}|null
+     */
+    protected function matchPlaceReference(
+        string $eventRemoteId,
+        string $field,
+        array $reference,
+        ResolverContext $context
+    ): ?array {
+        $remoteId = $reference['remoteId'] ?? '';
+
+        if ($remoteId !== '') {
+            $place = $this->eventPlaceMatcher->findPlaceByRemoteId(
+                $remoteId,
+                $context->sitePageIds,
+                $field
+            );
+
+            $this->importLogger->recordEventPlaceMatch(
+                $eventRemoteId,
+                $field,
+                $place === null
+                    ? EventPlaceMatch::OUTCOME_UNRESOLVED_REFERENCE
+                    : EventPlaceMatch::OUTCOME_BY_REFERENCE,
+                $place['table'] ?? '',
+                $place['uid'] ?? 0,
+                ['remoteId' => $remoteId]
+            );
+
+            return $place;
+        }
+
+        $name = $reference['name'] ?? '';
+        $postalCode = $reference['postalCode'] ?? '';
+        $candidates = $this->eventPlaceMatcher->findCandidatesByNameAndPostalCode(
+            $name,
+            $postalCode,
+            $context->sitePageIds,
+            $field
+        );
+
+        $attempt = ['name' => $name, 'postalCode' => $postalCode];
+
+        if (count($candidates) === 1) {
+            $this->importLogger->recordEventPlaceMatch(
+                $eventRemoteId,
+                $field,
+                EventPlaceMatch::OUTCOME_BY_NAME_AND_POSTAL_CODE,
+                $candidates[0]['table'],
+                $candidates[0]['uid'],
+                $attempt
+            );
+
+            return $candidates[0];
+        }
+
+        if ($candidates === []) {
+            $this->importLogger->recordEventPlaceMatch(
+                $eventRemoteId,
+                $field,
+                EventPlaceMatch::OUTCOME_UNMATCHED,
+                '',
+                0,
+                $attempt
+            );
+
+            return null;
+        }
+
+        // Every candidate is named: which ones collided is the thing to fix.
+        $this->importLogger->recordEventPlaceMatch(
+            $eventRemoteId,
+            $field,
+            EventPlaceMatch::OUTCOME_AMBIGUOUS,
+            '',
+            0,
+            $attempt + ['candidates' => array_map(
+                static fn (array $candidate): string => $candidate['table'] . ':' . $candidate['uid'],
+                $candidates
+            )]
+        );
+
+        return null;
+    }
+
+    /**
+     * Country and region arrive either as a literal or as a CURIE naming an
+     * ontology class.
+     *
+     * The index is read once per run.
+     */
+    protected function resolveAddressVocabularyValues(
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): void {
+        $rows = $payload->getDataMap()[AddressEntity::TABLE] ?? [];
+        $translations = $payload->getTranslations()[AddressEntity::TABLE] ?? [];
+        if ($rows === [] && $translations === []) {
+            return;
+        }
+
+        $labels = new VocabularyLabelResolver($this->vocabularyProvider);
+
+        foreach ($rows as $key => $row) {
+            foreach (self::ADDRESS_VOCABULARY_FIELDS as $field) {
+                $value = (string)($row[$field] ?? '');
+                if ($value === '') {
+                    continue;
+                }
+                $payload->setField(
+                    AddressEntity::TABLE,
+                    (string)$key,
+                    $field,
+                    $labels->resolve($value, $context->language, $context->apiKey)
+                );
+            }
+        }
+
+        $languageByUid = array_flip($context->translationLanguages);
+        foreach ($translations as $remoteId => $perLanguage) {
+            foreach ($perLanguage as $sysLanguageUid => $fields) {
+                $language = $languageByUid[$sysLanguageUid] ?? null;
+                if ($language === null) {
+                    continue;
+                }
+                foreach (self::ADDRESS_VOCABULARY_FIELDS as $field) {
+                    $value = (string)($fields[$field] ?? '');
+                    if ($value === '') {
+                        continue;
+                    }
+                    $payload->addTranslationField(
+                        AddressEntity::TABLE,
+                        (string)$remoteId,
+                        $sysLanguageUid,
+                        $field,
+                        $labels->resolve($value, $language, $context->apiKey)
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -985,6 +1201,11 @@ class Resolver
                 $existing = $this->findTranslationUidsByParent($table, (int)$ownerKey);
 
                 foreach ($perLanguage as $sysLanguageUid => $fields) {
+                    if ($this->isOrphanedInlineTranslation($context, $table, (string)$remoteId, $sysLanguageUid)) {
+                        $payload->removeTranslation($table, (string)$remoteId, $sysLanguageUid);
+                        continue;
+                    }
+
                     if ($context->isTranslationUpdated($remoteId, $sysLanguageUid)) {
                         // Already staged for this (remote_id, language) earlier, no need to do it again
                         $payload->removeTranslation($table, $remoteId, $sysLanguageUid);
@@ -1012,6 +1233,48 @@ class Resolver
                 }
             }
         }
+    }
+
+    /**
+     * A translation for an inline child whose parent has no row in that
+     * language — neither stored nor staged this run.
+     *
+     * Untagged values are why this arises at all: a CURIE country carries no
+     *
+     * @language, so it reads in every language pass and offers a translation
+     * the source never published.
+     */
+    protected function isOrphanedInlineTranslation(
+        ResolverContext $context,
+        string $childTable,
+        string $childRemoteId,
+        int $sysLanguageUid
+    ): bool {
+        $config = self::INLINE_CHILD_PARENTS[$childTable] ?? null;
+        if ($config === null) {
+            return false;
+        }
+
+        $parentRemoteId = explode($config['separator'], $childRemoteId, 2)[0];
+        if ($parentRemoteId === $childRemoteId) {
+            return false;
+        }
+
+        // Staged this run: the parent's own translation is created or updated
+        // in the same payload, so the child may follow it.
+        if (isset($context->translationStatus[$parentRemoteId][$sysLanguageUid])) {
+            return false;
+        }
+
+        $parentTable = $context->remoteIdToTable[$parentRemoteId] ?? null;
+        $parentKey = $context->remoteIdToKey[$parentRemoteId] ?? null;
+        if ($parentTable === null || $parentKey === null || !ctype_digit($parentKey)) {
+            // No stored parent to judge against; the pending entry waits for a
+            // later round rather than being dropped.
+            return false;
+        }
+
+        return !isset($this->findTranslationUidsByParent($parentTable, (int)$parentKey)[$sysLanguageUid]);
     }
 
     /**
@@ -1077,7 +1340,7 @@ class Resolver
                 if ($existingKey !== null) {
                     $newKey = $existingKey;
                 } else {
-                    $uid = $this->findUidByRemoteId($table, $remoteId, $context->sitePageIds);
+                    $uid = $this->findUidByIdentity($table, $remoteId, $context->sitePageIds);
                     $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
                 }
 
@@ -1094,6 +1357,7 @@ class Resolver
         }
 
         $this->wireInlineChildrenToParents($payload, $context);
+        $this->wireChildrenOntoParentFields($payload, $context);
         $this->importInlineMedia($payload, $context);
     }
 
@@ -1843,6 +2107,38 @@ class Resolver
     }
 
     /**
+     * Write a keyed child's uid onto the field its parent carries it in — the
+     * reverse of wireInlineChildrenToParents, which lists the child on an
+     * inline field of the parent.
+     */
+    protected function wireChildrenOntoParentFields(
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): void {
+        foreach (self::PARENT_RELATION_FIELD as $childTable => $byParentTable) {
+            foreach ($byParentTable as $parentTable => $field) {
+                foreach ($payload->getDataMap()[$parentTable] ?? [] as $parentKey => $parentRow) {
+                    $staged = (string)($parentRow[$field] ?? '');
+                    if ($staged === '' || MathUtility::canBeInterpretedAsInteger($staged)) {
+                        continue;
+                    }
+
+                    $childKey = $context->remoteIdToKey[$staged] ?? '';
+                    $payload->setField($parentTable, (string)$parentKey, $field, $childKey);
+                }
+            }
+
+            if (!isset(self::IDENTITY_COLUMN[$childTable])) {
+                continue;
+            }
+
+            foreach (array_keys($payload->getDataMap()[$childTable] ?? []) as $childKey) {
+                $payload->unsetField($childTable, (string)$childKey, 'remote_id');
+            }
+        }
+    }
+
+    /**
      * Delete stored children the upstream record no longer carries.
      *
      * Judged only for parents whose payload carried children this round: a
@@ -2135,6 +2431,27 @@ class Resolver
     }
 
     /**
+     * Like findUidByRemoteId, but matching whichever column identifies the
+     * table. Most tables are keyed by `remote_id`; IDENTITY_COLUMN names the
+     * exceptions.
+     *
+     * @param list<int> $sitePageIds
+     */
+    protected function findUidByIdentity(string $table, string $identity, array $sitePageIds): int
+    {
+        if ($identity === '' && in_array($table, self::IDENTITY_REQUIRED_TABLES, true)) {
+            return 0;
+        }
+
+        return $this->findUidByColumn(
+            $table,
+            self::IDENTITY_COLUMN[$table] ?? 'remote_id',
+            $identity,
+            $sitePageIds
+        );
+    }
+
+    /**
      * Look up the default-language row for a given remote_id, within the
      * importing site.
      *
@@ -2142,6 +2459,14 @@ class Resolver
      *        no scope is known and the match stays instance-wide.
      */
     protected function findUidByRemoteId(string $table, string $remoteId, array $sitePageIds): int
+    {
+        return $this->findUidByColumn($table, 'remote_id', $remoteId, $sitePageIds);
+    }
+
+    /**
+     * @param list<int> $sitePageIds
+     */
+    protected function findUidByColumn(string $table, string $column, string $value, array $sitePageIds): int
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
@@ -2151,8 +2476,8 @@ class Resolver
         $queryBuilder->select('uid')
             ->from($table)
             ->where($queryBuilder->expr()->eq(
-                'remote_id',
-                $queryBuilder->createNamedParameter($remoteId)
+                $column,
+                $queryBuilder->createNamedParameter($value)
             ))
         ;
 

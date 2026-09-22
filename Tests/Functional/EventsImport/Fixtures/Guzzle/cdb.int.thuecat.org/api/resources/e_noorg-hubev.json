@@ -1,0 +1,40 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_noorg-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Veranstaltung ohne Veranstalter"
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-noorg-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-11-29T18:00:00+01:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-11-29"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   }
+  }
+ ]
+}

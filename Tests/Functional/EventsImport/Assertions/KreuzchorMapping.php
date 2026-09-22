@@ -17,6 +17,8 @@ return [
         'title' => 'Konzert des Dresdner Kreuzchores',
         'details' => '<p>Der Dresdner Kreuzchor ist einer der ältesten und berühmtesten Knabenchöre der Welt.</p>',
         'web' => 'http://www.kirchengemeinde-gotha.de/',
+        'location' => '3485b8186a975185aa95bd3ba139c4616502c6808ed0385e2708b528413a12c1',
+        'organizer' => 'thuecat:organizer:46f6db2968c633395d9cf3c7691033a4bce1ef19c0729539bb08dfa65264803f',
     ],
     'dates' => [
         [

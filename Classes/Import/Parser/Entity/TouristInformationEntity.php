@@ -25,7 +25,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TouristInformationEntity extends AbstractEntity
+class TouristInformationEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_tourist_information';
 
@@ -64,6 +64,8 @@ class TouristInformationEntity extends AbstractEntity
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
         }
+
+        $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
 
         // town (tx_thuecat_town) and managed_by (tx_thuecat_organisation) live
         // on the row but stay empty here — the referenced @id stubs only carry

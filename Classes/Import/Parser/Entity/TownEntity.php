@@ -6,13 +6,17 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TownEntity extends AbstractEntity
+class TownEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_town';
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
 
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->remote_id = $this->getRemoteId($node);
@@ -31,6 +35,8 @@ class TownEntity extends AbstractEntity
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
         }
+
+        $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
 
         $this->recordTransient('managedBy', $node['thuecat:managedBy'] ?? null);
     }

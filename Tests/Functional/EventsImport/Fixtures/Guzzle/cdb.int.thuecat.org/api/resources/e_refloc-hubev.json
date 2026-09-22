@@ -1,0 +1,43 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_refloc-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Veranstaltung im referenzierten Haus"
+   },
+   "schema:location": {
+    "@id": "https://thuecat.org/resources/900000000001-goet"
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-refloc-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-10-01T10:00:00+02:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-10-01"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   }
+  }
+ ]
+}

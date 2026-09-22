@@ -85,6 +85,46 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'address_inline' => [
+                'label' => $languagePath . '.address_inline',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_address',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'appearance' => [
+                        'enabledControls' => [
+                            'new' => false,
+                            'delete' => false,
+                        ],
+                        'collapseAll' => true,
+                        'expandSingle' => true,
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
+                ],
+            ],
+            'hosts_events' => [
+                'label' => $languagePath . '.hosts_events',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_events_domain_model_event',
+                    'readOnly' => true,
+                ],
+            ],
+            'manages_event' => [
+                'label' => $languagePath . '.manages_event',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_events_domain_model_event',
+                    'readOnly' => true,
+                ],
+            ],
             'manages_towns' => [
                 'label' => $languagePath . '.manages_towns',
                 'config' => [
@@ -124,9 +164,11 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, remote_id, tstamp'
+                'showitem' => 'title, description, remote_id, address_inline, tstamp'
                 . ',--div--;' . $languagePath . '.div.manages'
                 . ',manages_towns, manages_tourist_information, manages_tourist_attraction'
+                . ',--div--;' . $languagePath . '.tab.events'
+                . ',hosts_events, manages_event'
                 . ',--div--;LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language'
                 . ',--palette--;;language',
             ],

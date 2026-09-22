@@ -1,0 +1,109 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_orgmatch-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Konzert mit Veranstalter"
+   },
+   "schema:location": {
+    "@id": "genid-e_orgmatch-hubev-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Place"
+    ],
+    "schema:name": {
+     "@language": "de",
+     "@value": "Unbekannter Ort"
+    },
+    "schema:address": {
+     "@id": "genid-e_orgmatch-hubev-b2",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99999"
+     },
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Stéphane-Hessel-Platz 1"
+     },
+     "schema:addressCountry": {
+      "@language": "de",
+      "@value": "Deutschland"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Weimar"
+     }
+    }
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-e_orgmatch-hubev-b3",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-10-03T14:00:00+02:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-10-03"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   },
+   "schema:organizer": {
+    "@id": "genid-e_orgmatch-hubev-org",
+    "@type": [
+     "schema:Thing",
+     "schema:Place",
+     "schema:Organization"
+    ],
+    "schema:name": {
+     "@language": "de",
+     "@value": "Klassik Stiftung Weimar"
+    },
+    "schema:address": {
+     "@id": "genid-e_orgmatch-hubev-orgaddr",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99423"
+     },
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Irgendwo 1"
+     },
+     "schema:addressCountry": {
+      "@language": "de",
+      "@value": "Deutschland"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Weimar"
+     }
+    }
+   }
+  }
+ ]
+}

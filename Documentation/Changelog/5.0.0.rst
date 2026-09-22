@@ -225,6 +225,41 @@ Features
   returned. **After deploying, clear the pages cache once**: entries cached by an earlier version
   carry no record tag and would keep serving stale content until they expire.
 
+* An event's ``schema:location`` and ``schema:organizer`` are imported. Both were dropped
+  entirely, leaving ``location`` and ``organizer`` empty on every ThueCat event. The inline venue
+  and organizer nodes become :sql:`tx_events_domain_model_location` and
+  :sql:`tx_events_domain_model_organizer` rows, identified by the content hash EXT:events already
+  uses, so a venue destination.data imported is reused rather than duplicated.
+
+* ThueCat places carry the events taking place there. Tourist attractions, towns, organisations
+  and tourist informations each gain ``hosts_events``, and organisations a second field
+  ``manages_event`` for the events they organise. An event is related either through a resolvable
+  ThueCat reference or, where the payload carries only an inline address, by matching normalized
+  venue name plus postal code within the importing site.
+
+* Every attempt to relate an event to a place is logged as ``eventPlaceMatch`` at severity
+  ``info``, naming the event, the name and postal code used, the outcome and, where one was found,
+  the place. The outcomes distinguish resolved by reference, resolved by name and postal code,
+  ambiguous, unresolved reference and unmatched. The import log module lists them per run,
+  resolved ones first. Most venues are not places at all, so an unmatched attempt is the expected
+  case and does not colour the run.
+
+* Organisations, towns and tourist informations import their ``schema:address``. All three carry
+  it upstream but none has ever resolved it, so their address tables were empty; they now use the
+  same inline :sql:`tx_thuecat_address` records as the other place types, through a new
+  ``address_inline`` field. Without a stored postal code these tables could not take part in the
+  name-and-postal-code match at all.
+
+* Addresses store ``country`` and ``region``. Upstream sends both as a literal (``Deutschland``,
+  ``Thüringen``) and as a vocabulary reference (``thuecat:Germany``, ``thuecat:Thuringia``); both
+  encodings resolve to the same stored value. Re-run the import to fill the columns on existing
+  addresses.
+
+* A tourist attraction's detail view lists the events hosted there, each with its title and first
+  date. An attraction holding no events renders no event section. This is the only frontend output
+  of the new relations: no other place type renders its events, and neither an event's location nor
+  its organizer is rendered anywhere.
+
 * ``thuecat:Trail`` is imported into its own record type (:sql:`tx_thuecat_trail`), with its
   descriptive texts, route and metrics each in their own column. Way-type segments, current
   conditions and the start and end locations become inline records; seasons a multi-value field.

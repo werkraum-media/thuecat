@@ -28,13 +28,17 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 // Organisation itself has no outgoing relation data to persist.
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class OrganisationEntity extends AbstractEntity
+class OrganisationEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_organisation';
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';
 
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->remote_id = $this->getRemoteId($node);
@@ -55,6 +59,8 @@ class OrganisationEntity extends AbstractEntity
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
         }
+
+        $this->buildAddress($node, $this->remote_id, $language, $translationLanguages);
     }
 
     public function handlesTypes(): array

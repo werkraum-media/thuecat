@@ -101,6 +101,7 @@ return [
             // a place that is another attraction (self-referencing table).
             'contained_in_organisation' => '1',
             'contained_in_attraction' => '23',
+            'hosts_events' => '700',
         ],
         // Extbase overlays a relation to the PARENT record's language, so the
         // translated categories are only reachable through a translated parent.
@@ -301,6 +302,28 @@ return [
             'closes' => '18:00:00',
             'valid_from' => null,
             'valid_through' => null,
+        ],
+    ],
+    // The event the import matched to attraction 21. Attraction 24 hosts none,
+    // so the empty case has a record to render.
+    'tx_events_domain_model_event' => [
+        [
+            'uid' => '700',
+            'pid' => '11',
+            'remote_id' => 'https://int.thuecat.org/resources/e_museumsnacht-hubev',
+            'title' => 'Lange Nacht der Museen',
+            'sys_language_uid' => '0',
+        ],
+    ],
+    'tx_events_domain_model_date' => [
+        [
+            'uid' => '700',
+            'pid' => '11',
+            'event' => '700',
+            // 2026-11-29T18:00:00 Europe/Berlin
+            'start' => 1795971600,
+            'end' => 1795971600,
+            'canceled' => 'no',
         ],
     ],
 ];

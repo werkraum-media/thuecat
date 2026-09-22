@@ -29,6 +29,7 @@ use ReflectionClass;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
@@ -186,6 +187,46 @@ class ImportLogTest extends TestCase
             $subject->getGroupedNotices(),
             'The same class recurs on every record carrying it.'
         );
+    }
+
+    /**
+     * The template renders the listing behind an f:if on this accessor, so an
+     * empty list is what keeps a run without attempts free of one.
+     */
+    #[Test]
+    public function runWithoutMatchAttemptsListsNoMatches(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->typedEntry('categoryMatched', 'info', 'schema:Museum', 'Matched'));
+
+        self::assertSame([], $subject->getEventPlaceMatches());
+    }
+
+    #[Test]
+    public function resolvedMatchesAreListedBeforeUnresolvedOnes(): void
+    {
+        $subject = new ImportLog();
+        $subject->addEntry($this->eventPlaceMatch('event-b', 'Name matches no place.', 0));
+        $subject->addEntry($this->eventPlaceMatch('event-a', 'Related by reference.', 7));
+
+        self::assertSame(
+            [
+                'event-a: Related by reference.',
+                'event-b: Name matches no place.',
+            ],
+            $subject->getEventPlaceMatches()
+        );
+    }
+
+    private function eventPlaceMatch(string $remoteId, string $message, int $recordUid): EventPlaceMatch
+    {
+        $entry = new EventPlaceMatch();
+        $entry->_setProperty('severity', 'info');
+        $entry->_setProperty('remoteId', $remoteId);
+        $entry->_setProperty('message', $message);
+        $entry->_setProperty('recordUid', $recordUid);
+
+        return $entry;
     }
 
     private function typedEntry(

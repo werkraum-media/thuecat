@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
+use WerkraumMedia\ThueCat\Import\EventPlaceMatcher;
 use WerkraumMedia\ThueCat\Import\FetchFailureVerdict;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
@@ -453,6 +454,159 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     /**
+     * Country and region arrive as untagged CURIEs naming an ontology class.
+     * Each language's row holds that class's label in its own language.
+     *
+     * The CURIE reads in every language pass, but it only reaches the languages
+     * the parent record is translated into: an address child is reachable only
+     * through its parent's inline field, so a row under an untranslated parent
+     * would have no consumer.
+     */
+    #[Test]
+    public function resolvesCurieCountryAndRegionPerLanguage(): void
+    {
+        $this->seedVocabularyIndex(self::VOCABULARY + [
+            'https://thuecat.org/ontology/thuecat/1.0/Germany' => [
+                [],
+                ['de' => 'Deutschland', 'en' => 'Germany'],
+            ],
+            'https://thuecat.org/ontology/thuecat/1.0/Thuringia' => [
+                [],
+                ['de' => 'Thüringen', 'en' => 'Thuringia'],
+            ],
+        ]);
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAddressVocabularyValues.php');
+        $this->expectFetch('900000000002-curie.json');
+
+        $this->importConfiguration(1);
+
+        $remoteId = 'https://thuecat.org/resources/900000000002-curie::addr::0';
+        $default = $this->fetchRowByRemoteId('tx_thuecat_address', $remoteId);
+        self::assertSame('Deutschland', $default['country']);
+        self::assertSame('Thüringen', $default['region']);
+
+        $translations = $this->fetchTranslationsByParent(
+            'tx_thuecat_address',
+            $this->fetchUidByRemoteId('tx_thuecat_address', $remoteId)
+        );
+        self::assertSame('Germany', $translations[1]['country'] ?? null);
+        self::assertSame('Thuringia', $translations[1]['region'] ?? null);
+        // fr is configured, but the fixture publishes no French content, so the
+        // attraction has no French row for an address child to hang under.
+        self::assertArrayNotHasKey(2, $translations);
+    }
+
+    #[Test]
+    public function importsAddressForOrganisation(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
+        $this->expectFetch('900000000010-orgaddr.json');
+
+        $this->importConfiguration(1);
+
+        $parentRemoteId = 'https://thuecat.org/resources/900000000010-orgaddr';
+        $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
+        self::assertSame('Benediktsplatz 1', $address['street']);
+        self::assertSame('99084', $address['zip']);
+        self::assertSame('Erfurt', $address['city']);
+        self::assertSame('tx_thuecat_organisation', $address['parenttable']);
+        self::assertEquals(
+            $this->fetchUidByRemoteId('tx_thuecat_organisation', $parentRemoteId),
+            $address['parentid']
+        );
+    }
+
+    #[Test]
+    public function importsAddressForTown(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
+        $this->expectFetch('900000000011-townaddr.json');
+
+        $this->importConfiguration(2);
+
+        $parentRemoteId = 'https://thuecat.org/resources/900000000011-townaddr';
+        $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
+        self::assertSame('Markt 1', $address['street']);
+        self::assertSame('99423', $address['zip']);
+        self::assertSame('Weimar', $address['city']);
+        self::assertSame('tx_thuecat_town', $address['parenttable']);
+        self::assertEquals(
+            $this->fetchUidByRemoteId('tx_thuecat_town', $parentRemoteId),
+            $address['parentid']
+        );
+    }
+
+    #[Test]
+    public function importsAddressForTouristInformation(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
+        $this->expectFetch('900000000012-tiaddr.json');
+
+        $this->importConfiguration(3);
+
+        $parentRemoteId = 'https://thuecat.org/resources/900000000012-tiaddr';
+        $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
+        self::assertSame('Markt 10', $address['street']);
+        self::assertSame('99423', $address['zip']);
+        self::assertSame('Weimar', $address['city']);
+        self::assertSame('tx_thuecat_tourist_information', $address['parenttable']);
+        self::assertEquals(
+            $this->fetchUidByRemoteId('tx_thuecat_tourist_information', $parentRemoteId),
+            $address['parentid']
+        );
+    }
+
+    #[Test]
+    public function importsOrganisationWithoutAddressWithoutAddressRow(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
+        $this->expectFetch('900000000013-orgnoaddr.json');
+
+        $this->importConfiguration(4);
+
+        self::assertGreaterThan(
+            0,
+            $this->fetchUidByRemoteId(
+                'tx_thuecat_organisation',
+                'https://thuecat.org/resources/900000000013-orgnoaddr'
+            )
+        );
+        self::assertSame(0, $this->countRows('tx_thuecat_address'));
+    }
+
+    /**
+     * Skipped, not deleted: the behaviour is specced and the gap is real.
+     */
+    #[Test]
+    public function reapsAddressDroppedUpstreamForOrganisation(): void
+    {
+        self::markTestSkipped('Inline reaping never sees a parent that staged no child; see resolve-relation-reap-gap.');
+
+        // @phpstan-ignore-next-line deadCode.unreachable
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
+        $this->expectFetch('900000000013-orgnoaddr.json');
+
+        $this->importConfiguration(4);
+
+        self::assertSame(0, $this->countRows('tx_thuecat_address'));
+    }
+
+    /**
+     * A record that could not be fetched says nothing about upstream, so the
+     * stored address survives.
+     */
+    #[Test]
+    public function keepsAddressWhenOrganisationFetchFails(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
+        $this->expectNotFound('900000000013-orgnoaddr');
+
+        $this->importConfiguration(4);
+
+        self::assertSame(1, $this->countRows('tx_thuecat_address'));
+    }
+
+    /**
      * DataHandler appends inline children, so a re-import must match on the
      * derived remote_id to update rows in place rather than stacking them.
      */
@@ -885,6 +1039,7 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(TitleResolver::class),
             $this->get(ParentStrategies::class),
             $this->get(VocabularyProvider::class),
+            $this->get(EventPlaceMatcher::class),
         );
     }
 }

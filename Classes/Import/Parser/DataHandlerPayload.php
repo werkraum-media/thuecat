@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser;
 
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 
 class DataHandlerPayload
 {
@@ -84,6 +85,16 @@ class DataHandlerPayload
     protected array $inlineMedia = [];
 
     /**
+     * The place an event happens at, keyed table => remote_id => relation
+     * field: either a remote_id to resolve or the name and postal code to
+     * match on. The place is imported separately, so this is resolved against
+     * stored rows rather than against the payload.
+     *
+     * @var array<string, array<string, array<string, array<string, string>>>>
+     */
+    protected array $placeReferences = [];
+
+    /**
      * Staged DataHandler cmdmap entries. Outer key is the table; second key
      * is the target uid (as string, since cmdmap targets are existing rows);
      * inner is a list of `[$command, $value]` tuples. The Importer fans these
@@ -140,6 +151,13 @@ class DataHandlerPayload
         $entityInlineMedia = $entity->getInlineMedia();
         if ($entityInlineMedia !== []) {
             $this->inlineMedia[$table][$remoteId] = $entityInlineMedia;
+        }
+
+        if ($entity instanceof EventEntity) {
+            $entityPlaceReferences = $entity->getPlaceReferences();
+            if ($entityPlaceReferences !== []) {
+                $this->placeReferences[$table][$remoteId] = $entityPlaceReferences;
+            }
         }
 
         foreach ($entity->getMatchReports() as $matchReport) {
@@ -237,6 +255,16 @@ class DataHandlerPayload
         }
 
         $this->dataMap[$table][$key][$field] = $value;
+    }
+
+    /**
+     * Drop a field from a row. For values that exist only to carry a row
+     * through the resolver and must not reach DataHandler, such as the
+     * synthetic remote_id a hash-identified row is keyed by.
+     */
+    public function unsetField(string $table, string $key, string $field): void
+    {
+        unset($this->dataMap[$table][$key][$field]);
     }
 
     /**
@@ -436,6 +464,15 @@ class DataHandlerPayload
             }
         }
 
+        foreach ($other->placeReferences as $table => $rowsByRemoteId) {
+            foreach ($rowsByRemoteId as $remoteId => $references) {
+                if (isset($this->placeReferences[$table][$remoteId])) {
+                    continue;
+                }
+                $this->placeReferences[$table][$remoteId] = $references;
+            }
+        }
+
         foreach ($other->cmdMap as $table => $entriesByKey) {
             foreach ($entriesByKey as $key => $entries) {
                 foreach ($entries as $entry) {
@@ -528,6 +565,14 @@ class DataHandlerPayload
     public function getInlineMedia(): array
     {
         return $this->inlineMedia;
+    }
+
+    /**
+     * @return array<string, array<string, array<string, array<string, string>>>>
+     */
+    public function getPlaceReferences(): array
+    {
+        return $this->placeReferences;
     }
 
     /**

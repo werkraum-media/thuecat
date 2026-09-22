@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
@@ -599,6 +600,76 @@ class ImportLogger
                 'context' => (string)(json_encode(['title' => $title]) ?: '{}'),
             ]);
         }
+    }
+
+    /**
+     * One entry per attempt to relate an event to a place, whether or not it
+     * found one. Info, not warning: most venues are not places at all, so an
+     * unmatched attempt is the expected case and must not colour the run.
+     *
+     * @param array<string, mixed> $context what the attempt was made with
+     */
+    public function recordEventPlaceMatch(
+        string $eventRemoteId,
+        string $field,
+        string $outcome,
+        string $placeTable = '',
+        int $placeUid = 0,
+        array $context = []
+    ): void {
+        $this->stage([
+            'type' => 'eventPlaceMatch',
+            'severity' => self::SEVERITY_INFO,
+            'kind' => $outcome,
+            'remote_id' => $eventRemoteId,
+            'table_name' => $placeTable,
+            'record_uid' => $placeUid,
+            'message' => $this->matchMessage($outcome, $context),
+            'context' => (string)(json_encode([
+                'outcome' => $outcome,
+                'field' => $field,
+            ] + $context) ?: '{}'),
+        ]);
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    private function matchMessage(string $outcome, array $context): string
+    {
+        $name = is_string($context['name'] ?? null) ? $context['name'] : '';
+        $postalCode = is_string($context['postalCode'] ?? null) ? $context['postalCode'] : '';
+        $remoteId = is_string($context['remoteId'] ?? null) ? $context['remoteId'] : '';
+
+        return match ($outcome) {
+            EventPlaceMatch::OUTCOME_BY_REFERENCE => sprintf(
+                'Related by reference "%s".',
+                $remoteId
+            ),
+            EventPlaceMatch::OUTCOME_BY_NAME_AND_POSTAL_CODE => sprintf(
+                'Related by name "%s" and postal code "%s".',
+                $name,
+                $postalCode
+            ),
+            EventPlaceMatch::OUTCOME_AMBIGUOUS => sprintf(
+                'Name "%s" and postal code "%s" match more than one place: %s.',
+                $name,
+                $postalCode,
+                implode(', ', array_map(
+                    static fn (mixed $candidate): string => is_string($candidate) ? $candidate : '',
+                    is_array($context['candidates'] ?? null) ? $context['candidates'] : []
+                ))
+            ),
+            EventPlaceMatch::OUTCOME_UNRESOLVED_REFERENCE => sprintf(
+                'Reference "%s" names no place in this site.',
+                $remoteId
+            ),
+            default => sprintf(
+                'Name "%s" and postal code "%s" match no place.',
+                $name,
+                $postalCode
+            ),
+        };
     }
 
     public function getMaxSeverity(): string

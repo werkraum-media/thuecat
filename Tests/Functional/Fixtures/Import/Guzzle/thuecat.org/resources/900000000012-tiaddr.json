@@ -1,0 +1,49 @@
+{
+  "@context": {
+    "schema": "http://schema.org/",
+    "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+    "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+  },
+  "@graph": [
+    {
+      "@id": "https://thuecat.org/resources/900000000012-tiaddr",
+      "@type": [
+        "schema:Place",
+        "schema:Organization",
+        "schema:Thing",
+        "thuecat:TouristInformation"
+      ],
+      "schema:name": {
+        "@language": "de",
+        "@value": "Tourist-Information mit Adresse"
+      },
+      "schema:address": {
+        "@id": "genid-address-0",
+        "@type": [
+          "schema:PostalAddress",
+          "schema:Thing"
+        ],
+        "schema:streetAddress": {
+          "@language": "de",
+          "@value": "Markt 10"
+        },
+        "schema:postalCode": {
+          "@language": "de",
+          "@value": "99423"
+        },
+        "schema:addressLocality": {
+          "@language": "de",
+          "@value": "Weimar"
+        },
+        "schema:addressCountry": {
+          "@type": "thuecat:AddressCountry",
+          "@value": "thuecat:Germany"
+        },
+        "schema:addressRegion": {
+          "@type": "thuecat:AddressFederalState",
+          "@value": "thuecat:Thuringia"
+        }
+      }
+    }
+  ]
+}

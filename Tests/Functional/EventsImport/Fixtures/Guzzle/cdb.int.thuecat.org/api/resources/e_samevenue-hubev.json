@@ -1,0 +1,93 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://int.thuecat.org/resources/e_samevenue-hubev",
+   "@type": [
+    "schema:Thing",
+    "schema:Event"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Zweite Veranstaltung in der Messe Erfurt"
+   },
+   "schema:location": {
+    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3337534-b11",
+    "@type": [
+     "schema:Thing",
+     "schema:Place"
+    ],
+    "schema:name": {
+     "@language": "de",
+     "@value": "Messe Erfurt"
+    },
+    "schema:address": {
+     "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3337534-b12",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99094"
+     },
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Gothaer Straße 34"
+     },
+     "schema:addressCountry": {
+      "@language": "de",
+      "@value": "Deutschland"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Erfurt - Brühlervorstadt"
+     },
+     "schema:telephone": {
+      "@language": "de",
+      "@value": "0361 400-0"
+     }
+    },
+    "schema:geo": {
+     "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3337534-b13",
+     "@type": [
+      "schema:Thing",
+      "schema:GeoCoordinates"
+     ],
+     "schema:latitude": {
+      "@type": "schema:Float",
+      "@value": "50.95965"
+     },
+     "schema:longitude": {
+      "@type": "schema:Float",
+      "@value": "10.99227"
+     }
+    }
+   },
+   "schema:eventSchedule": {
+    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3337534-b1",
+    "@type": [
+     "schema:Thing",
+     "schema:Schedule"
+    ],
+    "schema:startDate": {
+     "@type": "schema:DateTime",
+     "@value": "2026-12-05T20:00:00+01:00"
+    },
+    "schema:endDate": {
+     "@type": "schema:Date",
+     "@value": "2026-12-05"
+    },
+    "schema:scheduleTimezone": {
+     "@type": "xsd:string",
+     "@value": "Europe/Berlin"
+    }
+   }
+  }
+ ]
+}

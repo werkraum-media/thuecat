@@ -207,6 +207,22 @@ final class ResolverContext
     public array $collectedKeywords = [];
 
     /**
+     * Run-scoped: the event uids these carry are placeholders until the
+     * persist loop has promoted them, so the flush happens after it.
+     *
+     * @var list<CollectedPlaceMatch>
+     */
+    public array $collectedPlaceMatches = [];
+
+    /**
+     * "<eventRemoteId>|<field>" — resolve() runs once per persist pass, and a
+     * place is looked up only on the first.
+     *
+     * @var array<string, true>
+     */
+    public array $claimedPlaceMatch = [];
+
+    /**
      * "<table>|<key>|<field>|<remoteId>" — one relation per keyword per field,
      * first claim winning.
      *

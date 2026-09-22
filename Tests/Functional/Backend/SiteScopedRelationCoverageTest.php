@@ -25,6 +25,13 @@ class SiteScopedRelationCoverageTest extends AbstractImportTestCase
     {
         self::assertSame(
             [
+                'tx_events_domain_model_event' => [
+                    'location',
+                    'organizer',
+                ],
+                'tx_events_domain_model_location' => [
+                    'children',
+                ],
                 'tx_thuecat_parking_facility' => [
                     'contained_in_attraction',
                     'contained_in_organisation',
