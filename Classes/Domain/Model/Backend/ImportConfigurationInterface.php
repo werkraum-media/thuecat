@@ -80,15 +80,6 @@ interface ImportConfigurationInterface
      */
     public function getApiDomain(): string;
 
-    /**
-     * Which extension's data structures the import populates. Currently
-     * supplied by the syncScope flexform; other configuration types return
-     * 'thuecat' as the historical default. Returned values mirror the
-     * extension keys ('thuecat', 'events') so callers can route on them
-     * directly without a mapping layer.
-     */
-    public function getImportTarget(): string;
-
     public function getUid(): ?int;
 
     public function getFetchLastXDays(): int;

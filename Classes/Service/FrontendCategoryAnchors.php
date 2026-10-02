@@ -16,19 +16,14 @@ namespace WerkraumMedia\ThueCat\Service;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
-use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 /**
  * The sys_category anchors a frontend request filters against.
  *
- * The import resolves anchors per import configuration; a request has no such
- * configuration, only a site. Both read the same settings under the same target,
- * so a filter offers exactly the tree its import writes.
- *
- * Places are always the ThueCat target: the event target's anchors belong to
- * event plugins, which resolve them on their own side.
+ * The filtered record table decides the scope, through the same chain the
+ * import writes with, so a filter offers the tree its records were filed in.
  */
 #[Autoconfigure(public: true)]
 class FrontendCategoryAnchors
@@ -38,27 +33,27 @@ class FrontendCategoryAnchors
     ) {
     }
 
-    public function categoryParent(ServerRequestInterface $request): int
+    public function categoryParent(ServerRequestInterface $request, string $recordTable): int
     {
-        return $this->resolve($request, CategoryAnchorSetting::CategoryParent);
+        return $this->resolve($request, $recordTable, AnchorKind::Category);
     }
 
-    public function keywordParent(ServerRequestInterface $request): int
+    public function keywordParent(ServerRequestInterface $request, string $recordTable): int
     {
-        return $this->resolve($request, CategoryAnchorSetting::KeywordParent);
+        return $this->resolve($request, $recordTable, AnchorKind::Keyword);
     }
 
     /**
      * 0 when the request carries no site, which is what an unconfigured anchor
      * yields too: the filter offers nothing rather than the whole tree.
      */
-    private function resolve(ServerRequestInterface $request, CategoryAnchorSetting $setting): int
+    private function resolve(ServerRequestInterface $request, string $recordTable, AnchorKind $kind): int
     {
         $site = $request->getAttribute('site');
         if (!$site instanceof Site) {
             return 0;
         }
 
-        return $this->resolver->resolve($setting, $site, ImportTarget::Thuecat);
+        return $this->resolver->resolvePair($site, $recordTable, $kind)->parent;
     }
 }

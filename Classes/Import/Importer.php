@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Throwable;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Resource\Folder;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
@@ -23,12 +24,10 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
-use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchors;
-use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
@@ -143,10 +142,7 @@ class Importer
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
-        // resolveFor() carries the import target, so the anchors are the ones
-        // of this run's own category tree.
-        $anchors = $this->anchorResolver->resolveFor($configuration);
-        $this->reportEffectiveSettings($configuration, $anchors, $listener);
+        $this->reportEffectiveSettings($configuration, $site, $listener);
         $parserContext = new ParserContext((int)$configuration->getUid(), $apiDomain);
         $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
@@ -156,16 +152,13 @@ class Importer
             $translationLanguages,
             $targetFolder,
             $stagingFolder,
-            $anchors->categoryParent,
-            $anchors->categoryStoragePid,
-            $anchors->keywordParent,
-            $anchors->keywordStoragePid,
             $listener,
             $skipMedia,
             // Once per run: the record lookup consults this per record and per
             // relation, so deriving it there would rewalk the page tree for
             // every one of them.
             $this->sitePageIds->forRootPage($site->getRootPageId()),
+            $site,
         );
         $accumulatedPayload = new DataHandlerPayload();
         $urls = $urlProvider->getUrls($apiDomain);
@@ -325,7 +318,7 @@ class Importer
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
 
         // The category map now holds real uids, so matched entries can point at them.
-        $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByRemoteId);
+        $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByIdentifier());
         $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
         $this->importLogger->recordUnusableScheduleDays($parserContext->unusableScheduleDays);
         $this->importLogger->recordDroppedScheduleDays($parserContext->droppedScheduleDays);
@@ -392,10 +385,6 @@ class Importer
     }
 
     /**
-     * Staged, not thrown: the run must still reach writeLog(), or an aborted
-     * run leaves nothing behind — which is the failure this exists to fix.
-     */
-    /**
      * What actually governs this run, assembled once before the first fetch.
      * The values come from three levels (import configuration, site settings,
      * extension configuration), so a run that behaves unexpectedly can be
@@ -406,30 +395,28 @@ class Importer
      * it. Reporting is wrapped because it is diagnostics, not a gate — a
      * failure here must not abort an otherwise healthy run.
      *
-     * Only the run's own target's anchors are named. Listing the other one's
-     * would suggest it had a say in this run.
+     * Anchors are listed for every scope, because which kinds a run writes is
+     * known only once it has fetched.
      */
     protected function reportEffectiveSettings(
         ImportConfigurationInterface $configuration,
-        CategoryAnchors $anchors,
+        Site $site,
         ImportProgressListener $listener
     ): void {
         try {
-            $target = ImportTarget::tryFromConfigured($configuration->getImportTarget());
-            if ($target === null) {
-                // Unreachable in a run: resolveFor() rejected it already.
-                return;
-            }
-
             $settings = [
                 'storagePid' => $configuration->getStoragePid(),
                 'fileFolder' => $configuration->getFileFolder(),
                 'apiDomain' => $configuration->getApiDomain(),
-                'importTarget' => $target->value,
             ];
-            foreach (CategoryAnchorSetting::cases() as $anchor) {
-                $uid = $anchors->for($anchor);
-                $settings[$anchor->settingsPath($target)] = $uid > 0 ? $uid : 'unset';
+            // What each scope supplies itself; which one a record falls back
+            // to is decided per record and has no single value to report.
+            foreach ($this->anchorResolver->scopes() as $scope) {
+                foreach (AnchorKind::cases() as $kind) {
+                    $pair = $this->anchorResolver->resolveInScope($site, $scope, $kind);
+                    $settings[$kind->parentSetting()->settingsPath($scope)] = $pair->parent > 0 ? $pair->parent : 'unset';
+                    $settings[$kind->storagePidSetting()->settingsPath($scope)] = $pair->storagePid > 0 ? $pair->storagePid : 'unset';
+                }
             }
             $settings += [
                 'readTimeout' => $this->settings->resolve(ImportSetting::ReadTimeout, 0),
@@ -449,6 +436,10 @@ class Importer
         }
     }
 
+    /**
+     * Staged, not thrown: the run must still reach writeLog(), or an aborted
+     * run leaves nothing behind — which is the failure this exists to fix.
+     */
     protected function recordAbort(RunDeadline $deadline, ImportPhase $phase): void
     {
         try {

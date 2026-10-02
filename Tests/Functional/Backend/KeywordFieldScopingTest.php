@@ -23,8 +23,8 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // An editor opening a place record must see the keyword tree in the keyword
 // field and the type-category tree in the categories field — never each other's.
-// The anchors come from site settings, so the assertion is that core resolved
-// ###SITE:### into the configured uids.
+// The anchors come from the import's resolution chain, so the assertion is that
+// the form resolved ###THUECAT_ANCHOR### into the configured uids.
 class KeywordFieldScopingTest extends AbstractImportTestCase
 {
     protected array $pathsToLinkInTestInstance = [
@@ -45,7 +45,7 @@ class KeywordFieldScopingTest extends AbstractImportTestCase
 
     /**
      * The prepared TCA for one field of a place record on the fixture's storage
-     * page, with the site markers already resolved.
+     * page, with the anchor markers already resolved.
      */
     private function startingPointsFor(string $field): string
     {

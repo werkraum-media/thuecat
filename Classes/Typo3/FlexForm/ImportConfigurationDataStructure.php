@@ -65,7 +65,6 @@ class ImportConfigurationDataStructure
         return [
             'storagePid' => $this->storagePidField('static'),
             'fileFolder' => $this->fileFolderField('static'),
-            'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
             'urls' => $this->urlsSection(),
             'apiKey' => $this->apiKeyField(),
@@ -80,7 +79,6 @@ class ImportConfigurationDataStructure
         return [
             'storagePid' => $this->storagePidField('syncScope'),
             'fileFolder' => $this->fileFolderField('syncScope'),
-            'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
             'syncScopeId' => [
                 'label' => self::LLL . 'importConfiguration.syncScope.syncScopeId',
@@ -103,7 +101,6 @@ class ImportConfigurationDataStructure
         return [
             'storagePid' => $this->storagePidField('containsPlace'),
             'fileFolder' => $this->fileFolderField('containsPlace'),
-            'importTarget' => $this->importTargetField(),
             'apiDomain' => $this->apiDomainField(),
             'containsPlaceId' => [
                 'label' => self::LLL . 'importConfiguration.containsPlace.containsPlaceId',
@@ -190,25 +187,6 @@ class ImportConfigurationDataStructure
         }
 
         return $fields;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function importTargetField(): array
-    {
-        return [
-            'label' => self::LLL . 'importConfiguration.syncScope.importTarget',
-            'description' => self::LLL . 'importConfiguration.syncScope.importTarget.description',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['label' => self::LLL . 'importConfiguration.syncScope.importTarget.thuecat', 'value' => 'thuecat'],
-                    ['label' => self::LLL . 'importConfiguration.syncScope.importTarget.events', 'value' => 'events'],
-                ],
-            ],
-        ];
     }
 
     /**

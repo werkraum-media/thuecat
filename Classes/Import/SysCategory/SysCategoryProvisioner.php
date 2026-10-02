@@ -52,12 +52,13 @@ class SysCategoryProvisioner
         array $translationLanguages
     ): ?string {
         $identifier = $anchor->prefixed($term->sourceValue);
+        $stagingKey = $anchor->stagingKey($identifier);
 
-        $known = $state->keyFor($identifier);
+        $known = $state->keyFor($stagingKey);
         if ($known !== null) {
             return $known;
         }
-        if ($state->wasSkipped($identifier)) {
+        if ($state->wasSkipped($stagingKey)) {
             return null;
         }
 
@@ -71,21 +72,21 @@ class SysCategoryProvisioner
             $defaultLanguage
         );
         if ($key === null) {
-            $state->markSkipped($identifier, $term->parentValue);
+            $state->markSkipped($stagingKey, $term->parentValue);
 
             return null;
         }
 
-        $state->remember($identifier, $key);
-        $this->stageTranslations($payload, $term, $identifier, $translationLanguages);
+        $state->remember($stagingKey, $key);
+        $this->stageTranslations($payload, $term, $stagingKey, $translationLanguages);
 
         return $key;
     }
 
     /**
-     * Staged against the identifier rather than the datamap key, because the
-     * later translation pass resolves rows by remote_id and a NEW… key means
-     * nothing to it yet.
+     * Staged against the staging key rather than the datamap key, because the
+     * later translation pass resolves rows through the run's key map and a
+     * NEW… key means nothing to it yet.
      *
      * A language the term has no title for is left alone: filling it with the
      * default language's title would present an untranslated row as a choice.
@@ -95,7 +96,7 @@ class SysCategoryProvisioner
     protected function stageTranslations(
         DataHandlerPayload $payload,
         SysCategoryTerm $term,
-        string $identifier,
+        string $stagingKey,
         array $translationLanguages
     ): void {
         foreach ($translationLanguages as $language => $sysLanguageUid) {
@@ -106,7 +107,7 @@ class SysCategoryProvisioner
 
             $payload->addTranslationField(
                 'sys_category',
-                $identifier,
+                $stagingKey,
                 $sysLanguageUid,
                 'title',
                 $title
@@ -198,7 +199,7 @@ class SysCategoryProvisioner
         $seen = [];
 
         while ($parentValue !== null) {
-            $identifier = $anchor->prefixed($parentValue);
+            $identifier = $anchor->stagingKey($anchor->prefixed($parentValue));
             if (isset($seen[$identifier])) {
                 break;
             }

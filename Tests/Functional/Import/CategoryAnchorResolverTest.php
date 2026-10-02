@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorPair;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
 
@@ -28,26 +30,6 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
     }
 
     #[Test]
-    public function resolvesAnchorsFromTheSiteOwningTheStoragePid(): void
-    {
-        $this->writeSiteSettings([
-            'import' => [
-                'thuecat' => [
-                    'category' => ['storagePid' => 320, 'parent' => 100],
-                    'keywords' => ['storagePid' => 330, 'parent' => 110],
-                ],
-            ],
-        ], 'anchors', 300);
-
-        $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(310));
-
-        self::assertSame(100, $anchors->categoryParent);
-        self::assertSame(320, $anchors->categoryStoragePid);
-        self::assertSame(110, $anchors->keywordParent);
-        self::assertSame(330, $anchors->keywordStoragePid);
-    }
-
-    #[Test]
     public function fallsBackToExtensionConfigurationWithoutSiteSettings(): void
     {
         $this->writeSiteSettings([], 'anchors', 300);
@@ -56,88 +38,16 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
             'importThuecatKeywordsStoragePid' => '330',
         ]);
 
-        $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(310));
+        $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Keyword);
 
-        self::assertSame(110, $anchors->keywordParent);
-        self::assertSame(330, $anchors->keywordStoragePid);
-        self::assertSame(0, $anchors->categoryParent);
-        self::assertSame(0, $anchors->categoryStoragePid);
-    }
-
-    /**
-     * One site, one import configuration per target: each must find its own
-     * tree, which is the whole point of the target segment.
-     */
-    #[Test]
-    public function eachTargetResolvesItsOwnAnchorsWithinOneSite(): void
-    {
-        $this->writeSiteSettings([
-            'import' => [
-                'thuecat' => [
-                    'category' => ['storagePid' => 320, 'parent' => 100],
-                    'keywords' => ['storagePid' => 330, 'parent' => 110],
-                ],
-                'events' => [
-                    'category' => ['storagePid' => 340, 'parent' => 120],
-                    'keywords' => ['storagePid' => 350, 'parent' => 130],
-                ],
-            ],
-        ], 'anchors', 300);
-
-        $resolver = $this->get(CategoryAnchorResolver::class);
-
-        $thuecat = $resolver->resolveFor($this->configurationWithStoragePid(310));
-        self::assertSame(100, $thuecat->categoryParent);
-        self::assertSame(320, $thuecat->categoryStoragePid);
-        self::assertSame(110, $thuecat->keywordParent);
-        self::assertSame(330, $thuecat->keywordStoragePid);
-
-        $events = $resolver->resolveFor($this->configurationWithStoragePid(310, 'events'));
-        self::assertSame(120, $events->categoryParent);
-        self::assertSame(340, $events->categoryStoragePid);
-        self::assertSame(130, $events->keywordParent);
-        self::assertSame(350, $events->keywordStoragePid);
-    }
-
-    // A target the site says nothing about resolves unset, never the other's.
-    #[Test]
-    public function targetWithoutSettingsDoesNotBorrowTheOthers(): void
-    {
-        $this->writeSiteSettings([
-            'import' => [
-                'thuecat' => [
-                    'category' => ['storagePid' => 320, 'parent' => 100],
-                    'keywords' => ['storagePid' => 330, 'parent' => 110],
-                ],
-            ],
-        ], 'anchors', 300);
-
-        $anchors = $this->get(CategoryAnchorResolver::class)
-            ->resolveFor($this->configurationWithStoragePid(310, 'events'))
-        ;
-
-        self::assertSame(0, $anchors->categoryParent);
-        self::assertSame(0, $anchors->categoryStoragePid);
-        self::assertSame(0, $anchors->keywordParent);
-        self::assertSame(0, $anchors->keywordStoragePid);
-    }
-
-    #[Test]
-    public function resolvesToUnsetWithoutAnyConfiguration(): void
-    {
-        $this->writeSiteSettings([], 'anchors', 300);
-
-        $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(310));
-
-        self::assertSame(0, $anchors->categoryParent);
-        self::assertSame(0, $anchors->categoryStoragePid);
-        self::assertSame(0, $anchors->keywordParent);
-        self::assertSame(0, $anchors->keywordStoragePid);
+        self::assertSame(110, $pair->parent);
+        self::assertSame(330, $pair->storagePid);
+        self::assertSame('thuecat', $pair->scope?->value);
     }
 
     // Two sites must not see each other's anchors.
     #[Test]
-    public function resolvesTheAnchorsOfTheImportsOwnSite(): void
+    public function resolvesTheAnchorsOfTheGivenSite(): void
     {
         $this->writeSiteSettings([
             'import' => ['thuecat' => ['keywords' => ['parent' => 110, 'storagePid' => 330]]],
@@ -146,20 +56,174 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
             'import' => ['thuecat' => ['keywords' => ['parent' => 910, 'storagePid' => 930]]],
         ], 'other_anchors', 900);
 
-        $anchors = $this->get(CategoryAnchorResolver::class)->resolveFor($this->configurationWithStoragePid(910));
+        $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Keyword, 910);
 
-        self::assertSame(910, $anchors->keywordParent);
-        self::assertSame(930, $anchors->keywordStoragePid);
+        self::assertSame(910, $pair->parent);
+        self::assertSame(930, $pair->storagePid);
     }
 
-    private function configurationWithStoragePid(
-        int $storagePid,
-        string $importTarget = 'thuecat'
-    ): ImportConfigurationInterface {
-        $configuration = self::createStub(ImportConfigurationInterface::class);
-        $configuration->method('getStoragePid')->willReturn($storagePid);
-        $configuration->method('getImportTarget')->willReturn($importTarget);
+    #[Test]
+    public function recordKindResolvesItsOwnScope(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => ['keywords' => ['storagePid' => 330, 'parent' => 110]],
+                'trails' => ['keywords' => ['storagePid' => 360, 'parent' => 140]],
+            ],
+        ], 'anchors', 300);
 
-        return $configuration;
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(140, $pair->parent);
+        self::assertSame(360, $pair->storagePid);
+        self::assertSame('trails', $pair->scope?->value);
+    }
+
+    #[Test]
+    public function attractionResolvesTheThuecatScope(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => ['category' => ['storagePid' => 320, 'parent' => 100]],
+                'events' => ['category' => ['storagePid' => 340, 'parent' => 120]],
+            ],
+        ], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Category);
+
+        self::assertSame(100, $pair->parent);
+        self::assertSame(320, $pair->storagePid);
+        self::assertSame('thuecat', $pair->scope?->value);
+    }
+
+    /**
+     * A trail run without trail settings keeps today's behaviour.
+     */
+    #[Test]
+    public function unconfiguredTrailsScopeFallsBackToThuecat(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => ['keywords' => ['storagePid' => 330, 'parent' => 110]],
+                'events' => ['keywords' => ['storagePid' => 350, 'parent' => 130]],
+            ],
+        ], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(110, $pair->parent);
+        self::assertSame(330, $pair->storagePid);
+        self::assertSame('thuecat', $pair->scope?->value);
+    }
+
+    #[Test]
+    public function unconfiguredEventsScopeFallsBackToThuecat(): void
+    {
+        $this->writeSiteSettings([
+            'import' => ['thuecat' => ['category' => ['storagePid' => 320, 'parent' => 100]]],
+        ], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_events_domain_model_event', AnchorKind::Category);
+
+        self::assertSame(100, $pair->parent);
+        self::assertSame('thuecat', $pair->scope?->value);
+    }
+
+    /**
+     * Relation kinds are shared between imports of every top-level kind, so
+     * another scope's settings never apply to them.
+     */
+    #[Test]
+    public function relationKindResolvesThuecatWhateverElseIsConfigured(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => ['keywords' => ['storagePid' => 330, 'parent' => 110]],
+                'events' => ['keywords' => ['storagePid' => 350, 'parent' => 130]],
+                'trails' => ['keywords' => ['storagePid' => 360, 'parent' => 140]],
+            ],
+        ], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_thuecat_tourist_information', AnchorKind::Keyword);
+
+        self::assertSame(110, $pair->parent);
+        self::assertSame('thuecat', $pair->scope?->value);
+    }
+
+    #[Test]
+    public function chainResolvesUnsetWhenNoScopeSuppliesAnything(): void
+    {
+        $this->writeSiteSettings([], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(0, $pair->parent);
+        self::assertSame(0, $pair->storagePid);
+        self::assertNull($pair->scope);
+    }
+
+    #[Test]
+    public function levelsAreWalkedPerSettingWithinAScope(): void
+    {
+        $this->writeSiteSettings([
+            'import' => ['trails' => ['keywords' => ['parent' => 140]]],
+        ], 'anchors', 300);
+        $this->writeExtensionConfiguration([
+            'importTrailsKeywordsStoragePid' => '360',
+        ]);
+
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(140, $pair->parent);
+        self::assertSame(360, $pair->storagePid);
+        self::assertSame('trails', $pair->scope?->value);
+    }
+
+    /**
+     * Half a pair still claims the kind for its scope; completing it from
+     * another scope would pair a trail parent with a ThueCat folder.
+     */
+    #[Test]
+    public function scopeIsNeverCompletedFromAnotherScope(): void
+    {
+        $this->writeSiteSettings([
+            'import' => [
+                'thuecat' => ['keywords' => ['storagePid' => 330, 'parent' => 110]],
+                'trails' => ['keywords' => ['parent' => 140]],
+            ],
+        ], 'anchors', 300);
+
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(140, $pair->parent);
+        self::assertSame(0, $pair->storagePid);
+        self::assertSame('trails', $pair->scope?->value);
+    }
+
+    #[Test]
+    public function zeroInSiteSettingsFallsThroughToExtensionConfiguration(): void
+    {
+        $this->writeSiteSettings([
+            'import' => ['trails' => ['keywords' => ['storagePid' => 0, 'parent' => 0]]],
+        ], 'anchors', 300);
+        $this->writeExtensionConfiguration([
+            'importTrailsKeywordsParent' => '140',
+            'importTrailsKeywordsStoragePid' => '360',
+        ]);
+
+        $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
+
+        self::assertSame(140, $pair->parent);
+        self::assertSame(360, $pair->storagePid);
+        self::assertSame('trails', $pair->scope?->value);
+    }
+
+    private function resolvePair(string $table, AnchorKind $kind, int $pageId = 310): AnchorPair
+    {
+        return $this->get(CategoryAnchorResolver::class)->resolvePair(
+            $this->get(SiteFinder::class)->getSiteByPageId($pageId),
+            $table,
+            $kind
+        );
     }
 }

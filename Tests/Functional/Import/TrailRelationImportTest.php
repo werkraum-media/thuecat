@@ -33,8 +33,9 @@ class TrailRelationImportTest extends AbstractImportTestCase
 
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';
 
+    // The fixture site configures no trails scope, so trails keep the thuecat anchor.
     #[Test]
-    public function resolvesTrailKeywordsUnderTheKeywordAnchor(): void
+    public function trailWithoutTrailAnchorsResolvesKeywordsUnderTheThuecatAnchor(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithRelations.php');
         $this->expectKeywordFetches();
@@ -50,7 +51,7 @@ class TrailRelationImportTest extends AbstractImportTestCase
         $set = $this->fetchCategoryByRemoteId(
             'keyword:https://thuecat.org/resources/192875159827-xfqk'
         );
-        self::assertSame(200, $set['parent'], 'The term set hangs off the keyword anchor.');
+        self::assertSame(200, $set['parent'], 'The term set hangs off the thuecat keyword anchor.');
         self::assertSame($set['uid'], $term['parent'], 'The term hangs off its set.');
     }
 

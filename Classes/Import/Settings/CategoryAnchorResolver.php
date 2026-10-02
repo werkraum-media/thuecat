@@ -17,22 +17,18 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\Entity\Site;
-use TYPO3\CMS\Core\Site\SiteFinder;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
-use WerkraumMedia\ThueCat\Import\ImportTargetConfigurationException;
 
 /**
- * Resolves a sys_category anchor for one import: the site owning the import's
- * storagePid decides first, the instance-wide extension configuration second.
- * An anchor no level supplies is 0, which switches its kind's mapping off.
+ * Resolves the sys_category anchors of a record kind: the site decides first,
+ * the instance-wide extension configuration second. An anchor no level supplies
+ * is 0, which switches its kind's mapping off.
  *
- * Every level is read under the name of the import's own target, so a run never
- * sees another target's settings. One site can hold an import configuration per
- * target, and each keeps its own category tree.
+ * Every level is read under a scope's own name. A top-level kind reads its own
+ * scope and falls back to the default one; every other kind reads the default
+ * scope only, so records shared between imports agree on their tree.
  *
- * Each setting walks the chain on its own, so the two halves of a kind's pair
+ * Each setting walks the levels on its own, so the two halves of a kind's pair
  * may come from different levels.
  */
 #[Autoconfigure(public: true)]
@@ -40,37 +36,79 @@ class CategoryAnchorResolver
 {
     public function __construct(
         private readonly ExtensionConfiguration $extensionConfiguration,
-        private readonly SiteFinder $siteFinder
+        private readonly AnchorScopeRegistry $scopes,
     ) {
     }
 
     /**
-     * @throws SiteNotFoundException storagePid belongs to no site
-     * @throws ImportTargetConfigurationException target matches no known one
+     * A record kind's anchors for one kind: its own scope if it is a top-level
+     * kind, then the default scope. The first scope supplying either setting
+     * answers for the whole pair: completing half a pair from another scope
+     * would pair one tree's parent with another's folder.
+     *
+     * Depends on table and site only, so an import, a frontend filter and a
+     * backend form resolve the same tree.
      */
-    public function resolveFor(ImportConfigurationInterface $configuration): CategoryAnchors
+    public function resolvePair(Site $site, string $table, AnchorKind $kind): AnchorPair
     {
-        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
-        $target = ImportTarget::tryFromConfigured($configuration->getImportTarget());
-        // Pre-flight validation rejects an unknown target before a run gets
-        // here. Guarding anyway: resolving under a target nobody declared would
-        // find nothing at any level and silently switch all mapping off.
-        if ($target === null) {
-            throw ImportTargetConfigurationException::forUnknownTarget($configuration->getImportTarget());
+        foreach ($this->scopeChain($table) as $scope) {
+            $pair = $this->resolveInScope($site, $scope, $kind);
+            if ($pair->isSet()) {
+                return $pair;
+            }
         }
 
-        return new CategoryAnchors(
-            $this->resolve(CategoryAnchorSetting::CategoryParent, $site, $target),
-            $this->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, $target),
-            $this->resolve(CategoryAnchorSetting::KeywordParent, $site, $target),
-            $this->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, $target),
+        return new AnchorPair();
+    }
+
+    /**
+     * One scope's pair without falling back, as validation needs it: a broken
+     * scope must be seen even where another scope would stand in for it.
+     */
+    public function resolveInScope(Site $site, AnchorScope $scope, AnchorKind $kind): AnchorPair
+    {
+        return new AnchorPair(
+            $this->resolve($kind->parentSetting(), $site, $scope),
+            $this->resolve($kind->storagePidSetting(), $site, $scope),
+            $scope
         );
     }
 
-    public function resolve(CategoryAnchorSetting $setting, Site $site, ImportTarget $target): int
+    /**
+     * Every scope that can supply anchors: the top-level kinds' and the
+     * default one relation kinds fall back to.
+     *
+     * @return list<AnchorScope>
+     */
+    public function scopes(): array
     {
-        return $this->asSetValue($site->getSettings()->get($setting->settingsPath($target)))
-            ?? $this->fromExtensionConfiguration($setting, $target)
+        $scopes = [];
+        foreach ([...$this->scopes->scopes(), AnchorScope::default()] as $scope) {
+            $scopes[$scope->value] ??= $scope;
+        }
+
+        return array_values($scopes);
+    }
+
+    /**
+     * @return list<AnchorScope>
+     */
+    private function scopeChain(string $table): array
+    {
+        $chain = [];
+        foreach ([$this->scopes->forTable($table), AnchorScope::default()] as $scope) {
+            if ($scope !== null) {
+                $chain[$scope->value] ??= $scope;
+            }
+        }
+
+        return array_values($chain);
+    }
+
+    public function resolve(CategoryAnchorSetting $setting, Site $site, AnchorScope $scope): int
+    {
+        return $this->asSetValue($site->getSettings()->get($setting->settingsPath($scope)))
+            ?? $this->fromExtensionConfiguration($setting, $scope)
             ?? 0;
     }
 
@@ -78,10 +116,10 @@ class CategoryAnchorResolver
      * Both exceptions mean "nothing set at this level": the extension has no
      * configuration at all, or none carrying these keys.
      */
-    private function fromExtensionConfiguration(CategoryAnchorSetting $setting, ImportTarget $target): ?int
+    private function fromExtensionConfiguration(CategoryAnchorSetting $setting, AnchorScope $scope): ?int
     {
         try {
-            $value = $this->extensionConfiguration->get('thuecat', $setting->extensionConfigurationKey($target));
+            $value = $this->extensionConfiguration->get('thuecat', $setting->extensionConfigurationKey($scope));
         } catch (ExtensionConfigurationExtensionNotConfiguredException | ExtensionConfigurationPathDoesNotExistException) {
             return null;
         }

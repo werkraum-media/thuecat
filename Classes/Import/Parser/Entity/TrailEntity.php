@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 /**
  * Entity to import entries that carry thuecat:trail
  */
-class TrailEntity extends AbstractEntity
+class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
 {
     public const TABLE = 'tx_thuecat_trail';
 
@@ -416,5 +416,10 @@ class TrailEntity extends AbstractEntity
     public function handlesTypes(): array
     {
         return ['thuecat:Trail'];
+    }
+
+    public static function anchorScope(): string
+    {
+        return 'trails';
     }
 }

@@ -54,6 +54,9 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpec
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorPair;
+use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\SysCategory\ChainBuilder;
 use WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies;
 use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryAnchor;
@@ -205,6 +208,7 @@ class Resolver
         protected readonly ParentStrategies $parentStrategies,
         protected readonly VocabularyProvider $vocabularyProvider,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
+        protected readonly CategoryAnchorResolver $anchorResolver,
     ) {
     }
 
@@ -239,7 +243,7 @@ class Resolver
      */
     public function flushCollectedKeywords(DataHandlerPayload $payload, ResolverContext $context): void
     {
-        if ($context->collectedKeywords === [] || $context->keywordParentUid === 0) {
+        if ($context->collectedKeywords === []) {
             return;
         }
 
@@ -252,7 +256,11 @@ class Resolver
             $byRemoteId[$keyword->remoteId] = $keyword;
         }
         foreach ($context->collectedKeywords as $keyword) {
-            $this->createKeywordAncestors($payload, $context, $sitePageIds, $keyword, $byRemoteId, []);
+            $anchor = $this->keywordAnchor($context, $keyword->ownerTable);
+            if (!$anchor->isConfigured()) {
+                continue;
+            }
+            $this->createKeywordAncestors($payload, $context, $sitePageIds, $keyword, $byRemoteId, [], $anchor);
         }
 
         foreach ($context->collectedKeywords as $keyword) {
@@ -268,7 +276,11 @@ class Resolver
                 continue;
             }
 
-            $categoryKey = $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword);
+            $anchor = $this->keywordAnchor($context, $keyword->ownerTable);
+            if (!$anchor->isConfigured()) {
+                continue;
+            }
+            $categoryKey = $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword, $anchor);
             $payload->setRelationField(
                 $keyword->ownerTable,
                 $ownerKey,
@@ -573,7 +585,8 @@ class Resolver
         array $sitePageIds,
         CollectedKeyword $keyword,
         array $byRemoteId,
-        array $visited
+        array $visited,
+        SysCategoryAnchor $anchor
     ): void {
         if (in_array($keyword->remoteId, $visited, true)) {
             return;
@@ -582,10 +595,10 @@ class Resolver
 
         $parent = $keyword->parentRemoteId === null ? null : ($byRemoteId[$keyword->parentRemoteId] ?? null);
         if ($parent !== null) {
-            $this->createKeywordAncestors($payload, $context, $sitePageIds, $parent, $byRemoteId, $visited);
+            $this->createKeywordAncestors($payload, $context, $sitePageIds, $parent, $byRemoteId, $visited, $anchor);
         }
 
-        $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword);
+        $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword, $anchor);
     }
 
     /**
@@ -619,7 +632,8 @@ class Resolver
         DataHandlerPayload $payload,
         ResolverContext $context,
         array $sitePageIds,
-        CollectedKeyword $keyword
+        CollectedKeyword $keyword,
+        SysCategoryAnchor $anchor
     ): string {
         // The state binds to the context's own map, so keys stay where
         // promoteNewKeys() expects to find them between rounds.
@@ -628,7 +642,7 @@ class Resolver
         $key = $this->sysCategoryProvisioner->provision(
             $payload,
             $state,
-            $this->keywordAnchor($context),
+            $anchor,
             new SysCategoryTerm(
                 self::keywordSourceValue($keyword->remoteId),
                 $keyword->titles,
@@ -913,13 +927,30 @@ class Resolver
             : $remoteId;
     }
 
-    protected function keywordAnchor(ResolverContext $context): SysCategoryAnchor
+    protected function keywordAnchor(ResolverContext $context, string $ownerTable): SysCategoryAnchor
     {
-        return new SysCategoryAnchor(
-            $context->keywordParentUid,
-            $context->keywordStoragePid,
-            self::KEYWORD_IDENTIFIER_PREFIX
-        );
+        return $this->anchorFor($context, $ownerTable, AnchorKind::Keyword, self::KEYWORD_IDENTIFIER_PREFIX);
+    }
+
+    /**
+     * The owner table decides the tree, so records of different kinds in one
+     * run land under their own anchors.
+     */
+    protected function anchorFor(
+        ResolverContext $context,
+        string $ownerTable,
+        AnchorKind $kind,
+        string $identifierPrefix
+    ): SysCategoryAnchor {
+        $memoKey = $ownerTable . '|' . $kind->name;
+        if (!isset($context->anchorPairs[$memoKey])) {
+            $context->anchorPairs[$memoKey] = $context->site === null
+                ? new AnchorPair()
+                : $this->anchorResolver->resolvePair($context->site, $ownerTable, $kind);
+        }
+        $pair = $context->anchorPairs[$memoKey];
+
+        return new SysCategoryAnchor($pair->parent, $pair->storagePid, $identifierPrefix);
     }
 
     /**
@@ -929,20 +960,20 @@ class Resolver
      */
     protected function wireCategories(DataHandlerPayload $payload, ResolverContext $context): void
     {
-        $parentUid = $context->categoryParentUid;
-        $categoryPid = $context->categoryStoragePid;
-        if ($parentUid === 0 && $categoryPid === 0) {
-            return;
-        }
-
         $sitePageIds = $context->sitePageIds;
-        $anchor = new SysCategoryAnchor($parentUid, $categoryPid, self::TYPE_IDENTIFIER_PREFIX);
         // Bound to the context's map so keys survive promoteNewKeys() between
         // rounds, as they did before the provisioner took this over.
         $state = new SysCategoryProvisioningState($context->categoryKeyByRemoteId);
-        $index = $this->vocabularyProvider->index($context->apiKey);
+        // Fetched only once a table actually maps: an unconfigured run costs no API call.
+        $index = null;
 
         foreach ($payload->getCategories() as $table => $categoriesByOwner) {
+            $anchor = $this->anchorFor($context, (string)$table, AnchorKind::Category, self::TYPE_IDENTIFIER_PREFIX);
+            if (!$anchor->isConfigured()) {
+                continue;
+            }
+            $index ??= $this->vocabularyProvider->index($context->apiKey);
+
             foreach ($categoriesByOwner as $ownerRemoteId => $categories) {
                 $ownerKey = $context->remoteIdToKey[$ownerRemoteId] ?? null;
                 if ($ownerKey === null) {

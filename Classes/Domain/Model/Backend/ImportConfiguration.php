@@ -159,16 +159,6 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return is_string($apiDomain) ? $apiDomain : '';
     }
 
-    public function getImportTarget(): string
-    {
-        $importTarget = $this->getConfigurationValueFromFlexForm('importTarget');
-        // syncScope flexform values are extension keys ('thuecat', 'events').
-        // Non-syncScope configurations don't carry the field — they import
-        // ThueCat POI structures by definition, so 'thuecat' is the safe
-        // historical default.
-        return is_string($importTarget) && $importTarget !== '' ? $importTarget : 'thuecat';
-    }
-
     public function getFetchLastXDays(): int
     {
         $value = $this->getConfigurationValueFromFlexForm('fetchLastXDays');

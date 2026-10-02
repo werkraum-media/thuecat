@@ -193,7 +193,7 @@ class SysCategoryProvisionerTest extends TestCase
             ['en' => 1]
         );
 
-        self::assertSame([], $this->translationsFor($payload, 'type:thuecat:Unknown'));
+        self::assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:thuecat:Unknown')));
     }
 
     #[Test]
@@ -235,7 +235,7 @@ class SysCategoryProvisionerTest extends TestCase
 
         self::assertNull($this->provision($payload, $state, $this->types(), $term));
         self::assertTrue(
-            $state->wasSkipped('type:thuecat:Unknown'),
+            $state->wasSkipped($this->types()->stagingKey('type:thuecat:Unknown')),
             'The skip is recorded, so the value is not reconsidered for every record carrying it.'
         );
     }
@@ -302,6 +302,41 @@ class SysCategoryProvisionerTest extends TestCase
         self::assertSame('100', $this->columnOf($payload, $leaf, 'parent'));
     }
 
+    /**
+     * One run can file a term in two trees: the run's state shared between
+     * them must not hand one tree's row to the other.
+     */
+    #[Test]
+    public function stagesOneRowPerTreeForTheSameIdentifier(): void
+    {
+        $payload = new DataHandlerPayload();
+        $state = new SysCategoryProvisioningState();
+        $term = new SysCategoryTerm('Historisch', ['de' => 'Historisch']);
+
+        $first = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
+        $second = $this->provision($payload, $state, new SysCategoryAnchor(300, 30, 'keyword:'), $term);
+
+        self::assertIsString($first);
+        self::assertIsString($second);
+        self::assertNotSame($first, $second);
+        self::assertSame('200', $this->columnOf($payload, $first, 'parent'));
+        self::assertSame('300', $this->columnOf($payload, $second, 'parent'));
+        self::assertSame('keyword:Historisch', $this->rowFor($payload, $second)['remote_id'] ?? null);
+    }
+
+    #[Test]
+    public function sharesTheRowBetweenAnchorsOnOneParent(): void
+    {
+        $payload = new DataHandlerPayload();
+        $state = new SysCategoryProvisioningState();
+        $term = new SysCategoryTerm('Historisch', ['de' => 'Historisch']);
+
+        $first = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
+        $second = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
+
+        self::assertSame($first, $second);
+    }
+
     #[Test]
     public function stagesATranslationPerConfiguredLanguageThatHasATitle(): void
     {
@@ -315,7 +350,7 @@ class SysCategoryProvisionerTest extends TestCase
             ['en' => 1, 'fr' => 2]
         );
 
-        $translations = $this->translationsFor($payload, 'type:schema:Museum');
+        $translations = $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'));
 
         self::assertSame('Museum EN', $translations[1]['title'] ?? null);
         self::assertSame('Musée', $translations[2]['title'] ?? null);
@@ -334,7 +369,7 @@ class SysCategoryProvisionerTest extends TestCase
             ['en' => 1, 'fr' => 2]
         );
 
-        $translations = $this->translationsFor($payload, 'type:schema:Museum');
+        $translations = $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'));
 
         // Not the default language's title either: an untranslated row would
         // read as a deliberate choice.
@@ -356,7 +391,7 @@ class SysCategoryProvisionerTest extends TestCase
             ['en' => 1]
         );
 
-        $translations = $this->translationsFor($payload, 'type:schema:Museum');
+        $translations = $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'));
 
         self::assertSame([1], array_keys($translations), 'Only the configured language is staged.');
     }
@@ -373,7 +408,7 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum', 'en' => 'Museum EN'])
         );
 
-        self::assertSame([], $this->translationsFor($payload, 'type:schema:Museum'));
+        self::assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum')));
     }
 
     #[Test]
@@ -397,7 +432,7 @@ class SysCategoryProvisionerTest extends TestCase
         // A stored term still needs its translation kept current.
         self::assertSame(
             'Museum EN',
-            $this->translationsFor($payload, 'type:schema:Museum')[1]['title'] ?? null
+            $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'))[1]['title'] ?? null
         );
     }
 

@@ -1,0 +1,27 @@
+base: 'https://trail-keywords.example.com'
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    base: /
+    typo3Language: de
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    websiteTitle: ''
+    languageId: 0
+rootPageId: 1100
+websiteTitle: 'Trail Keyword Import'
+settings:
+  import:
+    thuecat:
+      keywords:
+        storagePid: 1130
+        parent: 1200
+    trails:
+      keywords:
+        storagePid: 1140
+        parent: 1300

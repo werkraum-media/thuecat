@@ -91,8 +91,8 @@ class SearchFilterOptionsService
             $storagePageIds,
             $editorFilter,
             [
-                CategoryAnchorSetting::CategoryParent->name => $this->anchors->categoryParent($request),
-                CategoryAnchorSetting::KeywordParent->name => $this->anchors->keywordParent($request),
+                CategoryAnchorSetting::CategoryParent->name => $this->anchors->categoryParent($request, $recordTable),
+                CategoryAnchorSetting::KeywordParent->name => $this->anchors->keywordParent($request, $recordTable),
             ],
             $this->resolveSitePageIds($request)
         );

@@ -45,6 +45,12 @@
             <trans-unit id="importEventsKeywordsParent" xml:space="preserve">
                 <source>Events — keyword parent: category the imported keywords are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; set it together with the keyword storage folder or keyword mapping stays off.</source>
             </trans-unit>
+            <trans-unit id="importTrailsKeywordsStoragePid" xml:space="preserve">
+                <source>Trails — keyword storage folder: page holding the keywords imported for trails. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; trails then use the keywords of the run's top-level kind, and finally the ThueCat ones. Set it together with the keyword parent.</source>
+            </trans-unit>
+            <trans-unit id="importTrailsKeywordsParent" xml:space="preserve">
+                <source>Trails — keyword parent: category the imported trail keywords are placed beneath. Instance-wide fallback, used only when the target site's settings do not supply it. 0 means unset; trails then use the keywords of the run's top-level kind, and finally the ThueCat ones. Set it together with the keyword storage folder.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Pagination;
 
-use TYPO3\CMS\Core\Pagination\SimplePagination;
+use TYPO3\CMS\Core\Pagination\SlidingWindowPagination;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -45,6 +45,6 @@ final class PaginationFactory
     ): PaginationResult {
         $paginator = new QueryResultPaginator($items, $currentPage, $itemsPerPage);
 
-        return new PaginationResult($paginator, new SimplePagination($paginator), $itemsPerPage);
+        return new PaginationResult($paginator, new SlidingWindowPagination($paginator, 6), $itemsPerPage);
     }
 }

@@ -16,16 +16,17 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteSettings;
-use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorScopeRegistry;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 class CategoryAnchorResolverTest extends TestCase
 {
@@ -37,7 +38,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -49,7 +50,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -63,7 +64,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => $unusable]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -78,7 +79,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -90,7 +91,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -102,7 +103,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -115,8 +116,8 @@ class CategoryAnchorResolverTest extends TestCase
         ]));
         $site = $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]);
 
-        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Thuecat));
-        self::assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, ImportTarget::Thuecat));
+        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
+        self::assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('thuecat')));
     }
 
     #[Test]
@@ -128,17 +129,17 @@ class CategoryAnchorResolverTest extends TestCase
             'import.thuecat.keywords.storagePid' => 30,
         ]);
 
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site, ImportTarget::Thuecat));
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, ImportTarget::Thuecat));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site, new AnchorScope('thuecat')));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, new AnchorScope('thuecat')));
     }
 
     /**
-     * The reason the settings carry a target at all: one site holding an import
-     * of each target keeps two category trees, so a value declared for one
-     * target is invisible to the other.
+     * The reason the settings carry a scope at all: one site holding records of
+     * several kinds keeps one category tree per scope, so a value declared for
+     * one scope is invisible to another at this level.
      */
     #[Test]
-    public function targetsDoNotBleedIntoEachOther(): void
+    public function scopesDoNotBleedIntoEachOther(): void
     {
         $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
         $site = $this->siteWithSettings([
@@ -146,12 +147,12 @@ class CategoryAnchorResolverTest extends TestCase
             'import.thuecat.keywords.storagePid' => 30,
         ]);
 
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Events));
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, ImportTarget::Events));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
+        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('events')));
     }
 
     #[Test]
-    public function eachTargetResolvesItsOwnValue(): void
+    public function eachScopeResolvesItsOwnValue(): void
     {
         $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
         $site = $this->siteWithSettings([
@@ -159,13 +160,13 @@ class CategoryAnchorResolverTest extends TestCase
             'import.events.keywords.parent' => 77,
         ]);
 
-        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Thuecat));
-        self::assertSame(77, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, ImportTarget::Events));
+        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
+        self::assertSame(77, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
     }
 
-    // Nor may the other target's value be borrowed one level down.
+    // Nor may another scope's value be borrowed one level down.
     #[Test]
-    public function anotherTargetsExtensionConfigurationIsNeverBorrowed(): void
+    public function anotherScopesExtensionConfigurationIsNeverBorrowed(): void
     {
         $subject = $this->resolverWith($this->extensionConfigurationReturning([
             'importThuecatKeywordsParent' => 60,
@@ -174,7 +175,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
-            ImportTarget::Events
+            new AnchorScope('events')
         ));
     }
 
@@ -186,7 +187,7 @@ class CategoryAnchorResolverTest extends TestCase
         self::assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => '42']),
-            ImportTarget::Thuecat
+            new AnchorScope('thuecat')
         ));
     }
 
@@ -205,10 +206,12 @@ class CategoryAnchorResolverTest extends TestCase
         ];
     }
 
-    // resolve() takes the Site directly; the finder only serves resolveFor().
     private function resolverWith(ExtensionConfiguration $extensionConfiguration): CategoryAnchorResolver
     {
-        return new CategoryAnchorResolver($extensionConfiguration, self::createStub(SiteFinder::class));
+        return new CategoryAnchorResolver(
+            $extensionConfiguration,
+            new AnchorScopeRegistry(new ServiceLocator([]))
+        );
     }
 
     /**

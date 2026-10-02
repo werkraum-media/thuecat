@@ -70,23 +70,48 @@ further filter properties as they are added. Each such property is anchored by a
 of settings: the folder its categories are stored in, and the parent category they are
 created beneath.
 
-Anchors are configured **per site and per import target**, not per import configuration.
+Anchors are configured **per site and per anchor scope**, not per import configuration.
 That is deliberate. They are structural data every imported object uses the same way, and
 a filter in the frontend has to be able to identify the parent category its selection
 rests on. With the anchors defined once per site, a plugin can.
 
-The import target comes from the import configuration's :guilabel:`Import target` field
-and says which kind of records a run writes — ``thuecat`` objects or ``events``. One site
-can hold an import configuration of each, so every anchor setting names its target: an
-import reads only its own, and the two category trees stay apart. A configuration that
-carries no target counts as ``thuecat``; one carrying a value that matches no known target
-is rejected before the run fetches anything.
+The scope belongs to the kind of record being written, not to the import run. Every kind
+that can be imported on its own declares one:
 
-Every anchored property carries its own pair per target, resolved independently of the
+.. list-table::
+   :header-rows: 1
+
+   * - Record kind
+     - Scope
+     - Settings
+   * - Tourist attraction
+     - ``thuecat``
+     - categories and keywords
+   * - Event
+     - ``events``
+     - categories and keywords
+   * - Trail
+     - ``trails``
+     - keywords (trails have no category field)
+
+One run therefore writes into several trees where it meets several kinds: an attraction
+import that reaches a trail files the trail's keywords under ``trails``. Every other kind —
+organisations, tourist information, towns and anything else reached only as a relation —
+resolves under ``thuecat``, whichever import reached it. Such records are shared between
+imports, so their categories must not depend on who wrote them.
+
+A scope that supplies neither setting of a pair falls back to ``thuecat`` as a pair. A site
+that configures no ``trails`` settings keeps all keywords in one tree, exactly as before
+scopes existed. Half a pair is never completed from another scope.
+
+The same resolution serves the import, the frontend filters and the category trees in the
+backend forms, so a form and a filter offer the tree the import writes into.
+
+Every anchored property carries its own pair per scope, resolved independently of the
 others. Properties may point at the same storage folder, but each pair stays separately
 configurable, because imported categories can legitimately live in different folders. The
 settings are grouped under :guilabel:`Import` in the site settings editor, one labelled
-pair per property and target.
+group per scope.
 
 Each anchor is resolved from the first level that supplies a positive page or category
 uid:
@@ -100,9 +125,10 @@ Site settings
 Extension Configuration
    Installation-wide, via :guilabel:`Admin Tools > Settings > Extension Configuration >
    thuecat`. Used only when the site supplies nothing — it is the fallback for
-   installations that declare no site set. One value per target applies to every site, so
-   it fits single-site installations and installations where all imports of that target
-   share one category tree.
+   installations that declare no site set. One value per scope applies to every site, so
+   it fits single-site installations and installations where all sites share one category
+   tree per scope. The keys are ``importThuecat…``, ``importEvents…`` and
+   ``importTrailsKeywordsStoragePid`` / ``importTrailsKeywordsParent``.
 
 Unset
    ``0``, or nothing configured anywhere. That kind's mapping is switched off and the
@@ -112,7 +138,9 @@ Unset
 Per kind, both anchors must be set or neither. Setting only one is rejected before the
 import fetches anything, as is an anchor outside the site that owns the storage page. The
 two kinds are validated independently: a broken keyword pair says nothing about the
-category pair. Failure messages name the settings to correct, including their target.
+category pair. Every scope is validated before every run, including scopes the run will not
+write, because which kinds a run meets is known only once it has fetched. Failure messages
+name the settings to correct, including their scope.
 
 The values actually in effect are reported at the start of every run — see
 :ref:`effective-settings`.
@@ -239,12 +267,12 @@ shown in the :guilabel:`Summary` column of the backend module. Command line runs
 it as well, at normal verbosity; :bash:`--quiet` suppresses the console output while the
 log entry is still written.
 
-It covers the storage page, the file folder, the API domain, the import target, that
-target's four :ref:`category anchors <import-category-based-anchors>` and the five
-:ref:`tuning settings <import-tuning>`. Only the run's own target appears; listing the
-other one's anchors would suggest they had a say in the run. An anchor nothing supplies is
-reported as ``unset`` rather than ``0``, so a switched-off mapping is visible as a decision
-rather than a number.
+It covers the storage page, the file folder, the API domain, the four
+:ref:`category anchors <import-category-based-anchors>` of every scope and the five
+:ref:`tuning settings <import-tuning>`. Each scope is reported with what it supplies itself;
+the fallback to ``thuecat`` is decided per record and does not show here. An anchor nothing
+supplies is reported as ``unset`` rather than ``0``, so a switched-off mapping is visible as a
+decision rather than a number.
 
 The API key is never part of the report — not its value, not a masked rendering, not its
 length.
@@ -255,8 +283,7 @@ length.
    values are the resolved ones, so a setting that never took effect is visible without
    tracing the fallback chain by hand. A category kind reported as ``unset`` after the
    site settings were filled in usually means the value was written for a different site
-   than the one owning the storage page — or under a different import target than the one
-   the report names.
+   than the one owning the storage page, or under a different scope's name.
 
 .. _recovered-retries:
 

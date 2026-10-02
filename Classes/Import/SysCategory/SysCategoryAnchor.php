@@ -38,4 +38,16 @@ final class SysCategoryAnchor
     {
         return $this->identifierPrefix . $value;
     }
+
+    /**
+     * Run bookkeeping key for an identifier. One term can exist once per tree
+     * with the same remote_id, so staging and translations are told apart by
+     * the parent they hang beneath; anchors sharing a parent share the row.
+     */
+    public function stagingKey(string $identifier): string
+    {
+        return $this->parentUid . self::STAGING_SEPARATOR . $identifier;
+    }
+
+    public const STAGING_SEPARATOR = '|';
 }

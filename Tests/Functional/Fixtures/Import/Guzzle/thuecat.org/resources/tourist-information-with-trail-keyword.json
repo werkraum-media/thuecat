@@ -1,0 +1,27 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/tourist-information-with-trail-keyword",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "thuecat:TouristInformation",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Tourist-Information am Fotospot"
+            },
+            "schema:keywords": [
+                {
+                    "@id": "https://thuecat.org/resources/887654277691-eatw"
+                }
+            ]
+        }
+    ]
+}

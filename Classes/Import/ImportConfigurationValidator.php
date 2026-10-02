@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 use WerkraumMedia\ThueCat\Service\SitePageIds;
 
 // Pre-flight configuration checks, run once before the import fetches anything
@@ -30,39 +32,29 @@ class ImportConfigurationValidator
         protected readonly SitePageIds $sitePageIdsResolver,
         protected readonly SysCategoryRepository $sysCategoryRepository,
         protected readonly CategoryAnchorResolver $anchorResolver,
+        protected readonly SiteFinder $siteFinder,
     ) {
     }
 
     /**
-     * @throws ImportTargetConfigurationException target matches no known one
      * @throws StoragePidConfigurationException storagePid maps to no site
      * @throws CategoryConfigurationException category mapping on but unusable
      * @throws KeywordConfigurationException keyword mapping on but unusable
      */
     public function validate(ImportConfigurationInterface $configuration): void
     {
-        // Before the anchors are resolved: the target decides which settings
-        // they come from, so an unknown one would resolve nothing and switch
-        // every kind's mapping off instead of failing.
-        $target = ImportTarget::tryFromConfigured($configuration->getImportTarget());
-        if ($target === null) {
-            throw ImportTargetConfigurationException::forUnknownTarget($configuration->getImportTarget());
-        }
-
         $sitePageIds = $this->sitePageIds($configuration->getStoragePid());
-        $anchors = $this->anchorResolver->resolveFor($configuration);
-        $this->validateCategoryConfiguration(
-            $anchors->categoryParent,
-            $anchors->categoryStoragePid,
-            $sitePageIds,
-            $target
-        );
-        $this->validateKeywordConfiguration(
-            $anchors->keywordParent,
-            $anchors->keywordStoragePid,
-            $sitePageIds,
-            $target
-        );
+        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+
+        // Every scope, not only those this run will meet: which kinds a run
+        // writes is known only once it has fetched, and a broken scope must
+        // abort before that.
+        foreach ($this->anchorResolver->scopes() as $scope) {
+            $category = $this->anchorResolver->resolveInScope($site, $scope, AnchorKind::Category);
+            $this->validateCategoryConfiguration($category->parent, $category->storagePid, $sitePageIds, $scope);
+            $keyword = $this->anchorResolver->resolveInScope($site, $scope, AnchorKind::Keyword);
+            $this->validateKeywordConfiguration($keyword->parent, $keyword->storagePid, $sitePageIds, $scope);
+        }
     }
 
     /**
@@ -98,7 +90,7 @@ class ImportConfigurationValidator
         int $parentUid,
         int $storagePid,
         array $sitePageIds,
-        ImportTarget $target
+        AnchorScope $scope
     ): void {
         // Off: no category fields set.
         if ($parentUid === 0 && $storagePid === 0) {
@@ -108,8 +100,8 @@ class ImportConfigurationValidator
         // On but incomplete: one anchor set without the other.
         if ($parentUid === 0 || $storagePid === 0) {
             throw new CategoryConfigurationException(
-                'Category mapping needs both ' . CategoryAnchorSetting::CategoryParent->settingsPath($target)
-                . ' and ' . CategoryAnchorSetting::CategoryStoragePid->settingsPath($target)
+                'Category mapping needs both ' . CategoryAnchorSetting::CategoryParent->settingsPath($scope)
+                . ' and ' . CategoryAnchorSetting::CategoryStoragePid->settingsPath($scope)
                 . '; got parent=' . $parentUid . ', storage=' . $storagePid . '.',
                 1752570001
             );
@@ -117,7 +109,7 @@ class ImportConfigurationValidator
 
         if (!in_array($storagePid, $sitePageIds, true)) {
             throw new CategoryConfigurationException(
-                CategoryAnchorSetting::CategoryStoragePid->settingsPath($target) . ' ' . $storagePid
+                CategoryAnchorSetting::CategoryStoragePid->settingsPath($scope) . ' ' . $storagePid
                 . ' is outside the storagePid\'s site.',
                 1752570002
             );
@@ -126,7 +118,7 @@ class ImportConfigurationValidator
         $parentPid = $this->sysCategoryRepository->findPid($parentUid);
         if (!in_array($parentPid, $sitePageIds, true)) {
             throw new CategoryConfigurationException(
-                CategoryAnchorSetting::CategoryParent->settingsPath($target) . ' ' . $parentUid
+                CategoryAnchorSetting::CategoryParent->settingsPath($scope) . ' ' . $parentUid
                 . ' is outside the storagePid\'s site.',
                 1752570003
             );
@@ -145,7 +137,7 @@ class ImportConfigurationValidator
         int $parentUid,
         int $storagePid,
         array $sitePageIds,
-        ImportTarget $target
+        AnchorScope $scope
     ): void {
         if ($parentUid === 0 && $storagePid === 0) {
             return;
@@ -153,8 +145,8 @@ class ImportConfigurationValidator
 
         if ($parentUid === 0 || $storagePid === 0) {
             throw new KeywordConfigurationException(
-                'Keyword mapping needs both ' . CategoryAnchorSetting::KeywordParent->settingsPath($target)
-                . ' and ' . CategoryAnchorSetting::KeywordStoragePid->settingsPath($target)
+                'Keyword mapping needs both ' . CategoryAnchorSetting::KeywordParent->settingsPath($scope)
+                . ' and ' . CategoryAnchorSetting::KeywordStoragePid->settingsPath($scope)
                 . '; got parent=' . $parentUid . ', storage=' . $storagePid . '.',
                 1786713820
             );
@@ -162,7 +154,7 @@ class ImportConfigurationValidator
 
         if (!in_array($storagePid, $sitePageIds, true)) {
             throw new KeywordConfigurationException(
-                CategoryAnchorSetting::KeywordStoragePid->settingsPath($target) . ' ' . $storagePid
+                CategoryAnchorSetting::KeywordStoragePid->settingsPath($scope) . ' ' . $storagePid
                 . ' is outside the storagePid\'s site.',
                 1786713821
             );
@@ -171,7 +163,7 @@ class ImportConfigurationValidator
         $parentPid = $this->sysCategoryRepository->findPid($parentUid);
         if (!in_array($parentPid, $sitePageIds, true)) {
             throw new KeywordConfigurationException(
-                CategoryAnchorSetting::KeywordParent->settingsPath($target) . ' ' . $parentUid
+                CategoryAnchorSetting::KeywordParent->settingsPath($scope) . ' ' . $parentUid
                 . ' is outside the storagePid\'s site.',
                 1786713822
             );

@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\CategoryConfigurationException;
 use WerkraumMedia\ThueCat\Import\ImportConfigurationValidator;
-use WerkraumMedia\ThueCat\Import\ImportTargetConfigurationException;
 use WerkraumMedia\ThueCat\Import\KeywordConfigurationException;
 use WerkraumMedia\ThueCat\Import\StoragePidConfigurationException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
@@ -160,68 +159,16 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
         $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
     }
 
-    /**
-     * An unknown target must fail rather than resolve anchors nobody declared:
-     * that would switch every kind's mapping off and let the run report success
-     * having imported no categories.
-     */
+    // Every scope is validated, not only the one the run will write.
     #[Test]
-    public function throwsWhenImportTargetIsUnknown(): void
-    {
-        $this->writeSiteSettings([], 'validator_scope', 1);
-
-        $this->expectException(ImportTargetConfigurationException::class);
-        $this->expectExceptionCode(1787117122);
-        $this->get(ImportConfigurationValidator::class)
-            ->validate($this->configuration(10, 'future'))
-        ;
-    }
-
-    #[Test]
-    public function theUnknownTargetMessageNamesTheValueAndTheAcceptedOnes(): void
-    {
-        $this->writeSiteSettings([], 'validator_scope', 1);
-
-        try {
-            $this->get(ImportConfigurationValidator::class)
-                ->validate($this->configuration(10, 'future'))
-            ;
-            self::fail('An unknown import target must not pass validation.');
-        } catch (ImportTargetConfigurationException $e) {
-            self::assertStringContainsString('future', $e->getMessage());
-            self::assertStringContainsString('thuecat', $e->getMessage());
-            self::assertStringContainsString('events', $e->getMessage());
-        }
-    }
-
-    /**
-     * An absent target is not unknown: it means the thuecat target, so an
-     * empty value must resolve the thuecat anchors — hence settings written
-     * under 'thuecat' while the configuration reports ''.
-     */
-    #[Test]
-    public function passesWhenImportTargetIsEmpty(): void
-    {
-        $this->writeSiteSettings([
-            'import' => [
-                'thuecat' => ['category' => ['storagePid' => 20, 'parent' => 100]],
-            ],
-        ], 'validator_scope', 1);
-
-        $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10, ''));
-        $this->addToAssertionCount(1);
-    }
-
-    // Each target is validated against its own anchors, in its own tree.
-    #[Test]
-    public function validatesTheAnchorsOfTheConfiguredTarget(): void
+    public function validatesTheEventsScope(): void
     {
         $this->validate(10, 100, 20, 0, 0, 'events');
         $this->addToAssertionCount(1);
     }
 
     #[Test]
-    public function throwsForTheConfiguredTargetsOutOfSiteAnchor(): void
+    public function throwsForAnEventsAnchorOutsideTheSite(): void
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570003);
@@ -229,24 +176,60 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
     }
 
     /**
-     * Anchors declared for one target say nothing about the other: the run must
-     * see them as unset, not borrow them into its own tree.
+     * Every declared scope is checked before a run, whichever kinds it will
+     * meet: a trail reached as a relation would otherwise hit the broken pair
+     * mid-run.
      */
     #[Test]
-    public function passesWhenOnlyTheOtherTargetIsConfigured(): void
+    public function throwsForAnIncompleteTrailsPair(): void
+    {
+        $this->writeSiteSettings([
+            'import' => ['trails' => ['keywords' => ['parent' => 100]]],
+        ], 'validator_scope', 1);
+
+        try {
+            $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
+            self::fail('An incomplete trails pair must fail validation.');
+        } catch (KeywordConfigurationException $exception) {
+            self::assertSame(1786713820, $exception->getCode());
+            self::assertStringContainsString('import.trails.keywords.parent', $exception->getMessage());
+            self::assertStringContainsString('import.trails.keywords.storagePid', $exception->getMessage());
+        }
+    }
+
+    #[Test]
+    public function throwsForATrailsAnchorOutsideTheSite(): void
+    {
+        $this->writeSiteSettings([
+            'import' => ['trails' => ['keywords' => ['parent' => 900, 'storagePid' => 20]]],
+        ], 'validator_scope', 1);
+
+        $this->expectException(KeywordConfigurationException::class);
+        $this->expectExceptionCode(1786713822);
+        $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
+    }
+
+    #[Test]
+    public function throwsForAnIncompleteEventsPairOnAnAttractionRun(): void
     {
         $this->writeSiteSettings([
             'import' => [
-                'thuecat' => [
-                    'category' => ['storagePid' => 20, 'parent' => 100],
-                    'keywords' => ['storagePid' => 20, 'parent' => 100],
-                ],
+                'thuecat' => ['category' => ['storagePid' => 20, 'parent' => 100]],
+                'events' => ['category' => ['parent' => 100]],
             ],
         ], 'validator_scope', 1);
 
-        $this->get(ImportConfigurationValidator::class)
-            ->validate($this->configuration(10, 'events'))
-        ;
+        $this->expectException(CategoryConfigurationException::class);
+        $this->expectExceptionCode(1752570001);
+        $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
+    }
+
+    #[Test]
+    public function passesWithEveryScopeUnset(): void
+    {
+        $this->writeSiteSettings([], 'validator_scope', 1);
+
+        $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
         $this->addToAssertionCount(1);
     }
 
@@ -261,11 +244,11 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
         int $categoryStoragePid,
         int $keywordParent = 0,
         int $keywordStoragePid = 0,
-        string $importTarget = 'thuecat'
+        string $scope = 'thuecat'
     ): void {
         $this->writeSiteSettings([
             'import' => [
-                $importTarget => [
+                $scope => [
                     'category' => ['storagePid' => $categoryStoragePid, 'parent' => $categoryParent],
                     'keywords' => ['storagePid' => $keywordStoragePid, 'parent' => $keywordParent],
                 ],
@@ -273,16 +256,15 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
         ], 'validator_scope', 1);
 
         $this->get(ImportConfigurationValidator::class)
-            ->validate($this->configuration($storagePid, $importTarget))
+            ->validate($this->configuration($storagePid))
         ;
     }
 
-    private function configuration(int $storagePid, string $importTarget = 'thuecat'): ImportConfigurationInterface
+    private function configuration(int $storagePid): ImportConfigurationInterface
     {
-        return new class($storagePid, $importTarget) implements ImportConfigurationInterface {
+        return new class($storagePid) implements ImportConfigurationInterface {
             public function __construct(
                 private readonly int $storagePid,
-                private readonly string $importTarget = 'thuecat',
             ) {
             }
 
@@ -319,11 +301,6 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
             public function getApiDomain(): string
             {
                 return '';
-            }
-
-            public function getImportTarget(): string
-            {
-                return $this->importTarget;
             }
 
             // @phpstan-ignore return.unusedType (interface is nullable; stub always has a uid)

@@ -20,13 +20,13 @@ runBudget = 86400
 fetchCacheLifetime = 900
 
 # Instance-wide fallback for the sys_category anchors, used when the target
-# site's settings do not supply them. One set per import target, because a site
-# may hold an import of each and their category trees must stay apart. Within a
-# target a single value applies across every site, so it only fits installations
-# where all imports of that target share one category tree; anchors outside the
-# import's site are rejected before the run starts.
+# site's settings do not supply them. One set per anchor scope (thuecat, events,
+# trails), because a site may hold records of each and their category trees must
+# stay apart. Within a scope a single value applies across every site, so it only
+# fits installations where all sites share one category tree per scope; anchors
+# outside the import's site are rejected before the run starts.
 # Mirrors WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting composed
-# with WerkraumMedia\ThueCat\Import\Settings\ImportTarget.
+# with WerkraumMedia\ThueCat\Import\Settings\AnchorScope.
 
 # cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importThuecatCategoryStoragePid
 importThuecatCategoryStoragePid = 0
@@ -51,3 +51,9 @@ importEventsKeywordsStoragePid = 0
 
 # cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importEventsKeywordsParent
 importEventsKeywordsParent = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importTrailsKeywordsStoragePid
+importTrailsKeywordsStoragePid = 0
+
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:importTrailsKeywordsParent
+importTrailsKeywordsParent = 0

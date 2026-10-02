@@ -2,9 +2,14 @@
 $finder = (new PhpCsFixer\Finder())
     ->ignoreVCSIgnored(true)
     ->in(realpath(__DIR__))
+    // exclude() prunes before descending; notPath() only filters afterwards,
+    // so an unreadable directory would still abort the walk.
+    ->exclude([
+        'var',
+        'Documentation-GENERATED-temp',
+    ])
     ->notPath([
         'Classes/Import/EntityMapper/CustomAnnotationExtractor.php',
-        'var',
     ]);
 ;
 

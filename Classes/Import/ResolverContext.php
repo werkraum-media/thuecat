@@ -24,10 +24,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Resource\Folder;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorPair;
+use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryAnchor;
 
 final class ResolverContext
 {
@@ -93,7 +96,8 @@ final class ResolverContext
     public array $remoteIdToTable = [];
 
     /**
-     * Category remote_id → staged key (existing uid or NEW placeholder). Lives on
+     * Category staging key (see SysCategoryAnchor::stagingKey()) → staged key
+     * (existing uid or NEW placeholder). Lives on
      * the context because resolve() runs once per root but a category recurs
      * across roots, and NEW rows aren't in the DB until the run flushes — without
      * this the second sighting would stage a duplicate.
@@ -231,8 +235,8 @@ final class ResolverContext
     public array $claimedKeywordByField = [];
 
     /**
-     * Keyword remote_id → staged key, so a keyword recurring across roots
-     * yields one row. Separate from the category map: the two trees must never
+     * Keyword staging key → staged key, so a keyword recurring across roots
+     * yields one row per tree. Separate from the category map: the two trees must never
      * hand each other a key.
      *
      * @var array<string, string>
@@ -272,6 +276,14 @@ final class ResolverContext
     public array $keywordFailureByField = [];
 
     /**
+     * "<table>|<kind>" → the anchors that table's records resolve, walked once
+     * per run rather than once per record.
+     *
+     * @var array<string, AnchorPair>
+     */
+    public array $anchorPairs = [];
+
+    /**
      * Download URL → whether its failure means the asset is gone. Needed
      * because the failure cache short-circuits later owners of the same asset,
      * which must still mark their own field.
@@ -304,10 +316,6 @@ final class ResolverContext
         public readonly array $translationLanguages = [],
         public readonly ?Folder $targetFolder = null,
         public readonly ?Folder $stagingFolder = null,
-        public readonly int $categoryParentUid = 0,
-        public readonly int $categoryStoragePid = 0,
-        public readonly int $keywordParentUid = 0,
-        public readonly int $keywordStoragePid = 0,
         public readonly ?ImportProgressListener $progressListener = null,
         // Drops media before any API request: both the referenced bucket and
         // inline nodes are discarded unresolved, undownloaded, unrelated.
@@ -316,6 +324,8 @@ final class ResolverContext
         // instance-wide, which is only ever the case for a context built
         // outside the Importer (tests constructing one directly).
         public readonly array $sitePageIds = [],
+        // Null outside the Importer: no anchor resolves, so mapping is off.
+        public readonly ?Site $site = null,
     ) {
     }
 
@@ -420,6 +430,24 @@ final class ResolverContext
     public function isTranslationUpdated(string $remoteId, int $sysLanguageUid): bool
     {
         return ($this->translationStatus[$remoteId][$sysLanguageUid] ?? null) === self::TRANSLATION_UPDATED;
+    }
+
+    /**
+     * The category map without its tree qualifier, for readers that know a
+     * term by remote_id alone. Where one run staged a term in two trees, the
+     * later one wins.
+     *
+     * @return array<string, string>
+     */
+    public function categoryKeyByIdentifier(): array
+    {
+        $keys = [];
+        foreach ($this->categoryKeyByRemoteId as $stagingKey => $key) {
+            $parts = explode(SysCategoryAnchor::STAGING_SEPARATOR, (string)$stagingKey, 2);
+            $keys[$parts[1] ?? $parts[0]] = $key;
+        }
+
+        return $keys;
     }
 
     /**

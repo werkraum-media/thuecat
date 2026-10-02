@@ -37,6 +37,32 @@
         <f:if condition="{imports.pagination.lastPageNumber} > 1">
             <nav class="pagination-wrap">
                 <ul class="pagination">
+                    <f:if condition="{imports.pagination.hasLessPages}">
+                        <li class="page-item">
+                            <f:link.action
+                                class="page-link"
+                                action="index"
+                                arguments="{currentPage: 1}"
+                            >1</f:link.action>
+                        </li>
+                        <li class="page-item"><span class="page-link">...</span></li>
+                    </f:if>
+                    <f:if condition="{imports.pagination.previousPageNumber}">
+                        <f:then>
+                            <li class="page-item">
+                                <f:link.action
+                                        class="page-link"
+                                        action="index"
+                                        arguments="{currentPage: imports.pagination.previousPageNumber}"
+                                ><span aria-hidden="true">&laquo;</span></f:link.action>
+                            </li>
+                        </f:then>
+                        <f:else>
+                            <li class="page-item disabled">
+                                <span class="page-link" aria-label="Vorherige Seite"><span aria-hidden="true">&laquo;</span></span>
+                            </li>
+                        </f:else>
+                    </f:if>
                     <f:for each="{imports.pagination.allPageNumbers}" as="pageNumber">
                         <li class="page-item {f:if(condition: '{pageNumber} == {imports.paginator.currentPageNumber}', then: 'active')}">
                             <f:link.action
@@ -46,6 +72,32 @@
                             >{pageNumber}</f:link.action>
                         </li>
                     </f:for>
+                    <f:if condition="{imports.pagination.nextPageNumber}">
+                        <f:then>
+                            <li class="page-item">
+                                <f:link.action
+                                        class="page-link"
+                                        action="index"
+                                        arguments="{currentPage: imports.pagination.nextPageNumber}"
+                                ><span aria-hidden="true">&raquo;</span></f:link.action>
+                            </li>
+                        </f:then>
+                        <f:else>
+                            <li class="page-item disabled">
+                                <span class="page-link"><span aria-hidden="true">&raquo;</span></span>
+                            </li>
+                        </f:else>
+                    </f:if>
+                    <f:if condition="{imports.pagination.hasMorePages}">
+                        <li class="page-item"><span class="page-link">...</span></li>
+                        <li class="page-item">
+                            <f:link.action
+                                    class="page-link"
+                                    action="index"
+                                    arguments="{currentPage: imports.pagination.paginator.numberOfPages}"
+                            >{imports.pagination.paginator.numberOfPages}</f:link.action>
+                        </li>
+                    </f:if>
                 </ul>
             </nav>
         </f:if>

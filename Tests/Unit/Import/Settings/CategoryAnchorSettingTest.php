@@ -16,29 +16,35 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 class CategoryAnchorSettingTest extends TestCase
 {
+    /**
+     * @param non-empty-string $scope
+     */
     #[Test]
     #[DataProvider('settingPaths')]
     public function carriesItsSiteSettingsPath(
         CategoryAnchorSetting $setting,
-        ImportTarget $target,
+        string $scope,
         string $expectedPath
     ): void {
-        self::assertSame($expectedPath, $setting->settingsPath($target));
+        self::assertSame($expectedPath, $setting->settingsPath(new AnchorScope($scope)));
     }
 
+    /**
+     * @param non-empty-string $scope
+     */
     #[Test]
     #[DataProvider('extensionConfigurationKeys')]
     public function carriesItsExtensionConfigurationKey(
         CategoryAnchorSetting $setting,
-        ImportTarget $target,
+        string $scope,
         string $expectedKey
     ): void {
-        self::assertSame($expectedKey, $setting->extensionConfigurationKey($target));
+        self::assertSame($expectedKey, $setting->extensionConfigurationKey(new AnchorScope($scope)));
     }
 
     /**
@@ -48,11 +54,11 @@ class CategoryAnchorSettingTest extends TestCase
     #[Test]
     public function bothSpellingsAreDistinctPerCase(): void
     {
-        foreach (ImportTarget::cases() as $target) {
+        foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
                 self::assertNotSame(
-                    $setting->settingsPath($target),
-                    $setting->extensionConfigurationKey($target),
+                    $setting->settingsPath($scope),
+                    $setting->extensionConfigurationKey($scope),
                     $setting->name . ' uses one spelling for both levels.'
                 );
             }
@@ -60,18 +66,18 @@ class CategoryAnchorSettingTest extends TestCase
     }
 
     /**
-     * Across targets as well as cases: two targets sharing a spelling is the
+     * Across scopes as well as cases: two scopes sharing a spelling is the
      * collision this whole scoping exists to remove.
      */
     #[Test]
-    public function everySpellingIsUsedByExactlyOneCaseAndTarget(): void
+    public function everySpellingIsUsedByExactlyOneCaseAndScope(): void
     {
         $paths = [];
         $keys = [];
-        foreach (ImportTarget::cases() as $target) {
+        foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
-                $paths[] = $setting->settingsPath($target);
-                $keys[] = $setting->extensionConfigurationKey($target);
+                $paths[] = $setting->settingsPath($scope);
+                $keys[] = $setting->extensionConfigurationKey($scope);
             }
         }
 
@@ -80,123 +86,151 @@ class CategoryAnchorSettingTest extends TestCase
     }
 
     /**
-     * Every spelling names its target, so no setting can be read by an import
-     * of the other one.
+     * Every spelling names its scope, so no setting can be read by a record of
+     * another one.
      */
     #[Test]
-    public function everySpellingCarriesItsTarget(): void
+    public function everySpellingCarriesItsScope(): void
     {
-        foreach (ImportTarget::cases() as $target) {
+        foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
                 self::assertStringContainsString(
-                    '.' . $target->value . '.',
-                    $setting->settingsPath($target),
-                    $setting->name . ' settings path does not name its target.'
+                    '.' . $scope->value . '.',
+                    $setting->settingsPath($scope),
+                    $setting->name . ' settings path does not name its scope.'
                 );
                 self::assertStringContainsString(
-                    ucfirst($target->value),
-                    $setting->extensionConfigurationKey($target),
-                    $setting->name . ' extension configuration key does not name its target.'
+                    ucfirst($scope->value),
+                    $setting->extensionConfigurationKey($scope),
+                    $setting->name . ' extension configuration key does not name its scope.'
                 );
             }
         }
     }
 
     /**
-     * @return array<string, array{CategoryAnchorSetting, ImportTarget, string}>
+     * @return array<string, array{CategoryAnchorSetting, non-empty-string, string}>
      */
     public static function settingPaths(): array
     {
         return [
             'thuecat category storage' => [
                 CategoryAnchorSetting::CategoryStoragePid,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'import.thuecat.category.storagePid',
             ],
             'thuecat category parent' => [
                 CategoryAnchorSetting::CategoryParent,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'import.thuecat.category.parent',
             ],
             'thuecat keyword storage' => [
                 CategoryAnchorSetting::KeywordStoragePid,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'import.thuecat.keywords.storagePid',
             ],
             'thuecat keyword parent' => [
                 CategoryAnchorSetting::KeywordParent,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'import.thuecat.keywords.parent',
             ],
             'events category storage' => [
                 CategoryAnchorSetting::CategoryStoragePid,
-                ImportTarget::Events,
+                'events',
                 'import.events.category.storagePid',
             ],
             'events category parent' => [
                 CategoryAnchorSetting::CategoryParent,
-                ImportTarget::Events,
+                'events',
                 'import.events.category.parent',
             ],
             'events keyword storage' => [
                 CategoryAnchorSetting::KeywordStoragePid,
-                ImportTarget::Events,
+                'events',
                 'import.events.keywords.storagePid',
             ],
             'events keyword parent' => [
                 CategoryAnchorSetting::KeywordParent,
-                ImportTarget::Events,
+                'events',
                 'import.events.keywords.parent',
+            ],
+            'trails keyword storage' => [
+                CategoryAnchorSetting::KeywordStoragePid,
+                'trails',
+                'import.trails.keywords.storagePid',
+            ],
+            'trails keyword parent' => [
+                CategoryAnchorSetting::KeywordParent,
+                'trails',
+                'import.trails.keywords.parent',
             ],
         ];
     }
 
     /**
-     * @return array<string, array{CategoryAnchorSetting, ImportTarget, string}>
+     * @return array<string, array{CategoryAnchorSetting, non-empty-string, string}>
      */
     public static function extensionConfigurationKeys(): array
     {
         return [
             'thuecat category storage' => [
                 CategoryAnchorSetting::CategoryStoragePid,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'importThuecatCategoryStoragePid',
             ],
             'thuecat category parent' => [
                 CategoryAnchorSetting::CategoryParent,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'importThuecatCategoryParent',
             ],
             'thuecat keyword storage' => [
                 CategoryAnchorSetting::KeywordStoragePid,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'importThuecatKeywordsStoragePid',
             ],
             'thuecat keyword parent' => [
                 CategoryAnchorSetting::KeywordParent,
-                ImportTarget::Thuecat,
+                'thuecat',
                 'importThuecatKeywordsParent',
             ],
             'events category storage' => [
                 CategoryAnchorSetting::CategoryStoragePid,
-                ImportTarget::Events,
+                'events',
                 'importEventsCategoryStoragePid',
             ],
             'events category parent' => [
                 CategoryAnchorSetting::CategoryParent,
-                ImportTarget::Events,
+                'events',
                 'importEventsCategoryParent',
             ],
             'events keyword storage' => [
                 CategoryAnchorSetting::KeywordStoragePid,
-                ImportTarget::Events,
+                'events',
                 'importEventsKeywordsStoragePid',
             ],
             'events keyword parent' => [
                 CategoryAnchorSetting::KeywordParent,
-                ImportTarget::Events,
+                'events',
                 'importEventsKeywordsParent',
             ],
+            'trails keyword storage' => [
+                CategoryAnchorSetting::KeywordStoragePid,
+                'trails',
+                'importTrailsKeywordsStoragePid',
+            ],
+            'trails keyword parent' => [
+                CategoryAnchorSetting::KeywordParent,
+                'trails',
+                'importTrailsKeywordsParent',
+            ],
         ];
+    }
+
+    /**
+     * @return list<AnchorScope>
+     */
+    private static function scopes(): array
+    {
+        return [new AnchorScope('thuecat'), new AnchorScope('events'), new AnchorScope('trails')];
     }
 }

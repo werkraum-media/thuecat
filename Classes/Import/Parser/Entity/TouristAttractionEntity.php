@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TouristAttractionEntity extends AbstractPlaceEntity
+class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEntityInterface
 {
     public const TABLE = 'tx_thuecat_tourist_attraction';
 
@@ -192,5 +192,10 @@ class TouristAttractionEntity extends AbstractPlaceEntity
     public function handlesTypes(): array
     {
         return ['schema:TouristAttraction'];
+    }
+
+    public static function anchorScope(): string
+    {
+        return 'thuecat';
     }
 }

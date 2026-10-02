@@ -20,6 +20,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository;
 use WerkraumMedia\ThueCat\Import\Resolver;
+use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\SysCategory\ChainBuilder;
 use WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies;
 use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioner;
@@ -1040,6 +1041,7 @@ class ImporterTest extends AbstractImportTestCase
             $this->get(ParentStrategies::class),
             $this->get(VocabularyProvider::class),
             $this->get(EventPlaceMatcher::class),
+            $this->get(CategoryAnchorResolver::class),
         );
     }
 }

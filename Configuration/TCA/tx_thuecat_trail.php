@@ -85,7 +85,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'category',
                     'treeConfig' => [
-                        'startingPoints' => '###SITE:settings.import.trails.keywords.parent###',
+                        'startingPoints' => '###THUECAT_ANCHOR:tx_thuecat_trail:keywords###',
                     ],
                 ],
             ],

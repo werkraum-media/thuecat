@@ -45,18 +45,6 @@
             <trans-unit id="importConfiguration.syncScope.syncScopeId" xml:space="preserve">
                 <source>syncScopeId</source>
             </trans-unit>
-            <trans-unit id="importConfiguration.syncScope.importTarget">
-                <source>Import Target Extension</source>
-            </trans-unit>
-            <trans-unit id="importConfiguration.syncScope.importTarget.description">
-                <source>When importing events, they can use the ext:events data structures.</source>
-            </trans-unit>
-            <trans-unit id="importConfiguration.syncScope.importTarget.thuecat">
-                <source>ThueCat</source>
-            </trans-unit>
-            <trans-unit id="importConfiguration.syncScope.importTarget.events">
-                <source>Events</source>
-            </trans-unit>
             <trans-unit id="importConfiguration.syncScope.apiDomain">
                 <source>API Domain</source>
             </trans-unit>

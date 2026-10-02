@@ -20,8 +20,8 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
+use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
-use WerkraumMedia\ThueCat\Import\Settings\ImportTarget;
 
 // Values driving a run are spread over site settings, extension configuration
 // and the import configuration, so each run reports what it actually used.
@@ -113,12 +113,11 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $expected = ['storagePid', 'fileFolder', 'apiDomain', 'importTarget'];
-        // Anchors come from the enum, so a new pair is covered without editing
-        // this list — it only has to be reported. Only the run's own target
-        // appears: reporting the other one would suggest it drove the run.
-        foreach (CategoryAnchorSetting::cases() as $anchor) {
-            $expected[] = $anchor->settingsPath(ImportTarget::Thuecat);
+        $expected = ['storagePid', 'fileFolder', 'apiDomain'];
+        foreach (self::scopes() as $scope) {
+            foreach (CategoryAnchorSetting::cases() as $anchor) {
+                $expected[] = $anchor->settingsPath($scope);
+            }
         }
         $expected = array_merge($expected, [
             'readTimeout',
@@ -136,11 +135,11 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
     }
 
     /**
-     * The fixture imports as the thuecat target, so the events anchors are not
-     * merely unset in the report — they are absent from it.
+     * Which scopes a run writes is known only once it has fetched, so every
+     * scope is reported; no import target exists to narrow it.
      */
     #[Test]
-    public function theSummaryNamesOnlyTheRunsOwnTarget(): void
+    public function theSummaryNamesTheAnchorsOfEveryScope(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
@@ -149,15 +148,9 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $reported = array_keys($this->summaryContext());
 
-        self::assertContains('importTarget', $reported);
-        self::assertSame('thuecat', $this->summaryContext()['importTarget']);
-
-        foreach (CategoryAnchorSetting::cases() as $anchor) {
-            self::assertNotContains(
-                $anchor->settingsPath(ImportTarget::Events),
-                $reported,
-                'The events anchors must not appear in a thuecat run.'
-            );
+        self::assertNotContains('importTarget', $reported);
+        foreach (self::scopes() as $scope) {
+            self::assertContains(CategoryAnchorSetting::KeywordParent->settingsPath($scope), $reported);
         }
     }
 
@@ -171,12 +164,22 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $context = $this->summaryContext();
 
-        // This fixture configures no anchors at all, so every kind the enum
-        // knows must report 'unset' — a new pair is covered automatically.
-        foreach (CategoryAnchorSetting::cases() as $anchor) {
-            $path = $anchor->settingsPath(ImportTarget::Thuecat);
-            self::assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
+        // This fixture configures no anchors at all, so every kind of every
+        // scope must report 'unset'.
+        foreach (self::scopes() as $scope) {
+            foreach (CategoryAnchorSetting::cases() as $anchor) {
+                $path = $anchor->settingsPath($scope);
+                self::assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
+            }
         }
+    }
+
+    /**
+     * @return list<AnchorScope>
+     */
+    private static function scopes(): array
+    {
+        return [new AnchorScope('thuecat'), new AnchorScope('events'), new AnchorScope('trails')];
     }
 
     /**

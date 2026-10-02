@@ -72,7 +72,7 @@ return (static function (string $extensionKey, string $tableName) {
                 'config' => [
                     'type' => 'category',
                     'treeConfig' => [
-                        'startingPoints' => '###SITE:settings.import.thuecat.keywords.parent###',
+                        'startingPoints' => '###THUECAT_ANCHOR:tx_thuecat_tourist_information:keywords###',
                     ],
                 ],
             ],

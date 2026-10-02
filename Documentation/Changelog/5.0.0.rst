@@ -17,32 +17,46 @@ Breaking
 * Support for TYPO3 v12 removed.
 
 * Category and keyword anchors moved from the import configuration to the target site, and are
-  now scoped by import target. The flexform fields ``categoryStoragePid``, ``categoryParent``,
-  ``keywordStoragePid`` and ``keywordParent`` are removed without replacement; values left in
-  stored flexform XML are ignored. Configure the anchors in the site settings instead — eight
-  settings, one set per target, because a site may hold an import configuration of each and
-  their category trees have to stay apart:
+  now scoped by the kind of record being written. The flexform fields ``categoryStoragePid``,
+  ``categoryParent``, ``keywordStoragePid`` and ``keywordParent`` are removed without replacement;
+  values left in stored flexform XML are ignored. Configure the anchors in the site settings
+  instead, one set per scope, because a site may hold several record kinds whose category trees
+  have to stay apart:
 
   * ``import.thuecat.category.storagePid``, ``import.thuecat.category.parent``,
-    ``import.thuecat.keywords.storagePid``, ``import.thuecat.keywords.parent``
+    ``import.thuecat.keywords.storagePid``, ``import.thuecat.keywords.parent`` for tourist
+    attractions
   * ``import.events.category.storagePid``, ``import.events.category.parent``,
-    ``import.events.keywords.storagePid``, ``import.events.keywords.parent``
+    ``import.events.keywords.storagePid``, ``import.events.keywords.parent`` for events
+  * ``import.trails.keywords.storagePid``, ``import.trails.keywords.parent`` for trails, which
+    carry keywords but no categories
+
+  Each record resolves the anchors of its own kind, so one run can write into several trees: an
+  attraction import that reaches a trail files the trail's keywords under ``trails``. Kinds that
+  are only ever reached as relations — organisations, tourist information, towns — always resolve
+  under ``thuecat``, so a record shared between imports keeps one tree. A scope that configures
+  neither setting of a pair falls back to ``thuecat``; a site without ``trails`` settings keeps
+  trail keywords in the ThueCat tree. Every scope is validated before every run, and a pair set
+  only halfway or pointing outside the site aborts the run before it fetches anything.
 
   A site opts into the settings editor for them by listing the ``werkraummedia/thuecat-import``
   set among its own ``dependencies``. The anchors are no longer declared by ``thuecat_ces`` or
   ``events_ces``. On installations without a site set they remain configurable instance-wide in
   the Extension Configuration, where the four ``importCategory*`` / ``importKeywords*`` keys are
-  likewise replaced by eight ``importThuecat*`` / ``importEvents*`` ones.
+  replaced by ``importThuecat*``, ``importEvents*`` and ``importTrailsKeywords*`` ones. Import,
+  frontend filters and the category trees of the backend forms resolve the same chain, Extension
+  Configuration included.
 
   There is no upgrade wizard: **note the existing values before updating**, because an import
   whose anchors are not configured runs with category and keyword mapping switched off rather
-  than failing.
+  than failing. See :ref:`import-category-based-anchors`.
 
-  Check the ``importTarget`` of every import configuration while you are there. It decides which
-  anchors a run resolves, and a configuration that writes event records without it set counts as
-  the ``thuecat`` target — putting its categories in the ThueCat tree. A value matching no known
-  target now aborts the run before it fetches anything, instead of importing with no categories.
-  See :ref:`import-category-based-anchors`.
+  Code reading the anchors: the target-scoped API is gone. A record kind importable on its own
+  implements :php:`TopLevelEntityInterface` and names its scope in :php:`anchorScope()`; anchors
+  are read through :php:`CategoryAnchorResolver::resolvePair()`. TCA and Content Block fields
+  bound to an anchor use ``###THUECAT_ANCHOR:<table>:<category|keywords>###`` in
+  ``treeConfig.startingPoints``; core's ``###SITE:###`` marker still works but reads site
+  settings only.
 
 * An imported record is identified within the site that imports it. Previously a ``remote_id``
   matched any record carrying it anywhere in the installation, so two sites importing the same
@@ -69,12 +83,12 @@ Breaking
   items in ``{items}`` rather than iterating attractions. An override left in ``Partials/`` is
   silently ignored. See :ref:`frontend-output`.
 
-* The category and keyword fields on tourist attractions and tourist information are bounded by
-  the site's anchors instead of offering every :sql:`sys_category` in the installation. A site
-  that configures no anchor now offers **nothing** in these fields, where it previously offered
-  everything; configure ``import.thuecat.category.parent`` and ``import.thuecat.keywords.parent``
-  to restore a selection. The same bound applies to the keyword field of the attraction list
-  plugin. See :ref:`import-category-based-anchors`.
+* The category and keyword fields on tourist attractions, tourist information and trails are
+  bounded by the anchors their record kind resolves, from site settings or the Extension
+  Configuration, instead of offering every :sql:`sys_category` in the installation. A site that
+  configures no anchor at any level still offers the whole tree, starting at the root; configure
+  the anchors to bound it. The same bound applies to the category and keyword fields of the
+  attraction list plugin. See :ref:`import-category-based-anchors`.
 
 * Filter options are built by :php:`SearchFilterOptionsService`. Removed without replacement:
   :php:`TouristAttractionRepository::findCategoryTreeForSearchForm()`,

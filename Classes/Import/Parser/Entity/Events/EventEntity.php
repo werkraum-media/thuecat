@@ -10,13 +10,14 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventDateFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\TopLevelEntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 /**
  * Entity class for event imports.
  * Collected via ServiceLocator, so don't use a constructor
  */
-class EventEntity extends AbstractEventsEntity
+class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterface
 {
     public const TABLE = 'tx_events_domain_model_event';
 
@@ -323,5 +324,10 @@ class EventEntity extends AbstractEventsEntity
             return $this->extractValue($item['schema:value'] ?? null, $language);
         }
         return '';
+    }
+
+    public static function anchorScope(): string
+    {
+        return 'events';
     }
 }
