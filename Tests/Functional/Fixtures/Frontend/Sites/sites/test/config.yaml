@@ -14,5 +14,4 @@ languages:
     flag: global
     languageId: 0
 rootPageId: 1
-thuecat_api_key: ''
 websiteTitle: test
