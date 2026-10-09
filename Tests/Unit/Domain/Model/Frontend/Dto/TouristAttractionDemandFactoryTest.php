@@ -162,6 +162,40 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     }
 
     #[Test]
+    public function sortBySettingIsCarriedWithoutLockingIt(): void
+    {
+        // Locked properties render as hidden form fields; the sort order must not.
+        $filter = $this->subject->fromSettings(['sortBy' => 'sorting']);
+
+        self::assertSame('sorting', $filter->getDemand()->getSortBy());
+        self::assertSame([], $filter->getLockedProperties());
+    }
+
+    #[Test]
+    public function applyForcesTheEditorsSortByOverVisitorInput(): void
+    {
+        $filter = $this->subject->fromSettings(['sortBy' => 'sorting']);
+        $demand = new TouristAttractionDemand();
+        $demand->setSortBy('title');
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        self::assertSame('sorting', $demand->getSortBy());
+    }
+
+    #[Test]
+    public function applyForcesAnEmptySortByOverVisitorInput(): void
+    {
+        $filter = $this->subject->fromSettings([]);
+        $demand = new TouristAttractionDemand();
+        $demand->setSortBy('sorting');
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        self::assertSame('', $demand->getSortBy());
+    }
+
+    #[Test]
     public function applyLeavesUnlockedPropertyUntouched(): void
     {
         // Only towns locked; the visitor's searchword must survive.

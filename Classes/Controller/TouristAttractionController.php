@@ -123,10 +123,14 @@ class TouristAttractionController extends AbstractActionController
         $html = $this->view->render();
 
         // One tag per displayed record; an empty result falls back to the table.
-        $cache->set($identifier, $html, $this->cacheTagCollector->forRecords(
-            $displayedRecords,
-            $this->cacheTagCollector->tableForModel(TouristAttraction::class)
-        ));
+        // The plugin's own tag discards its lists when an editor saves it.
+        $cache->set($identifier, $html, [
+            ...$this->cacheTagCollector->forRecords(
+                $displayedRecords,
+                $this->cacheTagCollector->tableForModel(TouristAttraction::class)
+            ),
+            'tt_content_' . $this->pluginUid(),
+        ]);
 
         return $this->htmlResponse($html);
     }

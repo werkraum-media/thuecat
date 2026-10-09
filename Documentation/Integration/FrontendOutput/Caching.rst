@@ -33,12 +33,21 @@ Invalidation
 
 Because the caches belong to the :sql:`pages` group, everything that already clears page caches
 clears these too: the :guilabel:`Clear cache` buttons in the backend, and any editor saving a
-record. Editors need do nothing differently — a changed attraction, town or category takes its
-cached output with it, and the next visitor sees the new content.
+record. Editors need do nothing differently, with the one exception below — a changed attraction,
+town or category takes its cached output with it, and the next visitor sees the new content.
+Saving a list plugin discards every list it stored, so a changed setting such as the sort order
+shows on the next request.
 
 Entries are discarded by the records they show rather than by age, so nothing goes stale waiting for
 a lifetime to run out. A filter combination nobody has requested before is still built from scratch,
 but only its unseen items cost anything: the rest come from the teaser cache.
+
+.. important::
+
+   Re-sorting attractions in the backend discards only the stored list pages that showed a moved
+   attraction. A list in backend order can keep a page that never showed it, and that page then
+   repeats one attraction and misses another. Clear the frontend caches after re-sorting. The next
+   import run rebuilds the lists as well, see the note below.
 
 .. _frontend-output-caching-lifetime:
 

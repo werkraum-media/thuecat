@@ -58,6 +58,24 @@ element may override them in its FlexForm.
           ignoreFlexFormSettingsIfEmpty = itemsPerPage, page.pid.thuecat_attraction_show
       }
 
+.. _frontend-output-plugin-settings-sort-order:
+
+Sort order
+==========
+
+:typoscript:`settings.sortBy`
+   Attraction lists only. ``sorting`` lists the attractions in the order editors arranged them in the
+   backend, with the title deciding between equal positions. Any other value, or none, lists them by
+   title. A request cannot change the order, and it never appears in URLs.
+
+.. important::
+
+   Backend order suits small storage folders. Existing attractions start out sharing one position,
+   and TYPO3 cannot place a record between records that share a position: moving it after one of
+   them puts it after all of them. Arrange the records by moving them to the top one at a time, last
+   one first. Saving the content element applies a changed sort order at once; re-sorting records
+   needs a cache flush, see :ref:`frontend-output-caching-invalidation`.
+
 .. _frontend-output-plugin-settings-records:
 
 Picking records

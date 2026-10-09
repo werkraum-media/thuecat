@@ -1,0 +1,8 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","remote_id","title"
+,1,10,"test:attraction-a","Attraction A"
+,2,10,"test:attraction-b","Attraction B"
+"tx_thuecat_trail"
+,"uid","pid","remote_id","title"
+,1,10,"test:trail-a","Trail A"
+,2,10,"test:trail-b","Trail B"

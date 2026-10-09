@@ -14,7 +14,7 @@ return (static function (string $extensionKey, string $tableName) {
         'ctrl' => [
             'label' => 'title',
             'iconfile' => Extension::getIconPath() . $tableName . '.svg',
-            'default_sortby' => 'title',
+            'sortby' => 'sorting',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'delete' => 'deleted',

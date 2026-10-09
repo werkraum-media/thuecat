@@ -95,6 +95,23 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         $this->assertDataHandlerSucceeded($dataHandler, 'delete');
     }
 
+    /**
+     * Moves the way the list module does: a positive target is the page to move
+     * to the top of, a negative one the record to move after.
+     */
+    protected function moveRecord(
+        int $uid,
+        int $target,
+        string $table = 'tx_thuecat_tourist_attraction'
+    ): void {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start([], [$table => [$uid => ['move' => $target]]]);
+        $dataHandler->process_cmdmap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, 'move');
+    }
+
     /** Undelete is a cmdmap command; writing the delete field would not restore. */
     protected function undeleteRecord(
         int $uid,

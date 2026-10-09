@@ -59,6 +59,10 @@ class TouristAttractionDemandFactory
             $demand->setPublicAccess(true);
             $locked[] = 'publicAccess';
         }
+        // Not locked: locked properties render as hidden form fields.
+        if (is_string($settings['sortBy'] ?? null)) {
+            $demand->setSortBy($settings['sortBy']);
+        }
 
         return new EditorFilter($demand, $locked);
     }
@@ -90,6 +94,8 @@ class TouristAttractionDemandFactory
         if ($filter->isLocked('publicAccess')) {
             $demand->setPublicAccess($locked->getPublicAccess());
         }
+        // Always the editor's, even when empty, so a request can never pick the order.
+        $demand->setSortBy($locked->getSortBy());
 
         return $demand;
     }

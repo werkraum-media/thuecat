@@ -171,6 +171,19 @@ class TrailImportTest extends AbstractImportTestCase
         self::assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID));
     }
 
+    #[Test]
+    public function reImportingKeepsAnEditorsBackendOrder(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $connection = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_trail');
+        $connection->update('tx_thuecat_trail', ['sorting' => 42], ['uid' => 1]);
+        $this->expectFetch('e_52469786-oatour.json');
+
+        $this->importConfiguration(1);
+
+        self::assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID)['sorting']);
+    }
+
     private function fetchTrailSeason(): int
     {
         $season = $this->fetchTrail()['season'];

@@ -84,8 +84,25 @@ class TouristAttractionRepository extends AbstractThuecatObjectRepository
             $query->matching($query->logicalAnd(...$constraints));
         }
 
-        $query->setOrderings(['title' => QueryInterface::ORDER_ASCENDING]);
+        $query->setOrderings($this->orderingsFor($demand->getSortBy()));
         return $query->execute();
+    }
+
+    /**
+     * A setting never reaches setOrderings() raw; anything unknown means title.
+     * Title breaks ties so records never arranged in the backend page stably.
+     *
+     * @return array<string, string>
+     */
+    protected function orderingsFor(string $sortBy): array
+    {
+        return match ($sortBy) {
+            'sorting' => [
+                'sorting' => QueryInterface::ORDER_ASCENDING,
+                'title' => QueryInterface::ORDER_ASCENDING,
+            ],
+            default => ['title' => QueryInterface::ORDER_ASCENDING],
+        };
     }
 
     /**

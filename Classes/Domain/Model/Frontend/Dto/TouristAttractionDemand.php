@@ -51,6 +51,8 @@ class TouristAttractionDemand
 
     protected bool $publicAccess = false;
 
+    protected string $sortBy = '';
+
     public function getSearchword(): string
     {
         return $this->searchword;
@@ -139,6 +141,16 @@ class TouristAttractionDemand
         $this->publicAccess = $publicAccess;
     }
 
+    public function getSortBy(): string
+    {
+        return $this->sortBy;
+    }
+
+    public function setSortBy(string $sortBy): void
+    {
+        $this->sortBy = $sortBy;
+    }
+
     /**
      * Flat shape for GET URLs (f:link.action / POST redirect); empties dropped.
      *
@@ -149,6 +161,8 @@ class TouristAttractionDemand
         $parameters = [];
         /** @var array<string, string|int|int[]|bool> $properties */
         $properties = get_object_vars($this);
+        // Editor-only and re-applied on every request; kept out of URLs and the cHash.
+        unset($properties['sortBy']);
         foreach ($properties as $name => $value) {
             if ($value === '' || $value === [] || $value === false) {
                 continue;

@@ -642,6 +642,22 @@ class ImporterTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function reimportKeepsAnEditorsBackendOrder(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportAddressTranslations.php');
+        $connection = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_tourist_attraction');
+        $connection->update('tx_thuecat_tourist_attraction', ['sorting' => 42], ['uid' => 1]);
+        $this->expectFetch('900000000001-goet.json');
+
+        $this->importConfiguration(1);
+
+        self::assertEquals(
+            42,
+            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/900000000001-goet')['sorting']
+        );
+    }
+
+    #[Test]
     public function importsTouristAttractionsWithSpecialOpeningHours(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithSpecialOpeningHours.php');
