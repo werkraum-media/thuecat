@@ -58,7 +58,7 @@
         "typo3/cms-filemetadata": "^13.4 || 14.*",
         "typo3/cms-frontend": "^13.4 || 14.*",
         "typo3/cms-install": "^13.4 || 14.*",
-        "werkraummedia/events": "^v6.0"
+        "werkraummedia/events": "^6.0 || ^7.0"
     },
     "require-dev": {
         "brianium/paratest": "^7.8",
@@ -86,6 +86,7 @@
         ]
     },
     "extra": {
+        "branch-alias": {"dev-main": "6.x-dev"},
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "thuecat",
