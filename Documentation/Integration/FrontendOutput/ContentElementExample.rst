@@ -51,7 +51,8 @@ The other content elements follow the same shape, wired to their plugin name, wi
    * - List
      - ``TouristAttractionList``
      - :sql:`pages`, ``recursive``
-     - :typoscript:`settings.itemsPerPage`, :typoscript:`settings.page.pid.thuecat_attraction_show`
+     - :typoscript:`settings.itemsPerPage`, :typoscript:`settings.page.pid.thuecat_attraction_show`,
+       :typoscript:`settings.sortBy`
    * - Filtered list
      - ``TouristAttractionList``
      - same as the list

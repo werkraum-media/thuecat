@@ -37,6 +37,7 @@ The extension offers no frontend plugins, only registrations for Extbase actions
 data.
 How to make use of this is described in :ref:`content-element-example`.
 The data types supported for listing and display are Tourist Attraction and Trail.
+Attraction lists show their records by title, or in the order editors arranged them in the backend.
 
 Backend
 =======

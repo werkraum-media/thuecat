@@ -44,7 +44,8 @@ Tourist attractions
      - ``List``
      - optional preset: ``towns``, ``categories``, ``keywords``, ``petsAllowed``,
        ``isAccessibleForFree``, ``publicAccess``. Optional overrides of the `Site settings`_:
-       ``itemsPerPage``, ``page.pid.thuecat_attraction_show``.
+       ``itemsPerPage``, ``page.pid.thuecat_attraction_show``. Optional sort order: ``sortBy``, see
+       :ref:`frontend-output-plugin-settings-sort-order`.
    * - ``TouristAttractionListSelected``
      - Fixed set of attractions picked by the editor, in the picked order.
        No filtering, no pagination.
