@@ -873,6 +873,20 @@ class Resolver
         string $uri,
         ?bool &$technicalFailure = null
     ): ?KeywordTermEntity {
+        if (!isset($context->keywordTermByUri[$uri])) {
+            $term = $this->requestKeywordTerm($context, $uri, $requestFailed);
+            $context->keywordTermByUri[$uri] = ['term' => $term, 'technicalFailure' => $requestFailed === true];
+        }
+
+        $technicalFailure = $context->keywordTermByUri[$uri]['technicalFailure'];
+        return $context->keywordTermByUri[$uri]['term'];
+    }
+
+    protected function requestKeywordTerm(
+        ResolverContext $context,
+        string $uri,
+        ?bool &$technicalFailure = null
+    ): ?KeywordTermEntity {
         $technicalFailure = false;
 
         try {

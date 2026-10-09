@@ -288,7 +288,6 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
         self::assertSame(
             ['media_files'],
             $this->fetchReferenceFields(),
@@ -316,7 +315,6 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
         self::assertSame(
             ['media_files', 'media_files'],
             $this->fetchReferenceFields(),
@@ -350,7 +348,6 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getFailureLogEntries(), 'No rendition may be requested.');
         self::assertSame(
             // oastatic paths end in "/.jpg", so those two have no stem to keep.
             [
@@ -400,7 +397,6 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched once.');
         self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
         self::assertSame(
             ['main_image', 'media_files'],
@@ -438,7 +434,6 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getFailureLogEntries(), 'The asset must be fetched.');
         self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
         self::assertSame(
             ['main_image', 'media_files'],
@@ -781,26 +776,6 @@ class MediaImportTest extends AbstractImportTestCase
             }
         }
         return $titles;
-    }
-
-    /**
-     * A repeat fetch becomes a mappingError rather than a failed run.
-     *
-     * @return list<array<string, mixed>>
-     */
-    private function getFailureLogEntries(): array
-    {
-        return $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log_entry')
-            ->select(
-                ['type', 'severity', 'table_name', 'remote_id', 'message'],
-                'tx_thuecat_import_log_entry',
-                ['severity' => 'error'],
-                [],
-                ['uid' => 'ASC']
-            )
-            ->fetchAllAssociative()
-        ;
     }
 
     /**

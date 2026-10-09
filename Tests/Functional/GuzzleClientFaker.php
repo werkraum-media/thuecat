@@ -8,6 +8,7 @@ use Exception;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
@@ -37,10 +38,32 @@ class GuzzleClientFaker
      */
     private static array $consumed = [];
 
+    /**
+     * Kept apart from the thrown exception: production code may catch that one
+     * and log it as data drift, which would let the test pass on an empty import.
+     *
+     * @var list<string>
+     */
+    private static array $unexpected = [];
+
     private static ?RequestInterface $lastRequest = null;
+
+    /**
+     * Static, unlike the handler in $GLOBALS: the functional bootstrap rebuilds
+     * TYPO3_CONF_VARS per test, which would hide a registration nobody tore down.
+     */
+    private static bool $registered = false;
 
     public static function registerClient(): void
     {
+        if (self::$registered) {
+            throw new RuntimeException(
+                'GuzzleClientFaker was registered again without tearDown() in between. Every test that'
+                . ' registers it must call tearDown() and fail on what it returns, or its fetches go unchecked.',
+                1791532593
+            );
+        }
+        self::$registered = true;
         self::reset();
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
         $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = function (callable $handler) {
@@ -49,25 +72,33 @@ class GuzzleClientFaker
     }
 
     /**
-     * Cleans things up, call it in tests tearDown() method. Returns the
-     * still-pending expectations so the abstract test case can assert no
-     * leftovers (strict mode).
+     * Cleans things up, call it in tests tearDown() method. Returns every
+     * violated expectation, staged fetches that never happened and fetches
+     * nobody staged, so the abstract test case can fail on them (strict mode).
      *
-     * @return array<string, list<string>> URL → list of unconsumed labels
+     * @return list<string>
      */
     public static function tearDown(): array
     {
-        $remaining = [];
+        $problems = [];
         foreach (self::$expected as $url => $bag) {
             if ($bag === []) {
                 continue;
             }
-            $remaining[$url] = array_map(static fn (array $entry): string => $entry['label'], $bag);
+            $labels = array_map(static fn (array $entry): string => $entry['label'], $bag);
+            $problems[] = sprintf(
+                'Expected HTTP fetch never happened: %s  ×%d  [%s]',
+                $url,
+                count($labels),
+                implode(', ', $labels)
+            );
         }
+        $problems = [...$problems, ...self::$unexpected];
         self::reset();
+        self::$registered = false;
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
         unset($GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker']);
-        return $remaining;
+        return $problems;
     }
 
     /**
@@ -121,6 +152,7 @@ class GuzzleClientFaker
     {
         self::$expected = [];
         self::$consumed = [];
+        self::$unexpected = [];
         self::$lastRequest = null;
     }
 
@@ -132,7 +164,9 @@ class GuzzleClientFaker
             $key = self::normaliseUrl($url);
 
             if (!isset(self::$expected[$key]) || self::$expected[$key] === []) {
-                throw new UnexpectedFetchException(self::unexpectedMessage($request, $key));
+                $message = self::unexpectedMessage($request, $key);
+                self::$unexpected[] = $message;
+                throw new UnexpectedFetchException($message);
             }
 
             $entry = array_shift(self::$expected[$key]);

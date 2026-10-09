@@ -98,6 +98,16 @@ class ImportWithoutChangesTest extends FunctionalTestCase
         ]);
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['LANG']);
+        $problems = GuzzleClientFaker::tearDown();
+        parent::tearDown();
+        if ($problems !== []) {
+            self::fail(implode("\n\n", $problems));
+        }
+    }
+
     /** The record is not written: `tstamp` stands. */
     #[Test]
     public function anImportFindingNoChangesWritesNoRecord(): void
@@ -163,14 +173,16 @@ class ImportWithoutChangesTest extends FunctionalTestCase
 
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
         self::assertNotNull($configuration, 'Fixture configuration uid=1 not found.');
-        $this->get(Importer::class)->importConfiguration($configuration);
+        // Bypassing the fetch cache: a cached response would stand in for the
+        // staged one, and the record would never change.
+        $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
     }
 
+    /** Whatever the fixture, it answers the one URL the configuration imports. */
     private function expectFetch(string $filename): void
     {
-        $segment = pathinfo($filename, PATHINFO_FILENAME);
         GuzzleClientFaker::expectFileForUrl(
-            'https://thuecat.org/resources/' . $segment,
+            'https://thuecat.org/resources/attraction-with-category',
             __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/' . $filename
         );
     }

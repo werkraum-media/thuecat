@@ -206,14 +206,10 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
     {
         $this->expectErrors = false;
         unset($GLOBALS['LANG']);
-        $remaining = GuzzleClientFaker::tearDown();
+        $problems = GuzzleClientFaker::tearDown();
         parent::tearDown();
-        if ($remaining !== []) {
-            $lines = ['Test expected HTTP fetches that never happened:'];
-            foreach ($remaining as $url => $labels) {
-                $lines[] = sprintf('  %s  ×%d  [%s]', $url, count($labels), implode(', ', $labels));
-            }
-            self::fail(implode("\n", $lines));
+        if ($problems !== []) {
+            self::fail(implode("\n\n", $problems));
         }
     }
 

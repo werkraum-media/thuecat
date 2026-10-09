@@ -25,6 +25,7 @@ namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
@@ -242,6 +243,15 @@ final class ResolverContext
      * @var array<string, string>
      */
     public array $keywordKeyByRemoteId = [];
+
+    /**
+     * Keyword term URI → the fetch outcome: one request per term per run. Many
+     * keywords share an ancestor, and the fetch cache cannot absorb the repeats
+     * when a run bypasses it.
+     *
+     * @var array<string, array{term: ?KeywordTermEntity, technicalFailure: bool}>
+     */
+    public array $keywordTermByUri = [];
 
     /**
      * Download URL → sys_file uid: one fetch per asset per run.

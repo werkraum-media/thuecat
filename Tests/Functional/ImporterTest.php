@@ -86,6 +86,9 @@ class ImporterTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
         $this->expectFetch('043064193523-jcyt.json');
+        // One per attempt: maxAttempts defaults to 3.
+        $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
+        $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
         $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
 
         $this->importConfiguration(1);
