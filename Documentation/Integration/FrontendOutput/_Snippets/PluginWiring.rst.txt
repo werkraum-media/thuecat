@@ -1,0 +1,22 @@
+Define one Extbase plugin object carrying the ``ThueCat`` extension name, once, in your site set.
+Each content element copies it and names its plugin. A dedicated object keeps other extensions that
+wire their own plugins into content elements on the same site from overwriting the extension name:
+
+.. code-block:: typoscript
+   :caption: EXT:myextension/Configuration/Sets/MySet/setup.typoscript
+
+   lib.myvendorThuecatPlugin = EXTBASEPLUGIN
+   lib.myvendorThuecatPlugin {
+       extensionName = ThueCat
+   }
+
+.. code-block:: typoscript
+   :caption: EXT:myextension/ContentBlocks/ContentElements/attraction-list-selected/setup.typoscript
+
+   tt_content.myvendor_attractionlistselected =< lib.contentBlock
+   tt_content.myvendor_attractionlistselected {
+       20 =< lib.myvendorThuecatPlugin
+       20 {
+           pluginName = TouristAttractionListSelected
+       }
+   }

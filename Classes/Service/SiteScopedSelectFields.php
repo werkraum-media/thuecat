@@ -28,7 +28,7 @@ namespace WerkraumMedia\ThueCat\Service;
  * belongs here — usually yes, but a table shared across sites on purpose, or
  * one never used as a relation target, is correctly left out. Nothing detects
  * an omission: a select field pointing at a missing table keeps working and
- * offers the whole installation. See Documentation/BackendRelationScoping.rst.
+ * offers the whole installation.
  */
 class SiteScopedSelectFields
 {

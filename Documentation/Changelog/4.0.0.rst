@@ -1,3 +1,7 @@
+.. include:: ../Includes.txt
+.. _changelog-4-0-0:
+
+=====
 4.0.0
 =====
 
@@ -6,8 +10,8 @@ Breaking
 
 * Removed content element.
 
-  No Content element is provided any longer.
-  We recommend to build your own tailored content elements instead.
+  No content element is provided any longer.
+  We recommend building your own tailored content elements instead.
 
 Features
 --------

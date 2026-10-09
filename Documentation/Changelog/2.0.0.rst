@@ -1,3 +1,7 @@
+.. include:: ../Includes.txt
+.. _changelog-2-0-0:
+
+=====
 2.0.0
 =====
 
@@ -18,45 +22,44 @@ Features
 * Last import date is now shown within backend module beside each import configuration.
 
 * New import configuration type "Contains Place".
-  This allows to provide a single entity, e.g. a Town that has multiple ``schema:containsPlace`` entries.
+  This allows providing a single entity, e.g. a town, that has multiple ``schema:containsPlace``
+  entries.
   Each of them will be imported.
 
 * Import will no longer break on mapping issues.
   Those will be logged and are available within the existing backend module.
-  This allows to skip some objects which can not be handled yet.
+  This allows skipping objects which cannot be handled yet.
   The log can be used to open issues. We then can improve the mapping.
 
-* Import author of media. This allows to either render the license author or the author.
+* Import author of media. This allows rendering either the license author or the author.
 
 * Filter and sort opening hours.
   Filter out opening hours from the past, they are not available to the template anymore.
-  Sort opening hours from early to later based on their end timing.
+  Sort opening hours from earliest to latest based on their end time.
 
   This should improve the UX of website visitors.
-  It is not possible yet to sort opening hours by hand within the thuecat backend.
+  It is not possible yet to sort opening hours by hand within the ThueCat backend.
 
 * Support special opening hours.
   It is possible to define special opening hours, e.g. for holidays.
   Those are now also imported and provided to the templates.
 
-* Allow to check if an opening hour is valid for a single day.
+* Allow checking whether an opening hour is valid for a single day.
 
 * The URL of attractions is now imported and provided to the template.
 
-* Media has a new method ``getExtraImages()`` which will return everything from
-  ``getImages()`` except the ``getMainImage()``.
-  We now also filter out the main image from other images, it will not exist twice
-  anymore.
+* Media has a new method :php:`getExtraImages()` which will return everything from
+  :php:`getImages()` except the :php:`getMainImage()`. We now also filter out the main image from
+  other images, it will not exist twice anymore.
 
-* Allow to hide parking facilities.
+* Allow hiding parking facilities.
 
-* Parking facilities can now be rendered sorted by alphabet.
-  Use new method ``getParkingFacilitiesNearBySortedByAlphabet()``.
+* Parking facilities can now be rendered sorted alphabetically.
+  Use new method :php:`getParkingFacilitiesNearBySortedByAlphabet()`.
 
-* Support types of public transport when returning distance to public transport.
-  A new array key ``types`` was added. This is an array of types, e.g. ``CityBus`` or
-  ``Streetcar``.
-  These can be used with ``f:translate`` ViewHelper to provide proper none technical labels.
+* Support types of public transport when returning distance to public transport. A new array key
+  ``types`` was added. This is an array of types, e.g. ``CityBus`` or ``Streetcar``. These can be
+  used with :fluid:`f:translate` ViewHelper to provide proper non-technical labels.
 
 * Configure EXT:scheduler table garbage collection task to clean up import records.
   It is now possible to select the tables within the TYPO3 scheduler task to be cleaned up.
@@ -74,13 +77,13 @@ Features
 Fixes
 -----
 
-* Allow to import objects (e.g. Tourist Attractions) which are managed by generic
-  organisations instead of specific Tourist Marketing Company.
-  Those organisations will now also be imported, just like Tourist Marketing Company before.
-  Both are organizations internally and only used for the TYPO3 backend module.
+* Allow importing objects (e.g. Tourist Attractions) which are managed by generic organisations
+  instead of a specific Tourist Marketing Company. Those organisations will now also be imported,
+  just like Tourist Marketing Company before. Both are organizations internally and only used for
+  the TYPO3 backend module.
 
 * Handle multiple ``thuecat:offerType`` values within Offer.
-  The API is none breaking, the models still return only a single offer.
+  The API is non-breaking, the models still return only a single offer.
 
   They will filter down to the first offer which contains ``Offer`` within the value.
   Examples:
@@ -95,14 +98,15 @@ Fixes
   This was the only label with ``:``.
 
 * Keep editorial sorting of tourist attractions within content element.
-  This was not the case yet, the records were sorted by dbms, e.g. by uid.
+  This was not the case before; the records were sorted by the DBMS, e.g. by uid.
 
 Tasks
 -----
 
 * Removed API Key from site configuration.
   The key was already moved to extension configuration as documented.
-  Still we extended the site configuration, which is now cleaned up, see: https://github.com/werkraum-media/thuecat/issues/55
+  Still, we extended the site configuration, which is now cleaned up, see:
+  https://github.com/werkraum-media/thuecat/issues/55
 
 * Remove seconds from opens and closes of opening hours as we don't expect them to be used.
 

@@ -7,29 +7,17 @@
 >
     <extension
         class="\T3Docs\Typo3DocsTheme\DependencyInjection\Typo3DocsThemeExtension"
-        project-home="https://github.com/werkraum-media/thuecat"
-        project-contact="coding@daniel-siepmann.de"
-        project-repository="https://github.com/werkraum-media/thuecat"
-        project-issues="https://github.com/werkraum-media/thuecat/issues"
-        edit-on-github-branch="main"
-        edit-on-github="werkraum-media/thuecat"
+        project-home="https://forgejo.werkraum-media.de/typo3/thuecat"
         typo3-core-preferred="stable"
+        interlink-shortcode="werkraummedia/thuecat"
     />
     <project
         title="TYPO3 EXT:thuecat"
         release="latest"
-        copyright="2020 by werkraum-media"
+        copyright="2020-2026 by werkraum-media"
     />
     <inventory
-        id="t3install"
-        url="https://docs.typo3.org/m/typo3/guide-installation/main/en-us/"
-    />
-    <inventory
-        id="t3gettingstarted"
-        url="https://docs.typo3.org/m/typo3/tutorial-getting-started/main/en-us/"
-    />
-    <inventory
-        id="t3tsref"
-        url="https://docs.typo3.org/m/typo3/reference-typoscript/main/en-us/"
+        id="content_blocks"
+        url="https://docs.typo3.org/p/friendsoftypo3/content-blocks/main/en-us/"
     />
 </guides>

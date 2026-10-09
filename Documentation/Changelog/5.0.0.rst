@@ -1,370 +1,209 @@
+.. include:: ../Includes.txt
+.. _changelog-5-0-0:
+
+=====
 5.0.0
 =====
 
-Important
----------
+What changed for installations upgrading from 4.2.0. Commits that do not affect an upgrade — fixes
+to features introduced within 5.0.0, tests, CI — are not listed; the git history has them.
 
-* Backend relation fields offer only records of the edited record's site, and each record
-  once rather than once per language. Both the dropdown and the suggest wizard are bounded,
-  content element fields included. The wizard is bounded through a global
-  :typoscript:`TCEFORM.suggest.default.addWhere`, which disables the per-field
-  :php:`foreign_table_where` fallback for every suggest field in the installation.
-  See :ref:`backend-relation-scoping`.
+.. contents:: On this page
+   :local:
+   :depth: 1
 
 Breaking
 --------
 
-* Support for TYPO3 v12 removed.
+* **Add TYPO3 v14 Support** (``6381907``)
 
-* Category and keyword anchors moved from the import configuration to the target site, and are
-  now scoped by the kind of record being written. The flexform fields ``categoryStoragePid``,
-  ``categoryParent``, ``keywordStoragePid`` and ``keywordParent`` are removed without replacement;
-  values left in stored flexform XML are ignored. Configure the anchors in the site settings
-  instead, one set per scope, because a site may hold several record kinds whose category trees
-  have to stay apart:
+  TYPO3 v12 and PHP 8.1 are no longer supported; the extension requires TYPO3 13.4 or 14 and PHP 8.2
+  or later. :file:`ext_emconf.php` is gone, install via Composer, see :ref:`installation`.
 
-  * ``import.thuecat.category.storagePid``, ``import.thuecat.category.parent``,
-    ``import.thuecat.keywords.storagePid``, ``import.thuecat.keywords.parent`` for tourist
-    attractions
-  * ``import.events.category.storagePid``, ``import.events.category.parent``,
-    ``import.events.keywords.storagePid``, ``import.events.keywords.parent`` for events
-  * ``import.trails.keywords.storagePid``, ``import.trails.keywords.parent`` for trails, which
-    carry keywords but no categories
+* **[FEATURE] Import Events into ext:events tables** (``b2be349``)
 
-  Each record resolves the anchors of its own kind, so one run can write into several trees: an
-  attraction import that reaches a trail files the trail's keywords under ``trails``. Kinds that
-  are only ever reached as relations — organisations, tourist information, towns — always resolve
-  under ``thuecat``, so a record shared between imports keeps one tree. A scope that configures
-  neither setting of a pair falls back to ``thuecat``; a site without ``trails`` settings keeps
-  trail keywords in the ThueCat tree. Every scope is validated before every run, and a pair set
-  only halfway or pointing outside the site aborts the run before it fetches anything.
+  :composer:`werkraummedia/events` is a new required dependency. Events are imported into its
+  tables, so it has to be installed even where no events are imported.
 
-  A site opts into the settings editor for them by listing the ``werkraummedia/thuecat-import``
-  set among its own ``dependencies``. The anchors are no longer declared by ``thuecat_ces`` or
-  ``events_ces``. On installations without a site set they remain configurable instance-wide in
-  the Extension Configuration, where the four ``importCategory*`` / ``importKeywords*`` keys are
-  replaced by ``importThuecat*``, ``importEvents*`` and ``importTrailsKeywords*`` ones. Import,
-  frontend filters and the category trees of the backend forms resolve the same chain, Extension
-  Configuration included.
+* **[FEATURE] Parser based importer** (``c8c2c5f``)
 
-  There is no upgrade wizard: **note the existing values before updating**, because an import
-  whose anchors are not configured runs with category and keyword mapping switched off rather
-  than failing. See :ref:`import-category-based-anchors`.
+  The import was rewritten and writes through the DataHandler. The previous extension points —
+  :php:`MapsToType` entities, :php:`Typo3Converter` converters and their compiler passes — are
+  removed;
+  custom import code has to be rebuilt as described in :ref:`developers-import`.
 
-  Code reading the anchors: the target-scoped API is gone. A record kind importable on its own
-  implements :php:`TopLevelEntityInterface` and names its scope in :php:`anchorScope()`; anchors
-  are read through :php:`CategoryAnchorResolver::resolvePair()`. TCA and Content Block fields
-  bound to an anchor use ``###THUECAT_ANCHOR:<table>:<category|keywords>###`` in
-  ``treeConfig.startingPoints``; core's ``###SITE:###`` marker still works but reads site
-  settings only.
+* **[TASK] Refactor code structure for importer** (``9ab6e84``)
 
-* An imported record is identified within the site that imports it. Previously a ``remote_id``
-  matched any record carrying it anywhere in the installation, so two sites importing the same
-  upstream object shared one record: the second site's import updated the first site's record in
-  place — the record kept its page, so one site silently edited another's content — and the second
-  site never got a record of its own. Each site now holds its own record, and relation targets
-  resolve within the importing site too. On an installation where two sites import overlapping
-  data, the first run after the update creates the records the second site was missing, which
-  looks like duplication but is each site gaining what it should always have had. There is no
-  migration: records a foreign site's import wrote into keep whatever it last wrote, and editors
-  reconcile them.
+  All import classes moved from :php:`WerkraumMedia\ThueCat\Domain\Import` to
+  :php:`WerkraumMedia\ThueCat\Import`, including the :php:`UrlProvider` interface. A custom URL
+  provider has to follow the new namespace, see :ref:`developers-import-sources`.
 
-* API responses are cached persistently: ``thuecat_fetchdata`` now defaults to
-  :php:`Typo3DatabaseBackend` with a 900 second lifetime instead of dying with the process.
-  A run is no longer guaranteed to hit the API — see :ref:`fetch-cache` for the bypass options.
+* **[FEATURE] Import Images via Import into FAL and relate to objects** (``6040613``)
 
-* Imported images are now the original asset (``schema:contentUrl`` over ``schema:url``), stored
-  under a filename derived from the download URL. Re-imported records point at a different file
-  under a new name; the previously imported files stay on disk unreferenced. No migration pass.
-  See :ref:`frontend-output-media-import`.
+  Images are downloaded into FAL, into a folder the import configuration names. Existing import
+  configurations have no folder and fail until one is set, unless run with :shell:`--no_media`, see
+  :ref:`import-configuration`.
 
-* The list item moved from :file:`Partials/TouristAttraction/ListItem.html` to
-  :file:`Templates/TouristAttraction/ListItem.html`, and the list templates now receive rendered
-  items in ``{items}`` rather than iterating attractions. An override left in ``Partials/`` is
-  silently ignored. See :ref:`frontend-output`.
+* **[TASK] Remove deprecated json-blob fields** (``68312dc``)
 
-* The category and keyword fields on tourist attractions, tourist information and trails are
-  bounded by the anchors their record kind resolves, from site settings or the Extension
-  Configuration, instead of offering every :sql:`sys_category` in the installation. A site that
-  configures no anchor at any level still offers the whole tree, starting at the root; configure
-  the anchors to bound it. The same bound applies to the category and keyword fields of the
-  attraction list plugin. See :ref:`import-category-based-anchors`.
+  The columns ``media``, ``address``, :sql:`opening_hours` and :sql:`special_opening_hours` are
+  dropped, with the models reading them: :php:`Base::getMedia()`, :php:`Place::getAddress()` and
+  :php:`Place::get(Merged)(Special)OpeningHours()`. Templates use :ref:`the FAL fields
+  <frontend-output-media>`, :php:`getAddressInline()`/:php:`getFirstAddress()` and :ref:`the new
+  opening hours accessors
+  <frontend-output-opening-hours>`; run the import once after the update to fill them.
 
-* Filter options are built by :php:`SearchFilterOptionsService`. Removed without replacement:
-  :php:`TouristAttractionRepository::findCategoryTreeForSearchForm()`,
-  :php:`findKeywordsTreeForSearchForm()`, :php:`findTownsInStorageSortedByTitle()`,
-  :php:`TownRepository::findAllForSearchFormSortedByTitle()`, and the frontend
-  :php:`CategoryRepository`. :php:`Dto\CategoryNode` is replaced by :php:`Dto\FilterOption`, which
-  keeps its accessor names — template overrides need no change.
+* **[BUGFIX] Properly read translated strings for address** (``6e05604``)
 
-  The partial :file:`Partials/TouristAttraction/CategoryTree.html` requires a ``property``
-  argument naming the demand property its checkboxes bind to; an override without it renders
-  unbound checkboxes. Its element ids carry that property too, so a category and a keyword
-  sharing a uid no longer collide.
+  Addresses are records of their own (:sql:`tx_thuecat_address`) instead of a value object. The
+  misspelled :php:`Address::getLatitute()` is now :php:`getLatitude()`.
 
-* Filter options are scoped by site, not by the list's storage pages. A value outside those pages
-  but inside the site is now offered; a value from another site no longer is.
+* **[FEATURE] Store relations for schema:containedInPlace** (``f47fa76``)
 
-* A record can be contained in more than one place. ``town`` is a multi-value relation instead of
-  a single select, so :php:`TouristAttraction::getTown()` is replaced by
-  :php:`getTowns()`, returning an :php:`ObjectStorage`. Templates reading
-  :html:`{attraction.town.title}` must iterate :html:`{attraction.towns}` instead. Existing rows
-  keep the town they held; a row that held none reads as an empty relation. Applies to tourist
-  attractions, tourist information and parking facilities alike.
-  See :ref:`import-contained-in-place`.
+  ``town`` holds several towns, so :php:`TouristAttraction::getTown()` is replaced by
+  :php:`getTowns()`; templates reading :fluid:`{attraction.town.title}` have to iterate
+  :fluid:`{attraction.towns}`. Containing organisations and places get fields of their own, see
+  :ref:`import-contained-in-place`.
 
-* Every transient bucket reports a reference it cannot relate. Previously only ``containedInPlace``
-  logged ``referenceUnrelatable``; ``managedBy`` and ``parkingFacilityNearBy`` dropped a reference
-  whose record imported into another table without saying so. Expect new ``info`` entries in the
-  import log from those buckets on the first run — they name relations that were already being
-  lost, not new failures.
+* **[TASK] Remove custom page type** (``51704ca``)
 
-* The json-based media storage is removed in favour of FAL handling. The :php:`Media` model and
-  :php:`Base::getMedia()` are gone, as is the ``media`` database column. Use the FAL properties
-  on ``Base`` (:php:`getMainImage()`, :php:`getMediaFiles()`, :php:`getEditorialImages()`) and
-  re-run the import. See :ref:`frontend-output-media-model`.
+  The page type ``950``, the :php:`ResolveEntities` data processor and the static template "ThüCAT -
+  Page Types" are removed. Change such pages to standard pages before updating and render the data
+  with plugins, see :ref:`frontend-output`.
 
-* ``editorial_images`` is handled as the FAL field it always has been: replace
-  :html:`{entity.media.editorialImages}` with :html:`{entity.editorialImages}`.
+* **[TASK] Remove unused thuecat:configuration backend module** (``aa111e9``)
 
-* The json-based opening hours storage is removed in favour of inline database records.
-  :php:`Place::getOpeningHours()`, :php:`getMergedOpeningHours()`, :php:`getSpecialOpeningHours()`
-  and :php:`getMergedSpecialOpeningHours()` are gone, as are the :php:`OpeningHours`,
-  :php:`MergedOpeningHours` and :php:`MergedOpeningHourWeekDay` models and the ``opening_hours``
-  and ``special_opening_hours`` columns. Use :php:`getPerDayTable()` /
-  :php:`getSpecialPerDayTable()` and re-run the import.
-  See :ref:`frontend-output-opening-hours-model`.
+  The backend module listing import configurations is removed, and with it the TypoScript setting
+  :typoscript:`module.tx_thuecat.settings.newRecordPid`. Import configurations are created and
+  edited in the Records module.
 
-* The json-based address storage is removed in favour of inline database records.
-  :php:`Place::getAddress()` and the :php:`LegacyAddress` value object are gone, as is the
-  ``address`` column. Use :php:`getAddressInline()` for the full set, or :php:`getFirstAddress()`
-  where one address is expected, and re-run the import. The misspelled
-  :php:`Address::getLatitute()` is :php:`getLatitude()` on the new model.
+* **[BUGFIX] Scope import objects per site** (``23aae21``)
+
+  A record is recognised only within the site that imports it, instead of anywhere in the
+  installation. Where two sites import the same upstream object, the first run after the update
+  creates the record the second site was missing, see :ref:`developers-import-records`.
+
+Important
+---------
+
+* **[TASK] Change maintenance** (``8ceae43``)
+
+  The extension is now maintained by Anja Leichsenring.
+
+* **Migrate CI from GitHub to Forgejo (main)** (``a09c479``)
+
+  Development moved from GitHub to https://forgejo.werkraum-media.de/typo3/thuecat.
+
+* **[TASK] Remove deprecations for v14 (#138)** (``c88ad9d``)
+
+  The upgrade wizard that migrated backend user permissions to the ThüCAT module group is removed.
+  Run it before updating if it is still pending.
+
+* **[TASK] Remove requirement for fluid-styled-content** (``afc36d7``)
+
+  The extension no longer requires :composer:`typo3/cms-fluid-styled-content`. Require it in the
+  project if the instance relies on it.
 
 Features
 --------
 
-* Support for TYPO3 v14 added.
+* **Add TYPO3 v14 Support** (``6381907``)
 
-* Images and other files are imported via FAL; the target file directory is part of the import
-  configuration. See :ref:`frontend-output-media-import`.
+  The extension supports TYPO3 13.4 and 14.
 
-* One asset is downloaded once per run however many records use it, deduplicated on the download
-  URL before any request. Measured across two production configurations: 614 requests fell to 398,
-  and 144 to 71.
+* **[FEATURE] Prepare Extbase actions for CE output** (``3b67233``)
 
-* Media relations are cleaned up when upstream stops supplying an image, for inline and referenced
-  media alike. Re-importing an unchanged record no longer accumulates ``sys_file_reference`` rows.
-  See :ref:`frontend-output-media-ownership`.
+  Plugins for list, search form, selected list and detail view replace the page type. Output is
+  built with content elements of the site's own, see :ref:`frontend-output`.
 
-* A failed download no longer removes the image it failed to fetch: only ``404`` and ``410`` count
-  as the asset being gone. See :ref:`frontend-output-media-ownership`.
+* **[FEATURE] Frontend ready FAL fields main_image, media_files and editorial_images** (``23044a9``)
 
-* Events are imported with their images, both ``schema:photo`` and ``schema:image`` landing in
-  ``images``; the previous cap of eight images per event is gone.
+  Images are proper file references, rendered with the usual TYPO3 image handling. See
+  :ref:`frontend-output-media`.
 
-* Media uploaded directly to a record is imported rather than rejected, for every record type,
-  with its author and licence. The configured API key is sent when fetching from the API host.
+* **[FEATURE] Remove file references not provided by upstream** (``cbe6161``)
 
-* Addresses are imported as inline database records (:sql:`tx_thuecat_address`) related through
-  ``address_inline``, one row per address per language. Each field has its own column, so an
-  address is readable and queryable without decoding a blob, and editors see labelled fields.
-  A record may carry more than one address: ``schema:address`` is read as a list where upstream
-  sends one. Addresses no longer supplied upstream are removed on re-import.
+  An image upstream no longer supplies loses its file reference on re-import, and each file is
+  downloaded once per run. See :ref:`developers-import-media`.
 
-* Opening hours are imported as inline database records (:sql:`tx_thuecat_opening_hours`) and
-  exposed display-ready via :php:`Place::getComputedOpeningHours()`.
+* **[FEATURE] Import opening hours as IRRE records** (``3fa6420``)
+
+  Opening hours are inline records with display-ready accessors and a partial for a per-day table.
   See :ref:`frontend-output-opening-hours`.
 
-* Imports can be run without media via :bash:`--no_media`. See :ref:`import-without-media`.
+* **[FEATURE] Two more partials to display opening hours with merged time periods** (``73bccc1``)
 
-* Import runs are bounded and report their progress: per-request connect and read timeouts, retries
-  for transient failures, an overall run budget, and progress output at three verbosity levels.
-  Aborted and failed runs write an import log instead of vanishing. See :ref:`import-tuning` and
-  :ref:`recovered-retries`.
+  Two further partials group days with identical hours. See :ref:`frontend-output-opening-hours`.
 
-* Every import run reports the settings that drove it — storage page, file folder, API domain,
-  the category anchors and the tuning settings — as the first entry of its import log, in the
-  backend module's summary column, and on the console. The API key is never included.
-  See :ref:`effective-settings`.
+* **[FEATURE] Add categories to events based on @type** (``e433084``)
 
-* Attraction lists, list items and filter forms are cached in the ``pages`` cache group, so
-  everything that already clears page caches clears these too.
-  See :ref:`frontend-output-caching`.
+  An object's ``@type`` becomes :sql:`sys_category` relations, starting with events.
 
-* An event imported without a single date is named in the import log as ``eventWithoutDates``
-  at severity ``warning``.
+* **[FEATURE] Import categories into tourist attractions** (``bda7ce1``)
 
-* ``schema:keywords`` is imported as :sql:`sys_category` records in their own tree, for tourist
-  attractions, tourist information and events. Term references, typed ontology literals and
-  editor-typed free text all resolve to a localized title, and the upstream group structure is
-  mirrored as intermediate categories. Keywords stay separate from the categories derived from an
-  object's type: separate anchor, separate relation, separate identifier. Editor renames survive
-  re-import, and a keyword upstream stops supplying loses its relation while the category record
-  remains. See :ref:`import-keywords`.
+  Tourist attractions get their categories too, and the search form filters by them. See
+  :ref:`frontend-output-plugin-settings-trees`.
 
-* Imported keywords are usable in the frontend: the attraction list filters by keyword, the filter
-  mask offers them grouped by their parent set, and the selection survives pagination. Selecting
-  several keywords widens the result while other filters continue to narrow it. Which keywords a
-  plugin offers is chosen per plugin and bounded by the site's keyword anchor, so a plugin without
-  a keyword selected behaves exactly as before. See :ref:`frontend-output-keywords`.
+* **[FEATURE] Import category hierarchy from thuecat** (``1b4b435``)
 
-* A place detail view emits a ``keywords`` meta tag built from its related keyword categories.
-  A place with no keyword relations emits no such tag.
+  Categories are arranged in the hierarchy of the schema.org and ThüCAT vocabularies instead of a
+  flat list. See :ref:`category-hierarchy`.
 
-* ``schema:containedInPlace`` is imported in full. Upstream uses the property for whatever contains
-  a record — towns, organisations and other places — while only the first town was kept and the
-  rest discarded. Each reference now lands on a relation chosen by the kind of record it imported
-  into: ``town``, ``contained_in_organisation``, or one of ``contained_in_attraction``,
-  ``contained_in_tourist_information`` and ``contained_in_parking_facility``. One production
-  configuration was dropping 127 such relations per run. A record contained in a kind no relation
-  accepts is still reported as ``referenceUnrelatable``. The detail view renders the containing
-  organisations and places. See :ref:`import-contained-in-place`.
+* **[FEATURE] Import keywords in both POIs and events** (``d4fa6d4``)
 
-* The town filter matches a record carrying several towns, and the search form offers every town
-  its records carry. An attraction in two towns is returned once when both are selected.
+  ``schema:keywords`` is imported as a :sql:`sys_category` tree of its own, separate from the
+  categories. See :ref:`import-keywords`.
 
-* A show content element can pin the record it displays. The attraction and trail detail elements
-  gain a backend field selecting one record; when it is set that record is shown and the frontend
-  query parameter is ignored entirely, so no URL can change what the page renders. Left empty, the
-  element resolves the record from the query parameter exactly as before, which is what existing
-  elements do. A pinned record that no longer resolves — hidden, deleted — renders the "no data"
-  message rather than falling back to the parameter, because an editor's pick must not be replaced
-  silently. The pinned uid is the default-language one and is the same in every language; the
-  record renders translated where a translation exists.
+* **[FEATURE] Use imported keywords for display and filtering** (``86cd3e5``)
 
-* Detail pages are discarded when the record they show changes. A page rendering no record is
-  tagged from the uid its element pins, so it is discarded once that record exists again — without
-  that tag nothing could ever flush it, and the page would keep saying "no data" after the record
-  returned. **After deploying, clear the pages cache once**: entries cached by an earlier version
-  carry no record tag and would keep serving stale content until they expire.
+  Attraction lists filter by keyword, and the detail view emits a ``keywords`` meta tag. See
+  :ref:`frontend-output-plugin-settings-trees`.
 
-* An event's ``schema:location`` and ``schema:organizer`` are imported. Both were dropped
-  entirely, leaving ``location`` and ``organizer`` empty on every ThueCat event. The inline venue
-  and organizer nodes become :sql:`tx_events_domain_model_location` and
-  :sql:`tx_events_domain_model_organizer` rows, identified by the content hash EXT:events already
-  uses, so a venue destination.data imported is reused rather than duplicated.
+* **[FEATURE] Allow top-level entities to define their sys_category anchors** (``b280d76``)
 
-* ThueCat places carry the events taking place there. Tourist attractions, towns, organisations
-  and tourist informations each gain ``hosts_events``, and organisations a second field
-  ``manages_event`` for the events they organise. An event is related either through a resolvable
-  ThueCat reference or, where the payload carries only an inline address, by matching normalized
-  venue name plus postal code within the importing site.
+  Where category and keyword trees live is configured per site and per record kind, through the site
+  set :yaml:`werkraummedia/thuecat-import`. See :ref:`configuration-category-anchors`.
 
-* Every attempt to relate an event to a place is logged as ``eventPlaceMatch`` at severity
-  ``info``, naming the event, the name and postal code used, the outcome and, where one was found,
-  the place. The outcomes distinguish resolved by reference, resolved by name and postal code,
-  ambiguous, unresolved reference and unmatched. The import log module lists them per run,
-  resolved ones first. Most venues are not places at all, so an unmatched attempt is the expected
-  case and does not colour the run.
+* **[FEATURE] Make import more robust by introducing timeout, recovery and watchdog** (``4cc9db0``)
 
-* Organisations, towns and tourist informations import their ``schema:address``. All three carry
-  it upstream but none has ever resolved it, so their address tables were empty; they now use the
-  same inline :sql:`tx_thuecat_address` records as the other place types, through a new
-  ``address_inline`` field. Without a stored postal code these tables could not take part in the
-  name-and-postal-code match at all.
+  Requests time out and are retried, a run has a time budget, and progress is shown on the console.
+  API responses are now cached in the database for 15 minutes; :shell:`--fresh` bypasses the cache,
+  see :ref:`import-tuning`.
 
-* Addresses store ``country`` and ``region``. Upstream sends both as a literal (``Deutschland``,
-  ``Thüringen``) and as a vocabulary reference (``thuecat:Germany``, ``thuecat:Thuringia``); both
-  encodings resolve to the same stored value. Re-run the import to fill the columns on existing
-  addresses.
+* **[TASK] Allow skipping media during imports** (``60d3da1``)
 
-* A tourist attraction's detail view lists the events hosted there, each with its title and first
-  date. An attraction holding no events renders no event section. This is the only frontend output
-  of the new relations: no other place type renders its events, and neither an event's location nor
-  its organizer is rendered anywhere.
+  :shell:`--no_media` runs an import without downloading images. See :ref:`import-without-media`.
 
-* ``thuecat:Trail`` is imported into its own record type (:sql:`tx_thuecat_trail`), with its
-  descriptive texts, route and metrics each in their own column. Way-type segments, current
-  conditions and the start and end locations become inline records; seasons a multi-value field.
-  Trails carry keywords and images like any other record. An attraction contained in a trail
-  resolves to it through ``contained_in_trail``. No frontend output yet — the records exist in the
-  backend.
+* **[FEATURE] Improve performance of POI lists by custom caching** (``007b6f3``)
 
-Fixes
------
+  Lists, list items and the search form are cached and cleared along with the page cache. See
+  :ref:`frontend-output-caching`.
 
-* Imported coordinates keep their full precision. Latitude and longitude are stored as delivered
-  rather than in a decimal column, which TYPO3 rounds to two decimal places on write — enough to
-  move a point by roughly two kilometres. Re-run the import to correct stored coordinates.
+* **[FEATURE] Import trails** (``2f3f3b7``)
 
-* A pinned record renders in the requested language. The record was looked up with a query matching
-  its uid, which in a translated request also demands the row's own language: the default-language
-  row failed the language test and its translation failed the uid test, so the detail view rendered
-  "no data" in every language but the default.
+  Trails are imported into a table of their own, with their way types, conditions and start and end
+  locations.
 
-* Translated records keep their own address. Address text was read with a helper that understood
-  only a single ``{@language,@value}`` object, so a record whose upstream address was a *list* of
-  language variants — the shape used as soon as an address is translated — imported with street,
-  postal code, city, phone, fax and email all empty. The same defect silently affected
-  media copyright years and licences, and accessibility certification values.
+* **[FEATURE] Selected List & Show CEs incl. Templates for Trails** (``05f8161``)
 
-* Paging through an attraction list no longer shows the wrong page. Every pagination page and
-  filter combination of one plugin previously shared a single page-cache entry.
+  Trails have plugins and templates for a selected list and a detail view. See
+  :ref:`content-element-example`.
 
-* The search mask no longer hydrates every record in storage to build its filter options. Measured
-  on 649 attractions: 31.8s to 0.04s, and the tree expansion from 375 queries to a fixed number.
+* **[FEATURE] Show plugins can show dedicated editor chosen record** (``964b92a``)
 
-* The search form offers its category options again on a page whose plugin names no storage page.
-  The option tree was built with the default storage restriction, which resolves to page 0 and
-  matches nothing, so the form rendered an empty category list.
+  A detail plugin can show one record chosen in the backend instead of the one in the URL. See
+  :ref:`frontend-output-plugin-settings-records`.
 
-* The search form shows the levels below a category's top level. Child categories were looked up
-  by comparing an object relation against uids, which matched nothing, so only the topmost entry
-  of each tree was offered.
+* **[FEATURE] Scope TCA and flexform select fields to records in site** (``41e06e3``)
 
-* Filtering by a category that groups others returns the records filed under those others.
-  Selecting a group previously matched only records related to the group itself — none, where a
-  vocabulary relates records to the terms it ends in — so every group selection came back empty.
-  Applies to the type categories and to keywords alike.
+  Relation fields in the backend offer only records of the current site. The suggest wizard is
+  bounded through a global :tsconfig:`TCEFORM.suggest.default.addWhere`, which affects every suggest
+  field of the installation, see :ref:`backend-relation-scoping`.
 
-* A referenced resource that cannot be fetched no longer aborts the whole root URL. Only the
-  affected reference is dropped, logged per owning record as ``referenceSkipped`` at ``warning``.
+* **[FEATURE] Import organizer and location for events** (``023d575``)
 
-* A media entry the import cannot interpret no longer costs the whole root URL.
-
-* An image that cannot be downloaded no longer costs the run its media. Previously one failed
-  download discarded every image downloaded under all other roots.
-
-* Media served behind a redirect is imported. A ``301`` was previously logged as
-  ``Image could not be downloaded``, which cost every asset on a host that redirects — trail images
-  and logos come from one. Redirects are followed up to five hops. Re-run the import to fetch the
-  images earlier runs skipped. See :ref:`frontend-output-media-import`.
-
-* Staged media is promoted into the target folder even when the run recorded an error elsewhere.
-
-* A record no longer inherits relations from the record imported before it — town, organisation,
-  parking, categories and images alike. Relations already stored from earlier runs are not
-  corrected by this.
-
-* Hiding a storage folder no longer breaks the import that writes into it. Which pages count as
-  belonging to a site was derived with the frontend's visibility rules, so a hidden folder — or one
-  past its publication end time — dropped out of the site. Depending on which folder it was, the
-  run aborted with ``… is outside the storagePid's site`` for a page plainly inside the site, or
-  the import stopped recognising what it had already written and built a second copy beside it: a
-  hidden keyword or category folder produced a whole duplicate category tree, splitting records'
-  relations across both. Storage is now what decides, for records, categories and keywords alike;
-  only deleted pages fall out of scope.
-
-* A schedule day that cannot seed a date series no longer aborts the event import; the value is
-  logged as ``scheduleDaySkipped``, and surplus usable days as ``scheduleDayDropped``.
-
-* ``schema:exceptDate`` is honoured, for every frequency.
-
-* An event's stored dates are reconciled with its schedule on re-import, so occurrences that
-  stopped being produced are removed. Only the import's own rows are affected; dates created in
-  the backend survive.
-
-* A failed root URL is identifiable from the import log: ``mappingError`` and ``fetchingError``
-  now carry the root URL.
-
-* :bash:`thuecat:importviaconfiguration` prints a closing message stating whether the run
-  completed, completed with warnings, or failed.
-
-Tasks
------
-
-Nothing
+  Events get their location and organizer, and places list the events taking place there. See
+  :ref:`developers-import-event-place-matching`.
 
 Deprecation
 -----------

@@ -62,7 +62,7 @@ settings:
         default: 0
     import.trails.keywords.storagePid:
         label: 'Storage folder for imported keywords'
-        description: 'Folder holding the keywords an trail import creates. Set it together with the parent category below, or keyword mapping stays off.'
+        description: 'Folder holding the keywords a trail import creates. Set it together with the parent category below, or keyword mapping stays off.'
         category: 'import.trails'
         type: 'page'
         default: 0

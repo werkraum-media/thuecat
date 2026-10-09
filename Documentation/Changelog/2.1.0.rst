@@ -1,3 +1,7 @@
+.. include:: ../Includes.txt
+.. _changelog-2-1-0:
+
+=====
 2.1.0
 =====
 
@@ -9,19 +13,21 @@ Nothing
 Features
 --------
 
-* Add command to allow import of a single configuration.
+* Add a command to import a single configuration.
   The command is also available as scheduler task.
-  This finally allows to regularly execute imports.
-  This also allows to import from CLI context with differently configured timeouts.
+  This finally allows executing imports regularly.
+  It also allows importing from CLI context with differently configured timeouts.
 
 * Add support for additional images added via TYPO3.
   Some installations might need to add further images to records imported from ThüCAT.
   The records are now extended to support adding images by editors.
   The images are not touched during import.
-  The images are also ignored during clean ups, the editor is in full control.
+  The images are also ignored during clean-ups; the editor is in full control.
 
   This feature for now is only added to tourist attractions by default.
-  The feature is implemented in a way that all objects extending the ``WerkraumMedia\ThueCat\Domain\Model\Frontend\Base`` class are usable by adding an ``editorial_images`` field to their table.
+  The feature is implemented in a way that all objects extending the
+  :php:`WerkraumMedia\ThueCat\Domain\Model\Frontend\Base` class are usable by adding an
+  :sql:`editorial_images` field to their table.
 
 * Support translated offers.
   The translation for offers of tourist attractions got added.
@@ -29,27 +35,28 @@ Features
 Fixes
 -----
 
-* Catch mapping exceptions during converting entities.
+* Catch mapping exceptions while converting entities.
   Those are handled the same way, the entity is skipped and errors are logged.
-  That way further entities can be imported while only none working entities are skipped.
+  That way further entities can be imported while only non-working entities are skipped.
 
 * Fix broken check of logged errors within functional tests.
   The logging is now adjusted to only log errors.
   The file will be checked for each test that does not expect errors to happen.
 
 * Handle incoming array instead of string for ``AccessibilityCertification``.
-  That prevents mapping exceptions for objects containing the corresponding certification with more info than a single value.
+  That prevents mapping exceptions for objects containing the corresponding certification with more
+  info than a single value.
 
 Tasks
 -----
 
-* Converted log entry for none converted entity from error to notice.
-  As this might hint at an issue but most probably is okay, e.g. due to none active
-  language, missing name, etc.
+* Converted log entry for non-converted entity from error to notice. It might hint at an issue but
+  is most probably okay, e.g. due to a non-active language, missing name, etc.
 
 * Separate default templates from templates for testing.
-  That way we no longer test the delivered templates, but they should not be used anyway.
-  Also we can now use templates only for testing to ensure that frontend rendering works as expected, without worrying about sites using the templates.
+  That way we no longer test the delivered templates, which should not be used anyway.
+  Also we can now use templates only for testing to ensure that frontend rendering works as
+  expected, without worrying about sites using the templates.
   The templates were copied and extended for editorial images.
 
 Deprecation

@@ -1,3 +1,7 @@
+.. include:: ../Includes.txt
+.. _changelog-4-2-0:
+
+=====
 4.2.0
 =====
 
@@ -15,10 +19,10 @@ Features
 Fixes
 -----
 
-* Allow none admin users to import.
+* Allow non-admin users to import.
 
-  There was a broken configuration of corresponding TCA tables.
-  It forced to insert log entries on root, whiteout allowing users to insert on root.
+  There was a broken configuration of the corresponding TCA tables.
+  It forced log entries to be inserted on root, without allowing users to insert on root.
 
 Tasks
 -----

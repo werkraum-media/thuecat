@@ -1,3 +1,4 @@
+.. include:: Includes.txt
 .. _changelog:
 
 =========

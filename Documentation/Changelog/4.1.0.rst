@@ -1,3 +1,7 @@
+.. include:: ../Includes.txt
+.. _changelog-4-1-0:
+
+=====
 4.1.0
 =====
 
@@ -10,33 +14,34 @@ Features
 --------
 
 * Add TYPO3 wizard to select pages in configuration.
-  That should ease live of editors, compared to manually inserting proper page uid.
+  That should ease the life of editors, compared to manually inserting the proper page uid.
 
 * Add title to static import configuration.
-  This title is auto filled on save with the titles of provided URLs.
+  This title is auto-filled on save with the titles of provided URLs.
 
 Fixes
 -----
 
-* Prevent `Error: Call to undefined method TYPO3\CMS\Core\Database\Schema\SchemaInformation::introspectTable()` with newer TYPO3 v13 versions.
-  We now check for the old API, falling back to the new.
-  All of this is still `@internal` TYPO3 API.
+* Prevent
+  :output:`Error: Call to undefined method TYPO3\CMS\Core\Database\Schema\SchemaInformation::introspectTable()`
+  with newer TYPO3 v13 versions. We now check for the old API, falling back to the new. All of this
+  is still :php:`@internal` TYPO3 API.
 
-  The corresponding core change was commit `45a50e455955c78f6baa2aec3af3865101ee06b9`.
-  We also need to update `codappix/typo3-php-datasets` dev dependency for the same reason.
+  The corresponding core change was commit ``45a50e455955c78f6baa2aec3af3865101ee06b9``.
+  We also need to update :composer:`codappix/typo3-php-datasets` dev dependency for the same reason.
 
 * Handle 404 during import.
   Imports that would import a no longer existing resource resulted in a 503 Server Error.
-  Those are now properly catched and logged. Those errors will no longer fail.
+  Those are now properly caught and logged. Those errors no longer fail the import.
 
 Tasks
 -----
 
-* Prevent creation of `composer.lock` file.
-  As this is an extension without a lock state.
-  We have different TYPO3 versions as supported versions and it should be easy to switch between them for testing and development.
+* Prevent creation of a :file:`composer.lock` file, as this is an extension without a lock state. We
+  have different TYPO3 versions as supported versions and it should be easy to switch between them
+  for testing and development.
 
-* Streamline `phpstan.neon` formatting.
+* Streamline :file:`phpstan.neon` formatting.
 
 Deprecation
 -----------
