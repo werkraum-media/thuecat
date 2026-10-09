@@ -41,11 +41,11 @@ use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 #[Autoconfigure(public: true)]
 class FileFolderAccess
 {
-    private const PROBE_PREFIX = '.thuecat-write-probe-';
+    protected const PROBE_PREFIX = '.thuecat-write-probe-';
 
     public function __construct(
-        private readonly ResourceFactory $resourceFactory,
-        private readonly TranslationService $translation,
+        protected readonly ResourceFactory $resourceFactory,
+        protected readonly TranslationService $translation,
     ) {
     }
 
@@ -70,7 +70,7 @@ class FileFolderAccess
         return true;
     }
 
-    private function assertProbeSucceeds(Folder $folder, string $folderIdentifier): void
+    protected function assertProbeSucceeds(Folder $folder, string $folderIdentifier): void
     {
         $probeName = self::PROBE_PREFIX . bin2hex(random_bytes(8));
         try {
@@ -90,7 +90,7 @@ class FileFolderAccess
         }
     }
 
-    private function resolveExistingFolder(string $folderIdentifier): Folder
+    protected function resolveExistingFolder(string $folderIdentifier): Folder
     {
         try {
             return $this->resourceFactory->getFolderObjectFromCombinedIdentifier($folderIdentifier);

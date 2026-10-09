@@ -81,7 +81,7 @@ class CacheIdentifierFactory
     /**
      * @param list<string> $parts
      */
-    private function build(string $prefix, array $parts): string
+    protected function build(string $prefix, array $parts): string
     {
         return $prefix . '_' . implode('_', $parts);
     }
@@ -93,7 +93,7 @@ class CacheIdentifierFactory
      * keep working while silently no longer telling two filter states apart as
      * more become editor-selectable.
      */
-    private function hashDemand(TouristAttractionDemand $demand): string
+    protected function hashDemand(TouristAttractionDemand $demand): string
     {
         /** @var array<string, string|list<string>> $canonical */
         $canonical = [];
@@ -111,7 +111,7 @@ class CacheIdentifierFactory
      *
      * @return string|list<string>
      */
-    private function canonicaliseValue(mixed $value): string|array
+    protected function canonicaliseValue(mixed $value): string|array
     {
         if (!is_array($value)) {
             return $this->stringify($value);
@@ -125,7 +125,7 @@ class CacheIdentifierFactory
     }
 
     /** Non-scalars are encoded rather than cast, which would fatal. */
-    private function stringify(mixed $value): string
+    protected function stringify(mixed $value): string
     {
         if (is_scalar($value) || $value === null) {
             return (string)$value;

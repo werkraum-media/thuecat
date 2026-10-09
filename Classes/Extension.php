@@ -42,12 +42,12 @@ class Extension
     final public const CACHE_SEARCH_MASK = 'tx_thuecat_searchmask';
 
     /** One year; invalidation is by tag. */
-    private const FRONTEND_CACHE_LIFETIME = 31536000;
+    protected const FRONTEND_CACHE_LIFETIME = 31536000;
 
     /** One year. The index expires itself; this only stops the backend doing it first. */
-    private const VOCABULARY_CACHE_LIFETIME = 31536000;
+    protected const VOCABULARY_CACHE_LIFETIME = 31536000;
 
-    private const FRONTEND_CACHE_IDENTIFIERS = [
+    protected const FRONTEND_CACHE_IDENTIFIERS = [
         self::CACHE_TEASER,
         self::CACHE_LIST,
         self::CACHE_SEARCH_MASK,
@@ -68,7 +68,7 @@ class Extension
         return 'EXT:' . self::EXTENSION_KEY . '/Resources/Public/Icons/';
     }
 
-    private static function addCaching(): void
+    protected static function addCaching(): void
     {
         self::addImportCache('thuecat_fetchdata', ImportSetting::FetchCacheLifetime->default(), ['system']);
         self::addImportCache('thuecat_vocabulary', self::VOCABULARY_CACHE_LIFETIME, ['system']);
@@ -84,7 +84,7 @@ class Extension
      *
      * @param list<string> $groups
      */
-    private static function addImportCache(string $cacheIdentifier, int $lifetime, array $groups): void
+    protected static function addImportCache(string $cacheIdentifier, int $lifetime, array $groups): void
     {
         if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] ?? null)) {
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$cacheIdentifier] = [];
@@ -107,7 +107,7 @@ class Extension
      * DataHandler flushes only 'pages' group by the
      * tags it emits on save, which is the entire invalidation mechanism.
      */
-    private static function addFrontendCache(string $identifier): void
+    protected static function addFrontendCache(string $identifier): void
     {
         if (isset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier])) {
             return;

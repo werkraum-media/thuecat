@@ -30,10 +30,10 @@ class AccessiblitySpecification implements TypeInterface
     /**
      * @var mixed[]
      */
-    private array $data;
+    protected array $data;
 
     public function __construct(
-        private readonly string $serialized
+        protected readonly string $serialized
     ) {
         $this->data = json_decode($serialized, true);
     }

@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 class ImportSettings
 {
     public function __construct(
-        private readonly ExtensionConfiguration $extensionConfiguration
+        protected readonly ExtensionConfiguration $extensionConfiguration
     ) {
     }
 
@@ -46,7 +46,7 @@ class ImportSettings
      * installation. get() never validates, so a malformed value arrives as a
      * string and is settled by asSetValue() instead.
      */
-    private function fromExtensionConfiguration(ImportSetting $setting): ?int
+    protected function fromExtensionConfiguration(ImportSetting $setting): ?int
     {
         try {
             $value = $this->extensionConfiguration->get('thuecat', $setting->value);
@@ -64,7 +64,7 @@ class ImportSettings
      *
      * @param mixed $value
      */
-    private function asSetValue($value): ?int
+    protected function asSetValue($value): ?int
     {
         if (!is_scalar($value) || $value === '') {
             return null;

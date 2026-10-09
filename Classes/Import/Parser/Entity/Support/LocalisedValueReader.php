@@ -49,7 +49,7 @@ class LocalisedValueReader
      *
      * @param list<mixed> $items
      */
-    private function readFromList(array $items, string $language): string
+    protected function readFromList(array $items, string $language): string
     {
         $fallback = '';
 
@@ -76,7 +76,7 @@ class LocalisedValueReader
     /**
      * @param array<mixed> $node
      */
-    private function readNode(array $node, string $language): string
+    protected function readNode(array $node, string $language): string
     {
         $tag = $node['@language'] ?? null;
         if ($tag !== null && $tag !== $language) {
@@ -89,7 +89,7 @@ class LocalisedValueReader
     /**
      * A non-scalar @value is malformed; '' rather than PHP's "Array".
      */
-    private function stringifyValue(mixed $value): string
+    protected function stringifyValue(mixed $value): string
     {
         if (!is_scalar($value)) {
             return '';

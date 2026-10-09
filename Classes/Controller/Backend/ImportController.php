@@ -33,11 +33,11 @@ use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 
 class ImportController extends ActionController
 {
-    private const ITEMS_PER_PAGE = 5;
+    protected const ITEMS_PER_PAGE = 5;
 
     public function __construct(
-        private readonly ImportLogRepository $repository,
-        private readonly PaginationFactory $paginationFactory,
+        protected readonly ImportLogRepository $repository,
+        protected readonly PaginationFactory $paginationFactory,
         protected readonly ModuleTemplateFactory $moduleTemplateFactory
     ) {
     }

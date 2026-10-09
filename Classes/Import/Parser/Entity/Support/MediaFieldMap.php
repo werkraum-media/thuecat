@@ -24,7 +24,7 @@ class MediaFieldMap
      *
      * @var list<class-string<\WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface>>
      */
-    private const OWNERS = [
+    protected const OWNERS = [
         TouristAttractionEntity::class,
         TouristInformationEntity::class,
         ParkingFacilityEntity::class,
@@ -35,7 +35,7 @@ class MediaFieldMap
     /**
      * @var array<string, array<string, string>> table => kind => field
      */
-    private readonly array $fieldsByTable;
+    protected readonly array $fieldsByTable;
 
     public function __construct()
     {

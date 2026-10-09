@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Service\DateBasedFilter;
 class FilterBasedOnTypo3Context implements DateBasedFilter
 {
     public function __construct(
-        private readonly Context $context
+        protected readonly Context $context
     ) {
     }
 

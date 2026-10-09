@@ -35,12 +35,12 @@ class Offers implements TypeInterface, Iterator, Countable
     /**
      * @var mixed[]
      */
-    private array $array = [];
+    protected array $array = [];
 
-    private int $position = 0;
+    protected int $position = 0;
 
     public function __construct(
-        private readonly string $serialized
+        protected readonly string $serialized
     ) {
         $array = json_decode($serialized, true);
         if (is_array($array)) {

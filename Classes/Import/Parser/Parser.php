@@ -31,17 +31,17 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 #[Autoconfigure(public: true)]
 class Parser
 {
-    private DataHandlerPayload $dataHandlerPayload;
+    protected DataHandlerPayload $dataHandlerPayload;
 
-    private string $language = 'de';
+    protected string $language = 'de';
 
     /** @var array<string, int> */
-    private array $translationLanguages = [];
+    protected array $translationLanguages = [];
 
     public function __construct(
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
         #[AutowireLocator(services: 'import.entity')]
-        private readonly ServiceLocator $entities,
+        protected readonly ServiceLocator $entities,
     ) {
     }
 
@@ -112,7 +112,7 @@ class Parser
     /**
      * Based on @type, the correct Entity class for the node is determined and returned.
      */
-    private function resolveEntityClass(mixed $types): ?EntityInterface
+    protected function resolveEntityClass(mixed $types): ?EntityInterface
     {
         // @todo check the mixed type here. This is always an array of strings if I am not very much mistaken
         $types = is_array($types) ? $types : [];

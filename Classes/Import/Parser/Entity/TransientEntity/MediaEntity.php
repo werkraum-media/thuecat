@@ -38,16 +38,16 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity;
 //     $resolvedAuthor argument.
 class MediaEntity extends AbstractTransientEntity
 {
-    private bool $mainImage = false;
-    private string $type = 'image';
-    private string $title = '';
-    private string $description = '';
-    private string $url = '';
-    private string $author = '';
-    private int $copyrightYear = 0;
+    protected bool $mainImage = false;
+    protected string $type = 'image';
+    protected string $title = '';
+    protected string $description = '';
+    protected string $url = '';
+    protected string $author = '';
+    protected int $copyrightYear = 0;
 
     /** @var array{type: string, author: string} */
-    private array $license = ['type' => '', 'author' => ''];
+    protected array $license = ['type' => '', 'author' => ''];
 
     /**
      * @param array<string, mixed> $node       the fetched dms_* media node
@@ -134,7 +134,7 @@ class MediaEntity extends AbstractTransientEntity
      * the shaped name in through configure(); this helper only handles the
      * literal-string case.
      */
-    private function extractAuthorString(mixed $value, string $language): string
+    protected function extractAuthorString(mixed $value, string $language): string
     {
         if (!is_array($value)) {
             return '';
@@ -182,7 +182,7 @@ class MediaEntity extends AbstractTransientEntity
         return self::pickLocalised($personNode['schema:name'] ?? null, $language);
     }
 
-    private static function pickLocalised(mixed $value, string $language): string
+    protected static function pickLocalised(mixed $value, string $language): string
     {
         if (!is_array($value)) {
             return '';

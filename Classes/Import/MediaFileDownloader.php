@@ -43,7 +43,7 @@ use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 #[Autoconfigure(public: true)]
 class MediaFileDownloader
 {
-    private const MAX_REDIRECTS = 5;
+    protected const MAX_REDIRECTS = 5;
 
     public function __construct(
         protected readonly ImportHttpClient $httpClient,

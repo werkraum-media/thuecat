@@ -32,12 +32,12 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 class RequestFactory implements RequestFactoryInterface
 {
-    private ?string $apiKeyOverride = null;
+    protected ?string $apiKeyOverride = null;
 
     public function __construct(
-        private readonly ExtensionConfiguration $extensionConfiguration,
-        private readonly RequestFactoryInterface $requestFactory,
-        private readonly UriFactoryInterface $uriFactory
+        protected readonly ExtensionConfiguration $extensionConfiguration,
+        protected readonly RequestFactoryInterface $requestFactory,
+        protected readonly UriFactoryInterface $uriFactory
     ) {
     }
 
@@ -78,7 +78,7 @@ class RequestFactory implements RequestFactoryInterface
         return $this->requestFactory->createRequest($method, $uri);
     }
 
-    private function resolveApiKey(): ?string
+    protected function resolveApiKey(): ?string
     {
         if ($this->apiKeyOverride !== null) {
             return $this->apiKeyOverride;

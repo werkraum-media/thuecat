@@ -51,7 +51,7 @@ class KeywordReader
         return $entries;
     }
 
-    private function toEntry(mixed $item): ?KeywordEntry
+    protected function toEntry(mixed $item): ?KeywordEntry
     {
         if (!is_array($item)) {
             return null;

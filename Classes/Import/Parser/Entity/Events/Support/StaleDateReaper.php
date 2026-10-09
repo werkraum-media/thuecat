@@ -22,12 +22,12 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 class StaleDateReaper
 {
     // The entities own their table names; nothing else may hardcode them.
-    private const EVENT_TABLE = EventEntity::TABLE;
+    protected const EVENT_TABLE = EventEntity::TABLE;
 
-    private const DATE_TABLE = DateEntity::TABLE;
+    protected const DATE_TABLE = DateEntity::TABLE;
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool,
+        protected readonly ConnectionPool $connectionPool,
     ) {
     }
 
@@ -69,7 +69,7 @@ class StaleDateReaper
     /**
      * @return array<int, string> uid => remote_id
      */
-    private function findOwnedDates(string $eventRemoteId): array
+    protected function findOwnedDates(string $eventRemoteId): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::DATE_TABLE);
         $queryBuilder->getRestrictions()

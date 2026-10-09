@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
 class MetaInformationService
 {
     public function __construct(
-        private readonly MetaTagManagerRegistry $metaTagManagerRegistry
+        protected readonly MetaTagManagerRegistry $metaTagManagerRegistry
     ) {
     }
 

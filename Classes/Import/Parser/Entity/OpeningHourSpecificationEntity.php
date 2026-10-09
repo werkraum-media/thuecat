@@ -104,7 +104,7 @@ class OpeningHourSpecificationEntity extends AbstractEntity
     /**
      * schema:Date @value is "YYYY-MM-DD"; the date dbType column stores it as-is.
      */
-    private function extractDate(mixed $value): ?string
+    protected function extractDate(mixed $value): ?string
     {
         $raw = $this->extractValue($value, '');
         return $raw === '' ? null : $raw;

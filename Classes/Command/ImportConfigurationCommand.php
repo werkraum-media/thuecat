@@ -40,8 +40,8 @@ use WerkraumMedia\ThueCat\Import\ImportLogger;
 class ImportConfigurationCommand extends Command
 {
     public function __construct(
-        private readonly ImportConfigurationRepository $importConfigurationRepository,
-        private readonly Importer $importer
+        protected readonly ImportConfigurationRepository $importConfigurationRepository,
+        protected readonly Importer $importer
     ) {
         parent::__construct();
     }
@@ -129,7 +129,7 @@ class ImportConfigurationCommand extends Command
      * inspect the log without flagging the run as broken to whatever
      * scheduler invoked the command.
      */
-    private function isFailureSeverity(string $severity): bool
+    protected function isFailureSeverity(string $severity): bool
     {
         return in_array($severity, [
             ImportLogger::SEVERITY_ERROR,

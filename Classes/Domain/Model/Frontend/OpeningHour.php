@@ -32,12 +32,12 @@ class OpeningHour
     /**
      * @param mixed[] $daysOfWeek
      */
-    private function __construct(
-        private readonly string $opens,
-        private readonly string $closes,
-        private array $daysOfWeek,
-        private readonly ?DateTimeImmutable $from,
-        private readonly ?DateTimeImmutable $through
+    protected function __construct(
+        protected readonly string $opens,
+        protected readonly string $closes,
+        protected array $daysOfWeek,
+        protected readonly ?DateTimeImmutable $from,
+        protected readonly ?DateTimeImmutable $through
     ) {
     }
 
@@ -118,7 +118,7 @@ class OpeningHour
             && $from->format('Ymd') === $through->format('Ymd');
     }
 
-    private function sortedDaysOfWeek(array $sorting): array
+    protected function sortedDaysOfWeek(array $sorting): array
     {
         if ($this->daysOfWeek === []) {
             return [];

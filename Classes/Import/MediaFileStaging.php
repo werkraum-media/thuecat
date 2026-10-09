@@ -35,7 +35,7 @@ use TYPO3\CMS\Core\Utility\StringUtility;
  */
 class MediaFileStaging
 {
-    private const STAGING_PREFIX = '_thuecat_import_';
+    protected const STAGING_PREFIX = '_thuecat_import_';
 
     /**
      * Create a fresh, uniquely named staging subfolder under $target.

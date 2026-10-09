@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 class DataHandlerPayload
 {
     /** @var array<string, array<int|string, array<string, string|int|float>>> */
-    private array $dataMap = [];
+    protected array $dataMap = [];
 
     /**
      * Unresolved references, bound to (table, remote_id) so the resolver can
@@ -46,7 +46,7 @@ class DataHandlerPayload
      *
      * @var array<string, array<string, array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>>>
      */
-    private array $transients = [];
+    protected array $transients = [];
 
     /**
      * Translated scalar values, bound to the same (table, remote_id) shape
@@ -58,7 +58,7 @@ class DataHandlerPayload
      *
      * @var array<string, array<string, array<int, array<string, string|int|float>>>>
      */
-    private array $translations = [];
+    protected array $translations = [];
 
     /**
      * Categories per (table, remote_id), harvested during addEntity. Each entry
@@ -66,14 +66,14 @@ class DataHandlerPayload
      *
      * @var array<string, array<string, list<array{field: string, remoteId: string, title: string}>>>
      */
-    private array $categories = [];
+    protected array $categories = [];
 
     /**
      * Match reports for the import report; carried through mergeFrom.
      *
      * @var list<array{kind: string, sourcePrefix: string, matched: array<string, string>, unmatched: list<string>}>
      */
-    private array $matchReports = [];
+    protected array $matchReports = [];
 
     /**
      * Inline media per owner row, keyed table => remote_id. Kept apart from
@@ -107,7 +107,7 @@ class DataHandlerPayload
      *
      * @var array<string, array<int|string, list<array{0: string, 1: int|string}>>>
      */
-    private array $cmdMap = [];
+    protected array $cmdMap = [];
 
     /**
      * Outer keys of rows that came in via addEntity — i.e. default-language
@@ -118,7 +118,7 @@ class DataHandlerPayload
      *
      * @var array<string, array<int|string, true>>
      */
-    private array $defaultLanguageKeys = [];
+    protected array $defaultLanguageKeys = [];
 
     public function addEntity(EntityInterface $entity): void
     {
@@ -175,7 +175,7 @@ class DataHandlerPayload
      *
      * @return array<string, string|int|float>
      */
-    private function resolveParsedEmpty(array $row): array
+    protected function resolveParsedEmpty(array $row): array
     {
         foreach ($row as $field => $value) {
             if ($value === AbstractEntity::PARSED_EMPTY_INTEGER) {

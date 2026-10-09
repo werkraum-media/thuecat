@@ -19,7 +19,7 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
 class VocabularyIndexFactory
 {
     public function __construct(
-        private readonly VocabularyDistiller $distiller = new VocabularyDistiller()
+        protected readonly VocabularyDistiller $distiller = new VocabularyDistiller()
     ) {
     }
 

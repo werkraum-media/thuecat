@@ -27,12 +27,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class Price
 {
-    private function __construct(
-        private readonly string $title,
-        private readonly string $description,
-        private readonly float $price,
-        private readonly string $currency,
-        private readonly array $rules
+    protected function __construct(
+        protected readonly string $title,
+        protected readonly string $description,
+        protected readonly float $price,
+        protected readonly string $currency,
+        protected readonly array $rules
     ) {
     }
 

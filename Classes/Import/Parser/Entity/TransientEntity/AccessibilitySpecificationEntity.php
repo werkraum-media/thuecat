@@ -36,7 +36,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity;
 // empty so the blob stays compact.
 class AccessibilitySpecificationEntity extends AbstractTransientEntity
 {
-    private const CERTIFICATION_KEYS = [
+    protected const CERTIFICATION_KEYS = [
         'certificationAccessibilityDeaf',
         'certificationAccessibilityMental',
         'certificationAccessibilityPartiallyDeaf',
@@ -46,7 +46,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
         'certificationAccessibilityWheelchair',
     ];
 
-    private const SHORT_DESCRIPTION_KEYS = [
+    protected const SHORT_DESCRIPTION_KEYS = [
         'shortDescriptionAccessibilityAllGenerations',
         'shortDescriptionAccessibilityAllergic',
         'shortDescriptionAccessibilityDeaf',
@@ -58,23 +58,23 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
     // Fixed group order for search criteria — legacy producer's order. Source
     // iteration emits groups in whatever sequence the JSON-LD lists them in;
     // the output uses this order so the blob is stable across imports.
-    private const SEARCH_CRITERIA_GROUPS = [
+    protected const SEARCH_CRITERIA_GROUPS = [
         'facilityAccessibilityWalking',
         'facilityAccessibilityVisual',
         'facilityAccessibilityDeaf',
         'facilityAccessibilityMental',
     ];
 
-    private string $accessibilityCertificationStatus = '';
+    protected string $accessibilityCertificationStatus = '';
 
     /** @var array<string, string> */
-    private array $certifications = [];
+    protected array $certifications = [];
 
     /** @var array<string, list<string>> */
-    private array $searchCriteria = [];
+    protected array $searchCriteria = [];
 
     /** @var array<string, string> */
-    private array $shortDescriptions = [];
+    protected array $shortDescriptions = [];
 
     /**
      * @param array<string, mixed> $node the fetched AccessibilitySpecification node
@@ -140,7 +140,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
      *
      * @return array<string, list<string>>
      */
-    private function groupSearchCriteria(mixed $value, string $language): array
+    protected function groupSearchCriteria(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];

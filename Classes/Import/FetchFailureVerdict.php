@@ -43,7 +43,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
  */
 class FetchFailureVerdict
 {
-    private const GONE_STATUSES = [404, 410];
+    protected const GONE_STATUSES = [404, 410];
 
     public function statusMeansGone(?int $status): bool
     {
@@ -65,7 +65,7 @@ class FetchFailureVerdict
 
     // Non-200s without a dedicated exception class carry the status in the
     // message only.
-    private function statusFromMessage(string $message): ?int
+    protected function statusFromMessage(string $message): ?int
     {
         if (preg_match('/failed with status (\d{3})/', $message, $matches) !== 1) {
             return null;

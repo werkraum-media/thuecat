@@ -38,11 +38,11 @@ class VocabularyIndexCache
      */
     public const FORMAT = 1;
 
-    private const ENTRY = 'index';
+    protected const ENTRY = 'index';
 
     public function __construct(
         #[Autowire(service: 'cache.thuecat_vocabulary')]
-        private readonly FrontendInterface $cache
+        protected readonly FrontendInterface $cache
     ) {
     }
 
@@ -86,7 +86,7 @@ class VocabularyIndexCache
      *
      * @return array<string, array{parents: list<string>, labels: array<string, string>}>
      */
-    private function classesFrom(VocabularyIndex $index): array
+    protected function classesFrom(VocabularyIndex $index): array
     {
         $classes = [];
         foreach ($index->all() as $id => $class) {
@@ -99,7 +99,7 @@ class VocabularyIndexCache
     /**
      * @param array<mixed> $classes
      */
-    private function indexFrom(array $classes): VocabularyIndex
+    protected function indexFrom(array $classes): VocabularyIndex
     {
         $restored = [];
         foreach ($classes as $id => $class) {

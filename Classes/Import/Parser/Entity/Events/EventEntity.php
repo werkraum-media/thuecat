@@ -267,7 +267,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
      *
      * @return list<DateEntity>
      */
-    private function buildDateRows(array $node, ParserContext $parserContext): array
+    protected function buildDateRows(array $node, ParserContext $parserContext): array
     {
         $schedule = $node['schema:eventSchedule'] ?? null;
         $adapter = GeneralUtility::makeInstance(EventScheduleAdapter::class);
@@ -307,7 +307,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
      * schema:description carries plain + HTML siblings; we want the HTML one
      * for the richtext `details` column.
      */
-    private function extractHtmlDescription(mixed $value, string $language): string
+    protected function extractHtmlDescription(mixed $value, string $language): string
     {
         if (!is_array($value)) {
             return '';

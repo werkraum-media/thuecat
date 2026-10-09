@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 class FrontendCategoryAnchors
 {
     public function __construct(
-        private readonly CategoryAnchorResolver $resolver
+        protected readonly CategoryAnchorResolver $resolver
     ) {
     }
 
@@ -47,7 +47,7 @@ class FrontendCategoryAnchors
      * 0 when the request carries no site, which is what an unconfigured anchor
      * yields too: the filter offers nothing rather than the whole tree.
      */
-    private function resolve(ServerRequestInterface $request, string $recordTable, AnchorKind $kind): int
+    protected function resolve(ServerRequestInterface $request, string $recordTable, AnchorKind $kind): int
     {
         $site = $request->getAttribute('site');
         if (!$site instanceof Site) {

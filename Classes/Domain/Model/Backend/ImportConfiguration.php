@@ -187,7 +187,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return $containsPlaceId;
     }
 
-    private function getPositiveIntFromFlexForm(string $fieldName): int
+    protected function getPositiveIntFromFlexForm(string $fieldName): int
     {
         $value = $this->getConfigurationValueFromFlexForm($fieldName);
 
@@ -198,7 +198,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return (int)$value;
     }
 
-    private function getEntries(): array
+    protected function getEntries(): array
     {
         $configurationAsArray = $this->getConfigurationAsArray();
 
@@ -212,7 +212,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         );
     }
 
-    private function getConfigurationAsArray(): array
+    protected function getConfigurationAsArray(): array
     {
         $asArray = GeneralUtility::xml2array($this->configuration);
 
@@ -226,7 +226,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
     /**
      * @return mixed
      */
-    private function getConfigurationValueFromFlexForm(string $fieldName)
+    protected function getConfigurationValueFromFlexForm(string $fieldName)
     {
         if ($this->configuration === '') {
             return '';

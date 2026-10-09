@@ -61,7 +61,7 @@ class VocabularyDistiller
      *
      * @param array<mixed> $node
      */
-    private function isClass(array $node): bool
+    protected function isClass(array $node): bool
     {
         $types = $node['@type'] ?? null;
 
@@ -76,7 +76,7 @@ class VocabularyDistiller
      *
      * @return list<string>
      */
-    private function identifiers($value): array
+    protected function identifiers($value): array
     {
         if ($value === null) {
             return [];
@@ -104,7 +104,7 @@ class VocabularyDistiller
      *
      * @return array<string, string>
      */
-    private function labels($value): array
+    protected function labels($value): array
     {
         if ($value === null) {
             return [];

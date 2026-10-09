@@ -31,11 +31,11 @@ class Offer
      * @param string[] $types
      * @param mixed[] $prices
      */
-    private function __construct(
-        private readonly string $title,
-        private array $types,
-        private readonly string $description,
-        private readonly array $prices
+    protected function __construct(
+        protected readonly string $title,
+        protected array $types,
+        protected readonly string $description,
+        protected readonly array $prices
     ) {
     }
 

@@ -29,13 +29,13 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 
 class SyncScopeUrlProvider implements UrlProvider
 {
-    private string $syncScopeId = '';
-    private string $apiKey = '';
+    protected string $syncScopeId = '';
+    protected string $apiKey = '';
 
-    private int $fetchLastXDays = 0;
+    protected int $fetchLastXDays = 0;
 
     public function __construct(
-        private readonly FetchData $fetchData
+        protected readonly FetchData $fetchData
     ) {
     }
 

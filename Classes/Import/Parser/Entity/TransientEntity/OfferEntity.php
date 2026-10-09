@@ -75,7 +75,7 @@ class OfferEntity extends AbstractTransientEntity
      *
      * @return list<string>
      */
-    private function extractTypes(mixed $value, string $language): array
+    protected function extractTypes(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];
@@ -102,7 +102,7 @@ class OfferEntity extends AbstractTransientEntity
      *
      * @return list<array{title: string, description: string, price: float, currency: string, rule: string}>
      */
-    private function extractPrices(mixed $value, string $language): array
+    protected function extractPrices(mixed $value, string $language): array
     {
         if ($value === null || $value === '' || $value === []) {
             return [];

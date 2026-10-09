@@ -46,7 +46,7 @@ class TimingFormat
      *
      * @return string[]
      */
-    private static function getTimingParts(string $string): array
+    protected static function getTimingParts(string $string): array
     {
         $parts = explode(':', $string);
         return [

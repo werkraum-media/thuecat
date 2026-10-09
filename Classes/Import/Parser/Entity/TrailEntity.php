@@ -52,7 +52,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     ];
 
     // keys present in json entry map to dedicated fields
-    private const OTHER_DESCRIPTIONS = [
+    protected const OTHER_DESCRIPTIONS = [
         'short_description' => 'thuecat:shortDescription',
         'directions' => 'thuecat:directions',
         'getting_there' => 'thuecat:gettingThere',
@@ -65,7 +65,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     ];
 
     /** Rating column prefix => the name under thuecat:trailRatings. */
-    private const RATINGS = [
+    protected const RATINGS = [
         'rating_landscape' => 'thuecat:landscape',
         'rating_condition' => 'thuecat:ratingCondition',
         'rating_difficulty' => 'thuecat:ratingDifficulty',
@@ -194,7 +194,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
         $this->recordKeywords($node);
     }
 
-    private function recordLogoMedia(mixed $logo): void
+    protected function recordLogoMedia(mixed $logo): void
     {
         foreach ($this->splitMediaByShape($logo) as $logoNode) {
             $this->_inlineMedia[] = ['kind' => 'logo', 'node' => $logoNode];
@@ -216,7 +216,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
      * @param array<string, mixed> $node
      * @param array<string, int> $translationLanguages
      */
-    private function buildWayTypes(array $node, string $language, array $translationLanguages): void
+    protected function buildWayTypes(array $node, string $language, array $translationLanguages): void
     {
         $wayType = $node['schema:wayType'] ?? null;
         if (!is_array($wayType)) {
@@ -251,7 +251,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
      * @param array<string, mixed> $node
      * @param array<string, int> $translationLanguages
      */
-    private function buildConditions(array $node, string $language, array $translationLanguages): void
+    protected function buildConditions(array $node, string $language, array $translationLanguages): void
     {
         $conditions = $node['thuecat:trailCurrentConditions'] ?? null;
         if (!is_array($conditions)) {
@@ -281,7 +281,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
      * @param array<string, mixed> $node
      * @param array<string, int> $translationLanguages
      */
-    private function buildLocations(array $node, string $language, array $translationLanguages): void
+    protected function buildLocations(array $node, string $language, array $translationLanguages): void
     {
         $roles = [
             TrailLocationEntity::TYPE_START => 'thuecat:startLocation',
@@ -308,7 +308,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     /**
      * @param array<string, mixed> $node
      */
-    private function parseOpeningStatus(array $node, string $language): void
+    protected function parseOpeningStatus(array $node, string $language): void
     {
         $status = $this->stripNamespacePrefix(
             $this->extractValue($node['thuecat:openingStatus'] ?? null, $language)
@@ -325,7 +325,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
      *
      * @param array<string, mixed> $node
      */
-    private function parseSeasons(array $node, string $language): void
+    protected function parseSeasons(array $node, string $language): void
     {
         $bits = 0;
         foreach ($this->extractConcatenatedMembers($node['thuecat:season'] ?? null, $language) as $member) {
@@ -339,7 +339,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     /**
      * @param array<string, mixed> $node
      */
-    private function parseRoute(array $node, string $language): void
+    protected function parseRoute(array $node, string $language): void
     {
         $geo = $node['schema:geo'] ?? null;
         if (is_array($geo)) {
@@ -355,7 +355,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     /**
      * @param array<string, mixed> $node
      */
-    private function parseMetrics(array $node, string $language): void
+    protected function parseMetrics(array $node, string $language): void
     {
         $action = $node['schema:potentialAction'] ?? null;
         if (!is_array($action)) {
@@ -401,7 +401,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
      *
      * @return array{string, string}
      */
-    private function quantitativeValue(mixed $value, string $language): array
+    protected function quantitativeValue(mixed $value, string $language): array
     {
         if (!is_array($value)) {
             return ['', ''];

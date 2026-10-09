@@ -139,7 +139,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
         );
     }
 
-    private function collectOpeningHourSpecifications(mixed $value, string $remoteId, string $specificationType): void
+    protected function collectOpeningHourSpecifications(mixed $value, string $remoteId, string $specificationType): void
     {
         if (!is_array($value)) {
             return;
@@ -165,7 +165,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
      *
      * @return list<string>
      */
-    private function extractDaysOfWeek(mixed $value): array
+    protected function extractDaysOfWeek(mixed $value): array
     {
         if (!is_array($value)) {
             return [];

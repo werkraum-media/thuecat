@@ -30,7 +30,7 @@ class StaticUrlProvider implements UrlProvider
     /**
      * @var string[]
      */
-    private array $urls = [];
+    protected array $urls = [];
 
     public function canProvideForConfiguration(
         ImportConfigurationInterface $configuration

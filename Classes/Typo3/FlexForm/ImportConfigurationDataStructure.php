@@ -20,11 +20,11 @@ use WerkraumMedia\ThueCat\Extension;
 // folder, api key) are defined once. XML has no include mechanism.
 class ImportConfigurationDataStructure
 {
-    private const LLL = 'LLL:EXT:' . Extension::EXTENSION_KEY . '/Resources/Private/Language/locallang_flexform.xlf:';
+    protected const LLL = 'LLL:EXT:' . Extension::EXTENSION_KEY . '/Resources/Private/Language/locallang_flexform.xlf:';
 
     // Optional ints on every type; empty falls back to extension config.
     // Timeouts and attempts are deliberately absent: extension config only.
-    private const TUNABLES = [
+    protected const TUNABLES = [
         'runBudget',
         'fetchCacheLifetime',
     ];
@@ -60,7 +60,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function staticFields(): array
+    protected function staticFields(): array
     {
         return [
             'storagePid' => $this->storagePidField('static'),
@@ -74,7 +74,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function syncScopeFields(): array
+    protected function syncScopeFields(): array
     {
         return [
             'storagePid' => $this->storagePidField('syncScope'),
@@ -96,7 +96,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function containsPlaceFields(): array
+    protected function containsPlaceFields(): array
     {
         return [
             'storagePid' => $this->storagePidField('containsPlace'),
@@ -118,7 +118,7 @@ class ImportConfigurationDataStructure
      *
      * @return array<string, mixed>
      */
-    private function storagePidField(string $type): array
+    protected function storagePidField(string $type): array
     {
         return [
             'label' => self::LLL . 'importConfiguration.' . $type . '.storagePid',
@@ -133,7 +133,7 @@ class ImportConfigurationDataStructure
      *
      * @return array<string, mixed>
      */
-    private function pageSelectField(): array
+    protected function pageSelectField(): array
     {
         return [
             'type' => 'group',
@@ -151,7 +151,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function fileFolderField(string $type): array
+    protected function fileFolderField(string $type): array
     {
         return [
             'label' => self::LLL . 'importConfiguration.' . $type . '.fileFolder',
@@ -163,7 +163,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function apiKeyField(): array
+    protected function apiKeyField(): array
     {
         return [
             'label' => self::LLL . 'importConfiguration.apiKey',
@@ -175,7 +175,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function tunableFields(): array
+    protected function tunableFields(): array
     {
         $fields = [];
         foreach (self::TUNABLES as $name) {
@@ -192,7 +192,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function apiDomainField(): array
+    protected function apiDomainField(): array
     {
         return [
             'label' => self::LLL . 'importConfiguration.syncScope.apiDomain',
@@ -204,7 +204,7 @@ class ImportConfigurationDataStructure
     /**
      * @return array<string, mixed>
      */
-    private function urlsSection(): array
+    protected function urlsSection(): array
     {
         return [
             'title' => self::LLL . 'importConfiguration.static.urls',

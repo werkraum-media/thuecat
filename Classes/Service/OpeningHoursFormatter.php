@@ -51,7 +51,7 @@ class OpeningHoursFormatter
     /**
      * Canonical display order; PublicHolidays sorts last (after Sunday).
      */
-    private const WEEKDAY_ORDER = [
+    protected const WEEKDAY_ORDER = [
         'Monday' => 1,
         'Tuesday' => 2,
         'Wednesday' => 3,

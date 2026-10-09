@@ -23,7 +23,7 @@ class KeywordTermEntity extends AbstractEntity
     public const PARENT_BUCKET = 'keywords';
 
     /** Upstream always carries German; other languages may be absent. */
-    private const FALLBACK_LANGUAGE = 'de';
+    protected const FALLBACK_LANGUAGE = 'de';
 
     protected string $remote_id = '';
 

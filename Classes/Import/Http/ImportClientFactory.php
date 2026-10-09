@@ -63,7 +63,7 @@ class ImportClientFactory
      *
      * @param mixed $handlers
      */
-    private function handlerStack($handlers): HandlerStack
+    protected function handlerStack($handlers): HandlerStack
     {
         if ($handlers instanceof HandlerStack) {
             return $handlers;

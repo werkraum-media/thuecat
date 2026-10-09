@@ -30,8 +30,8 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 class VocabularyLabelResolver
 {
     public function __construct(
-        private readonly VocabularyProvider $vocabularyProvider,
-        private readonly CurieExpander $curieExpander = new CurieExpander()
+        protected readonly VocabularyProvider $vocabularyProvider,
+        protected readonly CurieExpander $curieExpander = new CurieExpander()
     ) {
     }
 
@@ -49,7 +49,7 @@ class VocabularyLabelResolver
         return $this->label($uri, $language, $apiKey) ?? $this->stripPrefix($value);
     }
 
-    private function label(string $uri, string $language, ?string $apiKey): ?string
+    protected function label(string $uri, string $language, ?string $apiKey): ?string
     {
         try {
             $label = $this->vocabularyProvider->index($apiKey)->get($uri)?->label($language);
@@ -61,7 +61,7 @@ class VocabularyLabelResolver
         return $label === '' ? null : $label;
     }
 
-    private function stripPrefix(string $value): string
+    protected function stripPrefix(string $value): string
     {
         $colon = strpos($value, ':');
         return $colon === false ? $value : substr($value, $colon + 1);

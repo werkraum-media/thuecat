@@ -41,11 +41,11 @@ class SearchFilterOptionsService
 {
     public function __construct(
         #[AutowireLocator(services: 'search.filter.field')]
-        private readonly ServiceLocator $fields,
+        protected readonly ServiceLocator $fields,
         #[AutowireLocator(services: 'search.filter.option.provider')]
-        private readonly ServiceLocator $providers,
-        private readonly FrontendCategoryAnchors $anchors,
-        private readonly SitePageIds $sitePageIds,
+        protected readonly ServiceLocator $providers,
+        protected readonly FrontendCategoryAnchors $anchors,
+        protected readonly SitePageIds $sitePageIds,
     ) {
     }
 

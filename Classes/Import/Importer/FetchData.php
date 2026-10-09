@@ -42,18 +42,18 @@ class FetchData
     // Reuse rather than re-defaulting elsewhere; the fallback lives here.
     public const DEFAULT_API_DOMAIN = 'https://cdb.thuecat.org';
 
-    private string $urlPrefix = 'https://thuecat.org';
+    protected string $urlPrefix = 'https://thuecat.org';
 
-    private bool $bypassCache = false;
+    protected bool $bypassCache = false;
 
-    private int $cacheLifetime = 0;
+    protected int $cacheLifetime = 0;
 
     public function __construct(
         #[Autowire(service: RequestFactory::class)]
-        private readonly RequestFactoryInterface $requestFactory,
-        private readonly ImportHttpClient $httpClient,
+        protected readonly RequestFactoryInterface $requestFactory,
+        protected readonly ImportHttpClient $httpClient,
         #[Autowire(service: 'cache.thuecat_fetchdata')]
-        private readonly CacheFrontendInterface $cache
+        protected readonly CacheFrontendInterface $cache
     ) {
     }
 
@@ -139,7 +139,7 @@ class FetchData
         return [];
     }
 
-    private function handleInvalidResponse(
+    protected function handleInvalidResponse(
         ResponseInterface $response,
         RequestInterface $request
     ): void {
@@ -182,7 +182,7 @@ class FetchData
      * A 5xx that survived every attempt comes back as a response, so the count
      * rides on a header; chain it so the log can report cause and attempts.
      */
-    private function exhaustedRetry(
+    protected function exhaustedRetry(
         ResponseInterface $response,
         RequestInterface $request
     ): ?RetryExhaustedException {

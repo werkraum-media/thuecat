@@ -35,8 +35,8 @@ use TYPO3\CMS\Core\Site\Entity\Site;
 class CategoryAnchorResolver
 {
     public function __construct(
-        private readonly ExtensionConfiguration $extensionConfiguration,
-        private readonly AnchorScopeRegistry $scopes,
+        protected readonly ExtensionConfiguration $extensionConfiguration,
+        protected readonly AnchorScopeRegistry $scopes,
     ) {
     }
 
@@ -93,7 +93,7 @@ class CategoryAnchorResolver
     /**
      * @return list<AnchorScope>
      */
-    private function scopeChain(string $table): array
+    protected function scopeChain(string $table): array
     {
         $chain = [];
         foreach ([$this->scopes->forTable($table), AnchorScope::default()] as $scope) {
@@ -116,7 +116,7 @@ class CategoryAnchorResolver
      * Both exceptions mean "nothing set at this level": the extension has no
      * configuration at all, or none carrying these keys.
      */
-    private function fromExtensionConfiguration(CategoryAnchorSetting $setting, AnchorScope $scope): ?int
+    protected function fromExtensionConfiguration(CategoryAnchorSetting $setting, AnchorScope $scope): ?int
     {
         try {
             $value = $this->extensionConfiguration->get('thuecat', $setting->extensionConfigurationKey($scope));
@@ -133,7 +133,7 @@ class CategoryAnchorResolver
      *
      * @param mixed $value
      */
-    private function asSetValue($value): ?int
+    protected function asSetValue($value): ?int
     {
         if (!is_scalar($value) || $value === '') {
             return null;

@@ -19,7 +19,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Support;
  */
 class CurieExpander
 {
-    private const BASE_BY_PREFIX = [
+    protected const BASE_BY_PREFIX = [
         'thuecat' => 'https://thuecat.org/ontology/thuecat/1.0/',
     ];
 

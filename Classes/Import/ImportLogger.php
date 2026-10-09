@@ -35,7 +35,7 @@ class ImportLogger
      *
      * @var array<string, int>
      */
-    private const SEVERITY_RANK = [
+    protected const SEVERITY_RANK = [
         self::SEVERITY_DEBUG => 0,
         self::SEVERITY_INFO => 1,
         self::SEVERITY_NOTICE => 2,
@@ -46,7 +46,7 @@ class ImportLogger
         self::SEVERITY_EMERGENCY => 7,
     ];
 
-    private const UPDATE_WINDOW_SECONDS = 300;
+    protected const UPDATE_WINDOW_SECONDS = 300;
 
     /**
      * Pending non-savingEntity entries staged via the record* methods.
@@ -55,7 +55,7 @@ class ImportLogger
      *
      * @var list<array<string, mixed>>
      */
-    private array $pendingEntries = [];
+    protected array $pendingEntries = [];
 
     /**
      * Held apart from pendingEntries so it can be written first, whenever the
@@ -63,18 +63,18 @@ class ImportLogger
      *
      * @var array<string, mixed>|null
      */
-    private ?array $effectiveSettings = null;
+    protected ?array $effectiveSettings = null;
 
     /**
      * Highest severity seen across all record* calls in this run, in
      * SEVERITY_RANK terms. Reset by writeLog() so a logger instance can be
      * reused across runs without leaking state.
      */
-    private int $maxSeverityRank = 0;
+    protected int $maxSeverityRank = 0;
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool,
-        private readonly RetryTally $retryTally
+        protected readonly ConnectionPool $connectionPool,
+        protected readonly RetryTally $retryTally
     ) {
     }
 
@@ -134,7 +134,7 @@ class ImportLogger
      *
      * @return array<string, int|string>
      */
-    private function retryContext(Throwable $exception): array
+    protected function retryContext(Throwable $exception): array
     {
         $exhausted = $exception instanceof RetryExhaustedException
             ? $exception
@@ -172,7 +172,7 @@ class ImportLogger
      * Notice, not warning — the resources were fetched, so the run's severity
      * and exit code must not move.
      */
-    private function recordRecoveredRetries(): void
+    protected function recordRecoveredRetries(): void
     {
         if (!$this->retryTally->hasRecoveries()) {
             return;
@@ -635,7 +635,7 @@ class ImportLogger
     /**
      * @param array<string, mixed> $context
      */
-    private function matchMessage(string $outcome, array $context): string
+    protected function matchMessage(string $outcome, array $context): string
     {
         $name = is_string($context['name'] ?? null) ? $context['name'] : '';
         $postalCode = is_string($context['postalCode'] ?? null) ? $context['postalCode'] : '';
@@ -759,7 +759,7 @@ class ImportLogger
     /**
      * @param array<string, mixed> $entry
      */
-    private function stage(array $entry): void
+    protected function stage(array $entry): void
     {
         $entry += [
             'pid' => 0,
@@ -785,7 +785,7 @@ class ImportLogger
      *
      * @return array<string, mixed>|null
      */
-    private function buildEntry(string $table, string $key, array $row, array $substNEWwithIDs, int $threshold): ?array
+    protected function buildEntry(string $table, string $key, array $row, array $substNEWwithIDs, int $threshold): ?array
     {
         $remoteId = is_string($row['remote_id'] ?? null) ? $row['remote_id'] : '';
 
@@ -827,7 +827,7 @@ class ImportLogger
         ];
     }
 
-    private function wasUpdatedRecently(string $table, int $uid, int $threshold): bool
+    protected function wasUpdatedRecently(string $table, int $uid, int $threshold): bool
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll();

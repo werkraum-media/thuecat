@@ -38,8 +38,8 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 class SitePageIds
 {
     public function __construct(
-        private readonly SiteFinder $siteFinder,
-        private readonly ConnectionPool $connectionPool,
+        protected readonly SiteFinder $siteFinder,
+        protected readonly ConnectionPool $connectionPool,
     ) {
     }
 
@@ -104,7 +104,7 @@ class SitePageIds
      *
      * @return list<int>
      */
-    private function childPageIds(array $parentIds): array
+    protected function childPageIds(array $parentIds): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $queryBuilder->getRestrictions()

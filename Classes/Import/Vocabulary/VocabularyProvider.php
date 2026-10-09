@@ -33,10 +33,10 @@ class VocabularyProvider
     ];
 
     public function __construct(
-        private readonly FetchData $fetchData,
-        private readonly VocabularyIndexCache $cache,
-        private readonly VocabularyIndexFactory $indexFactory,
-        private readonly ImportLogger $logger
+        protected readonly FetchData $fetchData,
+        protected readonly VocabularyIndexCache $cache,
+        protected readonly VocabularyIndexFactory $indexFactory,
+        protected readonly ImportLogger $logger
     ) {
     }
 
@@ -65,7 +65,7 @@ class VocabularyProvider
      * keeping a freshly fetched half beside a stale half would drop the failed
      * vocabulary's classes and break the chains crossing between them.
      */
-    private function fetch(?string $apiKey): VocabularyIndex
+    protected function fetch(?string $apiKey): VocabularyIndex
     {
         $documents = [];
         foreach (self::VOCABULARY_URLS as $url) {
@@ -79,7 +79,7 @@ class VocabularyProvider
      * The stored entry is deliberately left in place: discarding it would turn
      * one upstream outage into every later run resolving no hierarchy at all.
      */
-    private function indexBehindFailure(
+    protected function indexBehindFailure(
         ?CachedVocabularyIndex $stored,
         Throwable $failure,
         int $now
