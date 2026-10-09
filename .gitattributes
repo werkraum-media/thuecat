@@ -15,3 +15,4 @@ phpunit_dev.xml.dist export-ignore
 shell.nix export-ignore
 Tests export-ignore
 xliff-core-1.2-strict.xsd export-ignore
+Build export-ignore

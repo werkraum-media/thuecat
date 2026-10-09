@@ -2,7 +2,22 @@
 
 declare(strict_types=1);
 
-// Categories are wired onto the default-language attraction only (l10n_mode=
+/*
+ * This file is part of the TYPO3 CMS extension "thuecat".
+ *
+ * Copyright (C) werkraum-media <https://werkraum-media.de/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * For the full license text, see the LICENSE file distributed with this
+ * extension.
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 // exclude): two mapped @types become sys_category rows, each related via
 // sys_category_record_mm. Museum's ancestor is created alongside them without
 // being related — it gives the tree a level, nothing more. The unmapped

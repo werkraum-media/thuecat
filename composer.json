@@ -34,6 +34,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "WerkraumMedia\\ThueCat\\Build\\": "Build/",
             "WerkraumMedia\\ThueCat\\Tests\\": "Tests/"
         }
     },

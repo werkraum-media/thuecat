@@ -2,7 +2,22 @@
 
 declare(strict_types=1);
 
-// Expected EventEntity::toArray() + getDates() for the e_19542-hubev
+/*
+ * This file is part of the TYPO3 CMS extension "thuecat".
+ *
+ * Copyright (C) werkraum-media <https://werkraum-media.de/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * For the full license text, see the LICENSE file distributed with this
+ * extension.
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 // (Kreuzchor) fixture. v1: bare event row + per-occurrence dates.
 //
 // Schedule: single occurrence, startTime=2026-11-29T18:00+01:00, no endTime.

@@ -15,7 +15,11 @@ $finder = (new PhpCsFixer\Finder())
 
 return (new \PhpCsFixer\Config())
     ->setRiskyAllowed(true)
+    ->registerCustomFixers([
+        new \WerkraumMedia\ThueCat\Build\PhpCsFixer\ScopedHeaderCommentFixer(realpath(__DIR__)),
+    ])
     ->setRules([
+        'WerkraumMedia/header_comment' => true,
         '@DoctrineAnnotation' => true,
         '@PSR2' => true,
         'array_indentation' => true,

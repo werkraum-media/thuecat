@@ -6,6 +6,7 @@ parameters:
   # "already narrowed" on the other.
   treatPhpDocTypesAsCertain: false
   paths:
+    - 'Build'
     - 'Classes'
     - 'Configuration'
     - 'Tests'

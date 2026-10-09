@@ -2,7 +2,22 @@
 
 declare(strict_types=1);
 
-// uid order reflects how the Importer drives DataHandler: it accumulates
+/*
+ * This file is part of the TYPO3 CMS extension "thuecat".
+ *
+ * Copyright (C) werkraum-media <https://werkraum-media.de/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option)
+ * any later version.
+ *
+ * For the full license text, see the LICENSE file distributed with this
+ * extension.
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 // every URL's parsed payload before running any DataHandler pass, so iter 0
 // creates BOTH default-language rows (uids 1, 2), then iter 1 localizes
 // both via cmdMap (uids 3, 4). The naive "single attraction fully done
