@@ -1,0 +1,27 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/043064193523-contains",
+            "@type": [
+                "schema:Place",
+                "thuecat:Town"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Ort mit zwei Wegen"
+            },
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/e_52469786-oatour"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/e_106954656-oatour"
+                }
+            ]
+        }
+    ]
+}
