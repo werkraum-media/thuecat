@@ -209,3 +209,27 @@ Deprecation
 -----------
 
 Nothing
+
+Known issues
+------------
+
+A re-import updates what ThueCat still delivers, but not everything ThueCat stops delivering is
+removed from the stored records. The import errs on the side of keeping data: a value is only
+removed where the import can tell a deliberate removal upstream from a missing or failed delivery.
+
+* **Text cleared upstream keeps its old value.** When ThueCat empties a text field, for example a
+  description, the record keeps the previous text. This applies to every text field of every
+  record kind. Numeric fields are not affected.
+
+* **Opening hours are never removed.** An opening hours entry ThueCat no longer delivers stays on
+  the record, next to the current ones.
+
+* **Dropping everything of one kind keeps the old set.** Any *change* ThueCat makes is respected,
+  including dropping some entries of one kind. When a record drops *all* entries of one kind, the
+  stored ones stay. This applies to images, keywords, addresses, other relations, and an event's
+  organizer and location.
+  Related records themselves are shared and stay either way.
+
+**Workaround:** delete the affected record in the backend; the next import creates it again from
+what ThueCat delivers. The record gets a new uid, so plugins showing it as an editor-chosen record
+have to select it again.
