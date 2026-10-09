@@ -58,7 +58,7 @@
         "typo3/cms-filemetadata": "^13.4 || 14.*",
         "typo3/cms-frontend": "^13.4 || 14.*",
         "typo3/cms-install": "^13.4 || 14.*",
-        "werkraummedia/events": "dev-main"
+        "werkraummedia/events": "^v6.0"
     },
     "require-dev": {
         "brianium/paratest": "^7.8",
@@ -82,8 +82,6 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "mkdir -p .Build/web/typo3conf/ext/",
-            "[ -L .Build/web/typo3conf/ext/thuecat ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/thuecat",
             "[ \"$IS_DDEV_PROJECT\" = \"true\" ] && [ -d ../events ] && [ ! -L vendor/werkraummedia/events ] && rm -rf vendor/werkraummedia/events && ln -snvf ../../../events vendor/werkraummedia/events || true"
         ]
     },
