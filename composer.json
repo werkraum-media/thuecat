@@ -3,11 +3,10 @@
     "description": "Integration of ThueCat into TYPO3 CMS.",
     "type": "typo3-cms-extension",
     "license": "GPL-2.0-or-later",
-    "homepage": "https://github.com/werkraum-media/thuecat",
+    "homepage": "https://forgejo.werkraum-media.de/typo3/thuecat",
     "support": {
-        "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/master/en-us/",
-        "issues": "https://github.com/werkraum-media/thuecat/issues",
-        "source": "https://github.com/werkraum-media/thuecat"
+        "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/5.0/en-us/",
+        "source": "https://forgejo.werkraum-media.de/typo3/thuecat"
     },
     "authors": [
         {
