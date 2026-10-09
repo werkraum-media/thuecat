@@ -103,6 +103,23 @@ final class ImportLoggerTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function recordsDataHandlerRefusalDuringImport(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsOrganizationIntoStandardPage.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $severity = $this->importConfigurationReturningSeverity(1);
+
+        $dataHandlerErrors = array_values(array_filter(
+            $this->fetchEntries(),
+            static fn (array $row): bool => $row['type'] === 'dataHandlerError'
+        ));
+        self::assertNotSame([], $dataHandlerErrors);
+        self::assertSame('error', $dataHandlerErrors[0]['severity']);
+        self::assertSame(ImportLogger::SEVERITY_ERROR, $severity);
+    }
+
+    #[Test]
     public function commandReturnsSuccessOnCleanRun(): void
     {
         $this->workaroundExtbaseConfiguration();

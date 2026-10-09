@@ -277,7 +277,7 @@ class Importer
             ));
             $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-            $dataHandler->enableLogging = false;
+            // Logging stays on: DataHandler fills errorLog only while it logs.
             $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
             $dataHandler->process_datamap();
             $dataHandler->process_cmdmap();
@@ -306,7 +306,6 @@ class Importer
         $this->eventPlaceMatcher->flush($accumulatedPayload, $resolverContext);
         if ($accumulatedPayload->getDataMap() !== []) {
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-            $dataHandler->enableLogging = false;
             $dataHandler->start($accumulatedPayload->getDataMap(), []);
             $dataHandler->process_datamap();
             /** @var list<string> $matchErrorLog */
