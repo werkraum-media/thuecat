@@ -205,6 +205,11 @@ Features
   Events get their location and organizer, and places list the events taking place there. See
   :ref:`developers-import-event-place-matching`.
 
+* **[FEATURE] Introduce sorting for POI lists** (``ee1ff62``)
+
+  The list and filtered list plugins for tourist attractions sort by title, as before, or by the
+  record order set in the backend. See :ref:`frontend-output-plugin-settings-sort-order`.
+
 Deprecation
 -----------
 
