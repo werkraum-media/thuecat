@@ -109,7 +109,7 @@ class ListInvalidationTest extends AbstractCachingTestCase
         );
     }
 
-    private function requestPage(int $currentPage): ResponseInterface
+    protected function requestPage(int $currentPage): ResponseInterface
     {
         return $this->request(10, ['currentPage' => (string)$currentPage]);
     }
@@ -117,7 +117,7 @@ class ListInvalidationTest extends AbstractCachingTestCase
     /**
      * @return list<string>
      */
-    private function listIdentifiers(): array
+    protected function listIdentifiers(): array
     {
         return $this->identifiersForRecords(Extension::CACHE_LIST, range(1, 25));
     }

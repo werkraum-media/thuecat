@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
@@ -242,24 +241,5 @@ class TrailDepthCapTest extends AbstractImportTestCase
         ;
 
         return is_numeric($count) ? (int)$count : 0;
-    }
-
-    /** @return list<array<string, mixed>> */
-    private function fetchChildren(string $table): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        return $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where($queryBuilder->expr()->eq(
-                'sys_language_uid',
-                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
-            ))
-            ->orderBy('uid')
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
     }
 }

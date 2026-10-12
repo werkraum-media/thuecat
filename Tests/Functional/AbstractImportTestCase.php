@@ -469,4 +469,74 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
 
         return $byLanguage;
     }
+
+    protected function countDeletedRows(string $table): int
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        // intentional, we count deleted rows here
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $count = $queryBuilder
+            ->count('uid')
+            ->from($table)
+            ->where($queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)))
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($count) ? (int)$count : 0;
+    }
+
+    /** @return list<array<string, mixed>> */
+    protected function fetchChildren(string $table): array
+    {
+        $languageField = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getCapability(TcaSchemaCapability::Language)
+            ->getLanguageField()
+            ->getName()
+        ;
+
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        return $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where($queryBuilder->expr()->eq(
+                $languageField,
+                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+            ))
+            ->orderBy('uid')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+    }
+
+    /**
+     * Every language's rows, where fetchChildren() takes the default only.
+     *
+     * @return list<array<string, mixed>>
+     */
+    protected function fetchAllChildren(string $table): array
+    {
+        $languageField = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getCapability(TcaSchemaCapability::Language)
+            ->getLanguageField()
+            ->getName()
+        ;
+
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        return $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->orderBy($languageField)
+            ->addOrderBy('uid')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+    }
 }

@@ -25,6 +25,7 @@ use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction\AbstractFrontendTestCase;
@@ -145,6 +146,16 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/Fixtures/Frontend/BackendUser.csv');
         $this->setUpBackendUser(1);
+        // TODO: typo3/cms-core:15 Drop once v13 support goes, with the tearDown() below;
+        // v13 resolves record titles on move through $GLOBALS['LANG'].
+        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->create('en_US');
+    }
+
+    // TODO: typo3/cms-core:15 Drop once v13 support goes, with $GLOBALS['LANG'] above.
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['LANG']);
+        parent::tearDown();
     }
 
     /**

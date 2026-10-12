@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
@@ -167,7 +166,7 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countDefaultLanguageTrails());
+        self::assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
         self::assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID));
     }
 
@@ -184,7 +183,7 @@ class TrailImportTest extends AbstractImportTestCase
         self::assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID)['sorting']);
     }
 
-    private function fetchTrailSeason(): int
+    protected function fetchTrailSeason(): int
     {
         $season = $this->fetchTrail()['season'];
         self::assertIsNumeric($season);
@@ -265,7 +264,7 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countDefaultLanguageTrails());
+        self::assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
         self::assertSame(0, $this->countRows('tx_thuecat_trail_way_type'));
     }
 
@@ -413,41 +412,8 @@ class TrailImportTest extends AbstractImportTestCase
         self::assertSame(0, $this->countDeletedRows('tx_thuecat_trail_way_type'));
     }
 
-    private function countDeletedRows(string $table): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        // intentional, we count deleted rows here
-        $queryBuilder->getRestrictions()->removeAll();
-
-        $count = $queryBuilder
-            ->count('uid')
-            ->from($table)
-            ->where($queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(1)))
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($count) ? (int)$count : 0;
-    }
-
-    private function countDefaultLanguageTrails(): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tx_thuecat_trail');
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $count = $queryBuilder
-            ->count('uid')
-            ->from('tx_thuecat_trail')
-            ->where($queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)))
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($count) ? (int)$count : 0;
-    }
-
     /** @return array<int, array<string, mixed>> keyed by sys_language_uid */
-    private function fetchTrailsByLanguage(): array
+    protected function fetchTrailsByLanguage(): array
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('tx_thuecat_trail');
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
@@ -470,44 +436,8 @@ class TrailImportTest extends AbstractImportTestCase
         return $byLanguage;
     }
 
-    /**
-     * Every language's rows, where fetchChildren() takes the default only.
-     *
-     * @return list<array<string, mixed>>
-     */
-    private function fetchAllChildren(string $table): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        return $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->orderBy('sys_language_uid')
-            ->addOrderBy('uid')
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
-    }
-
-    /** @return list<array<string, mixed>> */
-    private function fetchChildren(string $table): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        return $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where($queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(0)))
-            ->orderBy('uid')
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
-    }
-
     /** @return array<string, mixed> */
-    private function fetchTrail(): array
+    protected function fetchTrail(): array
     {
         return $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
     }
