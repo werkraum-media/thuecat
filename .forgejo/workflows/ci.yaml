@@ -8,7 +8,7 @@ name: 'CI'
 
 jobs:
   base-qa:
-    runs-on: 'self-hosted'
+    runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php82-node24'
     steps:
@@ -34,7 +34,7 @@ jobs:
         run: './vendor/bin/php-cs-fixer fix --dry-run --diff'
 
   advanced-qa:
-    runs-on: 'self-hosted'
+    runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php${{ matrix.php-version }}-node24'
     needs:
