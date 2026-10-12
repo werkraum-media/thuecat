@@ -26,6 +26,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\DataHandling\TableColumnType;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
@@ -1267,6 +1268,10 @@ class Resolver
                         );
                         $context->markTranslationCreated($remoteId, $sysLanguageUid);
                         continue;
+                    }
+
+                    if (($context->translationStatus[$remoteId][$sysLanguageUid] ?? null) === ResolverContext::TRANSLATION_CREATED) {
+                        $fields += $this->emptySlugFields($table);
                     }
 
                     $payload->addTranslationRow($table, (string)$translationUid, $fields);
@@ -2552,6 +2557,28 @@ class Resolver
             return false;
         }
         return $this->tcaSchemaFactory->get($table)->hasField($field);
+    }
+
+    /**
+     * `localize` copies the default row's slug into the translation. Sent
+     * empty with the first write of the translated fields, DataHandler
+     * generates it from the translated title instead. Existing translations
+     * never get this, so their slugs stay stable across re-imports.
+     *
+     * @return array<string, string>
+     */
+    protected function emptySlugFields(string $table): array
+    {
+        if (!$this->tcaSchemaFactory->has($table)) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($this->tcaSchemaFactory->get($table)->getFieldsOfType(TableColumnType::SLUG) as $field) {
+            $fields[$field->getName()] = '';
+        }
+
+        return $fields;
     }
 
     /**

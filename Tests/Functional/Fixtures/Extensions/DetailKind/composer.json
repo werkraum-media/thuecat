@@ -1,0 +1,14 @@
+{
+    "name": "werkraummedia/thuecat-test-detail-kind",
+    "description": "Test extension contributing an additional detail record kind",
+    "type": "typo3-cms-extension",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "werkraummedia/thuecat": "*"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "thuecat_test_detail_kind"
+        }
+    }
+}

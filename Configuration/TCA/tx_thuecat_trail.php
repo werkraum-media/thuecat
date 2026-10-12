@@ -37,6 +37,20 @@ return (static function (string $extensionKey, string $tableName) {
                     'max' => 255,
                 ],
             ],
+            'slug' => [
+                'label' => $languagePath . '.slug',
+                'config' => [
+                    'type' => 'slug',
+                    'generatorOptions' => [
+                        'fields' => ['title'],
+                        'prefixParentPageSlug' => false,
+                        'replacements' => ['/' => '-'],
+                    ],
+                    'fallbackCharacter' => '-',
+                    'eval' => 'uniqueInSite',
+                    'prependSlash' => false,
+                ],
+            ],
             'description' => [
                 'label' => $languagePath . '.description',
                 'l10n_mode' => '',
@@ -520,7 +534,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, disable, title, description, short_description,
+                'showitem' => '--palette--;;language, disable, title, slug, description, short_description,
                 main_image, media_files, logo,
                 opening_status, season, remote_id, managed_by, keywords,
                 --div--;' . $languagePath . '.tab.descriptions, directions, getting_there, parking,

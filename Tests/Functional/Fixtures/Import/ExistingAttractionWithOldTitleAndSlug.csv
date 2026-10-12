@@ -1,0 +1,4 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","slug","town","url","offers"
+,600,10,0,0,"https://thuecat.org/resources/attraction-with-single-slogan","Alter Titel","alter-titel","","",""
+,601,10,1,600,"https://thuecat.org/resources/attraction-with-single-slogan","Old title","old-title","","",""

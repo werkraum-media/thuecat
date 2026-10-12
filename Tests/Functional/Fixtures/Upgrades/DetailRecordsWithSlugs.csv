@@ -1,0 +1,11 @@
+"pages"
+,"uid","pid","sys_language_uid","l10n_parent","title","doktype","slug","is_siteroot"
+,1,0,0,0,"Root",1,"/",1
+,10,1,0,0,"Storage",254,"/storage",0
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","slug","town","url","offers"
+,700,10,0,0,"test:wizard-attraction","Gemeindebrunnen Weimar","gemeindebrunnen-weimar","","",""
+,701,10,1,700,"test:wizard-attraction","Community fountain Weimar","community-fountain-weimar","","",""
+"tx_thuecat_trail"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","slug"
+,800,10,0,0,"test:wizard-trail","Rennsteig","rennsteig"

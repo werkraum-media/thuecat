@@ -65,6 +65,20 @@ return (static function (string $extensionKey, string $tableName) {
                     'max' => 255,
                 ],
             ],
+            'slug' => [
+                'label' => $languagePath . '.slug',
+                'config' => [
+                    'type' => 'slug',
+                    'generatorOptions' => [
+                        'fields' => ['title'],
+                        'prefixParentPageSlug' => false,
+                        'replacements' => ['/' => '-'],
+                    ],
+                    'fallbackCharacter' => '-',
+                    'eval' => 'uniqueInSite',
+                    'prependSlash' => false,
+                ],
+            ],
             'description' => [
                 'label' => $languagePath . '.description',
                 'l10n_mode' => '',
@@ -407,7 +421,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => '--palette--;;language, title, description, main_image, media_files, slogan, start_of_construction, sanitation, 
+                'showitem' => '--palette--;;language, title, slug, description, main_image, media_files, slogan, start_of_construction, sanitation, 
                 other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
                 photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
                 opening_hours_inline, special_opening_hours_inline, offers, accessibility_specification, address_inline, url,
