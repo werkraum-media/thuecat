@@ -52,7 +52,6 @@ class LegacyImportConfigurationTest extends AbstractImportTestCase
 
         $configuration = $this->getConfiguration(1);
         $settings = $this->get(ImportSettings::class);
-        self::assertInstanceOf(ImportSettings::class, $settings);
 
         self::assertSame(
             ImportSetting::RunBudget->default(),

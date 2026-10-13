@@ -198,11 +198,11 @@ class VocabularyProviderTest extends TestCase
     public function refetchesOnceTheStoredIndexIsStale(): void
     {
         $this->provider()->index(null, 1000);
-        $this->requests = [];
+        $before = count($this->requests);
 
         $this->provider()->index(null, 1000 + VocabularyIndexCache::STALE_AFTER);
 
-        self::assertCount(2, $this->requests, 'A stale index must be refetched.');
+        self::assertCount(2, array_slice($this->requests, $before), 'A stale index must be refetched.');
     }
 
     #[Test]
@@ -327,11 +327,11 @@ class VocabularyProviderTest extends TestCase
     public function fetchesAgainOnTheNextRunAfterAFailedFirstFetch(): void
     {
         $this->provider(array_values(VocabularyProvider::VOCABULARY_URLS))->index(null, 1000);
-        $this->requests = [];
+        $before = count($this->requests);
 
         $index = $this->provider()->index(null, 1001);
 
-        self::assertCount(2, $this->requests);
+        self::assertCount(2, array_slice($this->requests, $before));
         self::assertTrue($index->has('thuecat:BrassMusic'));
     }
 

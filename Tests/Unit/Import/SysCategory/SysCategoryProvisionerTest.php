@@ -84,10 +84,7 @@ class SysCategoryProvisionerTest extends TestCase
      */
     private function translationsFor(DataHandlerPayload $payload, string $identifier): array
     {
-        $staged = $payload->getTranslations()['sys_category'][$identifier] ?? [];
-        self::assertIsArray($staged);
-
-        return $staged;
+        return $payload->getTranslations()['sys_category'][$identifier] ?? [];
     }
 
     /**

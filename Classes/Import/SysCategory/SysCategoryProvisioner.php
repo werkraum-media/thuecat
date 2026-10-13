@@ -184,7 +184,7 @@ class SysCategoryProvisioner
         // uid may already carry fields staged elsewhere in the run.
         $existing = $payload->getDataMap()['sys_category'][(string)$uid] ?? [];
         $payload->addRow('sys_category', (string)$uid, array_merge(
-            is_array($existing) ? $existing : [],
+            $existing,
             ['parent' => $parentKey]
         ));
     }

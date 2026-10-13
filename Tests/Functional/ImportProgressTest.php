@@ -24,7 +24,6 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 
 class ImportProgressTest extends AbstractImportTestCase
 {
@@ -102,20 +101,6 @@ class ImportProgressTest extends AbstractImportTestCase
         self::assertSame('finish', end($order) ?: null, 'A run ends by finishing.');
         self::assertContains('persist', $order);
         self::assertContains('log', $order);
-    }
-
-    #[Test]
-    public function everyEventNamesItsPhase(): void
-    {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        $listener = $this->importWithListener(1);
-
-        self::assertNotSame([], $listener->events);
-        foreach ($listener->events as $event) {
-            self::assertInstanceOf(ImportProgress::class, $event);
-        }
     }
 
     private function importWithListener(int $uid): RecordingProgressListener

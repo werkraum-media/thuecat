@@ -25,7 +25,6 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -45,12 +44,6 @@ use WerkraumMedia\ThueCat\Service\SearchFilterOptionsService;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginLocator;
 
-/**
- * v13 types $view as a union, v14 as ViewInterface. Narrowing it here keeps
- * render() a string on both.
- *
- * @property ViewInterface $view
- */
 class TouristAttractionController extends AbstractActionController
 {
     /** The record kind this controller serves. */

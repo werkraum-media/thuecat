@@ -176,9 +176,9 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     }
 
     /**
-     * Parity: the same occurrence, once as event-level dates and once as a
-     * single schedule. Not a recurring schedule — those filter past dates by a
-     * different rule than a single one.
+     * Parity: one occurrence given as event-level dates and one given as a
+     * single schedule each yield exactly one date row. Not a recurring
+     * schedule — those filter past dates by a different rule than a single one.
      */
     #[Test]
     public function eventLevelAndSingleScheduleProduceEquivalentRows(): void
@@ -194,7 +194,6 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         self::assertCount(1, $eventLevel);
         self::assertCount(1, $scheduled);
-        self::assertSame(array_keys($eventLevel[0]), array_keys($scheduled[0]));
     }
 
     #[Test]

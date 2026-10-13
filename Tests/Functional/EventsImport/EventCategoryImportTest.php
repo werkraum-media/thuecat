@@ -817,10 +817,10 @@ class EventCategoryImportTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        return array_values(array_map(
+        return array_map(
             static fn (array $r): string => is_string($r['title']) ? $r['title'] : '',
             $rows
-        ));
+        );
     }
 
     /**

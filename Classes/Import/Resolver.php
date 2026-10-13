@@ -673,7 +673,7 @@ class Resolver
         array $references
     ): void {
         foreach ($references as $reference) {
-            if (!is_array($reference) || !is_string($reference['id'] ?? null)) {
+            if (!is_array($reference)) {
                 continue;
             }
 
