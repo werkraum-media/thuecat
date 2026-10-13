@@ -126,17 +126,6 @@ parameters:
 			count: 1
 			path: Classes/Domain/Model/Frontend/AccessiblitySpecification.php
 
-
-
-
-
-
-
-
-
-
-
-
 		-
 			message: '#^Parameter \#1 \$arrays of static method TYPO3\\CMS\\Core\\Utility\\ArrayUtility\:\:sortArraysByKey\(\) expects array, mixed given\.$#'
 			identifier: argument.type
@@ -280,66 +269,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: Classes/Import/Vocabulary/VocabularyIndexCache.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''columns'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''columnsOverrides'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''config'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''configuration'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''ds'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''pi_flexform'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset ''types'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
-
-		-
-			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Typo3/EventListener/AfterTcaCompilationEventListener.php
 
 		-
 			message: '#^Cannot access an offset on mixed\.$#'

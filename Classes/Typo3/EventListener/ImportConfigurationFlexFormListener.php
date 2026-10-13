@@ -25,9 +25,8 @@ use TYPO3\CMS\Core\Configuration\Event\BeforeFlexFormDataStructureParsedEvent;
 use WerkraumMedia\ThueCat\Typo3\FlexForm\ImportConfigurationDataStructure;
 
 // Serves the import-configuration data structure from PHP (composed once,
-// shared fields de-duplicated) instead of the per-type XML files. Fires on
-// both v13 and v14; the type comes from the identifier's dataStructureKey
-// (v13 via ds_pointerField=type, v14 via columnsOverrides).
+// shared fields de-duplicated) instead of the per-type XML files. The type
+// comes from the identifier's dataStructureKey, set via columnsOverrides.
 #[AsEventListener]
 final readonly class ImportConfigurationFlexFormListener
 {
@@ -39,12 +38,9 @@ final readonly class ImportConfigurationFlexFormListener
     public function __invoke(BeforeFlexFormDataStructureParsedEvent $event): void
     {
         $identifier = $event->getIdentifier();
-        // TODO: typo3/cms-core:15 Drop 'pi_flexform' once v13 support goes; v14
-        // names the field 'configuration'.
-        $fieldName = is_string($identifier['fieldName'] ?? null) ? $identifier['fieldName'] : '';
         if (
             ($identifier['tableName'] ?? '') !== 'tx_thuecat_import_configuration'
-            || !in_array($fieldName, ['configuration', 'pi_flexform'], true)
+            || ($identifier['fieldName'] ?? '') !== 'configuration'
         ) {
             return;
         }
