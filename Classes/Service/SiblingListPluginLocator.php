@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service;
 
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
@@ -56,7 +56,7 @@ class SiblingListPluginLocator
     ];
 
     public function __construct(
-        protected readonly FlexFormService $flexFormService,
+        protected readonly FlexFormTools $flexFormTools,
         protected readonly TouristAttractionDemandFactory $demandFactory,
         protected readonly PageRepository $pageRepository,
     ) {
@@ -83,9 +83,8 @@ class SiblingListPluginLocator
         }
 
         $flexForm = $row['pi_flexform'] ?? '';
-        // @todo v13: FlexFormService is aliased to FlexFormTools in v14; switch when v13 support drops.
         $parsed = is_string($flexForm) && $flexForm !== ''
-            ? $this->flexFormService->convertFlexFormContentToArray($flexForm)
+            ? $this->flexFormTools->convertFlexFormContentToArray($flexForm)
             : [];
         $settings = $parsed['settings'] ?? [];
         $editorFilter = $this->demandFactory->fromSettings(is_array($settings) ? $settings : []);
