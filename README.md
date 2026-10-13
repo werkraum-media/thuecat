@@ -15,7 +15,8 @@ languages it defines, in the frontend as well as in the backend.
 
 ## Requirements
 
-* TYPO3 13.4 LTS or 14
+* TYPO3 14.3 LTS
+* PHP 8.4 or 8.5
 * An API key for ThüCAT
 
 ## Getting started

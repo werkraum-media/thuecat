@@ -39,7 +39,7 @@
         }
     },
     "require": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "php": "~8.4.0 || ~8.5.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/http-client": "^1.0",
@@ -51,14 +51,14 @@
         "symfony/property-access": "^7.2",
         "symfony/property-info": "^7.2",
         "symfony/serializer": "^7.4 || ^8.0",
-        "typo3/cms-backend": "^13.4 || 14.*",
-        "typo3/cms-core": "^13.4 || 14.*",
-        "typo3/cms-extbase": "^13.4 || 14.*",
-        "typo3/cms-filelist": "^13.4 || 14.*",
-        "typo3/cms-filemetadata": "^13.4 || 14.*",
-        "typo3/cms-frontend": "^13.4 || 14.*",
-        "typo3/cms-install": "^13.4 || 14.*",
-        "werkraummedia/events": "^6.0"
+        "typo3/cms-backend": "^14.3",
+        "typo3/cms-core": "^14.3",
+        "typo3/cms-extbase": "^14.3",
+        "typo3/cms-filelist": "^14.3",
+        "typo3/cms-filemetadata": "^14.3",
+        "typo3/cms-frontend": "^14.3",
+        "typo3/cms-install": "^14.3",
+        "werkraummedia/events": "dev-main"
     },
     "require-dev": {
         "brianium/paratest": "^7.8",

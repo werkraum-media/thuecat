@@ -10,7 +10,7 @@ jobs:
   base-qa:
     runs-on: 'typo3'
     container:
-      image: 'forgejo.werkraum-media.de/global/typo3-ci:php82-node24'
+      image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
     steps:
       - uses: 'actions/checkout@v6'
 
@@ -42,13 +42,10 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - '82'
-          - '83'
           - '84'
           - '85'
         typo3-version:
-          - '^13.4'
-          - '^14'
+          - '^14.3'
     steps:
       - uses: 'actions/checkout@v6'
 

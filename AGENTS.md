@@ -1,11 +1,8 @@
 # EXT:thuecat — Repository Guidelines
 
-Conventions for coding agents working in this package. Instance-wide guidance, including the ddev
-commands, lives in the repository root `AGENTS.md`.
+Conventions for coding agents working in this package.
 
-This package is a **git submodule** and supports **TYPO3 v13.4 and v14** (`^13.4 || 14.*`); CI
-tests both. Core source for either version is worth reading directly when behaviour differs
-between them; where a checkout lives is a local matter and not recorded here.
+This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 
 ## Coding style
 
