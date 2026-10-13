@@ -68,6 +68,7 @@
         "phpstan/phpstan-phpunit": "2.0.16",
         "saschaegerer/phpstan-typo3": "2.1.1 || 3.0.1",
         "staabm/phpstan-todo-by": "^0.3.3",
+        "typo3/cms-scheduler": "^14.3",
         "typo3/testing-framework": "^9.4"
     },
     "config": {
