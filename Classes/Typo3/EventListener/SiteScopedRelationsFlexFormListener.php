@@ -27,9 +27,6 @@ use WerkraumMedia\ThueCat\Service\SiteScopedSelectFields;
 /**
  * Applies the site scope clause to relation selects inside flexform sheets,
  * so a content element offers the records of the site its page belongs to.
- *
- * The content elements carrying such fields ship in a v14-only package; under
- * v13 there is nothing to match.
  */
 #[AsEventListener]
 final readonly class SiteScopedRelationsFlexFormListener

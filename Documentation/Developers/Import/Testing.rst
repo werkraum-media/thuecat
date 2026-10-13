@@ -34,9 +34,8 @@ Reading results
    database ignoring deleted rows, but no other restriction — hidden records and every language
    count. Use them instead of building queries in the test.
 
-:composer:`werkraummedia/events` must be among the extensions a functional test loads. TYPO3 13
-enforces the dependency; 14 tolerates its absence, so a test can pass on one version and fail on the
-other.
+:composer:`werkraummedia/events` must be among the extensions a functional test loads. TYPO3 does
+not enforce the dependency, so a test that omits it does not fail on that account.
 
 Habits that keep tests honest
 =============================

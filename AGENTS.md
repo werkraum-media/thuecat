@@ -22,8 +22,7 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 
 ## Fluid
 
-- Template extension depends on the TYPO3 range: this package supports v13, so templates are plain
-  `.html`. Only v14-only packages (`*_ces`, `sitepackage`) use `.fluid.html`.
+- Templates are plain `.html`; new ones follow suit.
 - There is no `f:in` ViewHelper. Use `f:for`, or precompute in the controller.
 
 ## Database and TCA
@@ -41,13 +40,10 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 
 ## Testing
 
-- Functional tests must load `werkraummedia/events` in `testExtensionsToLoad`; v13 enforces the
-  dependency, v14 tolerates its omission.
-- Tests render **this package's own stub templates**. Never load `*_ces` or `sitepackage` into a
-  test; add whatever output the assertion needs to the stub instead. Template bugs get fixed in
-  both the stub and the sitepackage override.
-- Content Block definitions and `*_ces` partials have **no test coverage**. Changing a base
-  partial's contract means changing the `*_ces` copy too, and verifying in the running site.
+- Functional tests must load `werkraummedia/events` in `testExtensionsToLoad`. TYPO3 does not
+  enforce the dependency, so a test that omits it does not fail on that account.
+- Tests render **this package's own stub templates**. Never load another package's template
+  overrides into a test; add whatever output the assertion needs to the stub instead.
 - Test doubles extend production classes, so a signature change fatals the suite at bootstrap.
   Grep `extends <ClassName>` under `Tests/` before changing a constructor or method signature.
 - Prefer declarative CSV fixtures for new suites; existing suites standardise on the codappix

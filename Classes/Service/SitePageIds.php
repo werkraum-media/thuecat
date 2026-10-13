@@ -89,10 +89,10 @@ class SitePageIds
         // page count. Exits when a level adds nothing new; ids already seen
         // are never requeued, so a page pointing at an ancestor cannot loop.
         //
-        // @todo QueryBuilder::typo3_withRecursive() would do this in one query,
-        //       on v13 and v14 and on every platform we run. It is `@internal`
-        //       and may change without notice, so it stays unused until core
-        //       settles it; this method is the intended first adopter.
+        // @todo QueryBuilder::typo3_withRecursive() would do this in one query
+        //       on every platform we run. It is `@internal` and may change
+        //       without notice, so it stays unused until core settles it; this
+        //       method is the intended first adopter.
         while (true) {
             $children = $this->childPageIds($current);
             $new = array_values(array_diff($children, $pageIds));
