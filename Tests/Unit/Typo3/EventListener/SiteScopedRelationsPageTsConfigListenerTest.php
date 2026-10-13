@@ -268,7 +268,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
      */
     private function flexFormToolsReturning(array $dataStructures): FlexFormTools
     {
-        $flexFormTools = $this->createMock(FlexFormTools::class);
+        $flexFormTools = self::createStub(FlexFormTools::class);
         $flexFormTools->method('parseDataStructureByIdentifier')->willReturnCallback(
             static function (string $identifier) use ($dataStructures): array {
                 $decoded = json_decode($identifier, true);
@@ -290,7 +290,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
      */
     private function sitePageIdsReturning(array $pageIds): SitePageIds
     {
-        $sitePageIds = $this->createMock(SitePageIds::class);
+        $sitePageIds = self::createStub(SitePageIds::class);
         $sitePageIds->method('forStoragePidOrEmpty')->willReturn($pageIds);
 
         return $sitePageIds;

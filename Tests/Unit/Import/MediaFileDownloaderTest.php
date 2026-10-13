@@ -252,7 +252,7 @@ class MediaFileDownloaderTest extends TestCase
 
         $target = self::createStub(Folder::class);
         $target->method('hasFile')->willReturn(false);
-        $staging = self::createMock(Folder::class);
+        $staging = self::createStub(Folder::class);
         $staging->method('hasFile')->willReturn(false);
         $staging->method('createFile')->willReturnCallback(
             function (string $fileName) use (&$captured): File {
@@ -325,7 +325,7 @@ class MediaFileDownloaderTest extends TestCase
         $captured = '';
         $target = self::createStub(Folder::class);
         $target->method('hasFile')->willReturn(false);
-        $staging = self::createMock(Folder::class);
+        $staging = self::createStub(Folder::class);
         $staging->method('hasFile')->willReturn(false);
         $staging->method('createFile')->willReturnCallback(
             function (string $fileName) use (&$captured): File {
