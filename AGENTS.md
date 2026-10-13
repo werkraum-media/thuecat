@@ -22,7 +22,7 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 
 ## Fluid
 
-- Templates are plain `.html`; new ones follow suit.
+- Templates use the `.fluid.html` extension; new ones follow suit.
 - There is no `f:in` ViewHelper. Use `f:for`, or precompute in the controller.
 
 ## Database and TCA
