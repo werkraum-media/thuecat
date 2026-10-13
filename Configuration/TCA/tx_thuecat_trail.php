@@ -28,35 +28,6 @@ return (static function (string $extensionKey, string $tableName) {
             'translationSource' => 'l10n_source',
         ],
         'columns' => [
-            'sys_language_uid' => [
-                'exclude' => true,
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-                'config' => [
-                    'type' => 'language',
-                ],
-            ],
-            'l18n_parent' => [
-                'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'items' => [
-                        [
-                            'label' => '',
-                            'value' => 0,
-                        ],
-                    ],
-                    'foreign_table' => $tableName,
-                    'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',
-                    'default' => 0,
-                ],
-            ],
-            'l10n_source' => [
-                'config' => [
-                    'type' => 'passthrough',
-                ],
-            ],
             'title' => [
                 'label' => $languagePath . '.title',
                 'l10n_mode' => '',

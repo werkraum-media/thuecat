@@ -27,54 +27,6 @@ return (static function (string $tableName) {
             'translationSource' => 'l18n_source',
         ],
         'columns' => [
-            'sys_language_uid' => [
-                'exclude' => true,
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-                'config' => [
-                    'type' => 'language',
-                ],
-            ],
-            'l18n_parent' => [
-                'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'items' => [
-                        [
-                            'label' => '',
-                            'value' => 0,
-                        ],
-                    ],
-                    'foreign_table' => $tableName,
-                    'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',
-                    'default' => 0,
-                ],
-            ],
-            'l18n_diffsource' => [
-                'config' => [
-                    'type' => 'passthrough',
-                    'default' => '',
-                ],
-            ],
-            'l18n_source' => [
-                'config' => [
-                    'type' => 'passthrough',
-                ],
-            ],
-            'disable' => [
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.enabled',
-                'config' => [
-                    'type' => 'check',
-                    'renderType' => 'checkboxToggle',
-                    'items' => [
-                        [
-                            'label' => '',
-                            'invertStateDisplay' => true,
-                        ],
-                    ],
-                ],
-            ],
             'title' => [
                 'label' => $languagePath . '.title',
                 'config' => [

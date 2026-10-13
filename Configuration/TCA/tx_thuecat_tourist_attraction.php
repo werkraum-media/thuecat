@@ -28,49 +28,6 @@ return (static function (string $extensionKey, string $tableName) {
             'translationSource' => 'l10n_source',
         ],
         'columns' => [
-            'sys_language_uid' => [
-                'exclude' => true,
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language',
-                'config' => [
-                    'type' => 'language',
-                ],
-            ],
-            'l18n_parent' => [
-                'displayCond' => 'FIELD:sys_language_uid:>:0',
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.l18n_parent',
-                'config' => [
-                    'type' => 'select',
-                    'renderType' => 'selectSingle',
-                    'items' => [
-                        [
-                            'label' => '',
-                            'value' => 0,
-                        ],
-                    ],
-                    'foreign_table' => $tableName,
-                    'foreign_table_where' => 'AND ' . $tableName . '.pid=###CURRENT_PID### AND ' . $tableName . '.sys_language_uid IN (-1,0)',
-                    'default' => 0,
-                ],
-            ],
-            'l10n_source' => [
-                'config' => [
-                    'type' => 'passthrough',
-                ],
-            ],
-            'disable' => [
-                'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.enabled',
-                'config' => [
-                    'type' => 'check',
-                    'renderType' => 'checkboxToggle',
-                    'default' => 0,
-                    'items' => [
-                        [
-                            'label' => '',
-                            'invertStateDisplay' => true,
-                        ],
-                    ],
-                ],
-            ],
 
             // Both fields are bounded by the anchor their import writes beneath,
             // so neither offers the other's tree. Core resolves ###SITE:### in
