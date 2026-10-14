@@ -28,11 +28,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 class KeywordImportTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 
     #[Test]

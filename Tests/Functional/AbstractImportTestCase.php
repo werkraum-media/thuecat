@@ -21,16 +21,11 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use Codappix\Typo3PhpDatasets\TestingFramework;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
-use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
@@ -40,10 +35,8 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
-abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
+abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
 {
-    use TestingFramework;
-
     /**
      * Whether to expect errors to be logged.
      * Will check for no errors if set to false.
@@ -83,23 +76,11 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
      */
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Import/Guzzle';
 
-    protected array $coreExtensionsToLoad = [
-        'core',
-        'backend',
-        'extbase',
-        'frontend',
-        'install',
-        'filelist',
-        'filemetadata',
-    ];
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat',
-        'werkraummedia/events',
-    ];
-    protected array $pathsToLinkInTestInstance = [
+    public const PATHS_TO_LINK = [
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
     ];
-    protected array $configurationToUseInTestInstance = [
+
+    public const CONFIGURATION = [
         'LOG' => [
             'WerkraumMedia' => [
                 'writerConfiguration' => [
@@ -117,6 +98,10 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
             ],
         ],
     ];
+
+    protected array $pathsToLinkInTestInstance = self::PATHS_TO_LINK;
+
+    protected array $configurationToUseInTestInstance = self::CONFIGURATION;
 
     /**
      * Chains the fixtures actually carry, taken from the published
@@ -359,183 +344,6 @@ abstract class AbstractImportTestCase extends \TYPO3\TestingFramework\Core\Funct
                 [],
                 ['uid' => 'ASC']
             )
-            ->fetchAllAssociative()
-        ;
-    }
-
-    protected function countRows(string $table): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $count = $queryBuilder
-            ->count('uid')
-            ->from($table)
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($count) ? (int)$count : 0;
-    }
-
-    protected function fetchUidByRemoteId(string $table, string $remoteId): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $value = $queryBuilder
-            ->select('uid')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'remote_id',
-                    $queryBuilder->createNamedParameter($remoteId)
-                )
-            )
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($value) ? (int)$value : 0;
-    }
-
-    /** @return array<string, mixed> */
-    protected function fetchRowByRemoteId(string $table, string $remoteId): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $row = $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'remote_id',
-                    $queryBuilder->createNamedParameter($remoteId)
-                )
-            )
-            ->executeQuery()
-            ->fetchAssociative()
-        ;
-
-        self::assertIsArray($row, 'No record in ' . $table . ' for ' . $remoteId);
-
-        return $row;
-    }
-
-    /**
-     * Translations of one default-language row, keyed by sys_language_uid.
-     * A language with no row is absent rather than empty, so a test can assert
-     * that none was created.
-     *
-     * Field names come from the schema: tables differ on l18n_parent vs
-     * l10n_parent, and naming the wrong one silently matches nothing.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    protected function fetchTranslationsByParent(string $table, int $parentUid): array
-    {
-        $capability = $this->get(TcaSchemaFactory::class)
-            ->get($table)
-            ->getCapability(TcaSchemaCapability::Language)
-        ;
-        $parentField = $capability->getTranslationOriginPointerField()->getName();
-        $languageField = $capability->getLanguageField()->getName();
-
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $rows = $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    $parentField,
-                    $queryBuilder->createNamedParameter($parentUid, Connection::PARAM_INT)
-                )
-            )
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
-
-        $byLanguage = [];
-        foreach ($rows as $row) {
-            $language = $row[$languageField] ?? null;
-            if (!is_numeric($language)) {
-                continue;
-            }
-            $byLanguage[(int)$language] = $row;
-        }
-
-        return $byLanguage;
-    }
-
-    protected function countDeletedRows(string $table): int
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        // intentional, we count deleted rows here
-        $queryBuilder->getRestrictions()->removeAll();
-
-        $count = $queryBuilder
-            ->count('uid')
-            ->from($table)
-            ->where($queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)))
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        return is_numeric($count) ? (int)$count : 0;
-    }
-
-    /** @return list<array<string, mixed>> */
-    protected function fetchChildren(string $table): array
-    {
-        $languageField = $this->get(TcaSchemaFactory::class)
-            ->get($table)
-            ->getCapability(TcaSchemaCapability::Language)
-            ->getLanguageField()
-            ->getName()
-        ;
-
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        return $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where($queryBuilder->expr()->eq(
-                $languageField,
-                $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
-            ))
-            ->orderBy('uid')
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
-    }
-
-    /**
-     * Every language's rows, where fetchChildren() takes the default only.
-     *
-     * @return list<array<string, mixed>>
-     */
-    protected function fetchAllChildren(string $table): array
-    {
-        $languageField = $this->get(TcaSchemaFactory::class)
-            ->get($table)
-            ->getCapability(TcaSchemaCapability::Language)
-            ->getLanguageField()
-            ->getName()
-        ;
-
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        return $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->orderBy($languageField)
-            ->addOrderBy('uid')
-            ->executeQuery()
             ->fetchAllAssociative()
         ;
     }

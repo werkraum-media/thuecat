@@ -33,11 +33,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // Resolver → DataHandler chain works through the existing pipeline.
 class EventImportTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     // Override fixture roots: events fixtures live under the events test tree,
     // not the legacy thuecat one. The Guzzle fixtures sit under
     // EventsImport/Fixtures/Guzzle/ keyed by host + path.

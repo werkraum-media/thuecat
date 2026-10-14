@@ -33,11 +33,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // the resolver.
 class EventMediaImportTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     protected bool $stubMediaDownloader = false;
 
     protected bool $stubFileFolderAccess = false;

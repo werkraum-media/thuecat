@@ -61,6 +61,7 @@ class ImportWithoutChangesTest extends FunctionalTestCase
         'install',
         'filelist',
         'filemetadata',
+        'seo',
     ];
 
     protected array $testExtensionsToLoad = [

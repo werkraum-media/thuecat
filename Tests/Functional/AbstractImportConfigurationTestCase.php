@@ -46,6 +46,7 @@ abstract class AbstractImportConfigurationTestCase extends \TYPO3\TestingFramewo
         'install',
         'filelist',
         'filemetadata',
+        'seo',
     ];
 
     protected array $testExtensionsToLoad = [

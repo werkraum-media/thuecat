@@ -38,11 +38,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 class EventEntityMappingTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     #[Test]
     public function mapsKreuzchorFixtureToExpectedRows(): void
     {

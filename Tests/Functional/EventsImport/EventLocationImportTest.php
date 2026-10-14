@@ -29,11 +29,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // tx_events_domain_model_location, and the event points at it.
 class EventLocationImportTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
     protected string $fixturePath = 'api/resources';

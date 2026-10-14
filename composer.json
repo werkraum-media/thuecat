@@ -58,6 +58,7 @@
         "typo3/cms-filemetadata": "^14.3",
         "typo3/cms-frontend": "^14.3",
         "typo3/cms-install": "^14.3",
+        "typo3/cms-seo": "^14.3",
         "werkraummedia/events": "^7.0"
     },
     "require-dev": {

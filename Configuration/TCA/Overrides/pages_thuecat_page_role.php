@@ -15,7 +15,6 @@ defined('TYPO3') or die();
             'label' => Extension::getLanguagePath() . 'locallang_tca.xlf:pages.tx_thuecat_page_role.touristattractionlist',
             'value' => 'thuecat_touristattractionlist',
         ]
-
     );
 
     ExtensionManagementUtility::addTcaSelectItem(

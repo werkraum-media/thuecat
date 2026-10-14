@@ -21,21 +21,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\DetailRecordKind;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 use WerkraumMedia\ThueCat\Domain\DetailRecordKind\DetailRecordKinds;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 
-final class DetailRecordKindsTest extends FunctionalTestCase
+final class DetailRecordKindsTest extends AbstractFunctionalTestCase
 {
-    protected array $coreExtensionsToLoad = [
-        'extbase',
-        'filelist',
-        'filemetadata',
-        'install',
-    ];
-
     protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat',
-        'werkraummedia/events',
+        ...AbstractFunctionalTestCase::TEST_EXTENSIONS,
         __DIR__ . '/../Fixtures/Extensions/DetailKind',
     ];
 

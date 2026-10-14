@@ -34,11 +34,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // two findings, deliberately reported separately.
 class EventDateSkippedTest extends AbstractImportTestCase
 {
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat/',
-        'werkraummedia/events/',
-    ];
-
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
     protected string $fixturePath = 'api/resources';

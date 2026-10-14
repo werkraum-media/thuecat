@@ -43,6 +43,7 @@ abstract class AbstractFrontendTestCase extends FunctionalTestCase
             'filemetadata',
             'frontend',
             'install',
+            'seo',
         ];
 
         $this->testExtensionsToLoad = [

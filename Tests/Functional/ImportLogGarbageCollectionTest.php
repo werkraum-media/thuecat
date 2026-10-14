@@ -36,6 +36,7 @@ class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTestCase
         'filelist',
         'filemetadata',
         'scheduler',
+        'seo',
     ];
 
     /**
