@@ -1,0 +1,16 @@
+routeEnhancers:
+  ThueCatTrailShow:
+    type: Extbase
+    limitToPages:
+      - 'page["tx_thuecat_page_role"] == "thuecat_trailshow"'
+    extension: ThueCat
+    plugin: TrailShow
+    routes:
+      - routePath: '/{trail}'
+        _controller: 'Trail::show'
+    defaultController: 'Trail::show'
+    aspects:
+      trail:
+        type: PersistedAliasMapper
+        tableName: tx_thuecat_trail
+        routeFieldName: slug

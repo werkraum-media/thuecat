@@ -1,0 +1,9 @@
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
+
+plugin.tx_thuecat.settings {
+    page.pid {
+        thuecat_attraction_show = 10
+        thuecat_trail_show = 30
+    }
+    itemsPerPage = 2
+}

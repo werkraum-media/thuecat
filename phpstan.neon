@@ -8,6 +8,9 @@ parameters:
     - 'Configuration'
     - 'Tests'
   reportUnmatchedIgnoredErrors: true
+  typo3:
+    requestGetAttributeMapping:
+      pageContext: TYPO3\CMS\Backend\Context\PageContext
   ignoreErrors:
     - identifier: 'missingType.generics'
     - identifier: 'missingType.iterableValue'

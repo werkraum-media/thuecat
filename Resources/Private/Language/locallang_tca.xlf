@@ -811,6 +811,21 @@
             <trans-unit id="pages.module.thuecat" xml:space="preserve">
                 <source>ThÜCAT</source>
             </trans-unit>
+            <trans-unit id="pages.tx_thuecat_page_role" xml:space="preserve">
+                <source>ThüCAT page role</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_thuecat_page_role.description" xml:space="preserve">
+                <source>Set the role of the ThüCAT plugin on this page, so its links get readable URLs.</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_thuecat_page_role.touristattractionshow" xml:space="preserve">
+                <source>Tourist attraction detail</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_thuecat_page_role.trailshow" xml:space="preserve">
+                <source>Trail detail</source>
+            </trans-unit>
+            <trans-unit id="pages.tx_thuecat_page_role.touristattractionlist" xml:space="preserve">
+                <source>Tourist attraction list</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_address" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>

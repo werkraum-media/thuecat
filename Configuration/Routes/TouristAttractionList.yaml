@@ -1,0 +1,18 @@
+routeEnhancers:
+  ThueCatTouristAttractionList:
+    type: Extbase
+    limitToPages:
+      - 'page["tx_thuecat_page_role"] == "thuecat_touristattractionlist"'
+    extension: ThueCat
+    plugin: TouristAttractionList
+    routes:
+      - routePath: '/{currentPage}'
+        _controller: 'TouristAttraction::list'
+    defaultController: 'TouristAttraction::list'
+    defaults:
+      currentPage: '1'
+    aspects:
+      currentPage:
+        type: StaticRangeMapper
+        start: '1'
+        end: '999'

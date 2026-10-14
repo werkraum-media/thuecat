@@ -1,0 +1,14 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<f:be.infobox
+    title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:pages.tx_thuecat_page_role')}"
+    state="{state}"
+>
+    <p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:pageRole.hint.current', arguments: {0: currentRole})}</p>
+    <f:if condition="{recommendedRole}">
+        <p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:pageRole.hint.recommended', arguments: {0: recommendedRole})}</p>
+    </f:if>
+</f:be.infobox>
+
+</html>

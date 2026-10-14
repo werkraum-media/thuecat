@@ -1,0 +1,19 @@
+base: 'http://second.localhost/'
+imports:
+  - { resource: 'EXT:thuecat/Configuration/Routes/TouristAttractionShow.yaml' }
+languages:
+  -
+    title: Deutsch
+    enabled: true
+    base: /
+    typo3Language: de
+    locale: de_DE.UTF-8
+    iso-639-1: de
+    navigationTitle: Deutsch
+    hreflang: de-DE
+    direction: ''
+    flag: de
+    websiteTitle: ''
+    languageId: 0
+rootPageId: 2000
+websiteTitle: 'Second Website'

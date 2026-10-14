@@ -1,4 +1,8 @@
 base: /
+imports:
+  - { resource: 'EXT:thuecat/Configuration/Routes/TouristAttractionShow.yaml' }
+  - { resource: 'EXT:thuecat/Configuration/Routes/TouristAttractionList.yaml' }
+  - { resource: 'EXT:thuecat/Configuration/Routes/TrailShow.yaml' }
 languages:
   -
     title: Deutsch

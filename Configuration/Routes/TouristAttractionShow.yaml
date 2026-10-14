@@ -1,0 +1,16 @@
+routeEnhancers:
+  ThueCatTouristAttractionShow:
+    type: Extbase
+    limitToPages:
+      - 'page["tx_thuecat_page_role"] == "thuecat_touristattractionshow"'
+    extension: ThueCat
+    plugin: TouristAttractionShow
+    routes:
+      - routePath: '/{attraction}'
+        _controller: 'TouristAttraction::show'
+    defaultController: 'TouristAttraction::show'
+    aspects:
+      attraction:
+        type: PersistedAliasMapper
+        tableName: tx_thuecat_tourist_attraction
+        routeFieldName: slug

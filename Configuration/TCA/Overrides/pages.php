@@ -23,6 +23,30 @@ defined('TYPO3') or die();
             'icon' => 'pages_module_thuecat',
         ]
     );
+
+    // Each routed plugin adds its role item in its own pages_page_role_<plugin>.php, next to its route file.
+    ExtensionManagementUtility::addTCAcolumns($tableName, [
+        'tx_thuecat_page_role' => [
+            'label' => $languagePath . '.tx_thuecat_page_role',
+            'description' => $languagePath . '.tx_thuecat_page_role.description',
+            // limitToPages evaluates the translated page row, so translations must carry the role.
+            'l10n_mode' => 'exclude',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    ['label' => '', 'value' => ''],
+                ],
+                'default' => '',
+            ],
+        ],
+    ]);
+    ExtensionManagementUtility::addFieldsToPalette(
+        $tableName,
+        'module',
+        '--linebreak--, tx_thuecat_page_role',
+        'after:module'
+    );
 })(
     Extension::EXTENSION_KEY,
     'pages'
