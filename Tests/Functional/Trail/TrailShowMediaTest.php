@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Trail;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction\AbstractFrontendTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
  * Renders the Show template with the FAL media fields a trail carries:

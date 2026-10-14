@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
  * Renders the Show template with the FAL-based media fields (main_image, media_files),

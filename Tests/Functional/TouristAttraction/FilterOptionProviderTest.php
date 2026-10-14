@@ -26,6 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
 use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\CommaColumnOptionProvider;
 use WerkraumMedia\ThueCat\Service\FilterField\TownFilterField;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 class FilterOptionProviderTest extends AbstractFrontendTestCase
 {

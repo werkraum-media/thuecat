@@ -27,6 +27,7 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOption;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Service\SearchFilterOptionsService;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
  * One scope is resolved per request and every field is built against it, so a

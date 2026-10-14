@@ -25,6 +25,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Service\FrontendCategoryAnchors;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 // Isolates the one link the rendered mask depends on: the site settings the
 // import writes against must be readable from a frontend request.

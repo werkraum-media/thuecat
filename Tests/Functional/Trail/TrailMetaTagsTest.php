@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Trail;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction\AbstractFrontendTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 class TrailMetaTagsTest extends AbstractFrontendTestCase
 {

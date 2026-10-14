@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 class TouristAttractionSearchTest extends AbstractFrontendTestCase
 {

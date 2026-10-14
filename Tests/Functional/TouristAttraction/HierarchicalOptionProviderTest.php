@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 use WerkraumMedia\ThueCat\Service\FilterField\CategoryFilterField;
 use WerkraumMedia\ThueCat\Service\FilterField\KeywordFilterField;
 use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\HierarchicalOptionProvider;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
  * The offered tree starts at the sets the scoped records actually use — the

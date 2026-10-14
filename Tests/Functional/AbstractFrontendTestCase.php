@@ -18,46 +18,28 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
+namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use Codappix\Typo3PhpDatasets\TestingFramework;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\CacheHashCalculator;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
-abstract class AbstractFrontendTestCase extends FunctionalTestCase
+abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
 {
-    use TestingFramework;
+    public const PATHS_TO_LINK = [
+        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',
+    ];
+
+    protected array $pathsToLinkInTestInstance = self::PATHS_TO_LINK;
 
     protected function setUp(): void
     {
-        $this->coreExtensionsToLoad = [
-            'core',
-            'backend',
-            'extbase',
-            'filelist',
-            'filemetadata',
-            'frontend',
-            'install',
-            'seo',
-        ];
-
-        $this->testExtensionsToLoad = [
-            'werkraummedia/thuecat',
-            'werkraummedia/events',
-        ];
-
-        $this->pathsToLinkInTestInstance = [
-            'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',
-        ];
-
         parent::setUp();
 
-        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Frontend/' . $this->getDataSetFileName());
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Frontend/' . $this->getDataSetFileName());
         $this->setUpFrontendRootPage(1, [
             'EXT:thuecat/Configuration/TypoScript/Default/Setup.typoscript',
             'EXT:thuecat/Tests/Functional/Fixtures/Frontend/' . $this->getRenderingTypoScript(),

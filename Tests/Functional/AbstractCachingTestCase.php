@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction\AbstractFrontendTestCase;
 
 /**
  * Ground for every test that asserts on caching.
@@ -42,7 +41,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction\AbstractFrontendTes
 abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
 {
     /** The `tx_thuecat_*` caches are ours and already store; `pages` is core's. */
-    protected array $configurationToUseInTestInstance = [
+    public const CONFIGURATION = [
         'SYS' => [
             'caching' => [
                 'cacheConfigurations' => [
@@ -53,6 +52,8 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
             ],
         ],
     ];
+
+    protected array $configurationToUseInTestInstance = self::CONFIGURATION;
 
     /** A subclass needing a particular page tree names its own fixture. */
     protected function getDataSetFileName(): string

@@ -26,6 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 use WerkraumMedia\ThueCat\Service\FilterField\CategoryFilterField;
 use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\HierarchicalOptionProvider;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
  * The recursive expansion runs as raw SQL, out of reach of the restriction
