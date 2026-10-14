@@ -21,11 +21,11 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Backend;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
 // The coverage the derived registration actually reaches in the compiled TCA,
 // as opposed to what a fixture says it would reach.
-class SiteScopedRelationCoverageTest extends AbstractImportTestCase
+class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
 {
     #[Test]
     public function everyRelationFieldOfEveryRecordKindIsScoped(): void

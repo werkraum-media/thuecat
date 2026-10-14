@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-final class ParserTest extends AbstractImportTestCase
+final class ParserTest extends AbstractFunctionalTestCase
 {
     private const FIXTURE_PATH = __DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/';
 

@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\FileFolderAccessException;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
-class FileFolderAccessTest extends AbstractImportTestCase
+class FileFolderAccessTest extends AbstractFunctionalTestCase
 {
     #[Test]
     public function throwsWhenNoFolderConfigured(): void
@@ -64,10 +64,6 @@ class FileFolderAccessTest extends AbstractImportTestCase
         );
     }
 
-    /**
-     * The real service, not the stub AbstractImportTestCase swaps into the
-     * container — this test exercises the actual write probe.
-     */
     private function createSubject(): FileFolderAccess
     {
         return new FileFolderAccess(

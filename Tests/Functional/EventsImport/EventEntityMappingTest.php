@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 
 /**
  * Direct mapping smoke test: Asserts the entity's flat
@@ -36,7 +36,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * venue's content hash rather than its uid. The end-to-end result is asserted
  * by EventLocationImportTest.
  */
-class EventEntityMappingTest extends AbstractImportTestCase
+class EventEntityMappingTest extends AbstractFunctionalTestCase
 {
     #[Test]
     public function mapsKreuzchorFixtureToExpectedRows(): void

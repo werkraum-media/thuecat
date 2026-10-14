@@ -31,9 +31,9 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
-class PageRoleHintTest extends AbstractImportTestCase
+class PageRoleHintTest extends AbstractBackendTestCase
 {
     protected function setUp(): void
     {

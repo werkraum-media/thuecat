@@ -26,13 +26,13 @@ use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
 // An editor opening a place record must see the keyword tree in the keyword
 // field and the type-category tree in the categories field — never each other's.
 // The anchors come from the import's resolution chain, so the assertion is that
 // the form resolved ###THUECAT_ANCHOR### into the configured uids.
-class KeywordFieldScopingTest extends AbstractImportTestCase
+class KeywordFieldScopingTest extends AbstractBackendTestCase
 {
     protected array $pathsToLinkInTestInstance = [
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',

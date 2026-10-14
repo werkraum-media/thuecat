@@ -25,7 +25,6 @@ use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
@@ -35,7 +34,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
-abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
+abstract class AbstractImportTestCase extends AbstractBackendTestCase
 {
     /**
      * Whether to expect errors to be logged.
@@ -76,10 +75,6 @@ abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
      */
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Import/Guzzle';
 
-    public const PATHS_TO_LINK = [
-        'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
-    ];
-
     public const CONFIGURATION = [
         'LOG' => [
             'WerkraumMedia' => [
@@ -98,8 +93,6 @@ abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
             ],
         ],
     ];
-
-    protected array $pathsToLinkInTestInstance = self::PATHS_TO_LINK;
 
     protected array $configurationToUseInTestInstance = self::CONFIGURATION;
 
@@ -141,9 +134,6 @@ abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
             $this->getContainer()->set(MediaFileDownloader::class, new MediaFileDownloaderStub());
         }
         $this->seedVocabularyIndex();
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/BackendUser.php');
-        $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->getContainer()->get(LanguageServiceFactory::class)->create('en_US');
         foreach ($this->getLogFiles() as $logFile) {
             file_put_contents($logFile, '');
         }
@@ -188,7 +178,6 @@ abstract class AbstractImportTestCase extends AbstractFunctionalTestCase
     protected function tearDown(): void
     {
         $this->expectErrors = false;
-        unset($GLOBALS['LANG']);
         $problems = GuzzleClientFaker::tearDown();
         parent::tearDown();
         if ($problems !== []) {

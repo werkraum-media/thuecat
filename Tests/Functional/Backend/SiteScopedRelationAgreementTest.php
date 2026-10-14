@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
 /**
  * Asserts that a relation field's dropdown and its suggest wizard offer the
@@ -39,7 +39,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * different queries, so agreement between them is the property under test
  * rather than the behaviour of either alone.
  */
-class SiteScopedRelationAgreementTest extends AbstractImportTestCase
+class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
 {
     protected function setUp(): void
     {

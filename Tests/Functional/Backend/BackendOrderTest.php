@@ -24,9 +24,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
-final class BackendOrderTest extends AbstractImportTestCase
+final class BackendOrderTest extends AbstractBackendTestCase
 {
     protected function setUp(): void
     {

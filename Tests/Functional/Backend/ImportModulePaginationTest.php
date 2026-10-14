@@ -25,12 +25,12 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 use WerkraumMedia\ThueCat\Pagination\PaginationResult;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
 /**
  * Rendering every log ever written exhausts memory.
  */
-final class ImportModulePaginationTest extends AbstractImportTestCase
+final class ImportModulePaginationTest extends AbstractBackendTestCase
 {
     #[Test]
     public function returnsOnlyOnePageOfLogs(): void

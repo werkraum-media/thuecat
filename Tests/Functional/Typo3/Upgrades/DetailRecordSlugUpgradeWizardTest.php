@@ -21,10 +21,10 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Typo3\Upgrades;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 use WerkraumMedia\ThueCat\Typo3\Upgrades\DetailRecordSlugUpgradeWizard;
 
-final class DetailRecordSlugUpgradeWizardTest extends AbstractImportTestCase
+final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
 {
     #[Test]
     public function fillsEmptySlugsPerRowAndLanguage(): void
