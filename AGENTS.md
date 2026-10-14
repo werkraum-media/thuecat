@@ -40,8 +40,35 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 
 ## Testing
 
-- Functional tests must load `werkraummedia/events` in `testExtensionsToLoad`. TYPO3 does not
-  enforce the dependency, so a test that omits it does not fail on that account.
+### Functional test bases
+
+Every functional test extends one of these bases, never core's `FunctionalTestCase` directly.
+
+| Base | Extends | Provides |
+|---|---|---|
+| `AbstractFunctionalTestCase` | core | the extensions thuecat needs to boot, the codappix data set trait, record read helpers (`countRows`, `fetchUidByRemoteId`, `fetchRowByRemoteId`, …) |
+| `AbstractBackendTestCase` | functional | backend user, `LANG`, the `Fixtures/Import/Sites` site configurations |
+| `AbstractImportTestCase` | backend | Guzzle faker, file access and media stubs, vocabulary seed, error log writer, empty-log assertion, fetch and import helpers |
+| `AbstractFrontendTestCase` | functional | the `Fixtures/Frontend/Sites` site configurations, data set, root page TypoScript, request helpers |
+| `AbstractCachingTestCase` | frontend | a storing `pages` cache backend, DataHandler save and delete helpers |
+| `AbstractImportConfigurationTestCase` | functional | extension configuration backup, site settings writer |
+
+- Extend the narrowest base whose setup and helpers the test uses. A test that runs no import
+  does not extend the import base.
+- A need shared by several test classes belongs in a base; a need of one class stays in that class.
+- `$coreExtensionsToLoad`, `$testExtensionsToLoad`, `$pathsToLinkInTestInstance` and
+  `$configurationToUseInTestInstance` are properties, never assigned in `setUp()`. Each base
+  publishes its lists as constants. To add to one, redeclare the property and spread the constant
+  of the base the class extends:
+
+  ```php
+  protected array $coreExtensionsToLoad = [...AbstractImportConfigurationTestCase::CORE_EXTENSIONS, 'scheduler'];
+  ```
+- `werkraummedia/events` is loaded by the functional base. TYPO3 does not enforce the dependency,
+  so a list that drops it does not fail on that account.
+
+### Conventions
+
 - Tests render **this package's own stub templates**. Never load another package's template
   overrides into a test; add whatever output the assertion needs to the stub instead.
 - Test doubles extend production classes, so a signature change fatals the suite at bootstrap.

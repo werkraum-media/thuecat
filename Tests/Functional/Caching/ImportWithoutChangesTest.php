@@ -20,22 +20,13 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
-use Codappix\Typo3PhpDatasets\TestingFramework;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Extension;
-use WerkraumMedia\ThueCat\Import\FileFolderAccess;
-use WerkraumMedia\ThueCat\Import\Importer;
-use WerkraumMedia\ThueCat\Tests\Functional\FileFolderAccessStub;
-use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
  * What an import that changes nothing does to the caches.
@@ -46,29 +37,11 @@ use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
  * These tests pin the CURRENT behaviour rather than the desired one, so the day
  * it improves is visible.
  *
- * Needs the import harness and a real cache backend at once, so it sets both up
- * rather than extending either abstract.
+ * Needs the import harness and a real cache backend at once, so it adds the
+ * caching configuration to the import base.
  */
-class ImportWithoutChangesTest extends FunctionalTestCase
+class ImportWithoutChangesTest extends AbstractImportTestCase
 {
-    use TestingFramework;
-
-    protected array $coreExtensionsToLoad = [
-        'core',
-        'backend',
-        'extbase',
-        'frontend',
-        'install',
-        'filelist',
-        'filemetadata',
-        'seo',
-    ];
-
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat',
-        'werkraummedia/events',
-    ];
-
     protected array $pathsToLinkInTestInstance = [
         // A renderable site that carries no import settings. The import fixture
         // uses an absolute base and never renders, so no site would resolve for
@@ -79,50 +52,19 @@ class ImportWithoutChangesTest extends FunctionalTestCase
     ];
 
     protected array $configurationToUseInTestInstance = [
-        'EXTENSIONS' => [
-            'thuecat' => [
-                'apiKey' => null,
-            ],
-        ],
-        'SYS' => [
-            'caching' => [
-                'cacheConfigurations' => [
-                    'pages' => [
-                        'backend' => Typo3DatabaseBackend::class,
-                    ],
-                ],
-            ],
-        ],
+        ...AbstractImportTestCase::CONFIGURATION,
+        ...AbstractCachingTestCase::CONFIGURATION,
     ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        GuzzleClientFaker::registerClient();
-        // The import demands a writable target folder up front; this fixture
-        // downloads nothing.
-        // @phpstan-ignore method.notFound (the functional container has set())
-        $this->getContainer()->set(FileFolderAccess::class, new FileFolderAccessStub());
-        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/BackendUser.php');
-        $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->create('en_US');
-
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportWithoutChanges.php');
         $this->setUpFrontendRootPage(1, [
             'EXT:thuecat/Configuration/TypoScript/Default/Setup.typoscript',
             'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript',
         ]);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['LANG']);
-        $problems = GuzzleClientFaker::tearDown();
-        parent::tearDown();
-        if ($problems !== []) {
-            self::fail(implode("\n\n", $problems));
-        }
     }
 
     /** The record is not written: `tstamp` stands. */
@@ -178,30 +120,15 @@ class ImportWithoutChangesTest extends FunctionalTestCase
         );
     }
 
-    private function import(string $fixture = 'attraction-with-category.json'): void
+    protected function import(string $fixture = 'attraction-with-category.json'): void
     {
-        $this->expectFetch($fixture);
-
-        $request = (new ServerRequest())->withAttribute(
-            'applicationType',
-            SystemEnvironmentBuilder::REQUESTTYPE_BE
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/attraction-with-category',
+            'thuecat.org/resources/' . $fixture
         );
-        $this->get(ConfigurationManagerInterface::class)->setRequest($request);
-
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Fixture configuration uid=1 not found.');
         // Bypassing the fetch cache: a cached response would stand in for the
         // staged one, and the record would never change.
-        $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
-    }
-
-    /** Whatever the fixture, it answers the one URL the configuration imports. */
-    private function expectFetch(string $filename): void
-    {
-        GuzzleClientFaker::expectFileForUrl(
-            'https://thuecat.org/resources/attraction-with-category',
-            __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/' . $filename
-        );
+        $this->importConfigurationBypassingCache(1);
     }
 
     private function warmCaches(): void

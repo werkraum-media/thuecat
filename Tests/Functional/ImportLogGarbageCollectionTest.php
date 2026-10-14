@@ -27,17 +27,7 @@ use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
 
 class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTestCase
 {
-    protected array $coreExtensionsToLoad = [
-        'core',
-        'backend',
-        'extbase',
-        'frontend',
-        'install',
-        'filelist',
-        'filemetadata',
-        'scheduler',
-        'seo',
-    ];
+    protected array $coreExtensionsToLoad = [...AbstractImportConfigurationTestCase::CORE_EXTENSIONS, 'scheduler'];
 
     /**
      * @return iterable<string, array{string}>

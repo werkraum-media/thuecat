@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use Codappix\Typo3PhpDatasets\TestingFramework;
 use TYPO3\CMS\Core\Configuration\SiteWriter;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
@@ -34,26 +33,8 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
  * Tests that actually import extend AbstractImportTestCase instead, which
  * supplies the shared 'example' site and the HTTP faker.
  */
-abstract class AbstractImportConfigurationTestCase extends \TYPO3\TestingFramework\Core\Functional\FunctionalTestCase
+abstract class AbstractImportConfigurationTestCase extends AbstractFunctionalTestCase
 {
-    use TestingFramework;
-
-    protected array $coreExtensionsToLoad = [
-        'core',
-        'backend',
-        'extbase',
-        'frontend',
-        'install',
-        'filelist',
-        'filemetadata',
-        'seo',
-    ];
-
-    protected array $testExtensionsToLoad = [
-        'werkraummedia/thuecat',
-        'werkraummedia/events',
-    ];
-
     /** @var array<mixed> */
     private array $extensionConfigurationBackup = [];
 
