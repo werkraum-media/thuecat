@@ -132,7 +132,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
 
         self::assertSame(303, $response->getStatusCode());
         $location = $response->getHeaderLine('location');
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Bsearchword%5D=Park', $location);
+        self::assertStringEndsWith('?q=Park', $location);
         self::assertStringNotContainsString('sortBy', $location);
     }
 }

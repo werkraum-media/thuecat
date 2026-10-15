@@ -117,7 +117,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
         // 15 free Erfurt records, itemsPerPage 10 -> a second page exists, and its
         // link must keep the active filter so paging does not reset the search.
         self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Btowns%5D%5B0%5D=1', $body);
+        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Btowns%5D=1', $body);
         self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5BisAccessibleForFree%5D=1', $body);
     }
 
@@ -136,7 +136,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         self::assertSame(303, $response->getStatusCode());
         $location = $response->getHeaderLine('location');
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Bsearchword%5D=Erfurt', $location);
+        self::assertStringEndsWith('?q=Erfurt%20Frei%2001', $location);
         self::assertStringNotContainsString('__referrer', $location);
         self::assertStringNotContainsString('__trustedProperties', $location);
     }

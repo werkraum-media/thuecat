@@ -1,6 +1,6 @@
 routeEnhancers:
   ThueCatTouristAttractionList:
-    type: Extbase
+    type: ThueCatFilter
     limitToPages:
       - 'page["tx_thuecat_page_role"] == "thuecat_touristattractionlist"'
     extension: ThueCat
@@ -11,8 +11,69 @@ routeEnhancers:
     defaultController: 'TouristAttraction::list'
     defaults:
       currentPage: '1'
+    # One segment each; without it a filter value would swallow the segments after it.
+    # A flag matches only its own values, so it cannot be read in place of another segment.
+    requirements:
+      towns: '[^/]+'
+      categories: '[^/]+'
+      keywords: '[^/]+'
+      petsAllowed: 'haustiere-erlaubt|pets-allowed'
+      isAccessibleForFree: 'eintritt-frei|free-entry'
+      publicAccess: 'oeffentlich-zugaenglich|public-access'
+    filters:
+      - { name: towns, argument: demand/towns, label: townsLabel }
+      - { name: categories, argument: demand/categories, label: categoriesLabel }
+      - { name: keywords, argument: demand/keywords, label: keywordsLabel }
+      - { name: petsAllowed, argument: demand/petsAllowed }
+      - { name: isAccessibleForFree, argument: demand/isAccessibleForFree }
+      - { name: publicAccess, argument: demand/publicAccess }
     aspects:
       currentPage:
         type: StaticRangeMapper
         start: '1'
         end: '999'
+      townsLabel:
+        type: LocaleModifier
+        default: ort
+        localeMap:
+          - { locale: 'en_.*', value: town }
+      towns:
+        type: PersistedAliasListMapper
+        tableName: tx_thuecat_town
+        routeFieldName: slug
+      categoriesLabel:
+        type: LocaleModifier
+        default: kategorie
+        localeMap:
+          - { locale: 'en_.*', value: category }
+      categories:
+        type: PersistedAliasListMapper
+        tableName: sys_category
+        routeFieldName: slug
+      keywordsLabel:
+        type: LocaleModifier
+        default: stichwort
+        localeMap:
+          - { locale: 'en_.*', value: keyword }
+      keywords:
+        type: PersistedAliasListMapper
+        tableName: sys_category
+        routeFieldName: slug
+      petsAllowed:
+        type: StaticValueMapper
+        map:
+          haustiere-erlaubt: '1'
+        localeMap:
+          - { locale: 'en_.*', map: { pets-allowed: '1' } }
+      isAccessibleForFree:
+        type: StaticValueMapper
+        map:
+          eintritt-frei: '1'
+        localeMap:
+          - { locale: 'en_.*', map: { free-entry: '1' } }
+      publicAccess:
+        type: StaticValueMapper
+        map:
+          oeffentlich-zugaenglich: '1'
+        localeMap:
+          - { locale: 'en_.*', map: { public-access: '1' } }

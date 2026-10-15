@@ -27,23 +27,35 @@ use TYPO3\CMS\Core\DataHandling\Model\RecordStateFactory;
 use TYPO3\CMS\Core\DataHandling\SlugHelper;
 use TYPO3\CMS\Core\DataHandling\TableColumnType;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Upgrades\RepeatableInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 // TODO: typo3/cms-core:15 Use the EXT:core namespace once v13 support goes.
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
+use WerkraumMedia\ThueCat\Domain\DetailRecordKind\DetailRecordKind;
 use WerkraumMedia\ThueCat\Domain\DetailRecordKind\DetailRecordKinds;
 
 /**
- * Fills empty slugs of every detail record kind, per row and language.
+ * Fills empty slugs of every detail record kind and of the records list
+ * filters route by, per row and language.
  *
  * Writes directly instead of through DataHandler: no tstamp change and no
  * cache flush per row. Existing slugs are never touched, so URLs stay stable.
+ *
+ * Repeatable: offered again whenever an empty slug shows up, e.g. in a table
+ * that gained its slug column after an earlier run.
  */
 #[UpgradeWizard('thuecat_detailRecordSlugs')]
 #[Autoconfigure(public: true)]
-final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface
+final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
 {
+    /** Tables whose slugs are list filter segments. */
+    private const FILTER_TABLES = [
+        'tx_thuecat_town',
+        'sys_category',
+    ];
+
     public function __construct(
         private readonly DetailRecordKinds $kinds,
         private readonly TcaSchemaFactory $tcaSchemaFactory,
@@ -53,12 +65,12 @@ final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface
 
     public function getTitle(): string
     {
-        return 'ThueCat: Fill empty slugs of detail records';
+        return 'ThueCat: Fill empty slugs of detail and filter records';
     }
 
     public function getDescription(): string
     {
-        return 'Generates the URL segment of every tourist attraction, trail and other detail record that has none yet, from its title. Existing URL segments are kept.';
+        return 'Generates the URL segment of every tourist attraction, trail, other detail record, town and category that has none yet, from its title. Existing URL segments are kept.';
     }
 
     public function executeUpdate(): bool
@@ -110,13 +122,18 @@ final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface
      */
     private function slugFields(): array
     {
+        $tables = [
+            ...array_map(static fn (DetailRecordKind $kind): string => $kind->table, $this->kinds->all()),
+            ...self::FILTER_TABLES,
+        ];
+
         $fields = [];
-        foreach ($this->kinds->all() as $kind) {
-            if (!$this->tcaSchemaFactory->has($kind->table)) {
+        foreach ($tables as $table) {
+            if (!$this->tcaSchemaFactory->has($table)) {
                 continue;
             }
-            foreach ($this->tcaSchemaFactory->get($kind->table)->getFieldsOfType(TableColumnType::SLUG) as $field) {
-                $fields[] = [$kind->table, $field->getName(), $field->getConfiguration()];
+            foreach ($this->tcaSchemaFactory->get($table)->getFieldsOfType(TableColumnType::SLUG) as $field) {
+                $fields[] = [$table, $field->getName(), $field->getConfiguration()];
             }
         }
 

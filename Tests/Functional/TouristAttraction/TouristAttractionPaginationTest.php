@@ -101,7 +101,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
         // 13 odd-numbered attractions carry the keyword => 2 pages.
         self::assertStringContainsString('10 Einträge pro Seite, 2 Seiten insgesamt', $body);
         self::assertStringContainsString(
-            'tx_thuecat_touristattractionlist%5Bdemand%5D%5Bkeywords%5D%5B0%5D=501',
+            'tx_thuecat_touristattractionlist%5Bdemand%5D%5Bkeywords%5D=501',
             $body
         );
     }

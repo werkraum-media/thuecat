@@ -1,0 +1,3 @@
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
+
+plugin.tx_thuecat.settings.itemsPerPage = 1

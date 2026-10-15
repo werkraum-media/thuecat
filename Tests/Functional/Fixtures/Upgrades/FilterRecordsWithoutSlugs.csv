@@ -1,0 +1,11 @@
+"pages"
+,"uid","pid","sys_language_uid","l10n_parent","title","doktype","slug","is_siteroot"
+,1,0,0,0,"Root",1,"/",1
+,10,1,0,0,"Storage",254,"/storage",0
+"tx_thuecat_town"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","slug"
+,900,10,0,0,"test:wizard-town","Bad Langensalza",\NULL
+"sys_category"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","slug"
+,950,10,0,0,"test:wizard-category","Museen & Ausstellungen",""
+,951,10,0,0,"test:wizard-own-category-slug","Burgen","eigene-burgen"

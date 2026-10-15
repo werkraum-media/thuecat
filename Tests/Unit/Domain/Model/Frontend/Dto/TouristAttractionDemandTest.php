@@ -33,6 +33,6 @@ final class TouristAttractionDemandTest extends TestCase
         $demand->setSortBy('sorting');
         $demand->setTowns([1]);
 
-        self::assertSame(['towns' => [1]], $demand->getQueryParameters());
+        self::assertSame(['towns' => '1'], $demand->getQueryParameters());
     }
 }

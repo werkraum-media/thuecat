@@ -21,11 +21,14 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use ReflectionClass;
+use ReflectionNamedType;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\PropagateResponseException;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\ExtbaseRequestParameters;
+use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category;
@@ -177,6 +180,7 @@ class TouristAttractionController extends AbstractActionController
     public function searchFormAction(?TouristAttractionDemand $demand = null): ResponseInterface
     {
         $demand ??= new TouristAttractionDemand();
+        $this->demandFactory->applySearchQuery($demand, $this->request);
 
         /** @var ContentObjectRenderer $contentObject */
         $contentObject = $this->request->getAttribute('currentContentObject');
@@ -250,17 +254,31 @@ class TouristAttractionController extends AbstractActionController
 
     /**
      * Demand is a trusted-shape DTO (typed setters only); allow request mapping
-     * of all its properties so new filters need no change here.
+     * of all its properties so new filters need no change here. Its lists
+     * arrive comma-joined from routed URLs, as arrays from forms.
      */
     protected function allowDemandMapping(): void
     {
         if (!$this->arguments->hasArgument('demand')) {
             return;
         }
-        $this->arguments->getArgument('demand')
-            ->getPropertyMappingConfiguration()
-            ->allowAllProperties()
-        ;
+        $argument = $this->arguments->getArgument('demand');
+        $configuration = $argument->getPropertyMappingConfiguration();
+        $configuration->allowAllProperties();
+
+        $dataType = $argument->getDataType();
+        if (!class_exists($dataType)) {
+            return;
+        }
+        foreach ((new ReflectionClass($dataType))->getProperties() as $property) {
+            $type = $property->getType();
+            if ($type instanceof ReflectionNamedType && $type->getName() === 'array') {
+                $configuration->forProperty($property->getName())
+                    ->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_DELIMITER, ',')
+                    ->setTypeConverterOption(ArrayConverter::class, ArrayConverter::CONFIGURATION_REMOVE_EMPTY_VALUES, true)
+                ;
+            }
+        }
     }
 
     /**
@@ -281,7 +299,7 @@ class TouristAttractionController extends AbstractActionController
         throw new PropagateResponseException(
             $this->redirectToUri($contentObject->typoLink_URL([
                 'parameter' => 't3://page?uid=current',
-                'additionalParams' => '&' . http_build_query([$namespace => $parameter]),
+                'additionalParams' => '&' . http_build_query([$namespace => $parameter] + $demand->getSearchQuery(), '', '&', PHP_QUERY_RFC3986),
             ]))
         );
     }
@@ -294,6 +312,7 @@ class TouristAttractionController extends AbstractActionController
     protected function buildDemandFromInputAndEditorSettings(?TouristAttractionDemand $demand = null): TouristAttractionDemand
     {
         $demand ??= new TouristAttractionDemand();
+        $this->demandFactory->applySearchQuery($demand, $this->request);
         $editorFilter = $this->demandFactory->fromSettings($this->settings);
         $this->demandFactory->applyEditorFilter($demand, $editorFilter);
         return $demand;

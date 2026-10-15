@@ -101,8 +101,14 @@
             <trans-unit id="tx_thuecat_town" xml:space="preserve">
                 <source>Town</source>
             </trans-unit>
+            <trans-unit id="sys_category.slug" xml:space="preserve">
+                <source>URL segment</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_town.title" xml:space="preserve">
                 <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_town.slug" xml:space="preserve">
+                <source>URL segment</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_town.description" xml:space="preserve">
                 <source>Description</source>

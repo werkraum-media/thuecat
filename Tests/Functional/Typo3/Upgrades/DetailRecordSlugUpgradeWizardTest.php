@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Typo3\Upgrades;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Service\UpgradeWizardsService;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 use WerkraumMedia\ThueCat\Typo3\Upgrades\DetailRecordSlugUpgradeWizard;
 
@@ -93,5 +94,52 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/DetailRecordsWithSlugs.csv');
 
         self::assertFalse($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+    }
+
+    #[Test]
+    public function fillsEmptyTownAndCategorySlugs(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/FilterRecordsWithoutSlugs.csv');
+
+        $this->get(DetailRecordSlugUpgradeWizard::class)->executeUpdate();
+
+        self::assertSame(
+            'bad-langensalza',
+            $this->fetchRowByRemoteId('tx_thuecat_town', 'test:wizard-town')['slug']
+        );
+        self::assertSame(
+            'museen-ausstellungen',
+            $this->fetchRowByRemoteId('sys_category', 'test:wizard-category')['slug']
+        );
+        self::assertSame(
+            'eigene-burgen',
+            $this->fetchRowByRemoteId('sys_category', 'test:wizard-own-category-slug')['slug']
+        );
+    }
+
+    #[Test]
+    public function reportsUpdateNecessaryWhileAFilterRecordSlugIsEmpty(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/FilterRecordsWithoutSlugs.csv');
+
+        self::assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+    }
+
+    #[Test]
+    public function staysOfferedAfterARunForSlugsEmptiedLater(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/DetailRecordsWithoutSlugs.csv');
+        $upgradeWizards = $this->get(UpgradeWizardsService::class);
+
+        $upgradeWizards->executeWizard('thuecat_detailRecordSlugs', []);
+        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_town')->insert('tx_thuecat_town', [
+            'pid' => 10,
+            'remote_id' => 'test:wizard-town',
+            'title' => 'Bad Langensalza',
+            'slug' => '',
+        ]);
+
+        self::assertFalse($upgradeWizards->isWizardDone('thuecat_detailRecordSlugs'));
+        self::assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
     }
 }

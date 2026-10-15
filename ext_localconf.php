@@ -10,6 +10,8 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use WerkraumMedia\ThueCat\Controller\TouristAttractionController;
 use WerkraumMedia\ThueCat\Controller\TrailController;
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Routing\FilterRouteEnhancer;
+use WerkraumMedia\ThueCat\Routing\PersistedAliasListMapper;
 use WerkraumMedia\ThueCat\Typo3\FormDataProvider\AnchorStartingPoints;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
@@ -23,6 +25,9 @@ Extension::registerExtLocalconfConfigConfig();
     );
 
     AddTitleForStaticUrlsDataHandlerHook::register();
+
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['enhancers']['ThueCatFilter'] = FilterRouteEnhancer::class;
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['routing']['aspects']['PersistedAliasListMapper'] = PersistedAliasListMapper::class;
 
     // Non-cacheable: the plugin's own caches serve the rendered result.
     ExtensionUtility::registerControllerActions(
@@ -69,6 +74,8 @@ Extension::registerExtLocalconfConfigConfig();
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[demand]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionlist[currentPage]';
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionsearch[demand]';
+    // The search word of both actions, outside the plugin namespace so list URLs stay readable.
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'q';
 
     foreach (['tcaDatabaseRecord', 'flexFormSegment', 'tcaSelectTreeAjaxFieldData'] as $formDataGroup) {
         // Before the tree providers consume startingPoints; after the site is known.

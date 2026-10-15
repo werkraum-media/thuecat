@@ -94,7 +94,7 @@ class CacheIdentifierFactory
     {
         /** @var array<string, string|list<string>> $canonical */
         $canonical = [];
-        foreach ($demand->getQueryParameters() as $name => $value) {
+        foreach ($demand->getFilterState() as $name => $value) {
             $canonical[$name] = $this->canonicaliseValue($value);
         }
         ksort($canonical);

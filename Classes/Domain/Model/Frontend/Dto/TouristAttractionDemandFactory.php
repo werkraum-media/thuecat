@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TouristAttractionDemandFactory
@@ -68,6 +69,20 @@ class TouristAttractionDemandFactory
     }
 
     /**
+     * A search word in the `q` query argument wins over one mapped from the
+     * plugin namespace.
+     */
+    public function applySearchQuery(TouristAttractionDemand $demand, ServerRequestInterface $request): TouristAttractionDemand
+    {
+        $searchQuery = $request->getQueryParams()['q'] ?? null;
+        if (is_string($searchQuery) && trim($searchQuery) !== '') {
+            $demand->setSearchword(trim($searchQuery));
+        }
+
+        return $demand;
+    }
+
+    /**
      * Force the editor-locked values from $filter onto $demand so a visitor
      * search refines within the editor's set but can never widen past it.
      */
@@ -96,6 +111,7 @@ class TouristAttractionDemandFactory
         }
         // Always the editor's, even when empty, so a request can never pick the order.
         $demand->setSortBy($locked->getSortBy());
+        $demand->lockProperties(array_values($filter->getLockedProperties()));
 
         return $demand;
     }

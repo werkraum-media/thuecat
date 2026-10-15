@@ -53,6 +53,13 @@ class TouristAttractionDemand
 
     protected string $sortBy = '';
 
+    /**
+     * Properties the editor fixed; they apply without being part of URLs.
+     *
+     * @var list<string>
+     */
+    protected array $lockedProperties = [];
+
     public function getSearchword(): string
     {
         return $this->searchword;
@@ -152,22 +159,64 @@ class TouristAttractionDemand
     }
 
     /**
-     * Flat shape for GET URLs (f:link.action / POST redirect); empties dropped.
+     * Not a setter, so request mapping cannot reach it.
+     *
+     * @param list<string> $properties
+     */
+    public function lockProperties(array $properties): void
+    {
+        $this->lockedProperties = $properties;
+    }
+
+    /**
+     * The search word as the readable `q` query argument, for links next to
+     * getQueryParameters().
+     *
+     * @return array{q?: string}
+     */
+    public function getSearchQuery(): array
+    {
+        return $this->searchword === '' ? [] : ['q' => $this->searchword];
+    }
+
+    /**
+     * Every active filter value, locked or not; empties dropped. The identity
+     * of a result, independent of how URLs carry it.
      *
      * @return array<string, string|int|int[]>
      */
-    public function getQueryParameters(): array
+    public function getFilterState(): array
     {
-        $parameters = [];
+        $state = [];
         /** @var array<string, string|int|int[]|bool> $properties */
         $properties = get_object_vars($this);
         // Editor-only and re-applied on every request; kept out of URLs and the cHash.
-        unset($properties['sortBy']);
+        unset($properties['sortBy'], $properties['lockedProperties']);
         foreach ($properties as $name => $value) {
             if ($value === '' || $value === [] || $value === false) {
                 continue;
             }
-            $parameters[$name] = $value === true ? 1 : $value;
+            $state[$name] = $value === true ? 1 : $value;
+        }
+
+        return $state;
+    }
+
+    /**
+     * Flat shape for GET URLs (f:link.action / POST redirect): locked
+     * properties dropped, lists comma-joined as the route aspects map them.
+     * The searchword travels as `q`, see getSearchQuery().
+     *
+     * @return array<string, string|int>
+     */
+    public function getQueryParameters(): array
+    {
+        $parameters = [];
+        foreach ($this->getFilterState() as $name => $value) {
+            if ($name === 'searchword' || in_array($name, $this->lockedProperties, true)) {
+                continue;
+            }
+            $parameters[$name] = is_array($value) ? implode(',', $value) : $value;
         }
 
         return $parameters;

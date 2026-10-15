@@ -39,6 +39,20 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'slug' => [
+                'label' => $languagePath . '.slug',
+                'config' => [
+                    'type' => 'slug',
+                    'generatorOptions' => [
+                        'fields' => ['title'],
+                        'prefixParentPageSlug' => false,
+                        'replacements' => ['/' => '-'],
+                    ],
+                    'fallbackCharacter' => '-',
+                    'eval' => 'uniqueInSite',
+                    'prependSlash' => false,
+                ],
+            ],
             'description' => [
                 'label' => $languagePath . '.description',
                 'config' => [
@@ -111,7 +125,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, remote_id, address_inline, tourist_information, managed_by'
+                'showitem' => 'title, slug, description, remote_id, address_inline, tourist_information, managed_by'
                 . ',--div--;' . $languagePath . '.tab.events'
                 . ',hosts_events'
                 . ',--div--;LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.language'

@@ -79,6 +79,19 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
         self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
 
+    #[Test]
+    public function searchFormPrefillsValueFromQ(): void
+    {
+        $request = (new InternalRequest())
+            ->withPageId(12)
+            ->withQueryParams(['q' => 'Stadtmuseum'])
+        ;
+
+        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+
+        self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
+    }
+
     // 4.1: the mask offers the keyword tree, grouped by parent — the nesting is
     // what the grouping is, since a set renders as a checkbox owning its terms.
     #[Test]
