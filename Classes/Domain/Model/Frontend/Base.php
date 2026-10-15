@@ -33,6 +33,9 @@ abstract class Base extends AbstractEntity
      */
     public const TEMPLATE_VARIABLE_NAME = '';
 
+    /** The record's ThueCat resource URI. */
+    protected string $remoteId = '';
+
     protected string $title = '';
 
     protected string $description = '';
@@ -53,6 +56,11 @@ abstract class Base extends AbstractEntity
     {
         $this->mediaFiles = new ObjectStorage();
         $this->keywords = new ObjectStorage();
+    }
+
+    public function getRemoteId(): string
+    {
+        return $this->remoteId;
     }
 
     public function getTitle(): string
