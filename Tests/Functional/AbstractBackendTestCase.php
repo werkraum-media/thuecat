@@ -45,7 +45,9 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
 
     protected function tearDown(): void
     {
+        // clean up GLOBALS left behind by previous tests
         unset($GLOBALS['LANG']);
+        unset($GLOBALS['TYPO3_REQUEST']);
         parent::tearDown();
     }
 }

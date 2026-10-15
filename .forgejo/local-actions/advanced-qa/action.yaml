@@ -7,8 +7,11 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Provide site locales'
+      run: 'apt-get update && apt-get install -y --no-install-recommends locales && localedef -i de_DE -f UTF-8 de_DE.UTF-8 && localedef -i en_GB -f UTF-8 en_GB.UTF-8'
+
     - name: 'PHP lint'
-      run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l"
+      run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -d display_errors=stderr -d log_errors=0 -l > /dev/null && echo \"$(find *.php Classes Configuration Tests -name '*.php' | wc -l) files without syntax errors\""
 
     - name: 'Get Composer Cache Directory'
       id: 'composer-cache-dir'
@@ -27,4 +30,4 @@ runs:
       run: './vendor/bin/phpstan analyse'
 
     - name: 'PHPUnit Tests'
-      run: 'php -d xdebug.mode=off ./vendor/bin/phpunit --display-all-issues'
+      run: 'XDEBUG_MODE=off ./vendor/bin/paratest --runner=WrapperRunner --display-all-issues'
