@@ -99,6 +99,28 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         ;
     }
 
+    /**
+     * A request for one sitemap of the `EXT:seo` sitemap page type on the root page, carrying a valid cHash the way
+     * the sitemap index links it.
+     */
+    protected function sitemapRequest(string $sitemap, int $languageId = 0): InternalRequest
+    {
+        $queryParams = ['tx_seo' => ['sitemap' => $sitemap]];
+        $cHash = GeneralUtility::makeInstance(CacheHashCalculator::class)->generateForParameters(
+            http_build_query($queryParams + ['id' => 1])
+        );
+        // The root page has no slug of its own: `/en/` redirects to `/en`.
+        $base = $this->languageBase($languageId);
+
+        return (new InternalRequest('http://localhost' . ($base === '' ? '/' : $base)))
+            ->withQueryParameters([
+                'type' => 1533906435,
+                'tx_seo[sitemap]' => $sitemap,
+                'cHash' => $cHash,
+            ])
+        ;
+    }
+
     /** The page's own URL in one language, base path included. */
     protected function urlFor(int $pageId, int $languageId = 0): string
     {

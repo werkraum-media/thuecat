@@ -81,6 +81,24 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
     }
 
     /**
+     * Creates through DataHandler, which fills generated fields such as the slug.
+     *
+     * @param array<string, string> $values
+     */
+    protected function createRecord(
+        int $pid,
+        array $values,
+        string $table = 'tx_thuecat_tourist_attraction'
+    ): void {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start([$table => ['NEW1' => ['pid' => (string)$pid] + $values]], []);
+        $dataHandler->process_datamap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, 'create');
+    }
+
+    /**
      * Deletes through DataHandler, which registers the record's cache tags
      * before the row goes, so they are still emitted for it.
      */

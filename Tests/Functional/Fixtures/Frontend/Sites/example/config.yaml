@@ -50,6 +50,10 @@ languages:
 rootPageId: 1
 websiteTitle: 'Example Website'
 settings:
+  # Trails name no show page, so their sitemap stays empty.
+  thuecat:
+    pois:
+      pid_show: 10
   import:
     thuecat:
       # The anchors the frontend filters resolve against. Fixtures place their

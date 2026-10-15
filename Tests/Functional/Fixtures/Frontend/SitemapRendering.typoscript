@@ -1,0 +1,13 @@
+@import 'EXT:thuecat/Tests/Functional/Fixtures/Frontend/PluginRendering.typoscript'
+@import 'EXT:seo/Configuration/TypoScript/XmlSitemap/setup.typoscript'
+
+plugin.tx_seo.config.xmlSitemap.sitemaps {
+    attraction {
+        provider = WerkraumMedia\ThueCat\Frontend\Sitemap\DetailRecordSitemapDataProvider
+        config.kind = attraction
+    }
+    trail {
+        provider = WerkraumMedia\ThueCat\Frontend\Sitemap\DetailRecordSitemapDataProvider
+        config.kind = trail
+    }
+}
