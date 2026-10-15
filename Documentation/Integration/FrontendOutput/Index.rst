@@ -5,6 +5,9 @@
 
    PluginSettings
    ContentElementExample
+   Routing
+   RoutingExample
+   XmlSitemap
    Caching
    DetailPageSections
 
@@ -159,6 +162,9 @@ extension.
 A list content element can be narrowed to the storage folder through its :sql:`pages` field.
 
 A full, ready-to-use content element definition is shown in :ref:`content-element-example`.
+
+Detail pages, lists and the search get readable URLs once the site imports the route enhancers and
+the plugin pages carry their page role, see :ref:`frontend-output-routing`.
 
 Templates
 =========

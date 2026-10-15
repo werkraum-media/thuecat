@@ -1,0 +1,10 @@
+Import the route enhancers of the plugins the site uses into its site configuration. Each file
+routes one plugin:
+
+.. code-block:: yaml
+   :caption: config/sites/<your-site>/config.yaml
+
+   imports:
+     - { resource: 'EXT:thuecat/Configuration/Routes/TouristAttractionShow.yaml' }
+     - { resource: 'EXT:thuecat/Configuration/Routes/TouristAttractionList.yaml' }
+     - { resource: 'EXT:thuecat/Configuration/Routes/TrailShow.yaml' }

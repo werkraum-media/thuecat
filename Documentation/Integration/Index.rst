@@ -32,6 +32,10 @@ Information about how to install and use the extension within a TYPO3 instance.
 
       How to get data into the instance via import configuration and scheduled tasks.
 
+   .. card:: :ref:`maintenance`
+
+      What an update needs beyond Composer, such as filling the slugs of existing records.
+
 .. toctree::
    :hidden:
 
@@ -40,3 +44,4 @@ Information about how to install and use the extension within a TYPO3 instance.
    BackendRelationScoping
    Import
    FrontendOutput/Index
+   Maintenance

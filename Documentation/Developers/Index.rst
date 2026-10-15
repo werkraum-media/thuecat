@@ -8,5 +8,6 @@ For Developers
 .. toctree::
 
    Import/Index
+   DetailRecordKinds
    FilterFields
    BackendRelationScoping

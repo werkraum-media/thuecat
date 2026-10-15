@@ -1,0 +1,12 @@
+Map each routed content element type to the page role its plugin needs, in the page TSconfig of
+your site set. Content element types without a line are ignored by the page module hint:
+
+.. code-block:: typoscript
+   :caption: EXT:myextension/Configuration/Sets/MySet/page.tsconfig
+
+   tx_thuecat.pageRoles {
+       myvendor_attractionshow = thuecat_touristattractionshow
+       myvendor_trailshow = thuecat_trailshow
+       myvendor_attractionlist = thuecat_touristattractionlist
+       myvendor_attractionlistfiltered = thuecat_touristattractionlist
+   }

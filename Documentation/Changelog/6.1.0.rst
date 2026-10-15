@@ -1,0 +1,71 @@
+.. include:: ../Includes.txt
+.. _changelog-6-1-0:
+
+=====
+6.1.0
+=====
+
+What changed for installations upgrading from 6.0.0. Commits that do not affect an upgrade — tests,
+CI — are not listed; the git history has them.
+
+.. contents:: On this page
+   :local:
+   :depth: 1
+
+.. _changelog-6-1-0-breaking:
+
+Breaking
+--------
+
+Nothing
+
+.. _changelog-6-1-0-important:
+
+Important
+---------
+
+* **[FEATURE] Add slug fields and UpgradeWizard for POIs and Trails** (``94f884b``)
+
+  Tourist attractions, trails, towns and categories get a :sql:`slug` column. Update the database
+  schema and run the upgrade wizard to fill the slugs of existing records, see
+  :ref:`maintenance-slugs`.
+
+* **[FEATURE] Add readable URLs for attraction and trail detail pages** (``dcb1540``)
+
+  Pages get the field :guilabel:`ThüCAT page role`. Import the route enhancers into the site
+  configuration, set the role on every plugin page, and map your content element types to roles,
+  see :ref:`frontend-output-routing`. Links to detail pages with a role change from query strings
+  to slug paths; the former query-string URLs keep resolving, and a page without the role keeps
+  them. Flush all caches on deployment: list items cached before it still carry the former URLs.
+
+* **[FEATURE] Route list filters and search as readable URLs** (``cd17236``)
+
+  On list pages with a page role, filter and pagination URLs change from query strings to paths;
+  the former URLs keep resolving. The search word is the query argument ``q``, excluded from the
+  cHash and available as :php:`TouristAttractionDemand::getSearchQuery()`.
+  :php:`TouristAttractionDemand::getQueryParameters()` returns lists comma-joined, as strings, and
+  leaves out the search word and the filters the content element locks. Templates passing
+  ``demand.queryParameters`` to a link keep working; add ``additionalParams="{demand.searchQuery}"``
+  to keep the search word in pagination links.
+
+* **[FEATURE] Add XML sitemaps for detail records** (``31891dc``)
+
+  A sitemap provider for each detail record kind, configured by kind alone, see
+  :ref:`frontend-output-xml-sitemap`. :composer:`typo3/cms-seo` is a new required dependency.
+
+.. _changelog-6-1-0-features:
+
+Features
+--------
+
+* **[TASK] Expose the remote id on frontend models** (``07eac2c``)
+
+  :php:`getRemoteId()` returns a record's ThüCAT resource URI, for example for schema.org
+  ``sameAs``.
+
+.. _changelog-6-1-0-deprecation:
+
+Deprecation
+-----------
+
+Nothing
