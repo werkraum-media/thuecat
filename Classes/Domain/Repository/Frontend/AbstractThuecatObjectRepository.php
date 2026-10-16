@@ -28,34 +28,25 @@ class AbstractThuecatObjectRepository extends Repository
     /**
      * Returns the given records in the exact order of the passed uids.
      *
+     * The uids are default-language uids. findByUid() overlays each one for
+     * the request's language; a uid-matching query cannot, as its language
+     * constraint rejects the default-language row and the uid test rejects
+     * the translation.
+     *
      * @param int[] $uids
      *
      * @return Base[]
      */
     public function findBySelectedRecords(array $uids): array
     {
-        if ($uids === []) {
-            return [];
-        }
-
-        $query = $this->createQuery();
-        $query->getQuerySettings()->setRespectStoragePage(false);
-        $query->matching($query->in('uid', $uids));
-
-        $byUid = [];
-        foreach ($query->execute() as $attraction) {
-            if ($attraction instanceof Base && $attraction->getUid() !== null) {
-                $byUid[$attraction->getUid()] = $attraction;
-            }
-        }
-
-        $ordered = [];
+        $records = [];
         foreach ($uids as $uid) {
-            if (isset($byUid[$uid])) {
-                $ordered[] = $byUid[$uid];
+            $record = $this->findByUid($uid);
+            if ($record instanceof Base) {
+                $records[] = $record;
             }
         }
 
-        return $ordered;
+        return $records;
     }
 }

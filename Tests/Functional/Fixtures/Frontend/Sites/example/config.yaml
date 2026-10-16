@@ -47,6 +47,21 @@ languages:
     fallbacks: '1,0'
     flag: fr
     languageId: 2
+  -
+    title: Spanish
+    enabled: true
+    base: /es/
+    typo3Language: es
+    locale: es_ES.UTF-8
+    iso-639-1: es
+    websiteTitle: ''
+    navigationTitle: ''
+    hreflang: es-ES
+    direction: ''
+    fallbackType: fallback
+    fallbacks: '0'
+    flag: es
+    languageId: 3
 rootPageId: 1
 websiteTitle: 'Example Website'
 settings:
