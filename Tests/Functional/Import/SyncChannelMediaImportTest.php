@@ -69,4 +69,19 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
 
         $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelRelatesPrivateImage.csv');
     }
+
+    #[Test]
+    public function referencedMediaServedByTheChannelComesFromTheChannel(): void
+    {
+        $this->expectChannelServing('list-changed-media-in-channel.json', 'test-event-media-1');
+        $this->expectFetchForUrl(self::RECORD . 'test-media-1', 'widgets.thuecat.org/api/sync/test-channel/jsonld/test-media-1.json');
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-media-1/test-image-private.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelRelatesPrivateImage.csv');
+    }
 }

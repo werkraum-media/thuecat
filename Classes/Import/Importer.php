@@ -45,6 +45,7 @@ use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
+use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
@@ -181,6 +182,9 @@ class Importer
             // every one of them.
             $this->sitePageIds->forRootPage($site->getRootPageId()),
             $site,
+            $configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel'
+                ? SyncChannel::recordUrlPrefix($configuration->getSyncApiDomain(), $configuration->getSyncChannelId())
+                : null,
         );
         $accumulatedPayload = new DataHandlerPayload();
         $urls = $urlProvider->getUrls($apiDomain);

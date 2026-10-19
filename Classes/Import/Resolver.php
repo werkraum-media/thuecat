@@ -889,7 +889,7 @@ class Resolver
 
         try {
             $context->reportProgress($uri);
-            $response = $this->fetchData->jsonLDFromUrl($uri, $context->apiKey);
+            $response = $this->fetchReference($uri, $context);
         } catch (Exception $e) {
             $technicalFailure = !$this->fetchFailureVerdict->failureMeansGone($e);
             $this->importLogger->recordSkippedReference(
@@ -1744,7 +1744,7 @@ class Resolver
 
         try {
             $context->reportProgress($reference);
-            $response = $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
+            $response = $this->fetchReference($reference, $context);
             $graph = $response['@graph'] ?? [];
             if (!is_array($graph)) {
                 $graph = [];
@@ -2368,6 +2368,33 @@ class Resolver
     }
 
     /**
+     * On a sync channel run the channel is asked first: its node carries the
+     * private image the resource host withholds. The reference URL stays the
+     * identity either way; only the source of the payload changes.
+     *
+     * @return array<mixed>
+     */
+    protected function fetchReference(string $reference, ResolverContext $context): array
+    {
+        $channelUrl = $context->channelRecordUrlFor($reference);
+        if ($channelUrl !== null) {
+            if (!array_key_exists($reference, $context->channelResponseByReference)) {
+                try {
+                    $context->channelResponseByReference[$reference] = $this->fetchData->jsonLDFromUrl($channelUrl, $context->apiKey);
+                } catch (ResourceNotFoundException) {
+                    // Not in the channel: the expected answer for most references, so not logged.
+                    $context->channelResponseByReference[$reference] = null;
+                }
+            }
+            if ($context->channelResponseByReference[$reference] !== null) {
+                return $context->channelResponseByReference[$reference];
+            }
+        }
+
+        return $this->fetchData->jsonLDFromUrl($reference, $context->apiKey);
+    }
+
+    /**
      * Fetch a single JSON-LD resource and return the node whose @id matches.
      * Falls back to the first graph node for resources that publish a single
      * anonymous node. Throws if nothing matches so a broken upstream response
@@ -2378,7 +2405,7 @@ class Resolver
     protected function fetchGraphNode(string $url, ResolverContext $context, string $expectedId): array
     {
         $context->reportProgress($url);
-        $response = $this->fetchData->jsonLDFromUrl($url, $context->apiKey);
+        $response = $this->fetchReference($url, $context);
         $graph = $response['@graph'] ?? [];
         if (!is_array($graph)) {
             $graph = [];

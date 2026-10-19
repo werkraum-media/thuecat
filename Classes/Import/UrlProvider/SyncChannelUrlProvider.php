@@ -72,7 +72,7 @@ class SyncChannelUrlProvider implements UrlProvider
             $this->channelId,
             $this->syncWindow->since($this->configurationUid, $this->storagePid)
         );
-        $recordUrl = rtrim($this->syncHost, '/') . '/api/sync/' . rawurlencode($this->channelId) . '/jsonld/';
+        $recordUrl = SyncChannel::recordUrlPrefix($this->syncHost, $this->channelId);
 
         return array_map(
             static fn (string $id): string => $recordUrl . rawurlencode($id),

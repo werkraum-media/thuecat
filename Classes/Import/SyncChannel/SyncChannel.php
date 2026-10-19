@@ -35,6 +35,14 @@ class SyncChannel
     ) {
     }
 
+    /**
+     * Prefix of a single record's URL; the record ID is appended URL-encoded.
+     */
+    public static function recordUrlPrefix(string $syncHost, string $channelId): string
+    {
+        return rtrim($syncHost, '/') . '/api/sync/' . rawurlencode($channelId) . '/jsonld/';
+    }
+
     public function read(string $syncHost, string $channelId, DateTimeImmutable $since): SyncChannelLists
     {
         $listUrl = rtrim($syncHost, '/') . '/api/sync/' . rawurlencode($channelId) . '/';

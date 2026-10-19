@@ -1,0 +1,29 @@
+{
+ "@graph": [
+  {
+   "@id": "https://thuecat.org/resources/test-media-2",
+   "@type": [
+    "schema:Thing",
+    "schema:CreativeWork",
+    "schema:MediaObject",
+    "schema:ImageObject"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Testbild"
+   },
+   "schema:author": {
+    "@language": "de",
+    "@value": "Test-Fotograf"
+   },
+   "schema:contentUrl": {
+    "@type": "schema:URL",
+    "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-media-2/test-image-public.jpg"
+   },
+   "schema:license": {
+    "@type": "schema:URL",
+    "@value": "http://creativecommons.org/licenses/by-sa/4.0/"
+   }
+  }
+ ]
+}

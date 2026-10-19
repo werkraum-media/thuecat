@@ -107,4 +107,64 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
             $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-1')['hosts_events']
         );
     }
+
+    #[Test]
+    public function referenceOutsideTheChannelFallsBackToItsCarriedUrlWithoutLogging(): void
+    {
+        $this->expectChannelServing('list-changed-keyword.json', 'test-event-keyword-1');
+        $this->expectKeywordOutsideTheChannel();
+
+        $this->importConfiguration(1);
+
+        self::assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
+        self::assertSame([], $this->getLogEntriesOfType('fetchingError'));
+    }
+
+    #[Test]
+    public function referenceFetchedFromItsCarriedUrlKeepsThatUrlAsIdentity(): void
+    {
+        $this->expectChannelServing('list-changed-keyword.json', 'test-event-keyword-1');
+        $this->expectKeywordOutsideTheChannel();
+
+        $this->importConfiguration(1);
+
+        self::assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
+    }
+
+    #[Test]
+    public function referenceSharedByTwoEventsIsAskedOfTheChannelOnce(): void
+    {
+        $this->expectChannelServing('list-changed-media-outside-channel.json', 'test-event-media-2a', 'test-event-media-2b');
+        $this->expectFailureForUrl(self::RECORD . 'test-media-2', 200);
+        $this->expectFetchForUrl('https://thuecat.org/resources/test-media-2', 'thuecat.org/resources/test-media-2.json');
+
+        $this->importConfiguration(1);
+
+        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2a'));
+        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2b'));
+    }
+
+    #[Test]
+    public function runOfAnotherTypeNeverAsksAChannel(): void
+    {
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/test-event-keyword-1',
+            'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-keyword-1.json'
+        );
+        $this->expectFetchForUrl('https://thuecat.org/resources/916373333853-mknj', 'thuecat.org/resources/916373333853-mknj.json');
+        $this->expectFetchForUrl('https://thuecat.org/resources/192875159827-xfqk', 'thuecat.org/resources/192875159827-xfqk.json');
+
+        $this->importConfiguration(2);
+
+        self::assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
+    }
+
+    // The keyword and the term set it belongs to.
+    protected function expectKeywordOutsideTheChannel(): void
+    {
+        foreach (['916373333853-mknj', '192875159827-xfqk'] as $id) {
+            $this->expectFailureForUrl(self::RECORD . $id, 200);
+            $this->expectFetchForUrl('https://thuecat.org/resources/' . $id, 'thuecat.org/resources/' . $id . '.json');
+        }
+    }
 }

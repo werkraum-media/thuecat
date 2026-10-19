@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
@@ -300,6 +301,14 @@ final class ResolverContext
     public array $assetGoneByUrl = [];
 
     /**
+     * Run-wide, so a reference shared by several roots is asked of the channel
+     * once. Null records that the channel does not serve it.
+     *
+     * @var array<string, array<mixed>|null> reference URL => channel response
+     */
+    public array $channelResponseByReference = [];
+
+    /**
      * @param array<string, int> $translationLanguages Two-letter language
      *        code → sys_language_uid for every additional site language.
      *        Forwarded to the Parser whenever the Resolver fetches a
@@ -333,7 +342,23 @@ final class ResolverContext
         public readonly array $sitePageIds = [],
         // Null outside the Importer: no anchor resolves, so mapping is off.
         public readonly ?Site $site = null,
+        // Set on a sync channel run only: references are asked of the channel first.
+        public readonly ?string $channelRecordUrlPrefix = null,
     ) {
+    }
+
+    /**
+     * Null when the reference is not to be asked of the channel: no channel
+     * run, or not a resource URL, which the channel can never serve.
+     */
+    public function channelRecordUrlFor(string $reference): ?string
+    {
+        $resourcePrefix = FetchData::RESOURCE_HOST . '/resources/';
+        if ($this->channelRecordUrlPrefix === null || !str_starts_with($reference, $resourcePrefix)) {
+            return null;
+        }
+
+        return $this->channelRecordUrlPrefix . rawurlencode(substr($reference, strlen($resourcePrefix)));
     }
 
     /** Ignored when the owner field already claimed the keyword; first claim wins. */

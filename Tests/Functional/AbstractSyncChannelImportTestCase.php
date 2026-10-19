@@ -26,7 +26,8 @@ use TYPO3\CMS\Core\Context\DateTimeAspect;
 
 /**
  * Runs the syncChannel configuration of Fixtures/Import/SyncChannel.csv, which
- * imports channel `test-channel` into folder 10 of site root 1. Its last
+ * imports channel `test-channel` into folder 10 of site root 2200, which
+ * anchors keywords at category 200. Its last
  * successful run fixes the window, so the list URLs are known in advance.
  */
 abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
@@ -51,8 +52,18 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
 
     protected function expectChannelServingOneEvent(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed.json');
+        $this->expectChannelServing('list-changed.json', 'test-event-1');
+    }
+
+    /**
+     * @param string $changedList File name of the change list, which must list exactly $eventIds.
+     */
+    protected function expectChannelServing(string $changedList, string ...$eventIds): void
+    {
+        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/' . $changedList);
         $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
-        $this->expectFetchForUrl(self::RECORD . 'test-event-1', 'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1.json');
+        foreach ($eventIds as $eventId) {
+            $this->expectFetchForUrl(self::RECORD . $eventId, 'widgets.thuecat.org/api/sync/test-channel/jsonld/' . $eventId . '.json');
+        }
     }
 }
