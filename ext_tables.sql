@@ -4,7 +4,9 @@ CREATE TABLE tx_thuecat_import_log_entry (
 );
 
 
+-- Event relations hold more uids than core's derived varchar(255) fits
 CREATE TABLE tx_thuecat_tourist_attraction (
+    hosts_events text,
     url text,
     slogan text,
     start_of_construction text,
@@ -21,6 +23,19 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     public_access text,
     available_languages text,
     distance_to_public_transport text,
+);
+
+CREATE TABLE tx_thuecat_organisation (
+    hosts_events text,
+    manages_event text,
+);
+
+CREATE TABLE tx_thuecat_town (
+    hosts_events text,
+);
+
+CREATE TABLE tx_thuecat_tourist_information (
+    hosts_events text,
 );
 
 CREATE TABLE tx_thuecat_parking_facility (
