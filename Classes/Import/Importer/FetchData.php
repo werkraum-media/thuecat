@@ -40,6 +40,8 @@ class FetchData
     // Reuse rather than re-defaulting elsewhere; the fallback lives here.
     public const DEFAULT_API_DOMAIN = 'https://cdb.thuecat.org';
 
+    public const DEFAULT_SYNC_API_DOMAIN = 'https://widgets.thuecat.org';
+
     protected string $urlPrefix = 'https://thuecat.org';
 
     protected bool $bypassCache = false;
@@ -123,8 +125,25 @@ class FetchData
 
         $this->handleInvalidResponse($response, $request);
 
-        $jsonLD = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        $body = (string)$response->getBody();
+        // The sync API answers an ID outside its channel with an empty 200.
+        if (trim($body) === '') {
+            throw new ResourceNotFoundException(
+                sprintf(
+                    'Not found, empty response for resource: "%s".',
+                    $request->getUri()
+                ),
+                1792390267
+            );
+        }
+
+        $jsonLD = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         if (is_array($jsonLD)) {
+            // The sync API's single record is a bare node; the parser reads @graph.
+            if (isset($jsonLD['@id']) && !isset($jsonLD['@graph'])) {
+                $jsonLD = ['@graph' => [$jsonLD]];
+            }
+
             $this->cache->set(
                 $cacheIdentifier,
                 $jsonLD,

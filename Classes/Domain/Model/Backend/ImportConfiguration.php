@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 
 class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
@@ -155,6 +156,21 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         // resource fetches at that host".
         $apiDomain = $this->getConfigurationValueFromFlexForm('apiDomain');
         return is_string($apiDomain) ? $apiDomain : '';
+    }
+
+    public function getSyncChannelId(): string
+    {
+        $syncChannelId = $this->getConfigurationValueFromFlexForm('syncChannelId');
+        return is_string($syncChannelId) ? $syncChannelId : '';
+    }
+
+    /**
+     * Fixed host: a stored apiDomain is ignored, as switching a new record's
+     * type keeps the value the previous type's form prefilled.
+     */
+    public function getSyncApiDomain(): string
+    {
+        return FetchData::DEFAULT_SYNC_API_DOMAIN;
     }
 
     public function getFetchLastXDays(): int

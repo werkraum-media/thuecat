@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Typo3\FlexForm;
 use WerkraumMedia\ThueCat\Extension;
 
 // Composes the import-configuration FlexForm data structures in PHP so the
-// fields shared across the three types (storagePid, category anchors, file
+// fields shared across the types (storagePid, category anchors, file
 // folder, api key) are defined once. XML has no include mechanism.
 class ImportConfigurationDataStructure
 {
@@ -45,6 +45,7 @@ class ImportConfigurationDataStructure
             'default', 'static' => $this->staticFields(),
             'syncScope' => $this->syncScopeFields(),
             'containsPlace' => $this->containsPlaceFields(),
+            'syncChannel' => $this->syncChannelFields(),
             default => null,
         };
         if ($fields === null) {
@@ -115,6 +116,29 @@ class ImportConfigurationDataStructure
                 'config' => ['type' => 'input', 'eval' => 'trim', 'required' => true],
             ],
             'apiKey' => $this->apiKeyField(),
+        ] + $this->tunableFields();
+    }
+
+    /**
+     * No fetchLastXDays: the window is derived from the last successful run.
+     *
+     * @return array<string, mixed>
+     */
+    protected function syncChannelFields(): array
+    {
+        return [
+            'storagePid' => $this->storagePidField('syncChannel'),
+            'fileFolder' => $this->fileFolderField('syncChannel'),
+            'syncChannelId' => [
+                'label' => self::LLL . 'importConfiguration.syncChannel.syncChannelId',
+                'description' => self::LLL . 'importConfiguration.syncChannel.syncChannelId.description',
+                'config' => ['type' => 'input', 'eval' => 'trim', 'required' => true],
+            ],
+            'apiKey' => [
+                'label' => self::LLL . 'importConfiguration.syncChannel.apiKey',
+                'description' => self::LLL . 'importConfiguration.syncChannel.apiKey.description',
+                'config' => ['type' => 'input', 'eval' => 'trim', 'required' => true],
+            ],
         ] + $this->tunableFields();
     }
 

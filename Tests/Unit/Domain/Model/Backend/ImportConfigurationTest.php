@@ -405,4 +405,61 @@ class ImportConfigurationTest extends TestCase
 
         self::assertSame('', $subject->getApiDomain());
     }
+
+    #[Test]
+    public function returnsSyncChannelId(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="syncChannelId">',
+            '<value index="vDEF">test-channel</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('test-channel', $subject->getSyncChannelId());
+    }
+
+    #[Test]
+    public function ignoresApiDomainCarriedOverFromAnotherTypeAsSyncApiDomain(): void
+    {
+        $flexForm = implode(PHP_EOL, [
+            '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>',
+            '<T3FlexForms>',
+            '<data>',
+            '<sheet index="sDEF">',
+            '<language index="lDEF">',
+            '<field index="apiDomain">',
+            '<value index="vDEF">https://cdb.thuecat.org</value>',
+            '</field>',
+            '</language>',
+            '</sheet>',
+            '</data>',
+            '</T3FlexForms>',
+        ]);
+
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', $flexForm);
+
+        self::assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
+    }
+
+    #[Test]
+    public function returnsWidgetsHostAsSyncApiDomainWhenConfigurationEmpty(): void
+    {
+        $subject = new ImportConfiguration();
+        $subject->_setProperty('configuration', '');
+
+        self::assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
+    }
 }

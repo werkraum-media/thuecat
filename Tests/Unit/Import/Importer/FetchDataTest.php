@@ -32,6 +32,7 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 
 class FetchDataTest extends TestCase
 {
@@ -195,5 +196,110 @@ class FetchDataTest extends TestCase
         $this->expectExceptionMessage('Unauthorized API request, ensure apiKey is properly configured.');
 
         $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
+    }
+
+    #[Test]
+    public function throwsNotFoundOnEmptyBody(): void
+    {
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
+        $cache = self::createStub(FrontendInterface::class);
+
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
+
+        $uri = self::createStub(UriInterface::class);
+        $uri->method('__toString')->willReturn('https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event');
+        $request->method('getUri')->willReturn($uri);
+
+        $requestFactory->method('createRequest')->willReturn($request);
+        $httpClient->method('sendRequest')->willReturn($response);
+
+        $body = self::createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('');
+
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn($body);
+
+        $subject = new FetchData(
+            $requestFactory,
+            $httpClient,
+            $cache
+        );
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('"https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event"');
+
+        $subject->jsonLDFromUrl('https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event');
+    }
+
+    #[Test]
+    public function wrapsBareNodeIntoGraph(): void
+    {
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
+        $cache = self::createStub(FrontendInterface::class);
+
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
+
+        $requestFactory->method('createRequest')->willReturn($request);
+        $httpClient->method('sendRequest')->willReturn($response);
+
+        $body = self::createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"@id":"https://thuecat.org/resources/e_test-event","@type":["schema:Event"]}');
+
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn($body);
+
+        $subject = new FetchData(
+            $requestFactory,
+            $httpClient,
+            $cache
+        );
+
+        $result = $subject->jsonLDFromUrl('https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event');
+        self::assertSame([
+            '@graph' => [
+                [
+                    '@id' => 'https://thuecat.org/resources/e_test-event',
+                    '@type' => ['schema:Event'],
+                ],
+            ],
+        ], $result);
+    }
+
+    #[Test]
+    public function keepsResponseWithoutNodeUnwrapped(): void
+    {
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
+        $cache = self::createStub(FrontendInterface::class);
+
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
+
+        $requestFactory->method('createRequest')->willReturn($request);
+        $httpClient->method('sendRequest')->willReturn($response);
+
+        $body = self::createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"data":{"createdOrUpdated":["835224016581-dara"],"removed":[]}}');
+
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn($body);
+
+        $subject = new FetchData(
+            $requestFactory,
+            $httpClient,
+            $cache
+        );
+
+        $result = $subject->jsonLDFromUrl('https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db');
+        self::assertSame([
+            'data' => [
+                'createdOrUpdated' => ['835224016581-dara'],
+                'removed' => [],
+            ],
+        ], $result);
     }
 }

@@ -32,6 +32,10 @@ class RequestFactory implements RequestFactoryInterface
 {
     protected ?string $apiKeyOverride = null;
 
+    protected ?string $syncHost = null;
+
+    protected ?string $syncApiKey = null;
+
     public function __construct(
         protected readonly ExtensionConfiguration $extensionConfiguration,
         protected readonly RequestFactoryInterface $requestFactory,
@@ -52,12 +56,32 @@ class RequestFactory implements RequestFactoryInterface
     }
 
     /**
+     * Returns a clone that authenticates requests to the given host the way the
+     * sync API expects. The key is confined to that host. Every other host of a
+     * sync run gets no key: the resource and asset hosts are unprotected.
+     */
+    public function withSyncHost(string $host, string $apiKey): self
+    {
+        $clone = clone $this;
+        $clone->syncHost = $host;
+        $clone->syncApiKey = $apiKey;
+        return $clone;
+    }
+
+    /**
      * @param UriInterface|string $uri The URI associated with the request.
      */
     public function createRequest(string $method, $uri): RequestInterface
     {
         if (!$uri instanceof UriInterface) {
             $uri = $this->uriFactory->createUri((string)$uri);
+        }
+
+        if ($this->syncHost !== null && strcasecmp($uri->getHost(), $this->syncHost) === 0) {
+            return $this->requestFactory
+                ->createRequest($method, $uri)
+                ->withHeader('Authorization', 'APIKEY ' . $this->syncApiKey)
+            ;
         }
 
         $query = [];
@@ -78,6 +102,10 @@ class RequestFactory implements RequestFactoryInterface
 
     protected function resolveApiKey(): ?string
     {
+        if ($this->syncHost !== null) {
+            return null;
+        }
+
         if ($this->apiKeyOverride !== null) {
             return $this->apiKeyOverride;
         }

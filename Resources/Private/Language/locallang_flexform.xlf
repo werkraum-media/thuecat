@@ -58,6 +58,32 @@
                 <source>If the jobs runs every 5 days, set the X to 6 here to be safe. Don't let it go on for too long.</source>
             </trans-unit>
 
+            <!-- Sync Channel Import Configuration -->
+            <trans-unit id="importConfiguration.syncChannel.sheetTitle" xml:space="preserve">
+                <source>Sync API channel import configuration</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.storagePid" xml:space="preserve">
+                <source>Storage Page UID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.fileFolder" xml:space="preserve">
+                <source>Target folder for imported files</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.fileFolder.description" xml:space="preserve">
+                <source>Imported images and other media files are stored in this folder.</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.syncChannelId" xml:space="preserve">
+                <source>Channel ID</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.syncChannelId.description" xml:space="preserve">
+                <source>Imports the events of this channel. Events the channel lists as removed or expired are deleted in the whole site, whichever import configuration or storage folder holds them.</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.apiKey" xml:space="preserve">
+                <source>API Key</source>
+            </trans-unit>
+            <trans-unit id="importConfiguration.syncChannel.apiKey.description" xml:space="preserve">
+                <source>The key ThueCat issued for this channel. It is also used to download media files.</source>
+            </trans-unit>
+
             <!-- Contains Place Import Configuration -->
             <trans-unit id="importConfiguration.containsPlace.sheetTitle" xml:space="preserve">
                 <source>Contains place import configuration</source>

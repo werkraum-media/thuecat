@@ -61,6 +61,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.containsPlace',
                             'value' => 'containsPlace',
                         ],
+                        [
+                            'label' => $languagePath . '.type.syncChannel',
+                            'value' => 'syncChannel',
+                        ],
                     ],
                 ],
             ],
@@ -113,6 +117,14 @@ return (static function (string $extensionKey, string $tableName) {
                 ],
             ],
             'containsPlace' => [
+                'showitem' => 'title, type, configuration',
+                'columnsOverrides' => [
+                    'configuration' => [
+                        'config' => ['ds' => $placeholderDs],
+                    ],
+                ],
+            ],
+            'syncChannel' => [
                 'showitem' => 'title, type, configuration',
                 'columnsOverrides' => [
                     'configuration' => [
