@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Import\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -52,23 +51,13 @@ class DeniedRequestLoggingClient implements ImportHttpClient
             'Import request {method} {url} was denied with {status}; credential sent: {credential}.',
             [
                 'method' => $request->getMethod(),
-                'url' => $this->redactedUrl($request->getUri()),
+                'url' => RedactedUrl::of($request->getUri()),
                 'status' => $response->getStatusCode(),
                 'credential' => $this->credentialForm($request),
             ]
         );
 
         return $response;
-    }
-
-    protected function redactedUrl(UriInterface $uri): string
-    {
-        parse_str($uri->getQuery(), $query);
-        if (isset($query['api_key'])) {
-            $query['api_key'] = 'REDACTED';
-        }
-
-        return (string)$uri->withQuery(http_build_query($query));
     }
 
     protected function credentialForm(RequestInterface $request): string

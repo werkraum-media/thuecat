@@ -41,6 +41,7 @@ class ImportClientFactory
         protected readonly ImportSettings $settings,
         protected readonly RetryTally $tally,
         protected readonly LoggerInterface $logger,
+        protected readonly RequestLedger $ledger,
     ) {
     }
 
@@ -74,6 +75,7 @@ class ImportClientFactory
         );
 
         // Outside the retries: one entry per final answer, not per attempt.
+        $client = new RequestCountingClient($client, $this->ledger);
         return $context->isDevelopment() ? new DeniedRequestLoggingClient($client, $this->logger) : $client;
     }
 

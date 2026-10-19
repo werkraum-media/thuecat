@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\Core\ApplicationContext;
 use WerkraumMedia\ThueCat\Import\Http\ClientBudget;
 use WerkraumMedia\ThueCat\Import\Http\DeniedRequestLoggingClient;
 use WerkraumMedia\ThueCat\Import\Http\ImportClientFactory;
+use WerkraumMedia\ThueCat\Import\Http\RequestLedger;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 
@@ -54,7 +55,8 @@ final class ImportClientFactoryTest extends TestCase
         return new ImportClientFactory(
             self::createStub(ImportSettings::class),
             new RetryTally(),
-            new CapturingLogger()
+            new CapturingLogger(),
+            new RequestLedger()
         );
     }
 }

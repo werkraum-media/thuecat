@@ -18,6 +18,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RateLimited;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RetriesRecovered;
@@ -85,6 +86,7 @@ return [
             'eventWithoutDates' => EventWithoutDates::class,
             'eventDateSkipped' => EventDateSkipped::class,
             'storageFolderEmpty' => StorageFolderEmpty::class,
+            'rateLimited' => RateLimited::class,
             'runAborted' => RunAborted::class,
             'runFailed' => RunFailed::class,
             'retriesRecovered' => RetriesRecovered::class,
@@ -165,6 +167,10 @@ return [
     StorageFolderEmpty::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'storageFolderEmpty',
+    ],
+    RateLimited::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'rateLimited',
     ],
     CategoryParentChosen::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
+use WerkraumMedia\ThueCat\Import\Http\RequestLedger;
 use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
@@ -90,7 +91,8 @@ class ImportLogger
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
-        protected readonly RetryTally $retryTally
+        protected readonly RetryTally $retryTally,
+        protected readonly RequestLedger $requestLedger,
     ) {
     }
 
@@ -209,6 +211,28 @@ class ImportLogger
             ]) ?: '{}'),
         ]);
         $this->retryTally->reset();
+    }
+
+    /**
+     * Warning, not error: a rate-limited root already fails as a fetching
+     * error, and a rate-limited reference is skipped like any other.
+     */
+    protected function recordRateLimits(): void
+    {
+        foreach ($this->requestLedger->rateLimited() as $rateLimit) {
+            $this->stage([
+                'type' => 'rateLimited',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $rateLimit['url'],
+                'message' => sprintf(
+                    '%s answered request %d of the run with 429 Too Many Requests.',
+                    $rateLimit['host'],
+                    $rateLimit['ordinal']
+                ),
+                'context' => (string)(json_encode($rateLimit) ?: '{}'),
+            ]);
+        }
+        $this->requestLedger->reset();
     }
 
     // The phase reached is the diagnosis: it says where the run ran out.
@@ -728,6 +752,7 @@ class ImportLogger
     public function writeLog(int|null $configurationUid, array $payload, array $substNEWwithIDs): void
     {
         $this->recordRecoveredRetries();
+        $this->recordRateLimits();
         $logKey = StringUtility::getUniqueId('NEW');
         $datamap = [
             'tx_thuecat_import_log' => [
@@ -785,6 +810,7 @@ class ImportLogger
         $this->pendingEntries = [];
         $this->maxSeverityRank = 0;
         $this->retryTally->reset();
+        $this->requestLedger->reset();
     }
 
     /**

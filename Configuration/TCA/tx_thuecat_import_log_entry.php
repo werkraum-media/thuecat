@@ -119,6 +119,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'storageFolderEmpty',
                         ],
                         [
+                            'label' => $languagePath . '.type.rateLimited',
+                            'value' => 'rateLimited',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -267,6 +271,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, table_name, message, context',
             ],
             'storageFolderEmpty' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'rateLimited' => [
                 'showitem' => '--palette--;;always, message, context',
             ],
             'runAborted' => [
