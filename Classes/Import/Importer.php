@@ -185,6 +185,7 @@ class Importer
             $configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel'
                 ? SyncChannel::recordUrlPrefix($configuration->getSyncApiDomain(), $configuration->getSyncChannelId())
                 : null,
+            $this->mediaKeyedHosts($configuration),
         );
         $accumulatedPayload = new DataHandlerPayload();
         $urls = $urlProvider->getUrls($apiDomain);
@@ -393,6 +394,20 @@ class Importer
             }
         }
         return $result;
+    }
+
+    /**
+     * A sync key opens the asset host and nothing else; the other types keep
+     * the key on their API domain's host.
+     *
+     * @return list<string>
+     */
+    protected function mediaKeyedHosts(ImportConfigurationInterface $configuration): array
+    {
+        $domain = $configuration->getType() === 'syncChannel' ? FetchData::ASSET_HOST : $configuration->getApiDomain();
+        $host = parse_url($domain, PHP_URL_HOST) ?: $domain;
+
+        return $host === '' ? [] : [$host];
     }
 
     protected function getProviderForConfiguration(ImportConfigurationInterface $configuration): ?UrlProvider

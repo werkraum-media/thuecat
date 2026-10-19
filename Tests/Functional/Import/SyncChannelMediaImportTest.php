@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
 final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
 {
@@ -68,6 +69,44 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelRelatesPrivateImage.csv');
+    }
+
+    #[Test]
+    public function privateAssetIsDownloadedWithTheSyncKey(): void
+    {
+        $this->expectChannelServingOneEvent();
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(1);
+
+        // The faker matches without api_key, so the download is read back directly.
+        $download = GuzzleClientFaker::getLastRequest();
+        self::assertNotNull($download);
+        self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
+        self::assertSame('api_key=test-sync-key', $download->getUri()->getQuery());
+    }
+
+    #[Test]
+    public function runOfAnotherTypeKeysTheHostOfItsApiDomain(): void
+    {
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/test-event-1',
+            'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1.json'
+        );
+        $this->expectFetchForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importConfiguration(3);
+
+        $download = GuzzleClientFaker::getLastRequest();
+        self::assertNotNull($download);
+        self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
+        self::assertSame('api_key=test-static-key', $download->getUri()->getQuery());
     }
 
     #[Test]

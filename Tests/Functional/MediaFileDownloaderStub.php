@@ -45,7 +45,7 @@ final class MediaFileDownloaderStub extends MediaFileDownloader
         Folder $staging,
         string $downloadUrl,
         string $apiKey = '',
-        string $apiDomain = '',
+        array $keyedHosts = [],
         ?string &$failureDetail = null,
         ?int &$failureStatus = null,
     ): ?File {

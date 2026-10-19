@@ -22,6 +22,9 @@ namespace WerkraumMedia\ThueCat\Import\Http;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use Psr\Log\LoggerInterface;
+use TYPO3\CMS\Core\Core\ApplicationContext;
+use TYPO3\CMS\Core\Core\Environment;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 
@@ -36,12 +39,18 @@ class ImportClientFactory
 {
     public function __construct(
         protected readonly ImportSettings $settings,
-        protected readonly RetryTally $tally
+        protected readonly RetryTally $tally,
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
-    public function build(ClientBudget $budget): ImportHttpClient
+    /**
+     * @param ApplicationContext|null $context Defaults to the running context; tests pass one in.
+     */
+    public function build(ClientBudget $budget, ?ApplicationContext $context = null): ImportHttpClient
     {
+        $context ??= Environment::getContext();
+
         $confVars = $GLOBALS['TYPO3_CONF_VARS'] ?? [];
         $configured = is_array($confVars) ? ($confVars['HTTP'] ?? []) : [];
         /** @var array<string, mixed> $options */
@@ -57,12 +66,15 @@ class ImportClientFactory
         $options['http_errors'] = false;
         $options['handler'] = $this->handlerStack($handlers);
 
-        return new RetryingClient(
+        $client = new RetryingClient(
             new Client($options),
             $this->settings->resolve(ImportSetting::MaxAttempts, $budget->maxAttempts),
             null,
             $this->tally
         );
+
+        // Outside the retries: one entry per final answer, not per attempt.
+        return $context->isDevelopment() ? new DeniedRequestLoggingClient($client, $this->logger) : $client;
     }
 
     /**

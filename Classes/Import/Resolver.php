@@ -2008,7 +2008,7 @@ class Resolver
                 $staging,
                 $downloadUrl,
                 (string)$context->apiKey,
-                $context->parserContext->apiDomain,
+                $context->mediaKeyedHosts,
                 $failureDetail,
                 $failureStatus,
             );

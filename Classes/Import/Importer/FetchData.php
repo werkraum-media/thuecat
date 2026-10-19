@@ -45,6 +45,9 @@ class FetchData
     // The host every @id URI references, whichever host served the data.
     public const RESOURCE_HOST = 'https://thuecat.org';
 
+    // Serves media; original assets need a key.
+    public const ASSET_HOST = 'https://cdb.thuecat.org';
+
     protected string $urlPrefix = self::RESOURCE_HOST;
 
     protected bool $bypassCache = false;

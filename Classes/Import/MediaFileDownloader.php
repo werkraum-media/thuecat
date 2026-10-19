@@ -50,7 +50,8 @@ class MediaFileDownloader
     /**
      * Null when the download yields no usable bytes.
      *
-     * @param string $apiKey       sent only to $apiDomain, which refuses anonymous requests
+     * @param string $apiKey       sent only to $keyedHosts, which refuse anonymous requests
+     * @param list<string> $keyedHosts bare host names
      * @param string|null $failureDetail out-param: extra diagnosis on failure,
      *        null when there is nothing worth saying beyond "it failed"
      * @param int|null $failureStatus out-param: HTTP status of a failed
@@ -62,7 +63,7 @@ class MediaFileDownloader
         Folder $staging,
         string $downloadUrl,
         string $apiKey = '',
-        string $apiDomain = '',
+        array $keyedHosts = [],
         ?string &$failureDetail = null,
         ?int &$failureStatus = null,
     ): ?File {
@@ -83,7 +84,7 @@ class MediaFileDownloader
         }
 
         $contents = $this->fetchContents(
-            $this->authenticate($downloadUrl, $apiKey, $apiDomain),
+            $this->authenticate($downloadUrl, $apiKey, $keyedHosts),
             $failureDetail,
             $failureStatus
         );
@@ -98,17 +99,14 @@ class MediaFileDownloader
     }
 
     /**
-     * The API host refuses anonymous requests. Keyed on host, not on caller.
+     * Keyed hosts refuse anonymous requests. Keyed on host, not on caller.
+     *
+     * @param list<string> $keyedHosts
      */
-    protected function authenticate(string $downloadUrl, string $apiKey, string $apiDomain): string
+    protected function authenticate(string $downloadUrl, string $apiKey, array $keyedHosts): string
     {
-        if ($apiKey === '' || $apiDomain === '') {
-            return $downloadUrl;
-        }
-
         $assetHost = parse_url($downloadUrl, PHP_URL_HOST);
-        $apiHost = parse_url($apiDomain, PHP_URL_HOST) ?: $apiDomain;
-        if (!is_string($assetHost) || $assetHost !== $apiHost) {
+        if ($apiKey === '' || !is_string($assetHost) || !in_array($assetHost, $keyedHosts, true)) {
             return $downloadUrl;
         }
 

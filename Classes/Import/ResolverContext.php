@@ -323,6 +323,7 @@ final class ResolverContext
      *        Importer::runImport is the only production caller and always
      *        supplies it; the empty default exists for contexts built directly
      *        in tests, and means the record lookup is unscoped.
+     * @param list<string> $mediaKeyedHosts
      */
     public function __construct(
         public readonly int $storagePid,
@@ -344,6 +345,8 @@ final class ResolverContext
         public readonly ?Site $site = null,
         // Set on a sync channel run only: references are asked of the channel first.
         public readonly ?string $channelRecordUrlPrefix = null,
+        // Bare hosts whose media downloads carry the API key.
+        public readonly array $mediaKeyedHosts = [],
     ) {
     }
 

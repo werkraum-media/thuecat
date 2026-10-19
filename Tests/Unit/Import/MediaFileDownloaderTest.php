@@ -96,7 +96,7 @@ class MediaFileDownloaderTest extends TestCase
             $client,
             'https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg',
             'secret-key',
-            'https://cdb.thuecat.org'
+            ['cdb.thuecat.org']
         );
 
         self::assertSame('api_key=secret-key', $client->lastRequest?->getUri()->getQuery());
@@ -111,7 +111,22 @@ class MediaFileDownloaderTest extends TestCase
             $client,
             'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
             'secret-key',
-            'https://cdb.thuecat.org'
+            ['cdb.thuecat.org']
+        );
+
+        self::assertSame('', $client->lastRequest?->getUri()->getQuery());
+    }
+
+    #[Test]
+    public function sendsNoApiKeyToTheResourceHost(): void
+    {
+        $client = $this->capturingClient();
+
+        $this->downloadFrom(
+            $client,
+            'https://thuecat.org/resources/test-image.jpg',
+            'secret-key',
+            ['cdb.thuecat.org']
         );
 
         self::assertSame('', $client->lastRequest?->getUri()->getQuery());
@@ -126,7 +141,7 @@ class MediaFileDownloaderTest extends TestCase
         ] as $url) {
             $client = $this->capturingClient();
 
-            $this->downloadFrom($client, $url, 'secret-key', 'https://cdb.thuecat.org');
+            $this->downloadFrom($client, $url, 'secret-key', ['cdb.thuecat.org']);
 
             self::assertStringNotContainsString(
                 'format=',
@@ -145,7 +160,7 @@ class MediaFileDownloaderTest extends TestCase
             $client,
             'https://cdb.thuecat.org/assets/foo/bar.jpg?v=2',
             'secret-key',
-            'https://cdb.thuecat.org'
+            ['cdb.thuecat.org']
         );
 
         $query = (string)$client->lastRequest?->getUri()->getQuery();
@@ -275,11 +290,14 @@ class MediaFileDownloaderTest extends TestCase
         return new CapturingClient();
     }
 
-    private function downloadFrom(
+    /**
+     * @param list<string> $keyedHosts
+     */
+    protected function downloadFrom(
         CapturingClient $client,
         string $downloadUrl,
         string $apiKey,
-        string $apiDomain
+        array $keyedHosts
     ): void {
         $target = self::createStub(Folder::class);
         $target->method('hasFile')->willReturn(false);
@@ -292,7 +310,7 @@ class MediaFileDownloaderTest extends TestCase
             $staging,
             $downloadUrl,
             $apiKey,
-            $apiDomain,
+            $keyedHosts,
         );
     }
 
@@ -407,7 +425,7 @@ class MediaFileDownloaderTest extends TestCase
             $staging,
             'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image',
             '',
-            '',
+            [],
             $failureDetail,
             $failureStatus,
         );
