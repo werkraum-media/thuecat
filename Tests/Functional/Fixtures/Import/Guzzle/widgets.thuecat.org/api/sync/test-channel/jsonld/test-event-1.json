@@ -1,0 +1,296 @@
+{
+ "@id": "https://thuecat.org/resources/test-event-1",
+ "@type": [
+  "schema:Thing",
+  "schema:Event",
+  "dcmitype:Event",
+  "ttgds:Event",
+  "schema:ExhibitionEvent",
+  "thuecat:CultureEvent"
+ ],
+ "rdfs:label": {
+  "@language": "de",
+  "@value": "Test-Veranstaltung mit privatem Bild"
+ },
+ "schema:name": {
+  "@language": "de",
+  "@value": "Test-Veranstaltung mit privatem Bild"
+ },
+ "schema:image": {
+  "@id": "genid-test-event-1-image",
+  "@type": [
+   "schema:Thing",
+   "schema:CreativeWork",
+   "schema:MediaObject",
+   "schema:ImageObject",
+   "dcmitype:Image"
+  ],
+  "schema:position": {
+   "@type": "schema:Integer",
+   "@value": "1"
+  },
+  "schema:author": {
+   "@language": "de",
+   "@value": "Test-Fotograf"
+  },
+  "schema:contentUrl": {
+   "@type": "schema:URL",
+   "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg"
+  },
+  "schema:thumbnailUrl": {
+   "@type": "schema:URL",
+   "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/medium/test-event-1/test-image-1.jpg"
+  },
+  "schema:license": {
+   "@type": "schema:URL",
+   "@value": "http://creativecommons.org/licenses/by-sa/4.0/"
+  }
+ },
+ "schema:inLanguage": {
+  "@type": "xsd:string",
+  "@value": "tourism:German"
+ },
+ "schema:location": {
+  "@id": "https://thuecat.org/resources/test-place-1"
+ },
+ "schema:eventSchedule": {
+  "@id": "genid-test-event-1-schedule",
+  "@type": [
+   "schema:Thing",
+   "schema:Schedule",
+   "schema:Intangible"
+  ],
+  "schema:startDate": {
+   "@type": "schema:DateTime",
+   "@value": "2027-04-03T10:00:00+02:00"
+  },
+  "schema:endDate": {
+   "@type": "schema:Date",
+   "@value": "2027-04-03"
+  },
+  "schema:scheduleTimezone": {
+   "@type": "xsd:string",
+   "@value": "Europe/Berlin"
+  }
+ },
+ "schema:offers": [
+  {
+   "@id": "genid-test-event-1-offer-0",
+   "@type": [
+    "schema:Thing",
+    "schema:Offer",
+    "schema:Intangible"
+   ],
+   "rdfs:label": {
+    "@language": "de",
+    "@value": "Erwachsene"
+   },
+   "schema:name": {
+    "@language": "de",
+    "@value": "Erwachsene"
+   },
+   "schema:itemOffered": {
+    "@id": "https://thuecat.org/resources/test-event-1"
+   },
+   "schema:availability": {
+    "@id": "http://schema.org/InStock"
+   },
+   "schema:priceSpecification": {
+    "@id": "genid-test-event-1-price-0",
+    "@type": [
+     "schema:Thing",
+     "schema:Intangible",
+     "schema:StructuredValue",
+     "schema:PriceSpecification",
+     "schema:UnitPriceSpecification"
+    ],
+    "rdfs:label": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "schema:unitCode": {
+     "@language": "de",
+     "@value": "tourism:IE"
+    },
+    "schema:name": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "schema:priceCurrency": {
+     "@id": "genid-test-event-1-currency-0"
+    },
+    "schema:price": {
+     "@language": "de",
+     "@value": "6,00"
+    },
+    "dcterms:title": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "tourism:priceType": {
+     "@id": "http://schema.org/RegularPrice"
+    }
+   },
+   "dcterms:title": {
+    "@language": "de",
+    "@value": "Erwachsene"
+   },
+   "tourism:offerType": {
+    "@id": "https://web-of-data.org/tourism/Ticket"
+   }
+  },
+  {
+   "@id": "genid-test-event-1-offer-1",
+   "@type": [
+    "schema:Thing",
+    "schema:Offer",
+    "schema:Intangible"
+   ],
+   "rdfs:label": {
+    "@language": "de",
+    "@value": "ermäßigt"
+   },
+   "schema:name": {
+    "@language": "de",
+    "@value": "ermäßigt"
+   },
+   "schema:itemOffered": {
+    "@id": "https://thuecat.org/resources/test-event-1"
+   },
+   "schema:availability": {
+    "@id": "http://schema.org/InStock"
+   },
+   "schema:priceSpecification": {
+    "@id": "genid-test-event-1-price-1",
+    "@type": [
+     "schema:Thing",
+     "schema:Intangible",
+     "schema:StructuredValue",
+     "schema:PriceSpecification",
+     "schema:UnitPriceSpecification"
+    ],
+    "rdfs:label": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "schema:unitCode": {
+     "@language": "de",
+     "@value": "tourism:IE"
+    },
+    "schema:name": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "schema:priceCurrency": {
+     "@id": "genid-test-event-1-currency-1"
+    },
+    "schema:price": {
+     "@language": "de",
+     "@value": "4,00"
+    },
+    "dcterms:title": {
+     "@language": "de",
+     "@value": "Standard"
+    },
+    "tourism:priceType": {
+     "@id": "http://schema.org/RegularPrice"
+    }
+   },
+   "dcterms:title": {
+    "@language": "de",
+    "@value": "ermäßigt"
+   },
+   "tourism:offerType": {
+    "@id": "https://web-of-data.org/tourism/Ticket"
+   }
+  }
+ ],
+ "schema:description": {
+  "@id": "genid-test-event-1-description",
+  "@type": [
+   "schema:Thing",
+   "schema:CreativeWork",
+   "schema:MediaObject",
+   "schema:TextObject",
+   "dcmitype:Text",
+   "tourism:WebTextObject",
+   "tourism:MainText"
+  ],
+  "schema:additionalType": {
+   "@id": "https://web-of-data.org/tourism/MainText"
+  },
+  "schema:text": {
+   "@language": "de",
+   "@value": "Eine Test-Veranstaltung."
+  },
+  "tourism:html": {
+   "@language": "de",
+   "@value": "<p>Eine Test-Veranstaltung.</p>"
+  }
+ },
+ "schema:url": {
+  "@type": "schema:URL",
+  "@value": "www.example.org"
+ },
+ "schema:isAccessibleForFree": {
+  "@type": "schema:Boolean",
+  "@value": "false"
+ },
+ "dcterms:title": {
+  "@language": "de",
+  "@value": "Test-Veranstaltung mit privatem Bild"
+ },
+ "dcterms:description": {
+  "@id": "genid-test-event-1-description",
+  "@type": [
+   "schema:Thing",
+   "schema:CreativeWork",
+   "schema:MediaObject",
+   "schema:TextObject",
+   "dcmitype:Text",
+   "tourism:WebTextObject",
+   "tourism:MainText"
+  ],
+  "schema:additionalType": {
+   "@id": "https://web-of-data.org/tourism/MainText"
+  },
+  "schema:text": {
+   "@language": "de",
+   "@value": "Eine Test-Veranstaltung."
+  },
+  "tourism:html": {
+   "@language": "de",
+   "@value": "<p>Eine Test-Veranstaltung.</p>"
+  }
+ },
+ "schema:photo": {
+  "@id": "genid-test-event-1-image",
+  "@type": [
+   "schema:Thing",
+   "schema:CreativeWork",
+   "schema:MediaObject",
+   "schema:ImageObject",
+   "dcmitype:Image"
+  ],
+  "schema:position": {
+   "@type": "schema:Integer",
+   "@value": "1"
+  },
+  "schema:author": {
+   "@language": "de",
+   "@value": "Test-Fotograf"
+  },
+  "schema:contentUrl": {
+   "@type": "schema:URL",
+   "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg"
+  },
+  "schema:thumbnailUrl": {
+   "@type": "schema:URL",
+   "@value": "https://cdb.thuecat.org/assets/ttg/m-tdm/medium/test-event-1/test-image-1.jpg"
+  },
+  "schema:license": {
+   "@type": "schema:URL",
+   "@value": "http://creativecommons.org/licenses/by-sa/4.0/"
+  }
+ }
+}

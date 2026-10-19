@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
@@ -113,6 +114,9 @@ class Importer
             $bypassCache,
             $this->settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
         );
+        if ($configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel') {
+            $this->fetchData->authenticateRunAgainstSyncHost($configuration->getSyncApiDomain(), $configuration->getApiKey());
+        }
 
         try {
             return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $deadline, $skipMedia);
@@ -159,7 +163,9 @@ class Importer
             }
         }
         $this->reportEffectiveSettings($configuration, $site, $listener);
-        $parserContext = new ParserContext((int)$configuration->getUid(), $apiDomain);
+        // The sync host serves no record a visitor could open.
+        $sourceDomain = $configuration->getType() === 'syncChannel' ? FetchData::RESOURCE_HOST : $apiDomain;
+        $parserContext = new ParserContext((int)$configuration->getUid(), $sourceDomain);
         $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
             $parserContext,

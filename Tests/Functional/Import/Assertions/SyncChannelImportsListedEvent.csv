@@ -1,0 +1,7 @@
+"tx_events_domain_model_event"
+,"uid","pid","remote_id","title"
+,1,10,"https://thuecat.org/resources/test-event-0","Event imported before"
+,2,10,"https://thuecat.org/resources/test-event-1","Test-Veranstaltung mit privatem Bild"
+"tx_events_domain_model_date"
+,"uid","pid","remote_id","event","start","end"
+,1,10,"https://thuecat.org/resources/test-event-1::date::2027-04-03T10:00:00+02:00",2,1806739200,1806739200

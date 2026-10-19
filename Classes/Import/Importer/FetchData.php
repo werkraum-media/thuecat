@@ -42,11 +42,16 @@ class FetchData
 
     public const DEFAULT_SYNC_API_DOMAIN = 'https://widgets.thuecat.org';
 
-    protected string $urlPrefix = 'https://thuecat.org';
+    // The host every @id URI references, whichever host served the data.
+    public const RESOURCE_HOST = 'https://thuecat.org';
+
+    protected string $urlPrefix = self::RESOURCE_HOST;
 
     protected bool $bypassCache = false;
 
     protected int $cacheLifetime = 0;
+
+    protected ?RequestFactory $syncRunRequestFactory = null;
 
     public function __construct(
         #[Autowire(service: RequestFactory::class)]
@@ -69,10 +74,28 @@ class FetchData
         $this->cacheLifetime = $lifetime;
     }
 
+    /**
+     * Per-run, like configureForRun(): the sync host gets the key as header,
+     * every other host no key at all.
+     */
+    public function authenticateRunAgainstSyncHost(string $syncApiDomain, string $apiKey): void
+    {
+        if (!$this->requestFactory instanceof RequestFactory) {
+            return;
+        }
+
+        $host = parse_url($syncApiDomain, PHP_URL_HOST);
+        $this->syncRunRequestFactory = $this->requestFactory->withSyncHost(
+            is_string($host) ? $host : $syncApiDomain,
+            $apiKey
+        );
+    }
+
     public function resetRunConfiguration(): void
     {
         $this->bypassCache = false;
         $this->cacheLifetime = 0;
+        $this->syncRunRequestFactory = null;
     }
 
     public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null, int $fetchLastXDays = 0): array
@@ -137,9 +160,10 @@ class FetchData
      */
     public function jsonLDFromUrlIgnoringCache(string $url, ?string $apiKey = null): array
     {
-        $requestFactory = ($apiKey !== null && $apiKey !== '' && $this->requestFactory instanceof RequestFactory)
-            ? $this->requestFactory->withApiKey($apiKey)
-            : $this->requestFactory;
+        $requestFactory = $this->syncRunRequestFactory ?? $this->requestFactory;
+        if ($apiKey !== null && $apiKey !== '' && $requestFactory instanceof RequestFactory) {
+            $requestFactory = $requestFactory->withApiKey($apiKey);
+        }
         $request = $requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 

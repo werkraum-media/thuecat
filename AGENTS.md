@@ -51,6 +51,7 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 | `AbstractImportTestCase` | backend | Guzzle faker, file access and media stubs, vocabulary seed, error log writer, empty-log assertion, fetch and import helpers |
 | `AbstractFrontendTestCase` | functional | the `Fixtures/Frontend/Sites` site configurations, data set, root page TypoScript, request helpers |
 | `AbstractCachingTestCase` | frontend | a storing `pages` cache backend, DataHandler save and delete helpers |
+| `AbstractSyncChannelImportTestCase` | import | the `syncChannel` fixture with a fixed window, list and record URLs, channel staging |
 | `AbstractImportConfigurationTestCase` | functional | extension configuration backup, site settings writer |
 
 - Extend the narrowest base whose setup and helpers the test uses. A test that runs no import
