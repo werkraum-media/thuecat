@@ -1,0 +1,13 @@
+"pages"
+,"uid","pid","title","doktype","is_siteroot"
+,1,0,"Rootpage",1,1
+,10,1,"Storage folder",254,0
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","configuration"
+,1,0,"Sync Channel","syncChannel","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""storagePid""><value index=""vDEF"">10</value></field><field index=""syncChannelId""><value index=""vDEF"">test-channel</value></field><field index=""apiKey""><value index=""vDEF"">test-sync-key</value></field></language></sheet></data></T3FlexForms>"
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","title","remote_id"
+,1,10,0,0,"Event imported before","https://thuecat.org/resources/test-event-0"
+"tx_thuecat_import_log"
+,"uid","pid","configuration","crdate"
+,1,0,1,1792026000

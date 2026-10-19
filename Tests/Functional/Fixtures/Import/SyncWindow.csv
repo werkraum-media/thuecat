@@ -1,0 +1,33 @@
+"pages"
+,"uid","pid","title","doktype"
+,1,0,"Root",1
+,10,1,"Events",254
+,11,1,"Empty",254
+,12,1,"Deleted events only",254
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","deleted","title"
+,1,10,0,0,0,"Event"
+,2,12,0,0,1,"Deleted event"
+"tx_thuecat_import_log"
+,"uid","pid","configuration","crdate"
+,1,0,1,1791766800
+,2,0,1,1792026000
+,3,0,2,1792026000
+,4,0,2,1792198800
+,5,0,3,1792026000
+,6,0,3,1792198800
+,7,0,4,1792026000
+,8,0,4,1792198800
+,9,0,5,1792026000
+,10,0,6,1791766800
+,11,0,7,1792198800
+,12,0,8,1792198800
+"tx_thuecat_import_log_entry"
+,"uid","pid","import_log","type","severity"
+,1,0,2,"savingEntity","info"
+,2,0,4,"runAborted","error"
+,3,0,6,"runFailed","error"
+,4,0,8,"fetchingError","error"
+,5,0,9,"referenceSkipped","warning"
+,6,0,9,"mappingError","error"
+,7,0,12,"fetchingError","error"

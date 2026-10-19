@@ -133,6 +133,37 @@ class FetchDataTest extends TestCase
     }
 
     #[Test]
+    public function ignoringCacheNeitherReadsNorWritesTheCache(): void
+    {
+        $requestFactory = self::createStub(RequestFactoryInterface::class);
+        $httpClient = self::createStub(ImportHttpClient::class);
+        $cache = $this->createMock(FrontendInterface::class);
+        $cache->expects(self::never())->method('get');
+        $cache->expects(self::never())->method('set');
+
+        $request = self::createStub(RequestInterface::class);
+        $response = self::createStub(ResponseInterface::class);
+        $requestFactory->method('createRequest')->willReturn($request);
+        $httpClient->method('sendRequest')->willReturn($response);
+
+        $body = self::createStub(StreamInterface::class);
+        $body->method('__toString')->willReturn('{"expired":["e_1-test"]}');
+        $response->method('getStatusCode')->willReturn(200);
+        $response->method('getBody')->willReturn($body);
+
+        $subject = new FetchData(
+            $requestFactory,
+            $httpClient,
+            $cache
+        );
+
+        self::assertSame(
+            ['expired' => ['e_1-test']],
+            $subject->jsonLDFromUrlIgnoringCache('https://example.com/api/sync/test-channel/list-expired')
+        );
+    }
+
+    #[Test]
     public function throwsExceptionOn404(): void
     {
         $requestFactory = self::createStub(RequestFactoryInterface::class);

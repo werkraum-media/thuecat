@@ -117,6 +117,26 @@ class FetchData
             }
         }
 
+        $jsonLD = $this->jsonLDFromUrlIgnoringCache($url, $apiKey);
+        if ($jsonLD !== []) {
+            $this->cache->set(
+                $cacheIdentifier,
+                $jsonLD,
+                [],
+                $this->cacheLifetime > 0 ? $this->cacheLifetime : null
+            );
+        }
+
+        return $jsonLD;
+    }
+
+    /**
+     * For responses that must be fresh on every run, such as the sync API's
+     * change and expiry lists: a cached list would hide changes from a run
+     * whose window repeats the previous one.
+     */
+    public function jsonLDFromUrlIgnoringCache(string $url, ?string $apiKey = null): array
+    {
         $requestFactory = ($apiKey !== null && $apiKey !== '' && $this->requestFactory instanceof RequestFactory)
             ? $this->requestFactory->withApiKey($apiKey)
             : $this->requestFactory;
@@ -144,12 +164,6 @@ class FetchData
                 $jsonLD = ['@graph' => [$jsonLD]];
             }
 
-            $this->cache->set(
-                $cacheIdentifier,
-                $jsonLD,
-                [],
-                $this->cacheLifetime > 0 ? $this->cacheLifetime : null
-            );
             return $jsonLD;
         }
 
