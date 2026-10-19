@@ -1,0 +1,9 @@
+"pages"
+,"uid","pid","title","doktype","is_siteroot"
+,50,2200,"Empty storage folder",254,0
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","configuration"
+,4,0,"Sync Channel into an empty folder","syncChannel","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""storagePid""><value index=""vDEF"">50</value></field><field index=""fileFolder""><value index=""vDEF"">1:/thuecat/</value></field><field index=""syncChannelId""><value index=""vDEF"">test-channel</value></field><field index=""apiKey""><value index=""vDEF"">test-sync-key</value></field></language></sheet></data></T3FlexForms>"
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","title","remote_id"
+,21,10,0,0,"Event of another folder","https://thuecat.org/resources/test-event-1"

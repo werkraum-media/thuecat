@@ -593,6 +593,21 @@ class ImportLogger
     }
 
     /**
+     * Warning, not error: every event the run fetched may already live in
+     * another folder of the site, which is a configuration question, not a
+     * failed import.
+     */
+    public function recordStorageFolderEmpty(int $storagePid): void
+    {
+        $this->stage([
+            'type' => 'storageFolderEmpty',
+            'severity' => self::SEVERITY_WARNING,
+            'message' => sprintf('Storage folder %d holds no event after the import.', $storagePid),
+            'context' => (string)(json_encode(['storagePid' => $storagePid]) ?: '{}'),
+        ]);
+    }
+
+    /**
      * One entry per event publishing event-level date keys that could not be
      * resolved. Such an event also ends up dateless, so it gets an
      * eventWithoutDates entry too: this one says a published value was

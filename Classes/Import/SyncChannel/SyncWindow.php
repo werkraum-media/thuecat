@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Import\SyncChannel;
 use DateTimeImmutable;
 use DateTimeZone;
 use Psr\Clock\ClockInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
@@ -32,7 +33,11 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 
 /**
  * Computes the `since` that both lists of a sync channel run are requested with.
+ *
+ * Public, so functional tests can put one on a fixed clock in its place: a
+ * five-year window is otherwise derived from the real time.
  */
+#[Autoconfigure(public: true)]
 readonly class SyncWindow
 {
     protected const EVENT_TABLE = 'tx_events_domain_model_event';
@@ -65,7 +70,11 @@ readonly class SyncWindow
         return $anchor->setTimezone($now->getTimezone())->modify('-1 day');
     }
 
-    protected function holdsEvent(int $storagePid): bool
+    /**
+     * Also what the empty-folder warning asks, so the warning and the
+     * five-year window agree on what empty means.
+     */
+    public function holdsEvent(int $storagePid): bool
     {
         $languageField = $this->tcaSchemaFactory
             ->get(self::EVENT_TABLE)

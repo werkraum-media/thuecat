@@ -26,6 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunFailed;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDayDropped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDaySkipped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\StorageFolderEmpty;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyStale;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyUnavailable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
@@ -83,6 +84,7 @@ return [
             'scheduleDayDropped' => ScheduleDayDropped::class,
             'eventWithoutDates' => EventWithoutDates::class,
             'eventDateSkipped' => EventDateSkipped::class,
+            'storageFolderEmpty' => StorageFolderEmpty::class,
             'runAborted' => RunAborted::class,
             'runFailed' => RunFailed::class,
             'retriesRecovered' => RetriesRecovered::class,
@@ -159,6 +161,10 @@ return [
     EventDateSkipped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'eventDateSkipped',
+    ],
+    StorageFolderEmpty::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'storageFolderEmpty',
     ],
     CategoryParentChosen::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

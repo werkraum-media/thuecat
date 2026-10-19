@@ -47,6 +47,7 @@ use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
+use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
@@ -73,6 +74,7 @@ class Importer
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
         protected readonly SyncChannelReaper $syncChannelReaper,
+        protected readonly SyncWindow $syncWindow,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -247,6 +249,7 @@ class Importer
             // A window may hold removals only.
             if (!$aborted) {
                 $this->reapGoneEvents($urlProvider, $resolverContext, 0);
+                $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
             }
             $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
             // Nothing persisted; still report the types seen.
@@ -350,6 +353,7 @@ class Importer
 
         if (!$aborted) {
             $this->reapGoneEvents($urlProvider, $resolverContext, $iterations);
+            $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
         }
 
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
@@ -421,6 +425,23 @@ class Importer
             $this->syncChannelReaper->delete($urlProvider->getRemoteIdsToDelete(), $resolverContext->sitePageIds),
             $iteration
         );
+    }
+
+    /**
+     * Site-wide identity updates an event where it already lives, so a run can
+     * succeed and still leave its own folder empty. An empty folder also
+     * restarts the five-year window on every run.
+     */
+    protected function warnOfEmptyStorageFolder(UrlProvider $urlProvider, ImportConfigurationInterface $configuration): void
+    {
+        if (!$urlProvider instanceof SyncChannelUrlProvider) {
+            return;
+        }
+        if ($this->syncWindow->holdsEvent($configuration->getStoragePid())) {
+            return;
+        }
+
+        $this->importLogger->recordStorageFolderEmpty($configuration->getStoragePid());
     }
 
     /**

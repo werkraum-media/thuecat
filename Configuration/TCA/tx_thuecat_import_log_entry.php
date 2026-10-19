@@ -115,6 +115,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'value' => 'eventDateSkipped',
                         ],
                         [
+                            'label' => $languagePath . '.type.storageFolderEmpty',
+                            'value' => 'storageFolderEmpty',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -261,6 +265,9 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'eventDateSkipped' => [
                 'showitem' => '--palette--;;always, table_name, message, context',
+            ],
+            'storageFolderEmpty' => [
+                'showitem' => '--palette--;;always, message, context',
             ],
             'runAborted' => [
                 'showitem' => '--palette--;;always, message, context',
