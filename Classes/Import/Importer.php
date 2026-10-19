@@ -46,7 +46,9 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
+use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
 use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
+use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
@@ -70,6 +72,7 @@ class Importer
         protected readonly CategoryAnchorResolver $anchorResolver,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
+        protected readonly SyncChannelReaper $syncChannelReaper,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -241,6 +244,10 @@ class Importer
         $matchReports = $accumulatedPayload->getMatchReports();
 
         if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
+            // A window may hold removals only.
+            if (!$aborted) {
+                $this->reapGoneEvents($urlProvider, $resolverContext, 0);
+            }
             $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
             // Nothing persisted; still report the types seen.
             $this->importLogger->recordMatchReports($matchReports);
@@ -341,6 +348,10 @@ class Importer
             $accumulatedPayload->clearDataMap();
         }
 
+        if (!$aborted) {
+            $this->reapGoneEvents($urlProvider, $resolverContext, $iterations);
+        }
+
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
 
         // The category map now holds real uids, so matched entries can point at them.
@@ -394,6 +405,22 @@ class Importer
             }
         }
         return $result;
+    }
+
+    /**
+     * Only a run that saw both lists and was not cut short gets here, so a
+     * partial view of the channel never deletes anything.
+     */
+    protected function reapGoneEvents(UrlProvider $urlProvider, ResolverContext $resolverContext, int $iteration): void
+    {
+        if (!$urlProvider instanceof SyncChannelUrlProvider) {
+            return;
+        }
+
+        $this->importLogger->recordDataHandlerErrors(
+            $this->syncChannelReaper->delete($urlProvider->getRemoteIdsToDelete(), $resolverContext->sitePageIds),
+            $iteration
+        );
     }
 
     /**

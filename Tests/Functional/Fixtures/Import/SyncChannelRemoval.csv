@@ -1,0 +1,17 @@
+"pages"
+,"uid","pid","title","doktype","is_siteroot"
+,40,2200,"Storage folder of another configuration",254,0
+,2100,0,"Other site",1,1
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","title","remote_id","dates","images"
+,11,10,0,0,"Removed event","https://thuecat.org/resources/test-event-removed",1,1
+,12,10,0,0,"Expired event","https://thuecat.org/resources/test-event-expired",0,0
+,13,40,0,0,"Removed event in another folder","https://thuecat.org/resources/test-event-removed-elsewhere",0,0
+,14,2100,0,0,"Removed event of another site","https://thuecat.org/resources/test-event-removed-other-site",0,0
+,15,10,1,11,"Removed event (en)","https://thuecat.org/resources/test-event-removed",0,0
+"tx_events_domain_model_date"
+,"uid","pid","event"
+,1,10,11
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname"
+,1,10,1,11,"tx_events_domain_model_event","images"

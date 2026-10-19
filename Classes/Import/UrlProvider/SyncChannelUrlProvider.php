@@ -36,6 +36,11 @@ class SyncChannelUrlProvider implements UrlProvider
 
     protected string $syncHost = '';
 
+    /**
+     * @var list<string>
+     */
+    protected array $remoteIdsToDelete = [];
+
     public function __construct(
         protected readonly SyncChannel $syncChannel,
         protected readonly SyncWindow $syncWindow,
@@ -72,11 +77,23 @@ class SyncChannelUrlProvider implements UrlProvider
             $this->channelId,
             $this->syncWindow->since($this->configurationUid, $this->storagePid)
         );
+        $this->remoteIdsToDelete = $lists->remoteIdsToDelete;
         $recordUrl = SyncChannel::recordUrlPrefix($this->syncHost, $this->channelId);
 
         return array_map(
             static fn (string $id): string => $recordUrl . rawurlencode($id),
             $lists->idsToImport
         );
+    }
+
+    /**
+     * Read together with the URLs, so the lists are fetched once per run.
+     * Empty until getUrls() has run.
+     *
+     * @return list<string>
+     */
+    public function getRemoteIdsToDelete(): array
+    {
+        return $this->remoteIdsToDelete;
     }
 }
