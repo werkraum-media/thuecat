@@ -49,3 +49,33 @@ covers every detail record kind, including those other packages register, see
 
 The wizard is repeatable: it is offered again whenever a record without a slug exists, for example
 after a release that adds a slug column to another table.
+
+.. _maintenance-event-relations:
+
+Events of places
+================
+
+Tourist attractions, organisations, towns and tourist information list the events the import
+matched to them, see :ref:`developers-import-event-place-matching`. These relations are stored in
+MM tables. Relations an older version stored as comma-separated lists are moved there by the
+:ref:`upgrade wizard <t3coreapi:upgrade-wizards>` :guilabel:`ThueCat: Move event relations of
+places into MM tables`:
+
+#. Update the database schema, so the MM tables exist:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 extension:setup
+
+#. Run the wizard, in the Install Tool under :guilabel:`Upgrade > Upgrade Wizard`, or on the
+   console:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 upgrade:run thuecat_eventRelationsToMm
+
+The wizard keeps the order of each list and covers translations and deleted records too. It
+relates the same events as before, so no cache needs flushing.
+
+The wizard is repeatable: it is offered again while a stored list remains, and running it twice
+creates no duplicate relation.

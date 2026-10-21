@@ -1,0 +1,19 @@
+"pages"
+,"uid","pid","sys_language_uid","l10n_parent","title","doktype","slug","is_siteroot"
+,1,0,0,0,"Root",1,"/",1
+,10,1,0,0,"Storage",254,"/storage",0
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","town","url","offers","hosts_events"
+,700,10,0,0,"test:wizard-attraction","Gemeindebrunnen Weimar","","","","3"
+,702,10,0,0,"test:wizard-attraction-without-events","Stadtschloss Weimar","","","","0"
+"tx_thuecat_tourist_attraction_hosts_events_mm"
+,"uid_local","uid_foreign","sorting"
+,700,12,1
+,700,7,2
+,700,30,3
+"tx_thuecat_town"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","hosts_events"
+,720,10,0,0,"test:wizard-town","Weimar","1"
+"tx_thuecat_town_hosts_events_mm"
+,"uid_local","uid_foreign","sorting"
+,720,12,1

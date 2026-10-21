@@ -103,8 +103,12 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         self::assertSame(
-            (string)$this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'),
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-1')['hosts_events']
+            [$this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')],
+            $this->fetchMmRelatedUids(
+                'tx_thuecat_tourist_attraction',
+                $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-1'),
+                'hosts_events'
+            )
         );
     }
 

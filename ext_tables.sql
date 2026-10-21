@@ -4,7 +4,9 @@ CREATE TABLE tx_thuecat_import_log_entry (
 );
 
 
--- Event relations hold more uids than core's derived varchar(255) fits
+-- hosts_events / manages_event: MM relations, so core derives an int count column. Kept as text
+-- until thuecat_eventRelationsToMm has run everywhere, so the schema update cannot turn the stored
+-- uid lists into int before the wizard reads them.
 CREATE TABLE tx_thuecat_tourist_attraction (
     hosts_events text,
     url text,

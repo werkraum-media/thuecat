@@ -95,6 +95,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_events_domain_model_event',
+                    'MM' => 'tx_thuecat_town_hosts_events_mm',
                     'readOnly' => true,
                 ],
             ],

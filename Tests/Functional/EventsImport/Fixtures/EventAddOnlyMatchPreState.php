@@ -35,8 +35,12 @@ return [
             'remote_id' => 'https://thuecat.org/resources/900000000020-bauh',
             'title' => 'Bauhaus-Museum Weimar',
             'address_inline' => '1',
-            'hosts_events' => '900,901',
+            'hosts_events' => '2',
         ],
+    ],
+    'tx_thuecat_tourist_attraction_hosts_events_mm' => [
+        ['uid_local' => '1', 'uid_foreign' => '900', 'sorting' => '1'],
+        ['uid_local' => '1', 'uid_foreign' => '901', 'sorting' => '2'],
     ],
     'tx_thuecat_address' => [
         0 => [

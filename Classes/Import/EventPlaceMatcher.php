@@ -20,9 +20,11 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use RuntimeException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 
 /**
@@ -46,6 +48,7 @@ class EventPlaceMatcher
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
+        protected readonly TcaSchemaFactory $tcaSchemaFactory,
     ) {
     }
 
@@ -207,25 +210,32 @@ class EventPlaceMatcher
     }
 
     /**
-     * What the place already lists
+     * What the place already lists, in stored order. The field holds only a
+     * count; the uids live in its MM table, named by TCA.
      */
     protected function readRelation(string $table, int $uid, string $field): string
     {
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+        $mmTable = $this->tcaSchemaFactory->get($table)->getField($field)->getConfiguration()['MM'] ?? '';
+        if (!is_string($mmTable) || $mmTable === '') {
+            throw new RuntimeException($table . '.' . $field . ' is not an MM relation.', 1792567422);
+        }
 
-        $value = $queryBuilder
-            ->select($field)
-            ->from($table)
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($mmTable);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $uids = $queryBuilder
+            ->select('uid_foreign')
+            ->from($mmTable)
             ->where($queryBuilder->expr()->eq(
-                'uid',
+                'uid_local',
                 $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)
             ))
+            ->orderBy('sorting')
             ->executeQuery()
-            ->fetchOne()
+            ->fetchFirstColumn()
         ;
 
-        return is_string($value) ? $value : '';
+        return implode(',', array_filter($uids, is_numeric(...)));
     }
 
     /**

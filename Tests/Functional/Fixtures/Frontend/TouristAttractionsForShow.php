@@ -101,7 +101,7 @@ return [
             // a place that is another attraction (self-referencing table).
             'contained_in_organisation' => '1',
             'contained_in_attraction' => '23',
-            'hosts_events' => '700',
+            'hosts_events' => '1',
         ],
         // Extbase overlays a relation to the PARENT record's language, so the
         // translated categories are only reachable through a translated parent.
@@ -117,6 +117,9 @@ return [
             'sys_language_uid' => '1',
             'l18n_parent' => '21',
             'keywords' => '2',
+            // hosts_events is l10n_mode exclude: DataHandler copies the
+            // parent's relation onto the translation, which this seed bypasses.
+            'hosts_events' => '1',
         ],
         [
             // Target of attraction 21's contained_in_attraction.
@@ -314,6 +317,18 @@ return [
             'title' => 'Lange Nacht der Museen',
             'sys_language_uid' => '0',
         ],
+        [
+            'uid' => '701',
+            'pid' => '11',
+            'remote_id' => 'https://int.thuecat.org/resources/e_museumsnacht-hubev',
+            'title' => 'Long Night of Museums',
+            'sys_language_uid' => '1',
+            'l10n_parent' => '700',
+        ],
+    ],
+    'tx_thuecat_tourist_attraction_hosts_events_mm' => [
+        ['uid_local' => '21', 'uid_foreign' => '700', 'sorting' => '1'],
+        ['uid_local' => '22', 'uid_foreign' => '700', 'sorting' => '1'],
     ],
     'tx_events_domain_model_date' => [
         [

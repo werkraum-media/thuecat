@@ -260,3 +260,12 @@ The place is found among the records already stored in the site, never fetched:
 The relation is written after all other rounds, because only then do new events have uids. Every
 attempt is logged as ``eventPlaceMatch`` with its outcome, so an editor can see why an event did or
 did not end up at a place.
+
+Each of the two fields is an MM relation with a table of its own per place table, for example
+:sql:`tx_thuecat_tourist_attraction_hosts_events_mm`. The field itself holds only the count.
+Matching only ever adds. A run does not see every event, so it reads what the place already lists
+from the MM table, appends the new event and writes the whole list back through the DataHandler.
+Relations made by earlier runs and by other import configurations stay.
+
+The upgrade wizard ``thuecat_eventRelationsToMm`` moves relations that an older version stored as
+comma-separated uids into the MM tables, keeping their order.

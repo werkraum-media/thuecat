@@ -21,8 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // An imported event is related to the ThueCat place it takes place at, by
@@ -196,7 +194,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         self::assertSame(
             [$this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
-            $this->relationOf('tx_thuecat_organisation', 1, 'manages_event')
+            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event')
         );
     }
 
@@ -207,12 +205,12 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         self::assertSame(
             [$this->eventUidOf('https://int.thuecat.org/resources/e_orghosts-hubev')],
-            $this->relationOf('tx_thuecat_organisation', 1, 'hosts_events'),
+            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'hosts_events'),
             'The hosted event did not land in hosts_events alone.'
         );
         self::assertSame(
             [$this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
-            $this->relationOf('tx_thuecat_organisation', 1, 'manages_event'),
+            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event'),
             'The managed event did not land in manages_event alone.'
         );
     }
@@ -232,7 +230,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         );
         self::assertSame(
             [],
-            $this->relationOf('tx_thuecat_tourist_attraction', 1, 'hosts_events'),
+            $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 1, 'hosts_events'),
             'An organizer reference filled the attraction anyway.'
         );
     }
@@ -287,6 +285,39 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
             [$firstUid, $secondUid],
             $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
             'The second configuration dropped the first one\'s relation.'
+        );
+    }
+
+    #[Test]
+    public function placeHostsMoreEventsThanAListColumnHolds(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventManyHostedEventsPreState.php');
+        $this->expectFetch('e_bauhaus-hubev.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            [...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')],
+            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1)
+        );
+    }
+
+    #[Test]
+    public function organisationManagesMoreEventsThanAListColumnHolds(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventManyManagedEventsPreState.php');
+        $this->expectFetch('e_orgmatch-hubev.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            [...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
+            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event')
+        );
+        self::assertSame(
+            [950],
+            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'hosts_events'),
+            'Matching the organizer touched the organisation\'s other role.'
         );
     }
 
@@ -443,32 +474,6 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
      */
     protected function hostedEventsOf(string $table, int $uid): array
     {
-        return $this->relationOf($table, $uid, 'hosts_events');
-    }
-
-    /**
-     * @return list<int> the uids the named relation field holds
-     */
-    protected function relationOf(string $table, int $uid, string $field): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $value = $queryBuilder
-            ->select($field)
-            ->from($table)
-            ->where($queryBuilder->expr()->eq(
-                'uid',
-                $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)
-            ))
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        if (!is_string($value) || $value === '') {
-            return [];
-        }
-
-        return array_map(intval(...), explode(',', $value));
+        return $this->fetchMmRelatedUids($table, $uid, 'hosts_events');
     }
 }

@@ -68,6 +68,16 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function translatedAttractionShowsTheEventsOfItsDefaultLanguageRecord(): void
+    {
+        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+
+        $events = $this->renderedSection($request, 'relation', 'hostsEvents');
+
+        self::assertStringContainsString('Long Night of Museums', $events);
+    }
+
+    #[Test]
     public function showsNoEventSectionWhenTheAttractionHostsNone(): void
     {
         $body = (string)$this->executeFrontendSubRequest(

@@ -160,6 +160,38 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return $byLanguage;
     }
 
+    /**
+     * The foreign uids of one MM relation field, in stored order. The MM table comes from the field's TCA.
+     *
+     * @return list<int>
+     */
+    protected function fetchMmRelatedUids(string $table, int $uid, string $field): array
+    {
+        $mmTable = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getField($field)
+            ->getConfiguration()['MM'] ?? null
+        ;
+        self::assertIsString($mmTable, $table . '.' . $field . ' is not an MM relation.');
+
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($mmTable);
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $uids = $queryBuilder
+            ->select('uid_foreign')
+            ->from($mmTable)
+            ->where($queryBuilder->expr()->eq(
+                'uid_local',
+                $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)
+            ))
+            ->orderBy('sorting')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map(static fn (mixed $uid): int => is_numeric($uid) ? (int)$uid : 0, $uids);
+    }
+
     protected function countDeletedRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
