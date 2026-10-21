@@ -97,6 +97,14 @@ Entry types
    * - ``eventPlaceMatch``
      - info
      - An event matched, or failed to match, a place.
+   * - ``rateLimited``
+     - warning
+     - A host answered 429. Names the URL, the host and the request's ordinal within the run. The
+       request is not retried.
+   * - ``storageFolderEmpty``
+     - warning
+     - A ``syncChannel`` run left its storage folder without events, see
+       :ref:`sync-channel-empty-folder`.
 
 What the log does not cover:
 

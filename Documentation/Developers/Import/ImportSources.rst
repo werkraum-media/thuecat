@@ -25,6 +25,12 @@ The existing types
    The id of one place. The run fetches it and imports everything it lists in
    ``schema:containsPlace``. Suited to "everything in this region".
 
+``syncChannel``
+   A channel of the sync API. The run reads the channel's change and expiry lists and imports each
+   listed event from the channel, then deletes the events listed as removed or expired. Unlike the
+   other types, it also changes how references are fetched and which hosts receive the key. See
+   :ref:`sync-channel`.
+
 Each type is implemented by a URL provider, a class implementing
 :php:`WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider`.
 

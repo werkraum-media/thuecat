@@ -43,5 +43,6 @@ Information about how to install and use the extension within a TYPO3 instance.
    Configuration
    BackendRelationScoping
    Import
+   SyncChannel
    FrontendOutput/Index
    Maintenance

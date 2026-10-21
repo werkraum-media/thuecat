@@ -223,6 +223,10 @@ Synchronization area
 Contains Place
     Expects an ID that identifies a place and will import all objects that declare a relation to it.
 
+Sync API channel (events)
+   Imports the events of one channel of the ThueCat sync API, private images included, and deletes
+   the site's events the channel lists as removed or expired. See :ref:`sync-channel`.
+
 .. warning::
 
     Each import configuration record expects a storagePid page and will test all other values given
@@ -301,6 +305,12 @@ Synchronization area (syncScope)
      - Number of days of changes to fetch. Empty means one day; ``0`` fetches the whole scope
        without a time limit. Set it to cover the interval between runs with a margin, e.g. ``6``
        for a run every five days.
+
+Sync API channel (syncChannel)
+------------------------------
+
+Its fields differ from the common settings above: it has no ``apiDomain``, and ``apiKey`` is
+required. See :ref:`sync-channel-fields`.
 
 
 
