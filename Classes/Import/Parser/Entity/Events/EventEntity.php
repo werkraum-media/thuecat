@@ -95,8 +95,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
         $this->title = $this->extractValue($node['schema:name'] ?? null, $language);
         $this->details = $this->extractDescription($node['schema:description'] ?? null, $language);
         $this->web = $this->extractValue($node['schema:url'] ?? null, $language);
-        $offers = is_array($node['schema:offers'] ?? null) ? $node['schema:offers'] : [];
-        $this->ticket = $this->extractValue($offers['schema:url'] ?? null, $language);
+        $this->ticket = $this->extractTicket($node['schema:offers'] ?? null, $language);
 
         $this->recordMediaTransient(
             $node['schema:photo'] ?? null,
@@ -349,6 +348,30 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
         }
 
         return $html !== '' ? $html : htmlspecialchars($plain);
+    }
+
+    /**
+     * Price offers carry no link; the booking link sits on a sibling offer,
+     * so the first offer that has one wins.
+     */
+    protected function extractTicket(mixed $offers, string $language): string
+    {
+        if (!is_array($offers)) {
+            return '';
+        }
+
+        foreach (array_is_list($offers) ? $offers : [$offers] as $offer) {
+            if (!is_array($offer)) {
+                continue;
+            }
+
+            $url = $this->extractValue($offer['schema:url'] ?? null, $language);
+            if ($url !== '') {
+                return $url;
+            }
+        }
+
+        return '';
     }
 
     public static function anchorScope(): string
