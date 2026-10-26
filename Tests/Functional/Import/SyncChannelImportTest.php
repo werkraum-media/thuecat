@@ -59,7 +59,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        $request = GuzzleClientFaker::getLastRequest();
+        $request = GuzzleClientFaker::getRequestForUrl(self::RECORD . 'test-event-1');
         self::assertNotNull($request);
         self::assertSame(self::RECORD . 'test-event-1', (string)$request->getUri());
         self::assertSame('APIKEY test-sync-key', $request->getHeaderLine('Authorization'));
@@ -71,7 +71,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-with-unserved.json');
         $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-unserved', 200);
-        $this->expectFetchForUrl(self::RECORD . 'test-event-1', 'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1.json');
+        $this->expectChannelRecords('test-event-1');
 
         $this->importConfiguration(1);
 
@@ -157,6 +157,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         );
         $this->expectFetchForUrl('https://thuecat.org/resources/916373333853-mknj', 'thuecat.org/resources/916373333853-mknj.json');
         $this->expectFetchForUrl('https://thuecat.org/resources/192875159827-xfqk', 'thuecat.org/resources/192875159827-xfqk.json');
+        $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
 
         $this->importConfiguration(2);
 

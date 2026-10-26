@@ -41,6 +41,10 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
     // importer fills.
     public const KEYWORD_FIELD = 'keywords_relation';
 
+    // Not a BUCKET_MAP bucket: the fetched place becomes a location row of
+    // ext:events, not a ThueCat record.
+    public const LOCATION_BUCKET = 'locationReference';
+
     // One field for every slot: events rank images but do not single one out.
     public const MEDIA_FIELDS = [
         'photo' => 'images',
@@ -105,6 +109,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
 
         $this->_location = $this->buildLocation($node, $language);
         $this->location = $this->_location?->getGlobalId() ?? '';
+        $this->recordLocationReference($node);
 
         $this->_organizer = $this->buildOrganizer($node, $language);
         $this->organizer = $this->_organizer?->getGeneratedRemoteId() ?? '';
@@ -211,6 +216,25 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
         }
 
         $this->_placeReferences = $references;
+    }
+
+    /**
+     * A bare reference carries nothing to build a venue from; the Resolver
+     * fetches it.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function recordLocationReference(array $node): void
+    {
+        $single = $this->singleNode($node, 'schema:location');
+        if ($single === null || !$this->isBareReference($single)) {
+            return;
+        }
+
+        $id = $single['@id'] ?? null;
+        if (is_string($id) && $id !== '') {
+            $this->transients[self::LOCATION_BUCKET] = [$id];
+        }
     }
 
     /**

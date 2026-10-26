@@ -83,7 +83,9 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         // The faker matches without api_key, so the download is read back directly.
-        $download = GuzzleClientFaker::getLastRequest();
+        $download = GuzzleClientFaker::getRequestForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg'
+        );
         self::assertNotNull($download);
         self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
         self::assertSame('api_key=test-sync-key', $download->getUri()->getQuery());
@@ -100,10 +102,13 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
             'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg',
             'cms.thuecat.org/image.jpg'
         );
+        $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
 
         $this->importConfiguration(3);
 
-        $download = GuzzleClientFaker::getLastRequest();
+        $download = GuzzleClientFaker::getRequestForUrl(
+            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg'
+        );
         self::assertNotNull($download);
         self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
         self::assertSame('api_key=test-static-key', $download->getUri()->getQuery());

@@ -55,7 +55,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed-with-import.json');
         $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
-        $this->expectFetchForUrl(self::RECORD . 'test-event-1', 'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1.json');
+        $this->expectChannelRecords('test-event-1');
 
         $this->importConfiguration(1);
 

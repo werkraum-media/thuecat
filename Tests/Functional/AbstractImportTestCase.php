@@ -336,4 +336,22 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
             ->fetchAllAssociative()
         ;
     }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function getSkippedReferenceLogEntries(): array
+    {
+        return $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_log_entry')
+            ->select(
+                ['type', 'severity', 'table_name', 'remote_id', 'message'],
+                'tx_thuecat_import_log_entry',
+                ['type' => 'referenceSkipped'],
+                [],
+                ['uid' => 'ASC']
+            )
+            ->fetchAllAssociative()
+        ;
+    }
 }

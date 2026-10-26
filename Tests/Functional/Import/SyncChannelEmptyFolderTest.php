@@ -129,6 +129,6 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectFetchForUrl(self::LIST_CHANGED_FIVE_YEARS, 'widgets.thuecat.org/api/sync/test-channel/list-changed.json');
         $this->expectFetchForUrl(self::LIST_EXPIRED_FIVE_YEARS, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
-        $this->expectFetchForUrl(self::RECORD . 'test-event-1', 'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1.json');
+        $this->expectChannelRecords('test-event-1');
     }
 }

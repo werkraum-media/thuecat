@@ -38,6 +38,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\LocationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\OrganizerEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
@@ -1575,6 +1576,22 @@ class Resolver
                             continue;
                         }
 
+                        if ($bucket === EventEntity::LOCATION_BUCKET) {
+                            // Exempt from MAX_FETCH_DEPTH: it stages one row
+                            // and follows no references, so it cannot fan out.
+                            $this->resolveLocationReferences(
+                                $payload,
+                                $context,
+                                $ownerTable,
+                                $ownerRemoteId,
+                                $ownerKey,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
+                                $references
+                            );
+                            $progress = true;
+                            continue;
+                        }
+
                         if (!isset(self::BUCKET_MAP[$bucket])) {
                             // Unknown bucket — parser emitted something the
                             // resolver has no mapping for.
@@ -1711,6 +1728,81 @@ class Resolver
                 );
             }
         }
+    }
+
+    /**
+     * Point the owning event at the location row built from each referenced
+     * place. The key is written directly: wiring by global_id would run again
+     * on every later rekey pass.
+     *
+     * @param list<string> $references
+     */
+    protected function resolveLocationReferences(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $ownerKey,
+        array $references
+    ): void {
+        foreach ($references as $reference) {
+            $payload->removeTransient($ownerTable, $ownerRemoteId, EventEntity::LOCATION_BUCKET, $reference);
+
+            $globalId = $this->stageReferencedLocation($payload, $context, $ownerTable, $ownerRemoteId, $reference);
+            if ($globalId !== '') {
+                $payload->setField($ownerTable, $ownerKey, 'location', $context->remoteIdToKey[$globalId]);
+            }
+        }
+    }
+
+    /**
+     * Fetches the place once per run. A failure drops only the location, like
+     * any other reference.
+     *
+     * @return string global_id of the location row, empty if there is none
+     */
+    protected function stageReferencedLocation(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $reference
+    ): string {
+        if ($context->hasReferenceFailed($reference)) {
+            $this->importLogger->recordSkippedReference(
+                $ownerTable,
+                $ownerRemoteId,
+                'location',
+                $reference,
+                (string)$context->getReferenceFailureReason($reference)
+            );
+            return '';
+        }
+
+        if (isset($context->locationGlobalIdByReference[$reference])) {
+            return $context->locationGlobalIdByReference[$reference];
+        }
+
+        try {
+            $node = $this->fetchGraphNode($reference, $context, $reference);
+        } catch (Exception $e) {
+            $reason = $e::class . ': ' . $e->getMessage();
+            $context->markReferenceFailed($reference, $reason);
+            $this->importLogger->recordSkippedReference($ownerTable, $ownerRemoteId, 'location', $reference, $reason);
+            return '';
+        }
+
+        $location = new LocationEntity();
+        $location->configure($node, $context->language);
+        $globalId = $location->isValid() ? $location->getGlobalId() : '';
+        $context->locationGlobalIdByReference[$reference] = $globalId;
+
+        if ($globalId !== '' && !isset($context->remoteIdToKey[$globalId])) {
+            $payload->addEntity($location);
+            $this->rekeyRowsAndInjectPid($payload, $context, 1);
+        }
+
+        return $globalId;
     }
 
     /**
@@ -2166,7 +2258,7 @@ class Resolver
             foreach ($byParentTable as $parentTable => $field) {
                 foreach ($payload->getDataMap()[$parentTable] ?? [] as $parentKey => $parentRow) {
                     $staged = (string)($parentRow[$field] ?? '');
-                    if ($staged === '' || MathUtility::canBeInterpretedAsInteger($staged)) {
+                    if ($staged === '' || $this->isAlreadyRekeyed($staged)) {
                         continue;
                     }
 

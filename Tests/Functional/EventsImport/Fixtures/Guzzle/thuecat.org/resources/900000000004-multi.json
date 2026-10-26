@@ -1,0 +1,93 @@
+{
+ "@context": {
+  "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+  "schema": "http://schema.org/",
+  "thuecat": "https://int.thuecat.org/ontology/thuecat/1.0/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@graph": [
+  {
+   "@id": "https://thuecat.org/resources/900000000004-multi",
+   "@type": [
+    "schema:Thing",
+    "schema:Place",
+    "schema:TouristAttraction"
+   ],
+   "schema:name": {
+    "@language": "de",
+    "@value": "Messe Erfurt"
+   },
+   "schema:address": [
+    {
+     "@id": "genid-addr-GothaerStraße34",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Gothaer Straße 34"
+     },
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99094"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Erfurt - Brühlervorstadt"
+     },
+     "schema:addressCountry": {
+      "@type": "thuecat:AddressCountry",
+      "@value": "thuecat:Germany"
+     },
+     "schema:telephone": {
+      "@language": "de",
+      "@value": "0361 400-0"
+     }
+    },
+    {
+     "@id": "genid-addr-Postfach1",
+     "@type": [
+      "schema:Thing",
+      "schema:PostalAddress"
+     ],
+     "schema:streetAddress": {
+      "@language": "de",
+      "@value": "Postfach 1"
+     },
+     "schema:postalCode": {
+      "@language": "de",
+      "@value": "99001"
+     },
+     "schema:addressLocality": {
+      "@language": "de",
+      "@value": "Erfurt"
+     },
+     "schema:addressCountry": {
+      "@type": "thuecat:AddressCountry",
+      "@value": "thuecat:Germany"
+     },
+     "schema:telephone": {
+      "@language": "de",
+      "@value": "0361 400-0"
+     }
+    }
+   ],
+   "schema:geo": {
+    "@id": "genid-geo-900000000004-multi",
+    "@type": [
+     "schema:Thing",
+     "schema:GeoCoordinates"
+    ],
+    "schema:latitude": {
+     "@type": "schema:Float",
+     "@value": "50.95965"
+    },
+    "schema:longitude": {
+     "@type": "schema:Float",
+     "@value": "10.99227"
+    }
+   }
+  }
+ ]
+}

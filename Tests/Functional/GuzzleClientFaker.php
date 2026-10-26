@@ -65,6 +65,11 @@ class GuzzleClientFaker
     private static ?RequestInterface $lastRequest = null;
 
     /**
+     * @var list<RequestInterface>
+     */
+    private static array $requests = [];
+
+    /**
      * Static, unlike the handler in $GLOBALS: the functional bootstrap rebuilds
      * TYPO3_CONF_VARS per test, which would hide a registration nobody tore down.
      */
@@ -158,6 +163,22 @@ class GuzzleClientFaker
         return self::$lastRequest;
     }
 
+    /**
+     * The last request to $url, matched like a staged URL, so query parameters
+     * such as api_key do not take part.
+     */
+    public static function getRequestForUrl(string $url): ?RequestInterface
+    {
+        $key = self::normaliseUrl($url);
+        foreach (array_reverse(self::$requests) as $request) {
+            if (self::normaliseUrl((string)$request->getUri()) === $key) {
+                return $request;
+            }
+        }
+
+        return null;
+    }
+
     /** How many requests actually reached the handler; a cache hit adds none. */
     public static function countConsumed(): int
     {
@@ -170,12 +191,14 @@ class GuzzleClientFaker
         self::$consumed = [];
         self::$unexpected = [];
         self::$lastRequest = null;
+        self::$requests = [];
     }
 
     private static function wrappedHandler(): callable
     {
         return static function (RequestInterface $request, array $options) {
             self::$lastRequest = $request;
+            self::$requests[] = $request;
             $url = (string)$request->getUri();
             $key = self::normaliseUrl($url);
 

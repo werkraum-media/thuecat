@@ -1,0 +1,50 @@
+{
+ "@id": "https://thuecat.org/resources/test-place-1",
+ "@type": [
+  "schema:Thing",
+  "schema:Place",
+  "schema:TouristAttraction"
+ ],
+ "schema:name": {
+  "@language": "de",
+  "@value": "Test-Ort"
+ },
+ "schema:address": {
+  "@id": "genid-test-place-1-address",
+  "@type": [
+   "schema:Thing",
+   "schema:PostalAddress"
+  ],
+  "schema:streetAddress": {
+   "@language": "de",
+   "@value": "Teststraße 1"
+  },
+  "schema:postalCode": {
+   "@language": "de",
+   "@value": "99084"
+  },
+  "schema:addressLocality": {
+   "@language": "de",
+   "@value": "Erfurt"
+  },
+  "schema:addressCountry": {
+   "@type": "thuecat:AddressCountry",
+   "@value": "thuecat:Germany"
+  }
+ },
+ "schema:geo": {
+  "@id": "genid-test-place-1-geo",
+  "@type": [
+   "schema:Thing",
+   "schema:GeoCoordinates"
+  ],
+  "schema:latitude": {
+   "@type": "schema:Float",
+   "@value": "50.97"
+  },
+  "schema:longitude": {
+   "@type": "schema:Float",
+   "@value": "11.03"
+  }
+ }
+}

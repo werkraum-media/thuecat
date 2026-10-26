@@ -39,6 +39,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReferencedPlacePreState.php');
         $this->expectFetch('e_refloc-hubev.json');
+        $this->expectFetchAt('thuecat.org', 'resources', '900000000001-goet.json');
 
         $this->importConfiguration(1);
 
@@ -56,6 +57,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventUnknownReferencePreState.php');
         $this->expectFetch('e_unknownref-hubev.json');
+        $this->expectNotFoundAt('thuecat.org', 'resources', '900000000999-nope');
 
         $this->importConfiguration(1);
 
@@ -326,6 +328,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReferencedPlacePreState.php');
         $this->expectFetch('e_refloc-hubev.json');
+        $this->expectFetchAt('thuecat.org', 'resources', '900000000001-goet.json');
 
         $this->importConfiguration(1);
 
@@ -380,6 +383,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventUnknownReferencePreState.php');
         $this->expectFetch('e_unknownref-hubev.json');
+        $this->expectNotFoundAt('thuecat.org', 'resources', '900000000999-nope');
 
         $this->importConfiguration(1);
 

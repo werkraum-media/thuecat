@@ -864,24 +864,6 @@ class KeywordImportTest extends AbstractImportTestCase
     /**
      * @return list<array<string, mixed>>
      */
-    private function getSkippedReferenceLogEntries(): array
-    {
-        return $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log_entry')
-            ->select(
-                ['type', 'severity', 'table_name', 'remote_id', 'message'],
-                'tx_thuecat_import_log_entry',
-                ['type' => 'referenceSkipped'],
-                [],
-                ['uid' => 'ASC']
-            )
-            ->fetchAllAssociative()
-        ;
-    }
-
-    /**
-     * @return list<array<string, mixed>>
-     */
     private function fetchRowsByRemoteId(string $table, string $remoteId): array
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);

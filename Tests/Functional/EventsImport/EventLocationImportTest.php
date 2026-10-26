@@ -218,6 +218,113 @@ class EventLocationImportTest extends AbstractImportTestCase
         self::assertSame('99094', $location['zip']);
     }
 
+    #[Test]
+    public function referencedVenueBecomesALocationRowTheEventPointsAt(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReferencePreState.php');
+        $this->expectFetch('e_locref-hubev.json');
+        $this->expectFetchAt('thuecat.org', 'resources', '900000000002-locr.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
+
+        $location = $this->fetchLocationByUid(
+            $this->locationUidOf('https://int.thuecat.org/resources/e_locref-hubev')
+        );
+        self::assertSame(
+            [
+                'name' => 'Messe Erfurt',
+                'street' => 'Gothaer Straße 34',
+                'zip' => '99094',
+                'city' => 'Erfurt - Brühlervorstadt',
+                'district' => '',
+                'country' => 'Deutschland',
+                'phone' => '0361 400-0',
+                'latitude' => '50.959650',
+                'longitude' => '10.992270',
+            ],
+            [
+                'name' => $location['name'],
+                'street' => $location['street'],
+                'zip' => $location['zip'],
+                'city' => $location['city'],
+                'district' => $location['district'],
+                'country' => $location['country'],
+                'phone' => $location['phone'],
+                'latitude' => $location['latitude'],
+                'longitude' => $location['longitude'],
+            ]
+        );
+    }
+
+    /**
+     * Staged once: a second request for the place trips the faker.
+     */
+    #[Test]
+    public function referencedVenueSharedByTwoEventsIsFetchedOnce(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReferenceSharedPreState.php');
+        $this->expectFetch('e_locref-hubev.json');
+        $this->expectFetch('e_locref2-hubev.json');
+        $this->expectFetchAt('thuecat.org', 'resources', '900000000002-locr.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(2, $this->countRows('tx_events_domain_model_event'));
+        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
+        self::assertSame(
+            $this->locationUidOf('https://int.thuecat.org/resources/e_locref-hubev'),
+            $this->locationUidOf('https://int.thuecat.org/resources/e_locref2-hubev')
+        );
+    }
+
+    #[Test]
+    public function referencedVenueThatCannotBeFetchedLeavesTheLocationUnset(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReferenceDeadPreState.php');
+        $this->expectFetch('e_locref_dead-hubev.json');
+        $this->expectNotFoundAt('thuecat.org', 'resources', '900000000003-dead');
+
+        $this->importConfiguration(1);
+
+        $event = $this->fetchRowByRemoteId(
+            'tx_events_domain_model_event',
+            'https://int.thuecat.org/resources/e_locref_dead-hubev'
+        );
+
+        self::assertSame('Veranstaltung am toten Verweis', $event['title'] ?? null);
+        self::assertEmpty($event['location'] ?? 0);
+        self::assertSame(0, $this->countRows('tx_events_domain_model_location'));
+
+        $entries = $this->getSkippedReferenceLogEntries();
+        self::assertCount(1, $entries);
+        self::assertSame('warning', $entries[0]['severity']);
+        self::assertSame('tx_events_domain_model_event', $entries[0]['table_name']);
+        self::assertSame('https://int.thuecat.org/resources/e_locref_dead-hubev', $entries[0]['remote_id']);
+        self::assertIsString($entries[0]['message']);
+        self::assertStringContainsString(
+            'Skipped reference "https://thuecat.org/resources/900000000003-dead" for field "location"',
+            $entries[0]['message']
+        );
+    }
+
+    #[Test]
+    public function referencedVenueWithSeveralAddressesUsesTheFirst(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReferenceMultiPreState.php');
+        $this->expectFetch('e_locref_multi-hubev.json');
+        $this->expectFetchAt('thuecat.org', 'resources', '900000000004-multi.json');
+
+        $this->importConfiguration(1);
+
+        $location = $this->fetchLocationByUid(
+            $this->locationUidOf('https://int.thuecat.org/resources/e_locref_multi-hubev')
+        );
+        self::assertSame('Gothaer Straße 34', $location['street']);
+        self::assertSame('99094', $location['zip']);
+    }
+
     protected function locationUidOf(string $eventRemoteId): int
     {
         $uid = $this->fetchRowByRemoteId('tx_events_domain_model_event', $eventRemoteId)['location'] ?? null;

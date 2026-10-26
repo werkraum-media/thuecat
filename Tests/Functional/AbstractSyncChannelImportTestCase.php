@@ -38,6 +38,13 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
 
     public const RECORD = 'https://widgets.thuecat.org/api/sync/test-channel/jsonld/';
 
+    /** The place the event fixtures reference as schema:location. */
+    public const PLACE_ID = 'test-place-1';
+
+    public const PLACE = 'https://thuecat.org/resources/' . self::PLACE_ID;
+
+    public const PLACE_FIXTURE = 'widgets.thuecat.org/api/sync/test-channel/jsonld/' . self::PLACE_ID . '.json';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -62,8 +69,25 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
     {
         $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/' . $changedList);
         $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelRecords(...$eventIds);
+    }
+
+    /**
+     * Stages the channel records of one run, plus the place they reference.
+     */
+    protected function expectChannelRecords(string ...$eventIds): void
+    {
+        $placeIsReferenced = false;
         foreach ($eventIds as $eventId) {
-            $this->expectFetchForUrl(self::RECORD . $eventId, 'widgets.thuecat.org/api/sync/test-channel/jsonld/' . $eventId . '.json');
+            $file = 'widgets.thuecat.org/api/sync/test-channel/jsonld/' . $eventId . '.json';
+            $this->expectFetchForUrl(self::RECORD . $eventId, $file);
+            $placeIsReferenced = $placeIsReferenced
+                || str_contains((string)file_get_contents($this->fixtureGuzzleBase . '/' . $file), self::PLACE);
+        }
+
+        // One fetch per run, however many of the events reference the place.
+        if ($placeIsReferenced) {
+            $this->expectFetchForUrl(self::RECORD . self::PLACE_ID, self::PLACE_FIXTURE);
         }
     }
 }

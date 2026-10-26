@@ -301,6 +301,14 @@ final class ResolverContext
     public array $assetGoneByUrl = [];
 
     /**
+     * Run-wide, so a venue shared by several events and roots is fetched once.
+     * Empty where the place yielded no usable venue.
+     *
+     * @var array<string, string> reference URL => global_id of the location built from it
+     */
+    public array $locationGlobalIdByReference = [];
+
+    /**
      * Run-wide, so a reference shared by several roots is asked of the channel
      * once. Null records that the channel does not serve it.
      *
