@@ -93,7 +93,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
 
         $this->remote_id = $this->getRemoteId($node);
         $this->title = $this->extractValue($node['schema:name'] ?? null, $language);
-        $this->details = $this->extractHtmlDescription($node['schema:description'] ?? null, $language);
+        $this->details = $this->extractDescription($node['schema:description'] ?? null, $language);
         $this->web = $this->extractValue($node['schema:url'] ?? null, $language);
         $offers = is_array($node['schema:offers'] ?? null) ? $node['schema:offers'] : [];
         $this->ticket = $this->extractValue($offers['schema:url'] ?? null, $language);
@@ -319,27 +319,36 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
     }
 
     /**
-     * Pick the @value of the JSON-LD entry whose @type is thuecat:Html.
-     * schema:description carries plain + HTML siblings; we want the HTML one
-     * for the richtext `details` column.
+     * The richtext `details` column wants HTML. schema:description arrives as
+     * a plain literal beside a thuecat:Html entry, or as a schema:TextObject
+     * carrying tourism:html and schema:text. Where no HTML exists the plain
+     * text is better than an empty field, but it is escaped so it stays text.
      */
-    protected function extractHtmlDescription(mixed $value, string $language): string
+    protected function extractDescription(mixed $value, string $language): string
     {
         if (!is_array($value)) {
             return '';
         }
-        $items = array_is_list($value) ? $value : [$value];
-        foreach ($items as $item) {
+
+        $html = '';
+        $plain = '';
+        foreach (array_is_list($value) ? $value : [$value] as $item) {
             if (!is_array($item)) {
                 continue;
             }
+
             $types = (array)($item['@type'] ?? []);
-            if (!in_array('thuecat:Html', $types, true)) {
-                continue;
+            if (in_array('thuecat:Html', $types, true)) {
+                $html = $html !== '' ? $html : $this->extractValue($item['schema:value'] ?? null, $language);
+            } elseif (in_array('schema:TextObject', $types, true)) {
+                $html = $html !== '' ? $html : $this->extractValue($item['tourism:html'] ?? null, $language);
+                $plain = $plain !== '' ? $plain : $this->extractValue($item['schema:text'] ?? null, $language);
+            } else {
+                $plain = $plain !== '' ? $plain : $this->extractValue($item, $language);
             }
-            return $this->extractValue($item['schema:value'] ?? null, $language);
         }
-        return '';
+
+        return $html !== '' ? $html : htmlspecialchars($plain);
     }
 
     public static function anchorScope(): string

@@ -148,29 +148,6 @@
                     "@value": "https://erfurt-booking.inet-mainz.de/ot/formular"
                 }
             },
-            "schema:description": {
-                "@id": "genid-cd3aabd8d9c24bdaa69e564475fc509c6341109-b0",
-                "@type": [
-                    "schema:Thing",
-                    "schema:CreativeWork",
-                    "schema:MediaObject",
-                    "schema:TextObject",
-                    "dcmitype:Text",
-                    "tourism:WebTextObject",
-                    "tourism:MainText"
-                ],
-                "schema:additionalType": {
-                    "@id": "https://web-of-data.org/tourism/MainText"
-                },
-                "schema:text": {
-                    "@language": "de",
-                    "@value": "Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH."
-                },
-                "tourism:html": {
-                    "@language": "de",
-                    "@value": "<p>Dies ist eine Testveranstaltung der Erfurt Tourismus und Marketing GmbH.</p>"
-                }
-            },
             "schema:url": {
                 "@type": "schema:URL",
                 "@value": "www.erfurt-tourismus.de"
