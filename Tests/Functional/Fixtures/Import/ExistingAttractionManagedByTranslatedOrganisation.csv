@@ -1,0 +1,8 @@
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,1,10,0,0,"https://thuecat.org/resources/organisation-translated","Tourismus GmbH"
+,2,10,1,1,"https://thuecat.org/resources/organisation-translated","Tourism Ltd."
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","managed_by"
+,1,10,0,0,"https://thuecat.org/resources/attraction-managed-by-translated-organisation","Attraktion einer übersetzten Organisation",1
+,2,10,1,1,"https://thuecat.org/resources/attraction-managed-by-translated-organisation","Attraction of a translated organisation",1

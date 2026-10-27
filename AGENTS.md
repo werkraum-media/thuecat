@@ -35,6 +35,8 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 - `Connection::select()` filters deleted rows. In tests use `getQueryBuilderForTable()` with
   `removeAll()->add(new DeletedRestriction())` — never bare `removeAll()`, and never read absence
   as proof of a hard delete.
+- Before changing a `showitem`, check `overrideChildTca` and `columnsOverrides` for that table. An
+  override replaces the `showitem` as a whole and silently keeps the old field list.
 - `ExtensionConfiguration::get()` writes globals: a missing path triggers a sync from
   `ext_conf_template.txt`, so a declared key is never truly absent.
 

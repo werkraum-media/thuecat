@@ -1,0 +1,22 @@
+"pages"
+,"uid","pid","doktype","title","is_siteroot"
+,1,0,1,"Rootpage",1
+,10,1,254,"Storage folder",0
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,1,10,0,0,"test:organisation","Organisation DE"
+,2,10,1,1,"test:organisation","Organisation EN"
+,3,10,0,0,"test:other-organisation","Andere Organisation"
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","managed_by"
+,1,10,0,0,"test:attraction","Attraktion DE",1
+,2,10,1,1,"test:attraction","Attraction EN",1
+,3,10,0,0,"test:other-attraction","Attraktion einer anderen Organisation",3
+"tx_thuecat_town"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","managed_by"
+,1,10,0,0,"test:town","Stadt DE",1
+,2,10,1,1,"test:town","Town EN",2
+"tx_thuecat_tourist_information"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","managed_by","town"
+,1,10,0,0,"test:tourist-information","Touristinformation DE",1,1
+,2,10,1,1,"test:tourist-information","Tourist information EN",2,2

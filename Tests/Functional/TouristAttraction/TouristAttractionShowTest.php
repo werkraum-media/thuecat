@@ -44,6 +44,24 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheManagingOrganisation(): void
+    {
+        $managedBy = $this->renderedSection($this->generateRequestWithCHash('21'), 'relation', 'managedBy');
+
+        self::assertStringContainsString('Erfurt Tourismus GmbH', $managedBy);
+    }
+
+    #[Test]
+    public function translatedAttractionShowsTheTranslatedManagingOrganisation(): void
+    {
+        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+
+        $managedBy = $this->renderedSection($request, 'relation', 'managedBy');
+
+        self::assertStringContainsString('Erfurt Tourism Ltd.', $managedBy);
+    }
+
+    #[Test]
     public function showsNoRelationSectionsWhenTheAttractionIsContainedInNothing(): void
     {
         // Attraction 24 carries neither relation: an empty set renders no

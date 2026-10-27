@@ -93,6 +93,45 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return is_numeric($value) ? (int)$value : 0;
     }
 
+    /**
+     * The language of every row carrying the remote id on the storage page, one entry per row, so a duplicate
+     * translation shows twice. The page keeps other sites' imports of the same remote id out.
+     *
+     * @return list<int>
+     */
+    protected function fetchLanguagesByRemoteId(string $table, string $remoteId, int $storagePid): array
+    {
+        $languageField = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getCapability(TcaSchemaCapability::Language)
+            ->getLanguageField()
+            ->getName()
+        ;
+
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $languages = $queryBuilder
+            ->select($languageField)
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'remote_id',
+                    $queryBuilder->createNamedParameter($remoteId)
+                ),
+                $queryBuilder->expr()->eq(
+                    'pid',
+                    $queryBuilder->createNamedParameter($storagePid, Connection::PARAM_INT)
+                )
+            )
+            ->orderBy($languageField)
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_values(array_map(intval(...), array_filter($languages, is_numeric(...))));
+    }
+
     /** @return array<string, mixed> */
     protected function fetchRowByRemoteId(string $table, string $remoteId): array
     {

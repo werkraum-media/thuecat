@@ -21,30 +21,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-
 class Organisation extends AbstractEntity
 {
-    /**
-     * @var ObjectStorage<Town>
-     */
-    protected ObjectStorage $managesTowns;
-
-    /**
-     * @var ObjectStorage<TouristInformation>
-     */
-    protected ObjectStorage $managesTouristInformation;
-
-    public function getManagesTowns(): ObjectStorage
-    {
-        return $this->managesTowns;
-    }
-
-    public function getManagesTouristInformation(): ObjectStorage
-    {
-        return $this->managesTouristInformation;
-    }
-
     public function getTableName(): string
     {
         return 'tx_thuecat_organisation';

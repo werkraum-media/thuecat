@@ -78,6 +78,12 @@
             </section>
         </f:if>
 
+        <f:if condition="{attraction.managedBy}">
+            <section data-relation="managedBy">
+                <span class="organisation">{attraction.managedBy.title -> f:format.htmlspecialchars()}</span>
+            </section>
+        </f:if>
+
         <f:if condition="{attraction.containedInOrganisation}">
             <section data-relation="containedInOrganisation">
                 <f:for each="{attraction.containedInOrganisation}" as="organisation">

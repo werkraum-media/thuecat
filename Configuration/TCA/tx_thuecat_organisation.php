@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Typo3\FormEngine\ReverseRelationElement;
 
 defined('TYPO3') or die();
 
@@ -99,28 +100,34 @@ return (static function (string $extensionKey, string $tableName) {
             'manages_towns' => [
                 'label' => $languagePath . '.manages_towns',
                 'config' => [
-                    'type' => 'inline',
-                    'foreign_table' => 'tx_thuecat_town',
-                    'foreign_field' => 'managed_by',
-                    'readOnly' => true,
+                    'type' => 'none',
+                    'renderType' => ReverseRelationElement::RENDER_TYPE,
+                    'reverseRelation' => [
+                        'table' => 'tx_thuecat_town',
+                        'field' => 'managed_by',
+                    ],
                 ],
             ],
             'manages_tourist_information' => [
                 'label' => $languagePath . '.manages_tourist_information',
                 'config' => [
-                    'type' => 'inline',
-                    'foreign_table' => 'tx_thuecat_tourist_information',
-                    'foreign_field' => 'managed_by',
-                    'readOnly' => true,
+                    'type' => 'none',
+                    'renderType' => ReverseRelationElement::RENDER_TYPE,
+                    'reverseRelation' => [
+                        'table' => 'tx_thuecat_tourist_information',
+                        'field' => 'managed_by',
+                    ],
                 ],
             ],
             'manages_tourist_attraction' => [
                 'label' => $languagePath . '.manages_tourist_attraction',
                 'config' => [
-                    'type' => 'inline',
-                    'foreign_table' => 'tx_thuecat_tourist_attraction',
-                    'foreign_field' => 'managed_by',
-                    'readOnly' => true,
+                    'type' => 'none',
+                    'renderType' => ReverseRelationElement::RENDER_TYPE,
+                    'reverseRelation' => [
+                        'table' => 'tx_thuecat_tourist_attraction',
+                        'field' => 'managed_by',
+                    ],
                 ],
             ],
             'tstamp' => [

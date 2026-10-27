@@ -13,6 +13,7 @@ use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Routing\FilterRouteEnhancer;
 use WerkraumMedia\ThueCat\Routing\PersistedAliasListMapper;
 use WerkraumMedia\ThueCat\Typo3\FormDataProvider\AnchorStartingPoints;
+use WerkraumMedia\ThueCat\Typo3\FormEngine\ReverseRelationElement;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
 defined('TYPO3') or die();
@@ -76,6 +77,12 @@ Extension::registerExtLocalconfConfigConfig();
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = '^tx_thuecat_touristattractionsearch[demand]';
     // The search word of both actions, outside the plugin namespace so list URLs stay readable.
     $GLOBALS['TYPO3_CONF_VARS']['FE']['cacheHash']['excludedParameters'][] = 'q';
+
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1793106237] = [
+        'nodeName' => ReverseRelationElement::RENDER_TYPE,
+        'priority' => 40,
+        'class' => ReverseRelationElement::class,
+    ];
 
     foreach (['tcaDatabaseRecord', 'flexFormSegment', 'tcaSelectTreeAjaxFieldData'] as $formDataGroup) {
         // Before the tree providers consume startingPoints; after the site is known.

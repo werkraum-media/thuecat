@@ -1,0 +1,14 @@
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,1,10,0,0,"https://thuecat.org/resources/organisation-translated","Tourismus GmbH"
+,2,10,1,1,"https://thuecat.org/resources/organisation-translated","Tourism Ltd."
+"tx_thuecat_town"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","managed_by"
+,1,10,0,0,"https://thuecat.org/resources/town-translated","Erfurt",1
+,2,10,1,1,"https://thuecat.org/resources/town-translated","Erfurt (EN)",2
+,3,10,0,0,"https://thuecat.org/resources/town-managed-by-translated-organisation","Stadt einer übersetzten Organisation",1
+,4,10,1,3,"https://thuecat.org/resources/town-managed-by-translated-organisation","Town of a translated organisation",2
+"tx_thuecat_tourist_information"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","managed_by","town","contained_in_organisation"
+,1,10,0,0,"https://thuecat.org/resources/tourist-information-related-to-translated-records","Touristinformation übersetzter Datensätze",1,1,"1"
+,2,10,1,1,"https://thuecat.org/resources/tourist-information-related-to-translated-records","Tourist information of translated records",2,2,"2"

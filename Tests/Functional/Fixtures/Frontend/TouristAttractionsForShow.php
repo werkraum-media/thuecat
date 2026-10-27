@@ -102,6 +102,7 @@ return [
             'contained_in_organisation' => '1',
             'contained_in_attraction' => '23',
             'hosts_events' => '1',
+            'managed_by' => '1',
         ],
         // Extbase overlays a relation to the PARENT record's language, so the
         // translated categories are only reachable through a translated parent.
@@ -120,6 +121,9 @@ return [
             // hosts_events is l10n_mode exclude: DataHandler copies the
             // parent's relation onto the translation, which this seed bypasses.
             'hosts_events' => '1',
+            // managed_by is l10n_mode exclude: the translation relates to the default
+            // organisation, the overlay renders it in the request's language.
+            'managed_by' => '1',
         ],
         [
             // Target of attraction 21's contained_in_attraction.
@@ -151,6 +155,13 @@ return [
             'uid' => '1',
             'pid' => '11',
             'title' => 'Erfurt Tourismus GmbH',
+        ],
+        [
+            'uid' => '2',
+            'pid' => '11',
+            'title' => 'Erfurt Tourism Ltd.',
+            'sys_language_uid' => '1',
+            'l10n_parent' => '1',
         ],
     ],
     // Keyword tree under anchor 500. Attraction 21 carries two terms; 20 carries

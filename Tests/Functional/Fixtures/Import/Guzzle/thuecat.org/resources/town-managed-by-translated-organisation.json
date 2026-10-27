@@ -1,0 +1,36 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/town-managed-by-translated-organisation",
+            "@type": [
+                "schema:AdministrativeArea",
+                "schema:Place",
+                "schema:Thing",
+                "schema:City",
+                "ttgds:Destination",
+                "thuecat:Town"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Stadt einer übersetzten Organisation"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Town of a translated organisation"
+                }
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/organisation-translated"
+            },
+            "thuecat:managedBy": {
+                "@id": "https://thuecat.org/resources/organisation-translated"
+            }
+        }
+    ]
+}

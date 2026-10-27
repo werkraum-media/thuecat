@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Typo3\FormEngine\ReverseRelationElement;
 
 defined('TYPO3') or die();
 
@@ -101,6 +102,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'managed_by' => [
                 'label' => $languagePath . '.managed_by',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',
@@ -117,10 +119,12 @@ return (static function (string $extensionKey, string $tableName) {
             'tourist_information' => [
                 'label' => $languagePath . '.tourist_information',
                 'config' => [
-                    'type' => 'inline',
-                    'foreign_table' => 'tx_thuecat_tourist_information',
-                    'foreign_field' => 'town',
-                    'readOnly' => true,
+                    'type' => 'none',
+                    'renderType' => ReverseRelationElement::RENDER_TYPE,
+                    'reverseRelation' => [
+                        'table' => 'tx_thuecat_tourist_information',
+                        'field' => 'town',
+                    ],
                 ],
             ],
         ],

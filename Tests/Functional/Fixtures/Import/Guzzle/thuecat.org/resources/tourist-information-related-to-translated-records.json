@@ -1,0 +1,53 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/tourist-information-related-to-translated-records",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristInformationCenter",
+                "ttgds:PointOfInterest",
+                "thuecat:TouristInformation"
+            ],
+            "schema:availableLanguage": [
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:German"
+                },
+                {
+                    "@type": "thuecat:Language",
+                    "@value": "thuecat:English"
+                }
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Touristinformation übersetzter Datensätze"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Tourist information of translated records"
+                }
+            ],
+            "schema:containedInPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/town-translated"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/organisation-translated"
+                }
+            ],
+            "thuecat:contentResponsible": {
+                "@id": "https://thuecat.org/resources/organisation-translated"
+            },
+            "thuecat:managedBy": {
+                "@id": "https://thuecat.org/resources/organisation-translated"
+            }
+        }
+    ]
+}

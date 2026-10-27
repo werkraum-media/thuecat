@@ -48,6 +48,8 @@ class TouristAttraction extends Place
      */
     protected ObjectStorage $towns;
 
+    protected ?Organisation $managedBy = null;
+
     /**
      * @var ObjectStorage<Organisation>
      */
@@ -152,6 +154,11 @@ class TouristAttraction extends Place
     public function getHostsEvents(): ObjectStorage
     {
         return $this->hostsEvents;
+    }
+
+    public function getManagedBy(): ?Organisation
+    {
+        return $this->managedBy;
     }
 
     /**

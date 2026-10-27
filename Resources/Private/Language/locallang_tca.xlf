@@ -3,6 +3,9 @@
     <file source-language="en" datatype="plaintext" original="messages" date="2021-02-01T09:24:10Z" product-name="ThueCat TCA Labels">
         <header/>
         <body>
+            <trans-unit id="reverse_relation.empty" xml:space="preserve">
+                <source>No records</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>
             </trans-unit>

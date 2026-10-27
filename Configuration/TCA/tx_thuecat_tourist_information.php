@@ -116,6 +116,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'town' => [
                 'label' => $languagePath . '.town',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
@@ -125,6 +126,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'contained_in_organisation' => [
                 'label' => $languagePath . '.contained_in_organisation',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
@@ -136,6 +138,7 @@ return (static function (string $extensionKey, string $tableName) {
             // because Extbase resolves a relation through a single class.
             'contained_in_attraction' => [
                 'label' => $languagePath . '.contained_in_attraction',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
@@ -145,6 +148,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'contained_in_tourist_information' => [
                 'label' => $languagePath . '.contained_in_tourist_information',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
@@ -154,6 +158,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'contained_in_parking_facility' => [
                 'label' => $languagePath . '.contained_in_parking_facility',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
@@ -172,6 +177,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'managed_by' => [
                 'label' => $languagePath . '.managed_by',
+                'l10n_mode' => 'exclude',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectSingle',

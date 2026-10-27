@@ -21,17 +21,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
-use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-
 class Town extends AbstractEntity
 {
-    /**
-     * @var ObjectStorage<TouristInformation>
-     */
-    protected ObjectStorage $touristInformation;
-
-    public function getTouristInformation(): ObjectStorage
-    {
-        return $this->touristInformation;
-    }
 }
