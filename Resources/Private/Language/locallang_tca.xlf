@@ -165,6 +165,27 @@
             <trans-unit id="tx_thuecat_tourist_attraction" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.type" xml:space="preserve">
+                <source>Record type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.type.attraction" xml:space="preserve">
+                <source>Tourist attraction</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.type.meeting_venue" xml:space="preserve">
+                <source>Meeting venue</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.venue_type" xml:space="preserve">
+                <source>Venue type</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.venue_type.meeting_congress_hotel" xml:space="preserve">
+                <source>Conference hotel</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.venue_type.meeting_congress" xml:space="preserve">
+                <source>Meeting and congress location</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.tab.meeting_venue" xml:space="preserve">
+                <source>Venue</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.palette.language" xml:space="preserve">
                 <source>Language</source>
             </trans-unit>

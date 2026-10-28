@@ -34,6 +34,8 @@ class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEnt
 
     protected int $priority = 20;
     protected string $remote_id = '';
+    // Written on every run, so a node that loses its meeting type turns back into an attraction.
+    protected string $type = 'attraction';
     protected string $title = '';
     protected string $description = '';
     protected string $slogan = '';

@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
@@ -163,6 +164,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         self::assertSame(
             [
                 'remote_id',
+                'type',
                 'title',
                 'description',
                 'slogan',
@@ -187,6 +189,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         );
 
         self::assertSame('https://thuecat.org/resources/165868194223-zmqf', $row['remote_id']);
+        self::assertSame('attraction', $row['type']);
         self::assertSame('Alte Synagoge', $row['title']);
         self::assertSame('Beispiel Beschreibung', $row['description']);
         self::assertSame('http://www.alte-synagoge.erfurt.de', $row['url']);
@@ -567,6 +570,56 @@ final class ParserTest extends AbstractFunctionalTestCase
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         self::assertArrayNotHasKey('tx_thuecat_trail', $result);
+    }
+
+    /**
+     * Type sets of live venue payloads (2026-10-28): Dorint, Kundendienstzentrum, egapark and Theater Erfurt.
+     *
+     * @return iterable<string, array{list<string>, string}>
+     */
+    public static function placeTypeSets(): iterable
+    {
+        yield 'conference hotel' => [
+            ['schema:Thing', 'schema:Place', 'schema:LodgingBusiness', 'schema:Organization', 'schema:LocalBusiness', 'schema:FoodEstablishment', 'schema:Restaurant', 'schema:BarOrPub', 'schema:Hotel', 'schema:TouristAttraction', 'ttgds:FoodEstablishmentLodgingBusiness', 'thuecat:MeetingCongressHotel'],
+            'meeting_venue',
+        ];
+        yield 'meeting location' => [
+            ['schema:Thing', 'schema:Place', 'schema:Organization', 'schema:LocalBusiness', 'schema:TouristAttraction', 'thuecat:MeetingCongress', 'ttgds:PointOfInterest'],
+            'meeting_venue',
+        ];
+        yield 'park that also hosts meetings' => [
+            ['schema:Thing', 'schema:Place', 'schema:CivicStructure', 'schema:Organization', 'schema:LocalBusiness', 'schema:Cemetery', 'schema:Park', 'schema:TouristAttraction', 'thuecat:MeetingCongress', 'thuecat:SculpturePark', 'thuecat:ThemePark', 'thuecat:BotanicalGarden', 'thuecat:HerbGarden', 'ttgds:PointOfInterest'],
+            'meeting_venue',
+        ];
+        yield 'theatre that also hosts meetings' => [
+            ['schema:Thing', 'schema:Place', 'schema:CivicStructure', 'schema:Organization', 'schema:LocalBusiness', 'schema:MusicVenue', 'schema:LandmarksOrHistoricalBuildings', 'schema:EntertainmentBusiness', 'schema:TouristAttraction', 'schema:EventVenue', 'thuecat:Building', 'thuecat:MeetingCongress', 'thuecat:ConcertHall', 'thuecat:SpecialCongressLocation', 'thuecat:TheaterEventVenue', 'ttgds:PointOfInterest', 'thuecat:Theater', 'thuecat:DanceTheater'],
+            'meeting_venue',
+        ];
+        yield 'plain attraction' => [
+            ['schema:Place', 'schema:Thing', 'schema:TouristAttraction', 'ttgds:PointOfInterest'],
+            'attraction',
+        ];
+    }
+
+    /**
+     * @param list<string> $types
+     */
+    #[Test]
+    #[DataProvider('placeTypeSets')]
+    public function placeIsTypedByItsMeetingTypes(array $types, string $expectedType): void
+    {
+        $remoteId = 'https://thuecat.org/resources/test-place';
+        $graph = [[
+            '@id' => $remoteId,
+            '@type' => $types,
+            'schema:name' => [['@language' => 'de', '@value' => 'Ort']],
+        ]];
+
+        $subject = $this->get(Parser::class);
+        $subject->parse($graph, new ParserContext(0));
+        $result = $subject->getDataHandlerPayload()->getDataMap();
+
+        self::assertSame($expectedType, $result['tx_thuecat_tourist_attraction'][$remoteId]['type'] ?? null);
     }
 
     private function graphFromFixture(string $filename): array

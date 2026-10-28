@@ -38,6 +38,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Trail;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address as FrontendAddress;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\MeetingVenue as FrontendMeetingVenue;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Organisation as FrontendOrganisation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParkingFacility;
@@ -208,8 +209,14 @@ return [
         'recordType' => 'recordReclassification',
     ],
 
+    // Extbase constrains queries to the record types of the class and its subclasses, so every
+    // type needs one of the two: a type left out silently drops from every attraction query.
     FrontendTouristAttraction::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
+        'recordType' => 'attraction',
+        'subclasses' => [
+            'meeting_venue' => FrontendMeetingVenue::class,
+        ],
         'properties' => [
             // The property is plural (a record can be in several towns) while
             // the column keeps its historic singular name.
@@ -217,6 +224,10 @@ return [
                 'fieldName' => 'town',
             ],
         ],
+    ],
+    FrontendMeetingVenue::class => [
+        'tableName' => 'tx_thuecat_tourist_attraction',
+        'recordType' => 'meeting_venue',
     ],
     FrontendTown::class => [
         'tableName' => 'tx_thuecat_town',

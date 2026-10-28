@@ -8,6 +8,7 @@ CREATE TABLE tx_thuecat_import_log_entry (
 -- until thuecat_eventRelationsToMm has run everywhere, so the schema update cannot turn the stored
 -- uid lists into int before the wizard reads them.
 CREATE TABLE tx_thuecat_tourist_attraction (
+    type varchar(255) DEFAULT 'attraction' NOT NULL,
     hosts_events text,
     url text,
     slogan text,

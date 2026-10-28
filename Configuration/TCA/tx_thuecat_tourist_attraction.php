@@ -9,10 +9,21 @@ defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
     $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $attractionShowitem = 'type, --palette--;;language, title, slug, description, main_image, media_files, slogan, start_of_construction, sanitation, 
+                other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
+                photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
+                opening_hours_inline, special_opening_hours_inline, offers, accessibility_specification, address_inline, url,
+                remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
+                parking_facility_near_by, contained_in_organisation, contained_in_attraction,
+                contained_in_tourist_information, contained_in_parking_facility, contained_in_trail,
+                --div--;' . $languagePath . '.tab.events, hosts_events,
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords,
+                --div--;' . $languagePath . '.tab.editorial_additions, editorial_images';
 
     return [
         'ctrl' => [
             'label' => 'title',
+            'type' => 'type',
             'iconfile' => Extension::getIconPath() . $tableName . '.svg',
             'sortby' => 'sorting',
             'tstamp' => 'tstamp',
@@ -28,6 +39,49 @@ return (static function (string $extensionKey, string $tableName) {
             'translationSource' => 'l10n_source',
         ],
         'columns' => [
+
+            // Written by the import from the node's @type on every run.
+            'type' => [
+                'label' => $languagePath . '.type',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [
+                            'label' => $languagePath . '.type.attraction',
+                            'value' => 'attraction',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.meeting_venue',
+                            'value' => 'meeting_venue',
+                        ],
+                    ],
+                    'default' => 'attraction',
+                ],
+            ],
+            'venue_type' => [
+                'label' => $languagePath . '.venue_type',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [
+                            'label' => '',
+                            'value' => '',
+                        ],
+                        [
+                            'label' => $languagePath . '.venue_type.meeting_congress_hotel',
+                            'value' => 'meeting_congress_hotel',
+                        ],
+                        [
+                            'label' => $languagePath . '.venue_type.meeting_congress',
+                            'value' => 'meeting_congress',
+                        ],
+                    ],
+                ],
+            ],
 
             // Both fields are bounded by the anchor their import writes beneath,
             // so neither offers the other's tree. Core resolves ###SITE:### in
@@ -430,17 +484,12 @@ return (static function (string $extensionKey, string $tableName) {
             ],
         ],
         'types' => [
-            '0' => [
-                'showitem' => '--palette--;;language, title, slug, description, main_image, media_files, slogan, start_of_construction, sanitation, 
-                other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
-                photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
-                opening_hours_inline, special_opening_hours_inline, offers, accessibility_specification, address_inline, url,
-                remote_id, --div--;' . $languagePath . '.tab.relations, town, managed_by,
-                parking_facility_near_by, contained_in_organisation, contained_in_attraction,
-                contained_in_place, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail,
-                --div--;' . $languagePath . '.tab.events, hosts_events,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords,
-                --div--;' . $languagePath . '.tab.editorial_additions, editorial_images',
+            'attraction' => [
+                'showitem' => $attractionShowitem,
+            ],
+            'meeting_venue' => [
+                'showitem' => $attractionShowitem . ',
+                --div--;' . $languagePath . '.tab.meeting_venue, venue_type',
             ],
         ],
     ];
