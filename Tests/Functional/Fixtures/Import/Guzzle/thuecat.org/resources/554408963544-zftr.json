@@ -1,0 +1,185 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/554408963544-zftr",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:LodgingBusiness",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:FoodEstablishment",
+                "schema:Restaurant",
+                "schema:TouristAttraction",
+                "ttgds:FoodEstablishmentLodgingBusiness",
+                "thuecat:MeetingCongressHotel"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Waldhotel Ehrental"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Waldhotel Ehrental"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Waldhotel Ehrental"
+                }
+            ],
+            "schema:servesCuisine": [
+                {
+                    "@type": "thuecat:ServesCuisine",
+                    "@value": "thuecat:RegionalCuisine"
+                },
+                {
+                    "@type": "thuecat:ServesCuisine",
+                    "@value": "thuecat:ThuringianCuisine"
+                },
+                {
+                    "@type": "thuecat:ServesCuisine",
+                    "@value": "thuecat:VegetarianCooking"
+                },
+                {
+                    "@type": "thuecat:ServesCuisine",
+                    "@value": "thuecat:VeganCooking"
+                }
+            ],
+            "schema:starRating": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3005152-b8",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:Rating"
+                ],
+                "schema:ratingValue": {
+                    "@type": "thuecat:StarRatingValue",
+                    "@value": "thuecat:ThreeStar"
+                }
+            },
+            "schema:priceRange": {
+                "@type": "thuecat:PriceRange",
+                "@value": "thuecat:PriceRangeMiddle"
+            },
+            "schema:hasCertification": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3005152-b7",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:Certification"
+                ],
+                "rdfs:label": [
+                    {
+                        "@language": "de",
+                        "@value": "Motorradfreundlicher Hotel- und Gastronomiebetrieb"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Motorcycle-Friendly Hotel and Restaurant"
+                    },
+                    {
+                        "@language": "pl",
+                        "@value": "Obiekt hotelowo-gastronomiczny przyjazny motocyklistom"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Établissement hôtelier et de restauration adapté aux motards"
+                    }
+                ],
+                "schema:name": [
+                    {
+                        "@language": "de",
+                        "@value": "Motorradfreundlicher Hotel- und Gastronomiebetrieb"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Motorcycle-Friendly Hotel and Restaurant"
+                    },
+                    {
+                        "@language": "pl",
+                        "@value": "Obiekt hotelowo-gastronomiczny przyjazny motocyklistom"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Établissement hôtelier et de restauration adapté aux motards"
+                    }
+                ],
+                "thuecat:hasCertificate": {
+                    "@id": "https://thuecat.org/resources/583668100022-mdam"
+                },
+                "dcterms:title": [
+                    {
+                        "@language": "de",
+                        "@value": "Motorradfreundlicher Hotel- und Gastronomiebetrieb"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Motorcycle-Friendly Hotel and Restaurant"
+                    },
+                    {
+                        "@language": "pl",
+                        "@value": "Obiekt hotelowo-gastronomiczny przyjazny motocyklistom"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Établissement hôtelier et de restauration adapté aux motards"
+                    }
+                ]
+            },
+            "thuecat:sportsEquipment": {
+                "@type": "thuecat:SportsEquipment",
+                "@value": "thuecat:BicycleRental"
+            },
+            "schema:acceptsReservations": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "thuecat:seatsInside": {
+                "@type": "schema:Number",
+                "@value": "120"
+            },
+            "thuecat:twinRoomsInHouse": {
+                "@type": "schema:Number",
+                "@value": "2"
+            },
+            "schema:amenityFeature": [
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3005152-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue",
+                        "schema:LocationFeatureSpecification"
+                    ],
+                    "thuecat:featureName": {
+                        "@type": "thuecat:LodgingBusinessFeatures",
+                        "@value": "thuecat:Terrace"
+                    }
+                },
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3005152-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:PropertyValue",
+                        "schema:LocationFeatureSpecification"
+                    ],
+                    "thuecat:featureName": {
+                        "@type": "thuecat:LodgingBusinessFeatures",
+                        "@value": "thuecat:ConferenceMeetingRooms"
+                    }
+                }
+            ]
+        }
+    ]
+}

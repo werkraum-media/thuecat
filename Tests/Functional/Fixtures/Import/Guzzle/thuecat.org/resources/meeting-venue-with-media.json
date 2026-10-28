@@ -1,0 +1,51 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/554408963544-zftr",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:LodgingBusiness",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:FoodEstablishment",
+                "schema:Restaurant",
+                "schema:TouristAttraction",
+                "ttgds:FoodEstablishmentLodgingBusiness",
+                "thuecat:MeetingCongressHotel"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Waldhotel Ehrental"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Waldhotel Ehrental"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Waldhotel Ehrental"
+                }
+            ],
+            "schema:logo": {
+                "@id": "https://thuecat.org/resources/dms_5159186"
+            },
+            "schema:subjectOf": [
+                {
+                    "@id": "https://thuecat.org/resources/724271217629-ffrb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/dms_5159216"
+                }
+            ]
+        }
+    ]
+}

@@ -2,7 +2,9 @@
     "@context": {
         "schema": "http://schema.org/",
         "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
-        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
     },
     "@graph": [
         {
@@ -25,8 +27,243 @@
                 {
                     "@language": "de",
                     "@value": "Dorint Hotel am Dom Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Dorint Hotel am Dom Erfurt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Dorint Hotel am Dom Erfurt"
                 }
-            ]
+            ],
+            "schema:checkinTime": {
+                "@type": "schema:Time",
+                "@value": "16:00:00"
+            },
+            "schema:checkoutTime": {
+                "@type": "schema:Time",
+                "@value": "11:00:00"
+            },
+            "schema:maximumAttendeeCapacity": {
+                "@type": "schema:Integer",
+                "@value": "300"
+            },
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://maps.app.goo.gl/LHMD5KZXXeWoP9HU7"
+            },
+            "schema:smokingAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "schema:amenityFeature": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b1",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:PropertyValue",
+                    "schema:LocationFeatureSpecification"
+                ],
+                "thuecat:featureName": {
+                    "@type": "thuecat:LodgingBusinessFeatures",
+                    "@value": "thuecat:SaunaEnuMem"
+                }
+            },
+            "schema:numberOfRooms": {
+                "@type": "schema:Number",
+                "@value": "160"
+            },
+            "schema:hasDriveThroughService": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:gastro": [
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:Restaurant"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:BreakfastService"
+                },
+                {
+                    "@type": "thuecat:GastroPoi",
+                    "@value": "thuecat:BarEnumMem"
+                }
+            ],
+            "thuecat:entrance": {
+                "@type": "thuecat:Entrance",
+                "@value": "thuecat:IndoorActivities"
+            },
+            "thuecat:selfService": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:beerGarden": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:bookable": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "thuecat:distanceCityCenter": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b7",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTR"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "900"
+                }
+            },
+            "thuecat:distanceFair": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b8",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "3.2"
+                }
+            },
+            "thuecat:distanceFreeway": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b9",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "6"
+                }
+            },
+            "thuecat:distanceICECStation": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b10",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "1.4"
+                }
+            },
+            "thuecat:distanceAirport": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31282887028-b6",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "4.5"
+                }
+            },
+            "thuecat:meetingFacilitysHouse": [
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseCanvas"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseLectern"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseScreenTV"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseSoundSystem"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseProjector"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseWLAN"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseTechnicalStaff"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:MeetingHouseFlipchart"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysHouse",
+                    "@value": "thuecat:Multifunctional"
+                }
+            ],
+            "thuecat:doubleRoomsInHouse": {
+                "@type": "schema:Number",
+                "@value": "147"
+            },
+            "thuecat:singleRoomsInHouse": {
+                "@type": "schema:Number",
+                "@value": "5"
+            },
+            "thuecat:deliveryService": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:takeAway": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:lateKitchen": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:hotCuisineThroughout": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:catering": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "thuecat:suitenInHouse": {
+                "@type": "schema:Number",
+                "@value": "8"
+            }
         }
     ]
 }

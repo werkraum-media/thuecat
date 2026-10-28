@@ -1,0 +1,94 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/117034427781-ndta",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Park",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:Museum",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:OtherBuilding",
+                "thuecat:MemorialSite",
+                "thuecat:FrenchParkGarden",
+                "ttgds:PointOfInterest",
+                "thuecat:MemorialSiteBuilding"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Wielandgut Oßmannstedt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Wielandgut Oßmannstedt "
+                },
+                {
+                    "@language": "en",
+                    "@value": "Wielandgut Oßmannstedt"
+                }
+            ],
+            "thuecat:endOfConstruction": [
+                {
+                    "@language": "de",
+                    "@value": "1762"
+                },
+                {
+                    "@language": "en",
+                    "@value": "1762"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "1762"
+                }
+            ],
+            "thuecat:monumentEnum": {
+                "@type": "thuecat:MonumentEnum",
+                "@value": "thuecat:ZeroInformationMemorialClass"
+            },
+            "thuecat:exibitionObjekt": [
+                {
+                    "@type": "thuecat:ExhibitionObject",
+                    "@value": "thuecat:CulturalHistoryExhibition"
+                },
+                {
+                    "@type": "thuecat:ExhibitionObject",
+                    "@value": "thuecat:MemorialsWithExhibition"
+                },
+                {
+                    "@type": "thuecat:ExhibitionObject",
+                    "@value": "thuecat:LiteraryHistoryExhibition"
+                }
+            ],
+            "thuecat:isRuin": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:openAirMuseum": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:guidedTour": {
+                "@type": "thuecat:EnumGuidedTour",
+                "@value": "thuecat:GuidedTourOnlyWithRegistration"
+            },
+            "schema:sameAs": {
+                "@type": "schema:URL",
+                "@value": "https://www.outdooractive.com/de/56762049"
+            }
+        }
+    ]
+}

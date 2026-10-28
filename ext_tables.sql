@@ -9,6 +9,16 @@ CREATE TABLE tx_thuecat_import_log_entry (
 -- uid lists into int before the wizard reads them.
 CREATE TABLE tx_thuecat_tourist_attraction (
     type varchar(255) DEFAULT 'attraction' NOT NULL,
+    meeting_facilities text,
+    gastro text,
+    serves_cuisine text,
+    entrance text,
+    guided_tour text,
+    monument text,
+    ensemble text,
+    exhibition_objects text,
+    sports_equipment text,
+    amenity_features text,
     hosts_events text,
     url text,
     slogan text,

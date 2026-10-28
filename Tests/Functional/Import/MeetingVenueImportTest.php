@@ -81,7 +81,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([0], $this->fetchLanguagesByRemoteId(self::TABLE, self::HOTEL, self::STORAGE_PID));
+        self::assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId(self::TABLE, self::HOTEL, self::STORAGE_PID));
         self::assertSame(1, $this->fetchUidByRemoteId(self::TABLE, self::HOTEL));
         self::assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
     }

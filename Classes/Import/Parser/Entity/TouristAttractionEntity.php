@@ -27,9 +27,12 @@ class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEnt
 {
     public const TABLE = 'tx_thuecat_tourist_attraction';
 
+    // logo and subjectOf are staged by the meeting venue only; MediaFieldMap is keyed by table.
     public const MEDIA_FIELDS = [
         'photo' => 'main_image',
         'image' => 'media_files',
+        'logo' => 'logo',
+        'subjectOf' => 'subject_of_media',
     ];
 
     protected int $priority = 20;

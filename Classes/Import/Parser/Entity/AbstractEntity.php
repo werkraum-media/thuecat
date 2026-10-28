@@ -173,6 +173,38 @@ abstract class AbstractEntity implements EntityInterface
     }
 
     /**
+     * A description as HTML, for a richtext field. It arrives as a plain literal beside a thuecat:Html entry,
+     * or as a schema:TextObject carrying tourism:html and schema:text. Where no HTML exists the plain text is
+     * better than an empty field, but it is escaped so it stays text.
+     */
+    protected function extractDescription(mixed $value, string $language): string
+    {
+        if (!is_array($value)) {
+            return '';
+        }
+
+        $html = '';
+        $plain = '';
+        foreach (array_is_list($value) ? $value : [$value] as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+
+            $types = (array)($item['@type'] ?? []);
+            if (in_array('thuecat:Html', $types, true)) {
+                $html = $html !== '' ? $html : $this->extractValue($item['schema:value'] ?? null, $language);
+            } elseif (in_array('schema:TextObject', $types, true)) {
+                $html = $html !== '' ? $html : $this->extractValue($item['tourism:html'] ?? null, $language);
+                $plain = $plain !== '' ? $plain : $this->extractValue($item['schema:text'] ?? null, $language);
+            } else {
+                $plain = $plain !== '' ? $plain : $this->extractValue($item, $language);
+            }
+        }
+
+        return $html !== '' ? $html : htmlspecialchars($plain);
+    }
+
+    /**
      * Strip the thuecat:/schema: namespace prefix from an enum @value.
      *
      * ThueCat publishes enum members as namespaced URIs (e.g. "thuecat:GothicArt").
@@ -307,6 +339,28 @@ abstract class AbstractEntity implements EntityInterface
             return;
         }
 
+        $this->transients['media'] = $entries;
+    }
+
+    /**
+     * Media of one further kind, added to what recordMediaTransient() staged. The kind needs a field in
+     * MEDIA_FIELDS, or the resolver has nowhere to relate it.
+     */
+    protected function recordMediaOfKind(string $kind, mixed $value): void
+    {
+        foreach ($this->splitMediaByShape($value) as $node) {
+            $this->_inlineMedia[] = ['kind' => $kind, 'node' => $node];
+        }
+
+        $references = $this->collectIds($this->bareReferencesOnly($value));
+        if ($references === []) {
+            return;
+        }
+
+        $entries = $this->transients['media'] ?? [];
+        foreach ($references as $id) {
+            $entries[] = ['kind' => $kind, 'id' => $id];
+        }
         $this->transients['media'] = $entries;
     }
 

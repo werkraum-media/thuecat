@@ -1,0 +1,73 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/r_22033376-oapoi",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Cemetery",
+                "schema:Park",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "thuecat:SculpturePark",
+                "thuecat:ThemePark",
+                "thuecat:BotanicalGarden",
+                "thuecat:HerbGarden",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Parc Ega d'Erfurt"
+                },
+                {
+                    "@language": "de",
+                    "@value": "egapark Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "egapark Erfurt"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "egapark Erfurt"
+                }
+            ],
+            "thuecat:sizeOfArea": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e3747032-b72",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:HAR"
+                },
+                "schema:value": {
+                    "@type": "schema:Integer",
+                    "@value": "36"
+                }
+            },
+            "schema:tourBookingPage": {
+                "@type": "schema:URL",
+                "@value": "https://egapark.ticketfritz.de/Shop"
+            },
+            "schema:identifier": {
+                "@type": "schema:URL",
+                "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/egapark-104689.html"
+            }
+        }
+    ]
+}

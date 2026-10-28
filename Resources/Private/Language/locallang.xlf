@@ -827,6 +827,1110 @@
             <trans-unit id="content.price.type.VideoGuide" xml:space="preserve">
                 <source>Video Guide</source>
             </trans-unit>
+            <trans-unit id="content.meeting_facilities.AirConditioning" xml:space="preserve">
+                <source>Air conditioning</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.BackStageArea" xml:space="preserve">
+                <source>BacktageArea</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.Full" xml:space="preserve">
+                <source>Barrier-free</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomBlackoutOption" xml:space="preserve">
+                <source>Blackout option</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomConferenceTechnology" xml:space="preserve">
+                <source>Conference technology</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomDaylight" xml:space="preserve">
+                <source>Daylight</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomIntegratedSoundSystem" xml:space="preserve">
+                <source>Integrated conference sound system</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomInterpreterBooths" xml:space="preserve">
+                <source>Interpreter booths</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomLightingSoundControl" xml:space="preserve">
+                <source>Lighting and sound control</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomMediaConnections" xml:space="preserve">
+                <source>Media connections</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomPassable" xml:space="preserve">
+                <source>passable</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomPresentationMediaTechnology" xml:space="preserve">
+                <source>Presentation and media technology</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomSoundsystem" xml:space="preserve">
+                <source>Public address system</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingFacilitysRoomStage" xml:space="preserve">
+                <source>Stage</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseCanvas" xml:space="preserve">
+                <source>Canvas</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseFlipchart" xml:space="preserve">
+                <source>Flipchart</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseLectern" xml:space="preserve">
+                <source>Lectern</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseProjector" xml:space="preserve">
+                <source>Projector</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseScreenTV" xml:space="preserve">
+                <source>Screen/TV</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseSoundSystem" xml:space="preserve">
+                <source>Sound system</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseTechnicalStaff" xml:space="preserve">
+                <source>Technical staff</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseVideoRecorder" xml:space="preserve">
+                <source>video recorder</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseWLAN" xml:space="preserve">
+                <source>W-LAN</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.MeetingHouseslideProjector" xml:space="preserve">
+                <source>slide projector</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.Multifunctional" xml:space="preserve">
+                <source>Multifunctional</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.Separable" xml:space="preserve">
+                <source>Separable</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.Sustainable" xml:space="preserve">
+                <source>Sustainable</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.UsableOutdoorArea" xml:space="preserve">
+                <source>Usable Outdoor Area</source>
+            </trans-unit>
+            <trans-unit id="content.meeting_facilities.Wardrobe" xml:space="preserve">
+                <source>wardrobe</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.AirConditioning" xml:space="preserve">
+                <source>Air conditioning</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.BackStageArea" xml:space="preserve">
+                <source>BacktageArea</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.Full" xml:space="preserve">
+                <source>Barrier-free</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomBlackoutOption" xml:space="preserve">
+                <source>Blackout option</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomConferenceTechnology" xml:space="preserve">
+                <source>Conference technology</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomDaylight" xml:space="preserve">
+                <source>Daylight</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomIntegratedSoundSystem" xml:space="preserve">
+                <source>Integrated conference sound system</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomInterpreterBooths" xml:space="preserve">
+                <source>Interpreter booths</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomLightingSoundControl" xml:space="preserve">
+                <source>Lighting and sound control</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomMediaConnections" xml:space="preserve">
+                <source>Media connections</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomPassable" xml:space="preserve">
+                <source>passable</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomPresentationMediaTechnology" xml:space="preserve">
+                <source>Presentation and media technology</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomSoundsystem" xml:space="preserve">
+                <source>Public address system</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingFacilitysRoomStage" xml:space="preserve">
+                <source>Stage</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseCanvas" xml:space="preserve">
+                <source>Canvas</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseFlipchart" xml:space="preserve">
+                <source>Flipchart</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseLectern" xml:space="preserve">
+                <source>Lectern</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseProjector" xml:space="preserve">
+                <source>Projector</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseScreenTV" xml:space="preserve">
+                <source>Screen/TV</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseSoundSystem" xml:space="preserve">
+                <source>Sound system</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseTechnicalStaff" xml:space="preserve">
+                <source>Technical staff</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseVideoRecorder" xml:space="preserve">
+                <source>video recorder</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseWLAN" xml:space="preserve">
+                <source>W-LAN</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.MeetingHouseslideProjector" xml:space="preserve">
+                <source>slide projector</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.Multifunctional" xml:space="preserve">
+                <source>Multifunctional</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.Separable" xml:space="preserve">
+                <source>Separable</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.Sustainable" xml:space="preserve">
+                <source>Sustainable</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.UsableOutdoorArea" xml:space="preserve">
+                <source>Usable Outdoor Area</source>
+            </trans-unit>
+            <trans-unit id="content.facilities.Wardrobe" xml:space="preserve">
+                <source>wardrobe</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.AutomaticVendingMachine" xml:space="preserve">
+                <source>Automatic vending machine</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.BarEnumMem" xml:space="preserve">
+                <source>bar</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.BistroEnumMem" xml:space="preserve">
+                <source>Bistro</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.BreadRollServiceEnumMem" xml:space="preserve">
+                <source>Bread roll service</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.BreakfastService" xml:space="preserve">
+                <source>Breakfast service</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.Cafe" xml:space="preserve">
+                <source>café</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.CateringEnumMem" xml:space="preserve">
+                <source>Catering</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.DrinkingWaterStation" xml:space="preserve">
+                <source>drinking water station</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.DrinksVendingMachineEnumMem" xml:space="preserve">
+                <source>Getränkeautomat</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.KeyWordBeerGardenEnum" xml:space="preserve">
+                <source>beer garden</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.Restaurant" xml:space="preserve">
+                <source>restaurant</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.SelfCateringKitchen" xml:space="preserve">
+                <source>Self-catering kitchen</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.SnackVendingMachineEnumMem" xml:space="preserve">
+                <source>Snackautomat</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.SnacksEnumMem" xml:space="preserve">
+                <source>Snacks</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.TakeawayShop" xml:space="preserve">
+                <source>takeaway shop</source>
+            </trans-unit>
+            <trans-unit id="content.gastro.ZeroGastronomy" xml:space="preserve">
+                <source>no gastronomy</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AfricanCuisine" xml:space="preserve">
+                <source>African cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AllYouCanEat" xml:space="preserve">
+                <source>All You Can Eat</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AlpineCuisineEnumMem" xml:space="preserve">
+                <source>AlpineCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AmericanCuisine" xml:space="preserve">
+                <source>American cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ArabicCuisine" xml:space="preserve">
+                <source>Arabic cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AsianCuisine" xml:space="preserve">
+                <source>Asian cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AustralianCuisine" xml:space="preserve">
+                <source>Australian cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.AustrianCuisineEnumMem" xml:space="preserve">
+                <source>AustrianCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BBQEnumMem" xml:space="preserve">
+                <source>BBQEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BrazilianCuisine" xml:space="preserve">
+                <source>Brazilian cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BreakfastBuffet" xml:space="preserve">
+                <source>Breakfast buffet</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BritishCuisine" xml:space="preserve">
+                <source>British Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Brunch" xml:space="preserve">
+                <source>Brunch</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BuffetEnumMem" xml:space="preserve">
+                <source>BuffetEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.BurgersEnumMem" xml:space="preserve">
+                <source>Burger</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.CakesEnumMem" xml:space="preserve">
+                <source>Cake</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.CentralEuropeanCuisine" xml:space="preserve">
+                <source>CentralEuropean cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ChineseCuisine" xml:space="preserve">
+                <source>Chinese Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ContinentalBreakfastStandard" xml:space="preserve">
+                <source>Continental breakfast standard</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.CzechCuisineEnumMem" xml:space="preserve">
+                <source>CzechCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.DelicaciesOrGourmetFood" xml:space="preserve">
+                <source>delicacies or gourmet food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.DietaryFood" xml:space="preserve">
+                <source>Dietary food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Dinner" xml:space="preserve">
+                <source>Dinner</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Fastfood" xml:space="preserve">
+                <source>Fast food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Fingerfood" xml:space="preserve">
+                <source>Finger food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.FishSpecialties" xml:space="preserve">
+                <source>Fish specialties</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.FoodCombining" xml:space="preserve">
+                <source>Food Combining</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.FranconianCuisineEnumMem" xml:space="preserve">
+                <source>FranconianCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.FrenchCuisine" xml:space="preserve">
+                <source>French cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.FrontCooking" xml:space="preserve">
+                <source>Front Cooking</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.GameSpecialties" xml:space="preserve">
+                <source>Game specialties</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.GermanCuisine" xml:space="preserve">
+                <source>German cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.GlutenFreeCuisine" xml:space="preserve">
+                <source>GlutenFree cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.GreekCuisine" xml:space="preserve">
+                <source>Greek cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.HalalCuisine" xml:space="preserve">
+                <source>Halal cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.HauteCuisine" xml:space="preserve">
+                <source>Haute cuisine/gourmet cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.HesseCuisine" xml:space="preserve">
+                <source>Hesse cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.HomeCookedFood" xml:space="preserve">
+                <source>home-cooked meals</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.HomeStyle" xml:space="preserve">
+                <source>Home-style Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.IceCream" xml:space="preserve">
+                <source>Ice cream</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.IndianCuisine" xml:space="preserve">
+                <source>Indian cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.IndonesianCuisine" xml:space="preserve">
+                <source>Indonesian Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.InternationalCuisine" xml:space="preserve">
+                <source>International Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ItalianCuisine" xml:space="preserve">
+                <source>Italian Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.JapaneseCuisine" xml:space="preserve">
+                <source>Japanese Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.KosherCuisine" xml:space="preserve">
+                <source>Kosher cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.LactoseFreeCuisine" xml:space="preserve">
+                <source>LactoseFree cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.LunchAndDailyMenu" xml:space="preserve">
+                <source>Lunch / Daily menu</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MaritimeCuisine" xml:space="preserve">
+                <source>Maritime cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MeatSpecialties" xml:space="preserve">
+                <source>Meat specialties</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MediterraneanCuisine" xml:space="preserve">
+                <source>Mediterranean cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Merger" xml:space="preserve">
+                <source>merger</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MexicanCuisine" xml:space="preserve">
+                <source>Mexican Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MolecularCuisine" xml:space="preserve">
+                <source>Molecular cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.MultiCourseMenu" xml:space="preserve">
+                <source>Multi-course menu</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.OrganicFood" xml:space="preserve">
+                <source>organic food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.OrientalCuisine" xml:space="preserve">
+                <source>Oriental Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.OwnProduction" xml:space="preserve">
+                <source>Own production</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.PakistaniCuisineEnumMem" xml:space="preserve">
+                <source>PakistaniCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.PizzaSpecialitiesEnumMem" xml:space="preserve">
+                <source>Pizza</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.PotatoRestaurant" xml:space="preserve">
+                <source>Potato dishes</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ReductionDiet" xml:space="preserve">
+                <source>Reduction diet</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.RegionalCuisine" xml:space="preserve">
+                <source>Regional cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SeasonalMenu" xml:space="preserve">
+                <source>Seasonal menu</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SeniorPortions" xml:space="preserve">
+                <source>Senior portions</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Slowfood" xml:space="preserve">
+                <source>Slow food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SnacksEnumMem" xml:space="preserve">
+                <source>Snacks</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SpanishCuisine" xml:space="preserve">
+                <source>Spanish Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SteakDishes" xml:space="preserve">
+                <source>Steak dishes</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.StreetFoodCuisine" xml:space="preserve">
+                <source>Street food</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.Sushi" xml:space="preserve">
+                <source>sushi</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.SwissCuisine" xml:space="preserve">
+                <source>Swiss Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.TarteFlambeeEnumMem" xml:space="preserve">
+                <source>TarteFlambeeEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.ThuringianCuisine" xml:space="preserve">
+                <source>Thuringian cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.TraditionalCuisine" xml:space="preserve">
+                <source>Traditional Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.TurkishCuisine" xml:space="preserve">
+                <source>Turkish Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.TyroleanHutCuisineEnumMem" xml:space="preserve">
+                <source>TyroleanHutCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.VeganCooking" xml:space="preserve">
+                <source>vegan cooking</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.VegetarianCooking" xml:space="preserve">
+                <source>vegetarian cooking</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.VespersBreadDishes" xml:space="preserve">
+                <source>Vespers/Bread dishes</source>
+            </trans-unit>
+            <trans-unit id="content.serves_cuisine.VietnameseCuisineEnumMem" xml:space="preserve">
+                <source>VietnameseCuisineEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.entrance.IndoorActivities" xml:space="preserve">
+                <source>indoor</source>
+            </trans-unit>
+            <trans-unit id="content.entrance.OutdoorActivities" xml:space="preserve">
+                <source>outdoor</source>
+            </trans-unit>
+            <trans-unit id="content.entrance.SmokingArea" xml:space="preserve">
+                <source>smoking area</source>
+            </trans-unit>
+            <trans-unit id="content.entrance.ZeroInformationEntrance" xml:space="preserve">
+                <source>no information</source>
+            </trans-unit>
+            <trans-unit id="content.guided_tour.GuidedTourOnlyWithRegistration" xml:space="preserve">
+                <source>guided tour (only) with registration</source>
+            </trans-unit>
+            <trans-unit id="content.guided_tour.GuidedTourRegistrationNotRequired" xml:space="preserve">
+                <source>guided tour, registration not required</source>
+            </trans-unit>
+            <trans-unit id="content.guided_tour.ZeroGuidedTours" xml:space="preserve">
+                <source>no guided tours</source>
+            </trans-unit>
+            <trans-unit id="content.monument.ArchitecturalMonumentArea" xml:space="preserve">
+                <source>Monument (ensemble of monuments)</source>
+            </trans-unit>
+            <trans-unit id="content.monument.ArchitecturalMonumentSingle" xml:space="preserve">
+                <source>architectural monument (single monument)</source>
+            </trans-unit>
+            <trans-unit id="content.monument.GardenMonument" xml:space="preserve">
+                <source>Garden Monument</source>
+            </trans-unit>
+            <trans-unit id="content.monument.GroundMonument" xml:space="preserve">
+                <source>Ground Monument</source>
+            </trans-unit>
+            <trans-unit id="content.monument.UnescoWorldHeritageCulture" xml:space="preserve">
+                <source>UNESCO World Heritage (Culture)</source>
+            </trans-unit>
+            <trans-unit id="content.monument.ZeroInformationMemorialClass" xml:space="preserve">
+                <source>no information</source>
+            </trans-unit>
+            <trans-unit id="content.ensemble.GuestPerformances" xml:space="preserve">
+                <source>guest performances</source>
+            </trans-unit>
+            <trans-unit id="content.ensemble.InHouseEnsemble" xml:space="preserve">
+                <source>in house ensemble</source>
+            </trans-unit>
+            <trans-unit id="content.ensemble.InHouseOrchestra" xml:space="preserve">
+                <source>in house orchestra</source>
+            </trans-unit>
+            <trans-unit id="content.ensemble.ZeroInformationTheaterEnsemble" xml:space="preserve">
+                <source>no information</source>
+            </trans-unit>
+            <trans-unit id="content.ensemble.ZeroInformationTheatreEnsemble" xml:space="preserve">
+                <source>no information</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.AgricultureEnum" xml:space="preserve">
+                <source>farming</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Animals" xml:space="preserve">
+                <source>Animals</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ArchaeologyExhibition" xml:space="preserve">
+                <source>archaeology</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Architecture" xml:space="preserve">
+                <source>architecture</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Art" xml:space="preserve">
+                <source>art</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.AstronomyExhibition" xml:space="preserve">
+                <source>astronomy</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.BotanyExhibition" xml:space="preserve">
+                <source>botany</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.BrewingTradeExhibition" xml:space="preserve">
+                <source>brewing trade</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CarExhibition" xml:space="preserve">
+                <source>cars</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CastleHistoryEnumMem" xml:space="preserve">
+                <source>CastleHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CastleWithInventory" xml:space="preserve">
+                <source>Castle with inventory</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Ceramics" xml:space="preserve">
+                <source>ceramics</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ChemistryExhibition" xml:space="preserve">
+                <source>chemistry</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ChildrensMuseums" xml:space="preserve">
+                <source>children's museums</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ChurchTreasures" xml:space="preserve">
+                <source>church treasures</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CityHistoryEnumMem" xml:space="preserve">
+                <source>CityHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ContemporaryHistory" xml:space="preserve">
+                <source>Contemporary history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CraftsArtsAndCrafts" xml:space="preserve">
+                <source>crafts/ arts and crafts</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.CulturalHistoryExhibition" xml:space="preserve">
+                <source>cultural history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Design" xml:space="preserve">
+                <source>design</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.DigitalArts" xml:space="preserve">
+                <source>DigitalArts</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.DistilleryHistoryEnumMem" xml:space="preserve">
+                <source>DistilleryHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.EarthSciencesExhibition" xml:space="preserve">
+                <source>earth sciences</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.EcclesiasticalHistoryExhibition" xml:space="preserve">
+                <source>ecclesiastical history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.EthnologyExhibition" xml:space="preserve">
+                <source>ethnology</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Farmhouses" xml:space="preserve">
+                <source>farmhouses</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.FireBrigadeExhibition" xml:space="preserve">
+                <source>fire brigade</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.FolkloreStudies" xml:space="preserve">
+                <source>folklore studies</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ForgingTechnologyEnumMem" xml:space="preserve">
+                <source>ForgingTechnologyEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.FossilsEnumMem" xml:space="preserve">
+                <source>FossilsEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.FurnitureEnumMem" xml:space="preserve">
+                <source>FurnitureEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.GardenEnum" xml:space="preserve">
+                <source>Garden</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.GeologyEnumMem" xml:space="preserve">
+                <source>GeologyEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Glass" xml:space="preserve">
+                <source>glass</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Graphics" xml:space="preserve">
+                <source>Graphics</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HandicraftsEnumMem" xml:space="preserve">
+                <source>HandicraftsEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HistoricalLibraries" xml:space="preserve">
+                <source>historical libraries</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HistoryExhibition" xml:space="preserve">
+                <source>History</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HistoryOfMusicExhibition" xml:space="preserve">
+                <source>history of music</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HistoryOfTechnologyExhibition" xml:space="preserve">
+                <source>history of technology</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.HumanMedicineExhibition" xml:space="preserve">
+                <source>human medicine</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.IndustrialHistoryExhibition" xml:space="preserve">
+                <source>industrial history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.InteriorEnumMem" xml:space="preserve">
+                <source>InteriorEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.JewishLifeEnumMem" xml:space="preserve">
+                <source>JewishLifeEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.LiteraryHistoryExhibition" xml:space="preserve">
+                <source>literary history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.LocalHistory" xml:space="preserve">
+                <source>local history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MasksEnumMem" xml:space="preserve">
+                <source>MasksEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MemorialsWithExhibition" xml:space="preserve">
+                <source>Memorials with exhibition</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MetallurgyExhibition" xml:space="preserve">
+                <source>metallurgy</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MeterologyEnumMem" xml:space="preserve">
+                <source>MeterologyEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MilitariaExhibition" xml:space="preserve">
+                <source>militaria</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Mill" xml:space="preserve">
+                <source>mill</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MineralsEnumMem" xml:space="preserve">
+                <source>MineralsEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MiningExhibition" xml:space="preserve">
+                <source>mining</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MiningHistoryEnumMem" xml:space="preserve">
+                <source>MiningHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ModellingEnumMem" xml:space="preserve">
+                <source>ModellingEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MonasteryEnuMem" xml:space="preserve">
+                <source>monastery</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Movie" xml:space="preserve">
+                <source>movie</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.MusicalInstrumentsExhibition" xml:space="preserve">
+                <source>musical instruments</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.NaturalHistoryExhibition" xml:space="preserve">
+                <source>natural history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.NaturalStudiesExhibition" xml:space="preserve">
+                <source>natural history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.Painting" xml:space="preserve">
+                <source>Painting</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PalaceWithInventory" xml:space="preserve">
+                <source>Palace with inventory</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PalaeontologyExhibition" xml:space="preserve">
+                <source>palaeontology</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PedagogyEnumMem" xml:space="preserve">
+                <source>PedagogyEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PersonaliaExhibition" xml:space="preserve">
+                <source>Personalia</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PharmacyExhibition" xml:space="preserve">
+                <source>pharmacy</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PhotographyExhibition" xml:space="preserve">
+                <source>photography</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PhysicsExhibition" xml:space="preserve">
+                <source>physics</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PoachingHistoryEnumMem" xml:space="preserve">
+                <source>PoachingHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PoliticalHistoryEnumMem" xml:space="preserve">
+                <source>PoliticalHistoryEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PorcelainEnumMem" xml:space="preserve">
+                <source>PorcelainEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PostalSystemEnumMem" xml:space="preserve">
+                <source>PostalSystemEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.PrehistoryAndEarlyHistoryExhibition" xml:space="preserve">
+                <source>Prehistory and Early History</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.RegionalHistory" xml:space="preserve">
+                <source>regional history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ReligiousHistoryExhibition" xml:space="preserve">
+                <source>religious history</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.SacredArt" xml:space="preserve">
+                <source>sacred art</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.SaltworksEnumMem" xml:space="preserve">
+                <source>SaltworksEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.SpicesEnumMem" xml:space="preserve">
+                <source>SpicesEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.SportsHistoryExhibition" xml:space="preserve">
+                <source>sports History</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.StreetArt" xml:space="preserve">
+                <source>Street art</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.TechnicTechnologyEngeneeringExhibition" xml:space="preserve">
+                <source>technic/ technology/ engeneering</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.TeddyBearsEnumMem" xml:space="preserve">
+                <source>TeddyBearsEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ToyExhibition" xml:space="preserve">
+                <source>toy</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.TrafficExhibition" xml:space="preserve">
+                <source>traffic</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.UmbrellasEnumMem" xml:space="preserve">
+                <source>UmbrellasEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.VeterinaryMedicineExhibition" xml:space="preserve">
+                <source>veterinary medicine</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ViticultureExhibition" xml:space="preserve">
+                <source>viticulture</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.WaterPowerEnumMem" xml:space="preserve">
+                <source>WaterPowerEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.WeaponsEnumMem" xml:space="preserve">
+                <source>WeaponsEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.exhibition_objects.ZoologyExhibition" xml:space="preserve">
+                <source>zoology</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.BasketballCourtEnumMem" xml:space="preserve">
+                <source>Basketball court/basket</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.BeachVolleyballCourtEnumMem" xml:space="preserve">
+                <source>BeachVolleyballCourtEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.BicycleRental" xml:space="preserve">
+                <source>Bicycle rental</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.Billiards" xml:space="preserve">
+                <source>Billiards</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.BoatRentalEnumMem" xml:space="preserve">
+                <source>BoatRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.BoulesEnumMem" xml:space="preserve">
+                <source>BoulesEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.CanoeRentalEnumMem" xml:space="preserve">
+                <source>CanoeRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.CurlingEnumMem" xml:space="preserve">
+                <source>Curling rink</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.Darts" xml:space="preserve">
+                <source>Darts</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.EbikeRentalEnumMem" xml:space="preserve">
+                <source>EbikeRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.FitnessRoom" xml:space="preserve">
+                <source>fitness room</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.FootballPitchEnumMem" xml:space="preserve">
+                <source>Fußballplatz</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.GrandChessEnumMem" xml:space="preserve">
+                <source>GrandChessEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.KayakRentalEnumMem" xml:space="preserve">
+                <source>KayakRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.MiniatureGolf" xml:space="preserve">
+                <source>miniature golf</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.PlayAndSportsArea" xml:space="preserve">
+                <source>Spiel- und Sportfläche</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.RidingAction" xml:space="preserve">
+                <source>Riding</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.SUPRentalEnumMem" xml:space="preserve">
+                <source>SUPRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.SportsgroundEnumMem" xml:space="preserve">
+                <source>SportsgroundEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.TableFootball" xml:space="preserve">
+                <source>Kicker</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.TableTennisTables" xml:space="preserve">
+                <source>table tennis tables</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.VolleyballCourtEnumMem" xml:space="preserve">
+                <source>VolleyballCourtEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.sports_equipment.WinterSportsEquipmentRentalEnumMem" xml:space="preserve">
+                <source>WinterSportsEquipmentRentalEnumMem</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.AirConditioning" xml:space="preserve">
+                <source>Air conditioning</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BabyBed" xml:space="preserve">
+                <source>Baby cot</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BabyHighChair" xml:space="preserve">
+                <source>Baby high chair</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Balcony" xml:space="preserve">
+                <source>Balcony</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BedLinen" xml:space="preserve">
+                <source>Bed linen</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BicycleRental" xml:space="preserve">
+                <source>Bicycle rental</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BicycleShelter" xml:space="preserve">
+                <source>Bicycle shelter</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BreakfastBuffet" xml:space="preserve">
+                <source>Breakfast buffet</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.BreakfastService" xml:space="preserve">
+                <source>Breakfast service</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.CarPark" xml:space="preserve">
+                <source>Car park</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.CommonRoomEnumMem" xml:space="preserve">
+                <source>common room</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.ConferenceMeetingRooms" xml:space="preserve">
+                <source>Conference/meeting rooms</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.ContinentalBreakfastStandard" xml:space="preserve">
+                <source>Continental breakfast standard</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.CookingFacilities" xml:space="preserve">
+                <source>Cooking facilities</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Crib" xml:space="preserve">
+                <source>Crib</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Desk" xml:space="preserve">
+                <source>Desk</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.DietaryFood" xml:space="preserve">
+                <source>Dietary food</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Dishwasher" xml:space="preserve">
+                <source>Dishwasher</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.ExtraBed" xml:space="preserve">
+                <source>Extra bed</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.FireplaceEnumMem" xml:space="preserve">
+                <source>Fireplace</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.FoodCombining" xml:space="preserve">
+                <source>Food Combining</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.FrenchBed" xml:space="preserve">
+                <source>French bed</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Fridge" xml:space="preserve">
+                <source>Fridge</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.FullBoardEnumMem" xml:space="preserve">
+                <source>Full board</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.GarageEnunMem" xml:space="preserve">
+                <source>Garage</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.GardenEnum" xml:space="preserve">
+                <source>Garden</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.GardenFurniture" xml:space="preserve">
+                <source>Garden furniture</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.GrillPossibility" xml:space="preserve">
+                <source>Grill possibility</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.HalfBoardEnumMem" xml:space="preserve">
+                <source>Half board</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.HighChairForChildren" xml:space="preserve">
+                <source>High chair for children</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.HotMeal" xml:space="preserve">
+                <source>warm kitchen</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.LawnForSunbathing" xml:space="preserve">
+                <source>lawn for sunbathing</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.LibraryEnumMem" xml:space="preserve">
+                <source>Library</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Lift" xml:space="preserve">
+                <source>Lift</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Playground" xml:space="preserve">
+                <source>playground</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Restaurant" xml:space="preserve">
+                <source>restaurant</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Safe" xml:space="preserve">
+                <source>Safe</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.SaunaEnuMem" xml:space="preserve">
+                <source>sauna</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.SwimmingPool" xml:space="preserve">
+                <source>Swimming pool</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.TV" xml:space="preserve">
+                <source>TV</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Terrace" xml:space="preserve">
+                <source>Terrace</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.VeganCooking" xml:space="preserve">
+                <source>vegan cooking</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.VegetarianCooking" xml:space="preserve">
+                <source>vegetarian cooking</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WC" xml:space="preserve">
+                <source>WC</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WCAndBathroom" xml:space="preserve">
+                <source>WC and bathroom</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WCAndShower" xml:space="preserve">
+                <source>WC and shower</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WCAndShowerAndBath" xml:space="preserve">
+                <source>WC and shower and bath</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WCAndShowerOrBath" xml:space="preserve">
+                <source>WC and shower or bath</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WLAN" xml:space="preserve">
+                <source>WLAN</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.WashingMachine" xml:space="preserve">
+                <source>washing machine</source>
+            </trans-unit>
+            <trans-unit id="content.amenity_features.Wholefood" xml:space="preserve">
+                <source>wholefood</source>
+            </trans-unit>
+            <trans-unit id="content.price_range.PriceRangeHight" xml:space="preserve">
+                <source>hight</source>
+            </trans-unit>
+            <trans-unit id="content.price_range.PriceRangeLow" xml:space="preserve">
+                <source>low</source>
+            </trans-unit>
+            <trans-unit id="content.price_range.PriceRangeMiddle" xml:space="preserve">
+                <source>middle</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FiveStar" xml:space="preserve">
+                <source>*****</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FiveStarSuperior" xml:space="preserve">
+                <source>***** Superior</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FiveStarSuperiorGarni" xml:space="preserve">
+                <source>***** Superior Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FourStar" xml:space="preserve">
+                <source>****</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FourStarGarni" xml:space="preserve">
+                <source>**** Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FourStarSuperior" xml:space="preserve">
+                <source>**** Superior</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.FourStarSuperiorGarni" xml:space="preserve">
+                <source>**** Superior bed and breakfast</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.GtaFiveStar" xml:space="preserve">
+                <source>F*****</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.GtaFourStar" xml:space="preserve">
+                <source>F****</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.GtaOneStar" xml:space="preserve">
+                <source>F*</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.GtaThreeStar" xml:space="preserve">
+                <source>F***</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.GtaTwoStar" xml:space="preserve">
+                <source>F**</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.NotClassified" xml:space="preserve">
+                <source>not classified</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneGreenStarMichelin" xml:space="preserve">
+                <source>1 Michelin Green Star</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneStar" xml:space="preserve">
+                <source>*</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneStarGarni" xml:space="preserve">
+                <source>* Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneStarMichelin" xml:space="preserve">
+                <source>1 Michelin star</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneStarSuperior" xml:space="preserve">
+                <source>* Superior</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.OneStarSuperiorGarni" xml:space="preserve">
+                <source>* Superior Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.ThreeStar" xml:space="preserve">
+                <source>***</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.ThreeStarGarni" xml:space="preserve">
+                <source>*** Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.ThreeStarSuperior" xml:space="preserve">
+                <source>*** Superior</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.ThreeStarSuperiorGarni" xml:space="preserve">
+                <source>*** Superior bed and breakfast</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.TwoStar" xml:space="preserve">
+                <source>**</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.TwoStarGarni" xml:space="preserve">
+                <source>** Garni</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.TwoStarSuperior" xml:space="preserve">
+                <source>** Superior</source>
+            </trans-unit>
+            <trans-unit id="content.star_rating.TwoStarSuperiorGarni" xml:space="preserve">
+                <source>** Superior Garni</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

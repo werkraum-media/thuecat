@@ -372,6 +372,7 @@ class Importer
         $this->importLogger->recordDroppedScheduleDays($parserContext->droppedScheduleDays);
         $this->importLogger->recordUnresolvableEventDates($parserContext->unresolvableEventDates);
         $this->importLogger->recordEventsWithoutDates($parserContext->eventsWithoutDates);
+        $this->importLogger->recordUnmatchedValues($parserContext->unmatchedValues);
         $this->importLogger->writeLog(
             $configuration->getUid(),
             $loggerPayload,

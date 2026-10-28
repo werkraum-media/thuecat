@@ -186,6 +186,171 @@
             <trans-unit id="tx_thuecat_tourist_attraction.tab.meeting_venue" xml:space="preserve">
                 <source>Venue</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.meeting_facilities" xml:space="preserve">
+                <source>Meeting equipment</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.gastro" xml:space="preserve">
+                <source>Gastronomy</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.serves_cuisine" xml:space="preserve">
+                <source>Cuisine</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.entrance" xml:space="preserve">
+                <source>Activities</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.guided_tour" xml:space="preserve">
+                <source>Guided tours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.monument" xml:space="preserve">
+                <source>Monument protection</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.ensemble" xml:space="preserve">
+                <source>Ensemble</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.exhibition_objects" xml:space="preserve">
+                <source>Exhibitions</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.sports_equipment" xml:space="preserve">
+                <source>Sports equipment</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.amenity_features" xml:space="preserve">
+                <source>Amenities</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.price_range" xml:space="preserve">
+                <source>Price range</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.star_rating" xml:space="preserve">
+                <source>Star rating</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.smoking_allowed" xml:space="preserve">
+                <source>Smoking allowed</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.is_ruin" xml:space="preserve">
+                <source>Ruin</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.open_air_museum" xml:space="preserve">
+                <source>Open-air museum</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.bookable" xml:space="preserve">
+                <source>Bookable</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.has_drive_through_service" xml:space="preserve">
+                <source>Drive-through</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.beer_garden" xml:space="preserve">
+                <source>Beer garden</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.catering" xml:space="preserve">
+                <source>Catering</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.delivery_service" xml:space="preserve">
+                <source>Delivery service</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.hot_cuisine_throughout" xml:space="preserve">
+                <source>Hot food all day</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.late_kitchen" xml:space="preserve">
+                <source>Late kitchen</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.self_service" xml:space="preserve">
+                <source>Self service</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.take_away" xml:space="preserve">
+                <source>Take away</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.accepts_reservations" xml:space="preserve">
+                <source>Accepts reservations</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.maximum_attendee_capacity" xml:space="preserve">
+                <source>Maximum attendees</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.number_of_rooms" xml:space="preserve">
+                <source>Number of rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.single_rooms" xml:space="preserve">
+                <source>Single rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.double_rooms" xml:space="preserve">
+                <source>Double rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.twin_rooms" xml:space="preserve">
+                <source>Twin rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.suites" xml:space="preserve">
+                <source>Suites</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.seats_inside" xml:space="preserve">
+                <source>Seats inside</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.seats_outside" xml:space="preserve">
+                <source>Seats outside</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_airport" xml:space="preserve">
+                <source>Distance to airport (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_city_center" xml:space="preserve">
+                <source>Distance to city centre (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_fair" xml:space="preserve">
+                <source>Distance to exhibition centre (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_freeway" xml:space="preserve">
+                <source>Distance to motorway (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.distance_ice_station" xml:space="preserve">
+                <source>Distance to ICE/IC station (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.size_of_area" xml:space="preserve">
+                <source>Area (m²)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.typical_age_range" xml:space="preserve">
+                <source>Typical age range</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.end_of_construction" xml:space="preserve">
+                <source>End of construction</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.certifications" xml:space="preserve">
+                <source>Certifications</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.checkin_time" xml:space="preserve">
+                <source>Check-in time</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.checkout_time" xml:space="preserve">
+                <source>Check-out time</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.has_map" xml:space="preserve">
+                <source>Map</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.tour_booking_page" xml:space="preserve">
+                <source>Booking page</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.identifier" xml:space="preserve">
+                <source>Identifier</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.same_as" xml:space="preserve">
+                <source>Same as</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.logo" xml:space="preserve">
+                <source>Logo</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.subject_of_media" xml:space="preserve">
+                <source>Further media</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.description_culture_portal" xml:space="preserve">
+                <source>Description for the culture portal</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.description_lodging_meeting" xml:space="preserve">
+                <source>Description for lodging and meetings</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.boolean.true" xml:space="preserve">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.boolean.false" xml:space="preserve">
+                <source>No</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.tab.meeting" xml:space="preserve">
+                <source>Meeting</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.palette.language" xml:space="preserve">
                 <source>Language</source>
             </trans-unit>
@@ -808,6 +973,9 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.type.recordReclassification" xml:space="preserve">
                 <source>Record Reclassification</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.valueUnmatched" xml:space="preserve">
+                <source>Value Unmatched</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.kind" xml:space="preserve">
                 <source>Field</source>

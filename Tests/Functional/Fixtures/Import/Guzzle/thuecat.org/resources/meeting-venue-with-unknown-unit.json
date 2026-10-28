@@ -1,0 +1,129 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/059632237210-rbpe",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Centre de service client des services municipaux d'Erfurt"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "Centrum obsługi klienta przedsiębiorstwa komunalnego Stadtwerke Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Erfurt Municipal Utilities Customer Service Centre"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Kundendienstzentrum der Stadtwerke Erfurt"
+                }
+            ],
+            "schema:hasMap": {
+                "@type": "schema:URL",
+                "@value": "https://maps.app.goo.gl/t34prCe86M7tkbHZ9"
+            },
+            "schema:sameAs": {
+                "@type": "schema:URL",
+                "@value": "https://www.outdooractive.com/de/812638275"
+            },
+            "schema:smokingAllowed": {
+                "@type": "schema:Boolean",
+                "@value": "false"
+            },
+            "thuecat:gastro": {
+                "@type": "thuecat:GastroPoi",
+                "@value": "thuecat:TakeawayShop"
+            },
+            "thuecat:distanceCityCenter": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31286112686-b6",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "2"
+                }
+            },
+            "thuecat:distanceFair": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31286112686-b7",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "test:UnknownUnit"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "6"
+                }
+            },
+            "thuecat:distanceFreeway": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31286112686-b8",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "10"
+                }
+            },
+            "thuecat:distanceICECStation": {
+                "@id": "genid-cdd7ace199e34746a484db4ded5e31286112686-b9",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:KTM"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "3"
+                }
+            },
+            "thuecat:meetingFacilitysHouse": {
+                "@type": "thuecat:MeetingFacilitysHouse",
+                "@value": "thuecat:MeetingHouseScreenTV"
+            }
+        }
+    ]
+}

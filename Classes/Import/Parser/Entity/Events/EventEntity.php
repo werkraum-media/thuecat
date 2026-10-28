@@ -342,39 +342,6 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
     }
 
     /**
-     * The richtext `details` column wants HTML. schema:description arrives as
-     * a plain literal beside a thuecat:Html entry, or as a schema:TextObject
-     * carrying tourism:html and schema:text. Where no HTML exists the plain
-     * text is better than an empty field, but it is escaped so it stays text.
-     */
-    protected function extractDescription(mixed $value, string $language): string
-    {
-        if (!is_array($value)) {
-            return '';
-        }
-
-        $html = '';
-        $plain = '';
-        foreach (array_is_list($value) ? $value : [$value] as $item) {
-            if (!is_array($item)) {
-                continue;
-            }
-
-            $types = (array)($item['@type'] ?? []);
-            if (in_array('thuecat:Html', $types, true)) {
-                $html = $html !== '' ? $html : $this->extractValue($item['schema:value'] ?? null, $language);
-            } elseif (in_array('schema:TextObject', $types, true)) {
-                $html = $html !== '' ? $html : $this->extractValue($item['tourism:html'] ?? null, $language);
-                $plain = $plain !== '' ? $plain : $this->extractValue($item['schema:text'] ?? null, $language);
-            } else {
-                $plain = $plain !== '' ? $plain : $this->extractValue($item, $language);
-            }
-        }
-
-        return $html !== '' ? $html : htmlspecialchars($plain);
-    }
-
-    /**
      * Price offers carry no link; the booking link sits on a sibling offer,
      * so the first offer that has one wins.
      */

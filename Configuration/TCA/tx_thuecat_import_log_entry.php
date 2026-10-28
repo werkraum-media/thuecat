@@ -142,6 +142,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.recordReclassification',
                             'value' => 'recordReclassification',
                         ],
+                        [
+                            'label' => $languagePath . '.type.valueUnmatched',
+                            'value' => 'valueUnmatched',
+                        ],
                     ],
                 ],
             ],
@@ -321,6 +325,9 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'recordReclassification' => [
                 'showitem' => '--palette--;;always, kind, table_name, record_uid, message, context',
+            ],
+            'valueUnmatched' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
             ],
         ],
     ];

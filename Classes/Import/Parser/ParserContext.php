@@ -44,6 +44,11 @@ class ParserContext
      */
     public array $unresolvableEventDates = [];
 
+    /**
+     * @var list<array{table: string, remoteId: string, property: string, value: string}> values outside the closed set a property allows
+     */
+    public array $unmatchedValues = [];
+
     public function __construct(
         public readonly int $importConfigurationUid,
         public readonly string $apiDomain = '',

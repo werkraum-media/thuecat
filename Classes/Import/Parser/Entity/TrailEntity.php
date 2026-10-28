@@ -185,28 +185,10 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
             $node['schema:image'] ?? null,
             null,
         );
-        $this->recordLogoMedia($node['schema:logo'] ?? null);
+        $this->recordMediaOfKind('logo', $node['schema:logo'] ?? null);
 
         $this->recordTransient('managedBy', $node['thuecat:contentResponsible'] ?? null);
         $this->recordKeywords($node);
-    }
-
-    protected function recordLogoMedia(mixed $logo): void
-    {
-        foreach ($this->splitMediaByShape($logo) as $logoNode) {
-            $this->_inlineMedia[] = ['kind' => 'logo', 'node' => $logoNode];
-        }
-
-        $references = $this->collectIds($this->bareReferencesOnly($logo));
-        if ($references === []) {
-            return;
-        }
-
-        $entries = $this->transients['media'] ?? [];
-        foreach ($references as $id) {
-            $entries[] = ['kind' => 'logo', 'id' => $id];
-        }
-        $this->transients['media'] = $entries;
     }
 
     /**

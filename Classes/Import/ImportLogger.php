@@ -697,6 +697,30 @@ class ImportLogger
     }
 
     /**
+     * One entry per value outside the closed set its property allows. Warning, not error: the record
+     * imported, only that value is lost.
+     *
+     * @param list<array{table: string, remoteId: string, property: string, value: string}> $values
+     */
+    public function recordUnmatchedValues(array $values): void
+    {
+        foreach ($values as $value) {
+            $this->stage([
+                'type' => 'valueUnmatched',
+                'severity' => self::SEVERITY_WARNING,
+                'remote_id' => $value['remoteId'],
+                'table_name' => $value['table'],
+                'message' => sprintf(
+                    'Skipped value "%s" of %s: it is not one the import knows.',
+                    $value['value'],
+                    $value['property']
+                ),
+                'context' => (string)(json_encode(['property' => $value['property'], 'value' => $value['value']]) ?: '{}'),
+            ]);
+        }
+    }
+
+    /**
      * Warning, not error: every event the run fetched may already live in
      * another folder of the site, which is a configuration question, not a
      * failed import.

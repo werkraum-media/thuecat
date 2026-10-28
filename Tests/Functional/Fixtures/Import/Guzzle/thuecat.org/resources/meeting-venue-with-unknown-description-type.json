@@ -1,0 +1,95 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/838757899629-mqjw",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:Museum",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:OtherBuilding",
+                "thuecat:MemorialSite",
+                "thuecat:SpecialCongressLocation",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Gedenk- und Bildungsstätte Andreasstraße"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Memorial and Educational Site Andreasstraße"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Site commémoratif et éducatif Andreasstraße"
+                }
+            ],
+            "schema:typicalAgeRange": {
+                "@language": "de",
+                "@value": "12"
+            },
+            "schema:identifier": {
+                "@type": "schema:URL",
+                "@value": "https://www.thueringen-entdecken.de/urlaub-hotel-reisen/gedenk-und-bildungsstaette-andreasstrasse-141546.html"
+            },
+            "thuecat:additionalDescriptions": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e9239353-b18",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:TextObject",
+                    "dcmitype:Text",
+                    "tourism:WebTextObject",
+                    "test:UnknownDescription"
+                ],
+                "schema:additionalType": {
+                    "@id": "test:UnknownDescription"
+                },
+                "schema:text": [
+                    {
+                        "@language": "de",
+                        "@value": "Was die Gedenk- und Bildungsstätte Andreasstraße besonders macht:\nÜber 5.000 Menschen waren hier in der Untersuchungshaftanstalt des Ministeriums für Staatssicherheit (Stasi) zu DDR-Zeiten inhaftiert – weil sie \nWiderstand gegen das Regime geleistet hatten. Am 4. Dezember 1989 besetzten Erfurter Bürger*innen das Gebäude: Es war die erste Besetzung einer Stasi-Bastion während der Friedlichen Revolution.\nDie Themen Haft, Diktatur und Revolution werden in der Dauerausstellung auf drei Etagen veranschaulicht; im Mittelpunkt stehen \ndie persönlichen Geschichten von Zeitzeugen. Mit Hilfe von emotional bewegenden Videoclips und interaktiven Comics werden ihre Erzählungen lebendig. \nBesonders beeindruckend: der behutsam restaurierte \nZellentrakt im historischen Haftgebäude und die moderne Kubus-Fassade – sie zeigt Szenen der Friedlichen Revolution im Stil einer Graphic Novel. \nUnser Tipp: der Mediaguide. Damit führen dich Zeitzeugen per Videoclip durch die Haft-Etage und du kannst dich im Anschluss auch an weitere Orte der Friedlichen Revolution in Erfurt führen lassen. \n"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "Ce qui rend le centre de mémoire et d'éducation de l'Andreasstraße si particulier :\nPlus de 5 000 personnes ont été détenues ici, dans le centre de détention provisoire du ministère de la Sécurité d'État (Stasi), à l'époque de la RDA – parce qu'elles \navaient résisté au régime. Le 4 décembre 1989, des citoyens d’Erfurt ont occupé le bâtiment : ce fut la première occupation d’un bastion de la Stasi pendant la Révolution pacifique.\nLes thèmes de la détention, de la dictature et de la révolution sont illustrés dans l’exposition permanente sur trois étages ; l’accent est mis sur \nles récits personnels de témoins de l’époque. Leurs récits prennent vie grâce à des clips vidéo émouvants et des bandes dessinées interactives. \nParticulièrement impressionnants : le \ncorps de prison, soigneusement restauré, situé dans le bâtiment historique de détention et la façade cubique moderne – elle présente des scènes de la Révolution pacifique dans le style d’un roman graphique. \nNotre conseil : le guide multimédia. Grâce à lui, des témoins de l'époque te guident par le biais de clips vidéo à travers l'étage de détention et tu peux ensuite te laisser guider vers d'autres lieux de la Révolution pacifique à Erfurt. \n"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "What makes the Andreasstraße Memorial and Educational Center special:\nOver 5,000 people were detained here in the Ministry for State Security (Stasi) remand prison during the GDR era—because they \nhad resisted the regime. On December 4, 1989, citizens of Erfurt occupied the building: It was the first occupation of a Stasi stronghold during the Peaceful Revolution.\nThe themes of imprisonment, dictatorship, and revolution are illustrated in the permanent exhibition across three floors; the focus is on \nthe personal stories of eyewitnesses. Their stories come to life with the help of emotionally moving video clips and interactive comics. \nParticularly impressive: the carefully restored \ncell block in the historic detention building and the modern cube-shaped façade—it depicts scenes from the Peaceful Revolution in the style of a graphic novel. \nOur tip: the media guide. Through video clips, eyewitnesses guide you through the detention floor, and afterward, you can also be guided to other sites of the Peaceful Revolution in Erfurt. \n"
+                    }
+                ],
+                "tourism:html": [
+                    {
+                        "@language": "de",
+                        "@value": "<p>Was die Gedenk- und Bildungsstätte Andreasstraße besonders macht:</p><ul><li><p>Über 5.000 Menschen waren hier in der Untersuchungshaftanstalt des Ministeriums für Staatssicherheit (Stasi) zu DDR-Zeiten inhaftiert – weil sie <strong>Widerstand gegen das Regime</strong> geleistet hatten. Am 4. Dezember 1989 besetzten Erfurter Bürger*innen das Gebäude: Es war die erste Besetzung einer Stasi-Bastion während der Friedlichen Revolution.</p></li><li><p>Die Themen Haft, Diktatur und Revolution werden in der Dauerausstellung auf drei Etagen veranschaulicht; im Mittelpunkt stehen <strong>die persönlichen Geschichten von Zeitzeugen</strong>. Mit Hilfe von emotional bewegenden Videoclips und interaktiven Comics werden ihre Erzählungen lebendig. </p></li><li><p>Besonders beeindruckend: der behutsam restaurierte <strong>Zellentrakt im historischen Haftgebäude</strong> und die moderne Kubus-Fassade – sie zeigt Szenen der Friedlichen Revolution im Stil einer Graphic Novel. </p></li><li><p><strong>Unser Tipp: der Mediaguide.</strong> Damit führen dich Zeitzeugen per Videoclip durch die Haft-Etage und du kannst dich im Anschluss auch an weitere Orte der Friedlichen Revolution in Erfurt führen lassen. </p></li></ul>"
+                    },
+                    {
+                        "@language": "fr",
+                        "@value": "<p>Ce qui rend le centre de mémoire et d'éducation de l'Andreasstraße si particulier :</p><ul><li><p>Plus de 5 000 personnes ont été détenues ici, dans le centre de détention provisoire du ministère de la Sécurité d'État (Stasi), à l'époque de la RDA – parce qu'elles <strong>avaient résisté au régime</strong>. Le 4 décembre 1989, des citoyens d’Erfurt ont occupé le bâtiment : ce fut la première occupation d’un bastion de la Stasi pendant la Révolution pacifique.</p></li><li><p>Les thèmes de la détention, de la dictature et de la révolution sont illustrés dans l’exposition permanente sur trois étages ; l’accent est mis sur <strong>les récits personnels de témoins de l’époque</strong>. Leurs récits prennent vie grâce à des clips vidéo émouvants et des bandes dessinées interactives. </p></li><li><p>Particulièrement impressionnants : le <strong>corps de prison, soigneusement restauré, situé dans le bâtiment historique de détention</strong> et la façade cubique moderne – elle présente des scènes de la Révolution pacifique dans le style d’un roman graphique. </p></li><li><p><strong>Notre conseil : le guide multimédia.</strong> Grâce à lui, des témoins de l'époque te guident par le biais de clips vidéo à travers l'étage de détention et tu peux ensuite te laisser guider vers d'autres lieux de la Révolution pacifique à Erfurt. </p></li></ul>"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "<p>What makes the Andreasstraße Memorial and Educational Center special:</p><ul><li><p>Over 5,000 people were detained here in the Ministry for State Security (Stasi) remand prison during the GDR era—because they <strong>had resisted the regime</strong>. On December 4, 1989, citizens of Erfurt occupied the building: It was the first occupation of a Stasi stronghold during the Peaceful Revolution.</p></li><li><p>The themes of imprisonment, dictatorship, and revolution are illustrated in the permanent exhibition across three floors; the focus is on <strong>the personal stories of eyewitnesses</strong>. Their stories come to life with the help of emotionally moving video clips and interactive comics. </p></li><li><p>Particularly impressive: the carefully restored <strong>cell block in the historic detention building</strong> and the modern cube-shaped façade—it depicts scenes from the Peaceful Revolution in the style of a graphic novel. </p></li><li><p><strong>Our tip: the media guide.</strong> Through video clips, eyewitnesses guide you through the detention floor, and afterward, you can also be guided to other sites of the Peaceful Revolution in Erfurt. </p></li></ul>"
+                    }
+                ]
+            }
+        }
+    ]
+}

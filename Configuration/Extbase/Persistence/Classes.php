@@ -29,6 +29,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDayDropped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ScheduleDaySkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\StorageFolderEmpty;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ValueUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyStale;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyUnavailable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
@@ -102,6 +103,7 @@ return [
             'categoriesFieldMissing' => CategoriesFieldMissing::class,
             'eventPlaceMatch' => EventPlaceMatch::class,
             'recordReclassification' => RecordReclassification::class,
+            'valueUnmatched' => ValueUnmatched::class,
         ],
     ],
     SavingEntity::class => [
@@ -207,6 +209,10 @@ return [
     RecordReclassification::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'recordReclassification',
+    ],
+    ValueUnmatched::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'valueUnmatched',
     ],
 
     // Extbase constrains queries to the record types of the class and its subclasses, so every

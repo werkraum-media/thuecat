@@ -9,6 +9,12 @@ defined('TYPO3') or die();
 
 return (static function (string $extensionKey, string $tableName) {
     $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    // Booleans keep "not delivered" apart from "no".
+    $booleanItems = [
+        ['label' => '', 'value' => ''],
+        ['label' => $languagePath . '.boolean.true', 'value' => 'true'],
+        ['label' => $languagePath . '.boolean.false', 'value' => 'false'],
+    ];
     $attractionShowitem = 'type, --palette--;;language, title, slug, description, main_image, media_files, slogan, start_of_construction, sanitation, 
                 other_service, museum_service, architectural_style, traffic_infrastructure, payment_accepted, digital_offer, 
                 photography, pets_allowed, is_accessible_for_free, public_access, available_languages, distance_to_public_transport, 
@@ -79,6 +85,423 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.venue_type.meeting_congress',
                             'value' => 'meeting_congress',
                         ],
+                    ],
+                ],
+            ],
+
+            // Venue properties: imported for the meeting_venue type only, shown on its tabs.
+            'meeting_facilities' => [
+                'label' => $languagePath . '.meeting_facilities',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'gastro' => [
+                'label' => $languagePath . '.gastro',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'serves_cuisine' => [
+                'label' => $languagePath . '.serves_cuisine',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'entrance' => [
+                'label' => $languagePath . '.entrance',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'guided_tour' => [
+                'label' => $languagePath . '.guided_tour',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'monument' => [
+                'label' => $languagePath . '.monument',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'ensemble' => [
+                'label' => $languagePath . '.ensemble',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'exhibition_objects' => [
+                'label' => $languagePath . '.exhibition_objects',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'sports_equipment' => [
+                'label' => $languagePath . '.sports_equipment',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'amenity_features' => [
+                'label' => $languagePath . '.amenity_features',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'price_range' => [
+                'label' => $languagePath . '.price_range',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'star_rating' => [
+                'label' => $languagePath . '.star_rating',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'checkin_time' => [
+                'label' => $languagePath . '.checkin_time',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'checkout_time' => [
+                'label' => $languagePath . '.checkout_time',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'input',
+                    'searchable' => false,
+                ],
+            ],
+            'smoking_allowed' => [
+                'label' => $languagePath . '.smoking_allowed',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'is_ruin' => [
+                'label' => $languagePath . '.is_ruin',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'open_air_museum' => [
+                'label' => $languagePath . '.open_air_museum',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'bookable' => [
+                'label' => $languagePath . '.bookable',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'has_drive_through_service' => [
+                'label' => $languagePath . '.has_drive_through_service',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'beer_garden' => [
+                'label' => $languagePath . '.beer_garden',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'catering' => [
+                'label' => $languagePath . '.catering',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'delivery_service' => [
+                'label' => $languagePath . '.delivery_service',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'hot_cuisine_throughout' => [
+                'label' => $languagePath . '.hot_cuisine_throughout',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'late_kitchen' => [
+                'label' => $languagePath . '.late_kitchen',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'self_service' => [
+                'label' => $languagePath . '.self_service',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'take_away' => [
+                'label' => $languagePath . '.take_away',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'accepts_reservations' => [
+                'label' => $languagePath . '.accepts_reservations',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => $booleanItems,
+                ],
+            ],
+            'maximum_attendee_capacity' => [
+                'label' => $languagePath . '.maximum_attendee_capacity',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'number_of_rooms' => [
+                'label' => $languagePath . '.number_of_rooms',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'single_rooms' => [
+                'label' => $languagePath . '.single_rooms',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'double_rooms' => [
+                'label' => $languagePath . '.double_rooms',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'twin_rooms' => [
+                'label' => $languagePath . '.twin_rooms',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'suites' => [
+                'label' => $languagePath . '.suites',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'seats_inside' => [
+                'label' => $languagePath . '.seats_inside',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'seats_outside' => [
+                'label' => $languagePath . '.seats_outside',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'distance_airport' => [
+                'label' => $languagePath . '.distance_airport',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'distance_city_center' => [
+                'label' => $languagePath . '.distance_city_center',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'distance_fair' => [
+                'label' => $languagePath . '.distance_fair',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'distance_freeway' => [
+                'label' => $languagePath . '.distance_freeway',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'distance_ice_station' => [
+                'label' => $languagePath . '.distance_ice_station',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'size_of_area' => [
+                'label' => $languagePath . '.size_of_area',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                ],
+            ],
+            'typical_age_range' => [
+                'label' => $languagePath . '.typical_age_range',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'end_of_construction' => [
+                'label' => $languagePath . '.end_of_construction',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'certifications' => [
+                'label' => $languagePath . '.certifications',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'description_culture_portal' => [
+                'label' => $languagePath . '.description_culture_portal',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'description_lodging_meeting' => [
+                'label' => $languagePath . '.description_lodging_meeting',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'has_map' => [
+                'label' => $languagePath . '.has_map',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'searchable' => false,
+                ],
+            ],
+            'tour_booking_page' => [
+                'label' => $languagePath . '.tour_booking_page',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'searchable' => false,
+                ],
+            ],
+            'identifier' => [
+                'label' => $languagePath . '.identifier',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'searchable' => false,
+                ],
+            ],
+            'same_as' => [
+                'label' => $languagePath . '.same_as',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'searchable' => false,
+                ],
+            ],
+            'logo' => [
+                'label' => $languagePath . '.logo',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                    'maxitems' => 1,
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
+                ],
+            ],
+            'subject_of_media' => [
+                'label' => $languagePath . '.subject_of_media',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'common-image-types',
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
                     ],
                 ],
             ],
@@ -489,7 +912,17 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'meeting_venue' => [
                 'showitem' => $attractionShowitem . ',
-                --div--;' . $languagePath . '.tab.meeting_venue, venue_type',
+                --div--;' . $languagePath . '.tab.meeting, venue_type, meeting_facilities, maximum_attendee_capacity,
+                distance_airport, distance_city_center, distance_fair, distance_freeway, distance_ice_station,
+                description_lodging_meeting,
+                --div--;' . $languagePath . '.tab.meeting_venue, checkin_time, checkout_time, number_of_rooms,
+                single_rooms, double_rooms, twin_rooms, suites, star_rating, amenity_features, price_range,
+                gastro, serves_cuisine, seats_inside, seats_outside, beer_garden, catering, delivery_service,
+                hot_cuisine_throughout, late_kitchen, self_service, take_away, accepts_reservations,
+                has_drive_through_service, entrance, guided_tour, smoking_allowed, typical_age_range,
+                tour_booking_page, bookable, sports_equipment, ensemble, exhibition_objects, open_air_museum,
+                monument, is_ruin, end_of_construction, size_of_area, certifications, description_culture_portal,
+                has_map, same_as, identifier, logo, subject_of_media',
             ],
         ],
     ];

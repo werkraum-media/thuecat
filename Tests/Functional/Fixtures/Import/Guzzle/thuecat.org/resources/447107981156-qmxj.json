@@ -1,0 +1,54 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "tourism": "https://thuecat.org/ontology/tourism/1.0/",
+        "dcmitype": "http://purl.org/dc/dcmitype/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/447107981156-qmxj",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:OtherBuilding",
+                "thuecat:Villa",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Villa Haar Weimar"
+            },
+            "thuecat:additionalDescriptions": {
+                "@id": "genid-85fe3aee316849ddbe1804b70bc80f64116253166-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:CreativeWork",
+                    "schema:MediaObject",
+                    "schema:TextObject",
+                    "dcmitype:Text",
+                    "tourism:WebTextObject",
+                    "thuecat:LodgingMeetingDescription"
+                ],
+                "schema:additionalType": {
+                    "@id": "https://thuecat.org/ontology/thuecat/1.0/LodgingMeetingDescription"
+                },
+                "schema:text": {
+                    "@language": "de",
+                    "@value": "Kommunikation und Konzentration: In der einmaligen Kombination von Historie und Natur lässt es sich angenehm und mit Weitblick tagen. Die Villa Haar bietet optimale Lernbedingungen mit moderner Seminartechnik, und unser kompetenter Tagungsservice sorgt für flexible Gestaltung und störungsfreie Abläufe Fünf Seminarräume mit heller, freundlicher Atmosphäre, ein Wintergarten, zwei Terrassen und das Foyer mit Kaminen bilden den perfekten Rahmen für rund 120 Teilnehmer. Begegnungen in entspannter Atmosphäre, ohne Stress, aber mit Raum für Kreativität - in der Villa Haar ist der Spaß an der Arbeit garantiert!"
+                },
+                "tourism:html": {
+                    "@language": "de",
+                    "@value": "<p>Kommunikation und Konzentration: In der einmaligen Kombination von Historie und Natur lässt es sich angenehm und mit Weitblick tagen. Die Villa Haar bietet optimale Lernbedingungen mit moderner Seminartechnik, und unser kompetenter Tagungsservice sorgt für flexible Gestaltung und störungsfreie Abläufe Fünf Seminarräume mit heller, freundlicher Atmosphäre, ein Wintergarten, zwei Terrassen und das Foyer mit Kaminen bilden den perfekten Rahmen für rund 120 Teilnehmer. Begegnungen in entspannter Atmosphäre, ohne Stress, aber mit Raum für Kreativität - in der Villa Haar ist der Spaß an der Arbeit garantiert!</p>"
+                }
+            }
+        }
+    ]
+}
