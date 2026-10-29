@@ -28,7 +28,8 @@ In conjunction with :composer:`werkraummedia/events` it also imports
 * Events
 * Event Dates
 
-and relate those to Tourist Attractions.
+and relate those to Tourist Attractions, Organisations, Towns and Tourist Information, see
+:ref:`developers-import-event-place-matching`.
 
 Frontend
 ========
@@ -38,6 +39,9 @@ data.
 How to make use of this is described in :ref:`content-element-example`.
 The data types supported for listing and display are Tourist Attraction and Trail.
 Attraction lists show their records by title, or in the order editors arranged them in the backend.
+
+Detail pages, list filters and the search get readable URLs, see :ref:`frontend-output-routing`.
+Detail records are listed in XML sitemaps, see :ref:`frontend-output-xml-sitemap`.
 
 Backend
 =======
@@ -54,6 +58,9 @@ Scheduler and CLI
 To import ThueCat data into the local system, several kinds of import configurations can be
 configured and executed as CLI commands. These can also be wrapped into scheduler tasks to run on a
 predefined schedule. See :ref:`import` for further information.
+
+Events can also be imported from a ThueCat sync channel, including licence-restricted images, see
+:ref:`sync-channel`.
 
 Developers Corner
 =================

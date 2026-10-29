@@ -5,65 +5,63 @@
 6.1.0
 =====
 
-What changed for installations upgrading from 6.0.0. Commits that do not affect an upgrade — tests,
-CI — are not listed; the git history has them.
-
 .. contents:: On this page
    :local:
    :depth: 1
-
-.. _changelog-6-1-0-breaking:
 
 Breaking
 --------
 
 Nothing
 
-.. _changelog-6-1-0-important:
-
 Important
 ---------
 
 * **[FEATURE] Add slug fields and UpgradeWizard for POIs and Trails** (``94f884b``)
 
-  Tourist attractions, trails, towns and categories get a :sql:`slug` column. Update the database
-  schema and run the upgrade wizard to fill the slugs of existing records, see
-  :ref:`maintenance-slugs`.
-
 * **[FEATURE] Add readable URLs for attraction and trail detail pages** (``dcb1540``)
-
-  Pages get the field :guilabel:`ThüCAT page role`. Import the route enhancers into the site
-  configuration, set the role on every plugin page, and map your content element types to roles,
-  see :ref:`frontend-output-routing`. Links to detail pages with a role change from query strings
-  to slug paths; the former query-string URLs keep resolving, and a page without the role keeps
-  them. Flush all caches on deployment: list items cached before it still carry the former URLs.
-
-* **[FEATURE] Route list filters and search as readable URLs** (``cd17236``)
-
-  On list pages with a page role, filter and pagination URLs change from query strings to paths;
-  the former URLs keep resolving. The search word is the query argument ``q``, excluded from the
-  cHash and available as :php:`TouristAttractionDemand::getSearchQuery()`.
-  :php:`TouristAttractionDemand::getQueryParameters()` returns lists comma-joined, as strings, and
-  leaves out the search word and the filters the content element locks. Templates passing
-  ``demand.queryParameters`` to a link keep working; add ``additionalParams="{demand.searchQuery}"``
-  to keep the search word in pagination links.
 
 * **[FEATURE] Add XML sitemaps for detail records** (``31891dc``)
 
-  A sitemap provider for each detail record kind, configured by kind alone, see
-  :ref:`frontend-output-xml-sitemap`. :composer:`typo3/cms-seo` is a new required dependency.
+* **[FEATURE] Route list filters and search as readable URLs** (``cd17236``)
 
-.. _changelog-6-1-0-features:
+* **[BUGFIX] Store long event relation lists of places** (``fe8d0f4``)
+
+* **[FEATURE] Store event relations of places as MM relations** (``fceeef8``)
+
+* **[BUGFIX] Keep translations of records managed by organisations** (``81beed7``)
 
 Features
 --------
 
 * **[TASK] Expose the remote id on frontend models** (``07eac2c``)
 
-  :php:`getRemoteId()` returns a record's ThüCAT resource URI, for example for schema.org
-  ``sameAs``.
+* **[TASK] Define import configuration type syncChannel** (``413cbf6``)
 
-.. _changelog-6-1-0-deprecation:
+* **[FEATURE] Read the work list from a sync channel** (``ec89614``)
+
+* **[TASK] Import events via syncChannel** (``8cd81ac``)
+
+* **[FEATURE] Ask the sync channel for references first** (``8902df3``)
+
+* **[FEATURE] Download private images with the sync key** (``437f9b9``)
+
+* **[FEATURE] Delete events the sync channel lists as removed or expired** (``22b3e79``)
+
+* **[TASK] Warn when a sync channel run leaves its folder empty** (``cb02ce4``)
+
+* **[FEATURE] Log rate-limited import requests** (``f10bff6``)
+
+Fixes
+-----
+
+* **[BUGFIX] Show selected records in translated languages** (``997dc8e``)
+
+* **[BUGFIX] Import event descriptions delivered as text objects** (``ca69597``)
+
+* **[BUGFIX] Import the booking link of event offers given as a list** (``881f0da``)
+
+* **[BUGFIX] Import event locations delivered as a reference** (``9c86264``)
 
 Deprecation
 -----------
