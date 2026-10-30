@@ -93,6 +93,13 @@ return [
             'keywords' => '1',
         ],
     ],
+    'tx_thuecat_place' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Fischmarkt Erfurt',
+        ],
+    ],
     // Keyword tree under anchor 500, matching the site settings. Stadtmuseum
     // carries no keyword, so the mask must still offer the whole set.
     'sys_category' => [

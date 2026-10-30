@@ -25,7 +25,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\Events\Domain\Model\Event;
 
-class TouristAttraction extends Place
+class TouristAttraction extends AbstractPlace
 {
     /** Established template variable, shorter than the model name. */
     public const TEMPLATE_VARIABLE_NAME = 'attraction';
@@ -77,6 +77,11 @@ class TouristAttraction extends Place
     protected ObjectStorage $containedInParkingFacility;
 
     /**
+     * @var ObjectStorage<Place>
+     */
+    protected ObjectStorage $containedInPlace;
+
+    /**
      * @var ObjectStorage<Event>
      */
     protected ObjectStorage $hostsEvents;
@@ -116,6 +121,7 @@ class TouristAttraction extends Place
         $this->containedInAttraction = new ObjectStorage();
         $this->containedInTouristInformation = new ObjectStorage();
         $this->containedInParkingFacility = new ObjectStorage();
+        $this->containedInPlace = new ObjectStorage();
         $this->hostsEvents = new ObjectStorage();
     }
 
@@ -194,17 +200,26 @@ class TouristAttraction extends Place
     }
 
     /**
+     * @return ObjectStorage<Place>
+     */
+    public function getContainedInPlace(): ObjectStorage
+    {
+        return $this->containedInPlace;
+    }
+
+    /**
      * Every containing place, whatever table it came from — the template wants
      * one list, the storage is split because Extbase types a relation per table.
      *
-     * @return list<Place>
+     * @return list<AbstractPlace>
      */
     public function getContainedInPlaces(): array
     {
         return array_merge(
             array_values(iterator_to_array($this->containedInAttraction)),
             array_values(iterator_to_array($this->containedInTouristInformation)),
-            array_values(iterator_to_array($this->containedInParkingFacility))
+            array_values(iterator_to_array($this->containedInParkingFacility)),
+            array_values(iterator_to_array($this->containedInPlace))
         );
     }
 

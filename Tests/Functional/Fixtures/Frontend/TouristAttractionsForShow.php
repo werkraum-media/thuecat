@@ -101,6 +101,7 @@ return [
             // a place that is another attraction (self-referencing table).
             'contained_in_organisation' => '1',
             'contained_in_attraction' => '23',
+            'contained_in_place' => '1',
             'hosts_events' => '1',
             'managed_by' => '1',
         ],
@@ -162,6 +163,13 @@ return [
             'title' => 'Erfurt Tourism Ltd.',
             'sys_language_uid' => '1',
             'l10n_parent' => '1',
+        ],
+    ],
+    'tx_thuecat_place' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Fischmarkt Erfurt',
         ],
     ],
     // Keyword tree under anchor 500. Attraction 21 carries two terms; 20 carries

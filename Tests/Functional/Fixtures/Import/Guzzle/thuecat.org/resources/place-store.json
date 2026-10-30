@@ -1,0 +1,59 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/place-store",
+            "@type": [
+                "schema:Organization",
+                "schema:Place",
+                "schema:Thing",
+                "schema:LocalBusiness",
+                "schema:Store",
+                "ttgds:OtherInfraStructure"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Glaskunstladen"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Glass art shop"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Mundgeblasenes Glas"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Hand-blown glass"
+                }
+            ],
+            "schema:address": {
+                "@id": "genid-place-store-address",
+                "@type": [
+                    "schema:PostalAddress",
+                    "schema:Thing"
+                ],
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Krämerbrücke 7"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                }
+            }
+        }
+    ]
+}

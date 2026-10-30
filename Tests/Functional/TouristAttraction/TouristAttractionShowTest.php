@@ -41,6 +41,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
 
         $places = $this->renderedSection($request, 'relation', 'containedInPlace');
         self::assertStringContainsString('Domplatz Erfurt', $places);
+        self::assertStringContainsString('Fischmarkt Erfurt', $places);
     }
 
     #[Test]

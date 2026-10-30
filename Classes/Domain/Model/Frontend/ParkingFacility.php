@@ -21,6 +21,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
-class ParkingFacility extends Place
+class ParkingFacility extends AbstractPlace
 {
 }

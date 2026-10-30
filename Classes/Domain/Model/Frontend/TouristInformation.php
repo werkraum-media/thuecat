@@ -20,6 +20,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
-class TouristInformation extends Place
+class TouristInformation extends AbstractPlace
 {
 }

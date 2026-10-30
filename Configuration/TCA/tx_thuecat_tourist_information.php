@@ -146,6 +146,16 @@ return (static function (string $extensionKey, string $tableName) {
                     'readOnly' => true,
                 ],
             ],
+            'contained_in_place' => [
+                'label' => $languagePath . '.contained_in_place',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_place',
+                    'readOnly' => true,
+                ],
+            ],
             'contained_in_tourist_information' => [
                 'label' => $languagePath . '.contained_in_tourist_information',
                 'l10n_mode' => 'exclude',
@@ -195,7 +205,7 @@ return (static function (string $extensionKey, string $tableName) {
         ],
         'types' => [
             '0' => [
-                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, address_inline, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail'
+                'showitem' => 'title, description, main_image, media_files, keywords, remote_id, address_inline, town, managed_by, contained_in_organisation, contained_in_attraction, contained_in_place, contained_in_tourist_information, contained_in_parking_facility, contained_in_trail'
                 . ',--div--;' . $languagePath . '.tab.events'
                 . ',hosts_events',
             ],

@@ -107,6 +107,7 @@ class Resolver
             'tx_thuecat_tourist_information' => 'contained_in_tourist_information',
             'tx_thuecat_parking_facility' => 'contained_in_parking_facility',
             'tx_thuecat_trail' => 'contained_in_trail',
+            'tx_thuecat_place' => 'contained_in_place',
         ],
         'parkingFacilityNearBy' => [
             'tx_thuecat_parking_facility' => 'parking_facility_near_by',

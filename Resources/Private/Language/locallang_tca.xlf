@@ -45,6 +45,30 @@
             <trans-unit id="tx_thuecat_organisation.manages_tourist_attraction" xml:space="preserve">
                 <source>Tourist Attraction</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_place" xml:space="preserve">
+                <source>Place</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.tstamp" xml:space="preserve">
+                <source>Last imported</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.address_inline" xml:space="preserve">
+                <source>Address</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.tab.events" xml:space="preserve">
+                <source>Events</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_place.hosts_events" xml:space="preserve">
+                <source>Hosts events</source>
+            </trans-unit>
 
             <trans-unit id="tx_thuecat_tourist_information" xml:space="preserve">
                 <source>Tourist Information</source>
@@ -90,6 +114,9 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.contained_in_attraction" xml:space="preserve">
                 <source>Contained in tourist attraction</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_information.contained_in_place" xml:space="preserve">
+                <source>Contained in place</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_tourist_information.contained_in_tourist_information" xml:space="preserve">
                 <source>Contained in tourist information</source>
@@ -255,6 +282,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.contained_in_attraction" xml:space="preserve">
                 <source>Contained in tourist attraction</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.contained_in_place" xml:space="preserve">
+                <source>Contained in place</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.contained_in_tourist_information" xml:space="preserve">
                 <source>Contained in tourist information</source>
             </trans-unit>
@@ -327,6 +357,9 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.contained_in_attraction" xml:space="preserve">
                 <source>Contained in tourist attraction</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.contained_in_place" xml:space="preserve">
+                <source>Contained in place</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.contained_in_tourist_information" xml:space="preserve">
                 <source>Contained in tourist information</source>

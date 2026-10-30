@@ -49,6 +49,7 @@ class SiteScopedSelectFields
         'tx_thuecat_tourist_information',
         'tx_thuecat_parking_facility',
         'tx_thuecat_trail',
+        'tx_thuecat_place',
         'tx_events_domain_model_location',
         'tx_events_domain_model_organizer',
     ];

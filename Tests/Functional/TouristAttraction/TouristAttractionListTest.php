@@ -41,6 +41,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
         self::assertSame(200, $result->getStatusCode());
         self::assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
         self::assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
+        self::assertStringNotContainsString('Fischmarkt Erfurt', (string)$result->getBody());
     }
 
     #[Test]

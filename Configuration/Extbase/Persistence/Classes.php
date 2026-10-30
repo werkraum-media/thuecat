@@ -41,6 +41,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Organisation as FrontendOrganisation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility as FrontendParkingFacility;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Place as FrontendPlace;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction as FrontendTouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristInformation as FrontendTouristInformation;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town as FrontendTown;
@@ -222,6 +223,9 @@ return [
     ],
     FrontendOrganisation::class => [
         'tableName' => 'tx_thuecat_organisation',
+    ],
+    FrontendPlace::class => [
+        'tableName' => 'tx_thuecat_place',
     ],
     FrontendTouristInformation::class => [
         'tableName' => 'tx_thuecat_tourist_information',
