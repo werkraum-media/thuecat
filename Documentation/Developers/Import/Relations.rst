@@ -71,6 +71,10 @@ What the log says about references
    The target was imported, but into a table the bucket has no field for. The record exists;
    only the relation was dropped. This is upstream data the map does not anticipate.
 
+``recordReclassification`` (warning)
+   The target was known under another table than the one it is written to, see
+   :ref:`developers-import-table-mismatch`.
+
 Nothing
    The target's ``@type`` is not one any entity claims. No record was created, so no relation was
    lost.
@@ -85,8 +89,8 @@ One property, several target tables
 -----------------------------------
 
 ``schema:containedInPlace`` names whatever contains an object: the town it lies in, the organisation
-responsible for it, or another place — a sight inside a park, a car park inside a shopping centre.
-Its bucket therefore maps several tables:
+responsible for it, or another place — a sight inside a park, a restaurant inside a hotel, a fountain
+on a square. Its bucket therefore maps several tables:
 
 .. list-table::
    :header-rows: 1
@@ -105,6 +109,8 @@ Its bucket therefore maps several tables:
      - :sql:`contained_in_parking_facility`
    * - Trail
      - :sql:`contained_in_trail`
+   * - Place
+     - :sql:`contained_in_place`
 
 The field is chosen by the table the target **was imported into**, not by its ``@type``. The parser
 already decided the table; deciding again from the type would be a second classifier for the same
@@ -117,6 +123,33 @@ and the frontend model merges them back into one list
 
 The order of the map matters for one thing: a stored target is looked up table by table, in that
 order, until one matches. Put the most frequent kind first.
+
+.. _developers-import-places:
+
+Places: the table for what no other entity claims
+-------------------------------------------------
+
+ThueCat puts ``schema:Organization`` and ``schema:Place`` on nearly every node, so an entity never claims
+by those two. Each node carries exactly one top-level class of the ``ttgds:`` namespace, and the entities
+claim by it: ``ttgds:Organization`` is an organisation, ``ttgds:FoodEstablishmentLodgingBusiness`` and
+``ttgds:PointOfInterest`` are tourist attractions.
+
+Whatever no more specific entity claims — stores, squares, charging stations, manufacturers — is claimed
+by :php:`PlaceEntity` at the lowest priority and stored in :sql:`tx_thuecat_place`. A place exists to be
+related: records contained in it name it in :sql:`contained_in_place`, and events taking place at it are
+listed in its :sql:`hosts_events`. It has no detail page and no list; keeping it in a table of its own is
+what keeps it out of every attraction query.
+
+.. _developers-import-table-mismatch:
+
+A record known under one table is never written into another
+------------------------------------------------------------
+
+A reference finds its target in whichever table holds it, and the run remembers that table and uid. The
+fetched node may be claimed for another table, when the claiming rules changed since it was stored. The
+remembered uid is then not reused: the row is looked up in its own table or created there, and the case
+is logged as ``recordReclassification`` (warning). A uid is a key of its own table only; under another
+table it names a foreign record.
 
 .. _developers-import-inline-children:
 
@@ -132,6 +165,9 @@ Each child's :sql:`remote_id` is the owner's, a separator and a position, for ex
 owner's inline field. A child table may spread over several fields by a value of its own: opening
 hours go into :sql:`opening_hours_inline` or :sql:`special_opening_hours_inline` by their
 specification type.
+
+A stored child is reused only when it hangs under the table its owner is written to (:sql:`parenttable`).
+An owner that changed tables gets children of its own; the old ones belong to the old owner's row.
 
 The mapping lives in :php:`Resolver::INLINE_CHILD_PARENTS`. A table marked there to reap orphans
 loses stored children upstream no longer supplies; addresses and the parts of a trail are, opening
@@ -249,8 +285,9 @@ Events matched to places
 
 An event names its venue in ``schema:location`` and its organizer in ``schema:organizer``. Where
 these point at a place that is imported as a record of its own, the place gets a relation to the
-event: :sql:`hosts_events` for the venue on any kind of place, :sql:`manages_event` for the
-organizer, on organisations only.
+event: :sql:`hosts_events` for the venue on attractions, towns, tourist information and places,
+:sql:`manages_event` for the organizer, on organisations only. An organisation is no venue: a location
+that matches only an organisation relates the event to no place.
 
 The place is found among the records already stored in the site, never fetched:
 

@@ -1,0 +1,46 @@
+.. include:: ../Includes.txt
+.. _changelog-6-1-1:
+
+=====
+6.1.1
+=====
+
+.. contents:: On this page
+   :local:
+   :depth: 1
+
+Breaking
+--------
+
+* **[!!!][BUGFIX] Relate events to places, never to organisations**
+
+Important
+---------
+
+* **[BUGFIX] Replace organisations whose node belongs in another table**
+
+Features
+--------
+
+* **[FEATURE] Import places no more specific record kind covers**
+
+Fixes
+-----
+
+* **[BUGFIX] Keep records of different kinds apart in the import**
+
+Deprecation
+-----------
+
+Nothing
+
+Upgrade
+-------
+
+#. Run the database analyser and add :sql:`tx_thuecat_place`, its MM table and the
+   :sql:`contained_in_place` fields.
+#. Run the place import configurations of each site. They replace the organisations that belong in
+   another table.
+#. Run the event import configurations. They relate the events to attractions and places again.
+#. Drop :sql:`hosts_events` of :sql:`tx_thuecat_organisation` and its MM table with the database
+   analyser.
