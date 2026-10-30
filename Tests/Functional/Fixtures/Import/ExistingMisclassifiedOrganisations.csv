@@ -1,0 +1,30 @@
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","address_inline","manages_event"
+,21,10,0,0,"https://thuecat.org/resources/repair-hotel","Hotel am Markt",1,2
+,22,10,1,21,"https://thuecat.org/resources/repair-hotel","Hotel on the market square",1,2
+,23,10,0,0,"https://thuecat.org/resources/place-store","Glaskunstladen",0,0
+,24,10,0,0,"https://thuecat.org/resources/place-square","Fischmarkt",0,0
+,25,10,0,0,"https://thuecat.org/resources/claiming-dmo","Alter Verbandsname",0,0
+,26,4010,0,0,"https://thuecat.org/resources/repair-hotel","Hotel am Markt",0,0
+,27,10,0,0,"https://thuecat.org/resources/repair-holiday-flat","Ferienwohnung am Anger",1,0
+,28,10,0,0,"https://thuecat.org/resources/repair-square","Domplatz",1,0
+,29,10,1,28,"https://thuecat.org/resources/repair-square","Cathedral Square",1,0
+"tx_thuecat_address"
+,"uid","pid","sys_language_uid","l18n_parent","parentid","parenttable","remote_id","street","zip","city"
+,31,10,0,0,21,"tx_thuecat_organisation","https://thuecat.org/resources/repair-hotel::addr::0","Markt 19","99423","Weimar"
+,32,10,1,31,22,"tx_thuecat_organisation","https://thuecat.org/resources/repair-hotel::addr::0","Markt 19","99423","Weimar"
+,33,10,0,0,27,"tx_thuecat_organisation","https://thuecat.org/resources/repair-holiday-flat::addr::0","Anger 1","99084","Erfurt"
+,34,10,0,0,28,"tx_thuecat_organisation","https://thuecat.org/resources/repair-square::addr::0","","99084","Erfurt"
+,35,10,1,34,29,"tx_thuecat_organisation","https://thuecat.org/resources/repair-square::addr::0","","99084","Erfurt"
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","remote_id","title"
+,51,10,0,"https://thuecat.org/resources/repair-event-1","Führung im Hotel"
+,52,10,0,"https://thuecat.org/resources/repair-event-2","Lesung im Hotel"
+"tx_thuecat_organisation_manages_event_mm"
+,"uid_local","uid_foreign","sorting"
+,21,51,1
+,21,52,2
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","contained_in_organisation","managed_by"
+,41,10,0,0,"https://thuecat.org/resources/repair-restaurant","Hotelrestaurant","21",21
+,42,10,0,0,"https://thuecat.org/resources/repair-attraction-on-square","Brunnen am Fischmarkt","24",0

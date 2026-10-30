@@ -96,7 +96,7 @@ class Resolver
      * sequence and takes the first hit, and the first entry is the default
      * used while a reference's table is still unknown. Commonest kind first.
      */
-    protected const BUCKET_MAP = [
+    public const BUCKET_MAP = [
         'managedBy' => [
             'tx_thuecat_organisation' => 'managed_by',
         ],
@@ -1391,7 +1391,7 @@ class Resolver
                     $newKey = $existingKey;
                 } else {
                     // A key is a uid of its own table only; another table's row under it is a foreign record.
-                    $uid = $this->findUidByIdentity($table, $remoteId, $context->sitePageIds);
+                    $uid = $this->findOwnRowUid($table, $remoteId, $payload, $context);
                     $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
                     if ($existingKey !== null) {
                         $context->tableMismatches[$remoteId] = ['table' => $knownTable, 'uid' => (int)$existingKey];
@@ -1413,6 +1413,54 @@ class Resolver
         $this->wireInlineChildrenToParents($payload, $context);
         $this->wireChildrenOntoParentFields($payload, $context);
         $this->importInlineMedia($payload, $context);
+    }
+
+    /**
+     * An inline child stored under a parent of another table belongs to that
+     * parent's row, so a parent written to a new table gets children of its own.
+     * Reusing them would hand DataHandler a child it localizes a second time.
+     */
+    protected function findOwnRowUid(
+        string $table,
+        string $remoteId,
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): int {
+        $config = self::INLINE_CHILD_PARENTS[$table] ?? null;
+        $parentRemoteId = $config === null ? $remoteId : explode($config['separator'], $remoteId, 2)[0];
+        $parentTable = $config === null || $parentRemoteId === $remoteId
+            ? null
+            : $this->tableParentIsWrittenTo($parentRemoteId, $payload, $context);
+        if ($parentTable === null) {
+            return $this->findUidByIdentity($table, $remoteId, $context->sitePageIds);
+        }
+
+        return $this->findUidByColumn($table, 'remote_id', $remoteId, $context->sitePageIds, ['parenttable' => $parentTable]);
+    }
+
+    /**
+     * Before the parent is rekeyed, the context holds the table a reference
+     * probe found it in, which a reclassified node no longer belongs to; the
+     * payload holds the table it is written to. Children may be rekeyed first,
+     * since a merged payload keeps the table order of the record that arrived
+     * first.
+     */
+    protected function tableParentIsWrittenTo(
+        string $parentRemoteId,
+        DataHandlerPayload $payload,
+        ResolverContext $context
+    ): ?string {
+        if ($context->isUpdated($parentRemoteId)) {
+            return $context->remoteIdToTable[$parentRemoteId] ?? null;
+        }
+
+        foreach ($payload->getDataMap() as $table => $rows) {
+            if (isset($rows[$parentRemoteId])) {
+                return $table;
+            }
+        }
+
+        return null;
     }
 
     protected function isAlreadyRekeyed(string $outerKey): bool
@@ -2652,9 +2700,15 @@ class Resolver
 
     /**
      * @param list<int> $sitePageIds
+     * @param array<string, string> $alsoMatching column => value
      */
-    protected function findUidByColumn(string $table, string $column, string $value, array $sitePageIds): int
-    {
+    protected function findUidByColumn(
+        string $table,
+        string $column,
+        string $value,
+        array $sitePageIds,
+        array $alsoMatching = []
+    ): int {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
             ->removeAll()
@@ -2667,6 +2721,12 @@ class Resolver
                 $queryBuilder->createNamedParameter($value)
             ))
         ;
+        foreach ($alsoMatching as $matchColumn => $matchValue) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq(
+                $matchColumn,
+                $queryBuilder->createNamedParameter($matchValue)
+            ));
+        }
 
         // A record of another site is not ours to read or update; treated as
         // absent so the import creates its own within its own site. Empty

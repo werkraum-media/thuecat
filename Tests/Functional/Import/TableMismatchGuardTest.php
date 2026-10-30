@@ -83,7 +83,7 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function tableMismatchIsReported(): void
+    public function tableMismatchOfARepairedOrganisationIsReportedOnce(): void
     {
         $this->expectFetch('hotel-kind-changed.json');
 
@@ -102,6 +102,9 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
                 'previousUid' => 7,
                 'table' => 'tx_thuecat_tourist_attraction',
                 'uid' => $hotelUid,
+                'moved' => [],
+                'droppedManagedBy' => [],
+                'droppedManagedEvents' => [],
             ],
             json_decode($entries[0]['context'], true)
         );

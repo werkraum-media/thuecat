@@ -318,6 +318,49 @@ class ImportLogger
     }
 
     /**
+     * @todo Remove with OrganisationReclassificationRepair.
+     *
+     * @param list<string> $moved
+     * @param list<string> $droppedManagedBy
+     * @param list<int> $droppedManagedEvents
+     */
+    public function recordOrganisationRepair(
+        string $remoteId,
+        int $organisationUid,
+        string $table,
+        int $uid,
+        array $moved,
+        array $droppedManagedBy,
+        array $droppedManagedEvents
+    ): void {
+        $this->stage([
+            'type' => 'recordReclassification',
+            'severity' => self::SEVERITY_WARNING,
+            'kind' => RecordReclassification::KIND_REPAIRED,
+            'remote_id' => $remoteId,
+            'table_name' => $table,
+            'record_uid' => $uid,
+            'message' => sprintf(
+                'Organisation %d replaced by %s %d; %d relations moved, %d dropped.',
+                $organisationUid,
+                $table,
+                $uid,
+                count($moved),
+                count($droppedManagedBy) + count($droppedManagedEvents)
+            ),
+            'context' => (string)(json_encode([
+                'previousTable' => 'tx_thuecat_organisation',
+                'previousUid' => $organisationUid,
+                'table' => $table,
+                'uid' => $uid,
+                'moved' => $moved,
+                'droppedManagedBy' => $droppedManagedBy,
+                'droppedManagedEvents' => $droppedManagedEvents,
+            ]) ?: '{}'),
+        ]);
+    }
+
+    /**
      * A reference whose record imported into a table the bucket cannot relate
      * to. Upstream mixes kinds in one property (a POI under a key that maps to
      * towns, say), so this is data drift rather than a fault: the record is

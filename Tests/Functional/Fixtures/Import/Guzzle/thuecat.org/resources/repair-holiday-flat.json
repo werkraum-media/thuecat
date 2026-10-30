@@ -1,0 +1,51 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/repair-holiday-flat",
+            "@type": [
+                "schema:Organization",
+                "schema:Place",
+                "schema:Thing",
+                "schema:LocalBusiness",
+                "schema:LodgingBusiness",
+                "ttgds:FoodEstablishmentLodgingBusiness"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Ferienwohnung am Anger"
+                }
+            ],
+            "schema:address": {
+                "@id": "genid-repair-holiday-flat-address",
+                "@type": [
+                    "schema:PostalAddress",
+                    "schema:Thing"
+                ],
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Anger 1"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:addressLocality": [
+                    {
+                        "@language": "de",
+                        "@value": "Erfurt"
+                    },
+                    {
+                        "@language": "en",
+                        "@value": "Erfurt"
+                    }
+                ]
+            }
+        }
+    ]
+}

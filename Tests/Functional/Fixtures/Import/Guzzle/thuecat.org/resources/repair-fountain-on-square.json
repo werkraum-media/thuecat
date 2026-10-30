@@ -1,0 +1,48 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/repair-fountain-on-square",
+            "@type": [
+                "schema:Place",
+                "schema:Thing",
+                "schema:TouristAttraction",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Brunnen am Domplatz"
+                }
+            ],
+            "schema:address": {
+                "@id": "genid-repair-fountain-on-square-address",
+                "@type": [
+                    "schema:PostalAddress",
+                    "schema:Thing"
+                ],
+                "schema:streetAddress": {
+                    "@language": "de",
+                    "@value": "Domplatz 1"
+                },
+                "schema:postalCode": {
+                    "@language": "de",
+                    "@value": "99084"
+                },
+                "schema:addressLocality": {
+                    "@language": "de",
+                    "@value": "Erfurt"
+                }
+            },
+            "schema:containedInPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/repair-square"
+                }
+            ]
+        }
+    ]
+}

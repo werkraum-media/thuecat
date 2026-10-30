@@ -75,6 +75,7 @@ class Importer
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
         protected readonly SyncChannelReaper $syncChannelReaper,
         protected readonly SyncWindow $syncWindow,
+        protected readonly OrganisationReclassificationRepair $organisationReclassificationRepair,
         #[AutowireLocator(services: 'import.url.provider')]
         protected readonly ServiceLocator $urlProviders
     ) {
@@ -354,6 +355,7 @@ class Importer
         if (!$aborted) {
             $this->reapGoneEvents($urlProvider, $resolverContext, $iterations);
             $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
+            $this->organisationReclassificationRepair->repair($resolverContext, $iterations);
         }
 
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
