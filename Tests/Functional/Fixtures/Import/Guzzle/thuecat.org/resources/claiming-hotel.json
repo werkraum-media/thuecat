@@ -1,0 +1,28 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/claiming-hotel",
+            "@type": [
+                "schema:Organization",
+                "schema:Place",
+                "schema:Thing",
+                "schema:LocalBusiness",
+                "schema:LodgingBusiness",
+                "schema:Hotel",
+                "thuecat:MeetingCongressHotel",
+                "ttgds:FoodEstablishmentLodgingBusiness"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Tagungshotel"
+                }
+            ]
+        }
+    ]
+}

@@ -417,8 +417,13 @@ final class ResolverTest extends AbstractImportTestCase
         self::assertCount(1, $keys);
         self::assertStringStartsWith('NEW', (string)$keys[0]);
 
+        $attractionKeys = array_keys($data['tx_thuecat_tourist_attraction']);
+        self::assertCount(1, $attractionKeys);
+        self::assertStringStartsWith('NEW', (string)$attractionKeys[0]);
+
         $row = $data['tx_thuecat_parking_facility'][$keys[0]];
-        self::assertSame('5', $row['town']);
+        self::assertSame('', $row['town']);
+        self::assertSame((string)$attractionKeys[0], $row['contained_in_attraction']);
         self::assertSame('7', $row['managed_by']);
         self::assertSame(10, $row['pid']);
 
@@ -469,11 +474,11 @@ final class ResolverTest extends AbstractImportTestCase
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
         self::assertCount(2, $keys);
+        self::assertStringStartsWith('NEW', (string)$keys[1]);
         $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
 
-        // town is a single-select; multiple containedInPlace refs collapse
-        // via the csv append+dedupe in DataHandlerPayload::setRelationField.
-        self::assertSame('5,6', $row['town']);
+        self::assertSame('5', $row['town']);
+        self::assertSame((string)$keys[1], $row['contained_in_attraction']);
         self::assertSame('9,11', $row['parking_facility_near_by']);
         self::assertSame('7', $row['managed_by']);
         self::assertSame(10, $row['pid']);
@@ -583,7 +588,9 @@ final class ResolverTest extends AbstractImportTestCase
             implode(',', array_map('strval', $parkingKeys)),
             $row['parking_facility_near_by']
         );
-        self::assertSame('5,6', $row['town']);
+        self::assertStringStartsWith('NEW', (string)$attractionKeys[1]);
+        self::assertSame('5', $row['town']);
+        self::assertSame((string)$attractionKeys[1], $row['contained_in_attraction']);
         self::assertSame('7', $row['managed_by']);
 
         self::assertSame([], $payload->getTransients());

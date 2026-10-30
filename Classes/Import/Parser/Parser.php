@@ -120,7 +120,7 @@ class Parser
         // A JSON-LD node usually carries multiple @types (e.g. a TouristAttraction
         // is also Place, Thing, CivicStructure…). Collect every entity that claims
         // any of them, then let priority break ties — more specific entities
-        // (TouristInformation, priority 20) win over generic ones.
+        // (TouristInformation, say) win over generic ones.
         $candidates = [];
         foreach ($this->entities as $candidate) {
             if (!$candidate instanceof EntityInterface) {

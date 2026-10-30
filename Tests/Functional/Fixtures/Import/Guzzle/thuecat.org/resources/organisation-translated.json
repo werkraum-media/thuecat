@@ -4,7 +4,8 @@
             "@id": "https://thuecat.org/resources/organisation-translated",
             "@type": [
                 "schema:Organization",
-                "schema:Thing"
+                "schema:Thing",
+                "ttgds:Organization"
             ],
             "schema:name": [
                 {

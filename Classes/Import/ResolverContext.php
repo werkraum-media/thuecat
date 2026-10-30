@@ -95,6 +95,15 @@ final class ResolverContext
     public array $remoteIdToTable = [];
 
     /**
+     * remote_id → the table and uid it was known under before a row of another
+     * table claimed it. The row's own table and key stay in the maps above, so
+     * the report reads them once NEW keys are promoted.
+     *
+     * @var array<string, array{table: string, uid: int}>
+     */
+    public array $tableMismatches = [];
+
+    /**
      * Category staging key (see SysCategoryAnchor::stagingKey()) → staged key
      * (existing uid or NEW placeholder). Lives on
      * the context because resolve() runs once per root but a category recurs

@@ -60,8 +60,9 @@ class OrganisationEntity extends AbstractPlaceEntity
 
     public function handlesTypes(): array
     {
+        // schema:Organization sits on nearly every node; upstream's own top-level class tells organisations apart.
         return [
-            'schema:Organization',
+            'ttgds:Organization',
         ];
     }
 }

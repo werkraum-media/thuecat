@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RecordReclassification;
 use WerkraumMedia\ThueCat\Import\Http\RequestLedger;
 use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
@@ -278,6 +279,42 @@ class ImportLogger
                 'reason' => $reason,
             ]) ?: '{}'),
         ]);
+    }
+
+    /**
+     * Called after persisting, so the keys are the uids DataHandler assigned.
+     *
+     * @param array<string, array{table: string, uid: int}> $mismatches
+     * @param array<string, string> $remoteIdToKey
+     * @param array<string, string> $remoteIdToTable
+     */
+    public function recordTableMismatches(array $mismatches, array $remoteIdToKey, array $remoteIdToTable): void
+    {
+        foreach ($mismatches as $remoteId => $previous) {
+            $table = $remoteIdToTable[$remoteId] ?? '';
+            $uid = (int)($remoteIdToKey[$remoteId] ?? 0);
+            $this->stage([
+                'type' => 'recordReclassification',
+                'severity' => self::SEVERITY_WARNING,
+                'kind' => RecordReclassification::KIND_TABLE_MISMATCH,
+                'remote_id' => $remoteId,
+                'table_name' => $table,
+                'record_uid' => $uid,
+                'message' => sprintf(
+                    'Known as %s %d, written as %s %d.',
+                    $previous['table'],
+                    $previous['uid'],
+                    $table,
+                    $uid
+                ),
+                'context' => (string)(json_encode([
+                    'previousTable' => $previous['table'],
+                    'previousUid' => $previous['uid'],
+                    'table' => $table,
+                    'uid' => $uid,
+                ]) ?: '{}'),
+            ]);
+        }
     }
 
     /**

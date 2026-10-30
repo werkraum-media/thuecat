@@ -1,0 +1,7 @@
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,7,10,0,0,"https://thuecat.org/resources/hotel-kind-changed","Hotel eines geänderten Typs"
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title"
+,6,10,0,0,"https://thuecat.org/resources/unrelated-attraction","Verkehrsgarten"
+,7,10,1,6,"https://thuecat.org/resources/unrelated-attraction","Children's traffic area"

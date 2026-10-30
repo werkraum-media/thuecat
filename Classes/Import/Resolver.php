@@ -1385,11 +1385,16 @@ class Resolver
                 }
 
                 $existingKey = $context->remoteIdToKey[$remoteId] ?? null;
-                if ($existingKey !== null) {
+                $knownTable = $context->remoteIdToTable[$remoteId] ?? $table;
+                if ($existingKey !== null && $knownTable === $table) {
                     $newKey = $existingKey;
                 } else {
+                    // A key is a uid of its own table only; another table's row under it is a foreign record.
                     $uid = $this->findUidByIdentity($table, $remoteId, $context->sitePageIds);
                     $newKey = $uid > 0 ? (string)$uid : StringUtility::getUniqueId('NEW');
+                    if ($existingKey !== null) {
+                        $context->tableMismatches[$remoteId] = ['table' => $knownTable, 'uid' => (int)$existingKey];
+                    }
                 }
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
@@ -1452,6 +1457,18 @@ class Resolver
             $this->defaultTableFor($bucket),
             $actualTable
         );
+    }
+
+    protected function withdrawRelation(
+        DataHandlerPayload $payload,
+        string $ownerTable,
+        string $ownerKey,
+        string $field,
+        string $value
+    ): void {
+        $existing = (string)($payload->getDataMap()[$ownerTable][$ownerKey][$field] ?? '');
+        $values = array_values(array_diff(explode(',', $existing), [$value, '']));
+        $payload->setField($ownerTable, $ownerKey, $field, implode(',', $values));
     }
 
     /**
@@ -1676,6 +1693,9 @@ class Resolver
                                     $reference,
                                     $remoteIdToKey
                                 );
+                                if (($context->remoteIdToTable[$reference] ?? $foundTable) !== $foundTable) {
+                                    $this->withdrawRelation($payload, $ownerTable, $ownerKey, $foundField, (string)$uid);
+                                }
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;

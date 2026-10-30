@@ -31,10 +31,9 @@ class TouristInformationEntity extends AbstractPlaceEntity
         'image' => 'media_files',
     ];
 
-    // Higher than the default 10 — TouristInformation nodes also carry
-    // schema:Organization in @type, so without priority the generic
-    // OrganisationEntity would win the resolver tie-break.
-    protected int $priority = 20;
+    // Above the attraction's 20: TouristInformation nodes also carry
+    // ttgds:PointOfInterest, which the attraction claims.
+    protected int $priority = 25;
     protected string $remote_id = '';
     protected string $title = '';
     protected string $description = '';

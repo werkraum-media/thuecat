@@ -360,6 +360,11 @@ class Importer
 
         // The category map now holds real uids, so matched entries can point at them.
         $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByIdentifier());
+        $this->importLogger->recordTableMismatches(
+            $resolverContext->tableMismatches,
+            $resolverContext->remoteIdToKey,
+            $resolverContext->remoteIdToTable
+        );
         $this->importLogger->recordCategoriesFieldMissing($resolverContext->categoriesFieldMissing);
         $this->importLogger->recordUnusableScheduleDays($parserContext->unusableScheduleDays);
         $this->importLogger->recordDroppedScheduleDays($parserContext->droppedScheduleDays);

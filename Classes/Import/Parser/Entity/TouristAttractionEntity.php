@@ -188,7 +188,11 @@ class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEnt
 
     public function handlesTypes(): array
     {
-        return ['schema:TouristAttraction'];
+        return [
+            'schema:TouristAttraction',
+            'ttgds:FoodEstablishmentLodgingBusiness',
+            'ttgds:PointOfInterest',
+        ];
     }
 
     public static function anchorScope(): string

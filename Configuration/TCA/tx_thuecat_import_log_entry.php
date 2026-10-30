@@ -138,6 +138,10 @@ return (static function (string $extensionKey, string $tableName) {
                             'label' => $languagePath . '.type.eventPlaceMatch',
                             'value' => 'eventPlaceMatch',
                         ],
+                        [
+                            'label' => $languagePath . '.type.recordReclassification',
+                            'value' => 'recordReclassification',
+                        ],
                     ],
                 ],
             ],
@@ -313,6 +317,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'showitem' => '--palette--;;always, message, context',
             ],
             'eventPlaceMatch' => [
+                'showitem' => '--palette--;;always, kind, table_name, record_uid, message, context',
+            ],
+            'recordReclassification' => [
                 'showitem' => '--palette--;;always, kind, table_name, record_uid, message, context',
             ],
         ],

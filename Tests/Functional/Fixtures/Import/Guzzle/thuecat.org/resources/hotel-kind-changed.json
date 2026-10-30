@@ -1,0 +1,26 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/hotel-kind-changed",
+            "@type": [
+                "schema:Organization",
+                "schema:Place",
+                "schema:Thing",
+                "schema:Hotel",
+                "schema:TouristAttraction",
+                "ttgds:FoodEstablishmentLodgingBusiness"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Hotel eines geänderten Typs"
+                }
+            ]
+        }
+    ]
+}

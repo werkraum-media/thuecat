@@ -19,6 +19,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RateLimited;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RecordReclassification;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RetriesRecovered;
@@ -98,6 +99,7 @@ return [
             'vocabularyUnavailable' => VocabularyUnavailable::class,
             'categoriesFieldMissing' => CategoriesFieldMissing::class,
             'eventPlaceMatch' => EventPlaceMatch::class,
+            'recordReclassification' => RecordReclassification::class,
         ],
     ],
     SavingEntity::class => [
@@ -199,6 +201,10 @@ return [
     EventPlaceMatch::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'eventPlaceMatch',
+    ],
+    RecordReclassification::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'recordReclassification',
     ],
 
     FrontendTouristAttraction::class => [

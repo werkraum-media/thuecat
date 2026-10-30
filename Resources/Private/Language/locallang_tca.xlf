@@ -755,6 +755,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.eventPlaceMatch" xml:space="preserve">
                 <source>Event Place Match</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.recordReclassification" xml:space="preserve">
+                <source>Record Reclassification</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.kind" xml:space="preserve">
                 <source>Field</source>
             </trans-unit>
