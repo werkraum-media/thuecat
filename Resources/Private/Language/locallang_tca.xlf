@@ -27,9 +27,6 @@
             <trans-unit id="tx_thuecat_organisation.tab.events" xml:space="preserve">
                 <source>Events</source>
             </trans-unit>
-            <trans-unit id="tx_thuecat_organisation.hosts_events" xml:space="preserve">
-                <source>Hosts events</source>
-            </trans-unit>
             <trans-unit id="tx_thuecat_organisation.manages_event" xml:space="preserve">
                 <source>Manages events</source>
             </trans-unit>

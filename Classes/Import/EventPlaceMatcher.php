@@ -36,14 +36,15 @@ class EventPlaceMatcher
     public const FIELD_MANAGES = 'manages_event';
 
     /**
-     * Place table => the relation fields it carries. Only organisations
-     * manage events; every place can host them.
+     * Table => the relation fields it carries. Organisations manage events
+     * but are no place, so no event takes place at one.
      */
     protected const PLACE_TABLES = [
         'tx_thuecat_tourist_attraction' => [self::FIELD_HOSTS],
         'tx_thuecat_town' => [self::FIELD_HOSTS],
-        'tx_thuecat_organisation' => [self::FIELD_HOSTS, self::FIELD_MANAGES],
+        'tx_thuecat_organisation' => [self::FIELD_MANAGES],
         'tx_thuecat_tourist_information' => [self::FIELD_HOSTS],
+        'tx_thuecat_place' => [self::FIELD_HOSTS],
     ];
 
     public function __construct(
@@ -202,8 +203,8 @@ class EventPlaceMatcher
 
         $uids[] = (string)$eventUid;
 
-        // An organisation can be related in both roles in one run, so the row
-        // is extended rather than replaced.
+        // The row may already be staged with other fields, so it is extended
+        // rather than replaced.
         $row = $payload->getDataMap()[$table][$key] ?? [];
         $row[$field] = implode(',', $uids);
         $payload->addRow($table, $key, $row);

@@ -98,6 +98,20 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function inlineVenueMatchesARecordOfThePlaceTable(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPlaceTableVenuePreState.php');
+        $this->expectFetch('e_bauhaus-hubev.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(
+            [$this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')],
+            $this->hostedEventsOf('tx_thuecat_place', 1)
+        );
+    }
+
+    #[Test]
     public function differingPostalCodePreventsTheMatch(): void
     {
         $this->importNegativeFixtures();
@@ -201,20 +215,18 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function oneOrganisationHoldsHostedAndManagedEventsApart(): void
+    public function locationNamingOnlyAnOrganisationRelatesNoPlace(): void
     {
         $this->importOrganizerFixtures();
 
-        self::assertSame(
-            [$this->eventUidOf('https://int.thuecat.org/resources/e_orghosts-hubev')],
-            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'hosts_events'),
-            'The hosted event did not land in hosts_events alone.'
-        );
-        self::assertSame(
-            [$this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
-            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event'),
-            'The managed event did not land in manages_event alone.'
-        );
+        $results = array_values(array_filter(
+            $this->fetchMatchResults(),
+            static fn (array $result): bool => $result['remote_id'] === 'https://int.thuecat.org/resources/e_orghosts-hubev'
+        ));
+        self::assertCount(1, $results);
+
+        self::assertSame('unmatched', $results[0]['context']['outcome']);
+        self::assertSame(0, $results[0]['record_uid']);
     }
 
     /**
@@ -315,11 +327,6 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         self::assertSame(
             [...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
             $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event')
-        );
-        self::assertSame(
-            [950],
-            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'hosts_events'),
-            'Matching the organizer touched the organisation\'s other role.'
         );
     }
 

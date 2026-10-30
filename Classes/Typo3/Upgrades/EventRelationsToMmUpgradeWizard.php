@@ -46,7 +46,6 @@ final class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, R
 {
     private const FIELDS = [
         ['tx_thuecat_tourist_attraction', EventPlaceMatcher::FIELD_HOSTS],
-        ['tx_thuecat_organisation', EventPlaceMatcher::FIELD_HOSTS],
         ['tx_thuecat_organisation', EventPlaceMatcher::FIELD_MANAGES],
         ['tx_thuecat_town', EventPlaceMatcher::FIELD_HOSTS],
         ['tx_thuecat_tourist_information', EventPlaceMatcher::FIELD_HOSTS],

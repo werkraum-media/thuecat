@@ -5,7 +5,7 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 // The organisation already manages 60 events, more than 255 characters of
-// comma-separated uids hold, and hosts event 950 in its other role.
+// comma-separated uids hold.
 $seeded = range(1000, 1059);
 
 return [
@@ -36,12 +36,8 @@ return [
             'remote_id' => 'https://thuecat.org/resources/900000000040-ksw',
             'title' => 'Klassik Stiftung Weimar',
             'address_inline' => '1',
-            'hosts_events' => '1',
             'manages_event' => (string)count($seeded),
         ],
-    ],
-    'tx_thuecat_organisation_hosts_events_mm' => [
-        ['uid_local' => '1', 'uid_foreign' => '950', 'sorting' => '1'],
     ],
     'tx_thuecat_organisation_manages_event_mm' => array_map(
         static fn (int $uid): array => ['uid_local' => '1', 'uid_foreign' => (string)$uid, 'sorting' => (string)($uid - 999)],
@@ -68,7 +64,7 @@ return [
             'remote_id' => 'https://int.thuecat.org/resources/e_seeded' . $uid . '-hubev',
             'title' => 'Veranstaltung ' . $uid,
         ],
-        [...$seeded, 950]
+        $seeded
     ),
     'tx_thuecat_import_configuration' => [
         0 => [

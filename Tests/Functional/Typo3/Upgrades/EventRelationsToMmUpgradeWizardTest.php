@@ -74,13 +74,12 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
     }
 
     #[Test]
-    public function keepsBothOrganisationRolesApart(): void
+    public function migratesTheEventsAnOrganisationManages(): void
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/EventRelationsAsLists.csv');
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([12], $this->fetchMmRelatedUids('tx_thuecat_organisation', 710, 'hosts_events'));
         self::assertSame([7, 30], $this->fetchMmRelatedUids('tx_thuecat_organisation', 710, 'manages_event'));
     }
 

@@ -30,7 +30,6 @@ CREATE TABLE tx_thuecat_tourist_attraction (
 -- manages_* / tourist_information: reverse views of type none, which core gives no column. Kept with
 -- the definition their former inline fields had, as the form reads every shown field from the row.
 CREATE TABLE tx_thuecat_organisation (
-    hosts_events text,
     manages_event text,
     manages_towns int(10) unsigned DEFAULT '0' NOT NULL,
     manages_tourist_information int(10) unsigned DEFAULT '0' NOT NULL,
