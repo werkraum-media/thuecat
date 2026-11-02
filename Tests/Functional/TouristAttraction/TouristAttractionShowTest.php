@@ -20,12 +20,33 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 class TouristAttractionShowTest extends AbstractFrontendTestCase
 {
+    private int $originalExecTime = 0;
+
+    // Inside the fixture's current opening hours span and before its event. The frontend application
+    // builds its date aspect from EXEC_TIME on every request, so a date aspect set here would not survive.
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->originalExecTime = is_int($GLOBALS['EXEC_TIME'] ?? null) ? $GLOBALS['EXEC_TIME'] : time();
+        $GLOBALS['EXEC_TIME'] = (new DateTimeImmutable('2026-10-15T12:00:00', new DateTimeZone('Europe/Berlin')))->getTimestamp();
+    }
+
+    protected function tearDown(): void
+    {
+        $GLOBALS['EXEC_TIME'] = $this->originalExecTime;
+
+        parent::tearDown();
+    }
+
     protected function getDataSetFileName(): string
     {
         return 'TouristAttractionsForShow.php';

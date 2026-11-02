@@ -23,6 +23,8 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Service;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\DateTimeAspect;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
@@ -33,7 +35,9 @@ class OpeningHoursFormatterTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = new OpeningHoursFormatter();
+        $context = new Context();
+        $context->setAspect('date', new DateTimeAspect(new DateTimeImmutable()));
+        $this->subject = new OpeningHoursFormatter($context);
     }
 
     #[Test]

@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Service;
 
 use DateTimeImmutable;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use TYPO3\CMS\Core\Context\Context;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\DayRange;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\MergedByWeekday;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\MergedPeriod;
@@ -43,6 +45,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
  * dropped, the period containing today marked current (drives open-now). All
  * compute lives here so templates request shapes without re-importing.
  */
+#[Autoconfigure(public: true)]
 class OpeningHoursFormatter
 {
     /**
@@ -59,12 +62,17 @@ class OpeningHoursFormatter
         'PublicHolidays' => 8,
     ];
 
+    public function __construct(
+        protected readonly Context $context,
+    ) {
+    }
+
     /**
      * @param iterable<OpeningHourSpecification> $specifications
      */
     public function buildPerDayTable(iterable $specifications, ?DateTimeImmutable $now = null): PerDayTable
     {
-        $now ??= new DateTimeImmutable();
+        $now ??= $this->now();
         $today = $now->setTime(0, 0);
 
         $windows = $this->groupByWindow($specifications, $today);
@@ -89,7 +97,7 @@ class OpeningHoursFormatter
      */
     public function buildMergedByWeekday(iterable $specifications, ?DateTimeImmutable $now = null): MergedByWeekday
     {
-        $now ??= new DateTimeImmutable();
+        $now ??= $this->now();
         $today = $now->setTime(0, 0);
 
         $windows = $this->groupByWindow($specifications, $today);
@@ -311,6 +319,14 @@ class OpeningHoursFormatter
         $nowMinutes = (int)$now->format('H') * 60 + (int)$now->format('i');
 
         return $nowMinutes >= $minutes($timePeriod->getOpens()) && $nowMinutes < $minutes($timePeriod->getCloses());
+    }
+
+    // The date aspect, so a preview or a test can set the date the output is built for.
+    protected function now(): DateTimeImmutable
+    {
+        $now = $this->context->getPropertyFromAspect('date', 'full');
+
+        return $now instanceof DateTimeImmutable ? $now : new DateTimeImmutable();
     }
 
     protected function comparePeriods(PeriodInterface $a, PeriodInterface $b): int
