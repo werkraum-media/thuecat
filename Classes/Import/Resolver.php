@@ -43,7 +43,9 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\LocationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\OrganizerEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingVenueEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\VocabularyLabelResolver;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailConditionEntity;
@@ -112,6 +114,15 @@ class Resolver
         'parkingFacilityNearBy' => [
             'tx_thuecat_parking_facility' => 'parking_facility_near_by',
         ],
+        'operatedBy' => [
+            'tx_thuecat_organisation' => 'operated_by',
+        ],
+        'geoTouches' => [
+            'tx_thuecat_trail' => 'geo_touches_trail',
+        ],
+        'managedObjects' => [
+            'tx_thuecat_tourist_attraction' => 'managed_objects',
+        ],
         // Date → Event back-reference: child Date rows manufactured by
         // EventEntity stage the parent's remote_id under this bucket; the
         // Resolver dereferences it to the parent uid (which is in the same
@@ -166,6 +177,15 @@ class Resolver
             ],
             'reapOrphans' => true,
         ],
+    ];
+
+    /**
+     * Buckets whose targets no record kind imports, so the owner stores their names, one per line and language.
+     */
+    protected const NAMED_REFERENCE_FIELDS = [
+        'touristType' => 'tourist_types',
+        'whoWasHere' => 'who_was_here',
+        'architect' => 'architects',
     ];
 
     /** Address columns whose value may arrive as a CURIE instead of a literal. */
@@ -1658,6 +1678,37 @@ class Resolver
                             continue;
                         }
 
+                        if ($bucket === MeetingVenueEntity::HOSTED_EVENTS_BUCKET) {
+                            // Fetches nothing, so the cap has nothing to bound.
+                            $this->collectHostedEvents(
+                                $payload,
+                                $context,
+                                $ownerTable,
+                                $ownerRemoteId,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
+                                $references
+                            );
+                            $progress = true;
+                            continue;
+                        }
+
+                        if (isset(self::NAMED_REFERENCE_FIELDS[$bucket])) {
+                            // Exempt from MAX_FETCH_DEPTH: a name stages no rows
+                            // and follows no references, so it cannot fan out.
+                            $this->resolveNamedReferences(
+                                $payload,
+                                $context,
+                                $ownerTable,
+                                $ownerRemoteId,
+                                $ownerKey,
+                                $bucket,
+                                // @phpstan-ignore argument.type (bucket name implies the shape)
+                                $references
+                            );
+                            $progress = true;
+                            continue;
+                        }
+
                         if (!isset(self::BUCKET_MAP[$bucket])) {
                             // Unknown bucket — parser emitted something the
                             // resolver has no mapping for.
@@ -1797,6 +1848,121 @@ class Resolver
                 );
             }
         }
+    }
+
+    /**
+     * Only events already stored in the importing site are related; an unknown
+     * one arrives through an event import of its own.
+     *
+     * @param list<string> $references
+     */
+    protected function collectHostedEvents(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        array $references
+    ): void {
+        foreach ($references as $reference) {
+            $payload->removeTransient($ownerTable, $ownerRemoteId, MeetingVenueEntity::HOSTED_EVENTS_BUCKET, $reference);
+
+            $eventUid = $this->findUidByRemoteId(EventEntity::TABLE, $reference, $context->sitePageIds);
+            if ($eventUid > 0) {
+                $context->collectedHostedEvents[] = new CollectedHostedEvent($ownerRemoteId, $ownerTable, $eventUid);
+            }
+        }
+    }
+
+    /**
+     * A language the referenced record names nothing in stays empty; no other
+     * language's name stands in.
+     *
+     * @param list<string> $references
+     */
+    protected function resolveNamedReferences(
+        DataHandlerPayload $payload,
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $ownerKey,
+        string $bucket,
+        array $references
+    ): void {
+        $languages = [$context->language, ...array_keys($context->translationLanguages)];
+        $reader = new LocalisedValueReader();
+        $names = [];
+        foreach ($references as $reference) {
+            $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
+
+            $node = $this->fetchNamedReference($context, $ownerTable, $ownerRemoteId, $bucket, $reference);
+            if ($node === null) {
+                continue;
+            }
+            foreach ($languages as $language) {
+                $name = $reader->read($node['schema:name'] ?? null, $language);
+                if ($name !== '') {
+                    $names[$language][] = $name;
+                }
+            }
+        }
+
+        $field = self::NAMED_REFERENCE_FIELDS[$bucket];
+        $payload->setField($ownerTable, $ownerKey, $field, implode("\n", $names[$context->language] ?? []));
+
+        // Only languages the parser staged a translation for, or this would create translation rows.
+        $translations = $payload->getTranslations()[$ownerTable][$ownerRemoteId] ?? [];
+        foreach ($context->translationLanguages as $language => $sysLanguageUid) {
+            if (isset($translations[$sysLanguageUid])) {
+                $payload->addTranslationField(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $sysLanguageUid,
+                    $field,
+                    implode("\n", $names[$language] ?? [])
+                );
+            }
+        }
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    protected function fetchNamedReference(
+        ResolverContext $context,
+        string $ownerTable,
+        string $ownerRemoteId,
+        string $bucket,
+        string $reference
+    ): ?array {
+        if ($context->hasReferenceFailed($reference)) {
+            $this->importLogger->recordSkippedReference(
+                $ownerTable,
+                $ownerRemoteId,
+                self::NAMED_REFERENCE_FIELDS[$bucket],
+                $reference,
+                (string)$context->getReferenceFailureReason($reference)
+            );
+            return null;
+        }
+
+        if (!isset($context->namedReferenceNodes[$reference])) {
+            try {
+                $context->namedReferenceNodes[$reference] = $this->fetchGraphNode($reference, $context, $reference);
+            } catch (Exception $e) {
+                $reason = $e::class . ': ' . $e->getMessage();
+                $context->markReferenceFailed($reference, $reason);
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    self::NAMED_REFERENCE_FIELDS[$bucket],
+                    $reference,
+                    $reason
+                );
+                return null;
+            }
+        }
+
+        return $context->namedReferenceNodes[$reference];
     }
 
     /**

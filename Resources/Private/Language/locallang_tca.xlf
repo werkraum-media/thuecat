@@ -342,6 +342,27 @@
             <trans-unit id="tx_thuecat_tourist_attraction.description_lodging_meeting" xml:space="preserve">
                 <source>Description for lodging and meetings</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.subject_of" xml:space="preserve">
+                <source>Pages about this place</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.tourist_types" xml:space="preserve">
+                <source>Audiences</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.who_was_here" xml:space="preserve">
+                <source>Who was here</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.architects" xml:space="preserve">
+                <source>Architects</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.managed_objects" xml:space="preserve">
+                <source>Managed objects</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.operated_by" xml:space="preserve">
+                <source>Operated by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.geo_touches_trail" xml:space="preserve">
+                <source>Touches trail</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.boolean.true" xml:space="preserve">
                 <source>Yes</source>
             </trans-unit>

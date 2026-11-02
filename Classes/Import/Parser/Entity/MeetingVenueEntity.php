@@ -29,6 +29,20 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
  */
 class MeetingVenueEntity extends TouristAttractionEntity
 {
+    // Named, never fetched: the referenced events arrive through their own imports.
+    public const HOSTED_EVENTS_BUCKET = 'hostedEvents';
+
+    // Upstream property => transient bucket.
+    protected const REFERENCES = [
+        'thuecat:managedBy' => 'operatedBy',
+        'schema:geoTouches' => 'geoTouches',
+        'thuecat:managedObjects' => 'managedObjects',
+        'schema:event' => self::HOSTED_EVENTS_BUCKET,
+        'schema:touristType' => 'touristType',
+        'thuecat:whoWasHere' => 'whoWasHere',
+        'thuecat:architect' => 'architect',
+    ];
+
     // Lists and single members alike: both store comma-joined local names.
     protected const ENUMS = [
         'meeting_facilities' => 'thuecat:meetingFacilitysHouse',
@@ -149,6 +163,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
     protected string $tour_booking_page = '';
     protected string $identifier = '';
     protected string $same_as = '';
+    protected string $subject_of = '';
     protected string $typical_age_range = '';
     protected string $end_of_construction = '';
     protected string $certifications = '';
@@ -192,6 +207,10 @@ class MeetingVenueEntity extends TouristAttractionEntity
         }
         $this->recordMediaOfKind('logo', $node['schema:logo'] ?? null);
         $this->recordMediaOfKind('subjectOf', $this->mediaReferences($node['schema:subjectOf'] ?? null));
+        $this->subject_of = implode("\n", $this->pageReferences($node['schema:subjectOf'] ?? null));
+        foreach (self::REFERENCES as $property => $bucket) {
+            $this->recordTransient($bucket, $node[$property] ?? null);
+        }
 
         $this->parseLocalised($node, $language, null, $parserContext);
         foreach ($translationLanguages as $code => $sysLanguageUid) {
@@ -319,6 +338,22 @@ class MeetingVenueEntity extends TouristAttractionEntity
             static fn (array $reference): bool => is_string($reference['@id'] ?? null)
                 && str_contains($reference['@id'], '/dms_')
         ));
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function pageReferences(mixed $value): array
+    {
+        $ids = [];
+        foreach ($this->nodesOf($value) as $reference) {
+            $id = $reference['@id'] ?? null;
+            if (is_string($id) && !str_contains($id, '/dms_')) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
     }
 
     /**

@@ -1,0 +1,31 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/332021174274-eyhf",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "thuecat:TheaterEventVenue",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Kulturgut Ulrichshalben"
+            },
+            "thuecat:managedObjects": {
+                "@id": "https://thuecat.org/resources/201518958399-qbmh"
+            }
+        }
+    ]
+}

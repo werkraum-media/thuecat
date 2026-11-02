@@ -180,6 +180,15 @@ class EventPlaceMatcher
 
             $this->relate($payload, $match->placeTable, $match->placeUid, $match->field, (int)$eventUid);
         }
+
+        foreach ($context->collectedHostedEvents as $hosted) {
+            $placeUid = $context->remoteIdToKey[$hosted->placeRemoteId] ?? '';
+            if (!is_numeric($placeUid) || (int)$placeUid <= 0) {
+                continue;
+            }
+
+            $this->relate($payload, $hosted->placeTable, (int)$placeUid, self::FIELD_HOSTS, $hosted->eventUid);
+        }
     }
 
     protected function relate(

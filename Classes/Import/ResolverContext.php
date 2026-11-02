@@ -227,6 +227,20 @@ final class ResolverContext
     public array $collectedPlaceMatches = [];
 
     /**
+     * Run-scoped: the places these name are placeholders until the persist loop has promoted them.
+     *
+     * @var list<CollectedHostedEvent>
+     */
+    public array $collectedHostedEvents = [];
+
+    /**
+     * Run-wide, so a person or audience named by several places is fetched once.
+     *
+     * @var array<string, array<string, mixed>> reference URL => fetched node
+     */
+    public array $namedReferenceNodes = [];
+
+    /**
      * "<eventRemoteId>|<field>" — resolve() runs once per persist pass, and a
      * place is looked up only on the first.
      *

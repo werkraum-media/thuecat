@@ -1,0 +1,71 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/117034427781-ndta",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Park",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:Museum",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:OtherBuilding",
+                "thuecat:MemorialSite",
+                "thuecat:FrenchParkGarden",
+                "ttgds:PointOfInterest",
+                "thuecat:MemorialSiteBuilding"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Wielandgut Oßmannstedt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Wielandgut Oßmannstedt "
+                },
+                {
+                    "@language": "en",
+                    "@value": "Wielandgut Oßmannstedt"
+                }
+            ],
+            "thuecat:whoWasHere": {
+                "@id": "https://thuecat.org/resources/775941615571-khyx"
+            },
+            "schema:touristType": [
+                {
+                    "@id": "https://thuecat.org/resources/799431457224-zhww"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/312868368592-wnce"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/304061111979-rmed"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/290287712606-zkwq"
+                }
+            ],
+            "schema:subjectOf": [
+                {
+                    "@id": "https://thuecat.org/resources/724271217629-ffrb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/626444958944-bnpb"
+                }
+            ]
+        }
+    ]
+}

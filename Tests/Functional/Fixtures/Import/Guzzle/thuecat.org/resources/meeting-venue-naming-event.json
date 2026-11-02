@@ -1,0 +1,49 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "epapp": "https://thuecat.org/ontology/epapp/1.0/"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/117034427781-ndta",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Park",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:Museum",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:OtherBuilding",
+                "thuecat:MemorialSite",
+                "thuecat:FrenchParkGarden",
+                "ttgds:PointOfInterest",
+                "thuecat:MemorialSiteBuilding"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Wielandgut Oßmannstedt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Wielandgut Oßmannstedt "
+                },
+                {
+                    "@language": "en",
+                    "@value": "Wielandgut Oßmannstedt"
+                }
+            ],
+            "schema:event": {
+                "@id": "https://thuecat.org/resources/e_100967287-hubev"
+            }
+        }
+    ]
+}

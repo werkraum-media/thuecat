@@ -56,7 +56,10 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
                     'contained_in_place',
                     'contained_in_tourist_information',
                     'contained_in_trail',
+                    'geo_touches_trail',
                     'managed_by',
+                    'managed_objects',
+                    'operated_by',
                     'town',
                 ],
                 'tx_thuecat_tourist_information' => [

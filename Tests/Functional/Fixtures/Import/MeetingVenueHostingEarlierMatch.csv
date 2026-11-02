@@ -1,0 +1,10 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","hosts_events"
+,1,10,0,0,"https://thuecat.org/resources/117034427781-ndta","Wielandgut Oßmannstedt","meeting_venue","meeting_congress",1
+"tx_thuecat_tourist_attraction_hosts_events_mm"
+,"uid_local","uid_foreign","sorting"
+,1,900,1
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","remote_id","title"
+,900,30,0,"https://thuecat.org/resources/e_unrelated-hubev","Veranstaltung aus einem früheren Lauf"
+,901,30,0,"https://thuecat.org/resources/e_100967287-hubev","Der erste Schriftsteller Deutschlands"

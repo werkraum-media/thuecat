@@ -484,6 +484,44 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            'subject_of' => [
+                'label' => $languagePath . '.subject_of',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'text',
+                    'searchable' => false,
+                ],
+            ],
+            'tourist_types' => [
+                'label' => $languagePath . '.tourist_types',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'who_was_here' => [
+                'label' => $languagePath . '.who_was_here',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'architects' => [
+                'label' => $languagePath . '.architects',
+                'l10n_mode' => '',
+                'config' => [
+                    'type' => 'text',
+                ],
+            ],
+            'managed_objects' => [
+                'label' => $languagePath . '.managed_objects',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_tourist_attraction',
+                ],
+            ],
             'logo' => [
                 'label' => $languagePath . '.logo',
                 'config' => [
@@ -876,6 +914,31 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
+            'operated_by' => [
+                'label' => $languagePath . '.operated_by',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'foreign_table' => 'tx_thuecat_organisation',
+                    'default' => '0',
+                    'items' => [
+                        [
+                            'label' => $languagePath . '.managed_by.unkown',
+                            'value' => 0,
+                        ],
+                    ],
+                ],
+            ],
+            'geo_touches_trail' => [
+                'label' => $languagePath . '.geo_touches_trail',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_trail',
+                ],
+            ],
             'parking_facility_near_by' => [
                 'label' => $languagePath . '.parking_facility_near_by',
                 'l10n_mode' => 'exclude',
@@ -922,7 +985,8 @@ return (static function (string $extensionKey, string $tableName) {
                 has_drive_through_service, entrance, guided_tour, smoking_allowed, typical_age_range,
                 tour_booking_page, bookable, sports_equipment, ensemble, exhibition_objects, open_air_museum,
                 monument, is_ruin, end_of_construction, size_of_area, certifications, description_culture_portal,
-                has_map, same_as, identifier, logo, subject_of_media',
+                has_map, same_as, identifier, logo, subject_of_media, subject_of, tourist_types, who_was_here,
+                architects, managed_objects, operated_by, geo_touches_trail',
             ],
         ],
     ];
