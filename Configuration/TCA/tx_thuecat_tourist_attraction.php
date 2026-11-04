@@ -943,14 +943,9 @@ return (static function (string $extensionKey, string $tableName) {
                 'label' => $languagePath . '.parking_facility_near_by',
                 'l10n_mode' => 'exclude',
                 'config' => [
-                    'type' => 'group',
-                    'allowed' => 'tx_thuecat_parking_facility',
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_parking_facility',
-                    'suggestOptions' => [
-                        'tx_thuecat_parking_facility' => [
-                            'searchCondition' => 'sys_language_uid IN (0,-1)',
-                        ],
-                    ],
                 ],
             ],
 

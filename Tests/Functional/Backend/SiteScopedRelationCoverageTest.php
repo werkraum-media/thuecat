@@ -60,6 +60,7 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
                     'managed_by',
                     'managed_objects',
                     'operated_by',
+                    'parking_facility_near_by',
                     'town',
                 ],
                 'tx_thuecat_tourist_information' => [

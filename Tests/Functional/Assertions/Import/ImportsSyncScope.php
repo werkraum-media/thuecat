@@ -54,7 +54,7 @@ Montag bis Samstag findet hier außerdem der Wochenmarkt statt.
 Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants zum Verweilen und Genießen ein.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => null,
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 3,
@@ -70,7 +70,7 @@ Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants
             'description' => 'Beispiel Beschreibung',
             'slogan' => 'Highlight',
             'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","certificationAccessibilityDeaf":"None","certificationAccessibilityMental":"None","certificationAccessibilityPartiallyDeaf":"None","certificationAccessibilityPartiallyVisual":"Info","certificationAccessibilityVisual":"None","certificationAccessibilityWalking":"Info","certificationAccessibilityWheelchair":"Info","accessibilitySearchCriteria":{"facilityAccessibilityWalking":["AllRoomsStepFreeAccess","HingedGrabRailToilet","LateralAccessibleToilet","StepFreeAccess","ToiletsPeopleWithDisabilities","NinetyCMWidthPassageWays","SpecialOffersWalkingImpairment","SpecialOffersWheelchairUsers"],"facilityAccessibilityVisual":["AssistanceDogsWelcome","VisuallyContrastingStepEdges","OffersInPictoralLanguage","SpecialOffersBlindPeople","SpecialOffersVisualImpairment","TactileOffers"],"facilityAccessibilityDeaf":["AudioInductionLoop","SpecialOffersHearingImpairment"],"facilityAccessibilityMental":["InformationWithPictogramsOrPictures"]},"shortDescriptionAccessibilityDeaf":"Deutsche Beschreibung von shortDescriptionAccessibilityDeaf","shortDescriptionAccessibilityMental":"Deutsche Beschreibung von shortDescriptionAccessibilityMental","shortDescriptionAccessibilityVisual":"Deutsche Beschreibung von shortDescriptionAccessibilityVisual","shortDescriptionAccessibilityWalking":"Deutsche Beschreibung von shortDescriptionAccessibilityWalking"}',
-            'parking_facility_near_by' => null,
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 4,
@@ -87,7 +87,7 @@ Im Osten und im Süden des Domplatzes laden eine Vielzahl Cafés und Restaurants
 Heute spielt die Waagegasse vor allem als "Schleichweg" zwischen Michaelis- und Allerheiligenstraße, als Zugang zur Alten Synagoge und natürlich bei zahlreichen Stadtführungen eine Rolle.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => null,
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 5,
@@ -119,7 +119,7 @@ Heute spielt die Waagegasse vor allem als "Schleichweg" zwischen Michaelis- und 
             'description' => 'Der Wenigemarkt befindet sich am östlichen Zugang der Krämerbrücke. Hier finden Sie eine Vielzahl Cafés und Restaurants, die zum Verbleiben und Entspannen einladen.',
             'slogan' => null,
             'accessibility_specification' => null,
-            'parking_facility_near_by' => null,
+            'parking_facility_near_by' => '',
         ],
         [
             'uid' => 7,
