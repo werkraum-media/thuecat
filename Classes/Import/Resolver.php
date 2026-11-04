@@ -43,6 +43,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\LocationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\OrganizerEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingRoomEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingVenueEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
@@ -124,6 +125,12 @@ class Resolver
         'managedObjects' => [
             'tx_thuecat_tourist_attraction' => 'managed_objects',
         ],
+        MeetingVenueEntity::ROOMS_BUCKET => [
+            MeetingRoomEntity::TABLE => 'meeting_rooms',
+        ],
+        MeetingRoomEntity::ROOMS_BUCKET => [
+            MeetingRoomEntity::TABLE => 'contained_rooms',
+        ],
         // Date → Event back-reference: child Date rows manufactured by
         // EventEntity stage the parent's remote_id under this bucket; the
         // Resolver dereferences it to the parent uid (which is in the same
@@ -183,6 +190,15 @@ class Resolver
             ],
             'reapOrphans' => true,
         ],
+    ];
+
+    /**
+     * Buckets naming any contained place, of which only meeting rooms are related. The reference carries no type,
+     * so other places are discarded after the fetch, unreported: they relate from their own containedInPlace.
+     */
+    protected const ROOM_BUCKETS = [
+        MeetingVenueEntity::ROOMS_BUCKET,
+        MeetingRoomEntity::ROOMS_BUCKET,
     ];
 
     /**
@@ -1520,7 +1536,7 @@ class Resolver
             return;
         }
 
-        if ($actualTable === '') {
+        if ($actualTable === '' || in_array($bucket, self::ROOM_BUCKETS, true)) {
             return;
         }
 
@@ -1544,6 +1560,30 @@ class Resolver
         $existing = (string)($payload->getDataMap()[$ownerTable][$ownerKey][$field] ?? '');
         $values = array_values(array_diff(explode(',', $existing), [$value, '']));
         $payload->setField($ownerTable, $ownerKey, $field, implode(',', $values));
+    }
+
+    /**
+     * Room→room references are followed to their own bound; every other bucket keeps the generic cap.
+     */
+    protected function fetchDepthCapFor(string $bucket): int
+    {
+        return $bucket === MeetingRoomEntity::ROOMS_BUCKET
+            ? ResolverContext::MAX_MEETING_ROOM_DEPTH
+            : ResolverContext::MAX_FETCH_DEPTH;
+    }
+
+    /**
+     * @param array<mixed> $graph
+     */
+    protected function graphNamesMeetingRoom(array $graph, string $reference): bool
+    {
+        foreach ($graph as $node) {
+            if (is_array($node) && ($node['@id'] ?? null) === $reference) {
+                return in_array('schema:MeetingRoom', (array)($node['@type'] ?? []), true);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -1783,7 +1823,7 @@ class Resolver
                                 $context->remoteIdToTable[$reference] = $foundTable;
                                 $context->markFound($reference);
 
-                                if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
+                                if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= $this->fetchDepthCapFor($bucket)) {
                                     $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                     $progress = true;
                                     continue;
@@ -1823,7 +1863,7 @@ class Resolver
                                 continue;
                             }
 
-                            if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= ResolverContext::MAX_FETCH_DEPTH) {
+                            if (($context->depthByRemoteId[$ownerRemoteId] ?? 0) >= $this->fetchDepthCapFor($bucket)) {
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
@@ -2081,6 +2121,9 @@ class Resolver
             $graph = $response['@graph'] ?? [];
             if (!is_array($graph)) {
                 $graph = [];
+            }
+            if (in_array($bucket, self::ROOM_BUCKETS, true) && !$this->graphNamesMeetingRoom($graph, $reference)) {
+                return;
             }
 
             $fetchedPayload = $this->parser->parseFresh(

@@ -1,0 +1,179 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/019950652406-nywx",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "thuecat:MajorEventRoom",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Galerie"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Gallery"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "Galeria"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Galerie"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "de",
+                    "@value": "Die Galerie ist eine Veranstaltungsfläche, welche innerhalb der Vorgaben der Freigabe als Veranstaltungsfläche und genehmigter Bestuhlungspläne genutzt werden kann. Ausgehend von diesen Vorgaben ist eine Nutzung und Ausstattung der Fläche mit Tischen und Stühlen möglich.\nBodentanks zur Versorgung mit elektrischer Energie sind vorhanden. Der Zugang zur Galerie erfolgt über eine Treppe.\nKonferenztechnik wird für diese Fläche nicht vorgehalten und ist vom Mieter selbstständig über einen externen Dienstleister zu beschaffen. Die Kontaktdaten eines geeigneten Dienstleisters können bei Bedarf zur Verfügung gestellt werden.\nDer Boden ist mit einem strapazierfähigen Textilbelag versehen.\nEin Catering kann über den im Haus ansässigen Cateringdienstleister erfolgen."
+                },
+                {
+                    "@language": "pl",
+                    "@value": "Galeria stanowi powierzchnię eventową, z której można korzystać zgodnie z wytycznymi zawartymi w zezwoleniu na użytkowanie jako powierzchnia eventowa oraz zatwierdzonymi planami rozmieszczenia miejsc siedzących. Zgodnie z tymi wytycznymi możliwe jest wykorzystanie tej powierzchni oraz wyposażenie jej w stoły i krzesła.\nDostępne są gniazdka podłogowe do zasilania energią elektryczną. Dostęp do galerii zapewniają schody.\nSprzęt konferencyjny nie jest zapewniony dla tej przestrzeni i najemca musi samodzielnie zapewnić go za pośrednictwem zewnętrznego usługodawcy. W razie potrzeby można udostępnić dane kontaktowe odpowiedniego usługodawcy.\nPodłoga pokryta jest wytrzymałą wykładziną tekstylną.\nUsługi cateringowe mogą być świadczone przez firmę cateringową działającą w budynku."
+                },
+                {
+                    "@language": "fr",
+                    "@value": "La galerie est un espace événementiel pouvant être utilisé dans le respect des conditions prévues par l'autorisation d'utilisation en tant qu'espace événementiel et des plans de disposition des sièges approuvés. Sur la base de ces conditions, il est possible d'utiliser cet espace et de l'équiper de tables et de chaises.\nDes prises de sol pour l’alimentation électrique sont disponibles. L’accès à la galerie se fait par un escalier.\nAucun équipement technique de conférence n'est mis à disposition pour cet espace ; le locataire doit se le procurer de manière autonome auprès d'un prestataire externe. Les coordonnées d'un prestataire approprié peuvent être fournies si nécessaire.\nLe sol est recouvert d'un revêtement textile résistant.\nLa restauration peut être assurée par le prestataire de restauration présent dans les locaux."
+                },
+                {
+                    "@language": "en",
+                    "@value": "The gallery is an event space which may be used in accordance with the conditions set out in the approval for use as an event space and the approved seating plans. Subject to these conditions, the space may be used and furnished with tables and chairs.\nFloor sockets for the supply of electricity are available. Access to the gallery is via a staircase.\nConference equipment is not provided for this area and must be arranged by the tenant through an external service provider. The contact details of a suitable service provider can be provided on request.\nThe floor is fitted with a hard-wearing textile covering.\nCatering can be provided by the in-house catering service provider."
+                },
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Die Galerie ist eine Veranstaltungsfläche, welche innerhalb der Vorgaben der Freigabe als Veranstaltungsfläche und genehmigter Bestuhlungspläne genutzt werden kann. Ausgehend von diesen Vorgaben ist eine Nutzung und Ausstattung der Fläche mit Tischen und Stühlen möglich.</p><p>Bodentanks zur Versorgung mit elektrischer Energie sind vorhanden. Der Zugang zur Galerie erfolgt über eine Treppe.</p><p>Konferenztechnik wird für diese Fläche nicht vorgehalten und ist vom Mieter selbstständig über einen externen Dienstleister zu beschaffen. Die Kontaktdaten eines geeigneten Dienstleisters können bei Bedarf zur Verfügung gestellt werden.</p><p>Der Boden ist mit einem strapazierfähigen Textilbelag versehen.</p><p>Ein Catering kann über den im Haus ansässigen Cateringdienstleister erfolgen.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>The gallery is an event space which may be used in accordance with the conditions set out in the approval for use as an event space and the approved seating plans. Subject to these conditions, the space may be used and furnished with tables and chairs.</p><p>Floor sockets for the supply of electricity are available. Access to the gallery is via a staircase.</p><p>Conference equipment is not provided for this area and must be arranged by the tenant through an external service provider. The contact details of a suitable service provider can be provided on request.</p><p>The floor is fitted with a hard-wearing textile covering.</p><p>Catering can be provided by the in-house catering service provider.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b3",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "<p>La galerie est un espace événementiel pouvant être utilisé dans le respect des conditions prévues par l'autorisation d'utilisation en tant qu'espace événementiel et des plans de disposition des sièges approuvés. Sur la base de ces conditions, il est possible d'utiliser cet espace et de l'équiper de tables et de chaises.</p><p>Des prises de sol pour l’alimentation électrique sont disponibles. L’accès à la galerie se fait par un escalier.</p><p>Aucun équipement technique de conférence n'est mis à disposition pour cet espace ; le locataire doit se le procurer de manière autonome auprès d'un prestataire externe. Les coordonnées d'un prestataire approprié peuvent être fournies si nécessaire.</p><p>Le sol est recouvert d'un revêtement textile résistant.</p><p>La restauration peut être assurée par le prestataire de restauration présent dans les locaux.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b4",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "pl",
+                        "@value": "<p>Galeria stanowi powierzchnię eventową, z której można korzystać zgodnie z wytycznymi zawartymi w zezwoleniu na użytkowanie jako powierzchnia eventowa oraz zatwierdzonymi planami rozmieszczenia miejsc siedzących. Zgodnie z tymi wytycznymi możliwe jest wykorzystanie tej powierzchni oraz wyposażenie jej w stoły i krzesła.</p><p>Dostępne są gniazdka podłogowe do zasilania energią elektryczną. Dostęp do galerii zapewniają schody.</p><p>Sprzęt konferencyjny nie jest zapewniony dla tej przestrzeni i najemca musi samodzielnie zapewnić go za pośrednictwem zewnętrznego usługodawcy. W razie potrzeby można udostępnić dane kontaktowe odpowiedniego usługodawcy.</p><p>Podłoga pokryta jest wytrzymałą wykładziną tekstylną.</p><p>Usługi cateringowe mogą być świadczone przez firmę cateringową działającą w budynku.</p>"
+                    }
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://www.stadtwerke-erfurt.de/pb/die_swe/die+swe/fuer+erfurt/veranstaltungsraeume+bei+der+swe"
+            },
+            "schema:floorSize": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTK"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "382"
+                }
+            },
+            "thuecat:roomHeight": {
+                "@id": "genid-29fd6653e78d4000a34e3a26b7fe9a4e25928303-b6",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTR"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "11.5"
+                }
+            },
+            "thuecat:meetingFacilitysRoom": [
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:MeetingFacilitysRoomDaylight"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:AirConditioning"
+                }
+            ],
+            "thuecat:capacityBanquetSeating": {
+                "@type": "schema:Number",
+                "@value": "160"
+            },
+            "thuecat:capacityClassroomSeating": {
+                "@type": "schema:Number",
+                "@value": "160"
+            },
+            "thuecat:capacityTheatreSeating": {
+                "@type": "schema:Number",
+                "@value": "160"
+            },
+            "thuecat:capacityStandUpReception": {
+                "@type": "schema:Number",
+                "@value": "160"
+            },
+            "thuecat:bookable": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            }
+        }
+    ]
+}

@@ -143,6 +143,9 @@
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_parking_facility" xml:space="preserve">
                 <source>Parking Facility</source>
             </trans-unit>
+            <trans-unit id="module.imports.summary.tableName.tx_thuecat_meeting_room" xml:space="preserve">
+                <source>Meeting Room</source>
+            </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_trail" xml:space="preserve">
                 <source>Trail</source>
             </trans-unit>

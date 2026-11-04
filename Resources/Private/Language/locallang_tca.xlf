@@ -1195,6 +1195,78 @@
             <trans-unit id="tx_thuecat_opening_hours.remote_id" xml:space="preserve">
                 <source>Remote ID</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.meeting_rooms" xml:space="preserve">
+                <source>Meeting rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room" xml:space="preserve">
+                <source>Meeting room</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.description" xml:space="preserve">
+                <source>Description</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.url" xml:space="preserve">
+                <source>URL</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.floor_size" xml:space="preserve">
+                <source>Floor size (m²)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.room_height" xml:space="preserve">
+                <source>Room height (m)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.capacity_banquet" xml:space="preserve">
+                <source>Banquet seating</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.capacity_classroom" xml:space="preserve">
+                <source>Classroom seating</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.capacity_theatre" xml:space="preserve">
+                <source>Theatre seating</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.capacity_standing" xml:space="preserve">
+                <source>Stand-up reception</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.facilities" xml:space="preserve">
+                <source>Room equipment</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.number_of_rooms" xml:space="preserve">
+                <source>Number of rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.amenity_features" xml:space="preserve">
+                <source>Amenities</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.tour_booking_page" xml:space="preserve">
+                <source>Booking page</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.bookable" xml:space="preserve">
+                <source>Bookable</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.main_image" xml:space="preserve">
+                <source>Main image</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.media_files" xml:space="preserve">
+                <source>Images</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.floor_plan" xml:space="preserve">
+                <source>Floor plan</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.managed_by" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.contained_rooms" xml:space="preserve">
+                <source>Related rooms</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.keywords" xml:space="preserve">
+                <source>Keywords</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_meeting_room.tstamp" xml:space="preserve">
+                <source>Last imported</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

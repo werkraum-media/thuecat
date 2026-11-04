@@ -1,0 +1,33 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/e_ttg00020050000287335-tomas",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:LodgingBusiness",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Hotel",
+                "ttgds:FoodEstablishmentLodgingBusiness",
+                "thuecat:MeetingCongressHotel"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Hotel Kaiserin Augusta"
+            },
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/199366862325-pbyc"
+                }
+            ]
+        }
+    ]
+}

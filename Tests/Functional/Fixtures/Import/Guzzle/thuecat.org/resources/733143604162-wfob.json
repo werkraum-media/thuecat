@@ -1,0 +1,166 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/733143604162-wfob",
+            "@type": [
+                "schema:Thing",
+                "schema:CreativeWork",
+                "schema:DefinedTermSet",
+                "ttgds:Term"
+            ],
+            "rdfs:label": {
+                "@language": "de",
+                "@value": "Destinationen"
+            },
+            "schema:name": {
+                "@language": "de",
+                "@value": "Destinationen"
+            },
+            "schema:hasPart": [
+                {
+                    "@id": "https://thuecat.org/resources/319220369392-dnkk"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/357375854173-btze"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/533139458226-qcmp"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/919912624303-xckb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/972476204187-yfgt"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/363472390376-ogeh"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/964801275535-bnmm"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/115114439929-bxon"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/345930032361-pahf"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/293939569003-fznz"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/178879129916-mpzy"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/537010241706-gncn"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/047706356465-nctc"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/482799106998-qaja"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/930422708069-ngwr"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/535446130466-yntp"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/063397536536-htaf"
+                }
+            ],
+            "schema:hasDefinedTerm": [
+                {
+                    "@id": "https://thuecat.org/resources/319220369392-dnkk"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/357375854173-btze"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/533139458226-qcmp"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/919912624303-xckb"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/972476204187-yfgt"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/363472390376-ogeh"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/964801275535-bnmm"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/115114439929-bxon"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/345930032361-pahf"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/293939569003-fznz"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/178879129916-mpzy"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/537010241706-gncn"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/047706356465-nctc"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/482799106998-qaja"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/930422708069-ngwr"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/535446130466-yntp"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/063397536536-htaf"
+                }
+            ],
+            "schema:description": [
+                {
+                    "@language": "fr",
+                    "@value": "Destinations de Thuringe"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Thuringian destinations"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Thüringer Destinationen"
+                }
+            ],
+            "dcterms:title": {
+                "@language": "de",
+                "@value": "Destinationen"
+            },
+            "dcterms:description": [
+                {
+                    "@language": "fr",
+                    "@value": "Destinations de Thuringe"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Thuringian destinations"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Thüringer Destinationen"
+                }
+            ]
+        }
+    ]
+}

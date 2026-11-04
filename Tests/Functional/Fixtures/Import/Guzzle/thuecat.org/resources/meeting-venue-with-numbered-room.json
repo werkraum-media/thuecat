@@ -1,0 +1,51 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/121522223838-onak",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Park",
+                "schema:FoodEstablishment",
+                "schema:LandmarksOrHistoricalBuildings",
+                "schema:TouristAttraction",
+                "thuecat:Building",
+                "thuecat:MeetingCongress",
+                "thuecat:PalaceAndCastle",
+                "thuecat:Palace",
+                "thuecat:CastlePark",
+                "ttgds:PointOfInterest",
+                "thuecat:ConventionEventLocation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "en",
+                    "@value": "Kromsdorf Castle and Park"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Schloss und Park Kromsdorf"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Château et parc de Kromsdorf"
+                }
+            ],
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/685195632502-ffxz"
+                }
+            ]
+        }
+    ]
+}

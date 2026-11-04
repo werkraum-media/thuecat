@@ -1,0 +1,17 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","meeting_rooms"
+,1,10,0,0,"https://thuecat.org/resources/669150457039-gamn","Dorint Hotel am Dom Erfurt","meeting_venue","meeting_congress_hotel",2
+"tx_thuecat_meeting_room"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","contained_rooms"
+,1,10,0,0,"https://thuecat.org/resources/380984144868-tjdz","St. Joseph",2
+,2,10,0,0,"https://thuecat.org/resources/753845544755-tbnr","St. Andreas",0
+,3,10,0,0,"https://thuecat.org/resources/541146409582-zdzo","St. Joseph + St. Andreas",0
+,4,10,0,0,"https://thuecat.org/resources/853365081548-bobo","St. Joseph + St. Andreas + St. Christophorus",0
+"tx_thuecat_tourist_attraction_meeting_rooms_mm"
+,"uid_local","uid_foreign","sorting"
+,1,1,1
+,1,2,2
+"tx_thuecat_meeting_room_contained_rooms_mm"
+,"uid_local","uid_foreign","sorting"
+,1,3,1
+,1,4,2

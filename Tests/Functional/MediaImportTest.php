@@ -160,6 +160,40 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function relatesMeetingRoomPhotosAndFloorPlan(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsMeetingRoomWithMedia.php');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/059632237210-rbpe',
+            'thuecat.org/resources/meeting-venue-with-room.json'
+        );
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/019950652406-nywx',
+            'thuecat.org/resources/meeting-room-with-media.json'
+        );
+        $this->expectFetch('dms_203523307.json');
+        $this->expectFetch('789479277871-mhxt.json');
+        $this->expectFetch('dms_203523384.json');
+        $this->expectFetch('834583356184-rktz.json');
+        foreach ([203523307, 203523384] as $id) {
+            $this->expectFetchForUrl(
+                'https://cms.thuecat.org/o/adaptive-media/image/' . $id . '/Preview-1280x0/image',
+                'cms.thuecat.org/image.jpg'
+            );
+        }
+
+        $this->importConfiguration(1);
+
+        $references = array_filter(
+            $this->fetchChildren('sys_file_reference'),
+            static fn (array $reference): bool => $reference['tablenames'] === 'tx_thuecat_meeting_room'
+        );
+        $fields = array_column($references, 'fieldname');
+        sort($fields);
+        self::assertSame(['floor_plan', 'main_image', 'media_files'], $fields);
+    }
+
+    #[Test]
     public function relatesTrailMediaOncePerLanguage(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');

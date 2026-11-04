@@ -32,6 +32,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\StorageFolderEmpty
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ValueUnmatched;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyStale;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\VocabularyUnavailable;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\MeetingRoom;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Organisation;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\TouristInformation;
@@ -39,6 +40,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\Town;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\Trail;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Address as FrontendAddress;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Category as FrontendCategory;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\MeetingRoom as FrontendMeetingRoom;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\MeetingVenue as FrontendMeetingVenue;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Organisation as FrontendOrganisation;
@@ -61,6 +63,9 @@ return [
     ],
     TouristInformation::class => [
         'tableName' => 'tx_thuecat_tourist_information',
+    ],
+    MeetingRoom::class => [
+        'tableName' => 'tx_thuecat_meeting_room',
     ],
     ParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',
@@ -234,6 +239,9 @@ return [
     FrontendMeetingVenue::class => [
         'tableName' => 'tx_thuecat_tourist_attraction',
         'recordType' => 'meeting_venue',
+    ],
+    FrontendMeetingRoom::class => [
+        'tableName' => 'tx_thuecat_meeting_room',
     ],
     FrontendTown::class => [
         'tableName' => 'tx_thuecat_town',

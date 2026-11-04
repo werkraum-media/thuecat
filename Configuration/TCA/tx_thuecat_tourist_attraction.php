@@ -789,6 +789,17 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
+            'meeting_rooms' => [
+                'label' => $languagePath . '.meeting_rooms',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'foreign_table' => 'tx_thuecat_meeting_room',
+                    'MM' => 'tx_thuecat_tourist_attraction_meeting_rooms_mm',
+                    'readOnly' => true,
+                ],
+            ],
             'hosts_events' => [
                 'label' => $languagePath . '.hosts_events',
                 'l10n_mode' => 'exclude',
@@ -992,7 +1003,7 @@ return (static function (string $extensionKey, string $tableName) {
             ],
             'meeting_venue' => [
                 'showitem' => $attractionShowitem . ',
-                --div--;' . $languagePath . '.tab.meeting, venue_type, meeting_facilities, maximum_attendee_capacity,
+                --div--;' . $languagePath . '.tab.meeting, venue_type, meeting_rooms, meeting_facilities, maximum_attendee_capacity,
                 distance_airport, distance_city_center, distance_fair, distance_freeway, distance_ice_station,
                 description_lodging_meeting,
                 --div--;' . $languagePath . '.tab.meeting_venue, checkin_time, checkout_time, number_of_rooms,

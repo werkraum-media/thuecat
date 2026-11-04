@@ -39,6 +39,10 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
                 'tx_events_domain_model_location' => [
                     'children',
                 ],
+                'tx_thuecat_meeting_room' => [
+                    'contained_rooms',
+                    'managed_by',
+                ],
                 'tx_thuecat_parking_facility' => [
                     'contained_in_attraction',
                     'contained_in_organisation',
@@ -59,6 +63,7 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
                     'geo_touches_trail',
                     'managed_by',
                     'managed_objects',
+                    'meeting_rooms',
                     'operated_by',
                     'parking_facility_near_by',
                     'town',

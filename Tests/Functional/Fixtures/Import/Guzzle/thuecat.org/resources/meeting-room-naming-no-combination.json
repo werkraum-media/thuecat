@@ -1,0 +1,37 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/380984144868-tjdz",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Saint-Joseph"
+                },
+                {
+                    "@language": "de",
+                    "@value": "St. Joseph"
+                },
+                {
+                    "@language": "en",
+                    "@value": "St. Joseph"
+                }
+            ],
+            "schema:containsPlace": []
+        }
+    ]
+}

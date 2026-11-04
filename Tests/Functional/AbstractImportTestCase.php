@@ -337,6 +337,18 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         ;
     }
 
+    protected function assertSingleUnmatchedValue(string $table, string $remoteId, string $property, string $value): void
+    {
+        $entries = $this->getLogEntriesOfType('valueUnmatched');
+        self::assertCount(1, $entries);
+        self::assertSame($remoteId, $entries[0]['remote_id']);
+        self::assertSame($table, $entries[0]['table_name']);
+        $message = $entries[0]['message'];
+        self::assertIsString($message);
+        self::assertStringContainsString($property, $message);
+        self::assertStringContainsString($value, $message);
+    }
+
     /**
      * @return list<array<string, mixed>>
      */

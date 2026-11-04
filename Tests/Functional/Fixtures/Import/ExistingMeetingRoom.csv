@@ -1,0 +1,9 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","meeting_rooms"
+,1,10,0,0,"https://thuecat.org/resources/059632237210-rbpe","Kundendienstzentrum der Stadtwerke Erfurt","meeting_venue","meeting_congress",1
+"tx_thuecat_meeting_room"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,1,10,0,0,"https://thuecat.org/resources/019950652406-nywx","Galerie"
+"tx_thuecat_tourist_attraction_meeting_rooms_mm"
+,"uid_local","uid_foreign","sorting"
+,1,1,1

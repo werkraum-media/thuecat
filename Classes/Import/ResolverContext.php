@@ -168,6 +168,13 @@ final class ResolverContext
     public const MAX_KEYWORD_DEPTH = 10;
 
     /**
+     * Room→room references are followed below the venue's own rooms: a room can be divided, and one of its parts
+     * divided once more (venue 0 → room 1 → division 2 → sub-division 3). Applies to nothing but room-owned
+     * references to rooms; it bounds the fan-out, while cycles are caught by the payload and the stored rows.
+     */
+    public const MAX_MEETING_ROOM_DEPTH = 3;
+
+    /**
      * remote_id → tree depth at which the entity entered the payload. Roots
      * are 0; entities pulled in via a transient on a depth-N row are N+1.
      * Used by the Resolver to decide whether to fetch a transient reference

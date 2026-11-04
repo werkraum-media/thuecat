@@ -1,0 +1,36 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/304596263113-bfyw",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "en",
+                    "@value": "Cosmas and Damian"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Cosmas et Damian"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Cosmas und Damian"
+                }
+            ]
+        }
+    ]
+}

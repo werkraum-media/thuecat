@@ -84,14 +84,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         self::assertSame(120, $this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY)['spaces_car']);
 
-        $entries = $this->getLogEntriesOfType('valueUnmatched');
-        self::assertCount(1, $entries);
-        self::assertSame(self::PARKING_FACILITY, $entries[0]['remote_id']);
-        self::assertSame(self::TABLE, $entries[0]['table_name']);
-        $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringContainsString('thuecat:numberOfParkingSpace', $message);
-        self::assertStringContainsString('test:UnknownVehicle', $message);
+        $this->assertSingleUnmatchedValue(self::TABLE, self::PARKING_FACILITY, 'thuecat:numberOfParkingSpace', 'test:UnknownVehicle');
     }
 
     #[Test]
@@ -197,7 +190,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         self::assertSame(
             [self::HOTEL . '::parking::0'],
-            array_column($this->fetchChildren(self::TABLE), 'remote_id')
+            $this->fetchChildRemoteIds(self::TABLE)
         );
     }
 

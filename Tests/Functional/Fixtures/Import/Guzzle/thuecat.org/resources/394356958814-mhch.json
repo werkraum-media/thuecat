@@ -1,0 +1,41 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/394356958814-mhch",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:TouristAttraction",
+                "schema:EventVenue",
+                "thuecat:FestivalHall",
+                "thuecat:EventHall",
+                "thuecat:TheaterEventVenue",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "en",
+                    "@value": "Hall Number 1 - egapark"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Halle 1 - egapark"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Salle numéro 1 - egapark"
+                }
+            ]
+        }
+    ]
+}

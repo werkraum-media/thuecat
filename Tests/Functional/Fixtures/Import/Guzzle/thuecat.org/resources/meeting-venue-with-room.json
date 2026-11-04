@@ -1,0 +1,46 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/059632237210-rbpe",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Centre de service client des services municipaux d'Erfurt"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "Centrum obsługi klienta przedsiębiorstwa komunalnego Stadtwerke Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Erfurt Municipal Utilities Customer Service Centre"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Kundendienstzentrum der Stadtwerke Erfurt"
+                }
+            ],
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/019950652406-nywx"
+                }
+            ]
+        }
+    ]
+}

@@ -231,6 +231,37 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return array_map(static fn (mixed $uid): int => is_numeric($uid) ? (int)$uid : 0, $uids);
     }
 
+    /**
+     * The remote_ids an MM relation field of one record relates, in stored order.
+     *
+     * @return list<string>
+     */
+    protected function fetchMmRelatedRemoteIds(string $table, string $ownerRemoteId, string $field): array
+    {
+        $foreignTable = $this->get(TcaSchemaFactory::class)
+            ->get($table)
+            ->getField($field)
+            ->getConfiguration()['foreign_table'] ?? null
+        ;
+        self::assertIsString($foreignTable, $table . '.' . $field . ' names no foreign table.');
+
+        $remoteIds = [];
+        foreach ($this->fetchMmRelatedUids($table, $this->fetchUidByRemoteId($table, $ownerRemoteId), $field) as $uid) {
+            $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($foreignTable);
+            $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+            $remoteId = $queryBuilder
+                ->select('remote_id')
+                ->from($foreignTable)
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+                ->executeQuery()
+                ->fetchOne()
+            ;
+            $remoteIds[] = is_string($remoteId) ? $remoteId : '';
+        }
+
+        return $remoteIds;
+    }
+
     protected function countDeletedRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
@@ -272,6 +303,17 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             ->executeQuery()
             ->fetchAllAssociative()
         ;
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function fetchChildRemoteIds(string $table): array
+    {
+        return array_map(
+            static fn (array $row): string => is_string($row['remote_id'] ?? null) ? $row['remote_id'] : '',
+            $this->fetchChildren($table)
+        );
     }
 
     /**

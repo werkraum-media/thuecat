@@ -1,0 +1,171 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/685195632502-ffxz",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "thuecat:SeminarRoom",
+                "thuecat:SymposiumRoom",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Kaminsaal Schloss Kromsdorf"
+            },
+            "schema:description": [
+                {
+                    "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Im stilvollen Ambiente des Kaminsaals finden mehr als 50 Personen Platz. Mit rund 85 m² bildet er das Herzstück der Ebene. Ergänzt wird er durch eine gemütliche Bar für Pausen sowie einen flexibel nutzbaren Nebenraum, der sich bei Bedarf abtrenne lässt. Der direkte Zugang zum Schlosspark rundet das Ambiente der Kaminsaalebene ab.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>The stylish ambience of the fireplace room can accommodate more than 50 people. At around 85 m², it forms the heart of the level. It is complemented by a cozy bar for breaks and a flexibly usable adjoining room that can be partitioned off if required. Direct access to the castle park rounds off the ambience of the fireplace hall level.</p>"
+                    }
+                },
+                {
+                    "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b3",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "<p>L'ambiance élégante de la salle de la cheminée peut accueillir plus de 50 personnes. Avec environ 85 m², elle constitue le cœur de la plaine. Elle est complétée par un bar confortable pour les pauses ainsi que par une pièce annexe utilisable de manière flexible et pouvant être séparée en cas de besoin. L'accès direct au parc du château complète l'ambiance de la plaine de la salle de la cheminée.</p>"
+                    }
+                },
+                {
+                    "@language": "de",
+                    "@value": "Im stilvollen Ambiente des Kaminsaals finden mehr als 50 Personen Platz. Mit rund 85 m² bildet er das Herzstück der Ebene. Ergänzt wird er durch eine gemütliche Bar für Pausen sowie einen flexibel nutzbaren Nebenraum, der sich bei Bedarf abtrenne lässt. Der direkte Zugang zum Schlosspark rundet das Ambiente der Kaminsaalebene ab."
+                },
+                {
+                    "@language": "fr",
+                    "@value": "L'ambiance élégante de la salle de la cheminée peut accueillir plus de 50 personnes. Avec environ 85 m², elle constitue le cœur de la plaine. Elle est complétée par un bar confortable pour les pauses ainsi que par une pièce annexe utilisable de manière flexible et pouvant être séparée en cas de besoin. L'accès direct au parc du château complète l'ambiance de la plaine de la salle de la cheminée."
+                },
+                {
+                    "@language": "en",
+                    "@value": "The stylish ambience of the fireplace room can accommodate more than 50 people. At around 85 m², it forms the heart of the level. It is complemented by a cozy bar for breaks and a flexibly usable adjoining room that can be partitioned off if required. Direct access to the castle park rounds off the ambience of the fireplace hall level."
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://schlosskromsdorf.de/"
+            },
+            "schema:floorSize": {
+                "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b4",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTK"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "115"
+                }
+            },
+            "thuecat:roomHeight": {
+                "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b5",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTR"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "3.3"
+                }
+            },
+            "thuecat:meetingFacilitysRoom": [
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:MeetingFacilitysRoomDaylight"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:Separable"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:Wardrobe"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:Full"
+                },
+                {
+                    "@type": "thuecat:MeetingFacilitysRoom",
+                    "@value": "thuecat:UsableOutdoorArea"
+                }
+            ],
+            "thuecat:capacityBanquetSeating": {
+                "@type": "schema:Number",
+                "@value": "50"
+            },
+            "thuecat:capacityTheatreSeating": {
+                "@type": "schema:Number",
+                "@value": "50"
+            },
+            "thuecat:bookable": {
+                "@type": "schema:Boolean",
+                "@value": "true"
+            },
+            "schema:numberOfRooms": {
+                "@type": "schema:Number",
+                "@value": "3"
+            },
+            "schema:amenityFeature": {
+                "@id": "genid-cf9bc3608813459b803384cf884ea2af7830486-b0",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:StructuredValue",
+                    "schema:PropertyValue",
+                    "schema:LocationFeatureSpecification"
+                ],
+                "thuecat:featureName": {
+                    "@type": "thuecat:AccommodationFeatures",
+                    "@value": "thuecat:WC"
+                }
+            }
+        }
+    ]
+}

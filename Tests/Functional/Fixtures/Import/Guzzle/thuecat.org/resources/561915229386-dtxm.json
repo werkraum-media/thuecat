@@ -1,0 +1,104 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/561915229386-dtxm",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Rittersal Ordensburg"
+            },
+            "schema:description": [
+                {
+                    "@id": "genid-fefeb634b5a044e19484aa94b2f707c9162991-b0",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "de",
+                        "@value": "<p>Die eindrucksvollste Räumlichkeit im Burgtorhaus besticht durch eine wunderschöne Kreuzgewölbedecke und lädt zu Kamingesprächen ein.</p><p>Die prunkvolle Architektur dieses historischen Saals verleiht Ihrem Event edles Flair. Perfekt für kleine Tagungen, private Feiern oder freie Trauungen im engsten Kreis.</p><ul><li><p>Lage: Gebäude Torhaus | 1. Etage</p></li><li><p>Kapazität: bis 40 Personen</p></li><li><p>Fläche: ca. 60 m²</p></li></ul>"
+                    }
+                },
+                {
+                    "@id": "genid-fefeb634b5a044e19484aa94b2f707c9162991-b1",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "en",
+                        "@value": "<p>The most impressive room in the Burgtorhaus boasts a beautiful cross-vaulted ceiling and is ideal for fireside chats.</p><p>The magnificent architecture of this historic hall lends your event an elegant flair. Perfect for small conferences, private celebrations or intimate weddings.</p><ul><li><p>Location: Torhaus building | 1st floor</p></li><li><p>Capacity: up to 40 people</p></li><li><p>Area: approx. 60 m²</p></li></ul>"
+                    }
+                },
+                {
+                    "@id": "genid-fefeb634b5a044e19484aa94b2f707c9162991-b2",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:ComputerLanguage",
+                        "thuecat:Html"
+                    ],
+                    "schema:value": {
+                        "@language": "fr",
+                        "@value": "<p>La salle la plus impressionnante du Burgtorhaus se distingue par son magnifique plafond voûté en croisée d'ogives et invite aux discussions au coin du feu.</p><p>L'architecture somptueuse de cette salle historique confère un flair noble à votre événement. Elle est parfaite pour les petites réunions, les fêtes privées ou les mariages libres en cercle restreint.</p><ul><li><p>Situation : Bâtiment Torhaus | 1er étage</p></li><li><p>Capacité : jusqu'à 40 personnes</p></li><li><p>Surface : env. 60 m².</p></li></ul>"
+                    }
+                },
+                {
+                    "@language": "de",
+                    "@value": "Die eindrucksvollste Räumlichkeit im Burgtorhaus besticht durch eine wunderschöne Kreuzgewölbedecke und lädt zu Kamingesprächen ein.\nDie prunkvolle Architektur dieses historischen Saals verleiht Ihrem Event edles Flair. Perfekt für kleine Tagungen, private Feiern oder freie Trauungen im engsten Kreis.\nLage: Gebäude Torhaus | 1. Etage\nKapazität: bis 40 Personen\nFläche: ca. 60 m²\n"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "La salle la plus impressionnante du Burgtorhaus se distingue par son magnifique plafond voûté en croisée d'ogives et invite aux discussions au coin du feu.\nL'architecture somptueuse de cette salle historique confère un flair noble à votre événement. Elle est parfaite pour les petites réunions, les fêtes privées ou les mariages libres en cercle restreint.\nSituation : Bâtiment Torhaus | 1er étage\nCapacité : jusqu'à 40 personnes\nSurface : env. 60 m².\n"
+                },
+                {
+                    "@language": "en",
+                    "@value": "The most impressive room in the Burgtorhaus boasts a beautiful cross-vaulted ceiling and is ideal for fireside chats.\nThe magnificent architecture of this historic hall lends your event an elegant flair. Perfect for small conferences, private celebrations or intimate weddings.\nLocation: Torhaus building | 1st floor\nCapacity: up to 40 people\nArea: approx. 60 m²\n"
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://burg-liebstedt.de/mieten/rittersaal/"
+            },
+            "schema:floorSize": {
+                "@id": "genid-fefeb634b5a044e19484aa94b2f707c9162991-b3",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Intangible",
+                    "schema:QuantitativeValue",
+                    "schema:StructuredValue"
+                ],
+                "schema:unitCode": {
+                    "@type": "thuecat:Unit",
+                    "@value": "thuecat:MTK"
+                },
+                "schema:value": {
+                    "@type": "schema:Number",
+                    "@value": "60"
+                }
+            },
+            "schema:tourBookingPage": {
+                "@type": "schema:URL",
+                "@value": "https://burg-liebstedt.de/mieten/rittersaal/"
+            }
+        }
+    ]
+}

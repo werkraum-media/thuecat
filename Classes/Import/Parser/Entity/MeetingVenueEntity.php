@@ -32,6 +32,8 @@ class MeetingVenueEntity extends TouristAttractionEntity
     // Named, never fetched: the referenced events arrive through their own imports.
     public const HOSTED_EVENTS_BUCKET = 'hostedEvents';
 
+    public const ROOMS_BUCKET = 'meetingRooms';
+
     // Upstream property => transient bucket.
     protected const REFERENCES = [
         'thuecat:managedBy' => 'operatedBy',
@@ -212,6 +214,8 @@ class MeetingVenueEntity extends TouristAttractionEntity
         foreach (self::REFERENCES as $property => $bucket) {
             $this->recordTransient($bucket, $node[$property] ?? null);
         }
+        // Embedded nodes are hotel rooms, never meeting rooms.
+        $this->recordTransient(self::ROOMS_BUCKET, $this->bareReferencesOnly($node['schema:containsPlace'] ?? null));
 
         $this->parseLocalised($node, $language, null, $parserContext);
         foreach ($translationLanguages as $code => $sysLanguageUid) {

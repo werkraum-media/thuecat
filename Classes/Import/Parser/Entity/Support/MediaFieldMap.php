@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Support;
 
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingRoomEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristInformationEntity;
@@ -44,6 +45,7 @@ class MediaFieldMap
         TouristAttractionEntity::class,
         TouristInformationEntity::class,
         ParkingFacilityEntity::class,
+        MeetingRoomEntity::class,
         EventEntity::class,
         TrailEntity::class,
     ];

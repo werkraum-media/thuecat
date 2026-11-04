@@ -149,6 +149,7 @@ class PlaceCategoryMapper extends SysCategoryMapper
             'thuecat:Pub' => 'Kneipe',
             'thuecat:KneippFacility' => 'Kneippanlage',
             'thuecat:PastryShop' => 'Konditorei',
+            'thuecat:CongressRoom' => 'Kongressraum',
             'thuecat:ConventionCenter' => 'Kongresszentrum',
             'thuecat:ConcertHall' => 'Konzerthaus',
             'thuecat:HerbGarden' => 'Kräutergarten',
@@ -190,6 +191,8 @@ class PlaceCategoryMapper extends SysCategoryMapper
             'thuecat:Cycling' => 'Radfahren',
             'thuecat:CyclingTrack' => 'Radrennbahn',
             'schema:CityHall' => 'Rathaus',
+            'thuecat:MajorEventRoom' => 'Raum für Großveranstaltungen',
+            'thuecat:SymposiumRoom' => 'Raum für Symposien',
             'schema:Resort' => 'Resort',
             'schema:Restaurant' => 'Restaurant',
             'thuecat:RevueTheater' => 'Revuetheater',
@@ -212,6 +215,7 @@ class PlaceCategoryMapper extends SysCategoryMapper
             'thuecat:PoolClass' => 'Schwimmbad',
             'thuecat:Swimming' => 'Schwimmen',
             'schema:LakeBodyOfWater' => 'See',
+            'thuecat:SeminarRoom' => 'Seminarraum',
             'thuecat:Bench' => 'Sitzbank',
             'thuecat:SkateboardingFacility' => 'Skateanlage',
             'schema:SkiResort' => 'Skigebiet',
@@ -306,6 +310,11 @@ class PlaceCategoryMapper extends SysCategoryMapper
             // Compound markers; their constituent types are mapped individually.
             'ttgds:FoodEstablishmentLodgingBusiness',
             'ttgds:Manufacturer',
+            // A meeting room's generic types; its specific room type carries the category.
+            'schema:MeetingRoom',
+            'schema:Room',
+            'schema:Accommodation',
+            'ttgds:Accommodation',
         ];
     }
 }

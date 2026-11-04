@@ -1,0 +1,56 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/r_22033376-oapoi",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:Cemetery",
+                "schema:Park",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "thuecat:SculpturePark",
+                "thuecat:ThemePark",
+                "thuecat:BotanicalGarden",
+                "thuecat:HerbGarden",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Parc Ega d'Erfurt"
+                },
+                {
+                    "@language": "de",
+                    "@value": "egapark Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "egapark Erfurt"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "egapark Erfurt"
+                }
+            ],
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/394356958814-mhch"
+                },
+                {
+                    "@id": "https://thuecat.org/resources/201162676710-tagb"
+                }
+            ]
+        }
+    ]
+}

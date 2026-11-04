@@ -1,0 +1,35 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/234669135473-wkez",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:TouristAttraction",
+                "schema:EventVenue",
+                "thuecat:MeetingCongress",
+                "thuecat:ConventionCenter",
+                "ttgds:PointOfInterest"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "congress centrum weimarhalle"
+            },
+            "schema:containsPlace": [
+                {
+                    "@id": "https://thuecat.org/resources/927752209912-nrho"
+                }
+            ]
+        }
+    ]
+}

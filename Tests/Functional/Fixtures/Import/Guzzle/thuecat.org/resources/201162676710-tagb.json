@@ -1,0 +1,36 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/201162676710-tagb",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Hall 1 - Votre lieu pour les grands projets"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Hall 1 - your location for big projects"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Halle 1 – Ihre Location für große Vorhaben"
+                }
+            ]
+        }
+    ]
+}

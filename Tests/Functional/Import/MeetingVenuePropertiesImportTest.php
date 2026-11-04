@@ -191,14 +191,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         self::assertSame(0, $row['distance_fair']);
         self::assertSame(2000, $row['distance_city_center']);
 
-        $entries = $this->getLogEntriesOfType('valueUnmatched');
-        self::assertCount(1, $entries);
-        self::assertSame(self::MEETING_LOCATION, $entries[0]['remote_id']);
-        self::assertSame(self::TABLE, $entries[0]['table_name']);
-        $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringContainsString('thuecat:distanceFair', $message);
-        self::assertStringContainsString('test:UnknownUnit', $message);
+        $this->assertSingleUnmatchedValue(self::TABLE, self::MEETING_LOCATION, 'thuecat:distanceFair', 'test:UnknownUnit');
     }
 
     #[Test]
@@ -246,12 +239,6 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         self::assertEmpty($row['description_culture_portal']);
         self::assertEmpty($row['description_lodging_meeting']);
 
-        $entries = $this->getLogEntriesOfType('valueUnmatched');
-        self::assertCount(1, $entries);
-        self::assertSame(self::MEMORIAL, $entries[0]['remote_id']);
-        $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringContainsString('thuecat:additionalDescriptions', $message);
-        self::assertStringContainsString('test:UnknownDescription', $message);
+        $this->assertSingleUnmatchedValue(self::TABLE, self::MEMORIAL, 'thuecat:additionalDescriptions', 'test:UnknownDescription');
     }
 }

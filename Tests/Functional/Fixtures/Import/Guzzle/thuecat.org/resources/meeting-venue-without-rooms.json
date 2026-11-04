@@ -1,0 +1,43 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/669150457039-gamn",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:LodgingBusiness",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:FoodEstablishment",
+                "schema:Restaurant",
+                "schema:BarOrPub",
+                "schema:Hotel",
+                "schema:TouristAttraction",
+                "ttgds:FoodEstablishmentLodgingBusiness",
+                "thuecat:MeetingCongressHotel"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Dorint Hotel am Dom Erfurt"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Dorint Hotel am Dom Erfurt"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Dorint Hotel am Dom Erfurt"
+                }
+            ],
+            "schema:containsPlace": []
+        }
+    ]
+}
