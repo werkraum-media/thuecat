@@ -189,13 +189,16 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
      * Stage one expected fetch. The fixture file lives at
      * `<fixtureGuzzleBase>/<fixtureDomain>/<fixturePath>/<filename>`; the
      * matching URL is `https://<fixtureDomain>/<fixturePath>/<basename-no-ext>`.
-     * Stack the same call N times to declare N expected fetches of that URL —
-     * a single excess fetch trips the empty-bag error and a single missing
-     * fetch trips the tearDown leftover assertion.
+     * Each filename declares one expected fetch; name a file N times to
+     * declare N fetches of that URL — a single excess fetch trips the
+     * empty-bag error and a single missing fetch trips the tearDown leftover
+     * assertion.
      */
-    protected function expectFetch(string $filename): void
+    protected function expectFetch(string ...$filenames): void
     {
-        $this->expectFetchAt($this->fixtureDomain, $this->fixturePath, $filename);
+        foreach ($filenames as $filename) {
+            $this->expectFetchAt($this->fixtureDomain, $this->fixturePath, $filename);
+        }
     }
 
     protected function expectFetchAt(string $domain, string $path, string $filename): void

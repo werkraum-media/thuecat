@@ -226,9 +226,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->expectFetchForUrl('https://thuecat.org/resources/669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-rooms.json');
-        foreach (MeetingRoomRelationsImportTest::DORINT_ROOMS as $room) {
-            $this->expectFetch($room . '.json');
-        }
+        $this->expectFetch(...MeetingRoomRelationsImportTest::DORINT_ROOM_FIXTURES);
 
         $this->importConfiguration(2);
 
