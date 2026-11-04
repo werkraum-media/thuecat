@@ -79,6 +79,9 @@ class TouristAttractionRepository extends AbstractThuecatObjectRepository
         if ($demand->getPublicAccess()) {
             $constraints[] = $query->equals('publicAccess', 'true');
         }
+        if ($demand->getRecordTypes() !== []) {
+            $constraints[] = $query->in('type', $demand->getRecordTypes());
+        }
 
         if ($constraints !== []) {
             $query->matching($query->logicalAnd(...$constraints));

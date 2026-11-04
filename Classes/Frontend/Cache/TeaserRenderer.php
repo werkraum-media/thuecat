@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Frontend\Cache;
 
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionClass;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
@@ -119,10 +120,26 @@ class TeaserRenderer
             : lcfirst($this->typeFor($record));
     }
 
-    /** Unqualified model name: `TouristAttraction` → `TouristAttraction/ListItem`. */
+    /**
+     * Unqualified model name: `TouristAttraction` → `TouristAttraction/ListItem`. A record type subclass
+     * (`MeetingVenue`) renders through the model of its table, whose template chooses by record type.
+     */
     protected function typeFor(Base $record): string
     {
-        $parts = explode('\\', $record::class);
+        $className = $record::class;
+        $table = $this->tableFor($record);
+        $parent = get_parent_class($className);
+        while (
+            is_string($parent)
+            && is_subclass_of($parent, Base::class)
+            && !(new ReflectionClass($parent))->isAbstract()
+            && $this->dataMapper->getDataMap($parent)->getTableName() === $table
+        ) {
+            $className = $parent;
+            $parent = get_parent_class($className);
+        }
+
+        $parts = explode('\\', $className);
 
         return (string)end($parts);
     }

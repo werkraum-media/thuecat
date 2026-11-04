@@ -1,0 +1,48 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{rooms}">
+    <section data-venue="meetingRooms">
+        <h3><f:translate key="content.meetingRooms" extensionName="thuecat" /></h3>
+        <table>
+            <thead>
+                <tr>
+                    <th><f:translate key="content.meetingRoom.title" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.floorSize" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.roomHeight" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.capacityBanquet" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.capacityClassroom" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.capacityTheatre" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.capacityStanding" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.facilities" extensionName="thuecat" /></th>
+                    <th><f:translate key="content.meetingRoom.floorPlan" extensionName="thuecat" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <f:for each="{rooms}" as="room">
+                    <tr data-room="{room.uid}">
+                        <td>{room.title -> f:format.htmlspecialchars()}</td>
+                        <td><f:if condition="{room.floorSize}"><f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{room.floorSize}</f:format.number></f:if></td>
+                        <td><f:if condition="{room.roomHeight}"><f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{room.roomHeight}</f:format.number></f:if></td>
+                        <td><f:if condition="{room.capacityBanquet}">{room.capacityBanquet}</f:if></td>
+                        <td><f:if condition="{room.capacityClassroom}">{room.capacityClassroom}</f:if></td>
+                        <td><f:if condition="{room.capacityTheatre}">{room.capacityTheatre}</f:if></td>
+                        <td><f:if condition="{room.capacityStanding}">{room.capacityStanding}</f:if></td>
+                        <td>
+                            <f:for each="{room.facilityMembers}" as="facility" iteration="facilityIteration">
+                                <f:translate key="content.facilities.{facility}" extensionName="thuecat" default="{facility}" /><f:if condition="{facilityIteration.isLast}"><f:else>, </f:else></f:if>
+                            </f:for>
+                        </td>
+                        <td>
+                            <f:if condition="{room.floorPlan}">
+                                <a href="{room.floorPlan.originalResource.publicUrl}"><f:translate key="content.meetingRoom.floorPlan" extensionName="thuecat" /></a>
+                            </f:if>
+                        </td>
+                    </tr>
+                </f:for>
+            </tbody>
+        </table>
+    </section>
+</f:if>
+</html>

@@ -54,6 +54,13 @@ class TouristAttractionDemand
     protected string $sortBy = '';
 
     /**
+     * Record types of the attraction table; empty means every type.
+     *
+     * @var list<string>
+     */
+    protected array $recordTypes = [];
+
+    /**
      * Properties the editor fixed; they apply without being part of URLs.
      *
      * @var list<string>
@@ -156,6 +163,22 @@ class TouristAttractionDemand
     public function setSortBy(string $sortBy): void
     {
         $this->sortBy = $sortBy;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getRecordTypes(): array
+    {
+        return $this->recordTypes;
+    }
+
+    /**
+     * @param list<string> $recordTypes
+     */
+    public function setRecordTypes(array $recordTypes): void
+    {
+        $this->recordTypes = $recordTypes;
     }
 
     /**

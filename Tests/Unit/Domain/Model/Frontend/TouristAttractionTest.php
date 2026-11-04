@@ -92,6 +92,12 @@ class TouristAttractionTest extends TestCase
     }
 
     #[Test]
+    public function returnsNoAdditionalType(): void
+    {
+        self::assertSame('', (new TouristAttraction())->getAdditionalType());
+    }
+
+    #[Test]
     public function returnsSingleSlogan(): void
     {
         $subject = new TouristAttraction();

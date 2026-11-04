@@ -99,7 +99,7 @@ class MeetingRoom extends Base
     /**
      * @return list<string>
      */
-    public function getFacilities(): array
+    public function getFacilityMembers(): array
     {
         return array_values(array_filter(explode(',', $this->facilities)));
     }
@@ -112,7 +112,7 @@ class MeetingRoom extends Base
     /**
      * @return list<string>
      */
-    public function getAmenityFeatures(): array
+    public function getAmenityFeatureMembers(): array
     {
         return array_values(array_filter(explode(',', $this->amenityFeatures)));
     }

@@ -7,4 +7,7 @@
 <f:if condition="{attraction.firstAddress}">
     <f:render partial="Address/Summary" arguments="{address: attraction.firstAddress}" />
 </f:if>
+<f:if condition="{attraction.recordType} == 'meeting_venue'">
+    <f:render partial="TouristAttraction/MeetingVenueListItem" arguments="{venue: attraction}" />
+</f:if>
 </html>

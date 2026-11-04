@@ -102,6 +102,7 @@ return [
         $page(12, '/preselected-hidden/', 'Preselected Hidden Attraction'),
         $page(13, '/preselected-vanishing/', 'Preselected Attraction To Delete'),
         $page(15, '/preselected-unknown/', 'Preselected Unknown Attraction'),
+        $page(16, '/preselected-venue/', 'Preselected Meeting Venue'),
         [
             'uid' => '14',
             'pid' => '1',
@@ -132,6 +133,7 @@ return [
         $showPlugin(13, 13, $selectedRecordFlexform('24')),
         // No row carries this uid.
         $showPlugin(15, 15, $selectedRecordFlexform('9999')),
+        $showPlugin(16, 16, $selectedRecordFlexform('25')),
     ],
     'tx_thuecat_tourist_attraction' => [
         $attraction(20, 'Verstecktes Stadtmuseum', '1'),
@@ -141,5 +143,18 @@ return [
         $attraction(23, 'Domplatz Erfurt'),
         // Deleted mid-test to prove the empty state and its cache tag.
         $attraction(24, 'Ort der verschwindet'),
+        [...$attraction(25, 'Tagungshotel am Dom'), 'type' => 'meeting_venue', 'meeting_rooms' => '1'],
+    ],
+    'tx_thuecat_meeting_room' => [
+        [
+            'uid' => '1',
+            'pid' => '14',
+            'title' => 'Saal Erfurt',
+            'capacity_theatre' => '200',
+            'sys_language_uid' => '0',
+        ],
+    ],
+    'tx_thuecat_tourist_attraction_meeting_rooms_mm' => [
+        ['uid_local' => '25', 'uid_foreign' => '1', 'sorting' => '1'],
     ],
 ];

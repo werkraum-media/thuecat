@@ -1,0 +1,40 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<section data-venue="meeting">
+    <h3><f:translate key="content.meetingVenue" extensionName="thuecat" /></h3>
+    <dl>
+        <f:if condition="{venue.maximumAttendeeCapacity}">
+            <dt><f:translate key="content.meetingVenue.maximumAttendeeCapacity" extensionName="thuecat" /></dt>
+            <dd>{venue.maximumAttendeeCapacity}</dd>
+        </f:if>
+        <f:if condition="{venue.meetingFacilityMembers}">
+            <dt><f:translate key="content.meetingVenue.meetingFacilities" extensionName="thuecat" /></dt>
+            <dd>
+                <ul>
+                    <f:for each="{venue.meetingFacilityMembers}" as="facility">
+                        <li><f:translate key="content.meeting_facilities.{facility}" extensionName="thuecat" default="{facility}" /></li>
+                    </f:for>
+                </ul>
+            </dd>
+        </f:if>
+        <f:if condition="{venue.distances}">
+            <dt><f:translate key="content.meetingVenue.distances" extensionName="thuecat" /></dt>
+            <dd>
+                <ul>
+                    <f:for each="{venue.distances}" key="destination" as="distance">
+                        <li>
+                            <f:translate key="content.meetingVenue.distance.{destination}" extensionName="thuecat" />:
+                            <f:if condition="{distance.unit} == 'km'">
+                                <f:then><f:format.number decimals="1" decimalSeparator="," thousandsSeparator=".">{distance.value}</f:format.number> km</f:then>
+                                <f:else><f:format.number decimals="0" decimalSeparator="," thousandsSeparator=".">{distance.value}</f:format.number> m</f:else>
+                            </f:if>
+                        </li>
+                    </f:for>
+                </ul>
+            </dd>
+        </f:if>
+    </dl>
+</section>
+</html>

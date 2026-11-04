@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -170,6 +171,19 @@ class ShowPageCacheTest extends AbstractCachingTestCase
             $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_24'),
             'The empty page must stay reachable through the configured uid.'
         );
+    }
+
+    #[Test]
+    public function theNextRequestRendersAChangedRoomCapacityOfTheVenue(): void
+    {
+        $this->request(16);
+        self::assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_16'), 'The venue page is cached.');
+
+        $this->saveRecord(1, ['capacity_theatre' => '310'], 'tx_thuecat_meeting_room');
+
+        $rooms = $this->renderedSection((new InternalRequest())->withPageId(16), 'venue', 'meetingRooms');
+        self::assertStringContainsString('310', $rooms);
+        self::assertStringNotContainsString('200', $rooms);
     }
 
     #[Test]

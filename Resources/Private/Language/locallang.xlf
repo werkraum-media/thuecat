@@ -1934,6 +1934,63 @@
             <trans-unit id="content.star_rating.TwoStarSuperiorGarni" xml:space="preserve">
                 <source>** Superior Garni</source>
             </trans-unit>
+            <trans-unit id="content.meetingVenue" xml:space="preserve">
+                <source>Meetings and conferences</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.maximumAttendeeCapacity" xml:space="preserve">
+                <source>Maximum number of attendees</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.meetingFacilities" xml:space="preserve">
+                <source>Meeting equipment</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distances" xml:space="preserve">
+                <source>Distances</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.airport" xml:space="preserve">
+                <source>Airport</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.cityCenter" xml:space="preserve">
+                <source>City centre</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.fair" xml:space="preserve">
+                <source>Exhibition centre</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.freeway" xml:space="preserve">
+                <source>Motorway</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.iceStation" xml:space="preserve">
+                <source>ICE/IC station</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRooms" xml:space="preserve">
+                <source>Meeting rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.title" xml:space="preserve">
+                <source>Room</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.floorSize" xml:space="preserve">
+                <source>Floor size (m²)</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.roomHeight" xml:space="preserve">
+                <source>Room height (m)</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityBanquet" xml:space="preserve">
+                <source>Banquet</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityClassroom" xml:space="preserve">
+                <source>Classroom</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityTheatre" xml:space="preserve">
+                <source>Theatre</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityStanding" xml:space="preserve">
+                <source>Standing reception</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.facilities" xml:space="preserve">
+                <source>Equipment</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.floorPlan" xml:space="preserve">
+                <source>Floor plan</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

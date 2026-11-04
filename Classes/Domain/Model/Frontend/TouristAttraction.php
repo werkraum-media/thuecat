@@ -112,6 +112,8 @@ class TouristAttraction extends AbstractPlace
 
     protected string $publicAccess = '';
 
+    protected string $type = 'attraction';
+
     public function initializeObject(): void
     {
         parent::initializeObject();
@@ -123,6 +125,22 @@ class TouristAttraction extends AbstractPlace
         $this->containedInParkingFacility = new ObjectStorage();
         $this->containedInPlace = new ObjectStorage();
         $this->hostsEvents = new ObjectStorage();
+    }
+
+    /**
+     * Templates choose their output by it, e.g. the venue partials for 'meeting_venue'.
+     */
+    public function getRecordType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * The ThueCat type for the structured data, where schema.org has none.
+     */
+    public function getAdditionalType(): string
+    {
+        return '';
     }
 
     /**

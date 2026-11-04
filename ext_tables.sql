@@ -38,6 +38,12 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     distance_to_public_transport text,
 );
 
+-- Room equipment lists exceed the varchar(255) TCA derives for an input column (413 characters observed).
+CREATE TABLE tx_thuecat_meeting_room (
+    facilities text,
+    amenity_features text,
+);
+
 -- manages_* / tourist_information: reverse views of type none, which core gives no column. Kept with
 -- the definition their former inline fields had, as the form reads every shown field from the row.
 CREATE TABLE tx_thuecat_organisation (

@@ -31,16 +31,16 @@ class MeetingVenueTest extends TestCase
 {
     public static function enumLists(): iterable
     {
-        yield 'meeting facilities' => ['meetingFacilities', 'getMeetingFacilities', 'Beamer,Flipchart', ['Beamer', 'Flipchart']];
-        yield 'gastro' => ['gastro', 'getGastro', 'Restaurant', ['Restaurant']];
-        yield 'serves cuisine' => ['servesCuisine', 'getServesCuisine', 'RegionalCuisine,GermanCuisine', ['RegionalCuisine', 'GermanCuisine']];
-        yield 'entrance' => ['entrance', 'getEntrance', 'MainEntrance', ['MainEntrance']];
-        yield 'guided tour' => ['guidedTour', 'getGuidedTour', 'GuidedTourOnlyWithRegistration,GuidedTourForGroups', ['GuidedTourOnlyWithRegistration', 'GuidedTourForGroups']];
-        yield 'monument' => ['monument', 'getMonument', 'ArchitecturalMonument', ['ArchitecturalMonument']];
-        yield 'ensemble' => ['ensemble', 'getEnsemble', 'CastleEnsemble', ['CastleEnsemble']];
-        yield 'exhibition objects' => ['exhibitionObjects', 'getExhibitionObjects', 'Paintings,Sculptures', ['Paintings', 'Sculptures']];
-        yield 'sports equipment' => ['sportsEquipment', 'getSportsEquipment', 'BicycleRental', ['BicycleRental']];
-        yield 'amenity features' => ['amenityFeatures', 'getAmenityFeatures', 'Sauna,Elevator', ['Sauna', 'Elevator']];
+        yield 'meeting facilities' => ['meetingFacilities', 'getMeetingFacilityMembers', 'Beamer,Flipchart', ['Beamer', 'Flipchart']];
+        yield 'gastro' => ['gastro', 'getGastroMembers', 'Restaurant', ['Restaurant']];
+        yield 'serves cuisine' => ['servesCuisine', 'getServesCuisineMembers', 'RegionalCuisine,GermanCuisine', ['RegionalCuisine', 'GermanCuisine']];
+        yield 'entrance' => ['entrance', 'getEntranceMembers', 'MainEntrance', ['MainEntrance']];
+        yield 'guided tour' => ['guidedTour', 'getGuidedTourMembers', 'GuidedTourOnlyWithRegistration,GuidedTourForGroups', ['GuidedTourOnlyWithRegistration', 'GuidedTourForGroups']];
+        yield 'monument' => ['monument', 'getMonumentMembers', 'ArchitecturalMonument', ['ArchitecturalMonument']];
+        yield 'ensemble' => ['ensemble', 'getEnsembleMembers', 'CastleEnsemble', ['CastleEnsemble']];
+        yield 'exhibition objects' => ['exhibitionObjects', 'getExhibitionObjectMembers', 'Paintings,Sculptures', ['Paintings', 'Sculptures']];
+        yield 'sports equipment' => ['sportsEquipment', 'getSportsEquipmentMembers', 'BicycleRental', ['BicycleRental']];
+        yield 'amenity features' => ['amenityFeatures', 'getAmenityFeatureMembers', 'Sauna,Elevator', ['Sauna', 'Elevator']];
     }
 
     /**
@@ -59,7 +59,7 @@ class MeetingVenueTest extends TestCase
     #[Test]
     public function returnsNoEnumListMembersWhenNothingIsStored(): void
     {
-        self::assertSame([], (new MeetingVenue())->getMeetingFacilities());
+        self::assertSame([], (new MeetingVenue())->getMeetingFacilityMembers());
     }
 
     #[Test]
@@ -78,6 +78,23 @@ class MeetingVenueTest extends TestCase
             'fair' => ['value' => 1.0, 'unit' => 'km'],
             'iceStation' => ['value' => 999, 'unit' => 'm'],
         ], $subject->getDistances());
+    }
+
+    public static function additionalTypes(): iterable
+    {
+        yield 'conference hotel' => ['meeting_congress_hotel', 'https://thuecat.org/ontology/thuecat/1.0/MeetingCongressHotel'];
+        yield 'meeting and congress' => ['meeting_congress', 'https://thuecat.org/ontology/thuecat/1.0/MeetingCongress'];
+        yield 'no venue type' => ['', ''];
+    }
+
+    #[Test]
+    #[DataProvider('additionalTypes')]
+    public function returnsTheThueCatTypeOfItsVenueTypeAsAdditionalType(string $venueType, string $expected): void
+    {
+        $subject = new MeetingVenue();
+        $subject->_setProperty('venueType', $venueType);
+
+        self::assertSame($expected, $subject->getAdditionalType());
     }
 
     public static function meetingRoomTables(): iterable

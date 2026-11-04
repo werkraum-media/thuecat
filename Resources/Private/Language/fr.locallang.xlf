@@ -840,6 +840,82 @@
                         <source>Toilets People With Disabilities</source>
                         <target>Toilettes pour personnes handicap&#xE9;es</target>
                   </trans-unit>
+                  <trans-unit id="content.meetingVenue" xml:space="preserve">
+                      <source>Meetings and conferences</source>
+                      <target>Réunions et congrès</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.maximumAttendeeCapacity" xml:space="preserve">
+                      <source>Maximum number of attendees</source>
+                      <target>Nombre maximal de participants</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.meetingFacilities" xml:space="preserve">
+                      <source>Meeting equipment</source>
+                      <target>Équipement de réunion</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distances" xml:space="preserve">
+                      <source>Distances</source>
+                      <target>Distances</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distance.airport" xml:space="preserve">
+                      <source>Airport</source>
+                      <target>Aéroport</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distance.cityCenter" xml:space="preserve">
+                      <source>City centre</source>
+                      <target>Centre-ville</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distance.fair" xml:space="preserve">
+                      <source>Exhibition centre</source>
+                      <target>Parc des expositions</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distance.freeway" xml:space="preserve">
+                      <source>Motorway</source>
+                      <target>Autoroute</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.distance.iceStation" xml:space="preserve">
+                      <source>ICE/IC station</source>
+                      <target>Gare ICE/IC</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRooms" xml:space="preserve">
+                      <source>Meeting rooms</source>
+                      <target>Salles de réunion</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.title" xml:space="preserve">
+                      <source>Room</source>
+                      <target>Salle</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.floorSize" xml:space="preserve">
+                      <source>Floor size (m²)</source>
+                      <target>Surface (m²)</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.roomHeight" xml:space="preserve">
+                      <source>Room height (m)</source>
+                      <target>Hauteur sous plafond (m)</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.capacityBanquet" xml:space="preserve">
+                      <source>Banquet</source>
+                      <target>Banquet</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.capacityClassroom" xml:space="preserve">
+                      <source>Classroom</source>
+                      <target>Salle de classe</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.capacityTheatre" xml:space="preserve">
+                      <source>Theatre</source>
+                      <target>Théâtre</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.capacityStanding" xml:space="preserve">
+                      <source>Standing reception</source>
+                      <target>Cocktail debout</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.facilities" xml:space="preserve">
+                      <source>Equipment</source>
+                      <target>Équipement</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingRoom.floorPlan" xml:space="preserve">
+                      <source>Floor plan</source>
+                      <target>Plan</target>
+                  </trans-unit>
             </body>
       </file>
 </xliff>

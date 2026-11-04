@@ -1,0 +1,13 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<section data-venue="listItem">
+    <f:if condition="{venue.maximumAttendeeCapacity}">
+        <span class="capacity"><f:translate key="content.meetingVenue.maximumAttendeeCapacity" extensionName="thuecat" />: {venue.maximumAttendeeCapacity}</span>
+    </f:if>
+    <f:if condition="{venue.meetingRooms}">
+        <span class="rooms"><f:translate key="content.meetingRooms" extensionName="thuecat" />: <f:count subject="{venue.meetingRooms}" /></span>
+    </f:if>
+</section>
+</html>

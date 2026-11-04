@@ -128,6 +128,59 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheVenueFieldsOfAMeetingVenue(): void
+    {
+        $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
+
+        self::assertStringContainsString('250', $venue);
+        self::assertStringContainsString('Beamer', $venue);
+        self::assertStringContainsString('Flipchart', $venue);
+        self::assertStringContainsString('12,5 km', $venue);
+    }
+
+    #[Test]
+    public function showsTheMeetingRoomTableOfAMeetingVenue(): void
+    {
+        $rooms = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRooms');
+
+        self::assertStringContainsString('180,50', $rooms);
+        self::assertStringContainsString('4,20', $rooms);
+        self::assertStringContainsString('220', $rooms);
+        self::assertStringContainsString('Tageslicht', $rooms);
+        $erfurt = strpos($rooms, 'Saal Erfurt<');
+        $erfurtPart = strpos($rooms, 'Saal Erfurt Teil A');
+        $weimar = strpos($rooms, 'Raum Weimar');
+        self::assertNotFalse($erfurt);
+        self::assertNotFalse($erfurtPart);
+        self::assertNotFalse($weimar);
+        self::assertLessThan($erfurtPart, $erfurt);
+        self::assertLessThan($weimar, $erfurtPart);
+    }
+
+    #[Test]
+    public function showsNoVenueOutputForAPlainAttraction(): void
+    {
+        $body = (string)$this->executeFrontendSubRequest(
+            $this->generateRequestWithCHash('21')
+        )->getBody();
+
+        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        self::assertStringNotContainsString('data-venue=', $body);
+    }
+
+    #[Test]
+    public function showsNoMeetingRoomTableForAVenueWithoutRooms(): void
+    {
+        $request = $this->generateRequestWithCHash('26');
+
+        self::assertStringContainsString('40', $this->renderedSection($request, 'venue', 'meeting'));
+        self::assertStringNotContainsString(
+            'data-venue="meetingRooms"',
+            (string)$this->executeFrontendSubRequest($request)->getBody()
+        );
+    }
+
+    #[Test]
     public function showsAttractionTitle(): void
     {
         $request = $this->generateRequestWithCHash('21');

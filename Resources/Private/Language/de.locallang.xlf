@@ -2216,6 +2216,82 @@
                 <source>** Superior Garni</source>
                 <target>** Superior Garni</target>
             </trans-unit>
+            <trans-unit id="content.meetingVenue" xml:space="preserve">
+                <source>Meetings and conferences</source>
+                <target>Tagungen und Kongresse</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.maximumAttendeeCapacity" xml:space="preserve">
+                <source>Maximum number of attendees</source>
+                <target>Maximale Teilnehmerzahl</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.meetingFacilities" xml:space="preserve">
+                <source>Meeting equipment</source>
+                <target>Tagungsausstattung</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distances" xml:space="preserve">
+                <source>Distances</source>
+                <target>Entfernungen</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.airport" xml:space="preserve">
+                <source>Airport</source>
+                <target>Flughafen</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.cityCenter" xml:space="preserve">
+                <source>City centre</source>
+                <target>Stadtzentrum</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.fair" xml:space="preserve">
+                <source>Exhibition centre</source>
+                <target>Messe</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.freeway" xml:space="preserve">
+                <source>Motorway</source>
+                <target>Autobahn</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.distance.iceStation" xml:space="preserve">
+                <source>ICE/IC station</source>
+                <target>ICE-/IC-Bahnhof</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRooms" xml:space="preserve">
+                <source>Meeting rooms</source>
+                <target>Tagungsräume</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.title" xml:space="preserve">
+                <source>Room</source>
+                <target>Raum</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.floorSize" xml:space="preserve">
+                <source>Floor size (m²)</source>
+                <target>Fläche (m²)</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.roomHeight" xml:space="preserve">
+                <source>Room height (m)</source>
+                <target>Raumhöhe (m)</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityBanquet" xml:space="preserve">
+                <source>Banquet</source>
+                <target>Bankett</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityClassroom" xml:space="preserve">
+                <source>Classroom</source>
+                <target>Parlament</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityTheatre" xml:space="preserve">
+                <source>Theatre</source>
+                <target>Reihe</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.capacityStanding" xml:space="preserve">
+                <source>Standing reception</source>
+                <target>Stehempfang</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.facilities" xml:space="preserve">
+                <source>Equipment</source>
+                <target>Ausstattung</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.floorPlan" xml:space="preserve">
+                <source>Floor plan</source>
+                <target>Grundriss</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

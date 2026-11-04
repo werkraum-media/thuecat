@@ -44,6 +44,10 @@ class MeetingVenue extends TouristAttraction
 
     protected string $amenityFeatures = '';
 
+    protected string $venueType = '';
+
+    protected int $maximumAttendeeCapacity = 0;
+
     protected int $distanceAirport = 0;
 
     protected int $distanceCityCenter = 0;
@@ -65,10 +69,27 @@ class MeetingVenue extends TouristAttraction
         $this->meetingRooms = new ObjectStorage();
     }
 
+    public function getAdditionalType(): string
+    {
+        return match ($this->venueType) {
+            'meeting_congress_hotel' => 'https://thuecat.org/ontology/thuecat/1.0/MeetingCongressHotel',
+            'meeting_congress' => 'https://thuecat.org/ontology/thuecat/1.0/MeetingCongress',
+            default => '',
+        };
+    }
+
+    public function getMaximumAttendeeCapacity(): int
+    {
+        return $this->maximumAttendeeCapacity;
+    }
+
     /**
+     * Named apart from the property: Extbase types a property from its same-named getter, and an array
+     * typed property is never mapped.
+     *
      * @return list<string>
      */
-    public function getMeetingFacilities(): array
+    public function getMeetingFacilityMembers(): array
     {
         return $this->membersOf($this->meetingFacilities);
     }
@@ -76,7 +97,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getGastro(): array
+    public function getGastroMembers(): array
     {
         return $this->membersOf($this->gastro);
     }
@@ -84,7 +105,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getServesCuisine(): array
+    public function getServesCuisineMembers(): array
     {
         return $this->membersOf($this->servesCuisine);
     }
@@ -92,7 +113,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getEntrance(): array
+    public function getEntranceMembers(): array
     {
         return $this->membersOf($this->entrance);
     }
@@ -100,7 +121,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getGuidedTour(): array
+    public function getGuidedTourMembers(): array
     {
         return $this->membersOf($this->guidedTour);
     }
@@ -108,7 +129,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getMonument(): array
+    public function getMonumentMembers(): array
     {
         return $this->membersOf($this->monument);
     }
@@ -116,7 +137,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getEnsemble(): array
+    public function getEnsembleMembers(): array
     {
         return $this->membersOf($this->ensemble);
     }
@@ -124,7 +145,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getExhibitionObjects(): array
+    public function getExhibitionObjectMembers(): array
     {
         return $this->membersOf($this->exhibitionObjects);
     }
@@ -132,7 +153,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getSportsEquipment(): array
+    public function getSportsEquipmentMembers(): array
     {
         return $this->membersOf($this->sportsEquipment);
     }
@@ -140,7 +161,7 @@ class MeetingVenue extends TouristAttraction
     /**
      * @return list<string>
      */
-    public function getAmenityFeatures(): array
+    public function getAmenityFeatureMembers(): array
     {
         return $this->membersOf($this->amenityFeatures);
     }

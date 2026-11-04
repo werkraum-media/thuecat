@@ -60,6 +60,10 @@ class TouristAttractionDemandFactory
             $demand->setPublicAccess(true);
             $locked[] = 'publicAccess';
         }
+        if (!empty($settings['recordTypes']) && is_string($settings['recordTypes'])) {
+            $demand->setRecordTypes(GeneralUtility::trimExplode(',', $settings['recordTypes'], true));
+            $locked[] = 'recordTypes';
+        }
         // Not locked: locked properties render as hidden form fields.
         if (is_string($settings['sortBy'] ?? null)) {
             $demand->setSortBy($settings['sortBy']);
@@ -109,8 +113,9 @@ class TouristAttractionDemandFactory
         if ($filter->isLocked('publicAccess')) {
             $demand->setPublicAccess($locked->getPublicAccess());
         }
-        // Always the editor's, even when empty, so a request can never pick the order.
+        // Always the editor's, even when empty, so a request can never pick the order or the record types.
         $demand->setSortBy($locked->getSortBy());
+        $demand->setRecordTypes($locked->getRecordTypes());
         $demand->lockProperties(array_values($filter->getLockedProperties()));
 
         return $demand;
