@@ -26,6 +26,17 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_parking_facility';
 
+    // Inline nodes carry a blank-node @id, so their identity is derived from the venue.
+    public const INLINE_SEPARATOR = '::parking::';
+
+    protected const VEHICLE_TYPE_FIELDS = [
+        'thuecat:Car' => 'spaces_car',
+        'thuecat:HandicappedParking' => 'spaces_handicapped',
+        'thuecat:BusOrCoach' => 'spaces_bus',
+        'thuecat:ElectricVehicleCarChargingStationEnumMem' => 'spaces_ev_charging',
+        'thuecat:Motorcycle' => 'spaces_motorcycle',
+    ];
+
     public const MEDIA_FIELDS = [
         'photo' => 'main_image',
         'image' => 'media_files',
@@ -42,6 +53,11 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
     protected string $payment_accepted = '';
     protected string $distance_to_public_transport = '';
     protected string $offers = '';
+    protected int $spaces_car = 0;
+    protected int $spaces_handicapped = 0;
+    protected int $spaces_bus = 0;
+    protected int $spaces_ev_charging = 0;
+    protected int $spaces_motorcycle = 0;
 
     /**
      * @param array<string, mixed> $node
@@ -49,7 +65,34 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
      */
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
-        $this->remote_id = $this->getRemoteId($node);
+        $this->parseAs($this->getRemoteId($node), $node, $language, $parserContext, $translationLanguages);
+    }
+
+    /**
+     * A parking facility delivered inside its owner's node, manufactured by the owner.
+     *
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
+    public function configureInline(
+        array $node,
+        string $language,
+        ParserContext $parserContext,
+        array $translationLanguages,
+        string $parentRemoteId,
+        int $ordinal
+    ): void {
+        $this->parseAs($parentRemoteId . self::INLINE_SEPARATOR . $ordinal, $node, $language, $parserContext, $translationLanguages);
+    }
+
+    /**
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
+    protected function parseAs(string $remoteId, array $node, string $language, ParserContext $parserContext, array $translationLanguages): void
+    {
+        $this->remote_id = $remoteId;
+        $this->parseSpaces($node, $parserContext);
 
         $localisedFields = [
             'title' => 'schema:name',
@@ -111,5 +154,26 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
     public function handlesTypes(): array
     {
         return ['schema:ParkingFacility'];
+    }
+
+    /**
+     * An entry naming several vehicle types counts for each of them, so the columns are not summed.
+     *
+     * @param array<string, mixed> $node
+     */
+    protected function parseSpaces(array $node, ParserContext $parserContext): void
+    {
+        foreach ($this->nodesOf($node['thuecat:numberOfParkingSpace'] ?? null) as $entry) {
+            $spaces = (int)$this->extractValue($entry['schema:value'] ?? null, '');
+            foreach ($this->nodesOf($entry['schema:unitText'] ?? null) as $vehicleType) {
+                $vehicle = $this->extractValue($vehicleType, '');
+                $field = self::VEHICLE_TYPE_FIELDS[$vehicle] ?? null;
+                if ($field === null) {
+                    $this->reportUnmatched($parserContext, 'thuecat:numberOfParkingSpace', $vehicle);
+                    continue;
+                }
+                $this->$field += $spaces;
+            }
+        }
     }
 }

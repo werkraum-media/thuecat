@@ -173,6 +173,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_parking_facility',
+                    'foreign_table_where' => 'AND {#tx_thuecat_parking_facility}.{#parentid} = 0',
                     'readOnly' => true,
                 ],
             ],

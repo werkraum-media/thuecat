@@ -44,6 +44,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\OrganizerEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\StaleDateReaper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingVenueEntity;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\MediaFieldMap;
@@ -156,6 +157,11 @@ class Resolver
         'tx_thuecat_address' => [
             'separator' => AddressEntity::SEPARATOR,
             'field' => 'address_inline',
+            'reapOrphans' => true,
+        ],
+        'tx_thuecat_parking_facility' => [
+            'separator' => ParkingFacilityEntity::INLINE_SEPARATOR,
+            'field' => 'parking_facilities_inline',
             'reapOrphans' => true,
         ],
         'tx_thuecat_trail_way_type' => [
@@ -2453,6 +2459,10 @@ class Resolver
                 $childKey = (string)$childKey;
                 $childRemoteId = (string)($childRow['remote_id'] ?? '');
                 $parentRemoteId = explode($config['separator'], $childRemoteId, 2)[0];
+                // A table holding top-level records as well: those have no parent.
+                if ($parentRemoteId === $childRemoteId) {
+                    continue;
+                }
 
                 $parentKey = $context->remoteIdToKey[$parentRemoteId] ?? null;
                 $parentTable = $context->remoteIdToTable[$parentRemoteId] ?? null;

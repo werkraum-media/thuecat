@@ -91,6 +91,46 @@ return (static function (string $extensionKey, string $tableName) {
                     'searchable' => false,
                 ],
             ],
+            'spaces_car' => [
+                'label' => $languagePath . '.spaces_car',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                    'readOnly' => true,
+                ],
+            ],
+            'spaces_handicapped' => [
+                'label' => $languagePath . '.spaces_handicapped',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                    'readOnly' => true,
+                ],
+            ],
+            'spaces_bus' => [
+                'label' => $languagePath . '.spaces_bus',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                    'readOnly' => true,
+                ],
+            ],
+            'spaces_ev_charging' => [
+                'label' => $languagePath . '.spaces_ev_charging',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                    'readOnly' => true,
+                ],
+            ],
+            'spaces_motorcycle' => [
+                'label' => $languagePath . '.spaces_motorcycle',
+                'l10n_mode' => 'exclude',
+                'config' => [
+                    'type' => 'number',
+                    'readOnly' => true,
+                ],
+            ],
             'opening_hours_inline' => [
                 'label' => $languagePath . '.opening_hours_inline',
                 'l10n_mode' => 'exclude',
@@ -236,6 +276,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_parking_facility',
+                    'foreign_table_where' => 'AND {#tx_thuecat_parking_facility}.{#parentid} = 0',
                     'readOnly' => true,
                 ],
             ],
@@ -276,6 +317,7 @@ return (static function (string $extensionKey, string $tableName) {
             '0' => [
                 'showitem' => '--palette--;;language, disable, title, description, main_image, media_files, sanitation, other_service, 
                 traffic_infrastructure, payment_accepted, distance_to_public_transport,
+                spaces_car, spaces_handicapped, spaces_bus, spaces_ev_charging, spaces_motorcycle,
                 opening_hours_inline, special_opening_hours_inline,
                 offers, address_inline, remote_id,
                 --div--;' . $languagePath . '.tab.relations, town, managed_by, contained_in_organisation,

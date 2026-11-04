@@ -769,6 +769,26 @@ return (static function (string $extensionKey, string $tableName) {
                     ],
                 ],
             ],
+            'parking_facilities_inline' => [
+                'label' => $languagePath . '.parking_facilities_inline',
+                'config' => [
+                    'type' => 'inline',
+                    'foreign_table' => 'tx_thuecat_parking_facility',
+                    'foreign_field' => 'parentid',
+                    'foreign_table_field' => 'parenttable',
+                    'appearance' => [
+                        'enabledControls' => [
+                            'new' => false,
+                            'delete' => false,
+                        ],
+                        'collapseAll' => true,
+                        'expandSingle' => true,
+                    ],
+                    'behaviour' => [
+                        'allowLanguageSynchronization' => true,
+                    ],
+                ],
+            ],
             'hosts_events' => [
                 'label' => $languagePath . '.hosts_events',
                 'l10n_mode' => 'exclude',
@@ -887,6 +907,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_parking_facility',
+                    'foreign_table_where' => 'AND {#tx_thuecat_parking_facility}.{#parentid} = 0',
                 ],
             ],
             'contained_in_trail' => [
@@ -946,6 +967,7 @@ return (static function (string $extensionKey, string $tableName) {
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
                     'foreign_table' => 'tx_thuecat_parking_facility',
+                    'foreign_table_where' => 'AND {#tx_thuecat_parking_facility}.{#parentid} = 0',
                 ],
             ],
 
@@ -981,7 +1003,7 @@ return (static function (string $extensionKey, string $tableName) {
                 tour_booking_page, bookable, sports_equipment, ensemble, exhibition_objects, open_air_museum,
                 monument, is_ruin, end_of_construction, size_of_area, certifications, description_culture_portal,
                 has_map, same_as, identifier, logo, subject_of_media, subject_of, tourist_types, who_was_here,
-                architects, managed_objects, operated_by, geo_touches_trail',
+                architects, managed_objects, operated_by, geo_touches_trail, parking_facilities_inline',
             ],
         ],
     ];

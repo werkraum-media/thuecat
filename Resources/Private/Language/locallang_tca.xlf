@@ -456,6 +456,9 @@
             <trans-unit id="tx_thuecat_tourist_attraction.address_inline" xml:space="preserve">
                 <source>Address</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_tourist_attraction.parking_facilities_inline" xml:space="preserve">
+                <source>Parking facilities</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_tourist_attraction.url" xml:space="preserve">
                 <source>Url</source>
             </trans-unit>
@@ -543,6 +546,21 @@
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.media_files" xml:space="preserve">
                 <source>Images</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.spaces_car" xml:space="preserve">
+                <source>Parking spaces for cars</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.spaces_handicapped" xml:space="preserve">
+                <source>Disabled parking spaces</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.spaces_bus" xml:space="preserve">
+                <source>Parking spaces for coaches</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.spaces_ev_charging" xml:space="preserve">
+                <source>Parking spaces with charging station</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_parking_facility.spaces_motorcycle" xml:space="preserve">
+                <source>Parking spaces for motorcycles</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_parking_facility.offers" xml:space="preserve">
                 <source>Offers</source>

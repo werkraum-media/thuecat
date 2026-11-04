@@ -177,6 +177,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         parent::parse($node, $language, $parserContext, $translationLanguages);
+        $this->buildParkingFacilities($node, $language, $parserContext, $translationLanguages);
 
         $types = is_array($node['@type'] ?? null) ? $node['@type'] : [];
         $this->venue_type = in_array('thuecat:MeetingCongressHotel', $types, true)
@@ -224,6 +225,22 @@ class MeetingVenueEntity extends TouristAttractionEntity
     public function handlesTypes(): array
     {
         return ['thuecat:MeetingCongressHotel', 'thuecat:MeetingCongress'];
+    }
+
+    /**
+     * The parser emits one level of children, so the facilities' own children are handed on.
+     *
+     * @param array<string, mixed> $node
+     * @param array<string, int> $translationLanguages
+     */
+    protected function buildParkingFacilities(array $node, string $language, ParserContext $parserContext, array $translationLanguages): void
+    {
+        foreach ($this->nodesOf($node['thuecat:parkingFacility'] ?? null) as $ordinal => $parkingNode) {
+            $parkingFacility = new ParkingFacilityEntity();
+            $parkingFacility->configureInline($parkingNode, $language, $parserContext, $translationLanguages, $this->remote_id, $ordinal);
+            $this->children[] = $parkingFacility;
+            array_push($this->children, ...$parkingFacility->getChildren());
+        }
     }
 
     /**
@@ -316,16 +333,6 @@ class MeetingVenueEntity extends TouristAttractionEntity
         return $types === [] ? '' : $types[array_key_last($types)];
     }
 
-    protected function reportUnmatched(ParserContext $parserContext, string $property, string $value): void
-    {
-        $parserContext->unmatchedValues[] = [
-            'table' => self::TABLE,
-            'remoteId' => $this->remote_id,
-            'property' => $property,
-            'value' => $value,
-        ];
-    }
-
     /**
      * subjectOf mixes media with pages about the place; only the media go the media path.
      *
@@ -354,26 +361,6 @@ class MeetingVenueEntity extends TouristAttractionEntity
         }
 
         return $ids;
-    }
-
-    /**
-     * @return list<array<string, mixed>>
-     */
-    protected function nodesOf(mixed $value): array
-    {
-        if (!is_array($value) || $value === []) {
-            return [];
-        }
-
-        $nodes = [];
-        foreach (array_is_list($value) ? $value : [$value] as $node) {
-            if (is_array($node)) {
-                /** @var array<string, mixed> $node */
-                $nodes[] = $node;
-            }
-        }
-
-        return $nodes;
     }
 
     /**

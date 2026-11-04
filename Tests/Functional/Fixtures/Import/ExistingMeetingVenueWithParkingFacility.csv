@@ -1,0 +1,6 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","parking_facilities_inline"
+,1,10,0,0,"https://thuecat.org/resources/160874095809-phhn","Mehrzweckhalle Mellingen","meeting_venue","meeting_congress",1
+"tx_thuecat_parking_facility"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","parentid","parenttable","spaces_car"
+,1,10,0,0,"https://thuecat.org/resources/160874095809-phhn::parking::0","Parkplatz am Haupteingang",1,"tx_thuecat_tourist_attraction",6

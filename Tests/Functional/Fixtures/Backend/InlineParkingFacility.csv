@@ -1,0 +1,11 @@
+"pages"
+,"uid","pid","doktype","title","is_siteroot"
+,4000,0,1,"First site root",1
+,4010,4000,254,"First site record storage",0
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","parking_facilities_inline"
+,4900,4010,0,0,"https://thuecat.org/resources/first-venue","First site venue","meeting_venue","meeting_congress_hotel",1
+"tx_thuecat_parking_facility"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","parentid","parenttable"
+,4801,4010,0,0,"https://thuecat.org/resources/first-parking-facility","Parkplatz am Markt",0,""
+,4802,4010,0,0,"https://thuecat.org/resources/first-venue::parking::0","Parkplatz am Haupteingang",4900,"tx_thuecat_tourist_attraction"

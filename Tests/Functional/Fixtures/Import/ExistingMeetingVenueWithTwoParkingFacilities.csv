@@ -1,0 +1,7 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","parking_facilities_inline"
+,1,10,0,0,"https://thuecat.org/resources/e_ttg00020050000287335-tomas","Hotel Kaiserin Augusta","meeting_venue","meeting_congress_hotel",2
+"tx_thuecat_parking_facility"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","parentid","parenttable","spaces_car"
+,1,10,0,0,"https://thuecat.org/resources/e_ttg00020050000287335-tomas::parking::0","Tiefgarage",1,"tx_thuecat_tourist_attraction",32
+,2,10,0,0,"https://thuecat.org/resources/e_ttg00020050000287335-tomas::parking::1","Garage",1,"tx_thuecat_tourist_attraction",0

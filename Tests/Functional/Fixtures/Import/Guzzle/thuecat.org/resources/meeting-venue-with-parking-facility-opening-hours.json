@@ -1,0 +1,126 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/160874095809-phhn",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:FoodEstablishment",
+                "schema:TouristAttraction",
+                "thuecat:MeetingCongress",
+                "ttgds:PointOfInterest",
+                "thuecat:ConventionEventLocation"
+            ],
+            "schema:name": {
+                "@language": "de",
+                "@value": "Mehrzweckhalle Mellingen"
+            },
+            "thuecat:parkingFacility": {
+                "@id": "genid-85fe3aee316849ddbe1804b70bc80f6441017911-b9",
+                "@type": [
+                    "schema:Thing",
+                    "schema:Place",
+                    "schema:CivicStructure",
+                    "schema:Organization",
+                    "schema:LocalBusiness",
+                    "schema:ParkingFacility"
+                ],
+                "schema:name": {
+                    "@language": "de",
+                    "@value": "Parkplatz am Haupteingang"
+                },
+                "thuecat:numberOfParkingSpace": [
+                    {
+                        "@id": "genid-85fe3aee316849ddbe1804b70bc80f6441017911-b10",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:Intangible",
+                            "schema:QuantitativeValue",
+                            "schema:StructuredValue"
+                        ],
+                        "schema:unitText": {
+                            "@type": "thuecat:TypeOfVehicle",
+                            "@value": "thuecat:ElectricVehicleCarChargingStationEnumMem"
+                        },
+                        "schema:value": {
+                            "@type": "schema:Number",
+                            "@value": "1"
+                        }
+                    },
+                    {
+                        "@id": "genid-85fe3aee316849ddbe1804b70bc80f6441017911-b11",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:Intangible",
+                            "schema:QuantitativeValue",
+                            "schema:StructuredValue"
+                        ],
+                        "schema:unitText": {
+                            "@type": "thuecat:TypeOfVehicle",
+                            "@value": "thuecat:Car"
+                        },
+                        "schema:value": {
+                            "@type": "schema:Number",
+                            "@value": "6"
+                        }
+                    },
+                    {
+                        "@id": "genid-85fe3aee316849ddbe1804b70bc80f6441017911-b12",
+                        "@type": [
+                            "schema:Thing",
+                            "schema:Intangible",
+                            "schema:QuantitativeValue",
+                            "schema:StructuredValue"
+                        ],
+                        "schema:unitText": {
+                            "@type": "thuecat:TypeOfVehicle",
+                            "@value": "thuecat:HandicappedParking"
+                        },
+                        "schema:value": {
+                            "@type": "schema:Number",
+                            "@value": "2"
+                        }
+                    }
+                ],
+                "schema:openingHoursSpecification": {
+                    "@id": "genid-cdd7ace199e34746a484db4ded5e3128579344-b4",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:StructuredValue",
+                        "schema:OpeningHoursSpecification"
+                    ],
+                    "schema:dayOfWeek": {
+                        "@type": "schema:DayOfWeek",
+                        "@value": "schema:Monday"
+                    },
+                    "schema:closes": {
+                        "@type": "schema:Time",
+                        "@value": "23:59:59"
+                    },
+                    "schema:opens": {
+                        "@type": "schema:Time",
+                        "@value": "00:00:00"
+                    },
+                    "schema:validThrough": {
+                        "@type": "schema:Date",
+                        "@value": "2029-03-20"
+                    },
+                    "schema:validFrom": {
+                        "@type": "schema:Date",
+                        "@value": "2026-10-06"
+                    }
+                }
+            }
+        }
+    ]
+}

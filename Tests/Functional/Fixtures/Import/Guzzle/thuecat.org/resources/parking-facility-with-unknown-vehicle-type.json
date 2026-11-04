@@ -1,0 +1,75 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/109087118959-gwhg",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:CivicStructure",
+                "schema:Organization",
+                "schema:LocalBusiness",
+                "schema:ParkingFacility",
+                "thuecat:OtherPOI",
+                "thuecat:ParkingSpace",
+                "ttgds:OtherInfraStructure"
+            ],
+            "schema:name": [
+                {
+                    "@language": "fr",
+                    "@value": "Parking du Belvédère"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Parking lot Belvedere"
+                },
+                {
+                    "@language": "de",
+                    "@value": "Parkplatz Belvedere"
+                }
+            ],
+            "thuecat:numberOfParkingSpace": [
+                {
+                    "@id": "genid-cdd7ace199e34746a484db4ded5e3128579344-b12",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:QuantitativeValue",
+                        "schema:StructuredValue"
+                    ],
+                    "schema:unitText": {
+                        "@type": "thuecat:TypeOfVehicle",
+                        "@value": "thuecat:Car"
+                    },
+                    "schema:value": {
+                        "@type": "schema:Integer",
+                        "@value": "120"
+                    }
+                },
+                {
+                    "@id": "genid-test-unknown-vehicle",
+                    "@type": [
+                        "schema:Thing",
+                        "schema:Intangible",
+                        "schema:QuantitativeValue",
+                        "schema:StructuredValue"
+                    ],
+                    "schema:unitText": {
+                        "@type": "thuecat:TypeOfVehicle",
+                        "@value": "test:UnknownVehicle"
+                    },
+                    "schema:value": {
+                        "@type": "schema:Integer",
+                        "@value": "3"
+                    }
+                }
+            ]
+        }
+    ]
+}

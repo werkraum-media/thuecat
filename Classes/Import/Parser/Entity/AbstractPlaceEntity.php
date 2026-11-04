@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
+use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 /**
  * Builders shared by the POI record kinds: address, opening hours, offers and
@@ -28,6 +29,8 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
  */
 abstract class AbstractPlaceEntity extends AbstractEntity
 {
+    protected string $remote_id = '';
+
     /**
      * schema:makesOffer is a single Offer node or a list of them.
      */
@@ -177,5 +180,35 @@ abstract class AbstractPlaceEntity extends AbstractEntity
             $days[] = $this->stripNamespacePrefix($raw);
         }
         return $days;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function nodesOf(mixed $value): array
+    {
+        if (!is_array($value) || $value === []) {
+            return [];
+        }
+
+        $nodes = [];
+        foreach (array_is_list($value) ? $value : [$value] as $node) {
+            if (is_array($node)) {
+                /** @var array<string, mixed> $node */
+                $nodes[] = $node;
+            }
+        }
+
+        return $nodes;
+    }
+
+    protected function reportUnmatched(ParserContext $parserContext, string $property, string $value): void
+    {
+        $parserContext->unmatchedValues[] = [
+            'table' => static::TABLE,
+            'remoteId' => $this->remote_id,
+            'property' => $property,
+            'value' => $value,
+        ];
     }
 }
