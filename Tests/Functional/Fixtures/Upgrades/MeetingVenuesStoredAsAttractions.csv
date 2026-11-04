@@ -1,0 +1,24 @@
+"pages"
+,"uid","pid","sys_language_uid","l10n_parent","title","doktype","slug","is_siteroot"
+,1,0,0,0,"Root",1,"/",1
+,10,1,0,0,"Storage",254,"/storage",0
+"sys_category"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","parent"
+,900,10,0,0,"type:thuecat:MeetingCongressHotel","Tagungshotel",0
+,901,10,0,0,"type:thuecat:MeetingCongress","Tagung und Kongress",0
+,902,10,0,0,"type:schema:Museum","Museum",0
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","slug","type","venue_type","categories"
+,800,10,0,0,"test:wizard-hotel","Dorint Hotel am Dom Erfurt","dorint-hotel-am-dom-erfurt","attraction","",2
+,801,10,1,800,"test:wizard-hotel","Dorint Hotel am Dom Erfurt","dorint-hotel-am-dom-erfurt-en","attraction","",0
+,810,10,0,0,"test:wizard-congress","Kaisersaal Erfurt","kaisersaal-erfurt","attraction","",1
+,820,10,0,0,"test:wizard-museum","Angermuseum","angermuseum","attraction","",1
+,830,10,0,0,"test:wizard-hotel-and-congress","Radisson Blu Erfurt","radisson-blu-erfurt","attraction","",2
+"sys_category_record_mm"
+,"uid_local","uid_foreign","tablenames","fieldname","sorting","sorting_foreign"
+,900,800,"tx_thuecat_tourist_attraction","categories",0,1
+,902,800,"tx_thuecat_tourist_attraction","categories",0,2
+,901,810,"tx_thuecat_tourist_attraction","categories",0,1
+,902,820,"tx_thuecat_tourist_attraction","categories",0,1
+,901,830,"tx_thuecat_tourist_attraction","categories",0,1
+,900,830,"tx_thuecat_tourist_attraction","categories",0,2

@@ -262,6 +262,32 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return $remoteIds;
     }
 
+    /**
+     * Category and keyword relations store the record on the foreign side of sys_category_record_mm.
+     *
+     * @return list<int>
+     */
+    protected function fetchMmRelatedCategoryUids(string $table, int $uid, string $field): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_category_record_mm');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $uids = $queryBuilder
+            ->select('uid_local')
+            ->from('sys_category_record_mm')
+            ->where(
+                $queryBuilder->expr()->eq('uid_foreign', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->eq('tablenames', $queryBuilder->createNamedParameter($table)),
+                $queryBuilder->expr()->eq('fieldname', $queryBuilder->createNamedParameter($field))
+            )
+            ->orderBy('sorting_foreign')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_map(static fn (mixed $uid): int => is_numeric($uid) ? (int)$uid : 0, $uids);
+    }
+
     protected function countDeletedRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);

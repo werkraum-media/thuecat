@@ -126,12 +126,10 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->getConnectionPool()->getConnectionForTable('sys_category_record_mm')->count('*', 'sys_category_record_mm', [
-            'uid_local' => $this->fetchUidByRemoteId('sys_category', 'type:thuecat:MajorEventRoom'),
-            'uid_foreign' => $this->fetchUidByRemoteId(self::TABLE, self::GALERIE),
-            'tablenames' => self::TABLE,
-            'fieldname' => 'categories',
-        ]));
+        self::assertContains(
+            $this->fetchUidByRemoteId('sys_category', 'type:thuecat:MajorEventRoom'),
+            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'categories')
+        );
     }
 
     // A room is fetched as a reference, so its organisation relates only when already stored.
@@ -149,12 +147,10 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $room = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
         self::assertSame(1, $room['managed_by']);
-        self::assertSame(1, $this->getConnectionPool()->getConnectionForTable('sys_category_record_mm')->count('*', 'sys_category_record_mm', [
-            'uid_local' => $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/537010241706-gncn'),
-            'uid_foreign' => $this->fetchUidByRemoteId(self::TABLE, self::GALERIE),
-            'tablenames' => self::TABLE,
-            'fieldname' => 'keywords',
-        ]));
+        self::assertContains(
+            $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/537010241706-gncn'),
+            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'keywords')
+        );
     }
 
     // DEFENSIVE: not observed upstream.

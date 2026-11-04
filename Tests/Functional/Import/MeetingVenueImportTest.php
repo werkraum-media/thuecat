@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Database\Connection;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class MeetingVenueImportTest extends AbstractImportTestCase
@@ -86,6 +85,23 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         self::assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
     }
 
+    #[Test]
+    public function hotelStoredAsAttractionOnASiteWithoutTypeCategoriesBecomesMeetingVenue(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueWithoutTypeCategories.php');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingHotelStoredAsAttraction.csv');
+        $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-rooms.json');
+
+        $this->importConfiguration(1);
+
+        self::assertSame(0, $this->countRows('sys_category'));
+        $row = $this->fetchRowByRemoteId(self::TABLE, self::HOTEL);
+        self::assertSame(
+            [1, 'meeting_venue', 'meeting_congress_hotel'],
+            [$row['uid'], $row['type'], $row['venue_type']]
+        );
+    }
+
     /**
      * @return iterable<string, array{int, string, string, string}>
      */
@@ -107,23 +123,9 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $categoryUid = $this->fetchUidByRemoteId('sys_category', $categoryRemoteId);
         self::assertGreaterThan(0, $categoryUid);
 
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_category_record_mm');
-        $relations = $queryBuilder
-            ->count('uid_local')
-            ->from('sys_category_record_mm')
-            ->where(
-                $queryBuilder->expr()->eq('uid_local', $queryBuilder->createNamedParameter($categoryUid, Connection::PARAM_INT)),
-                $queryBuilder->expr()->eq(
-                    'uid_foreign',
-                    $queryBuilder->createNamedParameter($this->fetchUidByRemoteId(self::TABLE, $remoteId), Connection::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq('tablenames', $queryBuilder->createNamedParameter(self::TABLE)),
-                $queryBuilder->expr()->eq('fieldname', $queryBuilder->createNamedParameter('categories'))
-            )
-            ->executeQuery()
-            ->fetchOne()
-        ;
-
-        self::assertSame(1, is_numeric($relations) ? (int)$relations : 0);
+        self::assertContains(
+            $categoryUid,
+            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, $remoteId), 'categories')
+        );
     }
 }
