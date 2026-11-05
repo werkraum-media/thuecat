@@ -119,7 +119,7 @@
             <section data-relation="parkingFacilityNearBy">
                 <h3><f:translate key="content.parkingFacilitiesNearBy" extensionName="thuecat" /></h3>
                 <f:for each="{attraction.parkingFacilitiesNearBySortedByAlphabet}" as="parkingFacility">
-                    <span class="parkingFacility">{parkingFacility.title -> f:format.htmlspecialchars()}</span>
+                    <f:render partial="TouristAttraction/ParkingFacility" arguments="{parkingFacility: parkingFacility}" />
                 </f:for>
             </section>
         </f:if>
@@ -155,6 +155,7 @@
             <f:render partial="TouristAttraction/Venue/Texts" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/Venue/Relations" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/Venue/Media" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/ParkingFacilities" arguments="{venue: attraction}" />
         </f:if>
 
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>

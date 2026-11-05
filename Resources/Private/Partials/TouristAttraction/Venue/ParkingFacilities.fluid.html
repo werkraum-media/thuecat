@@ -1,0 +1,13 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.parkingFacilitiesInline -> f:count()}">
+    <section data-venue="parkingFacilities">
+        <h3><f:translate key="content.meetingVenue.parkingFacilities" extensionName="thuecat" /></h3>
+        <f:for each="{venue.parkingFacilitiesInline}" as="parkingFacility">
+            <f:render partial="TouristAttraction/ParkingFacility" arguments="{parkingFacility: parkingFacility}" />
+        </f:for>
+    </section>
+</f:if>
+</html>

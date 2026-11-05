@@ -216,6 +216,7 @@ return [
             'operated_by' => '1',
             'geo_touches_trail' => '1',
             'managed_objects' => '23',
+            'parking_facilities_inline' => '1',
         ],
         [
             'uid' => '26',
@@ -264,10 +265,56 @@ return [
     ],
     'tx_thuecat_parking_facility' => [
         [
+            // Every column filled: the full spread of a related parking facility.
             'uid' => '1',
             'pid' => '11',
             'title' => 'Parkhaus Domplatz',
+            'description' => 'Parkhaus mit direktem Zugang zum Domplatz',
             'sys_language_uid' => '0',
+            'spaces_car' => '400',
+            'spaces_handicapped' => '8',
+            'spaces_bus' => '4',
+            'spaces_ev_charging' => '12',
+            'spaces_motorcycle' => '10',
+            'sanitation' => 'Toilets',
+            'other_service' => 'FreeWlan',
+            'traffic_infrastructure' => 'BicycleStandsEnumMem',
+            'payment_accepted' => 'CashPayment',
+            'distance_to_public_transport' => '150:MTR:Tram',
+            'offers' => '[{"title":"Tagesticket","description":"","prices":[{"title":"Pkw","description":"","price":12,"currency":"EUR","rule":"PerPackage"}],"types":["ParkingFee"]}]',
+            'town' => '1',
+            'managed_by' => '1',
+            'contained_in_place' => '1',
+        ],
+        [
+            'uid' => '2',
+            'pid' => '11',
+            'parentid' => '25',
+            'parenttable' => 'tx_thuecat_tourist_attraction',
+            'title' => 'Tiefgarage des Hotels',
+            'description' => 'Zufahrt über den Hof',
+            'sys_language_uid' => '0',
+            'spaces_car' => '40',
+            'spaces_handicapped' => '2',
+        ],
+    ],
+    'tx_thuecat_town' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Erfurt',
+            'sys_language_uid' => '0',
+        ],
+    ],
+    'tx_thuecat_address' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'parentid' => '1',
+            'parenttable' => 'tx_thuecat_parking_facility',
+            'street' => 'Domplatz 1',
+            'zip' => '99084',
+            'city' => 'Erfurt',
         ],
     ],
     'tx_thuecat_trail' => [
@@ -436,6 +483,30 @@ return [
     // Mirrors the egapark shape: a current period whose Monday carries TWO spans
     // (the lunch-break case #10902 fixes) plus a future period to prove ordering.
     'tx_thuecat_opening_hours' => [
+        [
+            'uid' => '10',
+            'pid' => '11',
+            'parentid' => '1',
+            'parenttable' => 'tx_thuecat_parking_facility',
+            'specification_type' => 'regular',
+            'day_of_week' => 'Monday',
+            'opens' => '07:00:00',
+            'closes' => '22:00:00',
+            'valid_from' => '2026-01-01',
+            'valid_through' => '2026-12-31',
+        ],
+        [
+            'uid' => '11',
+            'pid' => '11',
+            'parentid' => '2',
+            'parenttable' => 'tx_thuecat_parking_facility',
+            'specification_type' => 'regular',
+            'day_of_week' => 'Tuesday',
+            'opens' => '06:00:00',
+            'closes' => '23:00:00',
+            'valid_from' => '2026-01-01',
+            'valid_through' => '2026-12-31',
+        ],
         [
             'uid' => '1',
             'pid' => '11',

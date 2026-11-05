@@ -155,6 +155,11 @@ class MeetingVenue extends TouristAttraction
     protected ObjectStorage $managedObjects;
 
     /**
+     * @var ObjectStorage<ParkingFacility>
+     */
+    protected ObjectStorage $parkingFacilitiesInline;
+
+    /**
      * @var ObjectStorage<MeetingRoom>
      */
     protected ObjectStorage $meetingRooms;
@@ -166,6 +171,7 @@ class MeetingVenue extends TouristAttraction
         $this->subjectOfMedia = new ObjectStorage();
         $this->geoTouchesTrail = new ObjectStorage();
         $this->managedObjects = new ObjectStorage();
+        $this->parkingFacilitiesInline = new ObjectStorage();
     }
 
     public function getAdditionalType(): string
@@ -537,6 +543,14 @@ class MeetingVenue extends TouristAttraction
     public function getManagedObjects(): ObjectStorage
     {
         return $this->managedObjects;
+    }
+
+    /**
+     * @return ObjectStorage<ParkingFacility>
+     */
+    public function getParkingFacilitiesInline(): ObjectStorage
+    {
+        return $this->parkingFacilitiesInline;
     }
 
     /**

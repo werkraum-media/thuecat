@@ -179,11 +179,53 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
-    public function showsTheParkingFacilitiesNearBy(): void
+    public function showsTheParkingFacilitiesNearByInFull(): void
     {
         $parking = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'parkingFacilityNearBy');
 
         self::assertStringContainsString('Parkhaus Domplatz', $parking);
+        self::assertStringContainsString('Parkhaus mit direktem Zugang zum Domplatz', $parking);
+        self::assertMatchesRegularExpression('#Pkw</dt>\s*<dd>400</dd>#', $parking);
+        self::assertMatchesRegularExpression('#Menschen mit Behinderung</dt>\s*<dd>8</dd>#', $parking);
+        self::assertMatchesRegularExpression('#Busse</dt>\s*<dd>4</dd>#', $parking);
+        self::assertMatchesRegularExpression('#Elektrofahrzeuge</dt>\s*<dd>12</dd>#', $parking);
+        self::assertMatchesRegularExpression('#Motorräder</dt>\s*<dd>10</dd>#', $parking);
+        self::assertStringContainsString('Montag', $parking);
+        self::assertStringContainsString('07:00', $parking);
+        self::assertStringContainsString('22:00', $parking);
+        self::assertStringContainsString('Domplatz 1', $parking);
+        self::assertStringContainsString('99084', $parking);
+        self::assertStringContainsString('Toilette', $parking);
+        self::assertStringContainsString('kostenfreies WLAN', $parking);
+        self::assertStringContainsString('Fahrradständer', $parking);
+        self::assertStringContainsString('Barzahlung', $parking);
+        self::assertStringContainsString('150', $parking);
+        self::assertStringContainsString('Tram', $parking);
+        self::assertStringContainsString('Tagesticket', $parking);
+        self::assertStringContainsString('12,00', $parking);
+    }
+
+    #[Test]
+    public function listsTheRelationsOfAParkingFacilityNearByByName(): void
+    {
+        $parking = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'parkingFacilityNearBy');
+
+        self::assertMatchesRegularExpression('#<dd class="town">Erfurt</dd>#', $parking);
+        self::assertMatchesRegularExpression('#<dd class="organisation">Erfurt Tourismus GmbH</dd>#', $parking);
+        self::assertMatchesRegularExpression('#<dd class="place">Fischmarkt Erfurt</dd>#', $parking);
+    }
+
+    #[Test]
+    public function showsTheInlineParkingFacilitiesOfAVenue(): void
+    {
+        $parking = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'parkingFacilities');
+
+        self::assertStringContainsString('Tiefgarage des Hotels', $parking);
+        self::assertStringContainsString('Zufahrt über den Hof', $parking);
+        self::assertMatchesRegularExpression('#Pkw</dt>\s*<dd>40</dd>#', $parking);
+        self::assertMatchesRegularExpression('#Menschen mit Behinderung</dt>\s*<dd>2</dd>#', $parking);
+        self::assertStringContainsString('Dienstag', $parking);
+        self::assertStringContainsString('06:00', $parking);
     }
 
     #[Test]
@@ -352,7 +394,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('26'));
 
-        foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media'] as $group) {
+        foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media', 'parkingFacilities'] as $group) {
             self::assertStringNotContainsString('data-venue="' . $group . '"', $body);
         }
     }

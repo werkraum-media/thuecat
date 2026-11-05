@@ -1,0 +1,83 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<article class="parkingFacility">
+    <h4>{parkingFacility.title -> f:format.htmlspecialchars()}</h4>
+    <f:if condition="{parkingFacility.description}">
+        <p>{parkingFacility.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
+    </f:if>
+    <f:if condition="{parkingFacility.mainImage}">
+        <figure>
+            <f:image image="{parkingFacility.mainImage}" maxWidth="400" />
+            <f:if condition="{parkingFacility.mainImage.originalResource.properties.copyright}">
+                <figcaption>{parkingFacility.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+            </f:if>
+        </figure>
+    </f:if>
+    <f:for each="{parkingFacility.mediaFiles}" as="image">
+        <figure>
+            <f:image image="{image}" maxWidth="400" />
+            <f:if condition="{image.originalResource.properties.copyright}">
+                <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+            </f:if>
+        </figure>
+    </f:for>
+    <f:render partial="Address/Summary" arguments="{address: parkingFacility.firstAddress}" />
+    <dl>
+        <f:if condition="{parkingFacility.spaces}">
+            <dt><f:translate key="content.parkingFacility.spaces" extensionName="thuecat" /></dt>
+            <dd>
+                <dl>
+                    <f:for each="{parkingFacility.spaces}" key="vehicleType" as="count">
+                        <dt><f:translate key="content.parkingFacility.spaces.{vehicleType}" extensionName="thuecat" /></dt>
+                        <dd>{count}</dd>
+                    </f:for>
+                </dl>
+            </dd>
+        </f:if>
+        <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.sanitation', prefix: 'content.sanitation', members: parkingFacility.sanitation}" />
+        <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.otherService', prefix: 'content.otherService', members: parkingFacility.otherServices}" />
+        <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.traffic', prefix: 'content.trafficInfrastructure', members: parkingFacility.trafficInfrastructures}" />
+        <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.payment', prefix: 'content.paymentAccepted', members: parkingFacility.paymentAccepted}" />
+        <f:if condition="{parkingFacility.distanceToPublicTransport}">
+            <dt><f:translate key="content.distanceToPublicTransport" extensionName="thuecat" /></dt>
+            <dd>
+                {parkingFacility.distanceToPublicTransport.value}
+                <f:translate key="content.unit.{parkingFacility.distanceToPublicTransport.unit}" extensionName="thuecat" default="{parkingFacility.distanceToPublicTransport.unit}" />
+                <f:for each="{parkingFacility.distanceToPublicTransport.types}" as="type">
+                    <span class="type">{type -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </dd>
+        </f:if>
+        <f:if condition="{parkingFacility.towns -> f:count()}">
+            <dt><f:translate key="content.town" extensionName="thuecat" /></dt>
+            <f:for each="{parkingFacility.towns}" as="town">
+                <dd class="town">{town.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+        </f:if>
+        <f:if condition="{parkingFacility.managedBy}">
+            <dt><f:translate key="content.parkingFacility.managedBy" extensionName="thuecat" /></dt>
+            <dd class="organisation">{parkingFacility.managedBy.title -> f:format.htmlspecialchars()}</dd>
+        </f:if>
+        <f:if condition="{parkingFacility.containedInOrganisation -> f:count()} || {parkingFacility.containedInPlaces}">
+            <dt><f:translate key="content.containedIn" extensionName="thuecat" /></dt>
+            <f:for each="{parkingFacility.containedInOrganisation}" as="organisation">
+                <dd class="organisation">{organisation.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+            <f:for each="{parkingFacility.containedInPlaces}" as="place">
+                <dd class="place">{place.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+        </f:if>
+        <f:if condition="{parkingFacility.containedInTrail -> f:count()}">
+            <dt><f:translate key="content.containedInTrail" extensionName="thuecat" /></dt>
+            <f:for each="{parkingFacility.containedInTrail}" as="trail">
+                <dd class="trail">{trail.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+        </f:if>
+    </dl>
+    <f:render partial="OpeningHours/MergedByWeekday" arguments="{openingHours: parkingFacility.mergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
+    <f:render partial="OpeningHours/MergedByWeekday" arguments="{openingHours: parkingFacility.specialMergedByWeekday, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.specialOpeningHours'}" />
+    <f:render partial="TouristAttraction/Offers" arguments="{offers: parkingFacility.offers}" />
+</article>
+</html>

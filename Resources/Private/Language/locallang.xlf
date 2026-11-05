@@ -2195,6 +2195,30 @@
             <trans-unit id="content.boolean.false" xml:space="preserve">
                 <source>no</source>
             </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces" xml:space="preserve">
+                <source>Parking spaces</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.car" xml:space="preserve">
+                <source>Cars</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.handicapped" xml:space="preserve">
+                <source>People with disabilities</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.bus" xml:space="preserve">
+                <source>Coaches</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.evCharging" xml:space="preserve">
+                <source>Electric vehicles</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.motorcycle" xml:space="preserve">
+                <source>Motorcycles</source>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.managedBy" xml:space="preserve">
+                <source>Managed by</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.parkingFacilities" xml:space="preserve">
+                <source>Parking</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

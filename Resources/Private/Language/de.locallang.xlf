@@ -2564,6 +2564,38 @@
                 <source>no</source>
                 <target>nein</target>
             </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces" xml:space="preserve">
+                <source>Parking spaces</source>
+                <target>Stellplätze</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.car" xml:space="preserve">
+                <source>Cars</source>
+                <target>Pkw</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.handicapped" xml:space="preserve">
+                <source>People with disabilities</source>
+                <target>Menschen mit Behinderung</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.bus" xml:space="preserve">
+                <source>Coaches</source>
+                <target>Busse</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.evCharging" xml:space="preserve">
+                <source>Electric vehicles</source>
+                <target>Elektrofahrzeuge</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.spaces.motorcycle" xml:space="preserve">
+                <source>Motorcycles</source>
+                <target>Motorräder</target>
+            </trans-unit>
+            <trans-unit id="content.parkingFacility.managedBy" xml:space="preserve">
+                <source>Managed by</source>
+                <target>Betreut durch</target>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.parkingFacilities" xml:space="preserve">
+                <source>Parking</source>
+                <target>Parken</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

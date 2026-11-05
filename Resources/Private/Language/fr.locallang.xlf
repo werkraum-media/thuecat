@@ -1188,6 +1188,38 @@
                       <source>no</source>
                       <target>non</target>
                   </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces" xml:space="preserve">
+                      <source>Parking spaces</source>
+                      <target>Places de stationnement</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces.car" xml:space="preserve">
+                      <source>Cars</source>
+                      <target>Voitures</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces.handicapped" xml:space="preserve">
+                      <source>People with disabilities</source>
+                      <target>Personnes handicapées</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces.bus" xml:space="preserve">
+                      <source>Coaches</source>
+                      <target>Autocars</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces.evCharging" xml:space="preserve">
+                      <source>Electric vehicles</source>
+                      <target>Véhicules électriques</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.spaces.motorcycle" xml:space="preserve">
+                      <source>Motorcycles</source>
+                      <target>Motos</target>
+                  </trans-unit>
+                  <trans-unit id="content.parkingFacility.managedBy" xml:space="preserve">
+                      <source>Managed by</source>
+                      <target>Géré par</target>
+                  </trans-unit>
+                  <trans-unit id="content.meetingVenue.parkingFacilities" xml:space="preserve">
+                      <source>Parking</source>
+                      <target>Stationnement</target>
+                  </trans-unit>
             </body>
       </file>
 </xliff>
