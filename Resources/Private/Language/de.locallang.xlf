@@ -2292,6 +2292,18 @@
                 <source>Floor plan</source>
                 <target>Grundriss</target>
             </trans-unit>
+            <trans-unit id="content.containedInTrail" xml:space="preserve">
+                <source>Part of trails</source>
+                <target>Teil von Wegen</target>
+            </trans-unit>
+            <trans-unit id="content.categories" xml:space="preserve">
+                <source>Categories</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="content.keywords" xml:space="preserve">
+                <source>Keywords</source>
+                <target>Schlagworte</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

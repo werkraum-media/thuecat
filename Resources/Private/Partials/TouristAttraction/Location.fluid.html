@@ -1,0 +1,25 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{attraction.url} || {attraction.distanceToPublicTransport}">
+    <section data-attraction="location">
+        <dl>
+            <f:if condition="{attraction.url}">
+                <dt><f:translate key="content.url" extensionName="thuecat" /></dt>
+                <dd><a href="{attraction.url}">{attraction.url -> f:format.htmlspecialchars()}</a></dd>
+            </f:if>
+            <f:if condition="{attraction.distanceToPublicTransport}">
+                <dt><f:translate key="content.distanceToPublicTransport" extensionName="thuecat" /></dt>
+                <dd>
+                    {attraction.distanceToPublicTransport.value}
+                    <f:translate key="content.unit.{attraction.distanceToPublicTransport.unit}" extensionName="thuecat" default="{attraction.distanceToPublicTransport.unit}" />
+                    <f:for each="{attraction.distanceToPublicTransport.types}" as="type">
+                        <span class="type">{type -> f:format.htmlspecialchars()}</span>
+                    </f:for>
+                </dd>
+            </f:if>
+        </dl>
+    </section>
+</f:if>
+</html>

@@ -1,0 +1,49 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{spec}">
+    <section data-attraction="accessibility">
+        <h3><f:translate key="content.accessibility" extensionName="thuecat" /></h3>
+        <f:if condition="{spec.certificationStatus}">
+            <p class="status"><f:translate key="content.accessibilitySpecification.certificationStatus.{spec.certificationStatus}" extensionName="thuecat" default="{spec.certificationStatus}" /></p>
+        </f:if>
+        <dl>
+            <f:render section="Certification" arguments="{label: 'wheelchair', value: spec.certificationWheelchair}" />
+            <f:render section="Certification" arguments="{label: 'walking', value: spec.certificationWalking}" />
+            <f:render section="Certification" arguments="{label: 'visual', value: spec.certificationVisual}" />
+            <f:render section="Certification" arguments="{label: 'partiallyVisual', value: spec.certificationPartiallyVisual}" />
+            <f:render section="Certification" arguments="{label: 'deaf', value: spec.certificationDeaf}" />
+            <f:render section="Certification" arguments="{label: 'partiallyDeaf', value: spec.certificationPartiallyDeaf}" />
+            <f:render section="Certification" arguments="{label: 'mental', value: spec.certificationMental}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionWalking', value: spec.shortDescriptionWalking}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionVisual', value: spec.shortDescriptionVisual}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionDeaf', value: spec.shortDescriptionDeaf}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionMental', value: spec.shortDescriptionMental}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionAllergic', value: spec.shortDescriptionAllergic}" />
+            <f:render section="ShortDescription" arguments="{label: 'shortDescriptionAllGenerations', value: spec.shortDescriptionAllGenerations}" />
+        </dl>
+        <f:if condition="{spec.searchCriteria}">
+            <ul class="criteria">
+                <f:for each="{spec.searchCriteria}" as="criteria">
+                    <li><f:translate key="content.accessibilitySpecification.searchCriteria.criteria.{criteria}" extensionName="thuecat" default="{criteria}" /></li>
+                </f:for>
+            </ul>
+        </f:if>
+    </section>
+</f:if>
+
+<f:section name="Certification">
+    <f:if condition="{value}">
+        <dt><f:translate key="content.accessibilitySpecification.certification.{label}" extensionName="thuecat" /></dt>
+        <dd><f:translate key="content.accessibilitySpecification.certification.{value}" extensionName="thuecat" default="{value}" /></dd>
+    </f:if>
+</f:section>
+
+<f:section name="ShortDescription">
+    <f:if condition="{value}">
+        <dt><f:translate key="content.accessibilitySpecification.{label}" extensionName="thuecat" /></dt>
+        <dd>{value -> f:format.htmlspecialchars()}</dd>
+    </f:if>
+</f:section>
+</html>

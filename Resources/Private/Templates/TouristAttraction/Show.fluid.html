@@ -36,6 +36,12 @@
         <h2>{attraction.title}</h2>
         <p>{attraction.description}</p>
 
+        <f:render partial="TouristAttraction/VisitInfo" arguments="{attraction: attraction}" />
+        <f:render partial="TouristAttraction/Location" arguments="{attraction: attraction}" />
+        <f:render partial="TouristAttraction/Offers" arguments="{offers: attraction.offers}" />
+        <f:render partial="TouristAttraction/Accessibility" arguments="{spec: attraction.accessibilitySpecification}" />
+        <f:render partial="TouristAttraction/Classification" arguments="{attraction: attraction}" />
+
         <section data-openinghours-format="perDayTable">
             <h3>Demo: per-day-table format</h3>
             <f:render partial="OpeningHours/PerDayTable" arguments="{openingHours: attraction.perDayTable, heading: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:content.openingHours'}" />
@@ -96,6 +102,24 @@
             <section data-relation="containedInPlace">
                 <f:for each="{attraction.containedInPlaces}" as="place">
                     <span class="place">{place.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{attraction.containedInTrail -> f:count()}">
+            <section data-relation="containedInTrail">
+                <h3><f:translate key="content.containedInTrail" extensionName="thuecat" /></h3>
+                <f:for each="{attraction.containedInTrail}" as="trail">
+                    <span class="trail">{trail.title -> f:format.htmlspecialchars()}</span>
+                </f:for>
+            </section>
+        </f:if>
+
+        <f:if condition="{attraction.parkingFacilitiesNearBy -> f:count()}">
+            <section data-relation="parkingFacilityNearBy">
+                <h3><f:translate key="content.parkingFacilitiesNearBy" extensionName="thuecat" /></h3>
+                <f:for each="{attraction.parkingFacilitiesNearBySortedByAlphabet}" as="parkingFacility">
+                    <span class="parkingFacility">{parkingFacility.title -> f:format.htmlspecialchars()}</span>
                 </f:for>
             </section>
         </f:if>

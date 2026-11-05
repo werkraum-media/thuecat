@@ -1991,6 +1991,15 @@
             <trans-unit id="content.meetingRoom.floorPlan" xml:space="preserve">
                 <source>Floor plan</source>
             </trans-unit>
+            <trans-unit id="content.containedInTrail" xml:space="preserve">
+                <source>Part of trails</source>
+            </trans-unit>
+            <trans-unit id="content.categories" xml:space="preserve">
+                <source>Categories</source>
+            </trans-unit>
+            <trans-unit id="content.keywords" xml:space="preserve">
+                <source>Keywords</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

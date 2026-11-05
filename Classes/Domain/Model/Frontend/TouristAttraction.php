@@ -82,6 +82,11 @@ class TouristAttraction extends AbstractPlace
     protected ObjectStorage $containedInPlace;
 
     /**
+     * @var ObjectStorage<Trail>
+     */
+    protected ObjectStorage $containedInTrail;
+
+    /**
      * @var ObjectStorage<Event>
      */
     protected ObjectStorage $hostsEvents;
@@ -112,6 +117,8 @@ class TouristAttraction extends AbstractPlace
 
     protected string $publicAccess = '';
 
+    protected string $availableLanguages = '';
+
     protected string $type = 'attraction';
 
     public function initializeObject(): void
@@ -124,6 +131,7 @@ class TouristAttraction extends AbstractPlace
         $this->containedInTouristInformation = new ObjectStorage();
         $this->containedInParkingFacility = new ObjectStorage();
         $this->containedInPlace = new ObjectStorage();
+        $this->containedInTrail = new ObjectStorage();
         $this->hostsEvents = new ObjectStorage();
     }
 
@@ -239,6 +247,22 @@ class TouristAttraction extends AbstractPlace
             array_values(iterator_to_array($this->containedInParkingFacility)),
             array_values(iterator_to_array($this->containedInPlace))
         );
+    }
+
+    /**
+     * @return ObjectStorage<Trail>
+     */
+    public function getContainedInTrail(): ObjectStorage
+    {
+        return $this->containedInTrail;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAvailableLanguageMembers(): array
+    {
+        return GeneralUtility::trimExplode(',', $this->availableLanguages, true);
     }
 
     public function getStartOfConstruction(): string

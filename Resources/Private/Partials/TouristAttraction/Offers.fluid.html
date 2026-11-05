@@ -1,0 +1,35 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{offers -> f:count()}">
+    <section data-attraction="offers">
+        <h3><f:translate key="content.offers" extensionName="thuecat" /></h3>
+        <f:for each="{offers}" as="offer">
+            <article class="offer">
+                <h4>{offer.title -> f:format.htmlspecialchars()}</h4>
+                <f:if condition="{offer.type}">
+                    <span class="type"><f:translate key="content.price.type.{offer.type}" extensionName="thuecat" default="{offer.type}" /></span>
+                </f:if>
+                <f:if condition="{offer.description}">
+                    <p>{offer.description -> f:format.htmlspecialchars()}</p>
+                </f:if>
+                <ul>
+                    <f:for each="{offer.prices}" as="price">
+                        <li>
+                            <span class="title">{price.title -> f:format.htmlspecialchars()}</span>
+                            <span class="price"><f:format.currency currencySign="{price.currency}" decimalSeparator="," thousandsSeparator=".">{price.price}</f:format.currency></span>
+                            <f:for each="{price.rules}" as="rule">
+                                <span class="rule"><f:translate key="content.price.rule.{rule}" extensionName="thuecat" default="{rule}" /></span>
+                            </f:for>
+                            <f:if condition="{price.description}">
+                                <p>{price.description -> f:format.htmlspecialchars()}</p>
+                            </f:if>
+                        </li>
+                    </f:for>
+                </ul>
+            </article>
+        </f:for>
+    </section>
+</f:if>
+</html>

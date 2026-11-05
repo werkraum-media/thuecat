@@ -1,0 +1,58 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:comment>Tri-state values are the strings 'true' and 'false'; Fluid reads 'false' as false, so they compare against ''.</f:comment>
+<f:if condition="{attraction.slogan} || {attraction.startOfConstruction} || {attraction.sanitation} || {attraction.otherServices} || {attraction.museumServices} || {attraction.architecturalStyles} || {attraction.trafficInfrastructures} || {attraction.paymentAccepted} || {attraction.digitalOffer} || {attraction.photography} || {attraction.petsAllowed} != '' || {attraction.isAccessibleForFree} != '' || {attraction.publicAccess} != '' || {attraction.availableLanguageMembers}">
+    <section data-attraction="visitInfo">
+        <h3><f:translate key="content.generalInformation" extensionName="thuecat" /></h3>
+        <dl>
+            <f:if condition="{attraction.slogan}">
+                <dt><f:translate key="content.slogan" extensionName="thuecat" /></dt>
+                <dd>
+                    <ul>
+                        <f:for each="{attraction.slogans}" as="slogan">
+                            <li>{slogan -> f:format.htmlspecialchars()}</li>
+                        </f:for>
+                    </ul>
+                </dd>
+            </f:if>
+            <f:if condition="{attraction.startOfConstruction}">
+                <dt><f:translate key="content.construction" extensionName="thuecat" /></dt>
+                <dd>{attraction.startOfConstruction -> f:format.htmlspecialchars()}</dd>
+            </f:if>
+            <f:render section="Members" arguments="{heading: 'content.sanitation', prefix: 'content.sanitation', members: attraction.sanitation}" />
+            <f:render section="Members" arguments="{heading: 'content.otherService', prefix: 'content.otherService', members: attraction.otherServices}" />
+            <f:render section="Members" arguments="{heading: 'content.museum', prefix: 'content.museumService', members: attraction.museumServices}" />
+            <f:render section="Members" arguments="{heading: 'content.architecture', prefix: 'content.architecturalStyle', members: attraction.architecturalStyles}" />
+            <f:render section="Members" arguments="{heading: 'content.traffic', prefix: 'content.trafficInfrastructure', members: attraction.trafficInfrastructures}" />
+            <f:render section="Members" arguments="{heading: 'content.payment', prefix: 'content.paymentAccepted', members: attraction.paymentAccepted}" />
+            <f:render section="Members" arguments="{heading: 'content.digital', prefix: 'content.digitalOffer', members: attraction.digitalOffer}" />
+            <f:render section="Members" arguments="{heading: 'content.photography', prefix: 'content.photography', members: attraction.photography}" />
+            <f:render section="Members" arguments="{heading: 'content.languages', prefix: 'content.availableLanguage', members: attraction.availableLanguageMembers}" />
+            <f:if condition="{attraction.petsAllowed} != ''">
+                <dd><f:translate key="content.petsAllowed.{attraction.petsAllowed}" extensionName="thuecat" /></dd>
+            </f:if>
+            <f:if condition="{attraction.isAccessibleForFree} != ''">
+                <dd><f:translate key="content.isAccessibleForFree.{attraction.isAccessibleForFree}" extensionName="thuecat" /></dd>
+            </f:if>
+            <f:if condition="{attraction.publicAccess} != ''">
+                <dd><f:translate key="content.publicAccess.{attraction.publicAccess}" extensionName="thuecat" /></dd>
+            </f:if>
+        </dl>
+    </section>
+</f:if>
+
+<f:section name="Members">
+    <f:if condition="{members}">
+        <dt><f:translate key="{heading}" extensionName="thuecat" /></dt>
+        <dd>
+            <ul>
+                <f:for each="{members}" as="member">
+                    <li><f:translate key="{prefix}.{member}" extensionName="thuecat" default="{member}" /></li>
+                </f:for>
+            </ul>
+        </dd>
+    </f:if>
+</f:section>
+</html>

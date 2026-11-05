@@ -181,6 +181,52 @@ return [
             'sys_language_uid' => '0',
             'maximum_attendee_capacity' => '40',
         ],
+        [
+            // Every column of the attraction type filled: the full spread of the show output.
+            'uid' => '27',
+            'pid' => '11',
+            'disable' => '0',
+            'title' => 'Vollständiges Museum',
+            'description' => '',
+            'town' => '',
+            'sys_language_uid' => '0',
+            'slogan' => 'Geschichte erleben',
+            'start_of_construction' => '1293',
+            'sanitation' => 'Toilets',
+            'other_service' => 'FreeWlan',
+            'museum_service' => 'MuseumShop',
+            'architectural_style' => 'GothicArt',
+            'traffic_infrastructure' => 'BicycleStandsEnumMem',
+            'payment_accepted' => 'CashPayment',
+            'digital_offer' => 'AudioGuide',
+            'photography' => 'TakingPicturesPermitted',
+            'pets_allowed' => 'true',
+            'is_accessible_for_free' => 'false',
+            'public_access' => 'true',
+            'available_languages' => 'German,English',
+            'url' => 'https://example.com/vollstaendiges-museum',
+            'distance_to_public_transport' => '200:MTR:CityBus',
+            'offers' => '[{"title":"Öffentliche Führung","description":"Jeden Sonntag","prices":[{"title":"Erwachsene","description":"","price":8,"currency":"EUR","rule":"PerPerson"}],"types":["GuidedTourOffer"]}]',
+            'accessibility_specification' => '{"accessibilityCertificationStatus":"AccessibilityChecked","shortDescriptionAccessibilityWalking":"Stufenloser Zugang"}',
+            'parking_facility_near_by' => '1',
+            'contained_in_trail' => '1',
+        ],
+    ],
+    'tx_thuecat_parking_facility' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Parkhaus Domplatz',
+            'sys_language_uid' => '0',
+        ],
+    ],
+    'tx_thuecat_trail' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Lutherweg',
+            'sys_language_uid' => '0',
+        ],
     ],
     // Venue 25 names rooms 1 and 2; room 3 is reached only through room 1.
     'tx_thuecat_meeting_room' => [
@@ -282,6 +328,13 @@ return [
             'sys_language_uid' => '1',
             'l10n_parent' => 502,
         ],
+        [
+            'uid' => 600,
+            'pid' => '11',
+            'parent' => '0',
+            'title' => 'Museum',
+            'sys_language_uid' => '0',
+        ],
     ],
     'sys_category_record_mm' => [
         [
@@ -313,6 +366,20 @@ return [
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'keywords',
             'sorting_foreign' => '2',
+        ],
+        [
+            'uid_local' => 600,
+            'uid_foreign' => 27,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'categories',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid_local' => 501,
+            'uid_foreign' => 27,
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '1',
         ],
     ],
     // Inline opening hours for attraction 21, resolved via parentid/parenttable.

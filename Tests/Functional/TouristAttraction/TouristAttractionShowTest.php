@@ -128,6 +128,94 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheVisitInformation(): void
+    {
+        $visitInfo = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'visitInfo');
+
+        self::assertStringContainsString('Geschichte erleben', $visitInfo);
+        self::assertStringContainsString('1293', $visitInfo);
+        self::assertStringContainsString('Toilette', $visitInfo);
+        self::assertStringContainsString('kostenfreies WLAN', $visitInfo);
+        self::assertStringContainsString('Museumsshop', $visitInfo);
+        self::assertStringContainsString('Gotik', $visitInfo);
+        self::assertStringContainsString('Fahrradständer', $visitInfo);
+        self::assertStringContainsString('Barzahlung', $visitInfo);
+        self::assertStringContainsString('Audioguide', $visitInfo);
+        self::assertStringContainsString('Fotografieren erlaubt', $visitInfo);
+        self::assertStringContainsString('Tiere erlaubt', $visitInfo);
+        self::assertStringContainsString('kein freier Eintritt', $visitInfo);
+        self::assertStringContainsString('öffentlich zugänglich', $visitInfo);
+        self::assertStringContainsString('Englisch', $visitInfo);
+    }
+
+    #[Test]
+    public function showsTheWebsiteAndTheDistanceToPublicTransport(): void
+    {
+        $location = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'location');
+
+        self::assertStringContainsString('https://example.com/vollstaendiges-museum', $location);
+        self::assertStringContainsString('200', $location);
+        self::assertStringContainsString('CityBus', $location);
+    }
+
+    #[Test]
+    public function showsTheOffersWithTheirPrices(): void
+    {
+        $offers = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'offers');
+
+        self::assertStringContainsString('Öffentliche Führung', $offers);
+        self::assertStringContainsString('Jeden Sonntag', $offers);
+        self::assertStringContainsString('Erwachsene', $offers);
+        self::assertStringContainsString('8,00', $offers);
+    }
+
+    #[Test]
+    public function showsTheAccessibilitySpecification(): void
+    {
+        $accessibility = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'accessibility');
+
+        self::assertStringContainsString('barrierefrei', $accessibility);
+        self::assertStringContainsString('Stufenloser Zugang', $accessibility);
+    }
+
+    #[Test]
+    public function showsTheParkingFacilitiesNearBy(): void
+    {
+        $parking = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'parkingFacilityNearBy');
+
+        self::assertStringContainsString('Parkhaus Domplatz', $parking);
+    }
+
+    #[Test]
+    public function showsTheContainingTrails(): void
+    {
+        $trails = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInTrail');
+
+        self::assertStringContainsString('Lutherweg', $trails);
+    }
+
+    #[Test]
+    public function showsTheCategoriesAndKeywords(): void
+    {
+        $request = $this->generateRequestWithCHash('27');
+
+        self::assertStringContainsString('Museum', $this->renderedSection($request, 'relation', 'categories'));
+        self::assertStringContainsString('romantisch', $this->renderedSection($request, 'relation', 'keywords'));
+    }
+
+    #[Test]
+    public function showsNoSectionOfAnEmptyFieldGroup(): void
+    {
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('24'));
+
+        self::assertStringNotContainsString('data-attraction=', $body);
+        self::assertStringNotContainsString('data-relation="parkingFacilityNearBy"', $body);
+        self::assertStringNotContainsString('data-relation="containedInTrail"', $body);
+        self::assertStringNotContainsString('data-relation="categories"', $body);
+        self::assertStringNotContainsString('data-relation="keywords"', $body);
+    }
+
+    #[Test]
     public function showsTheVenueFieldsOfAMeetingVenue(): void
     {
         $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
