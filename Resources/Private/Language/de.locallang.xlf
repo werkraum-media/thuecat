@@ -2620,6 +2620,10 @@
                 <source>Related rooms</source>
                 <target>Zugehörige Räume</target>
             </trans-unit>
+            <trans-unit id="content.organisation.managesEvent" xml:space="preserve">
+                <source>Organised events</source>
+                <target>Veranstaltungen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

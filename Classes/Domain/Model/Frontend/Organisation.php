@@ -20,6 +20,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\Events\Domain\Model\Event;
+
 /**
  * An organisation as the frontend sees it: title and description via Base.
  * Not a Place — upstream puts organisations behind schema:containedInPlace,
@@ -27,4 +30,45 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
  */
 class Organisation extends Base
 {
+    /**
+     * @var ObjectStorage<Address>
+     */
+    protected ObjectStorage $addressInline;
+
+    /**
+     * @var ObjectStorage<Event>
+     */
+    protected ObjectStorage $managesEvent;
+
+    public function initializeObject(): void
+    {
+        parent::initializeObject();
+        $this->addressInline = new ObjectStorage();
+        $this->managesEvent = new ObjectStorage();
+    }
+
+    /**
+     * @return ObjectStorage<Address>
+     */
+    public function getAddressInline(): ObjectStorage
+    {
+        return $this->addressInline;
+    }
+
+    public function getFirstAddress(): ?Address
+    {
+        foreach ($this->addressInline as $address) {
+            return $address;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return ObjectStorage<Event>
+     */
+    public function getManagesEvent(): ObjectStorage
+    {
+        return $this->managesEvent;
+    }
 }

@@ -1,0 +1,20 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<article class="organisation">
+    <span class="organisation">{organisation.title -> f:format.htmlspecialchars()}</span>
+    <f:if condition="{organisation.description}">
+        <p>{organisation.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
+    </f:if>
+    <f:render partial="Address/Summary" arguments="{address: organisation.firstAddress}" />
+    <f:if condition="{organisation.managesEvent -> f:count()}">
+        <dl>
+            <dt><f:translate key="content.organisation.managesEvent" extensionName="thuecat" /></dt>
+            <f:for each="{organisation.managesEvent}" as="event">
+                <dd class="event">{event.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+        </dl>
+    </f:if>
+</article>
+</html>

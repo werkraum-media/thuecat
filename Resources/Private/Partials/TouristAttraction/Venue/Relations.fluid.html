@@ -6,7 +6,7 @@
     <section data-venue="relations">
         <h3><f:translate key="content.meetingVenue.relations" extensionName="thuecat" /></h3>
         <dl>
-            <f:if condition="{venue.operatedBy}"><dt><f:translate key="content.meetingVenue.operatedBy" extensionName="thuecat" /></dt><dd class="organisation">{venue.operatedBy.title -> f:format.htmlspecialchars()}</dd></f:if>
+            <f:if condition="{venue.operatedBy}"><dt><f:translate key="content.meetingVenue.operatedBy" extensionName="thuecat" /></dt><dd><f:render partial="TouristAttraction/Organisation" arguments="{organisation: venue.operatedBy}" /></dd></f:if>
             <f:if condition="{venue.geoTouchesTrail -> f:count()}"><dt><f:translate key="content.meetingVenue.geoTouchesTrail" extensionName="thuecat" /></dt><f:for each="{venue.geoTouchesTrail}" as="trail"><dd class="trail">{trail.title -> f:format.htmlspecialchars()}</dd></f:for></f:if>
             <f:if condition="{venue.managedObjects -> f:count()}"><dt><f:translate key="content.meetingVenue.managedObjects" extensionName="thuecat" /></dt><f:for each="{venue.managedObjects}" as="managedObject"><dd class="attraction">{managedObject.title -> f:format.htmlspecialchars()}</dd></f:for></f:if>
         </dl>

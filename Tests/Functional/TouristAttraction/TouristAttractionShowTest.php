@@ -246,6 +246,55 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheManagingOrganisationInFull(): void
+    {
+        $organisation = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'managedBy');
+
+        self::assertStringContainsString('Erfurt Tourismus GmbH', $organisation);
+        self::assertStringContainsString('Die Tourismusgesellschaft der Stadt', $organisation);
+        self::assertStringContainsString('Benediktsplatz 1', $organisation);
+        self::assertMatchesRegularExpression('#<dd class="event">Lange Nacht der Museen</dd>#', $organisation);
+    }
+
+    #[Test]
+    public function showsTheContainingOrganisationsInFull(): void
+    {
+        $organisations = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInOrganisation');
+
+        self::assertStringContainsString('Die Tourismusgesellschaft der Stadt', $organisations);
+        self::assertStringContainsString('Benediktsplatz 1', $organisations);
+    }
+
+    #[Test]
+    public function showsTheTownsInFull(): void
+    {
+        $towns = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'towns');
+
+        self::assertStringContainsString('Erfurt', $towns);
+        self::assertStringContainsString('Landeshauptstadt Thüringens', $towns);
+        self::assertStringContainsString('Fischmarkt 1', $towns);
+        self::assertMatchesRegularExpression('#<dd class="organisation">Erfurt Tourismus GmbH</dd>#', $towns);
+        self::assertMatchesRegularExpression('#<dd class="event">Lange Nacht der Museen</dd>#', $towns);
+    }
+
+    #[Test]
+    public function summarisesEachContainingPlace(): void
+    {
+        $places = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInPlace');
+
+        self::assertStringContainsString('Domplatz Erfurt', $places);
+        self::assertStringContainsString('Platz vor dem Dom', $places);
+        self::assertStringContainsString('Domstufen 3', $places);
+        self::assertStringContainsString('Tourist Information Erfurt', $places);
+        self::assertStringContainsString('Beratung und Tickets', $places);
+        self::assertStringContainsString('Benediktsplatz 2', $places);
+        self::assertStringContainsString('Fischmarkt Erfurt', $places);
+        self::assertStringContainsString('Historischer Marktplatz', $places);
+        self::assertStringContainsString('Fischmarkt 2', $places);
+        self::assertMatchesRegularExpression('#<dd class="event">Lange Nacht der Museen</dd>#', $places);
+    }
+
+    #[Test]
     public function showsNoSectionOfAnEmptyFieldGroup(): void
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('24'));

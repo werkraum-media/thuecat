@@ -254,6 +254,11 @@ return [
     ],
     FrontendTouristInformation::class => [
         'tableName' => 'tx_thuecat_tourist_information',
+        'properties' => [
+            'towns' => [
+                'fieldName' => 'town',
+            ],
+        ],
     ],
     FrontendParkingFacility::class => [
         'tableName' => 'tx_thuecat_parking_facility',

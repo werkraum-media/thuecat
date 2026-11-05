@@ -1,0 +1,24 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<article class="town">
+    <span class="town">{town.title -> f:format.htmlspecialchars()}</span>
+    <f:if condition="{town.description}">
+        <p>{town.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
+    </f:if>
+    <f:render partial="Address/Summary" arguments="{address: town.firstAddress}" />
+    <dl>
+        <f:if condition="{town.managedBy}">
+            <dt><f:translate key="content.parkingFacility.managedBy" extensionName="thuecat" /></dt>
+            <dd class="organisation">{town.managedBy.title -> f:format.htmlspecialchars()}</dd>
+        </f:if>
+        <f:if condition="{town.hostsEvents -> f:count()}">
+            <dt><f:translate key="content.hostsEvents" extensionName="thuecat" /></dt>
+            <f:for each="{town.hostsEvents}" as="event">
+                <dd class="event">{event.title -> f:format.htmlspecialchars()}</dd>
+            </f:for>
+        </f:if>
+    </dl>
+</article>
+</html>

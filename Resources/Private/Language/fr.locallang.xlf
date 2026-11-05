@@ -1244,6 +1244,10 @@
                       <source>Related rooms</source>
                       <target>Salles associées</target>
                   </trans-unit>
+                  <trans-unit id="content.organisation.managesEvent" xml:space="preserve">
+                      <source>Organised events</source>
+                      <target>Événements organisés</target>
+                  </trans-unit>
             </body>
       </file>
 </xliff>

@@ -79,21 +79,21 @@
         <f:if condition="{attraction.towns}">
             <section data-relation="towns">
                 <f:for each="{attraction.towns}" as="town">
-                    <span class="town">{town.title -> f:format.htmlspecialchars()}</span>
+                    <f:render partial="TouristAttraction/Town" arguments="{town: town}" />
                 </f:for>
             </section>
         </f:if>
 
         <f:if condition="{attraction.managedBy}">
             <section data-relation="managedBy">
-                <span class="organisation">{attraction.managedBy.title -> f:format.htmlspecialchars()}</span>
+                <f:render partial="TouristAttraction/Organisation" arguments="{organisation: attraction.managedBy}" />
             </section>
         </f:if>
 
         <f:if condition="{attraction.containedInOrganisation}">
             <section data-relation="containedInOrganisation">
                 <f:for each="{attraction.containedInOrganisation}" as="organisation">
-                    <span class="organisation">{organisation.title -> f:format.htmlspecialchars()}</span>
+                    <f:render partial="TouristAttraction/Organisation" arguments="{organisation: organisation}" />
                 </f:for>
             </section>
         </f:if>
@@ -101,7 +101,7 @@
         <f:if condition="{attraction.containedInPlaces}">
             <section data-relation="containedInPlace">
                 <f:for each="{attraction.containedInPlaces}" as="place">
-                    <span class="place">{place.title -> f:format.htmlspecialchars()}</span>
+                    <f:render partial="TouristAttraction/ContainingPlace" arguments="{place: place}" />
                 </f:for>
             </section>
         </f:if>

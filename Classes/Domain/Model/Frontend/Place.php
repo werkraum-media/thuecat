@@ -20,10 +20,31 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\Events\Domain\Model\Event;
+
 /**
  * A place no more specific record kind covers: a shop, a square, a charging
  * station. It is shown only as the target of a relation, never on its own.
  */
 class Place extends AbstractPlace
 {
+    /**
+     * @var ObjectStorage<Event>
+     */
+    protected ObjectStorage $hostsEvents;
+
+    public function initializeObject(): void
+    {
+        parent::initializeObject();
+        $this->hostsEvents = new ObjectStorage();
+    }
+
+    /**
+     * @return ObjectStorage<Event>
+     */
+    public function getHostsEvents(): ObjectStorage
+    {
+        return $this->hostsEvents;
+    }
 }

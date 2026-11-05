@@ -2237,6 +2237,9 @@
             <trans-unit id="content.meetingRoom.containedRooms" xml:space="preserve">
                 <source>Related rooms</source>
             </trans-unit>
+            <trans-unit id="content.organisation.managesEvent" xml:space="preserve">
+                <source>Organised events</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

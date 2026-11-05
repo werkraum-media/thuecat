@@ -20,6 +20,27 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
-class TouristInformation extends AbstractPlace
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use WerkraumMedia\Events\Domain\Model\Event;
+
+class TouristInformation extends AbstractContainedPlace
 {
+    /**
+     * @var ObjectStorage<Event>
+     */
+    protected ObjectStorage $hostsEvents;
+
+    public function initializeObject(): void
+    {
+        parent::initializeObject();
+        $this->hostsEvents = new ObjectStorage();
+    }
+
+    /**
+     * @return ObjectStorage<Event>
+     */
+    public function getHostsEvents(): ObjectStorage
+    {
+        return $this->hostsEvents;
+    }
 }
