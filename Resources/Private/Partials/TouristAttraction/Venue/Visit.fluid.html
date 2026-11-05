@@ -1,0 +1,23 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.entranceMembers} || {venue.guidedTourMembers} || {venue.typicalAgeRange} || {venue.tourBookingPageMembers} || {venue.sportsEquipmentMembers} || {venue.ensembleMembers} || {venue.exhibitionObjectMembers} || {venue.touristTypeMembers} || {venue.smokingAllowed} != '' || {venue.bookable} != '' || {venue.openAirMuseum} != ''">
+    <section data-venue="visit">
+        <h3><f:translate key="content.meetingVenue.visit" extensionName="thuecat" /></h3>
+        <dl>
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.entrance', prefix: 'content.entrance', members: venue.entranceMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.guidedTour', prefix: 'content.guided_tour', members: venue.guidedTourMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/TriState" arguments="{label: 'content.meetingVenue.smokingAllowed', value: venue.smokingAllowed}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.typicalAgeRange', value: venue.typicalAgeRange}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.tourBookingPage', lines: venue.tourBookingPageMembers, links: 1}" />
+            <f:render partial="TouristAttraction/Venue/Fact/TriState" arguments="{label: 'content.meetingVenue.bookable', value: venue.bookable}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.sportsEquipment', prefix: 'content.sports_equipment', members: venue.sportsEquipmentMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.ensemble', prefix: 'content.ensemble', members: venue.ensembleMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.exhibitionObjects', prefix: 'content.exhibition_objects', members: venue.exhibitionObjectMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/TriState" arguments="{label: 'content.meetingVenue.openAirMuseum', value: venue.openAirMuseum}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.touristTypes', lines: venue.touristTypeMembers}" />
+        </dl>
+    </section>
+</f:if>
+</html>

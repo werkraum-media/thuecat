@@ -2000,6 +2000,201 @@
             <trans-unit id="content.keywords" xml:space="preserve">
                 <source>Keywords</source>
             </trans-unit>
+            <trans-unit id="content.meetingVenue.venueType" xml:space="preserve">
+                <source>Venue type</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.venueType.meeting_congress_hotel" xml:space="preserve">
+                <source>Conference hotel</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.venueType.meeting_congress" xml:space="preserve">
+                <source>Meeting and congress venue</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.descriptionLodgingMeeting" xml:space="preserve">
+                <source>Lodging and meetings</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.lodging" xml:space="preserve">
+                <source>Accommodation</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.checkinTime" xml:space="preserve">
+                <source>Check-in</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.checkoutTime" xml:space="preserve">
+                <source>Check-out</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.numberOfRooms" xml:space="preserve">
+                <source>Rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.singleRooms" xml:space="preserve">
+                <source>Single rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.doubleRooms" xml:space="preserve">
+                <source>Double rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.twinRooms" xml:space="preserve">
+                <source>Twin rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.suites" xml:space="preserve">
+                <source>Suites</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.starRating" xml:space="preserve">
+                <source>Star rating</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.amenityFeatures" xml:space="preserve">
+                <source>Amenities</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.priceRange" xml:space="preserve">
+                <source>Price range</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.gastronomy" xml:space="preserve">
+                <source>Gastronomy</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.gastro" xml:space="preserve">
+                <source>Gastronomy offers</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.servesCuisine" xml:space="preserve">
+                <source>Cuisine</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.seatsInside" xml:space="preserve">
+                <source>Seats inside</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.seatsOutside" xml:space="preserve">
+                <source>Seats outside</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.beerGarden" xml:space="preserve">
+                <source>Beer garden</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.catering" xml:space="preserve">
+                <source>Catering</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.deliveryService" xml:space="preserve">
+                <source>Delivery service</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.hotCuisineThroughout" xml:space="preserve">
+                <source>Hot food all day</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.lateKitchen" xml:space="preserve">
+                <source>Late kitchen</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.selfService" xml:space="preserve">
+                <source>Self service</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.takeAway" xml:space="preserve">
+                <source>Take away</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.acceptsReservations" xml:space="preserve">
+                <source>Reservations possible</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.hasDriveThroughService" xml:space="preserve">
+                <source>Drive-through</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.visit" xml:space="preserve">
+                <source>Visit</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.entrance" xml:space="preserve">
+                <source>Areas</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.guidedTour" xml:space="preserve">
+                <source>Guided tours</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.smokingAllowed" xml:space="preserve">
+                <source>Smoking allowed</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.typicalAgeRange" xml:space="preserve">
+                <source>Recommended age</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.tourBookingPage" xml:space="preserve">
+                <source>Tour booking</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.bookable" xml:space="preserve">
+                <source>Bookable</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.sportsEquipment" xml:space="preserve">
+                <source>Sports equipment</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.ensemble" xml:space="preserve">
+                <source>Ensemble</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.exhibitionObjects" xml:space="preserve">
+                <source>Exhibitions</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.openAirMuseum" xml:space="preserve">
+                <source>Open-air museum</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.touristTypes" xml:space="preserve">
+                <source>Audiences</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.building" xml:space="preserve">
+                <source>Building and site</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.monument" xml:space="preserve">
+                <source>Monument</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.isRuin" xml:space="preserve">
+                <source>Ruin</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.endOfConstruction" xml:space="preserve">
+                <source>Completed</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.sizeOfArea" xml:space="preserve">
+                <source>Area</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.architects" xml:space="preserve">
+                <source>Architects</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.whoWasHere" xml:space="preserve">
+                <source>Famous visitors</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.links" xml:space="preserve">
+                <source>Links</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.hasMap" xml:space="preserve">
+                <source>Map</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.sameAs" xml:space="preserve">
+                <source>Further entries</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.identifier" xml:space="preserve">
+                <source>Identifier</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.subjectOf" xml:space="preserve">
+                <source>Portal pages</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.texts" xml:space="preserve">
+                <source>Further information</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.certifications" xml:space="preserve">
+                <source>Certifications</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.descriptionCulturePortal" xml:space="preserve">
+                <source>Culture portal</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.relations" xml:space="preserve">
+                <source>Related records</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.operatedBy" xml:space="preserve">
+                <source>Operated by</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.geoTouchesTrail" xml:space="preserve">
+                <source>Trails nearby</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.managedObjects" xml:space="preserve">
+                <source>Managed places</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.media" xml:space="preserve">
+                <source>Media</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.logo" xml:space="preserve">
+                <source>Logo</source>
+            </trans-unit>
+            <trans-unit id="content.meetingVenue.subjectOfMedia" xml:space="preserve">
+                <source>Portal media</source>
+            </trans-unit>
+            <trans-unit id="content.boolean.true" xml:space="preserve">
+                <source>yes</source>
+            </trans-unit>
+            <trans-unit id="content.boolean.false" xml:space="preserve">
+                <source>no</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

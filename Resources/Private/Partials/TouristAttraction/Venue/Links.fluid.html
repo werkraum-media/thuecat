@@ -1,0 +1,16 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.hasMapMembers} || {venue.sameAsMembers} || {venue.identifierMembers} || {venue.subjectOfMembers}">
+    <section data-venue="links">
+        <h3><f:translate key="content.meetingVenue.links" extensionName="thuecat" /></h3>
+        <dl>
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.hasMap', lines: venue.hasMapMembers, links: 1}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.sameAs', lines: venue.sameAsMembers, links: 1}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.identifier', lines: venue.identifierMembers, links: 1}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.subjectOf', lines: venue.subjectOfMembers, links: 1}" />
+        </dl>
+    </section>
+</f:if>
+</html>

@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Domain\Model\Frontend;
 
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 class MeetingVenue extends TouristAttraction
@@ -58,6 +59,101 @@ class MeetingVenue extends TouristAttraction
 
     protected int $distanceIceStation = 0;
 
+    protected string $priceRange = '';
+
+    protected string $starRating = '';
+
+    protected string $checkinTime = '';
+
+    protected string $checkoutTime = '';
+
+    protected string $smokingAllowed = '';
+
+    protected string $isRuin = '';
+
+    protected string $openAirMuseum = '';
+
+    protected string $bookable = '';
+
+    protected string $hasDriveThroughService = '';
+
+    protected string $beerGarden = '';
+
+    protected string $catering = '';
+
+    protected string $deliveryService = '';
+
+    protected string $hotCuisineThroughout = '';
+
+    protected string $lateKitchen = '';
+
+    protected string $selfService = '';
+
+    protected string $takeAway = '';
+
+    protected string $acceptsReservations = '';
+
+    protected string $typicalAgeRange = '';
+
+    protected string $endOfConstruction = '';
+
+    protected string $descriptionCulturePortal = '';
+
+    protected string $descriptionLodgingMeeting = '';
+
+    protected string $certifications = '';
+
+    protected string $hasMap = '';
+
+    protected string $tourBookingPage = '';
+
+    protected string $identifier = '';
+
+    protected string $sameAs = '';
+
+    protected string $subjectOf = '';
+
+    protected string $touristTypes = '';
+
+    protected string $whoWasHere = '';
+
+    protected string $architects = '';
+
+    protected int $numberOfRooms = 0;
+
+    protected int $singleRooms = 0;
+
+    protected int $doubleRooms = 0;
+
+    protected int $twinRooms = 0;
+
+    protected int $suites = 0;
+
+    protected int $seatsInside = 0;
+
+    protected int $seatsOutside = 0;
+
+    protected int $sizeOfArea = 0;
+
+    protected ?FileReference $logo = null;
+
+    /**
+     * @var ObjectStorage<FileReference>
+     */
+    protected ObjectStorage $subjectOfMedia;
+
+    protected ?Organisation $operatedBy = null;
+
+    /**
+     * @var ObjectStorage<Trail>
+     */
+    protected ObjectStorage $geoTouchesTrail;
+
+    /**
+     * @var ObjectStorage<TouristAttraction>
+     */
+    protected ObjectStorage $managedObjects;
+
     /**
      * @var ObjectStorage<MeetingRoom>
      */
@@ -67,6 +163,9 @@ class MeetingVenue extends TouristAttraction
     {
         parent::initializeObject();
         $this->meetingRooms = new ObjectStorage();
+        $this->subjectOfMedia = new ObjectStorage();
+        $this->geoTouchesTrail = new ObjectStorage();
+        $this->managedObjects = new ObjectStorage();
     }
 
     public function getAdditionalType(): string
@@ -166,6 +265,280 @@ class MeetingVenue extends TouristAttraction
         return $this->membersOf($this->amenityFeatures);
     }
 
+    public function getVenueType(): string
+    {
+        return $this->venueType;
+    }
+
+    public function getPriceRange(): string
+    {
+        return $this->priceRange;
+    }
+
+    public function getStarRating(): string
+    {
+        return $this->starRating;
+    }
+
+    public function getCheckinTime(): string
+    {
+        return $this->checkinTime;
+    }
+
+    public function getCheckoutTime(): string
+    {
+        return $this->checkoutTime;
+    }
+
+    public function getSmokingAllowed(): string
+    {
+        return $this->smokingAllowed;
+    }
+
+    public function getIsRuin(): string
+    {
+        return $this->isRuin;
+    }
+
+    public function getOpenAirMuseum(): string
+    {
+        return $this->openAirMuseum;
+    }
+
+    public function getBookable(): string
+    {
+        return $this->bookable;
+    }
+
+    public function getHasDriveThroughService(): string
+    {
+        return $this->hasDriveThroughService;
+    }
+
+    public function getBeerGarden(): string
+    {
+        return $this->beerGarden;
+    }
+
+    public function getCatering(): string
+    {
+        return $this->catering;
+    }
+
+    public function getDeliveryService(): string
+    {
+        return $this->deliveryService;
+    }
+
+    public function getHotCuisineThroughout(): string
+    {
+        return $this->hotCuisineThroughout;
+    }
+
+    public function getLateKitchen(): string
+    {
+        return $this->lateKitchen;
+    }
+
+    public function getSelfService(): string
+    {
+        return $this->selfService;
+    }
+
+    public function getTakeAway(): string
+    {
+        return $this->takeAway;
+    }
+
+    public function getAcceptsReservations(): string
+    {
+        return $this->acceptsReservations;
+    }
+
+    public function getTypicalAgeRange(): string
+    {
+        return $this->typicalAgeRange;
+    }
+
+    public function getEndOfConstruction(): string
+    {
+        return $this->endOfConstruction;
+    }
+
+    public function getDescriptionCulturePortal(): string
+    {
+        return $this->descriptionCulturePortal;
+    }
+
+    public function getDescriptionLodgingMeeting(): string
+    {
+        return $this->descriptionLodgingMeeting;
+    }
+
+    public function getNumberOfRooms(): int
+    {
+        return $this->numberOfRooms;
+    }
+
+    public function getSingleRooms(): int
+    {
+        return $this->singleRooms;
+    }
+
+    public function getDoubleRooms(): int
+    {
+        return $this->doubleRooms;
+    }
+
+    public function getTwinRooms(): int
+    {
+        return $this->twinRooms;
+    }
+
+    public function getSuites(): int
+    {
+        return $this->suites;
+    }
+
+    public function getSeatsInside(): int
+    {
+        return $this->seatsInside;
+    }
+
+    public function getSeatsOutside(): int
+    {
+        return $this->seatsOutside;
+    }
+
+    public function getSizeOfArea(): int
+    {
+        return $this->sizeOfArea;
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getCertificationMembers(): array
+    {
+        return $this->linesOf($this->certifications);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getHasMapMembers(): array
+    {
+        return $this->linesOf($this->hasMap);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getTourBookingPageMembers(): array
+    {
+        return $this->linesOf($this->tourBookingPage);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getIdentifierMembers(): array
+    {
+        return $this->linesOf($this->identifier);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getSameAsMembers(): array
+    {
+        return $this->linesOf($this->sameAs);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getSubjectOfMembers(): array
+    {
+        return $this->linesOf($this->subjectOf);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getTouristTypeMembers(): array
+    {
+        return $this->linesOf($this->touristTypes);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getWhoWasHereMembers(): array
+    {
+        return $this->linesOf($this->whoWasHere);
+    }
+
+    /**
+     * One entry per stored line.
+     *
+     * @return list<string>
+     */
+    public function getArchitectMembers(): array
+    {
+        return $this->linesOf($this->architects);
+    }
+
+    public function getLogo(): ?FileReference
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @return ObjectStorage<FileReference>
+     */
+    public function getSubjectOfMedia(): ObjectStorage
+    {
+        return $this->subjectOfMedia;
+    }
+
+    public function getOperatedBy(): ?Organisation
+    {
+        return $this->operatedBy;
+    }
+
+    /**
+     * @return ObjectStorage<Trail>
+     */
+    public function getGeoTouchesTrail(): ObjectStorage
+    {
+        return $this->geoTouchesTrail;
+    }
+
+    /**
+     * @return ObjectStorage<TouristAttraction>
+     */
+    public function getManagedObjects(): ObjectStorage
+    {
+        return $this->managedObjects;
+    }
+
     /**
      * Delivered distances only, keyed by destination.
      *
@@ -242,5 +615,13 @@ class MeetingVenue extends TouristAttraction
     protected function membersOf(string $commaList): array
     {
         return array_values(array_filter(explode(',', $commaList)));
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function linesOf(string $text): array
+    {
+        return array_values(array_filter(array_map(trim(...), explode("\n", $text)), static fn (string $line): bool => $line !== ''));
     }
 }

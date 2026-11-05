@@ -5,6 +5,10 @@
 <section data-venue="meeting">
     <h3><f:translate key="content.meetingVenue" extensionName="thuecat" /></h3>
     <dl>
+        <f:if condition="{venue.venueType}">
+            <dt><f:translate key="content.meetingVenue.venueType" extensionName="thuecat" /></dt>
+            <dd><f:translate key="content.meetingVenue.venueType.{venue.venueType}" extensionName="thuecat" default="{venue.venueType}" /></dd>
+        </f:if>
         <f:if condition="{venue.maximumAttendeeCapacity}">
             <dt><f:translate key="content.meetingVenue.maximumAttendeeCapacity" extensionName="thuecat" /></dt>
             <dd>{venue.maximumAttendeeCapacity}</dd>
@@ -35,6 +39,7 @@
                 </ul>
             </dd>
         </f:if>
+        <f:render partial="TouristAttraction/Venue/Fact/Text" arguments="{label: 'content.meetingVenue.descriptionLodgingMeeting', value: venue.descriptionLodgingMeeting}" />
     </dl>
 </section>
 </html>

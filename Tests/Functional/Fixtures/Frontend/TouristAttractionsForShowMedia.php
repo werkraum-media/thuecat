@@ -76,6 +76,15 @@ return [
             'title' => 'Attraktion ohne Medien',
             'description' => 'Beschreibung ohne Medien',
         ],
+        [
+            'uid' => '24',
+            'pid' => '11',
+            'type' => 'meeting_venue',
+            'title' => 'Tagungsort mit Logo',
+            'description' => '',
+            'logo' => '1',
+            'subject_of_media' => '1',
+        ],
     ],
     // storage uid 1 is created at runtime via createLocalStorage() in the test setUp.
     // Both files point at the same image on disk; distinct copyright proves each
@@ -183,6 +192,22 @@ return [
             'title' => 'Editorial image',
             'description' => 'Editorial image description',
             'crop' => $crop,
+        ],
+        [
+            'uid' => '4',
+            'uid_local' => '1',
+            'uid_foreign' => '24',
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'logo',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid' => '5',
+            'uid_local' => '2',
+            'uid_foreign' => '24',
+            'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'subject_of_media',
+            'sorting_foreign' => '1',
         ],
     ],
 ];

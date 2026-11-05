@@ -1,0 +1,14 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.certificationMembers} || {venue.descriptionCulturePortal}">
+    <section data-venue="texts">
+        <h3><f:translate key="content.meetingVenue.texts" extensionName="thuecat" /></h3>
+        <dl>
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.certifications', lines: venue.certificationMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Text" arguments="{label: 'content.meetingVenue.descriptionCulturePortal', value: venue.descriptionCulturePortal}" />
+        </dl>
+    </section>
+</f:if>
+</html>

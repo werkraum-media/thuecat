@@ -1,0 +1,22 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.checkinTime} || {venue.checkoutTime} || {venue.numberOfRooms} || {venue.singleRooms} || {venue.doubleRooms} || {venue.twinRooms} || {venue.suites} || {venue.starRating} || {venue.amenityFeatureMembers} || {venue.priceRange}">
+    <section data-venue="lodging">
+        <h3><f:translate key="content.meetingVenue.lodging" extensionName="thuecat" /></h3>
+        <dl>
+            <f:if condition="{venue.checkinTime}"><dt><f:translate key="content.meetingVenue.checkinTime" extensionName="thuecat" /></dt><dd><f:format.date format="H:i">{venue.checkinTime}</f:format.date></dd></f:if>
+            <f:if condition="{venue.checkoutTime}"><dt><f:translate key="content.meetingVenue.checkoutTime" extensionName="thuecat" /></dt><dd><f:format.date format="H:i">{venue.checkoutTime}</f:format.date></dd></f:if>
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.numberOfRooms', value: venue.numberOfRooms}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.singleRooms', value: venue.singleRooms}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.doubleRooms', value: venue.doubleRooms}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.twinRooms', value: venue.twinRooms}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingVenue.suites', value: venue.suites}" />
+            <f:if condition="{venue.starRating}"><dt><f:translate key="content.meetingVenue.starRating" extensionName="thuecat" /></dt><dd><f:translate key="content.star_rating.{venue.starRating}" extensionName="thuecat" default="{venue.starRating}" /></dd></f:if>
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.amenityFeatures', prefix: 'content.amenity_features', members: venue.amenityFeatureMembers}" />
+            <f:if condition="{venue.priceRange}"><dt><f:translate key="content.meetingVenue.priceRange" extensionName="thuecat" /></dt><dd><f:translate key="content.price_range.{venue.priceRange}" extensionName="thuecat" default="{venue.priceRange}" /></dd></f:if>
+        </dl>
+    </section>
+</f:if>
+</html>

@@ -239,6 +239,125 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheVenueTypeAndTheMeetingDescription(): void
+    {
+        $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
+
+        self::assertStringContainsString('Tagungshotel', $venue);
+        self::assertStringContainsString('Tagen mit Blick auf den Dom', $venue);
+    }
+
+    #[Test]
+    public function showsTheLodgingFactsOfAVenue(): void
+    {
+        $lodging = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'lodging');
+
+        self::assertStringContainsString('16:00', $lodging);
+        self::assertStringContainsString('11:00', $lodging);
+        self::assertMatchesRegularExpression('#Zimmer</dt>\s*<dd>160</dd>#', $lodging);
+        self::assertMatchesRegularExpression('#Einzelzimmer</dt>\s*<dd>5</dd>#', $lodging);
+        self::assertMatchesRegularExpression('#Doppelzimmer</dt>\s*<dd>147</dd>#', $lodging);
+        self::assertMatchesRegularExpression('#Zweibettzimmer</dt>\s*<dd>2</dd>#', $lodging);
+        self::assertMatchesRegularExpression('#Suiten</dt>\s*<dd>8</dd>#', $lodging);
+        self::assertStringContainsString('***', $lodging);
+        self::assertStringContainsString('Sauna', $lodging);
+        self::assertStringContainsString('mittel', $lodging);
+    }
+
+    #[Test]
+    public function showsTheGastronomyFactsOfAVenue(): void
+    {
+        $gastronomy = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'gastronomy');
+
+        self::assertStringContainsString('Restaurant', $gastronomy);
+        self::assertStringContainsString('Regionale Küche', $gastronomy);
+        self::assertMatchesRegularExpression('#Sitzplätze innen</dt>\s*<dd>120</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Sitzplätze außen</dt>\s*<dd>40</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Biergarten</dt>\s*<dd>ja</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Catering</dt>\s*<dd>ja</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Lieferservice</dt>\s*<dd>nein</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Durchgehend warme Küche</dt>\s*<dd>ja</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Späte Küche</dt>\s*<dd>nein</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Selbstbedienung</dt>\s*<dd>nein</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Speisen zum Mitnehmen</dt>\s*<dd>nein</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Reservierung möglich</dt>\s*<dd>ja</dd>#', $gastronomy);
+        self::assertMatchesRegularExpression('#Drive-in</dt>\s*<dd>nein</dd>#', $gastronomy);
+    }
+
+    #[Test]
+    public function showsTheVisitFactsOfAVenue(): void
+    {
+        $visit = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'visit');
+
+        self::assertStringContainsString('Angebot im Indoorbereich', $visit);
+        self::assertStringContainsString('Führung mit Anmeldung', $visit);
+        self::assertMatchesRegularExpression('#Rauchen erlaubt</dt>\s*<dd>nein</dd>#', $visit);
+        self::assertMatchesRegularExpression('#Altersempfehlung</dt>\s*<dd>12</dd>#', $visit);
+        self::assertStringContainsString('https://example.com/tickets', $visit);
+        self::assertMatchesRegularExpression('#Buchbar</dt>\s*<dd>ja</dd>#', $visit);
+        self::assertStringContainsString('Fahrradverleih', $visit);
+        self::assertStringContainsString('eigenes Orchester', $visit);
+        self::assertStringContainsString('Kulturgeschichte', $visit);
+        self::assertMatchesRegularExpression('#Freilichtmuseum</dt>\s*<dd>nein</dd>#', $visit);
+        self::assertStringContainsString('Familien', $visit);
+        self::assertStringContainsString('Senioren', $visit);
+    }
+
+    #[Test]
+    public function showsTheBuildingFactsOfAVenue(): void
+    {
+        $building = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'building');
+
+        self::assertStringContainsString('UNESCO Welterbe (Kultur)', $building);
+        self::assertMatchesRegularExpression('#Ruine</dt>\s*<dd>nein</dd>#', $building);
+        self::assertStringContainsString('1762', $building);
+        self::assertStringContainsString('360.000 m²', $building);
+        self::assertStringContainsString('Heinrich Gentz', $building);
+        self::assertStringContainsString('Christoph Martin Wieland', $building);
+    }
+
+    #[Test]
+    public function showsTheLinksOfAVenue(): void
+    {
+        $links = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'links');
+
+        self::assertStringContainsString('https://example.com/karte', $links);
+        self::assertStringContainsString('https://example.com/same-a', $links);
+        self::assertStringContainsString('https://example.com/same-b', $links);
+        self::assertStringContainsString('https://example.com/kennung', $links);
+        self::assertStringContainsString('https://example.com/portal', $links);
+    }
+
+    #[Test]
+    public function showsTheAdditionalTextsOfAVenue(): void
+    {
+        $texts = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'texts');
+
+        self::assertStringContainsString('Motorradfreundlicher Hotel- und Gastronomiebetrieb', $texts);
+        self::assertStringContainsString('Text aus dem Kulturportal', $texts);
+    }
+
+    #[Test]
+    public function showsTheRelationsOfAVenue(): void
+    {
+        $relations = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'relations');
+
+        self::assertStringContainsString('Erfurt Tourismus GmbH', $relations);
+        self::assertStringContainsString('Lutherweg', $relations);
+        self::assertStringContainsString('Domplatz Erfurt', $relations);
+    }
+
+    #[Test]
+    public function showsNoVenueGroupWithoutData(): void
+    {
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('26'));
+
+        foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media'] as $group) {
+            self::assertStringNotContainsString('data-venue="' . $group . '"', $body);
+        }
+    }
+
+    #[Test]
     public function showsNoVenueOutputForAPlainAttraction(): void
     {
         $body = $this->executeFrontendSubRequestAndReturnBody(

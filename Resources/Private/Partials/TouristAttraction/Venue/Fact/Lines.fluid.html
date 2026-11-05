@@ -1,0 +1,15 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{lines}">
+    <dt><f:translate key="{label}" extensionName="thuecat" /></dt>
+    <dd>
+        <ul>
+            <f:for each="{lines}" as="line">
+                <li><f:if condition="{links}"><f:then><a href="{line}">{line -> f:format.htmlspecialchars()}</a></f:then><f:else>{line -> f:format.htmlspecialchars()}</f:else></f:if></li>
+            </f:for>
+        </ul>
+    </dd>
+</f:if>
+</html>

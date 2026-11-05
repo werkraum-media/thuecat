@@ -1,0 +1,18 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{venue.monumentMembers} || {venue.endOfConstruction} || {venue.sizeOfArea} || {venue.architectMembers} || {venue.whoWasHereMembers} || {venue.isRuin} != ''">
+    <section data-venue="building">
+        <h3><f:translate key="content.meetingVenue.building" extensionName="thuecat" /></h3>
+        <dl>
+            <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.meetingVenue.monument', prefix: 'content.monument', members: venue.monumentMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/TriState" arguments="{label: 'content.meetingVenue.isRuin', value: venue.isRuin}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Text" arguments="{label: 'content.meetingVenue.endOfConstruction', value: venue.endOfConstruction}" />
+            <f:if condition="{venue.sizeOfArea}"><dt><f:translate key="content.meetingVenue.sizeOfArea" extensionName="thuecat" /></dt><dd><f:format.number decimals="0" decimalSeparator="," thousandsSeparator=".">{venue.sizeOfArea}</f:format.number> m²</dd></f:if>
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.architects', lines: venue.architectMembers}" />
+            <f:render partial="TouristAttraction/Venue/Fact/Lines" arguments="{label: 'content.meetingVenue.whoWasHere', lines: venue.whoWasHereMembers}" />
+        </dl>
+    </section>
+</f:if>
+</html>

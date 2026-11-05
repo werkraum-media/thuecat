@@ -147,6 +147,14 @@
         <f:if condition="{attraction.recordType} == 'meeting_venue'">
             <f:render partial="TouristAttraction/MeetingVenue" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/MeetingRoomTable" arguments="{rooms: attraction.meetingRoomTable}" />
+            <f:render partial="TouristAttraction/Venue/Lodging" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Gastronomy" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Visit" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Building" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Links" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Texts" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Relations" arguments="{venue: attraction}" />
+            <f:render partial="TouristAttraction/Venue/Media" arguments="{venue: attraction}" />
         </f:if>
 
         <a href="javascript:history.back()"><f:translate key="content.backToList" extensionName="thuecat" /></a>

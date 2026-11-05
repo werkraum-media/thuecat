@@ -1,0 +1,10 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:comment>Values are the strings 'true' and 'false'; Fluid reads 'false' as false, so the check compares against ''.</f:comment>
+<f:if condition="{value} != ''">
+    <dt><f:translate key="{label}" extensionName="thuecat" /></dt>
+    <dd><f:translate key="content.boolean.{value}" extensionName="thuecat" /></dd>
+</f:if>
+</html>
