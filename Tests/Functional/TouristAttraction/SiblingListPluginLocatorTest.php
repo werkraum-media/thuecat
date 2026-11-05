@@ -114,6 +114,6 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
             $request = $request->withLanguageId($language);
         }
 
-        return (string)$this->executeFrontendSubRequest($request)->getBody();
+        return $this->executeFrontendSubRequestAndReturnBody($request);
     }
 }

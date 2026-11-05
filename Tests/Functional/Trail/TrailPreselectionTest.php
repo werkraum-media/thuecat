@@ -43,7 +43,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -54,7 +54,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '23', 10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
         self::assertStringNotContainsString(
@@ -69,7 +69,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '20', 10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -80,7 +80,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '9999', 10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -91,7 +91,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '23', 11);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Ilmtal-Radweg', $body);
     }
@@ -139,7 +139,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function theConfiguredRecordRendersItsTranslation(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('Goethe experience trail', $body);
         self::assertStringNotContainsString('No data to show.', $body);
@@ -161,7 +161,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '23', 15);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Keine Daten vorhanden.', $body);
         self::assertStringNotContainsString('Ilmtal-Radweg', $body);
@@ -172,7 +172,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(12);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }

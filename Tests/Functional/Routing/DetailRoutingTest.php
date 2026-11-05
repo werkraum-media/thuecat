@@ -39,7 +39,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function listLinksToAttractionBySlugPath(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(40))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
         self::assertStringContainsString('href="/show/gemeindebrunnen-weimar"', $body);
     }
@@ -47,7 +47,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function listLinksToTranslatedAttractionBySlugPath(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(40, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40, 1));
 
         self::assertStringContainsString('href="/en/show/community-fountain-weimar"', $body);
     }
@@ -55,7 +55,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function listLinksToTrailBySlugPath(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(40))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
         self::assertStringContainsString('href="/trail/rennsteig"', $body);
     }
@@ -133,7 +133,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function showPageWithoutRoleKeepsQueryStringLinks(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(51))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(51));
 
         self::assertStringContainsString(
             'href="/show-without-role?tx_thuecat_touristattractionshow%5Baction%5D=show&amp;tx_thuecat_touristattractionshow%5Battraction%5D=24&amp;',
@@ -155,7 +155,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function listLinksToSecondPageByPathSegment(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(40))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
         self::assertStringContainsString('href="/list/2"', $body);
     }
@@ -165,7 +165,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $request = new InternalRequest('http://localhost/list/2');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('href="/list"', $body);
     }

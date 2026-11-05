@@ -36,7 +36,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
@@ -49,20 +49,16 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999
-        self::assertLessThan(
-            mb_strpos($body, 'Goethe-Erlebnisweg'),
-            mb_strpos($body, 'Ilmtal-Radweg'),
-            'Selected records are not rendered in the editor-picked order.'
-        );
+        self::assertAppearInOrder($body, 'Ilmtal-Radweg', 'Goethe-Erlebnisweg');
     }
 
     #[Test]
     public function skipsUnresolvableSelectedRecords(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
         self::assertStringContainsString('Ilmtal-Radweg', $body);
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
@@ -73,7 +69,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function strictLanguageRendersTranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('Ilm Valley Cycle Path', $body);
         self::assertStringNotContainsString('Ilmtal-Radweg', $body);
@@ -82,7 +78,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function strictLanguageOmitsUntranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('Ilm Valley Cycle Path', $body);
         self::assertStringNotContainsString('Goethe-Erlebnisweg', $body);
@@ -91,7 +87,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function fallbackLanguageRendersTranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
         self::assertStringContainsString('Ruta ciclista del valle del Ilm', $body);
         self::assertStringNotContainsString('Ilmtal-Radweg', $body);
@@ -100,7 +96,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function fallbackLanguageRendersUntranslatedRecordInDefaultLanguage(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
         self::assertStringContainsString('Goethe-Erlebnisweg', $body);
     }
@@ -108,14 +104,8 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function translatedListPreservesEditorPickedOrder(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Ruta ciclista del valle del Ilm', $body);
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertLessThan(
-            mb_strpos($body, 'Goethe-Erlebnisweg'),
-            mb_strpos($body, 'Ruta ciclista del valle del Ilm'),
-            'Selected records are not rendered in the editor-picked order.'
-        );
+        self::assertAppearInOrder($body, 'Ruta ciclista del valle del Ilm', 'Goethe-Erlebnisweg');
     }
 }

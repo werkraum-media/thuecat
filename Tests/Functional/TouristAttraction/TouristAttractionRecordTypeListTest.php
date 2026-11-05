@@ -37,7 +37,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function listsOnlyMeetingVenuesWhenOnlyThatTypeIsTicked(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(20))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(20));
 
         self::assertStringContainsString('Tagungshotel am Dom', $body);
         self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
@@ -46,7 +46,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function listsEveryTypeWhenNoneIsTicked(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
         self::assertStringContainsString('Tagungshotel am Dom', $body);
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
@@ -55,7 +55,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function listsEveryTickedType(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(30))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(30));
 
         self::assertStringContainsString('Tagungshotel am Dom', $body);
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
@@ -69,7 +69,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'attraction,meeting_venue']]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Tagungshotel am Dom', $body);
         self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
@@ -83,7 +83,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'meeting_venue']]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
@@ -91,7 +91,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function listItemsRenderVenueOutputForMeetingVenuesOnly(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
         self::assertSame(1, substr_count($body, 'data-venue="listItem"'));
         self::assertStringContainsString('250', $this->renderedSection($this->pageRequest(10), 'venue', 'listItem'));

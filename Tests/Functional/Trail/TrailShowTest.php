@@ -73,7 +73,7 @@ class TrailShowTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '20');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringNotContainsString('data-trail="season"', $body);
     }
@@ -83,7 +83,7 @@ class TrailShowTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '20');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Weg ohne Schlagworte', $body);
         self::assertStringNotContainsString('data-relation="keywords"', $body);
@@ -121,7 +121,7 @@ class TrailShowTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '23');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }

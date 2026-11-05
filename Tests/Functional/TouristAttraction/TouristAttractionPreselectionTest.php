@@ -43,7 +43,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -59,7 +59,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
             10
         );
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString(
@@ -79,7 +79,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
             10
         );
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -95,7 +95,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
             10
         );
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
@@ -111,7 +111,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
             11
         );
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Domplatz Erfurt', $body);
     }
@@ -164,7 +164,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function theConfiguredRecordRendersItsTranslation(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('City Museum Erfurt', $body);
         self::assertStringNotContainsString('No data to show.', $body);
@@ -175,7 +175,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function theConfiguredRecordFollowsTheLanguageFallbackChain(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 2))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 2));
 
         self::assertStringContainsString('City Museum Erfurt', $body);
         self::assertStringNotContainsString('No data to show.', $body);
@@ -202,7 +202,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
             15
         );
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Keine Daten vorhanden.', $body);
         self::assertStringNotContainsString('Domplatz Erfurt', $body);
@@ -213,7 +213,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(12);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }

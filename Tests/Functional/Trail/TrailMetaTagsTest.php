@@ -35,7 +35,7 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '21');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression(
             '#<meta[^>]+name="keywords"[^>]+content="Themenweg, Fahrradfreundlich"#',
@@ -48,7 +48,7 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '20');
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
@@ -58,7 +58,7 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_trailshow', 'trail', '21', 10, 1);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression(
             '#<meta[^>]+name="keywords"[^>]+content="themed trail, bicycle friendly"#',

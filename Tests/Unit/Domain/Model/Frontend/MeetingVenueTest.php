@@ -44,6 +44,7 @@ class MeetingVenueTest extends TestCase
     }
 
     /**
+     * @param non-empty-string $property
      * @param list<string> $expected
      */
     #[Test]

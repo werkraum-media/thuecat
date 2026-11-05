@@ -34,7 +34,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function emitsKeywordsMetaTagFromRelatedCategories(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->showRequest('21'))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->showRequest('21'));
 
         self::assertMatchesRegularExpression(
             '#<meta[^>]+name="keywords"[^>]+content="romantisch, barrierefrei"#',
@@ -45,7 +45,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function emitsNoKeywordsMetaTagWithoutRelations(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->showRequest('20'))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->showRequest('20'));
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
@@ -55,7 +55,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     {
         $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression(
             '#<meta[^>]+name="keywords"[^>]+content="romantic, accessible"#',

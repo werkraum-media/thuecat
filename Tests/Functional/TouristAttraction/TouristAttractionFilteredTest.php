@@ -50,7 +50,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // settings.towns = 1 (Erfurt) -> Stadtmuseum (1) and Domberg (2)
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
@@ -67,7 +67,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['towns' => [2]]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('Goethehaus Weimar', $body);

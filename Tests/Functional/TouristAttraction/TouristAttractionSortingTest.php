@@ -35,37 +35,33 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aListWithoutSortSettingIsOrderedByTitle(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(10))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(10));
 
-        self::assertLessThan(mb_strpos($body, 'Beta Park'), mb_strpos($body, 'Alpha Museum'));
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
+        self::assertAppearInOrder($body, 'Alpha Museum', 'Beta Park', 'Gamma Garten');
     }
 
     #[Test]
     public function aListInBackendOrderIsOrderedBySorting(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(20))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(20));
 
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
-        self::assertLessThan(mb_strpos($body, 'Alpha Museum'), mb_strpos($body, 'Gamma Garten'));
+        self::assertAppearInOrder($body, 'Beta Park', 'Gamma Garten', 'Alpha Museum');
     }
 
     #[Test]
     public function aFilteredListInBackendOrderIsOrderedBySorting(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(40))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(40));
 
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
-        self::assertLessThan(mb_strpos($body, 'Alpha Museum'), mb_strpos($body, 'Gamma Garten'));
+        self::assertAppearInOrder($body, 'Beta Park', 'Gamma Garten', 'Alpha Museum');
     }
 
     #[Test]
     public function anUnknownSortSettingFallsBackToTitle(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(30))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(30));
 
-        self::assertLessThan(mb_strpos($body, 'Beta Park'), mb_strpos($body, 'Alpha Museum'));
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
+        self::assertAppearInOrder($body, 'Alpha Museum', 'Beta Park', 'Gamma Garten');
     }
 
     #[Test]
@@ -76,29 +72,28 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['sortBy' => 'sorting']]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertLessThan(mb_strpos($body, 'Beta Park'), mb_strpos($body, 'Alpha Museum'));
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
+        self::assertAppearInOrder($body, 'Alpha Museum', 'Beta Park', 'Gamma Garten');
     }
 
     #[Test]
     public function tiedSortingFallsBackToTitle(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(50))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
 
-        self::assertLessThan(mb_strpos($body, 'Theta Tor'), mb_strpos($body, 'Eta Brücke'));
+        self::assertAppearInOrder($body, 'Eta Brücke', 'Theta Tor');
     }
 
     #[Test]
     public function tiedSortingPutsEveryRecordOnExactlyOnePage(): void
     {
-        $first = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(50))->getBody();
-        $second = (string)$this->executeFrontendSubRequest(
+        $first = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
+        $second = $this->executeFrontendSubRequestAndReturnBody(
             (new InternalRequest())
                 ->withPageId(50)
                 ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
-        )->getBody();
+        );
 
         self::assertStringContainsString('Eta Brücke', $first);
         self::assertStringContainsString('Theta Tor', $first);
@@ -111,7 +106,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function paginationLinksCarryNoSortOrder(): void
     {
-        $body = (string)$this->executeFrontendSubRequest((new InternalRequest())->withPageId(50))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
 
         self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
         self::assertStringNotContainsString('sortBy', $body);

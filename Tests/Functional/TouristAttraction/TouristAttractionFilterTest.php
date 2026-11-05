@@ -41,7 +41,7 @@ class TouristAttractionFilterTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $search]])
         ;
 
-        return (string)$this->executeFrontendSubRequest($request)->getBody();
+        return $this->executeFrontendSubRequestAndReturnBody($request);
     }
 
     #[Test]

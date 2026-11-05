@@ -36,7 +36,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999 -> Goethehaus (3) and Stadtmuseum (1)
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
@@ -49,20 +49,16 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999 -> Goethehaus must appear before Stadtmuseum
-        self::assertLessThan(
-            mb_strpos($body, 'Stadtmuseum Erfurt'),
-            mb_strpos($body, 'Goethehaus Weimar'),
-            'Selected records are not rendered in the editor-picked order.'
-        );
+        self::assertAppearInOrder($body, 'Goethehaus Weimar', 'Stadtmuseum Erfurt');
     }
 
     #[Test]
     public function skipsUnresolvableSelectedRecords(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
         self::assertStringContainsString('Goethehaus Weimar', $body);
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
@@ -73,7 +69,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function strictLanguageRendersTranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('Goethe House Weimar', $body);
         self::assertStringNotContainsString('Goethehaus Weimar', $body);
@@ -82,7 +78,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function strictLanguageOmitsUntranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 1))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
         self::assertStringContainsString('Goethe House Weimar', $body);
         self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
@@ -91,7 +87,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function fallbackLanguageRendersTranslatedRecord(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
         self::assertStringContainsString('Casa de Goethe Weimar', $body);
         self::assertStringNotContainsString('Goethehaus Weimar', $body);
@@ -100,7 +96,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function fallbackLanguageRendersUntranslatedRecordInDefaultLanguage(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
@@ -108,14 +104,8 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function translatedListPreservesEditorPickedOrder(): void
     {
-        $body = (string)$this->executeFrontendSubRequest($this->pageRequest(10, 3))->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Casa de Goethe Weimar', $body);
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertLessThan(
-            mb_strpos($body, 'Stadtmuseum Erfurt'),
-            mb_strpos($body, 'Casa de Goethe Weimar'),
-            'Selected records are not rendered in the editor-picked order.'
-        );
+        self::assertAppearInOrder($body, 'Casa de Goethe Weimar', 'Stadtmuseum Erfurt');
     }
 }

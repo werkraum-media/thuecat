@@ -55,7 +55,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // Exactly one form (search plugin), and no list articles appear before it.
         self::assertSame(1, substr_count($body, '<form'));
@@ -74,7 +74,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
             ]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Erfurt Frei 01', $body);
         self::assertStringNotContainsString('Erfurt Kostenpflichtig', $body);
@@ -92,7 +92,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
             ]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression('#<option value="1"[^>]*selected#', $body);
         self::assertMatchesRegularExpression(
@@ -112,7 +112,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
             ]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // 15 free Erfurt records, itemsPerPage 10 -> a second page exists, and its
         // link must keep the active filter so paging does not reset the search.

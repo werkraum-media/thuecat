@@ -212,7 +212,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $demand]])
         ;
 
-        return (string)$this->executeFrontendSubRequest($request)->getBody();
+        return $this->executeFrontendSubRequestAndReturnBody($request);
     }
 
     protected function routedBody(string $path): string

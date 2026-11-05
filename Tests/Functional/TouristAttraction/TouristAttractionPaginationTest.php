@@ -41,7 +41,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Attraction 01', $body);
         self::assertStringContainsString('Attraction 10', $body);
@@ -56,7 +56,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Attraction 11', $body);
         self::assertStringContainsString('Attraction 20', $body);
@@ -69,7 +69,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
         self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=3', $body);
@@ -80,7 +80,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(10);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // 25 fixtures, itemsPerPage = 10 => 3 pages
         self::assertStringContainsString('10 Einträge pro Seite, 3 Seiten insgesamt', $body);
@@ -96,7 +96,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // 13 odd-numbered attractions carry the keyword => 2 pages.
         self::assertStringContainsString('10 Einträge pro Seite, 2 Seiten insgesamt', $body);
@@ -117,7 +117,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
             ]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // Page 1 holds the first ten odd ones (01-19); page 2 the rest (21-25).
         self::assertStringContainsString('Attraction 21', $body);

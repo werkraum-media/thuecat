@@ -84,6 +84,6 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
     private function render(int $pageId): string
     {
         $request = (new InternalRequest())->withPageId($pageId);
-        return (string)$this->executeFrontendSubRequest($request)->getBody();
+        return $this->executeFrontendSubRequestAndReturnBody($request);
     }
 }

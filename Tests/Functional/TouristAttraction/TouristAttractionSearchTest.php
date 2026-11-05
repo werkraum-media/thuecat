@@ -49,7 +49,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(12);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // form action attribute should point at the list page (uid 10, slug /list/)
         self::assertMatchesRegularExpression('#<form[^>]+action="[^"]*/list/[^"]*"#', $body);
@@ -60,7 +60,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(12);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('Domberg Erfurt', $body);
@@ -74,7 +74,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
@@ -87,7 +87,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
             ->withQueryParams(['q' => 'Stadtmuseum'])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
@@ -99,7 +99,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     {
         $request = (new InternalRequest())->withPageId(12);
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][keywords][]"', $body);
         self::assertStringContainsString('Ambiente', $body);
@@ -118,7 +118,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
         ;
 
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertMatchesRegularExpression(
             '#<input[^>]+value="501"[^>]+checked="checked"#',

@@ -84,7 +84,6 @@ final class PluginSaveInvalidationTest extends AbstractCachingTestCase
         $this->saveRecord(10, ['pi_flexform' => self::BACKEND_ORDER_FLEXFORM], 'tt_content');
 
         $body = (string)$this->request(10)->getBody();
-        self::assertLessThan(mb_strpos($body, 'Gamma Garten'), mb_strpos($body, 'Beta Park'));
-        self::assertLessThan(mb_strpos($body, 'Alpha Museum'), mb_strpos($body, 'Gamma Garten'));
+        self::assertAppearInOrder($body, 'Beta Park', 'Gamma Garten', 'Alpha Museum');
     }
 }

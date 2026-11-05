@@ -164,7 +164,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
      */
     protected function renderedSection(InternalRequest $request, string $attribute, string $value): string
     {
-        $body = (string)$this->executeFrontendSubRequest($request)->getBody();
+        $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         $marker = '<section data-' . $attribute . '="';
         $open = $marker . $value . '">';
@@ -175,5 +175,32 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         $end = strpos($rest, $marker);
 
         return $end === false ? $rest : substr($rest, 0, $end);
+    }
+
+    protected function executeFrontendSubRequestAndReturnBody(InternalRequest $request): string
+    {
+        return (string)$this->executeFrontendSubRequest($request)->getBody();
+    }
+
+    /**
+     * Each needle must occur, and each first occurrence must follow the previous needle's.
+     */
+    protected static function assertAppearInOrder(string $haystack, string ...$needles): void
+    {
+        $previous = null;
+        $previousPosition = -1;
+        foreach ($needles as $needle) {
+            $position = mb_strpos($haystack, $needle);
+            self::assertNotFalse($position, '"' . $needle . '" not found.');
+            if ($previous !== null) {
+                self::assertGreaterThan(
+                    $previousPosition,
+                    $position,
+                    '"' . $needle . '" is expected after "' . $previous . '".'
+                );
+            }
+            $previous = $needle;
+            $previousPosition = $position;
+        }
     }
 }

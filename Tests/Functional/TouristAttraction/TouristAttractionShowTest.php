@@ -88,9 +88,9 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         // Attraction 24 carries neither relation: an empty set renders no
         // container at all, rather than an empty one.
-        $body = (string)$this->executeFrontendSubRequest(
+        $body = $this->executeFrontendSubRequestAndReturnBody(
             $this->generateRequestWithCHash('24')
-        )->getBody();
+        );
 
         self::assertStringNotContainsString('data-relation="containedInOrganisation"', $body);
         self::assertStringNotContainsString('data-relation="containedInPlace"', $body);
@@ -120,9 +120,9 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsNoEventSectionWhenTheAttractionHostsNone(): void
     {
-        $body = (string)$this->executeFrontendSubRequest(
+        $body = $this->executeFrontendSubRequestAndReturnBody(
             $this->generateRequestWithCHash('24')
-        )->getBody();
+        );
 
         self::assertStringNotContainsString('data-relation="hostsEvents"', $body);
     }
@@ -147,22 +147,15 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         self::assertStringContainsString('4,20', $rooms);
         self::assertStringContainsString('220', $rooms);
         self::assertStringContainsString('Tageslicht', $rooms);
-        $erfurt = strpos($rooms, 'Saal Erfurt<');
-        $erfurtPart = strpos($rooms, 'Saal Erfurt Teil A');
-        $weimar = strpos($rooms, 'Raum Weimar');
-        self::assertNotFalse($erfurt);
-        self::assertNotFalse($erfurtPart);
-        self::assertNotFalse($weimar);
-        self::assertLessThan($erfurtPart, $erfurt);
-        self::assertLessThan($weimar, $erfurtPart);
+        self::assertAppearInOrder($rooms, 'Saal Erfurt<', 'Saal Erfurt Teil A', 'Raum Weimar');
     }
 
     #[Test]
     public function showsNoVenueOutputForAPlainAttraction(): void
     {
-        $body = (string)$this->executeFrontendSubRequest(
+        $body = $this->executeFrontendSubRequestAndReturnBody(
             $this->generateRequestWithCHash('21')
-        )->getBody();
+        );
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
         self::assertStringNotContainsString('data-venue=', $body);
@@ -176,7 +169,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         self::assertStringContainsString('40', $this->renderedSection($request, 'venue', 'meeting'));
         self::assertStringNotContainsString(
             'data-venue="meetingRooms"',
-            (string)$this->executeFrontendSubRequest($request)->getBody()
+            $this->executeFrontendSubRequestAndReturnBody($request)
         );
     }
 
