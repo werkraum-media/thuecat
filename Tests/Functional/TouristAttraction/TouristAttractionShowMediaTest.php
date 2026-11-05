@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -146,6 +147,34 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         self::assertStringContainsString('Foto: Main Author', $details);
         self::assertStringContainsString('Foto: Editorial Author', $details);
         self::assertSame(2, substr_count($details, '<img '));
+    }
+
+    /**
+     * @return iterable<string, array{string, string, string, string, string}>
+     */
+    public static function imagesWithTheirMetadata(): iterable
+    {
+        yield 'main image' => ['21', 'attraction', 'images', 'Main image', 'Main image description'];
+        yield 'gallery image' => ['21', 'attraction', 'images', 'Gallery image', 'Gallery image description'];
+        yield 'editorial image' => ['21', 'attraction', 'images', 'Editorial image', 'Editorial image description'];
+        yield 'venue logo' => ['24', 'venue', 'media', 'Logo', 'Logo description'];
+        yield 'venue portal image' => ['24', 'venue', 'media', 'Portal image', 'Portal image description'];
+        yield 'parking main image' => ['24', 'venue', 'parkingFacilities', 'Parking main image', 'Parking main image description'];
+        yield 'parking gallery image' => ['24', 'venue', 'parkingFacilities', 'Parking gallery image', 'Parking gallery image description'];
+        yield 'room main image' => ['24', 'venue', 'meetingRoomDetails', 'Room main image', 'Room main image description'];
+        yield 'room gallery image' => ['24', 'venue', 'meetingRoomDetails', 'Room gallery image', 'Room gallery image description'];
+    }
+
+    #[Test]
+    #[DataProvider('imagesWithTheirMetadata')]
+    public function rendersTheMetadataOfAnImage(string $uid, string $attribute, string $section, string $title, string $description): void
+    {
+        $markup = $this->renderedSection($this->requestForAttraction($uid), $attribute, $section);
+
+        self::assertMatchesRegularExpression('#<img [^>]*alt="Alternative: ' . $title . '"#', $markup);
+        // Title and description in one and the same caption.
+        $inCaption = '(?:(?!</figcaption>).)*';
+        self::assertMatchesRegularExpression('#<figcaption[^>]*>' . $inCaption . $title . $inCaption . $description . $inCaption . '</figcaption>#s', $markup);
     }
 
     #[Test]

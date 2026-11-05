@@ -1,0 +1,16 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:comment>The alternative text reaches the alt attribute through f:image; title, description and copyright form the caption.</f:comment>
+<figure>
+    <f:image image="{image}" maxWidth="{maxWidth}" />
+    <f:if condition="{image.originalResource.title} || {image.originalResource.description} || {image.originalResource.properties.copyright}">
+        <figcaption>
+            <f:if condition="{image.originalResource.title}"><strong class="title">{image.originalResource.title -> f:format.htmlspecialchars()}</strong></f:if>
+            <f:if condition="{image.originalResource.description}"><span class="description">{image.originalResource.description -> f:format.htmlspecialchars()}</span></f:if>
+            <f:if condition="{image.originalResource.properties.copyright}"><span class="copyright">{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</span></f:if>
+        </figcaption>
+    </f:if>
+</figure>
+</html>

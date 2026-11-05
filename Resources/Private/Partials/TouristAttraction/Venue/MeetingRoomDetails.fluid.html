@@ -12,20 +12,10 @@
                     <p>{room.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
                 </f:if>
                 <f:if condition="{room.mainImage}">
-                    <figure>
-                        <f:image image="{room.mainImage}" maxWidth="400" />
-                        <f:if condition="{room.mainImage.originalResource.properties.copyright}">
-                            <figcaption>{room.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-                        </f:if>
-                    </figure>
+                    <f:render partial="Media/Figure" arguments="{image: room.mainImage, maxWidth: 400}" />
                 </f:if>
                 <f:for each="{room.mediaFiles}" as="image">
-                    <figure>
-                        <f:image image="{image}" maxWidth="400" />
-                        <f:if condition="{image.originalResource.properties.copyright}">
-                            <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-                        </f:if>
-                    </figure>
+                    <f:render partial="Media/Figure" arguments="{image: image, maxWidth: 400}" />
                 </f:for>
                 <dl>
                     <f:render partial="TouristAttraction/Venue/Fact/Number" arguments="{label: 'content.meetingRoom.numberOfRooms', value: room.numberOfRooms}" />

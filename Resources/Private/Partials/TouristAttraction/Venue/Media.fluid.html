@@ -6,20 +6,10 @@
     <section data-venue="media">
         <h3><f:translate key="content.meetingVenue.media" extensionName="thuecat" /></h3>
         <f:if condition="{venue.logo}">
-            <figure class="logo">
-                <f:image image="{venue.logo}" />
-                <f:if condition="{venue.logo.originalResource.properties.copyright}">
-                    <figcaption>{venue.logo.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-                </f:if>
-            </figure>
+            <f:render partial="Media/Figure" arguments="{image: venue.logo}" />
         </f:if>
         <f:for each="{venue.subjectOfMedia}" as="image">
-            <figure class="subjectOf">
-                <f:image image="{image}" />
-                <f:if condition="{image.originalResource.properties.copyright}">
-                    <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-                </f:if>
-            </figure>
+            <f:render partial="Media/Figure" arguments="{image: image}" />
         </f:for>
     </section>
 </f:if>

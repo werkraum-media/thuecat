@@ -4,33 +4,25 @@
 >
 <f:if condition="{attraction}">
     <f:then>
-        <f:if condition="{attraction.mainImage}">
-            <figure>
-                <f:image image="{attraction.mainImage}" />
-                <f:if condition="{attraction.mainImage.originalResource.properties.copyright}">
-                    <figcaption>{attraction.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
+        <f:if condition="{attraction.mainImage} || {attraction.mediaFiles -> f:count()} || {attraction.editorialImages -> f:count()}">
+            <section data-attraction="images">
+                <f:if condition="{attraction.mainImage}">
+                    <f:render partial="Media/Figure" arguments="{image: attraction.mainImage}" />
                 </f:if>
-            </figure>
-        </f:if>
-        <f:if condition="{attraction.mediaFiles}">
-            <section class="gallery">
-                <f:for each="{attraction.mediaFiles}" as="image">
-                    <figure>
-                        <f:image image="{image}" />
-                        <f:if condition="{image.originalResource.properties.copyright}">
-                            <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-                        </f:if>
-                    </figure>
-                </f:for>
-            </section>
-        </f:if>
-        <f:if condition="{attraction.editorialImages}">
-            <section class="editorial">
-                <f:for each="{attraction.editorialImages}" as="image">
-                    <figure>
-                        <f:image image="{image}" />
-                    </figure>
-                </f:for>
+                <f:if condition="{attraction.mediaFiles}">
+                    <section class="gallery">
+                        <f:for each="{attraction.mediaFiles}" as="image">
+                            <f:render partial="Media/Figure" arguments="{image: image}" />
+                        </f:for>
+                    </section>
+                </f:if>
+                <f:if condition="{attraction.editorialImages}">
+                    <section class="editorial">
+                        <f:for each="{attraction.editorialImages}" as="image">
+                            <f:render partial="Media/Figure" arguments="{image: image}" />
+                        </f:for>
+                    </section>
+                </f:if>
             </section>
         </f:if>
         <h2>{attraction.title}</h2>

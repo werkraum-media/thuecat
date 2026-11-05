@@ -8,20 +8,10 @@
         <p>{parkingFacility.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
     </f:if>
     <f:if condition="{parkingFacility.mainImage}">
-        <figure>
-            <f:image image="{parkingFacility.mainImage}" maxWidth="400" />
-            <f:if condition="{parkingFacility.mainImage.originalResource.properties.copyright}">
-                <figcaption>{parkingFacility.mainImage.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-            </f:if>
-        </figure>
+        <f:render partial="Media/Figure" arguments="{image: parkingFacility.mainImage, maxWidth: 400}" />
     </f:if>
     <f:for each="{parkingFacility.mediaFiles}" as="image">
-        <figure>
-            <f:image image="{image}" maxWidth="400" />
-            <f:if condition="{image.originalResource.properties.copyright}">
-                <figcaption>{image.originalResource.properties.copyright -> f:format.htmlspecialchars()}</figcaption>
-            </f:if>
-        </figure>
+        <f:render partial="Media/Figure" arguments="{image: image, maxWidth: 400}" />
     </f:for>
     <f:render partial="Address/Full" arguments="{address: parkingFacility.firstAddress}" />
     <dl>
