@@ -2624,6 +2624,10 @@
                 <source>Organised events</source>
                 <target>Veranstaltungen</target>
             </trans-unit>
+            <trans-unit id="content.address.fax" xml:space="preserve">
+                <source>Fax</source>
+                <target>Fax</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

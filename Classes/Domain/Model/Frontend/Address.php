@@ -37,6 +37,10 @@ class Address extends AbstractEntity
 
     protected string $city = '';
 
+    protected string $region = '';
+
+    protected string $country = '';
+
     protected string $email = '';
 
     protected string $phone = '';
@@ -60,6 +64,16 @@ class Address extends AbstractEntity
     public function getCity(): string
     {
         return $this->city;
+    }
+
+    public function getRegion(): string
+    {
+        return $this->region;
+    }
+
+    public function getCountry(): string
+    {
+        return $this->country;
     }
 
     public function getEmail(): string

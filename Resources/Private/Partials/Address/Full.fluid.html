@@ -1,0 +1,18 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true"
+>
+<f:if condition="{address}">
+    <address>
+        <f:if condition="{address.street}"><span class="street">{address.street -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.zip}"><span class="zip">{address.zip -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.city}"><span class="city">{address.city -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.region}"><span class="region">{address.region -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.country}"><span class="country">{address.country -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.email}"><a class="email" href="mailto:{address.email}">{address.email -> f:format.htmlspecialchars()}</a></f:if>
+        <f:if condition="{address.phone}"><a class="phone" href="tel:{address.phone}">{address.phone -> f:format.htmlspecialchars()}</a></f:if>
+        <f:if condition="{address.fax}"><span class="fax">{address.fax -> f:format.htmlspecialchars()}</span></f:if>
+        <f:if condition="{address.latitude}"><span class="geo" data-lat="{address.latitude}" data-lon="{address.longitude}"></span></f:if>
+    </address>
+</f:if>
+</html>

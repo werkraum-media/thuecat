@@ -7,7 +7,7 @@
     <f:if condition="{organisation.description}">
         <p>{organisation.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
     </f:if>
-    <f:render partial="Address/Summary" arguments="{address: organisation.firstAddress}" />
+    <f:render partial="Address/Full" arguments="{address: organisation.firstAddress}" />
     <f:if condition="{organisation.managesEvent -> f:count()}">
         <dl>
             <dt><f:translate key="content.organisation.managesEvent" extensionName="thuecat" /></dt>

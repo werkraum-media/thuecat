@@ -8,7 +8,7 @@
     <f:if condition="{place.description}">
         <p>{place.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
     </f:if>
-    <f:render partial="Address/Summary" arguments="{address: place.firstAddress}" />
+    <f:render partial="Address/Full" arguments="{address: place.firstAddress}" />
     <f:if condition="{place.hostsEvents -> f:count()}">
         <dl>
             <dt><f:translate key="content.hostsEvents" extensionName="thuecat" /></dt>

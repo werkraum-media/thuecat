@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
@@ -292,6 +293,46 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         self::assertStringContainsString('Historischer Marktplatz', $places);
         self::assertStringContainsString('Fischmarkt 2', $places);
         self::assertMatchesRegularExpression('#<dd class="event">Lange Nacht der Museen</dd>#', $places);
+    }
+
+    #[Test]
+    public function showsTheFullAddressOfTheAttraction(): void
+    {
+        $address = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'address');
+
+        self::assertStringContainsString('Domstraße 5', $address);
+        self::assertStringContainsString('99084', $address);
+        self::assertStringContainsString('Erfurt', $address);
+        self::assertStringContainsString('Thüringen', $address);
+        self::assertStringContainsString('Deutschland', $address);
+        self::assertStringContainsString('museum@example.com', $address);
+        self::assertStringContainsString('+49 361 1111', $address);
+        self::assertStringContainsString('+49 361 1112', $address);
+        self::assertStringContainsString('data-lat="50.975"', $address);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function sectionsOfRelatedRecordsWithAnAddress(): iterable
+    {
+        yield 'parking facility near by' => ['parkingFacilityNearBy'];
+        yield 'managing organisation' => ['managedBy'];
+        yield 'town' => ['towns'];
+        yield 'containing place' => ['containedInPlace'];
+    }
+
+    #[Test]
+    #[DataProvider('sectionsOfRelatedRecordsWithAnAddress')]
+    public function showsTheFullAddressOfARelatedRecord(string $section): void
+    {
+        $related = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', $section);
+
+        self::assertStringContainsString('Thüringen', $related);
+        self::assertStringContainsString('Deutschland', $related);
+        self::assertStringContainsString('kontakt@example.com', $related);
+        self::assertStringContainsString('+49 361 0000', $related);
+        self::assertStringContainsString('+49 361 0001', $related);
     }
 
     #[Test]

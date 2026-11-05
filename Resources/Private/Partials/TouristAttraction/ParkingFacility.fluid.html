@@ -23,7 +23,7 @@
             </f:if>
         </figure>
     </f:for>
-    <f:render partial="Address/Summary" arguments="{address: parkingFacility.firstAddress}" />
+    <f:render partial="Address/Full" arguments="{address: parkingFacility.firstAddress}" />
     <dl>
         <f:if condition="{parkingFacility.spaces}">
             <dt><f:translate key="content.parkingFacility.spaces" extensionName="thuecat" /></dt>

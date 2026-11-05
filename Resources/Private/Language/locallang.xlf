@@ -2240,6 +2240,9 @@
             <trans-unit id="content.organisation.managesEvent" xml:space="preserve">
                 <source>Organised events</source>
             </trans-unit>
+            <trans-unit id="content.address.fax" xml:space="preserve">
+                <source>Fax</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -63,15 +63,7 @@
         <f:if condition="{attraction.addressInline}">
             <section data-relation="address">
                 <f:for each="{attraction.addressInline}" as="address">
-                    <address>
-                        <f:if condition="{address.street}"><span class="street">{address.street -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.zip}"><span class="zip">{address.zip -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.city}"><span class="city">{address.city -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.email}"><span class="email">{address.email -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.phone}"><span class="phone">{address.phone -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.fax}"><span class="fax">{address.fax -> f:format.htmlspecialchars()}</span></f:if>
-                        <f:if condition="{address.latitude}"><span class="geo" data-lat="{address.latitude}" data-lon="{address.longitude}"></span></f:if>
-                    </address>
+                    <f:render partial="Address/Full" arguments="{address: address}" />
                 </f:for>
             </section>
         </f:if>

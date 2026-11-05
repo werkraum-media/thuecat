@@ -7,7 +7,7 @@
     <f:if condition="{town.description}">
         <p>{town.description -> f:format.htmlspecialchars() -> f:format.nl2br()}</p>
     </f:if>
-    <f:render partial="Address/Summary" arguments="{address: town.firstAddress}" />
+    <f:render partial="Address/Full" arguments="{address: town.firstAddress}" />
     <dl>
         <f:if condition="{town.managedBy}">
             <dt><f:translate key="content.parkingFacility.managedBy" extensionName="thuecat" /></dt>
