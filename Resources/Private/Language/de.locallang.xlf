@@ -2596,6 +2596,30 @@
                 <source>Parking</source>
                 <target>Parken</target>
             </trans-unit>
+            <trans-unit id="content.meetingRoom.details" xml:space="preserve">
+                <source>Room details</source>
+                <target>Raumdetails</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.numberOfRooms" xml:space="preserve">
+                <source>Rooms</source>
+                <target>Räume</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.amenityFeatures" xml:space="preserve">
+                <source>Amenities</source>
+                <target>Ausstattung</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.bookable" xml:space="preserve">
+                <source>Bookable</source>
+                <target>Buchbar</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.tourBookingPage" xml:space="preserve">
+                <source>Booking</source>
+                <target>Buchung</target>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.containedRooms" xml:space="preserve">
+                <source>Related rooms</source>
+                <target>Zugehörige Räume</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

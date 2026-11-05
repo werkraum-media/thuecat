@@ -85,7 +85,20 @@ return [
             'logo' => '1',
             'subject_of_media' => '1',
             'parking_facilities_inline' => '1',
+            'meeting_rooms' => '1',
         ],
+    ],
+    'tx_thuecat_meeting_room' => [
+        [
+            'uid' => '1',
+            'pid' => '11',
+            'title' => 'Saal mit Bild',
+            'main_image' => '1',
+            'media_files' => '1',
+        ],
+    ],
+    'tx_thuecat_tourist_attraction_meeting_rooms_mm' => [
+        ['uid_local' => '24', 'uid_foreign' => '1', 'sorting' => '1'],
     ],
     'tx_thuecat_parking_facility' => [
         [
@@ -234,6 +247,22 @@ return [
             'uid_local' => '2',
             'uid_foreign' => '1',
             'tablenames' => 'tx_thuecat_parking_facility',
+            'fieldname' => 'media_files',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid' => '8',
+            'uid_local' => '1',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_thuecat_meeting_room',
+            'fieldname' => 'main_image',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid' => '9',
+            'uid_local' => '3',
+            'uid_foreign' => '1',
+            'tablenames' => 'tx_thuecat_meeting_room',
             'fieldname' => 'media_files',
             'sorting_foreign' => '1',
         ],

@@ -147,6 +147,7 @@
         <f:if condition="{attraction.recordType} == 'meeting_venue'">
             <f:render partial="TouristAttraction/MeetingVenue" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/MeetingRoomTable" arguments="{rooms: attraction.meetingRoomTable}" />
+            <f:render partial="TouristAttraction/Venue/MeetingRoomDetails" arguments="{rooms: attraction.meetingRoomTable}" />
             <f:render partial="TouristAttraction/Venue/Lodging" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/Venue/Gastronomy" arguments="{venue: attraction}" />
             <f:render partial="TouristAttraction/Venue/Visit" arguments="{venue: attraction}" />

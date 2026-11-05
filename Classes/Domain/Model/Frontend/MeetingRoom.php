@@ -55,6 +55,13 @@ class MeetingRoom extends Base
 
     protected ?FileReference $floorPlan = null;
 
+    protected ?Organisation $managedBy = null;
+
+    /**
+     * @var ObjectStorage<Category>
+     */
+    protected ObjectStorage $categories;
+
     /**
      * @var ObjectStorage<MeetingRoom>
      */
@@ -64,6 +71,7 @@ class MeetingRoom extends Base
     {
         parent::initializeObject();
         $this->containedRooms = new ObjectStorage();
+        $this->categories = new ObjectStorage();
     }
 
     public function getFloorSize(): float
@@ -133,6 +141,19 @@ class MeetingRoom extends Base
     public function getTourBookingPage(): string
     {
         return $this->tourBookingPage;
+    }
+
+    public function getManagedBy(): ?Organisation
+    {
+        return $this->managedBy;
+    }
+
+    /**
+     * @return ObjectStorage<Category>
+     */
+    public function getCategories(): ObjectStorage
+    {
+        return $this->categories;
     }
 
     public function getFloorPlan(): ?FileReference

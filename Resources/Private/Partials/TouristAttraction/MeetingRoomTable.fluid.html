@@ -22,7 +22,7 @@
             <tbody>
                 <f:for each="{rooms}" as="room">
                     <tr data-room="{room.uid}">
-                        <td>{room.title -> f:format.htmlspecialchars()}</td>
+                        <td><a href="#meeting-room-{room.uid}">{room.title -> f:format.htmlspecialchars()}</a></td>
                         <td><f:if condition="{room.floorSize}"><f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{room.floorSize}</f:format.number></f:if></td>
                         <td><f:if condition="{room.roomHeight}"><f:format.number decimals="2" decimalSeparator="," thousandsSeparator=".">{room.roomHeight}</f:format.number></f:if></td>
                         <td><f:if condition="{room.capacityBanquet}">{room.capacityBanquet}</f:if></td>

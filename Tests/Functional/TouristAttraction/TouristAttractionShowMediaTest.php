@@ -139,6 +139,16 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function rendersTheMediaOfAMeetingRoom(): void
+    {
+        $details = $this->renderedSection($this->requestForAttraction('24'), 'venue', 'meetingRoomDetails');
+
+        self::assertStringContainsString('Foto: Main Author', $details);
+        self::assertStringContainsString('Foto: Editorial Author', $details);
+        self::assertSame(2, substr_count($details, '<img '));
+    }
+
+    #[Test]
     public function rendersWithoutAnyMedia(): void
     {
         $result = $this->executeFrontendSubRequest($this->requestForAttraction('23'));

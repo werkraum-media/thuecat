@@ -2219,6 +2219,24 @@
             <trans-unit id="content.meetingVenue.parkingFacilities" xml:space="preserve">
                 <source>Parking</source>
             </trans-unit>
+            <trans-unit id="content.meetingRoom.details" xml:space="preserve">
+                <source>Room details</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.numberOfRooms" xml:space="preserve">
+                <source>Rooms</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.amenityFeatures" xml:space="preserve">
+                <source>Amenities</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.bookable" xml:space="preserve">
+                <source>Bookable</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.tourBookingPage" xml:space="preserve">
+                <source>Booking</source>
+            </trans-unit>
+            <trans-unit id="content.meetingRoom.containedRooms" xml:space="preserve">
+                <source>Related rooms</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

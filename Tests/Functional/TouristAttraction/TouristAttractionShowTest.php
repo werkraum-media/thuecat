@@ -281,6 +281,45 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     }
 
     #[Test]
+    public function showsTheDetailsOfEachMeetingRoom(): void
+    {
+        $details = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRoomDetails');
+
+        self::assertStringContainsString('Großer Saal mit Domblick', $details);
+        self::assertStringContainsString('https://example.com/saal-erfurt', $details);
+        self::assertMatchesRegularExpression('#Räume</dt>\s*<dd>2</dd>#', $details);
+        self::assertStringContainsString('Terrasse', $details);
+        self::assertStringContainsString('https://example.com/saal-buchen', $details);
+        self::assertMatchesRegularExpression('#Buchbar</dt>\s*<dd>ja</dd>#', $details);
+        self::assertAppearInOrder($details, 'Saal Erfurt<', 'Saal Erfurt Teil A<', 'Raum Weimar<');
+    }
+
+    #[Test]
+    public function linksEachRoomOfTheTableToItsDetails(): void
+    {
+        $request = $this->generateRequestWithCHash('25');
+
+        $table = $this->renderedSection($request, 'venue', 'meetingRooms');
+        self::assertMatchesRegularExpression('#<a href="\#meeting-room-1">Saal Erfurt</a>#', $table);
+        self::assertMatchesRegularExpression('#<a href="\#meeting-room-3">Saal Erfurt Teil A</a>#', $table);
+
+        $details = $this->renderedSection($request, 'venue', 'meetingRoomDetails');
+        self::assertStringContainsString('id="meeting-room-1"', $details);
+        self::assertStringContainsString('id="meeting-room-3"', $details);
+    }
+
+    #[Test]
+    public function listsTheRelationsOfAMeetingRoomByName(): void
+    {
+        $details = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRoomDetails');
+
+        self::assertMatchesRegularExpression('#<dd class="organisation">Erfurt Tourismus GmbH</dd>#', $details);
+        self::assertMatchesRegularExpression('#<dd class="category">Kongressraum</dd>#', $details);
+        self::assertMatchesRegularExpression('#<dd class="keyword">barrierefrei</dd>#', $details);
+        self::assertMatchesRegularExpression('#<dd class="room">Saal Erfurt Teil A</dd>#', $details);
+    }
+
+    #[Test]
     public function showsTheVenueTypeAndTheMeetingDescription(): void
     {
         $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
@@ -394,7 +433,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('26'));
 
-        foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media', 'parkingFacilities'] as $group) {
+        foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media', 'parkingFacilities', 'meetingRoomDetails'] as $group) {
             self::assertStringNotContainsString('data-venue="' . $group . '"', $body);
         }
     }

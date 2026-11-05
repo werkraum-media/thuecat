@@ -340,6 +340,13 @@ return [
             'facilities' => 'MeetingFacilitysRoomDaylight',
             'contained_rooms' => '1',
             'sys_language_uid' => '0',
+            'description' => 'Großer Saal mit Domblick',
+            'url' => 'https://example.com/saal-erfurt',
+            'number_of_rooms' => '2',
+            'amenity_features' => 'Terrace',
+            'tour_booking_page' => 'https://example.com/saal-buchen',
+            'bookable' => 'true',
+            'managed_by' => '1',
         ],
         [
             'uid' => '2',
@@ -432,6 +439,13 @@ return [
             'title' => 'Museum',
             'sys_language_uid' => '0',
         ],
+        [
+            'uid' => 601,
+            'pid' => '11',
+            'parent' => '0',
+            'title' => 'Kongressraum',
+            'sys_language_uid' => '0',
+        ],
     ],
     'sys_category_record_mm' => [
         [
@@ -475,6 +489,20 @@ return [
             'uid_local' => 501,
             'uid_foreign' => 27,
             'tablenames' => 'tx_thuecat_tourist_attraction',
+            'fieldname' => 'keywords',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid_local' => 601,
+            'uid_foreign' => 1,
+            'tablenames' => 'tx_thuecat_meeting_room',
+            'fieldname' => 'categories',
+            'sorting_foreign' => '1',
+        ],
+        [
+            'uid_local' => 502,
+            'uid_foreign' => 1,
+            'tablenames' => 'tx_thuecat_meeting_room',
             'fieldname' => 'keywords',
             'sorting_foreign' => '1',
         ],
