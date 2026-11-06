@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Assign\CombinedAssignRector;
 use Rector\CodeQuality\Rector\BooleanOr\RepeatedOrEqualToInArrayRector;
 use Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector;
-use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
 use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\CodeQuality\Rector\If_\ExplicitNullableObjectInstanceRector;
@@ -15,20 +13,15 @@ use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
 use Rector\CodingStyle\Rector\FuncCall\FunctionFirstClassCallableRector;
-use Rector\CodingStyle\Rector\FuncCall\StrictArraySearchRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\CodingStyle\Rector\String_\SimplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUselessUnionReturnDocblockRector;
-use Rector\DeadCode\Rector\FunctionLike\NarrowWideUnionReturnTypeRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Instanceof_\Rector\Ternary\FlipNegatedTernaryInstanceofRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
-use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
@@ -49,9 +42,7 @@ use Rector\Symfony\Symfony61\Rector\Class_\CommandConfigureToAttributeRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Class_\ReturnTypeFromStrictTernaryRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\NarrowObjectReturnTypeRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNullableTypeRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictFluentReturnRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\FuncCall\AddArrayAnyAllClosureParamTypeRector;
@@ -63,7 +54,6 @@ use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFrom
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromDimFetchAccessRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockGetterReturnArrayFromPropertyDocblockVarRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockReturnArrayFromDirectArrayInstanceRector;
-use Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector;
 use Ssch\TYPO3Rector\CodeQuality\General\RemoveTypo3VersionChecksRector;
 use Ssch\TYPO3Rector\Configuration\Typo3Option;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
@@ -147,6 +137,10 @@ return RectorConfig::configure()
         // The frontend application rebuilds the date aspect from EXEC_TIME on every request.
         DateTimeAspectInsteadOfGlobalsExecTimeRector::class => [
             __DIR__ . '/Tests/Functional/TouristAttraction/TouristAttractionShowTest.php',
+        ],
+        // Infers mixed[][] from the one nested assignment; the DataHandler field array holds scalars too.
+        AddParamArrayDocblockFromAssignsParamToParamReferenceRector::class => [
+            __DIR__ . '/Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php',
         ],
 
         // Disabled until enabled one by one; the count is the files each rule changed.
@@ -246,31 +240,5 @@ return RectorConfig::configure()
         PrivatizeFinalClassPropertyRector::class,
         // 1 file
         StringCastAssertStringContainsStringRector::class,
-        // 1 file
-        TypeWillReturnCallableArrowFunctionRector::class,
-        // 1 file
-        ReadOnlyAnonymousClassRector::class,
-        // 1 file
-        ArrayToFirstClassCallableRector::class,
-        // 1 file
-        ClassPropertyAssignToConstructorPromotionRector::class,
-        // 1 file
-        NarrowWideUnionReturnTypeRector::class,
-        // 1 file
-        RemoveUselessUnionReturnDocblockRector::class,
-        // 1 file
-        RemoveUselessParamTagRector::class,
-        // 1 file
-        StrictArraySearchRector::class,
-        // 1 file
-        CompactToVariablesRector::class,
-        // 1 file
-        CombinedAssignRector::class,
-        // 1 file
-        ReturnTypeFromStrictFluentReturnRector::class,
-        // 1 file
-        ReturnNullableTypeRector::class,
-        // 1 file
-        AddParamArrayDocblockFromAssignsParamToParamReferenceRector::class,
     ])
 ;

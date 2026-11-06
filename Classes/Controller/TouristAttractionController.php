@@ -340,8 +340,6 @@ class TouristAttractionController extends AbstractActionController
     /**
      * On a list page post to self; otherwise to the configured central search page.
      *
-     * @param SiblingListPluginContext|null $listPluginOnSamePage
-     * @param int $pageId
      *
      * @return int|mixed|null
      */

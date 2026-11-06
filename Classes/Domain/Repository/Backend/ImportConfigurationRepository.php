@@ -37,10 +37,7 @@ class ImportConfigurationRepository extends Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
-    /**
-     * @return ImportConfigurationInterface|null
-     */
-    public function findOneByUid(int $uid)
+    public function findOneByUid(int $uid): ?ImportConfigurationInterface
     {
         $query = $this->createQuery();
 

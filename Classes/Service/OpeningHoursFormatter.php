@@ -87,7 +87,7 @@ class OpeningHoursFormatter
             );
         }
 
-        usort($periods, [$this, 'comparePeriods']);
+        usort($periods, $this->comparePeriods(...));
 
         return new PerDayTable($periods, $this->isOpenNow($windows, $now, $today));
     }
@@ -112,7 +112,7 @@ class OpeningHoursFormatter
             );
         }
 
-        usort($periods, [$this, 'comparePeriods']);
+        usort($periods, $this->comparePeriods(...));
 
         return new MergedByWeekday($periods, $this->isOpenNow($windows, $now, $today));
     }
@@ -267,7 +267,7 @@ class OpeningHoursFormatter
             $periodsByDay[$row->getDayOfWeek()][] = new TimePeriod($opens, $closes);
         }
 
-        uksort($periodsByDay, [$this, 'compareWeekDays']);
+        uksort($periodsByDay, $this->compareWeekDays(...));
 
         $weekDays = [];
         foreach ($periodsByDay as $dayOfWeek => $timePeriods) {

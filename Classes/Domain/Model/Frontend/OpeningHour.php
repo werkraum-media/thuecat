@@ -125,7 +125,7 @@ class OpeningHour
         $days = [];
 
         foreach ($sorting as $weekDay) {
-            $position = array_search($weekDay, $this->daysOfWeek);
+            $position = array_search($weekDay, $this->daysOfWeek, true);
             if ($position === false) {
                 continue;
             }

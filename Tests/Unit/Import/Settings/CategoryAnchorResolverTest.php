@@ -244,7 +244,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturnCallback(
-            function (string $extension, string $path = '') use ($values) {
+            function (string $extension, string $path = '') use ($values): mixed {
                 if (!array_key_exists($path, $values)) {
                     throw new ExtensionConfigurationPathDoesNotExistException(
                         'Path ' . $path . ' does not exist.',

@@ -73,12 +73,12 @@ class VocabularyProviderTest extends TestCase
         $logger = $this->createStub(ImportLogger::class);
         $logger->method('recordStaleVocabulary')->willReturnCallback(
             function (string $vocabulary, int $age, string $reason): void {
-                $this->staleWarnings[] = compact('vocabulary', 'age', 'reason');
+                $this->staleWarnings[] = ['vocabulary' => $vocabulary, 'age' => $age, 'reason' => $reason];
             }
         );
         $logger->method('recordUnavailableVocabulary')->willReturnCallback(
             function (string $vocabulary, string $reason): void {
-                $this->unavailableWarnings[] = compact('vocabulary', 'reason');
+                $this->unavailableWarnings[] = ['vocabulary' => $vocabulary, 'reason' => $reason];
             }
         );
         $this->logger = $logger;

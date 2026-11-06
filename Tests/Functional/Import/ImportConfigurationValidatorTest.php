@@ -278,9 +278,9 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
 
     private function configuration(int $storagePid): ImportConfigurationInterface
     {
-        return new class($storagePid) implements ImportConfigurationInterface {
+        return new readonly class($storagePid) implements ImportConfigurationInterface {
             public function __construct(
-                private readonly int $storagePid,
+                private int $storagePid,
             ) {
             }
 
@@ -319,8 +319,7 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
                 return '';
             }
 
-            // @phpstan-ignore return.unusedType (interface is nullable; stub always has a uid)
-            public function getUid(): ?int
+            public function getUid(): int
             {
                 return 1;
             }

@@ -328,7 +328,7 @@ class Importer
             $this->importLogger->recordDataHandlerErrors($passErrorLog, $iterations);
             /** @var array<string, int|string> $passSubst */
             $passSubst = $dataHandler->substNEWwithIDs;
-            $substNEWwithIDs = $substNEWwithIDs + $passSubst;
+            $substNEWwithIDs += $passSubst;
             $accumulatedPayload->clearDataMap();
             $accumulatedPayload->clearCmdMap();
             // Rewrite NEW… entries in the resolver's remote_id→key map to

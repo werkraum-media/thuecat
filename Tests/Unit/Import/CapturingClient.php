@@ -38,13 +38,9 @@ final class CapturingClient implements ImportHttpClient
 {
     public ?RequestInterface $lastRequest = null;
 
-    /** @var list<array{0: int, 1: string, 2: string|null}> */
-    private array $script;
-
     /** @param list<array{0: int, 1: string, 2: string|null}> $script */
-    public function __construct(array $script = [])
+    public function __construct(private array $script = [])
     {
-        $this->script = $script;
     }
 
     public function sendRequest(RequestInterface $request): ResponseInterface

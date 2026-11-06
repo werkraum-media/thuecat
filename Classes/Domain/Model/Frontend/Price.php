@@ -37,7 +37,7 @@ class Price
     /**
      * @return Price
      */
-    public static function createFromArray(array $rawData)
+    public static function createFromArray(array $rawData): self
     {
         return new self(
             $rawData['title'],
