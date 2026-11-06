@@ -145,8 +145,10 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         AddSeeTestAnnotationRector::class,
-        // Emits assignments to a method call, which does not parse.
-        DateTimeAspectInsteadOfGlobalsExecTimeRector::class,
+        // The frontend application rebuilds the date aspect from EXEC_TIME on every request.
+        DateTimeAspectInsteadOfGlobalsExecTimeRector::class => [
+            __DIR__ . '/Tests/Functional/TouristAttraction/TouristAttractionShowTest.php',
+        ],
         // Subclasses declare their own constructors without calling the parent's.
         InjectMethodToConstructorInjectionRector::class,
 
