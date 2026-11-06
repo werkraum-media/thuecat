@@ -12,6 +12,7 @@ phpstan-baseline.neon export-ignore
 phpstan.neon export-ignore
 phpunit.xml.dist export-ignore
 phpunit_dev.xml.dist export-ignore
+rector.php export-ignore
 shell.nix export-ignore
 Tests export-ignore
 xliff-core-1.2-strict.xsd export-ignore
