@@ -25,14 +25,20 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Trail;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TrailRepository;
+use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
+use WerkraumMedia\ThueCat\Frontend\MetaInformation\MetaInformationService;
 
 class TrailController extends AbstractActionController
 {
     /** The record kind this controller serves. */
     protected const RECORD_TABLE = 'tx_thuecat_trail';
 
-    public function __construct(protected TrailRepository $trailRepository)
-    {
+    public function __construct(
+        TeaserRenderer $teaserRenderer,
+        MetaInformationService $metaInformationService,
+        protected TrailRepository $trailRepository,
+    ) {
+        parent::__construct($teaserRenderer, $metaInformationService);
     }
 
     public function initializeView(): void

@@ -42,6 +42,8 @@ use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
 use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
+use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
+use WerkraumMedia\ThueCat\Frontend\MetaInformation\MetaInformationService;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
 use WerkraumMedia\ThueCat\Service\SearchFilterOptionsService;
 use WerkraumMedia\ThueCat\Service\SiblingListPluginContext;
@@ -53,6 +55,8 @@ class TouristAttractionController extends AbstractActionController
     protected const RECORD_TABLE = 'tx_thuecat_tourist_attraction';
 
     public function __construct(
+        protected TeaserRenderer $teaserRenderer,
+        protected MetaInformationService $metaInformationService,
         protected TouristAttractionRepository $touristAttractionRepository,
         protected TownRepository $townRepository,
         protected TouristAttractionDemandFactory $demandFactory,
@@ -64,6 +68,7 @@ class TouristAttractionController extends AbstractActionController
         protected CacheTagCollector $cacheTagCollector,
         protected SearchFilterOptionsService $filterOptionsService,
     ) {
+        parent::__construct($teaserRenderer, $metaInformationService);
     }
 
     public function initializeListAction(): void

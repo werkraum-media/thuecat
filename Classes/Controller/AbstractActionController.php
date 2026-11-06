@@ -30,16 +30,10 @@ use WerkraumMedia\ThueCat\Frontend\MetaInformation\MetaInformationService;
 
 class AbstractActionController extends ActionController
 {
-    protected TeaserRenderer $teaserRenderer;
-    protected MetaInformationService $metaInformationService;
-    public function injectTeaserRenderer(TeaserRenderer $teaserRenderer): void
-    {
-        $this->teaserRenderer = $teaserRenderer;
-    }
-
-    public function injectMetaInformationService(MetaInformationService $metaInformationService): void
-    {
-        $this->metaInformationService = $metaInformationService;
+    public function __construct(
+        protected TeaserRenderer $teaserRenderer,
+        protected MetaInformationService $metaInformationService,
+    ) {
     }
 
     /**

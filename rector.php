@@ -63,7 +63,6 @@ use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFrom
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromDimFetchAccessRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockGetterReturnArrayFromPropertyDocblockVarRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockReturnArrayFromDirectArrayInstanceRector;
-use Ssch\TYPO3Rector\CodeQuality\General\AddErrorCodeToExceptionRector;
 use Ssch\TYPO3Rector\CodeQuality\General\InjectMethodToConstructorInjectionRector;
 use Ssch\TYPO3Rector\CodeQuality\General\RemoveTypo3VersionChecksRector;
 use Ssch\TYPO3Rector\Configuration\Typo3Option;
@@ -149,8 +148,6 @@ return RectorConfig::configure()
         DateTimeAspectInsteadOfGlobalsExecTimeRector::class => [
             __DIR__ . '/Tests/Functional/TouristAttraction/TouristAttractionShowTest.php',
         ],
-        // Subclasses declare their own constructors without calling the parent's.
-        InjectMethodToConstructorInjectionRector::class,
 
         // Disabled until enabled one by one; the count is the files each rule changed.
         // 149 files
