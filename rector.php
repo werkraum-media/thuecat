@@ -43,7 +43,6 @@ use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonA
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
 use Rector\Privatization\Rector\ClassConst\PrivatizeFinalClassConstantRector;
 use Rector\Privatization\Rector\Property\PrivatizeFinalClassPropertyRector;
-use Rector\Renaming\Rector\ClassConstFetch\RenameClassConstFetchRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Renaming\Rector\Name\RenameClassRector;
 use Rector\Symfony\Symfony61\Rector\Class_\CommandConfigureToAttributeRector;
@@ -145,8 +144,6 @@ return RectorConfig::configure()
         RemoveTypo3VersionChecksRector::TARGET_VERSION => 14,
     ])
     ->withSkip([
-        // Exception codes are unix timestamps, not random numbers.
-        AddErrorCodeToExceptionRector::class,
         AddSeeTestAnnotationRector::class,
         // Emits assignments to a method call, which does not parse.
         DateTimeAspectInsteadOfGlobalsExecTimeRector::class,

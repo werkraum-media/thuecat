@@ -205,7 +205,7 @@ class GuzzleClientFaker
             if (!isset(self::$expected[$key]) || self::$expected[$key] === []) {
                 $message = self::unexpectedMessage($request, $key);
                 self::$unexpected[] = $message;
-                throw new UnexpectedFetchException($message);
+                throw new UnexpectedFetchException($message, 9728122114);
             }
 
             $entry = array_shift(self::$expected[$key]);

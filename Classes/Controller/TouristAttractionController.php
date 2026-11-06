@@ -300,7 +300,8 @@ class TouristAttractionController extends AbstractActionController
             $this->redirectToUri($contentObject->typoLink_URL([
                 'parameter' => 't3://page?uid=current',
                 'additionalParams' => '&' . http_build_query([$namespace => $parameter] + $demand->getSearchQuery(), '', '&', PHP_QUERY_RFC3986),
-            ]))
+            ])),
+            5335481593
         );
     }
 
