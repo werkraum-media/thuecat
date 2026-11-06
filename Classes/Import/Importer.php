@@ -230,7 +230,7 @@ class Importer
                 $this->importLogger->recordException('mappingError', $e, $url);
                 continue;
             }
-            $accumulatedPayload->mergeFrom($resolved);
+            $accumulatedPayload->mergeFromOverlaying($resolved, $resolverContext->rerootedKeys);
         }
 
         // Not during resolution: only now is the produced-set complete.

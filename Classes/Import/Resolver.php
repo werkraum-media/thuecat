@@ -1423,8 +1423,13 @@ class Resolver
                 $remoteId = $outerKey;
 
                 if ($context->isUpdated($remoteId)) {
-                    $payload->dropRow($table, $remoteId);
-                    continue;
+                    if (!$this->isRerootable($table, $remoteId, $context, $depth)) {
+                        $payload->dropRow($table, $remoteId);
+                        continue;
+                    }
+                    // Lowered before the drain: its cap checks read this depth.
+                    $context->depthByRemoteId[$remoteId] = 0;
+                    $context->rerootedKeys[$table][$context->remoteIdToKey[$remoteId]] = true;
                 }
 
                 $existingKey = $context->remoteIdToKey[$remoteId] ?? null;
@@ -1503,6 +1508,18 @@ class Resolver
         }
 
         return null;
+    }
+
+    /**
+     * A root staged earlier as a fetched reference lost the references its depth capped. Resolving it again as a
+     * root restores them; one already resolved as a root, or claimed by another table, stays done.
+     */
+    protected function isRerootable(string $table, string $remoteId, ResolverContext $context, int $depth): bool
+    {
+        return $depth === 0
+            && ($context->depthByRemoteId[$remoteId] ?? 0) > 0
+            && ($context->remoteIdToTable[$remoteId] ?? null) === $table
+            && isset($context->remoteIdToKey[$remoteId]);
     }
 
     protected function isAlreadyRekeyed(string $outerKey): bool

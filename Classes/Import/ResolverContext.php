@@ -185,6 +185,15 @@ final class ResolverContext
     public array $depthByRemoteId = [];
 
     /**
+     * table → key → true for records staged as a fetched reference and then resolved as a root of the same run.
+     * Their root row arrives under a key the accumulated payload already holds, so the merge overlays it instead
+     * of keeping the earlier row.
+     *
+     * @var array<string, array<string, true>>
+     */
+    public array $rerootedKeys = [];
+
+    /**
      * remote_id → self::STATUS_*. Default-language status map; lifetime
      * equals one Importer::importConfiguration call across every root and
      * every resolver round. See the STATUS_* constants for state semantics.

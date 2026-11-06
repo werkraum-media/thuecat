@@ -96,6 +96,14 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
 
     protected array $configurationToUseInTestInstance = self::CONFIGURATION;
 
+    protected const MEETING_VENUE_WITH_ROOMS = 'https://thuecat.org/resources/669150457039-gamn';
+
+    protected const MEETING_VENUE_ROOM_FIXTURES = [
+        '380984144868-tjdz.json', '753845544755-tbnr.json', '136686449156-bdnh.json', '541146409582-zdzo.json',
+        '048586132751-gpjo.json', '853365081548-bobo.json', '304596263113-bfyw.json', '703138169290-tagr.json',
+        '586468465716-yyry.json', '179575219331-rdbx.json', '702430338819-hjqc.json', '279480826672-fqxd.json',
+    ];
+
     /**
      * Chains the fixtures actually carry, taken from the published
      * vocabularies, as class => [parents, titles]. `schema:Thing` is present so
@@ -219,6 +227,26 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $file = $this->fixtureGuzzleBase . '/' . ltrim($fixtureRelativePath, '/');
         GuzzleClientFaker::expectFileForUrl($url, $file);
+    }
+
+    /**
+     * The venue with every room it names, trimmed to the rooms: one fetch for the venue and one per room.
+     */
+    protected function expectMeetingVenueWithRooms(): void
+    {
+        $this->expectFetchForUrl(self::MEETING_VENUE_WITH_ROOMS, 'thuecat.org/resources/meeting-venue-with-rooms.json');
+        $this->expectFetch(...self::MEETING_VENUE_ROOM_FIXTURES);
+    }
+
+    /**
+     * @return list<string> in upstream order
+     */
+    protected function meetingVenueRoomRemoteIds(): array
+    {
+        return array_map(
+            static fn (string $fixture): string => 'https://thuecat.org/resources/' . basename($fixture, '.json'),
+            self::MEETING_VENUE_ROOM_FIXTURES
+        );
     }
 
     protected function expectNotFound(string $segment): void

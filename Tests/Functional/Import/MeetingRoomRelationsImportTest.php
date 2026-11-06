@@ -29,12 +29,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 {
-    public const DORINT_ROOM_FIXTURES = [
-        '380984144868-tjdz.json', '753845544755-tbnr.json', '136686449156-bdnh.json', '541146409582-zdzo.json',
-        '048586132751-gpjo.json', '853365081548-bobo.json', '304596263113-bfyw.json', '703138169290-tagr.json',
-        '586468465716-yyry.json', '179575219331-rdbx.json', '702430338819-hjqc.json', '279480826672-fqxd.json',
-    ];
-
     private const TABLE = 'tx_thuecat_meeting_room';
 
     private const VENUE_TABLE = 'tx_thuecat_tourist_attraction';
@@ -45,14 +39,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
     public function venueRelatesItsRoomsInUpstreamOrder(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
-        $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-rooms.json');
-        $this->expectFetch(...self::DORINT_ROOM_FIXTURES);
+        $this->expectMeetingVenueWithRooms();
 
         $this->importConfiguration(2);
 
         self::assertSame(
-            array_map(static fn (string $fixture): string => self::RESOURCES . basename($fixture, '.json'), self::DORINT_ROOM_FIXTURES),
-            $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms')
+            $this->meetingVenueRoomRemoteIds(),
+            $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms')
         );
     }
 
@@ -103,8 +96,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
     public function roomRelatesTheRoomsItNamesAsDelivered(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
-        $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-rooms.json');
-        $this->expectFetch(...self::DORINT_ROOM_FIXTURES);
+        $this->expectMeetingVenueWithRooms();
 
         $this->importConfiguration(2);
 

@@ -406,6 +406,30 @@ class DataHandlerPayload
     }
 
     /**
+     * Like mergeFrom(), except that a dataMap row under one of the given keys overlays the row already there field
+     * by field: the incoming values win, and fields only the existing row holds stay. For a record whose second
+     * staging is the more complete one.
+     *
+     * @param array<string, array<string, true>> $overlayKeys table → key → true
+     */
+    public function mergeFromOverlaying(self $other, array $overlayKeys): void
+    {
+        foreach ($overlayKeys as $table => $keys) {
+            foreach (array_keys($keys) as $key) {
+                if (!isset($this->dataMap[$table][$key], $other->dataMap[$table][$key])) {
+                    continue;
+                }
+                $this->dataMap[$table][$key] = array_replace($this->dataMap[$table][$key], $other->dataMap[$table][$key]);
+                if (isset($other->defaultLanguageKeys[$table][$key])) {
+                    $this->defaultLanguageKeys[$table][$key] = true;
+                }
+            }
+        }
+
+        $this->mergeFrom($other);
+    }
+
+    /**
      * Append rows and transients from another payload. Existing rows (keyed by
      * remote_id at this stage) are left untouched — same @id fetched twice
      * must not clobber whatever is already there. Used by the resolver when a

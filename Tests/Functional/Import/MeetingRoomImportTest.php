@@ -221,8 +221,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
     public function roomNamedByItsVenueAndByAnotherRoomIsStoredOnce(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
-        $this->expectFetchForUrl('https://thuecat.org/resources/669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-rooms.json');
-        $this->expectFetch(...MeetingRoomRelationsImportTest::DORINT_ROOM_FIXTURES);
+        $this->expectMeetingVenueWithRooms();
 
         $this->importConfiguration(2);
 
@@ -234,7 +233,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $uid = $this->fetchUidByRemoteId(self::TABLE, $tripleRoom);
         self::assertContains($uid, $this->fetchMmRelatedUids(
             'tx_thuecat_tourist_attraction',
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/669150457039-gamn'),
+            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::MEETING_VENUE_WITH_ROOMS),
             'meeting_rooms'
         ));
         self::assertContains($uid, $this->fetchMmRelatedUids(

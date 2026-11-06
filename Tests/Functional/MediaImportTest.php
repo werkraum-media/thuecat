@@ -160,6 +160,31 @@ class MediaImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function relatesVenueMediaOnceWhenTheVenueIsSightedAsRelationBeforeItsOwnRoot(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsMediaForMeetingVenueSightedAsRelationFirst.php');
+        $this->expectFetch('attraction-in-meeting-venue-with-media.json');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/554408963544-zftr',
+            'thuecat.org/resources/meeting-venue-with-media.json'
+        );
+        $this->expectFetch('dms_5159186.json');
+        $this->expectFetch('dms_5159216.json');
+        foreach ([5159186, 5159216] as $id) {
+            $this->expectFetchForUrl(
+                'https://cms.thuecat.org/o/adaptive-media/image/' . $id . '/Preview-1280x0/image',
+                'cms.thuecat.org/image.jpg'
+            );
+        }
+
+        $this->importConfiguration(1);
+
+        $fields = array_column($this->fetchChildren('sys_file_reference'), 'fieldname');
+        sort($fields);
+        self::assertSame(['logo', 'subject_of_media'], $fields);
+    }
+
+    #[Test]
     public function relatesMeetingRoomPhotosAndFloorPlan(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsMeetingRoomWithMedia.php');
