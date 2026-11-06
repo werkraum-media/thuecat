@@ -59,10 +59,10 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('eventWithoutDates');
 
-        self::assertNotSame([], $entries, 'A dateless event must be reported.');
+        $this->assertNotSame([], $entries, 'A dateless event must be reported.');
         foreach ($entries as $entry) {
-            self::assertSame('warning', $entry['severity']);
-            self::assertSame('tx_events_domain_model_event', $entry['table_name']);
+            $this->assertSame('warning', $entry['severity']);
+            $this->assertSame('tx_events_domain_model_event', $entry['table_name']);
         }
     }
 
@@ -71,15 +71,12 @@ class EventWithoutDatesTest extends AbstractImportTestCase
     {
         $this->importDatelessEvents();
 
-        self::assertSame(
-            [
-                self::REMOTE_ID_PREFIX . 'excepted',
-                self::REMOTE_ID_PREFIX . 'nosched',
-                self::REMOTE_ID_PREFIX . 'past',
-                self::REMOTE_ID_PREFIX . 'unusable',
-            ],
-            $this->reportedRemoteIds()
-        );
+        $this->assertSame([
+            self::REMOTE_ID_PREFIX . 'excepted',
+            self::REMOTE_ID_PREFIX . 'nosched',
+            self::REMOTE_ID_PREFIX . 'past',
+            self::REMOTE_ID_PREFIX . 'unusable',
+        ], $this->reportedRemoteIds());
     }
 
     #[Test]
@@ -89,8 +86,8 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
         $remoteIds = $this->reportedRemoteIds();
 
-        self::assertCount(4, $remoteIds);
-        self::assertSame($remoteIds, array_values(array_unique($remoteIds)));
+        $this->assertCount(4, $remoteIds);
+        $this->assertSame($remoteIds, array_values(array_unique($remoteIds)));
     }
 
     #[Test]
@@ -104,7 +101,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        self::assertCount(4, $rows, 'Reporting must not stop the record being written.');
+        $this->assertCount(4, $rows, 'Reporting must not stop the record being written.');
     }
 
     #[Test]
@@ -118,7 +115,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('warning', $severity);
+        $this->assertSame('warning', $severity);
     }
 
     #[Test]
@@ -128,14 +125,10 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('eventWithoutDates');
 
-        self::assertNotSame([], $entries);
+        $this->assertNotSame([], $entries);
         foreach ($entries as $entry) {
-            self::assertIsString($entry['message']);
-            self::assertStringContainsString(
-                'Test-Altstadtführung',
-                $entry['message'],
-                'The message must name the event an editor is looking for.'
-            );
+            $this->assertIsString($entry['message']);
+            $this->assertStringContainsString('Test-Altstadtführung', $entry['message'], 'The message must name the event an editor is looking for.');
         }
     }
 
@@ -158,12 +151,8 @@ class EventWithoutDatesTest extends AbstractImportTestCase
             ->count('uid', 'tx_events_domain_model_date', [])
         ;
 
-        self::assertGreaterThan(0, $dateCount, 'The healthy sibling keeps its dates.');
-        self::assertSame(
-            [self::REMOTE_ID_PREFIX . 'nosched'],
-            $this->reportedRemoteIds(),
-            'Only the dateless event is reported.'
-        );
+        $this->assertGreaterThan(0, $dateCount, 'The healthy sibling keeps its dates.');
+        $this->assertSame([self::REMOTE_ID_PREFIX . 'nosched'], $this->reportedRemoteIds(), 'Only the dateless event is reported.');
     }
 
     /** Without the fallback the message would read: Event "" was imported… */
@@ -177,11 +166,11 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('eventWithoutDates');
 
-        self::assertCount(1, $entries);
+        $this->assertCount(1, $entries);
         $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringNotContainsString('""', $message);
-        self::assertStringContainsString(self::REMOTE_ID_PREFIX . 'untitled', $message);
+        $this->assertIsString($message);
+        $this->assertStringNotContainsString('""', $message);
+        $this->assertStringContainsString(self::REMOTE_ID_PREFIX . 'untitled', $message);
     }
 
     /** Type map and class map are separate; the rest passes with only the first. */
@@ -191,7 +180,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
         $this->importDatelessEvents();
 
         $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
-        self::assertInstanceOf(ImportLog::class, $log, 'The run must have written a log.');
+        $this->assertInstanceOf(ImportLog::class, $log, 'The run must have written a log.');
 
         $found = [];
         foreach ($log->getEntries() as $entry) {
@@ -200,7 +189,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
             }
         }
 
-        self::assertCount(4, $found, 'Each dateless event hydrates to EventWithoutDates.');
+        $this->assertCount(4, $found, 'Each dateless event hydrates to EventWithoutDates.');
     }
 
     private function importDatelessEvents(): void
@@ -221,7 +210,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
     {
         $remoteIds = [];
         foreach ($this->getLogEntriesOfType('eventWithoutDates') as $entry) {
-            self::assertIsString($entry['remote_id']);
+            $this->assertIsString($entry['remote_id']);
             $remoteIds[] = $entry['remote_id'];
         }
         sort($remoteIds);

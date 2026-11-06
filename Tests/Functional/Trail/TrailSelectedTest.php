@@ -39,9 +39,9 @@ class TrailSelectedTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringContainsString('Ilmtal-Radweg', $body);
-        self::assertStringNotContainsString('Lutherweg Thüringen', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringNotContainsString('Lutherweg Thüringen', $body);
     }
 
     #[Test]
@@ -60,10 +60,10 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
-        self::assertStringContainsString('Ilmtal-Radweg', $body);
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringNotContainsString('Hidden Trail', $body);
-        self::assertStringNotContainsString('Deleted Trail', $body);
+        $this->assertStringContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringNotContainsString('Hidden Trail', $body);
+        $this->assertStringNotContainsString('Deleted Trail', $body);
     }
 
     #[Test]
@@ -71,8 +71,8 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
-        self::assertStringContainsString('Ilm Valley Cycle Path', $body);
-        self::assertStringNotContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringContainsString('Ilm Valley Cycle Path', $body);
+        $this->assertStringNotContainsString('Ilmtal-Radweg', $body);
     }
 
     #[Test]
@@ -80,8 +80,8 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
-        self::assertStringContainsString('Ilm Valley Cycle Path', $body);
-        self::assertStringNotContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringContainsString('Ilm Valley Cycle Path', $body);
+        $this->assertStringNotContainsString('Goethe-Erlebnisweg', $body);
     }
 
     #[Test]
@@ -89,8 +89,8 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Ruta ciclista del valle del Ilm', $body);
-        self::assertStringNotContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringContainsString('Ruta ciclista del valle del Ilm', $body);
+        $this->assertStringNotContainsString('Ilmtal-Radweg', $body);
     }
 
     #[Test]
@@ -98,7 +98,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
     }
 
     #[Test]

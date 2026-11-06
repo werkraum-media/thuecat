@@ -36,9 +36,9 @@ class AnchorStartingPointsTest extends TestCase
     public function replacesTheMarkerWithTheResolvedParent(): void
     {
         $resolver = $this->createMock(CategoryAnchorResolver::class);
-        $resolver->expects(self::once())
+        $resolver->expects($this->once())
             ->method('resolvePair')
-            ->with(self::isInstanceOf(Site::class), 'tx_thuecat_trail', AnchorKind::Keyword)
+            ->with($this->isInstanceOf(Site::class), 'tx_thuecat_trail', AnchorKind::Keyword)
             ->willReturn(new AnchorPair(140, 360, new AnchorScope('trails')))
         ;
 
@@ -46,16 +46,16 @@ class AnchorStartingPointsTest extends TestCase
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###')
         );
 
-        self::assertSame('140', $this->startingPointsOf($result));
+        $this->assertSame('140', $this->startingPointsOf($result));
     }
 
     #[Test]
     public function resolvesTheCategoryKind(): void
     {
         $resolver = $this->createMock(CategoryAnchorResolver::class);
-        $resolver->expects(self::once())
+        $resolver->expects($this->once())
             ->method('resolvePair')
-            ->with(self::isInstanceOf(Site::class), 'tx_thuecat_tourist_attraction', AnchorKind::Category)
+            ->with($this->isInstanceOf(Site::class), 'tx_thuecat_tourist_attraction', AnchorKind::Category)
             ->willReturn(new AnchorPair(100, 320, new AnchorScope('thuecat')))
         ;
 
@@ -63,59 +63,59 @@ class AnchorStartingPointsTest extends TestCase
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_tourist_attraction:category###')
         );
 
-        self::assertSame('100', $this->startingPointsOf($result));
+        $this->assertSame('100', $this->startingPointsOf($result));
     }
 
     // Core's own treatment of an unset ###SITE### value: the whole tree.
     #[Test]
     public function anUnresolvedAnchorBecomesZero(): void
     {
-        $resolver = self::createStub(CategoryAnchorResolver::class);
+        $resolver = $this->createStub(CategoryAnchorResolver::class);
         $resolver->method('resolvePair')->willReturn(new AnchorPair());
 
         $result = (new AnchorStartingPoints($resolver))->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###')
         );
 
-        self::assertSame('0', $this->startingPointsOf($result));
+        $this->assertSame('0', $this->startingPointsOf($result));
     }
 
     #[Test]
     public function withoutASiteTheMarkerBecomesZero(): void
     {
         $resolver = $this->createMock(CategoryAnchorResolver::class);
-        $resolver->expects(self::never())->method('resolvePair');
+        $resolver->expects($this->never())->method('resolvePair');
 
         $result = (new AnchorStartingPoints($resolver))->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###', new NullSite())
         );
 
-        self::assertSame('0', $this->startingPointsOf($result));
+        $this->assertSame('0', $this->startingPointsOf($result));
     }
 
     #[Test]
     public function leavesCoresSiteMarkerAlone(): void
     {
         $resolver = $this->createMock(CategoryAnchorResolver::class);
-        $resolver->expects(self::never())->method('resolvePair');
+        $resolver->expects($this->never())->method('resolvePair');
 
         $result = (new AnchorStartingPoints($resolver))->addData(
             $this->formData('###SITE:settings.import.thuecat.keywords.parent###')
         );
 
-        self::assertSame('###SITE:settings.import.thuecat.keywords.parent###', $this->startingPointsOf($result));
+        $this->assertSame('###SITE:settings.import.thuecat.keywords.parent###', $this->startingPointsOf($result));
     }
 
     #[Test]
     public function leavesFieldsWithoutStartingPointsAlone(): void
     {
-        $resolver = self::createStub(CategoryAnchorResolver::class);
+        $resolver = $this->createStub(CategoryAnchorResolver::class);
         $input = [
             'site' => new Site('test', 1, []),
             'processedTca' => ['columns' => ['title' => ['config' => ['type' => 'input']]]],
         ];
 
-        self::assertSame($input, (new AnchorStartingPoints($resolver))->addData($input));
+        $this->assertSame($input, (new AnchorStartingPoints($resolver))->addData($input));
     }
 
     /**
@@ -145,7 +145,7 @@ class AnchorStartingPointsTest extends TestCase
     {
         $value = $result;
         foreach (['processedTca', 'columns', 'keywords', 'config', 'treeConfig', 'startingPoints'] as $key) {
-            self::assertIsArray($value);
+            $this->assertIsArray($value);
             $value = $value[$key] ?? null;
         }
 

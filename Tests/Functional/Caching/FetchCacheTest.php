@@ -40,11 +40,7 @@ class FetchCacheTest extends AbstractImportTestCase
     {
         $backend = $this->get(CacheManager::class)->getCache('thuecat_fetchdata')->getBackend();
 
-        self::assertInstanceOf(
-            Typo3DatabaseBackend::class,
-            $backend,
-            'A transient backend dies with the process, so a re-run re-fetches everything.'
-        );
+        $this->assertInstanceOf(Typo3DatabaseBackend::class, $backend, 'A transient backend dies with the process, so a re-run re-fetches everything.');
     }
 
     #[Test]
@@ -57,11 +53,7 @@ class FetchCacheTest extends AbstractImportTestCase
         // Nothing staged: an HTTP request here has no response to consume.
         $this->importConfiguration(1);
 
-        self::assertSame(
-            1,
-            GuzzleClientFaker::countConsumed(),
-            'Two runs, one request: the second was served from the cache.'
-        );
+        $this->assertSame(1, GuzzleClientFaker::countConsumed(), 'Two runs, one request: the second was served from the cache.');
     }
 
     #[Test]
@@ -77,7 +69,7 @@ class FetchCacheTest extends AbstractImportTestCase
             ->count('*', 'cache_thuecat_fetchdata', [])
         ;
 
-        self::assertGreaterThan(0, $rows, 'The entry survives the process only if it is on disk.');
+        $this->assertGreaterThan(0, $rows, 'The entry survives the process only if it is on disk.');
     }
 
     #[Test]
@@ -94,10 +86,10 @@ class FetchCacheTest extends AbstractImportTestCase
             ->fetchOne()
         ;
 
-        self::assertIsNumeric($expires);
+        $this->assertIsNumeric($expires);
         $lifetime = ImportSetting::FetchCacheLifetime->default();
-        self::assertLessThanOrEqual(time() + $lifetime, (int)$expires, 'A stale snapshot must not outlive the lifetime.');
-        self::assertGreaterThan(time(), (int)$expires);
+        $this->assertLessThanOrEqual(time() + $lifetime, (int)$expires, 'A stale snapshot must not outlive the lifetime.');
+        $this->assertGreaterThan(time(), (int)$expires);
     }
 
     #[Test]
@@ -111,11 +103,7 @@ class FetchCacheTest extends AbstractImportTestCase
         $this->importConfiguration(1);
         $this->importConfigurationBypassingCache(1);
 
-        self::assertSame(
-            2,
-            GuzzleClientFaker::countConsumed(),
-            'The bypassing run went to the API despite a warm cache.'
-        );
+        $this->assertSame(2, GuzzleClientFaker::countConsumed(), 'The bypassing run went to the API despite a warm cache.');
     }
 
     #[Test]

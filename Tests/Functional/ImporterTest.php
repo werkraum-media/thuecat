@@ -149,13 +149,10 @@ class ImporterTest extends AbstractImportTestCase
 
         // Shared entity instances: an unfilled bucket keeps the previous
         // record's. Not media-specific.
-        self::assertSame(
-            [
-                'https://thuecat.org/resources/attraction-with-town' => 1,
-                'https://thuecat.org/resources/attraction-without-town' => 0,
-            ],
-            $this->fetchTownByAttractionRemoteId()
-        );
+        $this->assertSame([
+            'https://thuecat.org/resources/attraction-with-town' => 1,
+            'https://thuecat.org/resources/attraction-without-town' => 0,
+        ], $this->fetchTownByAttractionRemoteId());
     }
 
     /**
@@ -264,11 +261,7 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            ['Bürgerpark', 'Park', 'Öffentlicher Park'],
-            $this->fetchCategoryTitlesOf('https://thuecat.org/resources/attraction-sighted-as-relation-first'),
-            'The relation-first attraction lost the categories its @types map to.'
-        );
+        $this->assertSame(['Bürgerpark', 'Park', 'Öffentlicher Park'], $this->fetchCategoryTitlesOf('https://thuecat.org/resources/attraction-sighted-as-relation-first'), 'The relation-first attraction lost the categories its @types map to.');
     }
 
     #[Test]
@@ -337,13 +330,9 @@ class ImporterTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame(
-            'warning',
-            $severity,
-            'A vanished upstream reference is data drift, not an operator error. '
-            . 'Anything at error or above makes the command exit non-zero and any '
-            . 'scheduler treat a healthy import as broken.'
-        );
+        $this->assertSame('warning', $severity, 'A vanished upstream reference is data drift, not an operator error. '
+        . 'Anything at error or above makes the command exit non-zero and any '
+        . 'scheduler treat a healthy import as broken.');
     }
 
     /**
@@ -358,12 +347,8 @@ class ImporterTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame(
-            'error',
-            $severity,
-            'A root that cannot be fetched is an outage. If this ever reports warning, '
-            . 'a scheduler would treat a run that imported nothing as healthy.'
-        );
+        $this->assertSame('error', $severity, 'A root that cannot be fetched is an outage. If this ever reports warning, '
+        . 'a scheduler would treat a run that imported nothing as healthy.');
     }
 
     #[Test]
@@ -390,12 +375,8 @@ class ImporterTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame(
-            'error',
-            $severity,
-            'An Error is our own defect, not upstream drift. Demoting it to a skipped '
-            . 'reference would hide our bugs behind a run that reports success.'
-        );
+        $this->assertSame('error', $severity, 'An Error is our own defect, not upstream drift. Demoting it to a skipped '
+        . 'reference would hide our bugs behind a run that reports success.');
     }
 
     #[Test]
@@ -408,12 +389,8 @@ class ImporterTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame(
-            'error',
-            $severity,
-            'A skipped reference must not mask a real failure: the run carries the '
-            . 'highest severity seen, so the mapping error still decides the exit code.'
-        );
+        $this->assertSame('error', $severity, 'A skipped reference must not mask a real failure: the run carries the '
+        . 'highest severity seen, so the mapping error still decides the exit code.');
     }
 
     /**
@@ -502,15 +479,15 @@ class ImporterTest extends AbstractImportTestCase
 
         $remoteId = 'https://thuecat.org/resources/900000000002-curie::addr::0';
         $default = $this->fetchRowByRemoteId('tx_thuecat_address', $remoteId);
-        self::assertSame('Deutschland', $default['country']);
-        self::assertSame('Thüringen', $default['region']);
+        $this->assertSame('Deutschland', $default['country']);
+        $this->assertSame('Thüringen', $default['region']);
 
         $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_address', $remoteId);
-        self::assertSame('Germany', $translations[1]['country'] ?? null);
-        self::assertSame('Thuringia', $translations[1]['region'] ?? null);
+        $this->assertSame('Germany', $translations[1]['country'] ?? null);
+        $this->assertSame('Thuringia', $translations[1]['region'] ?? null);
         // fr is configured, but the fixture publishes no French content, so the
         // attraction has no French row for an address child to hang under.
-        self::assertArrayNotHasKey(2, $translations);
+        $this->assertArrayNotHasKey(2, $translations);
     }
 
     #[Test]
@@ -523,14 +500,11 @@ class ImporterTest extends AbstractImportTestCase
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000010-orgaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
-        self::assertSame('Benediktsplatz 1', $address['street']);
-        self::assertSame('99084', $address['zip']);
-        self::assertSame('Erfurt', $address['city']);
-        self::assertSame('tx_thuecat_organisation', $address['parenttable']);
-        self::assertEquals(
-            $this->fetchUidByRemoteId('tx_thuecat_organisation', $parentRemoteId),
-            $address['parentid']
-        );
+        $this->assertSame('Benediktsplatz 1', $address['street']);
+        $this->assertSame('99084', $address['zip']);
+        $this->assertSame('Erfurt', $address['city']);
+        $this->assertSame('tx_thuecat_organisation', $address['parenttable']);
+        $this->assertEquals($this->fetchUidByRemoteId('tx_thuecat_organisation', $parentRemoteId), $address['parentid']);
     }
 
     #[Test]
@@ -543,14 +517,11 @@ class ImporterTest extends AbstractImportTestCase
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000011-townaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
-        self::assertSame('Markt 1', $address['street']);
-        self::assertSame('99423', $address['zip']);
-        self::assertSame('Weimar', $address['city']);
-        self::assertSame('tx_thuecat_town', $address['parenttable']);
-        self::assertEquals(
-            $this->fetchUidByRemoteId('tx_thuecat_town', $parentRemoteId),
-            $address['parentid']
-        );
+        $this->assertSame('Markt 1', $address['street']);
+        $this->assertSame('99423', $address['zip']);
+        $this->assertSame('Weimar', $address['city']);
+        $this->assertSame('tx_thuecat_town', $address['parenttable']);
+        $this->assertEquals($this->fetchUidByRemoteId('tx_thuecat_town', $parentRemoteId), $address['parentid']);
     }
 
     #[Test]
@@ -563,14 +534,11 @@ class ImporterTest extends AbstractImportTestCase
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000012-tiaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
-        self::assertSame('Markt 10', $address['street']);
-        self::assertSame('99423', $address['zip']);
-        self::assertSame('Weimar', $address['city']);
-        self::assertSame('tx_thuecat_tourist_information', $address['parenttable']);
-        self::assertEquals(
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_information', $parentRemoteId),
-            $address['parentid']
-        );
+        $this->assertSame('Markt 10', $address['street']);
+        $this->assertSame('99423', $address['zip']);
+        $this->assertSame('Weimar', $address['city']);
+        $this->assertSame('tx_thuecat_tourist_information', $address['parenttable']);
+        $this->assertEquals($this->fetchUidByRemoteId('tx_thuecat_tourist_information', $parentRemoteId), $address['parentid']);
     }
 
     #[Test]
@@ -581,14 +549,11 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertGreaterThan(
-            0,
-            $this->fetchUidByRemoteId(
-                'tx_thuecat_organisation',
-                'https://thuecat.org/resources/900000000013-orgnoaddr'
-            )
-        );
-        self::assertSame(0, $this->countRows('tx_thuecat_address'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId(
+            'tx_thuecat_organisation',
+            'https://thuecat.org/resources/900000000013-orgnoaddr'
+        ));
+        $this->assertSame(0, $this->countRows('tx_thuecat_address'));
     }
 
     /**
@@ -597,7 +562,7 @@ class ImporterTest extends AbstractImportTestCase
     #[Test]
     public function reapsAddressDroppedUpstreamForOrganisation(): void
     {
-        self::markTestSkipped('Inline reaping never sees a parent that staged no child; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Inline reaping never sees a parent that staged no child; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
@@ -605,7 +570,7 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertSame(0, $this->countRows('tx_thuecat_address'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_address'));
     }
 
     /**
@@ -620,7 +585,7 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertSame(1, $this->countRows('tx_thuecat_address'));
+        $this->assertSame(1, $this->countRows('tx_thuecat_address'));
     }
 
     /**
@@ -648,10 +613,7 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertEquals(
-            42,
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/900000000001-goet')['sorting']
-        );
+        $this->assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/900000000001-goet')['sorting']);
     }
 
     #[Test]
@@ -695,16 +657,16 @@ class ImporterTest extends AbstractImportTestCase
 
         /** @var list<array{uid: string, parentid: string, parenttable: string}> $openingHours */
         $openingHours = $this->getAllRecords('tx_thuecat_opening_hours');
-        self::assertNotEmpty($openingHours, 'No opening hours imported for the contained parking facility.');
+        $this->assertNotEmpty($openingHours, 'No opening hours imported for the contained parking facility.');
 
         /** @var list<array{uid: string}> $parkingFacilities */
         $parkingFacilities = $this->getAllRecords('tx_thuecat_parking_facility');
         $parkingUids = array_map(static fn (array $row): string => (string)$row['uid'], $parkingFacilities);
 
         foreach ($openingHours as $row) {
-            self::assertNotSame('0', (string)$row['parentid'], 'Opening hours row ' . $row['uid'] . ' is orphaned (parentid=0).');
-            self::assertSame('tx_thuecat_parking_facility', $row['parenttable'], 'Opening hours row ' . $row['uid'] . ' has the wrong parenttable.');
-            self::assertContains((string)$row['parentid'], $parkingUids, 'Opening hours row ' . $row['uid'] . ' points at a non-existent parking facility.');
+            $this->assertNotSame('0', (string)$row['parentid'], 'Opening hours row ' . $row['uid'] . ' is orphaned (parentid=0).');
+            $this->assertSame('tx_thuecat_parking_facility', $row['parenttable'], 'Opening hours row ' . $row['uid'] . ' has the wrong parenttable.');
+            $this->assertContains((string)$row['parentid'], $parkingUids, 'Opening hours row ' . $row['uid'] . ' points at a non-existent parking facility.');
         }
     }
 
@@ -721,8 +683,8 @@ class ImporterTest extends AbstractImportTestCase
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
         /** @var list<array{accessibility_specification: string}> $records */
         $records = $this->getAllRecords('tx_thuecat_tourist_attraction');
-        self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
-        self::assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
+        $this->assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationGerman.txt', $records[0]['accessibility_specification'] . PHP_EOL);
+        $this->assertStringEqualsFile(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithAccessibilitySpecificationEnglish.txt', $records[1]['accessibility_specification'] . PHP_EOL);
     }
 
     /**
@@ -745,13 +707,9 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertNotSame(
-            '',
-            $this->fetchAccessibilitySpecificationOf(
-                'https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first'
-            ),
-            'The relation-first attraction lost its accessibility specification.'
-        );
+        $this->assertNotSame('', $this->fetchAccessibilitySpecificationOf(
+            'https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first'
+        ), 'The relation-first attraction lost its accessibility specification.');
     }
 
     /**
@@ -778,32 +736,25 @@ class ImporterTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [],
-            $this->getLogEntriesOfType('referenceUnrelatable'),
-            'The POI relates now, and the unmodelled reference never produced a record.'
-        );
-        self::assertCount(0, $this->fetchImportLog()->getUnrelatableReferences());
+        $this->assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'), 'The POI relates now, and the unmodelled reference never produced a record.');
+        $this->assertCount(0, $this->fetchImportLog()->getUnrelatableReferences());
 
         // The park imported as an attraction and landed on contained_in_attraction.
         $parkUid = $this->fetchUidByRemoteId(
             'tx_thuecat_tourist_attraction',
             'https://thuecat.org/resources/a-park-not-a-town'
         );
-        self::assertGreaterThan(0, $parkUid, 'The park imported as an attraction.');
-        self::assertSame(
-            (string)$parkUid,
-            $this->fetchContainedInAttractionOf('https://thuecat.org/resources/attraction-contained-in-a-poi')
-        );
+        $this->assertGreaterThan(0, $parkUid, 'The park imported as an attraction.');
+        $this->assertSame((string)$parkUid, $this->fetchContainedInAttractionOf('https://thuecat.org/resources/attraction-contained-in-a-poi'));
 
-        self::assertSame([], $this->getLogEntriesOfType('mappingError'));
+        $this->assertSame([], $this->getLogEntriesOfType('mappingError'));
     }
 
     private function fetchImportLog(): ImportLog
     {
         $logs = $this->get(ImportLogRepository::class)->findAll();
         $log = $logs->getFirst();
-        self::assertInstanceOf(ImportLog::class, $log);
+        $this->assertInstanceOf(ImportLog::class, $log);
 
         return $log;
     }
@@ -914,11 +865,8 @@ class ImporterTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('mappingError');
 
-        self::assertCount(1, $entries);
-        self::assertSame(
-            'https://thuecat.org/resources/unfetchable-reference',
-            $entries[0]['remote_id']
-        );
+        $this->assertCount(1, $entries);
+        $this->assertSame('https://thuecat.org/resources/unfetchable-reference', $entries[0]['remote_id']);
     }
 
     #[Test]
@@ -933,19 +881,16 @@ class ImporterTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('mappingError');
 
-        self::assertSame('error', $severity);
-        self::assertSame('error', $entries[0]['severity']);
-        self::assertNotSame('', $entries[0]['message']);
+        $this->assertSame('error', $severity);
+        $this->assertSame('error', $entries[0]['severity']);
+        $this->assertNotSame('', $entries[0]['message']);
 
-        self::assertIsString($entries[0]['context']);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertArrayHasKey('file', $context);
-        self::assertArrayHasKey('line', $context);
-        self::assertSame(
-            'https://thuecat.org/resources/unfetchable-reference',
-            $context['url'] ?? null
-        );
+        $this->assertIsArray($context);
+        $this->assertArrayHasKey('file', $context);
+        $this->assertArrayHasKey('line', $context);
+        $this->assertSame('https://thuecat.org/resources/unfetchable-reference', $context['url'] ?? null);
     }
 
     #[Test]
@@ -959,11 +904,8 @@ class ImporterTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('fetchingError');
 
-        self::assertCount(1, $entries);
-        self::assertSame(
-            'https://thuecat.org/resources/018132452787-ngbe',
-            $entries[0]['remote_id']
-        );
+        $this->assertCount(1, $entries);
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $entries[0]['remote_id']);
     }
 
     /**
@@ -983,18 +925,15 @@ class ImporterTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('fetchingError');
 
-        self::assertCount(1, $entries);
-        self::assertSame(
-            'https://thuecat.org/resources/018132452787-ngbe',
-            $entries[0]['remote_id']
-        );
-        self::assertSame('error', $entries[0]['severity']);
+        $this->assertCount(1, $entries);
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $entries[0]['remote_id']);
+        $this->assertSame('error', $entries[0]['severity']);
 
-        self::assertIsString($entries[0]['context']);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame(3, $context['attempts'] ?? null, 'Attempt count is recorded.');
-        self::assertSame('retryExhausted', $context['cause'] ?? null, 'Cause is machine-readable.');
+        $this->assertIsArray($context);
+        $this->assertSame(3, $context['attempts'] ?? null, 'Attempt count is recorded.');
+        $this->assertSame('retryExhausted', $context['cause'] ?? null, 'Cause is machine-readable.');
     }
 
     /**

@@ -38,16 +38,13 @@ final class ParserTest extends AbstractFunctionalTestCase
         $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
-        self::assertArrayHasKey('tx_thuecat_organisation', $result);
-        self::assertArrayHasKey(
-            'https://thuecat.org/resources/018132452787-ngbe',
-            $result['tx_thuecat_organisation']
-        );
+        $this->assertArrayHasKey('tx_thuecat_organisation', $result);
+        $this->assertArrayHasKey('https://thuecat.org/resources/018132452787-ngbe', $result['tx_thuecat_organisation']);
 
         $row = $result['tx_thuecat_organisation']['https://thuecat.org/resources/018132452787-ngbe'];
 
-        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
-        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
+        $this->assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
     }
 
     #[Test]
@@ -64,25 +61,19 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $data = $payload->getDataMap();
 
-        self::assertSame(['tx_thuecat_organisation', 'tx_thuecat_address'], array_keys($data));
-        self::assertSame(
-            ['https://thuecat.org/resources/018132452787-ngbe'],
-            array_keys($data['tx_thuecat_organisation'])
-        );
+        $this->assertSame(['tx_thuecat_organisation', 'tx_thuecat_address'], array_keys($data));
+        $this->assertSame(['https://thuecat.org/resources/018132452787-ngbe'], array_keys($data['tx_thuecat_organisation']));
 
         $row = $data['tx_thuecat_organisation']['https://thuecat.org/resources/018132452787-ngbe'];
-        self::assertSame(
-            ['remote_id', 'title', 'description'],
-            array_keys($row)
-        );
-        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
-        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
-        self::assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
-        self::assertStringEndsWith('4 Auszubildende', (string)$row['description']);
+        $this->assertSame(['remote_id', 'title', 'description'], array_keys($row));
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
+        $this->assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        $this->assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
+        $this->assertStringEndsWith('4 Auszubildende', (string)$row['description']);
 
         // Organisation has no outgoing relations of its own (reverse-inline
         // only), so the transients bucket must stay untouched.
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -99,35 +90,26 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $data = $payload->getDataMap();
 
-        self::assertSame(['tx_thuecat_town', 'tx_thuecat_address'], array_keys($data));
-        self::assertSame(
-            ['https://thuecat.org/resources/043064193523-jcyt'],
-            array_keys($data['tx_thuecat_town'])
-        );
+        $this->assertSame(['tx_thuecat_town', 'tx_thuecat_address'], array_keys($data));
+        $this->assertSame(['https://thuecat.org/resources/043064193523-jcyt'], array_keys($data['tx_thuecat_town']));
 
         $row = $data['tx_thuecat_town']['https://thuecat.org/resources/043064193523-jcyt'];
-        self::assertSame(
-            ['remote_id', 'title', 'description'],
-            array_keys($row)
-        );
-        self::assertSame('https://thuecat.org/resources/043064193523-jcyt', $row['remote_id']);
-        self::assertSame('Erfurt', $row['title']);
-        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge', (string)$row['description']);
+        $this->assertSame(['remote_id', 'title', 'description'], array_keys($row));
+        $this->assertSame('https://thuecat.org/resources/043064193523-jcyt', $row['remote_id']);
+        $this->assertSame('Erfurt', $row['title']);
+        $this->assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge', (string)$row['description']);
 
         // managed_by is a real TCA column but stays out of the row — the
         // resolver fills it after looking up the referenced @id.
-        self::assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
 
-        self::assertSame(
-            [
-                'tx_thuecat_town' => [
-                    'https://thuecat.org/resources/043064193523-jcyt' => [
-                        'managedBy' => ['https://thuecat.org/resources/018132452787-ngbe'],
-                    ],
+        $this->assertSame([
+            'tx_thuecat_town' => [
+                'https://thuecat.org/resources/043064193523-jcyt' => [
+                    'managedBy' => ['https://thuecat.org/resources/018132452787-ngbe'],
                 ],
             ],
-            $payload->getTransients()
-        );
+        ], $payload->getTransients());
     }
 
     #[Test]
@@ -148,121 +130,109 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         // Opening hours and addresses are inline child rows in their own
         // tables, not columns on the attraction.
-        self::assertSame(
-            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address'],
-            array_keys($data)
-        );
-        self::assertSame(
-            ['https://thuecat.org/resources/165868194223-zmqf'],
-            array_keys($data['tx_thuecat_tourist_attraction'])
-        );
+        $this->assertSame(['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address'], array_keys($data));
+        $this->assertSame(['https://thuecat.org/resources/165868194223-zmqf'], array_keys($data['tx_thuecat_tourist_attraction']));
 
         $row = $data['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
 
         // Full shape golden: catches regressions like the priority leak that
         // the Organisation/Town tests found.
-        self::assertSame(
-            [
-                'remote_id',
-                'type',
-                'title',
-                'description',
-                'slogan',
-                'start_of_construction',
-                'sanitation',
-                'other_service',
-                'museum_service',
-                'architectural_style',
-                'traffic_infrastructure',
-                'payment_accepted',
-                'digital_offer',
-                'photography',
-                'pets_allowed',
-                'is_accessible_for_free',
-                'public_access',
-                'available_languages',
-                'distance_to_public_transport',
-                'offers',
-                'url',
-            ],
-            array_keys($row)
-        );
+        $this->assertSame([
+            'remote_id',
+            'type',
+            'title',
+            'description',
+            'slogan',
+            'start_of_construction',
+            'sanitation',
+            'other_service',
+            'museum_service',
+            'architectural_style',
+            'traffic_infrastructure',
+            'payment_accepted',
+            'digital_offer',
+            'photography',
+            'pets_allowed',
+            'is_accessible_for_free',
+            'public_access',
+            'available_languages',
+            'distance_to_public_transport',
+            'offers',
+            'url',
+        ], array_keys($row));
 
-        self::assertSame('https://thuecat.org/resources/165868194223-zmqf', $row['remote_id']);
-        self::assertSame('attraction', $row['type']);
-        self::assertSame('Alte Synagoge', $row['title']);
-        self::assertSame('Beispiel Beschreibung', $row['description']);
-        self::assertSame('http://www.alte-synagoge.erfurt.de', $row['url']);
-        self::assertSame('Highlight', $row['slogan']);
-        self::assertSame('11. Jh.', $row['start_of_construction']);
-        self::assertSame('false', $row['is_accessible_for_free']);
-        self::assertSame('true', $row['public_access']);
-        self::assertSame('German,English,French', $row['available_languages']);
-        self::assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame('https://thuecat.org/resources/165868194223-zmqf', $row['remote_id']);
+        $this->assertSame('attraction', $row['type']);
+        $this->assertSame('Alte Synagoge', $row['title']);
+        $this->assertSame('Beispiel Beschreibung', $row['description']);
+        $this->assertSame('http://www.alte-synagoge.erfurt.de', $row['url']);
+        $this->assertSame('Highlight', $row['slogan']);
+        $this->assertSame('11. Jh.', $row['start_of_construction']);
+        $this->assertSame('false', $row['is_accessible_for_free']);
+        $this->assertSame('true', $row['public_access']);
+        $this->assertSame('German,English,French', $row['available_languages']);
+        $this->assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
 
         // Resolver-owned columns stay off the row entirely. Same contract as
         // the Organisation/Town tests, plus the attraction-specific ones.
-        self::assertArrayNotHasKey('town', $row);
-        self::assertArrayNotHasKey('managed_by', $row);
-        self::assertArrayNotHasKey('parking_facility_near_by', $row);
-        self::assertArrayNotHasKey('accessibility_specification', $row);
-        self::assertArrayNotHasKey('media', $row);
+        $this->assertArrayNotHasKey('town', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('parking_facility_near_by', $row);
+        $this->assertArrayNotHasKey('accessibility_specification', $row);
+        $this->assertArrayNotHasKey('media', $row);
 
         // Opening hours: one inline child row per weekday (the fixture's single
         // spec carries 6 days). Unit tests assert the full per-row shape.
         // parenttable/parentid are filled later by DataHandler, not at parse time.
         $openingHours = $data['tx_thuecat_opening_hours'];
-        self::assertCount(6, $openingHours);
+        $this->assertCount(6, $openingHours);
         $firstRow = reset($openingHours);
-        self::assertSame('10:00:00', $firstRow['opens']);
-        self::assertSame('regular', $firstRow['specification_type']);
+        $this->assertSame('10:00:00', $firstRow['opens']);
+        $this->assertSame('regular', $firstRow['specification_type']);
 
         // JSON blobs: we only spot-check shape here; the unit tests assert
         // the full decoded structure for offers.
 
         /** @var list<array<string, mixed>> $offers */
         $offers = json_decode((string)$row['offers'], true, 512, JSON_THROW_ON_ERROR);
-        self::assertCount(2, $offers);
-        self::assertSame(['GuidedTourOffer'], $offers[0]['types']);
-        self::assertSame(['EntryOffer'], $offers[1]['types']);
+        $this->assertCount(2, $offers);
+        $this->assertSame(['GuidedTourOffer'], $offers[0]['types']);
+        $this->assertSame(['EntryOffer'], $offers[1]['types']);
 
         $addresses = $data['tx_thuecat_address'];
-        self::assertCount(1, $addresses);
+        $this->assertCount(1, $addresses);
         $address = reset($addresses);
-        self::assertSame('Waagegasse 8', $address['street']);
-        self::assertSame('99084', $address['zip']);
-        self::assertSame('Erfurt', $address['city']);
+        $this->assertSame('Waagegasse 8', $address['street']);
+        $this->assertSame('99084', $address['zip']);
+        $this->assertSame('Erfurt', $address['city']);
 
         // Transients: every bucket the attraction records. media preserves the
         // duplicate (schema:image + schema:photo pointing at the same dms_*
         // resource) — deliberate, see TouristAttractionEntity::configure().
-        self::assertSame(
-            [
-                'tx_thuecat_tourist_attraction' => [
-                    'https://thuecat.org/resources/165868194223-zmqf' => [
-                        'containedInPlace' => [
-                            'https://thuecat.org/resources/043064193523-jcyt',
-                            'https://thuecat.org/resources/573211638937-gmqb',
-                            'https://thuecat.org/resources/497839263245-edbm',
-                        ],
-                        'managedBy' => [
-                            'https://thuecat.org/resources/018132452787-ngbe',
-                        ],
-                        'accessibilitySpecification' => [
-                            'https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa',
-                        ],
-                        'media' => [
-                            ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5099196'],
-                            ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5099196'],
-                        ],
+        $this->assertSame([
+            'tx_thuecat_tourist_attraction' => [
+                'https://thuecat.org/resources/165868194223-zmqf' => [
+                    'containedInPlace' => [
+                        'https://thuecat.org/resources/043064193523-jcyt',
+                        'https://thuecat.org/resources/573211638937-gmqb',
+                        'https://thuecat.org/resources/497839263245-edbm',
+                    ],
+                    'managedBy' => [
+                        'https://thuecat.org/resources/018132452787-ngbe',
+                    ],
+                    'accessibilitySpecification' => [
+                        'https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa',
+                    ],
+                    'media' => [
+                        ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5099196'],
+                        ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5099196'],
                     ],
                 ],
-                // Inline opening-hours children carry no transient: the Resolver
-                // wires them to the parent from the datamap (parent remote_id is
-                // the child remote_id prefix), so the parser emits no OH bucket.
             ],
-            $payload->getTransients()
-        );
+            // Inline opening-hours children carry no transient: the Resolver
+            // wires them to the parent from the datamap (parent remote_id is
+            // the child remote_id prefix), so the parser emits no OH bucket.
+        ], $payload->getTransients());
     }
 
     #[Test]
@@ -274,16 +244,13 @@ final class ParserTest extends AbstractFunctionalTestCase
         $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
-        self::assertArrayHasKey('tx_thuecat_tourist_information', $result);
-        self::assertArrayHasKey(
-            'https://thuecat.org/resources/333039283321-xxwg',
-            $result['tx_thuecat_tourist_information']
-        );
+        $this->assertArrayHasKey('tx_thuecat_tourist_information', $result);
+        $this->assertArrayHasKey('https://thuecat.org/resources/333039283321-xxwg', $result['tx_thuecat_tourist_information']);
 
         $row = $result['tx_thuecat_tourist_information']['https://thuecat.org/resources/333039283321-xxwg'];
 
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
-        self::assertSame('Erfurt Tourist Information', $row['title']);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
+        $this->assertSame('Erfurt Tourist Information', $row['title']);
     }
 
     #[Test]
@@ -304,11 +271,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         foreach ($payload->getDataMap() as $table => $rows) {
             foreach ($rows as $remoteId => $row) {
                 foreach ($row as $column => $value) {
-                    self::assertStringNotContainsString(
-                        $needle,
-                        (string)$value,
-                        "REF: placeholder leaked into {$table}[{$remoteId}][{$column}]"
-                    );
+                    $this->assertStringNotContainsString($needle, (string)$value, "REF: placeholder leaked into {$table}[{$remoteId}][{$column}]");
                 }
             }
         }
@@ -318,11 +281,7 @@ final class ParserTest extends AbstractFunctionalTestCase
                 foreach ($buckets as $key => $ids) {
                     foreach ($ids as $id) {
                         $reference = is_array($id) ? $id['id'] : $id;
-                        self::assertStringNotContainsString(
-                            $needle,
-                            $reference,
-                            "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]"
-                        );
+                        $this->assertStringNotContainsString($needle, $reference, "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]");
                     }
                 }
             }
@@ -347,25 +306,22 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         // Default row holds the German strings.
         $row = $payload->getDataMap()['tx_thuecat_organisation']['https://thuecat.org/resources/organisation-translated'];
-        self::assertSame('Tourismus GmbH', $row['title']);
-        self::assertSame('Wir vermarkten die Region.', $row['description']);
+        $this->assertSame('Tourismus GmbH', $row['title']);
+        $this->assertSame('Wir vermarkten die Region.', $row['description']);
 
-        self::assertSame(
-            [
-                'tx_thuecat_organisation' => [
-                    'https://thuecat.org/resources/organisation-translated' => [
-                        1 => [
-                            'title' => 'Tourism Ltd.',
-                            'description' => 'We market the region.',
-                        ],
-                        2 => [
-                            'title' => 'Tourisme SARL',
-                        ],
+        $this->assertSame([
+            'tx_thuecat_organisation' => [
+                'https://thuecat.org/resources/organisation-translated' => [
+                    1 => [
+                        'title' => 'Tourism Ltd.',
+                        'description' => 'We market the region.',
+                    ],
+                    2 => [
+                        'title' => 'Tourisme SARL',
                     ],
                 ],
             ],
-            $payload->getTranslations()
-        );
+        ], $payload->getTranslations());
     }
 
     #[Test]
@@ -382,7 +338,7 @@ final class ParserTest extends AbstractFunctionalTestCase
             'fr' => 2,
         ]);
 
-        self::assertSame([], $subject->getDataHandlerPayload()->getTranslations());
+        $this->assertSame([], $subject->getDataHandlerPayload()->getTranslations());
     }
 
     #[Test]
@@ -409,87 +365,69 @@ final class ParserTest extends AbstractFunctionalTestCase
         // primary payload, and transients stay as the single-language test
         // already locked them down.
         $row = $payload->getDataMap()['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
-        self::assertSame('Alte Synagoge', $row['title']);
-        self::assertSame('Beispiel Beschreibung', $row['description']);
-        self::assertSame('11. Jh.', $row['start_of_construction']);
+        $this->assertSame('Alte Synagoge', $row['title']);
+        $this->assertSame('Beispiel Beschreibung', $row['description']);
+        $this->assertSame('11. Jh.', $row['start_of_construction']);
 
         $translations = $payload->getTranslations();
 
         // The address joins the bucket because its country and region are
         // untagged CURIEs: the resolver reads their label per language, so they
         // travel into every language.
-        self::assertSame(
-            ['tx_thuecat_tourist_attraction', 'tx_thuecat_address'],
-            array_keys($translations)
-        );
-        self::assertSame(
-            ['https://thuecat.org/resources/165868194223-zmqf'],
-            array_keys($translations['tx_thuecat_tourist_attraction'])
-        );
+        $this->assertSame(['tx_thuecat_tourist_attraction', 'tx_thuecat_address'], array_keys($translations));
+        $this->assertSame(['https://thuecat.org/resources/165868194223-zmqf'], array_keys($translations['tx_thuecat_tourist_attraction']));
 
         $perLanguage = $translations['tx_thuecat_tourist_attraction']['https://thuecat.org/resources/165868194223-zmqf'];
-        self::assertSame([1, 2], array_keys($perLanguage));
+        $this->assertSame([1, 2], array_keys($perLanguage));
 
         // English: title, description, start_of_construction.
-        self::assertSame(
-            [
-                'title',
-                'description',
-                'start_of_construction',
-                'slogan',
-                'sanitation',
-                'other_service',
-                'museum_service',
-                'architectural_style',
-                'traffic_infrastructure',
-                'payment_accepted',
-                'digital_offer',
-                'photography',
-                'available_languages',
-                'distance_to_public_transport',
-                'offers',
-            ],
-            array_keys($perLanguage[1])
-        );
-        self::assertSame('Old Synagogue', $perLanguage[1]['title']);
-        self::assertSame('11th century', $perLanguage[1]['start_of_construction']);
-        self::assertStringStartsWith(
-            'The Old Synagogue is one of very few preserved medieval synagogues',
-            (string)$perLanguage[1]['description']
-        );
+        $this->assertSame([
+            'title',
+            'description',
+            'start_of_construction',
+            'slogan',
+            'sanitation',
+            'other_service',
+            'museum_service',
+            'architectural_style',
+            'traffic_infrastructure',
+            'payment_accepted',
+            'digital_offer',
+            'photography',
+            'available_languages',
+            'distance_to_public_transport',
+            'offers',
+        ], array_keys($perLanguage[1]));
+        $this->assertSame('Old Synagogue', $perLanguage[1]['title']);
+        $this->assertSame('11th century', $perLanguage[1]['start_of_construction']);
+        $this->assertStringStartsWith('The Old Synagogue is one of very few preserved medieval synagogues', (string)$perLanguage[1]['description']);
 
         // French: title and description only — start_of_construction has no
         // fr entry in the JSON-LD, so it must not appear in the bucket.
-        self::assertSame(
-            ['title', 'description', 'slogan',
-                'sanitation',
-                'other_service',
-                'museum_service',
-                'architectural_style',
-                'traffic_infrastructure',
-                'payment_accepted',
-                'digital_offer',
-                'photography',
-                'available_languages',
-                'distance_to_public_transport',
-                'offers', ],
-            array_keys($perLanguage[2])
-        );
-        self::assertSame('La vieille synagogue', $perLanguage[2]['title']);
-        self::assertStringStartsWith(
-            'La vieille synagogue (datant des années 1100)',
-            (string)$perLanguage[2]['description']
-        );
+        $this->assertSame(['title', 'description', 'slogan',
+            'sanitation',
+            'other_service',
+            'museum_service',
+            'architectural_style',
+            'traffic_infrastructure',
+            'payment_accepted',
+            'digital_offer',
+            'photography',
+            'available_languages',
+            'distance_to_public_transport',
+            'offers', ], array_keys($perLanguage[2]));
+        $this->assertSame('La vieille synagogue', $perLanguage[2]['title']);
+        $this->assertStringStartsWith('La vieille synagogue (datant des années 1100)', (string)$perLanguage[2]['description']);
 
         // Resolver-owned columns and bookkeeping must stay out of the bucket
         // — DataHandler will set sys_language_uid / l18n_parent / pid /
         // remote_id when consuming the array.
         foreach ($perLanguage as $fields) {
-            self::assertArrayNotHasKey('sys_language_uid', $fields);
-            self::assertArrayNotHasKey('l18n_parent', $fields);
-            self::assertArrayNotHasKey('l10n_source', $fields);
-            self::assertArrayNotHasKey('pid', $fields);
-            self::assertArrayNotHasKey('remote_id', $fields);
+            $this->assertArrayNotHasKey('sys_language_uid', $fields);
+            $this->assertArrayNotHasKey('l18n_parent', $fields);
+            $this->assertArrayNotHasKey('l10n_source', $fields);
+            $this->assertArrayNotHasKey('pid', $fields);
+            $this->assertArrayNotHasKey('remote_id', $fields);
         }
 
         // The address carries only the two CURIEs into each language: its
@@ -498,12 +436,9 @@ final class ParserTest extends AbstractFunctionalTestCase
         $addressPerLanguage = $translations['tx_thuecat_address'][
             'https://thuecat.org/resources/165868194223-zmqf::addr::0'
         ];
-        self::assertSame([1, 2], array_keys($addressPerLanguage));
+        $this->assertSame([1, 2], array_keys($addressPerLanguage));
         foreach ($addressPerLanguage as $fields) {
-            self::assertSame(
-                ['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany'],
-                $fields
-            );
+            $this->assertSame(['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany'], $fields);
         }
     }
 
@@ -518,7 +453,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0), 'de');
 
-        self::assertSame([], $subject->getDataHandlerPayload()->getTranslations());
+        $this->assertSame([], $subject->getDataHandlerPayload()->getTranslations());
     }
 
     #[Test]
@@ -532,7 +467,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         foreach (array_keys($result) as $table) {
             foreach (array_keys($result[$table]) as $remoteId) {
-                self::assertStringNotContainsString('genid-', (string)$remoteId);
+                $this->assertStringNotContainsString('genid-', (string)$remoteId);
             }
         }
     }
@@ -553,11 +488,8 @@ final class ParserTest extends AbstractFunctionalTestCase
             static fn (string $table): bool => !str_starts_with($table, 'tx_thuecat_trail_')
         );
 
-        self::assertSame(['tx_thuecat_trail'], array_values($tables));
-        self::assertArrayHasKey(
-            'https://thuecat.org/resources/e_52469786-oatour',
-            $result['tx_thuecat_trail']
-        );
+        $this->assertSame(['tx_thuecat_trail'], array_values($tables));
+        $this->assertArrayHasKey('https://thuecat.org/resources/e_52469786-oatour', $result['tx_thuecat_trail']);
     }
 
     #[Test]
@@ -569,7 +501,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
-        self::assertArrayNotHasKey('tx_thuecat_trail', $result);
+        $this->assertArrayNotHasKey('tx_thuecat_trail', $result);
     }
 
     /**
@@ -619,7 +551,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         $subject->parse($graph, new ParserContext(0));
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
-        self::assertSame($expectedType, $result['tx_thuecat_tourist_attraction'][$remoteId]['type'] ?? null);
+        $this->assertSame($expectedType, $result['tx_thuecat_tourist_attraction'][$remoteId]['type'] ?? null);
     }
 
     private function graphFromFixture(string $filename): array

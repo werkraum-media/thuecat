@@ -45,8 +45,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringNotContainsString('Keine Daten vorhanden.', $body);
     }
 
     #[Test]
@@ -56,12 +56,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringNotContainsString(
-            'Ilmtal-Radweg',
-            $body,
-            'The query parameter must not override the editor-configured record.'
-        );
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringNotContainsString('Ilmtal-Radweg', $body, 'The query parameter must not override the editor-configured record.');
     }
 
     #[Test]
@@ -71,8 +67,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringNotContainsString('Keine Daten vorhanden.', $body);
     }
 
     #[Test]
@@ -82,8 +78,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringNotContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringNotContainsString('Keine Daten vorhanden.', $body);
     }
 
     #[Test]
@@ -93,7 +89,7 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringContainsString('Ilmtal-Radweg', $body);
     }
 
     #[Test]
@@ -103,8 +99,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
     }
 
     #[Test]
@@ -115,14 +111,10 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Keine Daten vorhanden.', $body);
-        self::assertStringNotContainsString(
-            'Ilmtal-Radweg',
-            $body,
-            'An unresolvable pick must not fall back to the query parameter.'
-        );
-        self::assertStringNotContainsString('Versteckter Weg', $body);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringNotContainsString('Ilmtal-Radweg', $body, 'An unresolvable pick must not fall back to the query parameter.');
+        $this->assertStringNotContainsString('Versteckter Weg', $body);
     }
 
     #[Test]
@@ -132,8 +124,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
     }
 
     #[Test]
@@ -141,8 +133,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
-        self::assertStringContainsString('Goethe experience trail', $body);
-        self::assertStringNotContainsString('No data to show.', $body);
+        $this->assertStringContainsString('Goethe experience trail', $body);
+        $this->assertStringNotContainsString('No data to show.', $body);
     }
 
     #[Test]
@@ -152,8 +144,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Keine Daten vorhanden.', (string)$result->getBody());
     }
 
     #[Test]
@@ -163,8 +155,8 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Keine Daten vorhanden.', $body);
-        self::assertStringNotContainsString('Ilmtal-Radweg', $body);
+        $this->assertStringContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringNotContainsString('Ilmtal-Radweg', $body);
     }
 
     #[Test]
@@ -174,6 +166,6 @@ class TrailPreselectionTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
+        $this->assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 }

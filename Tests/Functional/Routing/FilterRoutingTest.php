@@ -42,8 +42,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['towns' => ['1']]);
 
-        self::assertStringContainsString('href="/liste/ort/erfurt/2"', $body);
-        self::assertStringNotContainsString('tx_thuecat_touristattractionlist', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt/2"', $body);
+        $this->assertStringNotContainsString('tx_thuecat_touristattractionlist', $body);
     }
 
     #[Test]
@@ -51,8 +51,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste/ort/weimar');
 
-        self::assertStringContainsString('Goethehaus Weimar', $body);
-        self::assertStringNotContainsString('Erfurt', $body);
+        $this->assertStringContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Erfurt', $body);
     }
 
     #[Test]
@@ -60,7 +60,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['towns' => ['2', '1']]);
 
-        self::assertStringContainsString('href="/liste/ort/erfurt+weimar/2"', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt+weimar/2"', $body);
     }
 
     // Four attractions in Erfurt, one in Weimar, one per page.
@@ -69,8 +69,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste/ort/erfurt+weimar/4');
 
-        self::assertStringContainsString('href="/liste/ort/erfurt+weimar/5"', $body);
-        self::assertStringNotContainsString('href="/liste/ort/erfurt+weimar/6"', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt+weimar/5"', $body);
+        $this->assertStringNotContainsString('href="/liste/ort/erfurt+weimar/6"', $body);
     }
 
     #[Test]
@@ -78,9 +78,9 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste/ort/erfurt/kategorie/kirche');
 
-        self::assertStringContainsString('Domberg Erfurt', $body);
-        self::assertStringContainsString('href="/liste/ort/erfurt/kategorie/kirche/2"', $body);
-        self::assertStringNotContainsString('museum', $body);
+        $this->assertStringContainsString('Domberg Erfurt', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt/kategorie/kirche/2"', $body);
+        $this->assertStringNotContainsString('museum', $body);
     }
 
     #[Test]
@@ -88,7 +88,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['categories' => ['11']], 1);
 
-        self::assertStringContainsString('href="/en/list/category/church/2"', $body);
+        $this->assertStringContainsString('href="/en/list/category/church/2"', $body);
     }
 
     #[Test]
@@ -96,8 +96,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/en/list/category/church');
 
-        self::assertStringContainsString('Erfurt Cathedral', $body);
-        self::assertStringNotContainsString('Stadtmuseum', $body);
+        $this->assertStringContainsString('Erfurt Cathedral', $body);
+        $this->assertStringNotContainsString('Stadtmuseum', $body);
     }
 
     #[Test]
@@ -105,7 +105,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $request = new InternalRequest('http://localhost/liste/ort/gibt-es-nicht');
 
-        self::assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
+        $this->assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
     }
 
     #[Test]
@@ -113,8 +113,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(12, ['categories' => ['10']]);
 
-        self::assertStringContainsString('href="/erfurt-liste/kategorie/museum/2"', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('href="/erfurt-liste/kategorie/museum/2"', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -122,7 +122,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['petsAllowed' => '1']);
 
-        self::assertStringContainsString('href="/liste/haustiere-erlaubt/2"', $body);
+        $this->assertStringContainsString('href="/liste/haustiere-erlaubt/2"', $body);
     }
 
     #[Test]
@@ -130,8 +130,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste/haustiere-erlaubt');
 
-        self::assertStringContainsString('href="/liste/haustiere-erlaubt/3"', $body);
-        self::assertStringNotContainsString('href="/liste/haustiere-erlaubt/4"', $body);
+        $this->assertStringContainsString('href="/liste/haustiere-erlaubt/3"', $body);
+        $this->assertStringNotContainsString('href="/liste/haustiere-erlaubt/4"', $body);
     }
 
     #[Test]
@@ -139,7 +139,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['petsAllowed' => '1'], 1);
 
-        self::assertStringContainsString('href="/en/list/pets-allowed/2"', $body);
+        $this->assertStringContainsString('href="/en/list/pets-allowed/2"', $body);
     }
 
     #[Test]
@@ -152,10 +152,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
             'petsAllowed' => '1',
         ]);
 
-        self::assertStringContainsString(
-            'href="/liste/ort/erfurt/haustiere-erlaubt/eintritt-frei/oeffentlich-zugaenglich/2"',
-            $body
-        );
+        $this->assertStringContainsString('href="/liste/ort/erfurt/haustiere-erlaubt/eintritt-frei/oeffentlich-zugaenglich/2"', $body);
     }
 
     #[Test]
@@ -163,8 +160,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->filteredListBody(10, ['towns' => ['1']]);
 
-        self::assertStringContainsString('href="/liste/ort/erfurt/2"', $body);
-        self::assertStringNotContainsString('haustiere-erlaubt', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt/2"', $body);
+        $this->assertStringNotContainsString('haustiere-erlaubt', $body);
     }
 
     #[Test]
@@ -179,8 +176,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
 
         $response = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(303, $response->getStatusCode());
-        self::assertStringEndsWith('/liste/ort/erfurt?q=Domberg%20Erfurt', $response->getHeaderLine('location'));
+        $this->assertSame(303, $response->getStatusCode());
+        $this->assertStringEndsWith('/liste/ort/erfurt?q=Domberg%20Erfurt', $response->getHeaderLine('location'));
     }
 
     #[Test]
@@ -188,8 +185,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste?q=Domberg');
 
-        self::assertStringContainsString('Domberg Erfurt', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Domberg Erfurt', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -197,8 +194,8 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->routedBody('/liste/ort/erfurt?q=Erfurt');
 
-        self::assertStringContainsString('href="/liste/ort/erfurt/2?q=Erfurt"', $body);
-        self::assertStringNotContainsString('tx_thuecat_touristattractionlist', $body);
+        $this->assertStringContainsString('href="/liste/ort/erfurt/2?q=Erfurt"', $body);
+        $this->assertStringNotContainsString('tx_thuecat_touristattractionlist', $body);
     }
 
     /**
@@ -218,7 +215,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     protected function routedBody(string $path): string
     {
         $response = $this->executeFrontendSubRequest(new InternalRequest('http://localhost' . $path));
-        self::assertSame(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
 
         return (string)$response->getBody();
     }

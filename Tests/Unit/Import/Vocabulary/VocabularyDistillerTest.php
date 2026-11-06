@@ -50,7 +50,7 @@ class VocabularyDistillerTest extends TestCase
      */
     private function assertDistilled(array $classes, string $id): VocabularyClass
     {
-        self::assertArrayHasKey($id, $classes);
+        $this->assertArrayHasKey($id, $classes);
 
         return $classes[$id];
     }
@@ -67,10 +67,7 @@ class VocabularyDistillerTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            ['schema:CivicStructure'],
-            $this->assertDistilled($classes, 'schema:Museum')->parents
-        );
+        $this->assertSame(['schema:CivicStructure'], $this->assertDistilled($classes, 'schema:Museum')->parents);
     }
 
     #[Test]
@@ -87,10 +84,7 @@ class VocabularyDistillerTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            ['schema:CivicStructure', 'schema:Museum'],
-            $this->assertDistilled($classes, 'thuecat:Archive')->parents
-        );
+        $this->assertSame(['schema:CivicStructure', 'schema:Museum'], $this->assertDistilled($classes, 'thuecat:Archive')->parents);
     }
 
     #[Test]
@@ -100,7 +94,7 @@ class VocabularyDistillerTest extends TestCase
             ['@id' => 'schema:Thing', '@type' => 'rdfs:Class', 'rdfs:label' => 'Thing'],
         ]);
 
-        self::assertSame([], $this->assertDistilled($classes, 'schema:Thing')->parents);
+        $this->assertSame([], $this->assertDistilled($classes, 'schema:Thing')->parents);
     }
 
     #[Test]
@@ -120,9 +114,9 @@ class VocabularyDistillerTest extends TestCase
 
         $class = $this->assertDistilled($classes, 'thuecat:BrassMusic');
 
-        self::assertSame('Blasmusik', $class->label('de'));
-        self::assertSame('Brass music', $class->label('en'));
-        self::assertSame('Muzyka dęta', $class->label('pl'));
+        $this->assertSame('Blasmusik', $class->label('de'));
+        $this->assertSame('Brass music', $class->label('en'));
+        $this->assertSame('Muzyka dęta', $class->label('pl'));
     }
 
     #[Test]
@@ -136,10 +130,7 @@ class VocabularyDistillerTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            'Kuchnia alpejska',
-            $this->assertDistilled($classes, 'thuecat:AlpineCuisineEnumMem')->label('pl')
-        );
+        $this->assertSame('Kuchnia alpejska', $this->assertDistilled($classes, 'thuecat:AlpineCuisineEnumMem')->label('pl'));
     }
 
     #[Test]
@@ -151,8 +142,8 @@ class VocabularyDistillerTest extends TestCase
 
         $class = $this->assertDistilled($classes, 'schema:Bridge');
 
-        self::assertSame('Bridge', $class->label(VocabularyClass::UNTAGGED));
-        self::assertNull($class->label('de'), 'An untagged label must not be claimed for a language.');
+        $this->assertSame('Bridge', $class->label(VocabularyClass::UNTAGGED));
+        $this->assertNull($class->label('de'), 'An untagged label must not be claimed for a language.');
     }
 
     #[Test]
@@ -166,7 +157,7 @@ class VocabularyDistillerTest extends TestCase
             ],
         ]);
 
-        self::assertSame([], $this->assertDistilled($classes, 'thuecat:Nameless')->labels);
+        $this->assertSame([], $this->assertDistilled($classes, 'thuecat:Nameless')->labels);
     }
 
     #[Test]
@@ -180,7 +171,7 @@ class VocabularyDistillerTest extends TestCase
             ],
         ]);
 
-        self::assertArrayHasKey('schema:ExerciseAction', $classes);
+        $this->assertArrayHasKey('schema:ExerciseAction', $classes);
     }
 
     #[Test]
@@ -200,7 +191,7 @@ class VocabularyDistillerTest extends TestCase
             ['@id' => 'schema:Museum', '@type' => 'rdfs:Class', 'rdfs:label' => 'Museum'],
         ]);
 
-        self::assertSame(['schema:Museum'], array_keys($classes));
+        $this->assertSame(['schema:Museum'], array_keys($classes));
     }
 
     #[Test]
@@ -210,7 +201,7 @@ class VocabularyDistillerTest extends TestCase
             ['@id' => 'schema:Museum', '@type' => 'rdfs:Class', 'rdfs:label' => 'Museum'],
         ]);
 
-        self::assertArrayHasKey('schema:Museum', $classes);
+        $this->assertArrayHasKey('schema:Museum', $classes);
     }
 
     #[Test]
@@ -221,6 +212,6 @@ class VocabularyDistillerTest extends TestCase
             ['@id' => 'schema:Museum', '@type' => 'rdfs:Class', 'rdfs:label' => 'Museum'],
         ]);
 
-        self::assertSame(['schema:Museum'], array_keys($classes));
+        $this->assertSame(['schema:Museum'], array_keys($classes));
     }
 }

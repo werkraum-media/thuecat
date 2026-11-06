@@ -35,25 +35,19 @@ final class ImportClientFactoryTest extends TestCase
     #[Test]
     public function logsDeniedRequestsInDevelopment(): void
     {
-        self::assertInstanceOf(
-            DeniedRequestLoggingClient::class,
-            $this->factory()->build(new ClientBudget(), new ApplicationContext('Development'))
-        );
+        $this->assertInstanceOf(DeniedRequestLoggingClient::class, $this->factory()->build(new ClientBudget(), new ApplicationContext('Development')));
     }
 
     #[Test]
     public function logsNoDeniedRequestsInProduction(): void
     {
-        self::assertNotInstanceOf(
-            DeniedRequestLoggingClient::class,
-            $this->factory()->build(new ClientBudget(), new ApplicationContext('Production'))
-        );
+        $this->assertNotInstanceOf(DeniedRequestLoggingClient::class, $this->factory()->build(new ClientBudget(), new ApplicationContext('Production')));
     }
 
     protected function factory(): ImportClientFactory
     {
         return new ImportClientFactory(
-            self::createStub(ImportSettings::class),
+            $this->createStub(ImportSettings::class),
             new RetryTally(),
             new CapturingLogger(),
             new RequestLedger()

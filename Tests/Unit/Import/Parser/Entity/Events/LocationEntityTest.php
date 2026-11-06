@@ -32,7 +32,7 @@ class LocationEntityTest extends TestCase
     {
         $entity = new LocationEntity();
 
-        self::assertSame('tx_events_domain_model_location', $entity::TABLE);
+        $this->assertSame('tx_events_domain_model_location', $entity::TABLE);
     }
 
     /**
@@ -77,7 +77,7 @@ class LocationEntityTest extends TestCase
             0
         );
 
-        self::assertSame($model->getGlobalId(), $entity->getGlobalId());
+        $this->assertSame($model->getGlobalId(), $entity->getGlobalId());
     }
 
     /**
@@ -88,10 +88,7 @@ class LocationEntityTest extends TestCase
     #[Test]
     public function curieCountryHashesAsTheLiteral(): void
     {
-        self::assertSame(
-            $this->globalIdForCountry(['@language' => 'de', '@value' => 'Deutschland']),
-            $this->globalIdForCountry(['@type' => 'thuecat:AddressCountry', '@value' => 'thuecat:Germany'])
-        );
+        $this->assertSame($this->globalIdForCountry(['@language' => 'de', '@value' => 'Deutschland']), $this->globalIdForCountry(['@type' => 'thuecat:AddressCountry', '@value' => 'thuecat:Germany']));
     }
 
     /**
@@ -104,7 +101,7 @@ class LocationEntityTest extends TestCase
         $entity = new LocationEntity();
         $entity->configure([], 'de');
 
-        self::assertFalse($entity->isValid());
+        $this->assertFalse($entity->isValid());
     }
 
     #[Test]
@@ -113,7 +110,7 @@ class LocationEntityTest extends TestCase
         $entity = new LocationEntity();
         $entity->configure(['schema:name' => ['@language' => 'de', '@value' => 'Messe Erfurt']], 'de');
 
-        self::assertTrue($entity->isValid());
+        $this->assertTrue($entity->isValid());
     }
 
     /** @param array<string, mixed> $country */

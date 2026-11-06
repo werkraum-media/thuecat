@@ -48,9 +48,9 @@ class ImportProgressTest extends AbstractImportTestCase
         $listener = $this->importWithListener(1);
 
         $fetches = $listener->ofPhase(ImportPhase::Fetch);
-        self::assertCount(1, $fetches, 'One event per configured root URL.');
-        self::assertSame(1, $fetches[0]->current);
-        self::assertSame(1, $fetches[0]->total, 'Total is the configured URL count.');
+        $this->assertCount(1, $fetches, 'One event per configured root URL.');
+        $this->assertSame(1, $fetches[0]->current);
+        $this->assertSame(1, $fetches[0]->total, 'Total is the configured URL count.');
     }
 
     #[Test]
@@ -62,10 +62,10 @@ class ImportProgressTest extends AbstractImportTestCase
         $listener = $this->importWithListener(1);
 
         $passes = $listener->ofPhase(ImportPhase::Persist);
-        self::assertNotSame([], $passes, 'Persisting emits at least one event.');
+        $this->assertNotSame([], $passes, 'Persisting emits at least one event.');
         foreach ($passes as $index => $pass) {
-            self::assertSame($index + 1, $pass->current, 'Passes are numbered from one.');
-            self::assertNotNull($pass->total, 'The pass budget is knowable up front.');
+            $this->assertSame($index + 1, $pass->current, 'Passes are numbered from one.');
+            $this->assertNotNull($pass->total, 'The pass budget is knowable up front.');
         }
     }
 
@@ -80,10 +80,10 @@ class ImportProgressTest extends AbstractImportTestCase
         $listener = $this->importWithListener(1);
 
         $resolves = $listener->ofPhase(ImportPhase::Resolve);
-        self::assertNotSame([], $resolves, 'Nested fetching reports progress.');
+        $this->assertNotSame([], $resolves, 'Nested fetching reports progress.');
         foreach ($resolves as $resolve) {
-            self::assertNull($resolve->total, 'No total is knowable while resolving.');
-            self::assertNotSame('', $resolve->label, 'The resource being fetched is named.');
+            $this->assertNull($resolve->total, 'No total is knowable while resolving.');
+            $this->assertNotSame('', $resolve->label, 'The resource being fetched is named.');
         }
     }
 
@@ -97,17 +97,17 @@ class ImportProgressTest extends AbstractImportTestCase
 
         $order = $listener->phaseOrder();
 
-        self::assertSame('fetch', $order[0] ?? null, 'A run starts by fetching.');
-        self::assertSame('finish', end($order) ?: null, 'A run ends by finishing.');
-        self::assertContains('persist', $order);
-        self::assertContains('log', $order);
+        $this->assertSame('fetch', $order[0] ?? null, 'A run starts by fetching.');
+        $this->assertSame('finish', end($order) ?: null, 'A run ends by finishing.');
+        $this->assertContains('persist', $order);
+        $this->assertContains('log', $order);
     }
 
     private function importWithListener(int $uid): RecordingProgressListener
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         $listener = new RecordingProgressListener();
         $this->get(Importer::class)->importConfiguration($configuration, $listener);

@@ -42,14 +42,14 @@ class TrailRelationImportTest extends AbstractImportTestCase
         $term = $this->fetchCategoryByRemoteId(
             'keyword:https://thuecat.org/resources/887654277691-eatw'
         );
-        self::assertSame('Fotospot', $term['title']);
-        self::assertSame(30, $term['pid'], 'Created at the configured keywordStoragePid.');
+        $this->assertSame('Fotospot', $term['title']);
+        $this->assertSame(30, $term['pid'], 'Created at the configured keywordStoragePid.');
 
         $set = $this->fetchCategoryByRemoteId(
             'keyword:https://thuecat.org/resources/192875159827-xfqk'
         );
-        self::assertSame(200, $set['parent'], 'The term set hangs off the thuecat keyword anchor.');
-        self::assertSame($set['uid'], $term['parent'], 'The term hangs off its set.');
+        $this->assertSame(200, $set['parent'], 'The term set hangs off the thuecat keyword anchor.');
+        $this->assertSame($set['uid'], $term['parent'], 'The term hangs off its set.');
     }
 
     #[Test]
@@ -61,13 +61,9 @@ class TrailRelationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
-        self::assertGreaterThan(0, $trailUid, 'The trail must be imported.');
+        $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
 
-        self::assertSame(
-            6,
-            $this->countKeywordRelations($trailUid),
-            'Every keyword the trail carries must relate to it.'
-        );
+        $this->assertSame(6, $this->countKeywordRelations($trailUid), 'Every keyword the trail carries must relate to it.');
     }
 
     #[Test]
@@ -79,9 +75,9 @@ class TrailRelationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
-        self::assertGreaterThan(0, $trailUid, 'Absent relations must not block the import.');
-        self::assertSame(0, $this->countKeywordRelations($trailUid));
-        self::assertSame(0, $this->fetchTrailManagedBy());
+        $this->assertGreaterThan(0, $trailUid, 'Absent relations must not block the import.');
+        $this->assertSame(0, $this->countKeywordRelations($trailUid));
+        $this->assertSame(0, $this->fetchTrailManagedBy());
     }
 
     #[Test]
@@ -97,13 +93,9 @@ class TrailRelationImportTest extends AbstractImportTestCase
             'tx_thuecat_organisation',
             'https://thuecat.org/resources/018132452787-ngbe'
         );
-        self::assertGreaterThan(0, $organisationUid, 'The organisation must be imported.');
+        $this->assertGreaterThan(0, $organisationUid, 'The organisation must be imported.');
 
-        self::assertSame(
-            $organisationUid,
-            $this->fetchTrailManagedBy(),
-            'contentResponsible must resolve to the real organisation row.'
-        );
+        $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'contentResponsible must resolve to the real organisation row.');
     }
 
     private function expectKeywordFetches(): void
@@ -170,7 +162,7 @@ class TrailRelationImportTest extends AbstractImportTestCase
             ->fetchAssociative()
         ;
 
-        self::assertIsArray($row, 'No category for "' . $remoteId . '".');
+        $this->assertIsArray($row, 'No category for "' . $remoteId . '".');
 
         return [
             'uid' => is_numeric($row['uid'] ?? null) ? (int)$row['uid'] : 0,

@@ -59,8 +59,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::SUCCESS, $exitCode);
-        self::assertStringContainsString('completed', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringContainsString('completed', $tester->getDisplay());
     }
 
     /** A recovered retry raises severity to `notice`; that must not reach the exit code. */
@@ -78,8 +78,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::SUCCESS, $exitCode);
-        self::assertStringContainsString('completed', $tester->getDisplay());
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringContainsString('completed', $tester->getDisplay());
     }
 
     #[Test]
@@ -98,18 +98,10 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
 
         $display = $tester->getDisplay();
 
-        self::assertSame(
-            Command::SUCCESS,
-            $exitCode,
-            'Skipped references must not fail the run.'
-        );
-        self::assertStringContainsString(
-            'completed with warnings',
-            $display,
-            'Severity carries no cause, so the message must not claim the warning '
-            . 'came from a skipped reference — it holds for any warning source.'
-        );
-        self::assertStringContainsString('import log', $display);
+        $this->assertSame(Command::SUCCESS, $exitCode, 'Skipped references must not fail the run.');
+        $this->assertStringContainsString('completed with warnings', $display, 'Severity carries no cause, so the message must not claim the warning '
+        . 'came from a skipped reference — it holds for any warning source.');
+        $this->assertStringContainsString('import log', $display);
     }
 
     #[Test]
@@ -125,8 +117,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::FAILURE, $exitCode);
-        self::assertStringContainsString('failed', $tester->getDisplay());
+        $this->assertSame(Command::FAILURE, $exitCode);
+        $this->assertStringContainsString('failed', $tester->getDisplay());
     }
 
     #[Test]
@@ -144,9 +136,9 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
 
         $display = $tester->getDisplay();
 
-        self::assertStringContainsString('Fetching', $display, 'The run names the phase it is in.');
-        self::assertStringContainsString('Persisting', $display);
-        self::assertStringContainsString('completed', $display, 'The closing line still prints.');
+        $this->assertStringContainsString('Fetching', $display, 'The run names the phase it is in.');
+        $this->assertStringContainsString('Persisting', $display);
+        $this->assertStringContainsString('completed', $display, 'The closing line still prints.');
     }
 
     /**
@@ -169,13 +161,9 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
 
         $display = $tester->getDisplay();
 
-        self::assertStringNotContainsString(
-            'https://thuecat.org/resources/018132452787-ngbe',
-            $display,
-            'Individual fetched resources are not listed when output is not a terminal.'
-        );
-        self::assertStringNotContainsString("\r", $display, 'No ANSI redraw without a terminal.');
-        self::assertStringContainsString('Fetching', $display, 'Phase transitions still print.');
+        $this->assertStringNotContainsString('https://thuecat.org/resources/018132452787-ngbe', $display, 'Individual fetched resources are not listed when output is not a terminal.');
+        $this->assertStringNotContainsString("\r", $display, 'No ANSI redraw without a terminal.');
+        $this->assertStringContainsString('Fetching', $display, 'Phase transitions still print.');
     }
 
     /**
@@ -201,16 +189,8 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
 
         $display = $tester->getDisplay();
 
-        self::assertSame(
-            1,
-            substr_count($display, 'Fetching configured URLs'),
-            'The fetch phase is announced once, not once per URL.'
-        );
-        self::assertSame(
-            1,
-            substr_count($display, 'Resolving references and media'),
-            'The resolve phase is announced once, however often it is re-entered.'
-        );
+        $this->assertSame(1, substr_count($display, 'Fetching configured URLs'), 'The fetch phase is announced once, not once per URL.');
+        $this->assertSame(1, substr_count($display, 'Resolving references and media'), 'The resolve phase is announced once, however often it is re-entered.');
     }
 
     #[Test]
@@ -226,7 +206,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exitCode = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::FAILURE, $exitCode, 'A failed run still exits non-zero.');
+        $this->assertSame(Command::FAILURE, $exitCode, 'A failed run still exits non-zero.');
     }
 
     #[Test]

@@ -33,7 +33,7 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     {
         $entity = new ParkingFacilityEntity();
 
-        self::assertSame('tx_thuecat_parking_facility', $entity::TABLE);
+        $this->assertSame('tx_thuecat_parking_facility', $entity::TABLE);
     }
 
     #[Test]
@@ -41,26 +41,26 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
     {
         $entity = new ParkingFacilityEntity();
 
-        self::assertContains('schema:ParkingFacility', $entity->handlesTypes());
+        $this->assertContains('schema:ParkingFacility', $entity->handlesTypes());
     }
 
     #[Test]
     public function extractsFlatValuesFromFixture(): void
     {
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $row = $entity->toArray();
 
-        self::assertSame('https://thuecat.org/resources/396420044896-drzt', $row['remote_id']);
-        self::assertSame('Parkhaus Domplatz', $row['title']);
-        self::assertStringStartsWith('Das Parkhaus Domplatz', (string)$row['description']);
-        self::assertSame('ZeroSanitation', $row['sanitation']);
-        self::assertSame('ZeroOtherServiceEnumMem', $row['other_service']);
-        self::assertSame('ElectricVehicleCarChargingStationEnumMem', $row['traffic_infrastructure']);
-        self::assertSame('240:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame('https://thuecat.org/resources/396420044896-drzt', $row['remote_id']);
+        $this->assertSame('Parkhaus Domplatz', $row['title']);
+        $this->assertStringStartsWith('Das Parkhaus Domplatz', (string)$row['description']);
+        $this->assertSame('ZeroSanitation', $row['sanitation']);
+        $this->assertSame('ZeroOtherServiceEnumMem', $row['other_service']);
+        $this->assertSame('ElectricVehicleCarChargingStationEnumMem', $row['traffic_infrastructure']);
+        $this->assertSame('240:MTR:CityBus', $row['distance_to_public_transport']);
     }
 
     #[Test]
@@ -73,63 +73,63 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // The parser must not surface those columns even when the fixture
         // happens to carry equivalent JSON-LD (e.g. schema:url, schema:petsAllowed).
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $row = $entity->toArray();
 
-        self::assertArrayNotHasKey('url', $row);
-        self::assertArrayNotHasKey('slogan', $row);
-        self::assertArrayNotHasKey('pets_allowed', $row);
-        self::assertArrayNotHasKey('public_access', $row);
-        self::assertArrayNotHasKey('is_accessible_for_free', $row);
-        self::assertArrayNotHasKey('museum_service', $row);
-        self::assertArrayNotHasKey('architectural_style', $row);
-        self::assertArrayNotHasKey('digital_offer', $row);
-        self::assertArrayNotHasKey('photography', $row);
-        self::assertArrayNotHasKey('available_languages', $row);
-        self::assertArrayNotHasKey('start_of_construction', $row);
-        self::assertArrayNotHasKey('accessibility_specification', $row);
+        $this->assertArrayNotHasKey('url', $row);
+        $this->assertArrayNotHasKey('slogan', $row);
+        $this->assertArrayNotHasKey('pets_allowed', $row);
+        $this->assertArrayNotHasKey('public_access', $row);
+        $this->assertArrayNotHasKey('is_accessible_for_free', $row);
+        $this->assertArrayNotHasKey('museum_service', $row);
+        $this->assertArrayNotHasKey('architectural_style', $row);
+        $this->assertArrayNotHasKey('digital_offer', $row);
+        $this->assertArrayNotHasKey('photography', $row);
+        $this->assertArrayNotHasKey('available_languages', $row);
+        $this->assertArrayNotHasKey('start_of_construction', $row);
+        $this->assertArrayNotHasKey('accessibility_specification', $row);
     }
 
     #[Test]
     public function rowOmitsResolverOwnedColumns(): void
     {
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $row = $entity->toArray();
 
-        self::assertArrayNotHasKey('town', $row);
-        self::assertArrayNotHasKey('managed_by', $row);
-        self::assertArrayNotHasKey('media', $row);
+        $this->assertArrayNotHasKey('town', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('media', $row);
     }
 
     #[Test]
     public function createsChildAddressEntity(): void
     {
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         // The legacy blob column is never written any more; the address is a
         // staged child row.
-        self::assertArrayNotHasKey('address', $entity->toArray());
+        $this->assertArrayNotHasKey('address', $entity->toArray());
 
         $addresses = $this->childRowsOf($entity, AddressEntity::TABLE);
-        self::assertCount(1, $addresses);
+        $this->assertCount(1, $addresses);
         $address = $addresses[0];
 
-        self::assertSame('https://thuecat.org/resources/396420044896-drzt::addr::0', $address['remote_id']);
-        self::assertSame('Bechtheimer Str. 1', $address['street']);
-        self::assertSame('99084', $address['zip']);
-        self::assertSame('Erfurt', $address['city']);
-        self::assertSame('+49 361 5640', $address['phone']);
-        self::assertSame('50.977648905044', $address['latitude']);
+        $this->assertSame('https://thuecat.org/resources/396420044896-drzt::addr::0', $address['remote_id']);
+        $this->assertSame('Bechtheimer Str. 1', $address['street']);
+        $this->assertSame('99084', $address['zip']);
+        $this->assertSame('Erfurt', $address['city']);
+        $this->assertSame('+49 361 5640', $address['phone']);
+        $this->assertSame('50.977648905044', $address['latitude']);
     }
 
     #[Test]
@@ -139,17 +139,14 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // {"@id"} object (not a list). recordTransient must normalise both
         // shapes into the same list<string> bucket.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('containedInPlace', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/508431710173-wwne'],
-            $transients['containedInPlace']
-        );
+        $this->assertArrayHasKey('containedInPlace', $transients);
+        $this->assertSame(['https://thuecat.org/resources/508431710173-wwne'], $transients['containedInPlace']);
     }
 
     #[Test]
@@ -159,17 +156,14 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // encode the same relation as thuecat:contentResponsible. The bucket
         // key is 'managedBy' in both cases so the resolver treats them the same.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('managedBy', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/018132452787-ngbe'],
-            $transients['managedBy']
-        );
+        $this->assertArrayHasKey('managedBy', $transients);
+        $this->assertSame(['https://thuecat.org/resources/018132452787-ngbe'], $transients['managedBy']);
     }
 
     #[Test]
@@ -180,14 +174,14 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // resolver can set mainImage:true on the schema:photo emission and
         // mainImage:false on the schema:image one.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('media', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('media', $transients);
+        $this->assertSame([
             ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_6486108'],
             ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_6486108'],
         ], $transients['media']);
@@ -200,11 +194,11 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // the fixture carries no thuecat:accessibilitySpecification node.
         // Bucket must stay absent (not present-but-empty).
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        self::assertArrayNotHasKey('accessibilitySpecification', $entity->getTransients());
+        $this->assertArrayNotHasKey('accessibilitySpecification', $entity->getTransients());
     }
 
     #[Test]
@@ -213,11 +207,11 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // parkingFacilityNearBy is an attraction-side relation. The parking
         // facility is the target, not the source — no reverse bucket here.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        self::assertArrayNotHasKey('parkingFacilityNearBy', $entity->getTransients());
+        $this->assertArrayNotHasKey('parkingFacilityNearBy', $entity->getTransients());
     }
 
     #[Test]
@@ -226,21 +220,21 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // Two specs: 07–22 for Mon–Sat (6 days) and 09–22 for Sun + PublicHolidays
         // (2 days). Multi-day specs expand to one child row per day → 8 rows.
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
-        self::assertCount(8, $rows);
+        $this->assertCount(8, $rows);
         $byDay = array_column($rows, null, 'day_of_week');
-        self::assertSame('07:00:00', $byDay['Monday']['opens']);
-        self::assertSame('22:00:00', $byDay['Monday']['closes']);
+        $this->assertSame('07:00:00', $byDay['Monday']['opens']);
+        $this->assertSame('22:00:00', $byDay['Monday']['closes']);
         // Parent linkage rides in the remote_id prefix (the Resolver reads it
         // back to wire the inline FK); the child carries no parenttable itself.
-        self::assertStringContainsString('::oh::', (string)$byDay['Monday']['remote_id']);
-        self::assertSame('09:00:00', $byDay['Sunday']['opens']);
-        self::assertArrayHasKey('PublicHolidays', $byDay);
+        $this->assertStringContainsString('::oh::', (string)$byDay['Monday']['remote_id']);
+        $this->assertSame('09:00:00', $byDay['Sunday']['opens']);
+        $this->assertArrayHasKey('PublicHolidays', $byDay);
     }
 
     #[Test]
@@ -249,24 +243,24 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
         // Parkhaus offers carry no schema:name, so title / description fall
         // back to '' (matches the legacy golden shape for language mismatches).
         $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new ParkingFacilityEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
-        self::assertCount(4, $decoded);
+        $this->assertCount(4, $decoded);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame(['ParkingFee'], $decoded[0]['types']);
+        $this->assertSame(['ParkingFee'], $decoded[0]['types']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('', $decoded[0]['title']);
+        $this->assertSame('', $decoded[0]['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertCount(1, $decoded[0]['prices']);
+        $this->assertCount(1, $decoded[0]['prices']);
         // Whole-number prices json_encode as "35" (no decimal) and decode
         // back as int — same round-trip behaviour the attraction test relies
         // on for price 8.
 
-        self::assertSame(
+        $this->assertSame(
             [
                 'title' => '',
                 'description' => '',
@@ -288,6 +282,6 @@ class ParkingFacilityEntityTest extends AbstractImportTestCase
             '@type' => ['schema:ParkingFacility'],
         ], 'de', new ParserContext(0));
 
-        self::assertSame([], $entity->getTransients());
+        $this->assertSame([], $entity->getTransients());
     }
 }

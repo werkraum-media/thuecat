@@ -43,8 +43,8 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->importAttractionOnly();
 
         $trail = $this->fetchTrail();
-        self::assertSame(self::TRAIL_ID, $trail['remote_id']);
-        self::assertSame('Goethe-Erlebnisweg', $trail['title']);
+        $this->assertSame(self::TRAIL_ID, $trail['remote_id']);
+        $this->assertSame('Goethe-Erlebnisweg', $trail['title']);
     }
 
     #[Test]
@@ -53,7 +53,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->importAttractionOnly();
 
         // contentResponsible sits behind the depth check, so it is dropped.
-        self::assertSame(0, $this->fetchTrailManagedBy());
+        $this->assertSame(0, $this->fetchTrailManagedBy());
     }
 
     #[Test]
@@ -61,8 +61,8 @@ class TrailDepthCapTest extends AbstractImportTestCase
     {
         $this->importAttractionOnly();
 
-        self::assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'));
-        self::assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
+        $this->assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'));
+        $this->assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
     }
 
     #[Test]
@@ -70,11 +70,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
     {
         $this->importAttractionOnly();
 
-        self::assertSame(
-            6,
-            $this->countKeywordRelations($this->fetchTrailUid()),
-            'A trail reached as a reference must still get its keywords.'
-        );
+        $this->assertSame(6, $this->countKeywordRelations($this->fetchTrailUid()), 'A trail reached as a reference must still get its keywords.');
     }
 
     #[Test]
@@ -82,18 +78,14 @@ class TrailDepthCapTest extends AbstractImportTestCase
     {
         $this->importAttractionOnly();
 
-        self::assertCount(
-            1,
-            $this->fetchChildren('tx_thuecat_trail_location'),
-            'The start location is manufactured during parse(), not fetched.'
-        );
+        $this->assertCount(1, $this->fetchChildren('tx_thuecat_trail_location'), 'The start location is manufactured during parse(), not fetched.');
     }
 
     #[Test]
     public function promotingTheTrailToARootGainsTheRelationsTheCapLeftUnset(): void
     {
         $this->importAttractionOnly();
-        self::assertSame(0, $this->fetchTrailManagedBy(), 'Precondition: the cap left it unset.');
+        $this->assertSame(0, $this->fetchTrailManagedBy(), 'Precondition: the cap left it unset.');
 
         // Same trail, now a root of its own, so depth 0 and no cap.
         // the first run cached the trail, so a plain import would
@@ -103,12 +95,8 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->importConfigurationBypassingCache(2);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION_ID);
-        self::assertGreaterThan(0, $organisationUid, 'The organisation must now be imported.');
-        self::assertSame(
-            $organisationUid,
-            $this->fetchTrailManagedBy(),
-            'A later root import must fill in what the cap skipped.'
-        );
+        $this->assertGreaterThan(0, $organisationUid, 'The organisation must now be imported.');
+        $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'A later root import must fill in what the cap skipped.');
     }
 
     #[Test]
@@ -121,7 +109,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION_ID);
-        self::assertSame($organisationUid, $this->fetchTrailManagedBy(), 'Precondition: the relation is set.');
+        $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'Precondition: the relation is set.');
 
         // ... then re-enter it as the attraction's reference, where the cap
         // applies. Skipping a relation must not mean clearing it.
@@ -133,11 +121,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->expectKeywordFetches();
         $this->importConfigurationBypassingCache(1);
 
-        self::assertSame(
-            $organisationUid,
-            $this->fetchTrailManagedBy(),
-            'managed_by must survive the trail being re-imported as a reference.'
-        );
+        $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'managed_by must survive the trail being re-imported as a reference.');
     }
 
     #[Test]
@@ -149,7 +133,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $trailUid = $this->fetchTrailUid();
-        self::assertSame(6, $this->countKeywordRelations($trailUid), 'Precondition: keywords are set.');
+        $this->assertSame(6, $this->countKeywordRelations($trailUid), 'Precondition: keywords are set.');
 
         $this->expectFetchForUrl(
             self::ATTRACTION_ID,
@@ -159,11 +143,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
         $this->expectKeywordFetches();
         $this->importConfigurationBypassingCache(1);
 
-        self::assertSame(
-            6,
-            $this->countKeywordRelations($trailUid),
-            'Keywords must neither be cleared nor duplicated by the re-entry.'
-        );
+        $this->assertSame(6, $this->countKeywordRelations($trailUid), 'Keywords must neither be cleared nor duplicated by the re-entry.');
     }
 
     private function importAttractionOnly(): void
@@ -197,7 +177,7 @@ class TrailDepthCapTest extends AbstractImportTestCase
     private function fetchTrailUid(): int
     {
         $uid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL_ID);
-        self::assertGreaterThan(0, $uid, 'The trail must be imported.');
+        $this->assertGreaterThan(0, $uid, 'The trail must be imported.');
 
         return $uid;
     }

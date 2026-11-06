@@ -36,11 +36,11 @@ final class SlugImportTest extends AbstractImportTestCase
 
         $remoteId = 'https://thuecat.org/resources/attraction-with-single-slogan';
         $default = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', $remoteId);
-        self::assertSame('attraktion-mit-single-slogan', $default['slug']);
+        $this->assertSame('attraktion-mit-single-slogan', $default['slug']);
 
         $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', $remoteId);
-        self::assertArrayHasKey(1, $translations);
-        self::assertSame('attraction-with-single-slogan', $translations[1]['slug']);
+        $this->assertArrayHasKey(1, $translations);
+        $this->assertSame('attraction-with-single-slogan', $translations[1]['slug']);
     }
 
     #[Test]
@@ -57,9 +57,9 @@ final class SlugImportTest extends AbstractImportTestCase
             'tx_thuecat_tourist_attraction',
             'https://thuecat.org/resources/attraction-with-single-slogan'
         );
-        self::assertIsString($imported['slug']);
-        self::assertStringStartsWith('attraktion-mit-single-slogan', $imported['slug']);
-        self::assertNotSame('attraktion-mit-single-slogan', $imported['slug']);
+        $this->assertIsString($imported['slug']);
+        $this->assertStringStartsWith('attraktion-mit-single-slogan', $imported['slug']);
+        $this->assertNotSame('attraktion-mit-single-slogan', $imported['slug']);
     }
 
     #[Test]
@@ -74,12 +74,12 @@ final class SlugImportTest extends AbstractImportTestCase
 
         $remoteId = 'https://thuecat.org/resources/attraction-with-single-slogan';
         $default = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', $remoteId);
-        self::assertSame('Attraktion mit single slogan', $default['title']);
-        self::assertSame('alter-titel', $default['slug']);
+        $this->assertSame('Attraktion mit single slogan', $default['title']);
+        $this->assertSame('alter-titel', $default['slug']);
 
         $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', $remoteId);
-        self::assertArrayHasKey(1, $translations);
-        self::assertSame('Attraction with single slogan', $translations[1]['title']);
-        self::assertSame('old-title', $translations[1]['slug']);
+        $this->assertArrayHasKey(1, $translations);
+        $this->assertSame('Attraction with single slogan', $translations[1]['title']);
+        $this->assertSame('old-title', $translations[1]['slug']);
     }
 }

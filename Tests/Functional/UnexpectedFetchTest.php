@@ -40,9 +40,6 @@ class UnexpectedFetchTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertStringContainsString(
-            'https://thuecat.org/resources/018132452787-ngbe',
-            implode("\n", GuzzleClientFaker::tearDown())
-        );
+        $this->assertStringContainsString('https://thuecat.org/resources/018132452787-ngbe', implode("\n", GuzzleClientFaker::tearDown()));
     }
 }

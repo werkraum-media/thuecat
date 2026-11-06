@@ -49,18 +49,14 @@ class TrailTeaserInvalidationTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $before = $this->teaserIdentifiersByTrail();
-        self::assertCount(2, $before, 'Both teasers must be stored before saving.');
+        $this->assertCount(2, $before, 'Both teasers must be stored before saving.');
 
         $this->saveRecord(10, ['title' => 'Goethe-Erlebnisweg, neu benannt'], 'tx_thuecat_trail');
 
         $after = $this->teaserIdentifiersByTrail();
-        self::assertArrayNotHasKey(10, $after, 'The saved record keeps no stale teaser.');
-        self::assertArrayHasKey(11, $after, 'An untouched record keeps its teaser.');
-        self::assertSame(
-            $before[11],
-            $after[11],
-            'The untouched entry is the same one, not a rebuilt replacement.'
-        );
+        $this->assertArrayNotHasKey(10, $after, 'The saved record keeps no stale teaser.');
+        $this->assertArrayHasKey(11, $after, 'An untouched record keeps its teaser.');
+        $this->assertSame($before[11], $after[11], 'The untouched entry is the same one, not a rebuilt replacement.');
     }
 
     /**
@@ -75,7 +71,7 @@ class TrailTeaserInvalidationTest extends AbstractCachingTestCase
 
         $body = (string)$this->request(10)->getBody();
 
-        self::assertStringContainsString('Goethe-Erlebnisweg, neu benannt', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg, neu benannt', $body);
     }
 
     /** Saving one table must leave another table's entries alone. */
@@ -89,18 +85,14 @@ class TrailTeaserInvalidationTest extends AbstractCachingTestCase
             Extension::CACHE_TEASER,
             'tx_thuecat_tourist_attraction_10'
         );
-        self::assertCount(1, $before, 'The attraction teaser must be stored before saving.');
+        $this->assertCount(1, $before, 'The attraction teaser must be stored before saving.');
 
         $this->saveRecord(10, ['title' => 'Goethe-Erlebnisweg, neu benannt'], 'tx_thuecat_trail');
 
-        self::assertSame(
-            $before,
-            $this->cacheIdentifiersTaggedWith(
-                Extension::CACHE_TEASER,
-                'tx_thuecat_tourist_attraction_10'
-            ),
-            'Saving a trail must not touch an attraction of the same uid.'
-        );
+        $this->assertSame($before, $this->cacheIdentifiersTaggedWith(
+            Extension::CACHE_TEASER,
+            'tx_thuecat_tourist_attraction_10'
+        ), 'Saving a trail must not touch an attraction of the same uid.');
     }
 
     /**

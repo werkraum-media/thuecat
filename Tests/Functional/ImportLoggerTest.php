@@ -50,17 +50,17 @@ final class ImportLoggerTest extends AbstractImportTestCase
             '[1.1]: Some other complaint',
         ], 1);
 
-        self::assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
+        $this->assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
 
         $logger->writeLog(null, [], []);
 
         $rows = $this->fetchEntries();
-        self::assertCount(2, $rows);
+        $this->assertCount(2, $rows);
         foreach ($rows as $row) {
-            self::assertSame('dataHandlerError', $row['type']);
-            self::assertSame('error', $row['severity']);
-            self::assertSame('{"iteration":1}', $row['context']);
-            self::assertNotSame('', $row['message']);
+            $this->assertSame('dataHandlerError', $row['type']);
+            $this->assertSame('error', $row['severity']);
+            $this->assertSame('{"iteration":1}', $row['context']);
+            $this->assertNotSame('', $row['message']);
         }
     }
 
@@ -75,15 +75,15 @@ final class ImportLoggerTest extends AbstractImportTestCase
             new RuntimeException('upstream returned 500', 1700000001)
         );
 
-        self::assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
+        $this->assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
 
         $logger->writeLog(null, [], []);
 
         $rows = $this->fetchEntries();
-        self::assertCount(1, $rows);
-        self::assertSame('fetchingError', $rows[0]['type']);
-        self::assertSame('error', $rows[0]['severity']);
-        self::assertSame('upstream returned 500', $rows[0]['message']);
+        $this->assertCount(1, $rows);
+        $this->assertSame('fetchingError', $rows[0]['type']);
+        $this->assertSame('error', $rows[0]['severity']);
+        $this->assertSame('upstream returned 500', $rows[0]['message']);
     }
 
     #[Test]
@@ -100,13 +100,13 @@ final class ImportLoggerTest extends AbstractImportTestCase
         $logger->writeLog(null, [], []);
 
         $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
-        self::assertInstanceOf(ImportLog::class, $log);
+        $this->assertInstanceOf(ImportLog::class, $log);
 
-        self::assertTrue($log->hasErrors());
+        $this->assertTrue($log->hasErrors());
         $errors = $log->getListOfErrors();
-        self::assertNotSame([], $errors);
-        self::assertStringContainsString('DataHandler refused the row', implode("\n", $errors));
-        self::assertStringContainsString('upstream returned 500', implode("\n", $errors));
+        $this->assertNotSame([], $errors);
+        $this->assertStringContainsString('DataHandler refused the row', implode("\n", $errors));
+        $this->assertStringContainsString('upstream returned 500', implode("\n", $errors));
     }
 
     #[Test]
@@ -115,7 +115,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
         $logger = $this->get(ImportLogger::class);
         $logger->reset();
 
-        self::assertSame(ImportLogger::SEVERITY_DEBUG, $logger->getMaxSeverity());
+        $this->assertSame(ImportLogger::SEVERITY_DEBUG, $logger->getMaxSeverity());
     }
 
     #[Test]
@@ -130,9 +130,9 @@ final class ImportLoggerTest extends AbstractImportTestCase
             $this->fetchEntries(),
             static fn (array $row): bool => $row['type'] === 'dataHandlerError'
         ));
-        self::assertNotSame([], $dataHandlerErrors);
-        self::assertSame('error', $dataHandlerErrors[0]['severity']);
-        self::assertSame(ImportLogger::SEVERITY_ERROR, $severity);
+        $this->assertNotSame([], $dataHandlerErrors);
+        $this->assertSame('error', $dataHandlerErrors[0]['severity']);
+        $this->assertSame(ImportLogger::SEVERITY_ERROR, $severity);
     }
 
     #[Test]
@@ -146,7 +146,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exit = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::SUCCESS, $exit);
+        $this->assertSame(Command::SUCCESS, $exit);
     }
 
     #[Test]
@@ -166,7 +166,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
         $exit = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
 
-        self::assertSame(Command::FAILURE, $exit);
+        $this->assertSame(Command::FAILURE, $exit);
     }
 
     /**

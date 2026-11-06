@@ -146,11 +146,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
 
     protected function assertDataHandlerSucceeded(DataHandler $dataHandler, string $operation): void
     {
-        self::assertSame(
-            [],
-            $dataHandler->errorLog,
-            'DataHandler must ' . $operation . ' cleanly: ' . implode(', ', $dataHandler->errorLog)
-        );
+        $this->assertSame([], $dataHandler->errorLog, 'DataHandler must ' . $operation . ' cleanly: ' . implode(', ', $dataHandler->errorLog));
     }
 
     /** Call from tests that save records. */
@@ -232,11 +228,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
     protected function cacheIdentifiersTaggedWith(string $cacheIdentifier, string $tag): array
     {
         $backend = $this->getCache($cacheIdentifier)->getBackend();
-        self::assertInstanceOf(
-            Typo3DatabaseBackend::class,
-            $backend,
-            'Cache "' . $cacheIdentifier . '" must store, or an assertion on it proves nothing.'
-        );
+        $this->assertInstanceOf(Typo3DatabaseBackend::class, $backend, 'Cache "' . $cacheIdentifier . '" must store, or an assertion on it proves nothing.');
 
         $identifiers = [];
         foreach ($backend->findIdentifiersByTag($tag) as $identifier) {
@@ -258,10 +250,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
     protected function cachedContent(string $cacheIdentifier, string $entryIdentifier): string
     {
         $content = $this->getCache($cacheIdentifier)->get($entryIdentifier);
-        self::assertIsString(
-            $content,
-            'Entry "' . $entryIdentifier . '" must hold a string.'
-        );
+        $this->assertIsString($content, 'Entry "' . $entryIdentifier . '" must hold a string.');
 
         return $content;
     }
@@ -273,20 +262,12 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
     protected function assertCachedEntriesHaveContent(string $cacheIdentifier, string $tag): void
     {
         $identifiers = $this->cacheIdentifiersTaggedWith($cacheIdentifier, $tag);
-        self::assertNotSame([], $identifiers, 'No entry stored, so there is nothing to check.');
+        $this->assertNotSame([], $identifiers, 'No entry stored, so there is nothing to check.');
 
         foreach ($identifiers as $identifier) {
             $content = $this->cachedContent($cacheIdentifier, $identifier);
-            self::assertNotSame(
-                '',
-                trim($content),
-                'Entry "' . $identifier . '" holds nothing but whitespace.'
-            );
-            self::assertStringContainsString(
-                '<',
-                $content,
-                'Entry "' . $identifier . '" holds no markup.'
-            );
+            $this->assertNotSame('', trim($content), 'Entry "' . $identifier . '" holds nothing but whitespace.');
+            $this->assertStringContainsString('<', $content, 'Entry "' . $identifier . '" holds no markup.');
         }
     }
 }

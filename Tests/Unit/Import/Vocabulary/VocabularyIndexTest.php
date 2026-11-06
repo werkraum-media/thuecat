@@ -49,14 +49,14 @@ class VocabularyIndexTest extends TestCase
     {
         $index = $this->index(['schema:Museum' => []]);
 
-        self::assertTrue($index->has('schema:Museum'));
-        self::assertFalse($index->has('schema:Absent'));
+        $this->assertTrue($index->has('schema:Museum'));
+        $this->assertFalse($index->has('schema:Absent'));
     }
 
     #[Test]
     public function returnsNullForAnUnknownClass(): void
     {
-        self::assertNull($this->index([])->get('schema:Absent'));
+        $this->assertNull($this->index([])->get('schema:Absent'));
     }
 
     #[Test]
@@ -66,16 +66,13 @@ class VocabularyIndexTest extends TestCase
             'thuecat:Archive' => ['schema:CivicStructure', 'schema:Museum'],
         ]);
 
-        self::assertSame(
-            ['schema:CivicStructure', 'schema:Museum'],
-            $index->parents('thuecat:Archive')
-        );
+        $this->assertSame(['schema:CivicStructure', 'schema:Museum'], $index->parents('thuecat:Archive'));
     }
 
     #[Test]
     public function unknownClassHasNoParents(): void
     {
-        self::assertSame([], $this->index([])->parents('schema:Absent'));
+        $this->assertSame([], $this->index([])->parents('schema:Absent'));
     }
 
     #[Test]
@@ -89,10 +86,7 @@ class VocabularyIndexTest extends TestCase
             'schema:Thing' => [],
         ]);
 
-        self::assertSame(
-            ['schema:MusicEvent', 'schema:Event', 'schema:Thing'],
-            $index->ancestors('thuecat:BrassMusic')
-        );
+        $this->assertSame(['schema:MusicEvent', 'schema:Event', 'schema:Thing'], $index->ancestors('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -103,7 +97,7 @@ class VocabularyIndexTest extends TestCase
             'schema:CivicStructure' => [],
         ]);
 
-        self::assertNotContains('schema:Museum', $index->ancestors('schema:Museum'));
+        $this->assertNotContains('schema:Museum', $index->ancestors('schema:Museum'));
     }
 
     #[Test]
@@ -119,10 +113,10 @@ class VocabularyIndexTest extends TestCase
 
         $ancestors = $index->ancestors('thuecat:Cinema');
 
-        self::assertContains('schema:EntertainmentBusiness', $ancestors);
-        self::assertContains('schema:EventVenue', $ancestors);
-        self::assertContains('schema:LocalBusiness', $ancestors);
-        self::assertContains('schema:Place', $ancestors);
+        $this->assertContains('schema:EntertainmentBusiness', $ancestors);
+        $this->assertContains('schema:EventVenue', $ancestors);
+        $this->assertContains('schema:LocalBusiness', $ancestors);
+        $this->assertContains('schema:Place', $ancestors);
     }
 
     #[Test]
@@ -137,7 +131,7 @@ class VocabularyIndexTest extends TestCase
 
         $ancestors = $index->ancestors('thuecat:Split');
 
-        self::assertSame(['schema:Thing'], array_values(array_filter(
+        $this->assertSame(['schema:Thing'], array_values(array_filter(
             $ancestors,
             static fn (string $id): bool => $id === 'schema:Thing'
         )));
@@ -151,7 +145,7 @@ class VocabularyIndexTest extends TestCase
             'thuecat:B' => ['thuecat:A'],
         ]);
 
-        self::assertSame(['thuecat:B', 'thuecat:A'], $index->ancestors('thuecat:A'));
+        $this->assertSame(['thuecat:B', 'thuecat:A'], $index->ancestors('thuecat:A'));
     }
 
     #[Test]
@@ -159,7 +153,7 @@ class VocabularyIndexTest extends TestCase
     {
         $index = $this->index(['thuecat:Loop' => ['thuecat:Loop']]);
 
-        self::assertSame(['thuecat:Loop'], $index->ancestors('thuecat:Loop'));
+        $this->assertSame(['thuecat:Loop'], $index->ancestors('thuecat:Loop'));
     }
 
     #[Test]
@@ -167,7 +161,7 @@ class VocabularyIndexTest extends TestCase
     {
         $index = $this->index(['thuecat:Orphan' => ['ttgds:Unknown']]);
 
-        self::assertSame(['ttgds:Unknown'], $index->ancestors('thuecat:Orphan'));
+        $this->assertSame(['ttgds:Unknown'], $index->ancestors('thuecat:Orphan'));
     }
 
     #[Test]
@@ -179,7 +173,7 @@ class VocabularyIndexTest extends TestCase
             'schema:CivicStructure' => [],
         ]);
 
-        self::assertSame(['ttgds:Unknown'], $index->danglingReferences());
+        $this->assertSame(['ttgds:Unknown'], $index->danglingReferences());
     }
 
     #[Test]
@@ -191,6 +185,6 @@ class VocabularyIndexTest extends TestCase
             'schema:Event' => [],
         ]);
 
-        self::assertSame([], $index->danglingReferences());
+        $this->assertSame([], $index->danglingReferences());
     }
 }

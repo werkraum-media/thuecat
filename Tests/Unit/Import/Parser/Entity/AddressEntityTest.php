@@ -31,7 +31,7 @@ class AddressEntityTest extends TestCase
     {
         $entity = new AddressEntity();
 
-        self::assertSame('tx_thuecat_address', $entity::TABLE);
+        $this->assertSame('tx_thuecat_address', $entity::TABLE);
     }
 
     #[Test]
@@ -66,12 +66,12 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de');
         $result = $entity->toArray();
 
-        self::assertSame('Beispielweg 5', $result['street'] ?? '');
-        self::assertSame('99425', $result['zip'] ?? '');
-        self::assertSame('Beispielstadt', $result['city'] ?? '');
-        self::assertSame('info@example.com', $result['email'] ?? '');
-        self::assertSame('+49 3643 545400', $result['phone'] ?? '');
-        self::assertSame('+49 3643 545401', $result['fax'] ?? '');
+        $this->assertSame('Beispielweg 5', $result['street'] ?? '');
+        $this->assertSame('99425', $result['zip'] ?? '');
+        $this->assertSame('Beispielstadt', $result['city'] ?? '');
+        $this->assertSame('info@example.com', $result['email'] ?? '');
+        $this->assertSame('+49 3643 545400', $result['phone'] ?? '');
+        $this->assertSame('+49 3643 545401', $result['fax'] ?? '');
     }
 
     #[Test]
@@ -92,8 +92,8 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'en');
         $result = $entity->toArray();
 
-        self::assertSame('Example Lane 5', $result['street'] ?? '');
-        self::assertSame('99423', $result['zip'] ?? '');
+        $this->assertSame('Example Lane 5', $result['street'] ?? '');
+        $this->assertSame('99423', $result['zip'] ?? '');
     }
 
     /**
@@ -111,10 +111,7 @@ class AddressEntityTest extends TestCase
             'https://thuecat.org/resources/043064193523-jkgh'
         );
 
-        self::assertSame(
-            'https://thuecat.org/resources/043064193523-jkgh::addr::0',
-            $entity->toArray()['remote_id'] ?? ''
-        );
+        $this->assertSame('https://thuecat.org/resources/043064193523-jkgh::addr::0', $entity->toArray()['remote_id'] ?? '');
     }
 
     /**
@@ -130,8 +127,8 @@ class AddressEntityTest extends TestCase
         $entity->configure([], 'de', [], $parentRemoteId);
         $childRemoteId = (string)($entity->toArray()['remote_id'] ?? '');
 
-        self::assertNotSame($parentRemoteId, $childRemoteId);
-        self::assertStringStartsWith($parentRemoteId . '::addr::0', $childRemoteId);
+        $this->assertNotSame($parentRemoteId, $childRemoteId);
+        $this->assertStringStartsWith($parentRemoteId . '::addr::0', $childRemoteId);
     }
 
     /**
@@ -146,8 +143,8 @@ class AddressEntityTest extends TestCase
         $second = new AddressEntity();
         $second->configure([], 'de', [], 'https://thuecat.org/resources/x', 1);
 
-        self::assertSame('https://thuecat.org/resources/x::addr::0', $first->toArray()['remote_id']);
-        self::assertSame('https://thuecat.org/resources/x::addr::1', $second->toArray()['remote_id']);
+        $this->assertSame('https://thuecat.org/resources/x::addr::0', $first->toArray()['remote_id']);
+        $this->assertSame('https://thuecat.org/resources/x::addr::1', $second->toArray()['remote_id']);
     }
 
     #[Test]
@@ -208,7 +205,7 @@ class AddressEntityTest extends TestCase
             'latitude' => '50.9784118',
             'longitude' => '11.0298392',
         ];
-        self::assertSame($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     #[Test]
@@ -232,7 +229,7 @@ class AddressEntityTest extends TestCase
         $entity = new AddressEntity();
         $entity->configure($node, 'de', $geo, 'https://thuecat.org/resources/333039283321-xxwg');
 
-        self::assertSame([
+        $this->assertSame([
             'remote_id' => 'https://thuecat.org/resources/333039283321-xxwg::addr::0',
             'street' => 'Benediktsplatz 1',
             'zip' => '99084',
@@ -259,8 +256,8 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de');
         $result = $entity->toArray();
 
-        self::assertSame('Deutschland', $result['country'] ?? '');
-        self::assertSame('Thüringen', $result['region'] ?? '');
+        $this->assertSame('Deutschland', $result['country'] ?? '');
+        $this->assertSame('Thüringen', $result['region'] ?? '');
     }
 
     /**
@@ -286,8 +283,8 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de');
         $result = $entity->toArray();
 
-        self::assertSame('thuecat:Germany', $result['country'] ?? '');
-        self::assertSame('thuecat:Thuringia', $result['region'] ?? '');
+        $this->assertSame('thuecat:Germany', $result['country'] ?? '');
+        $this->assertSame('thuecat:Thuringia', $result['region'] ?? '');
     }
 
     #[Test]
@@ -300,8 +297,8 @@ class AddressEntityTest extends TestCase
         ], 'de');
         $result = $entity->toArray();
 
-        self::assertSame('thuecat:Germany', $result['country'] ?? '');
-        self::assertSame('Thüringen', $result['region'] ?? '');
+        $this->assertSame('thuecat:Germany', $result['country'] ?? '');
+        $this->assertSame('Thüringen', $result['region'] ?? '');
     }
 
     #[Test]
@@ -311,8 +308,8 @@ class AddressEntityTest extends TestCase
         $entity->configure(['schema:postalCode' => ['@language' => 'de', '@value' => '99084']], 'de');
         $result = $entity->toArray();
 
-        self::assertSame('', $result['country'] ?? '');
-        self::assertSame('', $result['region'] ?? '');
+        $this->assertSame('', $result['country'] ?? '');
+        $this->assertSame('', $result['region'] ?? '');
     }
 
     #[Test]
@@ -327,8 +324,8 @@ class AddressEntityTest extends TestCase
         );
         $result = $entity->toArray();
 
-        self::assertArrayNotHasKey('latitude', $result);
-        self::assertArrayNotHasKey('longitude', $result);
+        $this->assertArrayNotHasKey('latitude', $result);
+        $this->assertArrayNotHasKey('longitude', $result);
     }
 
     #[Test]
@@ -349,10 +346,7 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
         $entity->configureTranslation($node, 'en', 1);
 
-        self::assertSame(
-            [1 => ['street' => 'Example Lane 5', 'zip' => '99423']],
-            $entity->getTranslations()
-        );
+        $this->assertSame([1 => ['street' => 'Example Lane 5', 'zip' => '99423']], $entity->getTranslations());
     }
 
     /**
@@ -377,10 +371,7 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
         $entity->configureTranslation($node, 'en', 1);
 
-        self::assertSame(
-            [1 => ['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany']],
-            $entity->getTranslations()
-        );
+        $this->assertSame([1 => ['region' => 'thuecat:Thuringia', 'country' => 'thuecat:Germany']], $entity->getTranslations());
     }
 
     /**
@@ -400,7 +391,7 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
         $entity->configureTranslation($node, 'en', 1);
 
-        self::assertSame([], $entity->getTranslations());
+        $this->assertSame([], $entity->getTranslations());
     }
 
     /**
@@ -424,10 +415,7 @@ class AddressEntityTest extends TestCase
         $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
         $entity->configureTranslation($node, 'en', 1);
 
-        self::assertSame(
-            [1 => ['region' => 'Thuringia', 'country' => 'Germany']],
-            $entity->getTranslations()
-        );
+        $this->assertSame([1 => ['region' => 'Thuringia', 'country' => 'Germany']], $entity->getTranslations());
     }
 
     #[Test]
@@ -477,8 +465,8 @@ class AddressEntityTest extends TestCase
 
         // remote_id is a real column on the Address record; it must stay unprefixed
         // so it survives the REF→UID swap done before DataHandler.
-        self::assertStringNotContainsString('REF:', (string)$result['remote_id']);
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::0', $result['remote_id']);
-        self::assertArrayNotHasKey('address', $result);
+        $this->assertStringNotContainsString('REF:', (string)$result['remote_id']);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::0', $result['remote_id']);
+        $this->assertArrayNotHasKey('address', $result);
     }
 }

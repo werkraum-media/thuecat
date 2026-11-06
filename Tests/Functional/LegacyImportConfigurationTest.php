@@ -41,8 +41,8 @@ class LegacyImportConfigurationTest extends AbstractImportTestCase
 
         $configuration = $this->getConfiguration(1);
 
-        self::assertSame(0, $configuration->getRunBudget(), 'A missing flexform field is "not set", not a value.');
-        self::assertSame(0, $configuration->getFetchCacheLifetime());
+        $this->assertSame(0, $configuration->getRunBudget(), 'A missing flexform field is "not set", not a value.');
+        $this->assertSame(0, $configuration->getFetchCacheLifetime());
     }
 
     #[Test]
@@ -53,15 +53,8 @@ class LegacyImportConfigurationTest extends AbstractImportTestCase
         $configuration = $this->getConfiguration(1);
         $settings = $this->get(ImportSettings::class);
 
-        self::assertSame(
-            ImportSetting::RunBudget->default(),
-            $settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()),
-            'The run is bounded by the default budget, not by 0 (unbounded).'
-        );
-        self::assertSame(
-            ImportSetting::FetchCacheLifetime->default(),
-            $settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
-        );
+        $this->assertSame(ImportSetting::RunBudget->default(), $settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()), 'The run is bounded by the default budget, not by 0 (unbounded).');
+        $this->assertSame(ImportSetting::FetchCacheLifetime->default(), $settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime()));
     }
 
     #[Test]
@@ -72,14 +65,14 @@ class LegacyImportConfigurationTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('debug', $severity, 'A legacy record runs clean on fallback values.');
+        $this->assertSame('debug', $severity, 'A legacy record runs clean on fallback values.');
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
 
     protected function getConfiguration(int $uid): ImportConfigurationInterface
     {
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         return $configuration;
     }

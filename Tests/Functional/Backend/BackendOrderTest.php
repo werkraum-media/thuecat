@@ -45,12 +45,12 @@ final class BackendOrderTest extends AbstractBackendTestCase
         $dataHandler->start([], [$table => [2 => ['move' => 10]]]);
         $dataHandler->process_cmdmap();
 
-        self::assertSame([], $dataHandler->errorLog);
+        $this->assertSame([], $dataHandler->errorLog);
 
         $unmoved = $this->fetchRowByRemoteId($table, $prefix . '-a');
         $moved = $this->fetchRowByRemoteId($table, $prefix . '-b');
-        self::assertArrayHasKey('sorting', $moved, $table . ' has no backend order column.');
-        self::assertLessThan($unmoved['sorting'], $moved['sorting']);
+        $this->assertArrayHasKey('sorting', $moved, $table . ' has no backend order column.');
+        $this->assertLessThan($unmoved['sorting'], $moved['sorting']);
     }
 
     #[Test]
@@ -62,11 +62,11 @@ final class BackendOrderTest extends AbstractBackendTestCase
         $dataHandler->start([], [$table => [1 => ['move' => -2]]]);
         $dataHandler->process_cmdmap();
 
-        self::assertSame([], $dataHandler->errorLog);
+        $this->assertSame([], $dataHandler->errorLog);
 
         $moved = $this->fetchRowByRemoteId($table, $prefix . '-a');
         $target = $this->fetchRowByRemoteId($table, $prefix . '-b');
-        self::assertGreaterThan($target['sorting'], $moved['sorting']);
+        $this->assertGreaterThan($target['sorting'], $moved['sorting']);
     }
 
     public static function tables(): iterable

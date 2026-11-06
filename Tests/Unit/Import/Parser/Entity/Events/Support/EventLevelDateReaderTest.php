@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity\Events\Support;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventLevelDateReader;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventOccurrence;
 
 // Values are the real ones from the fetched fixtures, so a change upstream
 // surfaces here and not only in a functional test.
@@ -44,9 +45,9 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-12-01T10:00:00.000+01:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
-        self::assertSame('2026-12-01T10:00:00+01:00', $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
+        $this->assertSame('2026-12-01T10:00:00+01:00', $occurrence->end);
     }
 
     // Mirroring start into end is the schedule path's fallback for a missing
@@ -59,8 +60,8 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-12-01T10:00:00.000+01:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertNotSame($occurrence->start, $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertNotSame($occurrence->start, $occurrence->end);
     }
 
     #[Test]
@@ -71,8 +72,8 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-08-30T19:00:00.000+02:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-08-30T17:00:00+02:00', $occurrence->start);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-08-30T17:00:00+02:00', $occurrence->start);
     }
 
     // In a Schedule this key bounds the repetition; here, the occurrence.
@@ -84,8 +85,8 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-08-29T20:00:00.000+02:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-08-29T20:00:00+02:00', $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-08-29T20:00:00+02:00', $occurrence->end);
     }
 
     #[Test]
@@ -100,9 +101,9 @@ class EventLevelDateReaderTest extends TestCase
 
         $occurrence = $this->reader->toOccurrence($node);
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
-        self::assertSame('2026-12-01T10:00:00+01:00', $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
+        $this->assertSame('2026-12-01T10:00:00+01:00', $occurrence->end);
     }
 
     #[Test]
@@ -113,8 +114,8 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-12-01T10:00:00.000+01:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-01T08:00:00+01:00', $occurrence->start);
     }
 
     #[Test]
@@ -122,7 +123,7 @@ class EventLevelDateReaderTest extends TestCase
     {
         $node = $this->node(start: null, end: '2026-12-01T10:00:00.000+01:00');
 
-        self::assertNull($this->reader->toOccurrence($node));
+        $this->assertNull($this->reader->toOccurrence($node));
     }
 
     #[Test]
@@ -130,7 +131,7 @@ class EventLevelDateReaderTest extends TestCase
     {
         $node = $this->node(start: '2026-12-01T08:00:00.000+01:00', end: null);
 
-        self::assertNull($this->reader->toOccurrence($node));
+        $this->assertNull($this->reader->toOccurrence($node));
     }
 
     // Standing in for the absent bound would invent a zero-duration occurrence.
@@ -139,7 +140,7 @@ class EventLevelDateReaderTest extends TestCase
     {
         $node = $this->node(start: '2026-12-01T08:00:00.000+01:00', end: null);
 
-        self::assertNull($this->reader->toOccurrence($node));
+        $this->assertNull($this->reader->toOccurrence($node));
     }
 
     // 00:00/23:59 is ext:events' all-day convention, not an invention here.
@@ -150,9 +151,9 @@ class EventLevelDateReaderTest extends TestCase
             $this->node(start: '2026-12-01', end: '2026-12-01', type: 'schema:Date')
         );
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-01T00:00:00+01:00', $occurrence->start);
-        self::assertSame('2026-12-01T23:59:00+01:00', $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-01T00:00:00+01:00', $occurrence->start);
+        $this->assertSame('2026-12-01T23:59:00+01:00', $occurrence->end);
     }
 
     #[Test]
@@ -162,9 +163,9 @@ class EventLevelDateReaderTest extends TestCase
             $this->node(start: '2026-12-08', end: '2026-12-10', type: 'schema:Date')
         );
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-08T00:00:00+01:00', $occurrence->start);
-        self::assertSame('2026-12-10T23:59:00+01:00', $occurrence->end);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-08T00:00:00+01:00', $occurrence->start);
+        $this->assertSame('2026-12-10T23:59:00+01:00', $occurrence->end);
     }
 
     // Offsetless values are German local time, so summer dates carry +02:00.
@@ -175,8 +176,8 @@ class EventLevelDateReaderTest extends TestCase
             $this->node(start: '2026-08-06', end: '2026-08-06', type: 'schema:Date')
         );
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-08-06T00:00:00+02:00', $occurrence->start);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-08-06T00:00:00+02:00', $occurrence->start);
     }
 
     // A published midnight is a real time, not a missing one.
@@ -188,14 +189,14 @@ class EventLevelDateReaderTest extends TestCase
             end: '2026-12-01T10:00:00.000+01:00'
         ));
 
-        self::assertNotNull($occurrence);
-        self::assertSame('2026-12-01T00:00:00+01:00', $occurrence->start);
+        $this->assertInstanceOf(EventOccurrence::class, $occurrence);
+        $this->assertSame('2026-12-01T00:00:00+01:00', $occurrence->start);
     }
 
     #[Test]
     public function skipsWhenNoDateKeysArePresentAtAll(): void
     {
-        self::assertNull($this->reader->toOccurrence([]));
+        $this->assertNull($this->reader->toOccurrence([]));
     }
 
     /**

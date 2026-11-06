@@ -38,10 +38,10 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $body = (string)$result->getBody();
-        self::assertStringContainsString('Goethe-Erlebnisweg', $body);
-        self::assertStringContainsString('Beschreibung des Goethe-Erlebniswegs', $body);
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $body);
+        $this->assertStringContainsString('Beschreibung des Goethe-Erlebniswegs', $body);
     }
 
     #[Test]
@@ -51,8 +51,8 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $keywords = $this->renderedSection($request, 'relation', 'keywords');
 
-        self::assertStringContainsString('Themenweg', $keywords);
-        self::assertStringContainsString('Fahrradfreundlich', $keywords);
+        $this->assertStringContainsString('Themenweg', $keywords);
+        $this->assertStringContainsString('Fahrradfreundlich', $keywords);
     }
 
     #[Test]
@@ -62,10 +62,10 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $season = $this->renderedSection($request, 'trail', 'season');
 
-        self::assertStringContainsString('March', $season);
-        self::assertStringContainsString('October', $season);
-        self::assertStringNotContainsString('February', $season);
-        self::assertStringNotContainsString('November', $season);
+        $this->assertStringContainsString('March', $season);
+        $this->assertStringContainsString('October', $season);
+        $this->assertStringNotContainsString('February', $season);
+        $this->assertStringNotContainsString('November', $season);
     }
 
     #[Test]
@@ -85,7 +85,7 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Weg ohne Schlagworte', $body);
+        $this->assertStringContainsString('Weg ohne Schlagworte', $body);
         self::assertSectionNotRendered($body, 'relation', 'keywords');
     }
 
@@ -96,10 +96,10 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $body = (string)$result->getBody();
-        self::assertStringContainsString('Keine Daten vorhanden.', $body);
-        self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
+        $this->assertStringContainsString('Keine Daten vorhanden.', $body);
+        $this->assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 
     #[Test]
@@ -109,10 +109,10 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $body = (string)$result->getBody();
-        self::assertStringNotContainsString('Versteckter Weg', $body);
-        self::assertStringContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringNotContainsString('Versteckter Weg', $body);
+        $this->assertStringContainsString('Keine Daten vorhanden.', $body);
     }
 
     // The record carries keywords, so an unresolved trail must not emit them.
@@ -123,6 +123,6 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
+        $this->assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 }

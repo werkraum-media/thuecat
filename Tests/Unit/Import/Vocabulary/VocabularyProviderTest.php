@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\Vocabulary\CachedVocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexFactory;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
@@ -69,7 +70,7 @@ class VocabularyProviderTest extends TestCase
     {
         parent::setUp();
 
-        $logger = self::createStub(ImportLogger::class);
+        $logger = $this->createStub(ImportLogger::class);
         $logger->method('recordStaleVocabulary')->willReturnCallback(
             function (string $vocabulary, int $age, string $reason): void {
                 $this->staleWarnings[] = compact('vocabulary', 'age', 'reason');
@@ -91,7 +92,7 @@ class VocabularyProviderTest extends TestCase
      */
     private function fetchData(array $failingUrls = []): FetchData
     {
-        $fetchData = self::createStub(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
         $fetchData->method('jsonLDFromUrl')->willReturnCallback(
             function (string $url, ?string $apiKey = null) use ($failingUrls): array {
                 $this->requests[] = ['url' => $url, 'apiKey' => $apiKey];
@@ -110,7 +111,7 @@ class VocabularyProviderTest extends TestCase
 
     private function cache(): VocabularyIndexCache
     {
-        $cache = self::createStub(FrontendInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
         $cache->method('get')->willReturnCallback(
             function (string $id): mixed {
                 return $this->entries[$id] ?? false;
@@ -143,10 +144,7 @@ class VocabularyProviderTest extends TestCase
     {
         $this->provider()->index(null, 1000);
 
-        self::assertSame(
-            array_values(VocabularyProvider::VOCABULARY_URLS),
-            array_column($this->requests, 'url')
-        );
+        $this->assertSame(array_values(VocabularyProvider::VOCABULARY_URLS), array_column($this->requests, 'url'));
     }
 
     #[Test]
@@ -154,10 +152,7 @@ class VocabularyProviderTest extends TestCase
     {
         $index = $this->provider()->index(null, 1000);
 
-        self::assertSame(
-            ['schema:MusicEvent', 'schema:Event'],
-            $index->ancestors('thuecat:BrassMusic')
-        );
+        $this->assertSame(['schema:MusicEvent', 'schema:Event'], $index->ancestors('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -165,10 +160,7 @@ class VocabularyProviderTest extends TestCase
     {
         $this->provider()->index('secret-key', 1000);
 
-        self::assertSame(
-            ['secret-key', 'secret-key'],
-            array_column($this->requests, 'apiKey')
-        );
+        $this->assertSame(['secret-key', 'secret-key'], array_column($this->requests, 'apiKey'));
     }
 
     #[Test]
@@ -177,9 +169,9 @@ class VocabularyProviderTest extends TestCase
         $this->provider()->index(null, 4242);
 
         $cached = $this->cache()->read();
-        self::assertNotNull($cached);
-        self::assertSame(4242, $cached->fetchedAt);
-        self::assertTrue($cached->index->has('thuecat:BrassMusic'));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
+        $this->assertSame(4242, $cached->fetchedAt);
+        $this->assertTrue($cached->index->has('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -190,8 +182,8 @@ class VocabularyProviderTest extends TestCase
 
         $index = $this->provider()->index(null, 1000 + VocabularyIndexCache::STALE_AFTER - 1);
 
-        self::assertSame([], $this->requests, 'A fresh index must not be refetched.');
-        self::assertTrue($index->has('thuecat:BrassMusic'));
+        $this->assertSame([], $this->requests, 'A fresh index must not be refetched.');
+        $this->assertTrue($index->has('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -202,7 +194,7 @@ class VocabularyProviderTest extends TestCase
 
         $this->provider()->index(null, 1000 + VocabularyIndexCache::STALE_AFTER);
 
-        self::assertCount(2, array_slice($this->requests, $before), 'A stale index must be refetched.');
+        $this->assertCount(2, array_slice($this->requests, $before), 'A stale index must be refetched.');
     }
 
     #[Test]
@@ -213,7 +205,7 @@ class VocabularyProviderTest extends TestCase
 
         $this->provider()->index(null, $refreshedAt);
 
-        self::assertSame($refreshedAt, $this->cache()->read()?->fetchedAt);
+        $this->assertSame($refreshedAt, $this->cache()->read()?->fetchedAt);
     }
 
     #[Test]
@@ -227,8 +219,8 @@ class VocabularyProviderTest extends TestCase
 
         $index = $this->provider()->index(null, 1000);
 
-        self::assertCount(2, $this->requests);
-        self::assertTrue($index->has('thuecat:BrassMusic'));
+        $this->assertCount(2, $this->requests);
+        $this->assertTrue($index->has('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -241,10 +233,7 @@ class VocabularyProviderTest extends TestCase
             ->index(null, $staleAt)
         ;
 
-        self::assertSame(
-            ['schema:MusicEvent', 'schema:Event'],
-            $index->ancestors('thuecat:BrassMusic')
-        );
+        $this->assertSame(['schema:MusicEvent', 'schema:Event'], $index->ancestors('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -257,9 +246,9 @@ class VocabularyProviderTest extends TestCase
             ->index(null, $staleAt)
         ;
 
-        self::assertCount(1, $this->staleWarnings);
-        self::assertSame(VocabularyIndexCache::STALE_AFTER, $this->staleWarnings[0]['age']);
-        self::assertStringContainsString('upstream is down', $this->staleWarnings[0]['reason']);
+        $this->assertCount(1, $this->staleWarnings);
+        $this->assertSame(VocabularyIndexCache::STALE_AFTER, $this->staleWarnings[0]['age']);
+        $this->assertStringContainsString('upstream is down', $this->staleWarnings[0]['reason']);
     }
 
     #[Test]
@@ -273,9 +262,9 @@ class VocabularyProviderTest extends TestCase
         ;
 
         $stored = $this->cache()->read();
-        self::assertNotNull($stored);
-        self::assertSame(1000, $stored->fetchedAt, 'The stored entry must not be overwritten.');
-        self::assertTrue($stored->index->has('thuecat:BrassMusic'));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $stored);
+        $this->assertSame(1000, $stored->fetchedAt, 'The stored entry must not be overwritten.');
+        $this->assertTrue($stored->index->has('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -288,8 +277,8 @@ class VocabularyProviderTest extends TestCase
             ->index(null, $staleAt)
         ;
 
-        self::assertTrue($index->has('thuecat:BrassMusic'));
-        self::assertSame(1000, $this->cache()->read()?->fetchedAt);
+        $this->assertTrue($index->has('thuecat:BrassMusic'));
+        $this->assertSame(1000, $this->cache()->read()?->fetchedAt);
     }
 
     #[Test]
@@ -300,8 +289,8 @@ class VocabularyProviderTest extends TestCase
         ;
 
         // No ancestors rather than no import: types fall back to flat categories.
-        self::assertSame([], $index->all());
-        self::assertSame([], $index->ancestors('thuecat:BrassMusic'));
+        $this->assertSame([], $index->all());
+        $this->assertSame([], $index->ancestors('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -309,9 +298,9 @@ class VocabularyProviderTest extends TestCase
     {
         $this->provider(array_values(VocabularyProvider::VOCABULARY_URLS))->index(null, 1000);
 
-        self::assertCount(1, $this->unavailableWarnings);
-        self::assertStringContainsString('upstream is down', $this->unavailableWarnings[0]['reason']);
-        self::assertSame([], $this->staleWarnings, 'Nothing was stale; nothing was stored.');
+        $this->assertCount(1, $this->unavailableWarnings);
+        $this->assertStringContainsString('upstream is down', $this->unavailableWarnings[0]['reason']);
+        $this->assertSame([], $this->staleWarnings, 'Nothing was stale; nothing was stored.');
     }
 
     #[Test]
@@ -320,7 +309,7 @@ class VocabularyProviderTest extends TestCase
         $this->provider(array_values(VocabularyProvider::VOCABULARY_URLS))->index(null, 1000);
 
         // An empty index must never be written; the next run has to retry.
-        self::assertNull($this->cache()->read());
+        $this->assertNull($this->cache()->read());
     }
 
     #[Test]
@@ -331,8 +320,8 @@ class VocabularyProviderTest extends TestCase
 
         $index = $this->provider()->index(null, 1001);
 
-        self::assertCount(2, array_slice($this->requests, $before));
-        self::assertTrue($index->has('thuecat:BrassMusic'));
+        $this->assertCount(2, array_slice($this->requests, $before));
+        $this->assertTrue($index->has('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -346,7 +335,7 @@ class VocabularyProviderTest extends TestCase
         $recoveredAt = $staleAt + 1;
         $this->provider()->index(null, $recoveredAt);
 
-        self::assertSame([], $this->staleWarnings);
-        self::assertSame($recoveredAt, $this->cache()->read()?->fetchedAt);
+        $this->assertSame([], $this->staleWarnings);
+        $this->assertSame($recoveredAt, $this->cache()->read()?->fetchedAt);
     }
 }

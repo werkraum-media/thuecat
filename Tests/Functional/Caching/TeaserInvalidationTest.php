@@ -47,18 +47,14 @@ class TeaserInvalidationTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $before = $this->teaserIdentifiersByAttraction();
-        self::assertCount(2, $before, 'Both teasers must be stored before saving.');
+        $this->assertCount(2, $before, 'Both teasers must be stored before saving.');
 
         $this->saveRecord(10, ['title' => 'Stadtmuseum Erfurt, neu benannt']);
 
         $after = $this->teaserIdentifiersByAttraction();
-        self::assertArrayNotHasKey(10, $after, 'The saved record keeps no stale teaser.');
-        self::assertArrayHasKey(11, $after, 'An untouched record keeps its teaser.');
-        self::assertSame(
-            $before[11],
-            $after[11],
-            'The untouched entry is the same one, not a rebuilt replacement.'
-        );
+        $this->assertArrayNotHasKey(10, $after, 'The saved record keeps no stale teaser.');
+        $this->assertArrayHasKey(11, $after, 'An untouched record keeps its teaser.');
+        $this->assertSame($before[11], $after[11], 'The untouched entry is the same one, not a rebuilt replacement.');
     }
 
     /**
@@ -73,12 +69,8 @@ class TeaserInvalidationTest extends AbstractCachingTestCase
 
         $body = (string)$this->request(10)->getBody();
 
-        self::assertStringContainsString('Stadtmuseum Erfurt, neu benannt', $body);
-        self::assertStringNotContainsString(
-            '>Stadtmuseum Erfurt<',
-            $body,
-            'The superseded title must not survive in a cached teaser.'
-        );
+        $this->assertStringContainsString('Stadtmuseum Erfurt, neu benannt', $body);
+        $this->assertStringNotContainsString('>Stadtmuseum Erfurt<', $body, 'The superseded title must not survive in a cached teaser.');
     }
 
     /**
@@ -91,13 +83,13 @@ class TeaserInvalidationTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $this->request(13);
-        self::assertCount(4, $this->teaserIdentifiers(), 'Two lists, two detail pages.');
+        $this->assertCount(4, $this->teaserIdentifiers(), 'Two lists, two detail pages.');
 
         $this->saveRecord(10, ['title' => 'Stadtmuseum Erfurt, neu benannt']);
 
         $remaining = $this->teaserIdentifiersByAttraction();
-        self::assertArrayNotHasKey(10, $remaining, 'No teaser of the saved record survives.');
-        self::assertCount(2, $remaining[11], 'Both teasers of the untouched record survive.');
+        $this->assertArrayNotHasKey(10, $remaining, 'No teaser of the saved record survives.');
+        $this->assertCount(2, $remaining[11], 'Both teasers of the untouched record survive.');
     }
 
     /**

@@ -41,7 +41,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
-        self::assertStringContainsString('href="/show/gemeindebrunnen-weimar"', $body);
+        $this->assertStringContainsString('href="/show/gemeindebrunnen-weimar"', $body);
     }
 
     #[Test]
@@ -49,7 +49,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40, 1));
 
-        self::assertStringContainsString('href="/en/show/community-fountain-weimar"', $body);
+        $this->assertStringContainsString('href="/en/show/community-fountain-weimar"', $body);
     }
 
     #[Test]
@@ -57,7 +57,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
-        self::assertStringContainsString('href="/trail/rennsteig"', $body);
+        $this->assertStringContainsString('href="/trail/rennsteig"', $body);
     }
 
     #[Test]
@@ -67,8 +67,8 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<h2>Gemeindebrunnen Weimar</h2>', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<h2>Gemeindebrunnen Weimar</h2>', (string)$result->getBody());
     }
 
     #[Test]
@@ -78,8 +78,8 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<h2>Community Fountain Weimar</h2>', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<h2>Community Fountain Weimar</h2>', (string)$result->getBody());
     }
 
     #[Test]
@@ -89,8 +89,8 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Rennsteig', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Rennsteig', (string)$result->getBody());
     }
 
     #[Test]
@@ -98,7 +98,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $request = new InternalRequest('http://localhost/show/gibt-es-nicht');
 
-        self::assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
+        $this->assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
     }
 
     // Core: with uniqueInSite on the slug, PersistedAliasMapper only resolves records inside the current site.
@@ -107,7 +107,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $request = new InternalRequest('http://localhost/show/wartburg');
 
-        self::assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
+        $this->assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
     }
 
     // Evidence: a translated slug under another language's base. Accepted, not handled.
@@ -116,7 +116,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $request = new InternalRequest('http://localhost/show/community-fountain-weimar');
 
-        self::assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
+        $this->assertSame(404, $this->executeFrontendSubRequest($request)->getStatusCode());
     }
 
     #[Test]
@@ -126,8 +126,8 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<h2>Gemeindebrunnen Weimar</h2>', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<h2>Gemeindebrunnen Weimar</h2>', (string)$result->getBody());
     }
 
     #[Test]
@@ -135,10 +135,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(51));
 
-        self::assertStringContainsString(
-            'href="/show-without-role?tx_thuecat_touristattractionshow%5Baction%5D=show&amp;tx_thuecat_touristattractionshow%5Battraction%5D=24&amp;',
-            $body
-        );
+        $this->assertStringContainsString('href="/show-without-role?tx_thuecat_touristattractionshow%5Baction%5D=show&amp;tx_thuecat_touristattractionshow%5Battraction%5D=24&amp;', $body);
     }
 
     #[Test]
@@ -148,8 +145,8 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<h2>Herderkirche Weimar</h2>', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<h2>Herderkirche Weimar</h2>', (string)$result->getBody());
     }
 
     #[Test]
@@ -157,7 +154,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(40));
 
-        self::assertStringContainsString('href="/list/2"', $body);
+        $this->assertStringContainsString('href="/list/2"', $body);
     }
 
     #[Test]
@@ -167,7 +164,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('href="/list"', $body);
+        $this->assertStringContainsString('href="/list"', $body);
     }
 
     #[Test]
@@ -177,9 +174,9 @@ class DetailRoutingTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         $body = (string)$result->getBody();
-        self::assertStringContainsString('Herderkirche Weimar', $body);
-        self::assertStringNotContainsString('Gemeindebrunnen Weimar', $body);
+        $this->assertStringContainsString('Herderkirche Weimar', $body);
+        $this->assertStringNotContainsString('Gemeindebrunnen Weimar', $body);
     }
 }

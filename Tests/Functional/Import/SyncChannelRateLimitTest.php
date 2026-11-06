@@ -41,20 +41,20 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         $entries = $this->getLogEntriesOfType('rateLimited');
-        self::assertCount(1, $entries);
-        self::assertIsString($entries[0]['context']);
+        $this->assertCount(1, $entries);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame(self::RECORD . 'test-event-unserved', $context['url'] ?? null);
-        self::assertSame('widgets.thuecat.org', $context['host'] ?? null);
-        self::assertSame(3, $context['ordinal'] ?? null);
-        self::assertIsString($context['time'] ?? null);
-        self::assertNotFalse(DateTimeImmutable::createFromFormat(DATE_ATOM, $context['time']));
+        $this->assertIsArray($context);
+        $this->assertSame(self::RECORD . 'test-event-unserved', $context['url'] ?? null);
+        $this->assertSame('widgets.thuecat.org', $context['host'] ?? null);
+        $this->assertSame(3, $context['ordinal'] ?? null);
+        $this->assertIsString($context['time'] ?? null);
+        $this->assertNotFalse(DateTimeImmutable::createFromFormat(DATE_ATOM, $context['time']));
 
         $fetchingErrors = $this->getLogEntriesOfType('fetchingError');
-        self::assertCount(1, $fetchingErrors);
-        self::assertSame(self::RECORD . 'test-event-unserved', $fetchingErrors[0]['remote_id']);
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'));
+        $this->assertCount(1, $fetchingErrors);
+        $this->assertSame(self::RECORD . 'test-event-unserved', $fetchingErrors[0]['remote_id']);
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'));
     }
 
     #[Test]
@@ -67,17 +67,17 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         $entries = $this->getLogEntriesOfType('rateLimited');
-        self::assertCount(1, $entries);
-        self::assertIsString($entries[0]['context']);
+        $this->assertCount(1, $entries);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame('https://thuecat.org/resources/916373333853-mknj?format=jsonld', $context['url'] ?? null);
-        self::assertSame('thuecat.org', $context['host'] ?? null);
+        $this->assertIsArray($context);
+        $this->assertSame('https://thuecat.org/resources/916373333853-mknj?format=jsonld', $context['url'] ?? null);
+        $this->assertSame('thuecat.org', $context['host'] ?? null);
 
         $skipped = $this->getLogEntriesOfType('referenceSkipped');
-        self::assertCount(1, $skipped);
-        self::assertIsString($skipped[0]['message']);
-        self::assertStringContainsString('https://thuecat.org/resources/916373333853-mknj', $skipped[0]['message']);
+        $this->assertCount(1, $skipped);
+        $this->assertIsString($skipped[0]['message']);
+        $this->assertStringContainsString('https://thuecat.org/resources/916373333853-mknj', $skipped[0]['message']);
     }
 
     #[Test]
@@ -92,12 +92,12 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
 
         $ordinals = [];
         foreach ($this->getLogEntriesOfType('rateLimited') as $entry) {
-            self::assertIsString($entry['context']);
+            $this->assertIsString($entry['context']);
             $context = json_decode($entry['context'], true);
-            self::assertIsArray($context);
+            $this->assertIsArray($context);
             $ordinals[] = $context['ordinal'] ?? null;
         }
-        self::assertSame([3, 4], $ordinals);
+        $this->assertSame([3, 4], $ordinals);
     }
 
     // The faker serves each staged response once: a retry would find none left.
@@ -110,6 +110,6 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, $this->getLogEntriesOfType('fetchingError'));
+        $this->assertCount(1, $this->getLogEntriesOfType('fetchingError'));
     }
 }

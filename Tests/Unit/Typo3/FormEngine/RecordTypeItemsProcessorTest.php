@@ -87,6 +87,6 @@ class RecordTypeItemsProcessorTest extends TestCase
             $values[] = $item->getValue();
         }
 
-        self::assertSame($expected, $values);
+        $this->assertSame($expected, $values);
     }
 }

@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Vocabulary;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
+use WerkraumMedia\ThueCat\Import\Vocabulary\CachedVocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
@@ -41,7 +42,7 @@ class VocabularyIndexCacheTest extends TestCase
      */
     private function cache(array &$entries): FrontendInterface
     {
-        $cache = self::createStub(FrontendInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
         // `use (&$entries)`, not an arrow function: an arrow function captures
         // by value, so `get` would keep answering from the empty array this
         // was built with and never see what `set` stored.
@@ -79,9 +80,9 @@ class VocabularyIndexCacheTest extends TestCase
         $cache->write($this->index(), 1000);
         $cached = $cache->read();
 
-        self::assertNotNull($cached);
-        self::assertTrue($cached->index->has('schema:Museum'));
-        self::assertSame(['schema:CivicStructure'], $cached->index->parents('schema:Museum'));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
+        $this->assertTrue($cached->index->has('schema:Museum'));
+        $this->assertSame(['schema:CivicStructure'], $cached->index->parents('schema:Museum'));
     }
 
     #[Test]
@@ -93,10 +94,10 @@ class VocabularyIndexCacheTest extends TestCase
         $cache->write($this->index(), 1000);
         $cached = $cache->read();
 
-        self::assertNotNull($cached);
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
         $museum = $cached->index->get('schema:Museum');
-        self::assertNotNull($museum);
-        self::assertSame('Museum', $museum->label(VocabularyClass::UNTAGGED));
+        $this->assertInstanceOf(VocabularyClass::class, $museum);
+        $this->assertSame('Museum', $museum->label(VocabularyClass::UNTAGGED));
     }
 
     #[Test]
@@ -107,7 +108,7 @@ class VocabularyIndexCacheTest extends TestCase
 
         $cache->write($this->index(), 1234567);
 
-        self::assertSame(1234567, $cache->read()?->fetchedAt);
+        $this->assertSame(1234567, $cache->read()?->fetchedAt);
     }
 
     #[Test]
@@ -115,7 +116,7 @@ class VocabularyIndexCacheTest extends TestCase
     {
         $entries = [];
 
-        self::assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
     }
 
     #[Test]
@@ -127,8 +128,8 @@ class VocabularyIndexCacheTest extends TestCase
 
         $cached = $cache->read();
 
-        self::assertNotNull($cached);
-        self::assertFalse($cached->isStale(1000 + VocabularyIndexCache::STALE_AFTER - 1));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
+        $this->assertFalse($cached->isStale(1000 + VocabularyIndexCache::STALE_AFTER - 1));
     }
 
     #[Test]
@@ -140,8 +141,8 @@ class VocabularyIndexCacheTest extends TestCase
 
         $cached = $cache->read();
 
-        self::assertNotNull($cached);
-        self::assertTrue($cached->isStale(1000 + VocabularyIndexCache::STALE_AFTER));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
+        $this->assertTrue($cached->isStale(1000 + VocabularyIndexCache::STALE_AFTER));
     }
 
     #[Test]
@@ -154,9 +155,9 @@ class VocabularyIndexCacheTest extends TestCase
         // The whole point: a refresh that fails must still find this.
         $cached = $cache->read();
 
-        self::assertNotNull($cached);
-        self::assertTrue($cached->isStale(PHP_INT_MAX - 1));
-        self::assertTrue($cached->index->has('schema:Museum'));
+        $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
+        $this->assertTrue($cached->isStale(PHP_INT_MAX - 1));
+        $this->assertTrue($cached->index->has('schema:Museum'));
     }
 
     #[Test]
@@ -170,7 +171,7 @@ class VocabularyIndexCacheTest extends TestCase
             ],
         ];
 
-        self::assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
     }
 
     #[Test]
@@ -178,7 +179,7 @@ class VocabularyIndexCacheTest extends TestCase
     {
         $entries = ['index' => 'nonsense'];
 
-        self::assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
     }
 
     #[Test]
@@ -188,7 +189,7 @@ class VocabularyIndexCacheTest extends TestCase
             'index' => ['format' => VocabularyIndexCache::FORMAT, 'classes' => []],
         ];
 
-        self::assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
     }
 
     #[Test]
@@ -199,7 +200,7 @@ class VocabularyIndexCacheTest extends TestCase
 
         $cache->write($this->index(), 1000);
 
-        self::assertSame(VocabularyIndexCache::FORMAT, $this->written($entries)['format'] ?? null);
+        $this->assertSame(VocabularyIndexCache::FORMAT, $this->written($entries)['format'] ?? null);
     }
 
     #[Test]
@@ -213,11 +214,11 @@ class VocabularyIndexCacheTest extends TestCase
         // Plain arrays survive a cache round-trip across deployments; a
         // serialised object graph would not.
         $classes = $this->written($entries)['classes'] ?? null;
-        self::assertIsArray($classes);
+        $this->assertIsArray($classes);
 
         $museum = $classes['schema:Museum'] ?? null;
-        self::assertIsArray($museum);
-        self::assertSame(['schema:CivicStructure'], $museum['parents'] ?? null);
+        $this->assertIsArray($museum);
+        $this->assertSame(['schema:CivicStructure'], $museum['parents'] ?? null);
     }
 
     /**
@@ -230,7 +231,7 @@ class VocabularyIndexCacheTest extends TestCase
     private function written(array $entries): array
     {
         $entry = $entries['index'] ?? null;
-        self::assertIsArray($entry, 'Nothing was written to the cache.');
+        $this->assertIsArray($entry, 'Nothing was written to the cache.');
 
         return $entry;
     }

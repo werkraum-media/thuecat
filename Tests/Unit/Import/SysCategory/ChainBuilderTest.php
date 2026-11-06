@@ -76,7 +76,7 @@ class ChainBuilderTest extends TestCase
             'schema:Thing' => [],
         ], 'schema:Museum');
 
-        self::assertSame(['schema:CivicStructure', 'schema:Museum'], $chain);
+        $this->assertSame(['schema:CivicStructure', 'schema:Museum'], $chain);
     }
 
     #[Test]
@@ -84,7 +84,7 @@ class ChainBuilderTest extends TestCase
     {
         $chain = $this->build(['thuecat:Solo' => []], 'thuecat:Solo');
 
-        self::assertSame(['thuecat:Solo'], $chain);
+        $this->assertSame(['thuecat:Solo'], $chain);
     }
 
     #[Test]
@@ -92,7 +92,7 @@ class ChainBuilderTest extends TestCase
     {
         $chain = $this->build(['schema:Museum' => []], 'ttgds:Unknown');
 
-        self::assertSame([], $chain);
+        $this->assertSame([], $chain);
     }
 
     #[Test]
@@ -103,8 +103,8 @@ class ChainBuilderTest extends TestCase
             'thuecat:B' => ['thuecat:A'],
         ], 'thuecat:A');
 
-        self::assertContains('thuecat:A', $chain);
-        self::assertLessThanOrEqual(2, count($chain), 'A cycle must not repeat a class.');
+        $this->assertContains('thuecat:A', $chain);
+        $this->assertLessThanOrEqual(2, count($chain), 'A cycle must not repeat a class.');
     }
 
     #[Test]
@@ -117,8 +117,8 @@ class ChainBuilderTest extends TestCase
             'schema:Thing' => [],
         ], 'schema:Museum');
 
-        self::assertNotContains('schema:Thing', $chain);
-        self::assertNotContains('schema:Place', $chain);
+        $this->assertNotContains('schema:Thing', $chain);
+        $this->assertNotContains('schema:Place', $chain);
     }
 
     #[Test]
@@ -133,10 +133,7 @@ class ChainBuilderTest extends TestCase
             'schema:Thing' => [],
         ], 'thuecat:BeerBar');
 
-        self::assertSame(
-            ['schema:LocalBusiness', 'schema:FoodEstablishment', 'schema:BarOrPub', 'thuecat:BeerBar'],
-            $chain
-        );
+        $this->assertSame(['schema:LocalBusiness', 'schema:FoodEstablishment', 'schema:BarOrPub', 'thuecat:BeerBar'], $chain);
     }
 
     #[Test]
@@ -148,7 +145,7 @@ class ChainBuilderTest extends TestCase
             'schema:Thing' => [],
         ], 'schema:CivicStructure');
 
-        self::assertSame(['schema:CivicStructure'], $chain);
+        $this->assertSame(['schema:CivicStructure'], $chain);
     }
 
     #[Test]
@@ -163,11 +160,7 @@ class ChainBuilderTest extends TestCase
             'schema:Place' => [],
         ], 'thuecat:Archive');
 
-        self::assertSame(
-            ['schema:CivicStructure', 'schema:Museum', 'thuecat:Archive'],
-            $chain,
-            'The nearer parent wins, and the restated ancestor keeps its own level.'
-        );
+        $this->assertSame(['schema:CivicStructure', 'schema:Museum', 'thuecat:Archive'], $chain, 'The nearer parent wins, and the restated ancestor keeps its own level.');
     }
 
     #[Test]
@@ -181,7 +174,7 @@ class ChainBuilderTest extends TestCase
             'schema:CivicStructure' => [],
         ], 'thuecat:Archive', $strategy);
 
-        self::assertSame([], $strategy->asked, 'Reduction settles this without a choice.');
+        $this->assertSame([], $strategy->asked, 'Reduction settles this without a choice.');
     }
 
     #[Test]
@@ -197,12 +190,9 @@ class ChainBuilderTest extends TestCase
             'schema:EventVenue' => [],
         ], 'thuecat:Cinema', $strategy);
 
-        self::assertCount(1, $strategy->asked);
-        self::assertSame('thuecat:Cinema', $strategy->asked[0]['class']);
-        self::assertSame(
-            ['schema:EntertainmentBusiness', 'schema:EventVenue'],
-            $strategy->asked[0]['candidates']
-        );
+        $this->assertCount(1, $strategy->asked);
+        $this->assertSame('thuecat:Cinema', $strategy->asked[0]['class']);
+        $this->assertSame(['schema:EntertainmentBusiness', 'schema:EventVenue'], $strategy->asked[0]['candidates']);
     }
 
     #[Test]
@@ -214,8 +204,8 @@ class ChainBuilderTest extends TestCase
             'schema:EventVenue' => [],
         ], 'thuecat:Cinema');
 
-        self::assertSame(['schema:EntertainmentBusiness', 'thuecat:Cinema'], $chain);
-        self::assertNotContains('schema:EventVenue', $chain, 'One record, one parent.');
+        $this->assertSame(['schema:EntertainmentBusiness', 'thuecat:Cinema'], $chain);
+        $this->assertNotContains('schema:EventVenue', $chain, 'One record, one parent.');
     }
 
     #[Test]
@@ -227,11 +217,7 @@ class ChainBuilderTest extends TestCase
             'schema:EventVenue' => [],
         ];
 
-        self::assertSame(
-            $this->build($parents, 'thuecat:Cinema'),
-            $this->build($parents, 'thuecat:Cinema'),
-            'A re-import must not re-parent for want of a stable choice.'
-        );
+        $this->assertSame($this->build($parents, 'thuecat:Cinema'), $this->build($parents, 'thuecat:Cinema'), 'A re-import must not re-parent for want of a stable choice.');
     }
 
     #[Test]
@@ -244,6 +230,6 @@ class ChainBuilderTest extends TestCase
             'schema:Shared' => [],
         ], 'thuecat:Split');
 
-        self::assertSame(array_values(array_unique($chain)), $chain);
+        $this->assertSame(array_values(array_unique($chain)), $chain);
     }
 }

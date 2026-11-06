@@ -38,10 +38,10 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
-        self::assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
-        self::assertStringNotContainsString('Fischmarkt Erfurt', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
+        $this->assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
+        $this->assertStringNotContainsString('Fischmarkt Erfurt', (string)$result->getBody());
     }
 
     #[Test]
@@ -54,9 +54,9 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
-        self::assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
+        $this->assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
     }
 
     #[Test]
@@ -69,9 +69,9 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
-        self::assertStringNotContainsString('Domberg Erfurt', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
+        $this->assertStringNotContainsString('Domberg Erfurt', (string)$result->getBody());
     }
 
     #[Test]
@@ -84,10 +84,10 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
-        self::assertStringNotContainsString('Domberg Erfurt', (string)$result->getBody());
-        self::assertStringContainsString('Keine Einträge vorhanden.', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
+        $this->assertStringNotContainsString('Domberg Erfurt', (string)$result->getBody());
+        $this->assertStringContainsString('Keine Einträge vorhanden.', (string)$result->getBody());
     }
 
     #[Test]
@@ -100,8 +100,8 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
 
         $result = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
-        self::assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Stadtmuseum Erfurt', (string)$result->getBody());
+        $this->assertStringContainsString('Domberg Erfurt', (string)$result->getBody());
     }
 }

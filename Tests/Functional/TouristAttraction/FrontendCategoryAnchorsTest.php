@@ -44,8 +44,8 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
 
         $anchors = $this->get(FrontendCategoryAnchors::class);
 
-        self::assertSame(300, $anchors->categoryParent($request, 'tx_thuecat_tourist_attraction'));
-        self::assertSame(500, $anchors->keywordParent($request, 'tx_thuecat_tourist_attraction'));
+        $this->assertSame(300, $anchors->categoryParent($request, 'tx_thuecat_tourist_attraction'));
+        $this->assertSame(500, $anchors->keywordParent($request, 'tx_thuecat_tourist_attraction'));
     }
 
     #[Test]
@@ -56,7 +56,7 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
             'trails' => ['keywords' => ['parent' => 600, 'storagePid' => 11]],
         ]);
 
-        self::assertSame(600, $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_trail'));
+        $this->assertSame(600, $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_trail'));
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
             'thuecat' => ['keywords' => ['parent' => 500, 'storagePid' => 11]],
         ]);
 
-        self::assertSame(500, $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_trail'));
+        $this->assertSame(500, $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_trail'));
     }
 
     #[Test]
@@ -77,10 +77,7 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
             'trails' => ['keywords' => ['parent' => 600, 'storagePid' => 11]],
         ]);
 
-        self::assertSame(
-            500,
-            $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_tourist_attraction')
-        );
+        $this->assertSame(500, $this->get(FrontendCategoryAnchors::class)->keywordParent($request, 'tx_thuecat_tourist_attraction'));
     }
 
     /**

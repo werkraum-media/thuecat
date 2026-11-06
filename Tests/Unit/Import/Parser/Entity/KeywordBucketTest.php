@@ -39,8 +39,8 @@ class KeywordBucketTest extends AbstractImportTestCase
 
         $categories = $payload->getCategories()[TouristAttractionEntity::TABLE][self::REMOTE_ID] ?? [];
 
-        self::assertNotSame([], $categories, 'The fixture must produce type categories.');
-        self::assertSame([], array_filter(
+        $this->assertNotSame([], $categories, 'The fixture must produce type categories.');
+        $this->assertSame([], array_filter(
             $categories,
             static fn (array $entry): bool => str_starts_with($entry['remoteId'], 'keyword:')
         ));
@@ -51,13 +51,13 @@ class KeywordBucketTest extends AbstractImportTestCase
     {
         $entity = $this->parseFixture();
 
-        self::assertArrayNotHasKey(AbstractEntity::KEYWORD_BUCKET, $entity->getTransients());
+        $this->assertArrayNotHasKey(AbstractEntity::KEYWORD_BUCKET, $entity->getTransients());
     }
 
     private function parseFixture(): TouristAttractionEntity
     {
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
 
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));

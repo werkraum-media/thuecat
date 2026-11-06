@@ -44,8 +44,8 @@ class ConsoleProgressRendererTest extends TestCase
 
         $display = $output->fetch();
 
-        self::assertSame(1, substr_count($display, 'Fetching configured URLs'));
-        self::assertSame(1, substr_count($display, 'Resolving references and media'));
+        $this->assertSame(1, substr_count($display, 'Fetching configured URLs'));
+        $this->assertSame(1, substr_count($display, 'Resolving references and media'));
     }
 
     #[Test]
@@ -59,8 +59,8 @@ class ConsoleProgressRendererTest extends TestCase
 
         $display = $output->fetch();
 
-        self::assertStringContainsString('fetching 2/2 second', $display);
-        self::assertStringContainsString('first', $display, 'The announcing item is named too.');
+        $this->assertStringContainsString('fetching 2/2 second', $display);
+        $this->assertStringContainsString('first', $display, 'The announcing item is named too.');
     }
 
     /**
@@ -75,10 +75,7 @@ class ConsoleProgressRendererTest extends TestCase
         $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-1'));
         $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-2'));
 
-        self::assertMatchesRegularExpression(
-            '/\[\s*\d+\.\d{2}s\] resolving ref-2/',
-            $output->fetch()
-        );
+        $this->assertMatchesRegularExpression('/\[\s*\d+\.\d{2}s\] resolving ref-2/', $output->fetch());
     }
 
     /**
@@ -97,13 +94,9 @@ class ConsoleProgressRendererTest extends TestCase
 
         $display = $output->fetch();
 
-        self::assertStringContainsString('Resolving references and media', $display);
-        self::assertStringNotContainsString('requests', $display);
-        self::assertCount(
-            1,
-            array_filter(explode(PHP_EOL, $display)),
-            'The headline is the only line an uncountable phase produces.'
-        );
+        $this->assertStringContainsString('Resolving references and media', $display);
+        $this->assertStringNotContainsString('requests', $display);
+        $this->assertCount(1, array_filter(explode(PHP_EOL, $display)), 'The headline is the only line an uncountable phase produces.');
     }
 
     #[Test]
@@ -117,8 +110,8 @@ class ConsoleProgressRendererTest extends TestCase
 
         $display = $output->fetch();
 
-        self::assertStringNotContainsString('second', $display, 'Item labels are debug-only.');
-        self::assertStringContainsString('fetching 2/2', $display, 'The position still shows.');
+        $this->assertStringNotContainsString('second', $display, 'Item labels are debug-only.');
+        $this->assertStringContainsString('fetching 2/2', $display, 'The position still shows.');
     }
 
     #[Test]
@@ -132,9 +125,9 @@ class ConsoleProgressRendererTest extends TestCase
 
         $display = $output->fetch();
 
-        self::assertStringContainsString('Fetching configured URLs', $display);
-        self::assertStringNotContainsString('second', $display);
-        self::assertStringNotContainsString("\r", $display);
+        $this->assertStringContainsString('Fetching configured URLs', $display);
+        $this->assertStringNotContainsString('second', $display);
+        $this->assertStringNotContainsString("\r", $display);
     }
 
     // Without the throttle a long root list prints one line per root.
@@ -150,11 +143,7 @@ class ConsoleProgressRendererTest extends TestCase
 
         $lines = array_filter(explode(PHP_EOL, $output->fetch()));
 
-        self::assertLessThan(
-            10,
-            count($lines),
-            'A tight loop yields the headline plus at most a couple of throttled lines.'
-        );
+        $this->assertLessThan(10, count($lines), 'A tight loop yields the headline plus at most a couple of throttled lines.');
     }
 
     #[Test]
@@ -166,6 +155,6 @@ class ConsoleProgressRendererTest extends TestCase
         $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-1'));
         $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-2'));
 
-        self::assertStringContainsString('resolving ref-2', $output->fetch());
+        $this->assertStringContainsString('resolving ref-2', $output->fetch());
     }
 }

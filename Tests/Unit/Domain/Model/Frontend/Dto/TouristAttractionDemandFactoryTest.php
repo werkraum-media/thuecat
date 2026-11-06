@@ -45,7 +45,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings([]);
 
-        self::assertSame([], $filter->getLockedProperties());
+        $this->assertSame([], $filter->getLockedProperties());
     }
 
     #[Test]
@@ -53,8 +53,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings(['towns' => '1, 3']);
 
-        self::assertSame([1, 3], $filter->getDemand()->getTowns());
-        self::assertTrue($filter->isLocked('towns'));
+        $this->assertSame([1, 3], $filter->getDemand()->getTowns());
+        $this->assertTrue($filter->isLocked('towns'));
     }
 
     #[Test]
@@ -63,8 +63,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
         // Flexform may hand an array; only a CSV string is a valid towns lock.
         $filter = $this->subject->fromSettings(['towns' => [1, 3]]);
 
-        self::assertSame([], $filter->getDemand()->getTowns());
-        self::assertFalse($filter->isLocked('towns'));
+        $this->assertSame([], $filter->getDemand()->getTowns());
+        $this->assertFalse($filter->isLocked('towns'));
     }
 
     #[Test]
@@ -72,8 +72,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings(['categories' => '10, 12']);
 
-        self::assertSame([10, 12], $filter->getDemand()->getCategories());
-        self::assertTrue($filter->isLocked('categories'));
+        $this->assertSame([10, 12], $filter->getDemand()->getCategories());
+        $this->assertTrue($filter->isLocked('categories'));
     }
 
     #[Test]
@@ -81,8 +81,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings(['categories' => [10, 12]]);
 
-        self::assertSame([], $filter->getDemand()->getCategories());
-        self::assertFalse($filter->isLocked('categories'));
+        $this->assertSame([], $filter->getDemand()->getCategories());
+        $this->assertFalse($filter->isLocked('categories'));
     }
 
     #[Test]
@@ -95,7 +95,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame([10], $demand->getCategories());
+        $this->assertSame([10], $demand->getCategories());
     }
 
     #[Test]
@@ -103,8 +103,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings(['keywords' => '22,75']);
 
-        self::assertSame([22, 75], $filter->getDemand()->getKeywords());
-        self::assertTrue($filter->isLocked('keywords'));
+        $this->assertSame([22, 75], $filter->getDemand()->getKeywords());
+        $this->assertTrue($filter->isLocked('keywords'));
     }
 
     #[Test]
@@ -112,8 +112,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     {
         $filter = $this->subject->fromSettings(['keywords' => [22, 75]]);
 
-        self::assertSame([], $filter->getDemand()->getKeywords());
-        self::assertFalse($filter->isLocked('keywords'));
+        $this->assertSame([], $filter->getDemand()->getKeywords());
+        $this->assertFalse($filter->isLocked('keywords'));
     }
 
     #[Test]
@@ -126,7 +126,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame([8], $demand->getCategories());
+        $this->assertSame([8], $demand->getCategories());
     }
 
     #[Test]
@@ -139,13 +139,10 @@ final class TouristAttractionDemandFactoryTest extends TestCase
         ]);
 
         $demand = $filter->getDemand();
-        self::assertTrue($demand->getPetsAllowed());
-        self::assertTrue($demand->getIsAccessibleForFree());
-        self::assertTrue($demand->getPublicAccess());
-        self::assertSame(
-            ['petsAllowed', 'isAccessibleForFree', 'publicAccess'],
-            $filter->getLockedProperties()
-        );
+        $this->assertTrue($demand->getPetsAllowed());
+        $this->assertTrue($demand->getIsAccessibleForFree());
+        $this->assertTrue($demand->getPublicAccess());
+        $this->assertSame(['petsAllowed', 'isAccessibleForFree', 'publicAccess'], $filter->getLockedProperties());
     }
 
     #[Test]
@@ -158,7 +155,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame([1], $demand->getTowns());
+        $this->assertSame([1], $demand->getTowns());
     }
 
     #[Test]
@@ -167,8 +164,8 @@ final class TouristAttractionDemandFactoryTest extends TestCase
         // Locked properties render as hidden form fields; the sort order must not.
         $filter = $this->subject->fromSettings(['sortBy' => 'sorting']);
 
-        self::assertSame('sorting', $filter->getDemand()->getSortBy());
-        self::assertSame([], $filter->getLockedProperties());
+        $this->assertSame('sorting', $filter->getDemand()->getSortBy());
+        $this->assertSame([], $filter->getLockedProperties());
     }
 
     #[Test]
@@ -180,7 +177,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame('sorting', $demand->getSortBy());
+        $this->assertSame('sorting', $demand->getSortBy());
     }
 
     #[Test]
@@ -192,7 +189,7 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame('', $demand->getSortBy());
+        $this->assertSame('', $demand->getSortBy());
     }
 
     #[Test]
@@ -205,6 +202,6 @@ final class TouristAttractionDemandFactoryTest extends TestCase
 
         $this->subject->applyEditorFilter($demand, $filter);
 
-        self::assertSame('Dom', $demand->getSearchword());
+        $this->assertSame('Dom', $demand->getSearchword());
     }
 }

@@ -36,8 +36,8 @@ class RequestFactoryTest extends TestCase
     #[Test]
     public function returnsRequestWithJsonIdFormat(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
-        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -48,15 +48,15 @@ class RequestFactoryTest extends TestCase
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
 
-        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
+        $this->assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
     }
 
     #[Test]
     public function returnsRequestWithApiKeyWhenConfigured(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
-        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -67,15 +67,15 @@ class RequestFactoryTest extends TestCase
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
 
-        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
+        $this->assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
     }
 
     #[Test]
     public function returnsRequestWithoutApiKeyWhenUnkown(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException());
-        $requestFactory = new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class));
+        $requestFactory = new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class));
         $uriFactory = new UriFactory();
 
         $subject = new RequestFactory(
@@ -86,7 +86,7 @@ class RequestFactoryTest extends TestCase
 
         $request = $subject->createRequest('GET', 'https://example.com/api/ext-sync/get-updated-nodes?syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db');
 
-        self::assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
+        $this->assertSame('syncScopeId=dd3738dc-58a6-4748-a6ce-4950293a06db&format=jsonld', $request->getUri()->getQuery());
     }
 
     /**
@@ -102,55 +102,55 @@ class RequestFactoryTest extends TestCase
     #[DataProvider('thuecatHosts')]
     public function keepsQueryCredentialsOnThuecatHosts(string $url): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
 
         $subject = new RequestFactory(
             $extensionConfiguration,
-            new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class)),
+            new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class)),
             new UriFactory()
         );
 
         $request = $subject->createRequest('GET', $url);
 
-        self::assertSame('format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
-        self::assertFalse($request->hasHeader('Authorization'));
+        $this->assertSame('format=jsonld&api_key=some-api-key', $request->getUri()->getQuery());
+        $this->assertFalse($request->hasHeader('Authorization'));
     }
 
     #[Test]
     public function sendsSyncKeyAsHeaderToSyncHost(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
 
         $subject = (new RequestFactory(
             $extensionConfiguration,
-            new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class)),
+            new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class)),
             new UriFactory()
         ))->withSyncHost('widgets.thuecat.org', 'test-sync-key');
 
         $request = $subject->createRequest('GET', 'https://widgets.thuecat.org/api/sync/test-channel/list-changed?since=2026-10-14T03%3A00%3A00%2B02%3A00');
 
-        self::assertSame('APIKEY test-sync-key', $request->getHeaderLine('Authorization'));
-        self::assertSame('since=2026-10-14T03%3A00%3A00%2B02%3A00', $request->getUri()->getQuery());
+        $this->assertSame('APIKEY test-sync-key', $request->getHeaderLine('Authorization'));
+        $this->assertSame('since=2026-10-14T03%3A00%3A00%2B02%3A00', $request->getUri()->getQuery());
     }
 
     #[Test]
     #[DataProvider('thuecatHosts')]
     public function sendsNoKeyToOtherHostsOfSyncRun(string $url): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
 
         $subject = (new RequestFactory(
             $extensionConfiguration,
-            new Typo3RequestFactory(self::createStub(GuzzleClientFactory::class)),
+            new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class)),
             new UriFactory()
         ))->withSyncHost('widgets.thuecat.org', 'test-sync-key');
 
         $request = $subject->createRequest('GET', $url);
 
-        self::assertFalse($request->hasHeader('Authorization'));
-        self::assertSame('format=jsonld', $request->getUri()->getQuery());
+        $this->assertFalse($request->hasHeader('Authorization'));
+        $this->assertSame('format=jsonld', $request->getUri()->getQuery());
     }
 }

@@ -40,21 +40,15 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
 
         $hotel = $this->fetchRowByRemoteId(self::TABLE, 'test:wizard-hotel');
         $translation = $this->fetchTranslationsByParent(self::TABLE, 800)[1] ?? [];
-        self::assertSame(
-            [
-                [800, 'dorint-hotel-am-dom-erfurt', 'meeting_venue', 'meeting_congress_hotel'],
-                [801, 'dorint-hotel-am-dom-erfurt-en', 'meeting_venue', 'meeting_congress_hotel'],
-            ],
-            [
-                [$hotel['uid'], $hotel['slug'], $hotel['type'], $hotel['venue_type']],
-                [$translation['uid'] ?? null, $translation['slug'] ?? null, $translation['type'] ?? null, $translation['venue_type'] ?? null],
-            ]
-        );
-        self::assertSame(
-            $categoriesBefore,
-            $this->getConnectionPool()->getConnectionForTable('sys_category_record_mm')
-                ->select(['*'], 'sys_category_record_mm')->fetchAllAssociative()
-        );
+        $this->assertSame([
+            [800, 'dorint-hotel-am-dom-erfurt', 'meeting_venue', 'meeting_congress_hotel'],
+            [801, 'dorint-hotel-am-dom-erfurt-en', 'meeting_venue', 'meeting_congress_hotel'],
+        ], [
+            [$hotel['uid'], $hotel['slug'], $hotel['type'], $hotel['venue_type']],
+            [$translation['uid'] ?? null, $translation['slug'] ?? null, $translation['type'] ?? null, $translation['venue_type'] ?? null],
+        ]);
+        $this->assertSame($categoriesBefore, $this->getConnectionPool()->getConnectionForTable('sys_category_record_mm')
+            ->select(['*'], 'sys_category_record_mm')->fetchAllAssociative());
     }
 
     #[Test]
@@ -65,7 +59,7 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
         $this->get(MeetingVenueTypeUpgradeWizard::class)->executeUpdate();
 
         $row = $this->fetchRowByRemoteId(self::TABLE, 'test:wizard-congress');
-        self::assertSame(['meeting_venue', 'meeting_congress'], [$row['type'], $row['venue_type']]);
+        $this->assertSame(['meeting_venue', 'meeting_congress'], [$row['type'], $row['venue_type']]);
     }
 
     #[Test]
@@ -76,7 +70,7 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
         $this->get(MeetingVenueTypeUpgradeWizard::class)->executeUpdate();
 
         $row = $this->fetchRowByRemoteId(self::TABLE, 'test:wizard-hotel-and-congress');
-        self::assertSame(['meeting_venue', 'meeting_congress_hotel'], [$row['type'], $row['venue_type']]);
+        $this->assertSame(['meeting_venue', 'meeting_congress_hotel'], [$row['type'], $row['venue_type']]);
     }
 
     #[Test]
@@ -87,7 +81,7 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
         $this->get(MeetingVenueTypeUpgradeWizard::class)->executeUpdate();
 
         $row = $this->fetchRowByRemoteId(self::TABLE, 'test:wizard-museum');
-        self::assertSame(['attraction', ''], [$row['type'], $row['venue_type']]);
+        $this->assertSame(['attraction', ''], [$row['type'], $row['venue_type']]);
     }
 
     #[Test]
@@ -95,7 +89,7 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/MeetingVenuesStoredAsAttractions.csv');
 
-        self::assertTrue($this->get(MeetingVenueTypeUpgradeWizard::class)->updateNecessary());
+        $this->assertTrue($this->get(MeetingVenueTypeUpgradeWizard::class)->updateNecessary());
     }
 
     #[Test]
@@ -106,6 +100,6 @@ final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
 
         $wizard->executeUpdate();
 
-        self::assertFalse($wizard->updateNecessary());
+        $this->assertFalse($wizard->updateNecessary());
     }
 }

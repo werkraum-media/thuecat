@@ -205,11 +205,11 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
 
         try {
             $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
-            self::fail('An incomplete trails pair must fail validation.');
+            $this->fail('An incomplete trails pair must fail validation.');
         } catch (KeywordConfigurationException $exception) {
-            self::assertSame(1786713820, $exception->getCode());
-            self::assertStringContainsString('import.trails.keywords.parent', $exception->getMessage());
-            self::assertStringContainsString('import.trails.keywords.storagePid', $exception->getMessage());
+            $this->assertSame(1786713820, $exception->getCode());
+            $this->assertStringContainsString('import.trails.keywords.parent', $exception->getMessage());
+            $this->assertStringContainsString('import.trails.keywords.storagePid', $exception->getMessage());
         }
     }
 

@@ -48,11 +48,7 @@ class EventKeywordImportTest extends AbstractImportTestCase
 
         $eventUid = $this->eventUid();
 
-        self::assertSame(
-            ['Comedy', 'Erfurt', 'Landeshauptstadt Erfurt', 'Weingut'],
-            $this->relatedKeywordTitles($eventUid),
-            'Reference, ontology literal and free text all become relations.'
-        );
+        $this->assertSame(['Comedy', 'Erfurt', 'Landeshauptstadt Erfurt', 'Weingut'], $this->relatedKeywordTitles($eventUid), 'Reference, ontology literal and free text all become relations.');
     }
 
     #[Test]
@@ -65,16 +61,8 @@ class EventKeywordImportTest extends AbstractImportTestCase
 
         $eventUid = $this->eventUid();
 
-        self::assertSame(
-            ['Kulturveranstaltung'],
-            $this->relatedTitles($eventUid, 'categories'),
-            'The @type category relation holds only its own member.'
-        );
-        self::assertNotContains(
-            'Kulturveranstaltung',
-            $this->relatedKeywordTitles($eventUid),
-            'A type category must never appear among the keywords.'
-        );
+        $this->assertSame(['Kulturveranstaltung'], $this->relatedTitles($eventUid, 'categories'), 'The @type category relation holds only its own member.');
+        $this->assertNotContains('Kulturveranstaltung', $this->relatedKeywordTitles($eventUid), 'A type category must never appear among the keywords.');
     }
 
     #[Test]
@@ -86,11 +74,7 @@ class EventKeywordImportTest extends AbstractImportTestCase
         $this->runImport();
 
         foreach ($this->remoteIdsOfCategoriesUnder(100) as $remoteId) {
-            self::assertStringStartsNotWith(
-                'keyword:',
-                $remoteId,
-                'A keyword category appeared under the category anchor.'
-            );
+            $this->assertStringStartsNotWith('keyword:', $remoteId, 'A keyword category appeared under the category anchor.');
         }
     }
 
@@ -103,16 +87,8 @@ class EventKeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            'Vorbestehend, aus anderer Quelle',
-            $this->eventColumn($this->eventUid(), 'keywords'),
-            'The string column belongs to another importer.'
-        );
-        self::assertNotSame(
-            [],
-            $this->relatedKeywordTitles($this->eventUid()),
-            'Relations are written alongside it.'
-        );
+        $this->assertSame('Vorbestehend, aus anderer Quelle', $this->eventColumn($this->eventUid(), 'keywords'), 'The string column belongs to another importer.');
+        $this->assertNotSame([], $this->relatedKeywordTitles($this->eventUid()), 'Relations are written alongside it.');
     }
 
     private function expectKeywordFetches(): void
@@ -140,7 +116,7 @@ class EventKeywordImportTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Import configuration not found in pre-state.');
+        $this->assertNotNull($configuration, 'Import configuration not found in pre-state.');
         $this->get(Importer::class)->importConfiguration($configuration);
     }
 
@@ -166,7 +142,7 @@ class EventKeywordImportTest extends AbstractImportTestCase
             ->fetchOne()
         ;
 
-        self::assertIsNumeric($uid, 'Event was not imported.');
+        $this->assertIsNumeric($uid, 'Event was not imported.');
 
         return (int)$uid;
     }

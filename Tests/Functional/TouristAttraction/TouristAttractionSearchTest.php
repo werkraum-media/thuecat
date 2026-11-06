@@ -39,9 +39,9 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<form', $body);
-        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<form', $body);
+        $this->assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
     }
 
     #[Test]
@@ -52,7 +52,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // form action attribute should point at the list page (uid 10, slug /list/)
-        self::assertMatchesRegularExpression('#<form[^>]+action="[^"]*/list/[^"]*"#', $body);
+        $this->assertMatchesRegularExpression('#<form[^>]+action="[^"]*/list/[^"]*"#', $body);
     }
 
     #[Test]
@@ -62,8 +62,8 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Domberg Erfurt', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Domberg Erfurt', $body);
     }
 
     #[Test]
@@ -76,7 +76,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
+        $this->assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
 
     #[Test]
@@ -89,7 +89,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
+        $this->assertMatchesRegularExpression('#<input[^>]+name="tx_thuecat_touristattractionlist\[demand\]\[searchword\]"[^>]+value="Stadtmuseum"#', $body);
     }
 
     // 4.1: the mask offers the keyword tree, grouped by parent — the nesting is
@@ -101,11 +101,11 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][keywords][]"', $body);
-        self::assertStringContainsString('Ambiente', $body);
-        self::assertStringContainsString('romantisch', $body);
+        $this->assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][keywords][]"', $body);
+        $this->assertStringContainsString('Ambiente', $body);
+        $this->assertStringContainsString('romantisch', $body);
         // The anchor itself is a container, never an option.
-        self::assertStringNotContainsString('>Keywords<', $body);
+        $this->assertStringNotContainsString('>Keywords<', $body);
     }
 
     // 4.2: a keyword already chosen comes back checked, so the visitor sees what
@@ -120,9 +120,6 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression(
-            '#<input[^>]+value="501"[^>]+checked="checked"#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<input[^>]+value="501"[^>]+checked="checked"#', $body);
     }
 }

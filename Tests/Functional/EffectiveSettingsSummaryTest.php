@@ -91,8 +91,8 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('effectiveSettings');
 
-        self::assertCount(1, $entries, 'One summary per run.');
-        self::assertSame('debug', $entries[0]['severity']);
+        $this->assertCount(1, $entries, 'One summary per run.');
+        $this->assertSame('debug', $entries[0]['severity']);
     }
 
     // 'debug' is rank 0, so the summary cannot lift a clean run's outcome.
@@ -104,7 +104,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('debug', $severity);
+        $this->assertSame('debug', $severity);
     }
 
     /**
@@ -138,7 +138,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $actual = array_keys($this->summaryContext());
         sort($actual);
 
-        self::assertSame($expected, $actual);
+        $this->assertSame($expected, $actual);
     }
 
     /**
@@ -155,9 +155,9 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $reported = array_keys($this->summaryContext());
 
-        self::assertNotContains('importTarget', $reported);
+        $this->assertNotContains('importTarget', $reported);
         foreach (self::scopes() as $scope) {
-            self::assertContains(CategoryAnchorSetting::KeywordParent->settingsPath($scope), $reported);
+            $this->assertContains(CategoryAnchorSetting::KeywordParent->settingsPath($scope), $reported);
         }
     }
 
@@ -176,7 +176,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $anchor) {
                 $path = $anchor->settingsPath($scope);
-                self::assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
+                $this->assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
             }
         }
     }
@@ -207,15 +207,15 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $entries = $this->getLogEntriesOfType('effectiveSettings');
-        self::assertCount(1, $entries);
+        $this->assertCount(1, $entries);
         // The whole row, so no column can leak the key unnoticed.
         $serialised = (string)json_encode($entries[0]);
 
-        self::assertStringNotContainsStringIgnoringCase('apiKey', $serialised);
-        self::assertStringNotContainsString(self::API_KEY, $serialised);
+        $this->assertStringNotContainsStringIgnoringCase('apiKey', $serialised);
+        $this->assertStringNotContainsString(self::API_KEY, $serialised);
         // Neither a masked rendering nor a length may appear: both leak shape.
-        self::assertStringNotContainsString(str_repeat('*', 4), $serialised);
-        self::assertStringNotContainsString((string)strlen(self::API_KEY), $serialised);
+        $this->assertStringNotContainsString(str_repeat('*', 4), $serialised);
+        $this->assertStringNotContainsString((string)strlen(self::API_KEY), $serialised);
     }
 
     // Diagnostics must never cost a run.
@@ -237,10 +237,10 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         };
 
         $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        self::assertInstanceOf(ImportConfigurationInterface::class, $configuration);
+        $this->assertInstanceOf(ImportConfigurationInterface::class, $configuration);
         $severity = $this->get(Importer::class)->importConfiguration($configuration, $listener);
 
-        self::assertSame('debug', $severity);
+        $this->assertSame('debug', $severity);
     }
 
     /**
@@ -249,15 +249,15 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
     private function summaryContext(): array
     {
         $entries = $this->getLogEntriesOfType('effectiveSettings');
-        self::assertCount(1, $entries);
+        $this->assertCount(1, $entries);
         $raw = $entries[0]['context'] ?? '';
-        self::assertIsString($raw);
+        $this->assertIsString($raw);
         $decoded = json_decode($raw, true);
-        self::assertIsArray($decoded);
+        $this->assertIsArray($decoded);
 
         $context = [];
         foreach ($decoded as $name => $value) {
-            self::assertTrue(is_string($value) || is_int($value), 'Settings values stay scalar.');
+            $this->assertTrue(is_string($value) || is_int($value), 'Settings values stay scalar.');
             $context[(string)$name] = $value;
         }
 

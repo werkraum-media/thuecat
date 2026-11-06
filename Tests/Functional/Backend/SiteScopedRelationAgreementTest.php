@@ -51,31 +51,15 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
     #[Test]
     public function bothSurfacesOfferTheSameRecordsForTheFirstSite(): void
     {
-        self::assertSame(
-            [4001],
-            $this->dropdownOffers(4900),
-            'dropdown'
-        );
-        self::assertSame(
-            $this->dropdownOffers(4900),
-            $this->wizardOffers(4900, 4010),
-            'the two surfaces must agree'
-        );
+        $this->assertSame([4001], $this->dropdownOffers(4900), 'dropdown');
+        $this->assertSame($this->dropdownOffers(4900), $this->wizardOffers(4900, 4010), 'the two surfaces must agree');
     }
 
     #[Test]
     public function bothSurfacesOfferTheSameRecordsForTheSecondSite(): void
     {
-        self::assertSame(
-            [5001],
-            $this->dropdownOffers(5900),
-            'dropdown'
-        );
-        self::assertSame(
-            $this->dropdownOffers(5900),
-            $this->wizardOffers(5900, 5010),
-            'the two surfaces must agree'
-        );
+        $this->assertSame([5001], $this->dropdownOffers(5900), 'dropdown');
+        $this->assertSame($this->dropdownOffers(5900), $this->wizardOffers(5900, 5010), 'the two surfaces must agree');
     }
 
     #[Test]
@@ -85,13 +69,13 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
         $firstWizard = $this->wizardOffers(4900, 4010);
 
         // An empty offer would satisfy every assertNotContains below.
-        self::assertContains(4001, $firstDropdown);
-        self::assertContains(4001, $firstWizard);
+        $this->assertContains(4001, $firstDropdown);
+        $this->assertContains(4001, $firstWizard);
 
-        self::assertNotContains(5001, $firstDropdown);
-        self::assertNotContains(5001, $firstWizard);
-        self::assertNotContains(4001, $this->dropdownOffers(5900));
-        self::assertNotContains(4001, $this->wizardOffers(5900, 5010));
+        $this->assertNotContains(5001, $firstDropdown);
+        $this->assertNotContains(5001, $firstWizard);
+        $this->assertNotContains(4001, $this->dropdownOffers(5900));
+        $this->assertNotContains(4001, $this->wizardOffers(5900, 5010));
     }
 
     #[Test]
@@ -100,11 +84,11 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
         $dropdown = $this->dropdownOffers(4900);
         $wizard = $this->wizardOffers(4900, 4010);
 
-        self::assertContains(4001, $dropdown);
-        self::assertContains(4001, $wizard);
+        $this->assertContains(4001, $dropdown);
+        $this->assertContains(4001, $wizard);
 
-        self::assertNotContains(4002, $dropdown);
-        self::assertNotContains(4002, $wizard);
+        $this->assertNotContains(4002, $dropdown);
+        $this->assertNotContains(4002, $wizard);
     }
 
     /**

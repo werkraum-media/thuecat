@@ -48,26 +48,18 @@ class TrailShowPageCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
 
-        self::assertNotSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_21'),
-            'The configured record must tag the page it is displayed on.'
-        );
+        $this->assertNotSame([], $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_21'), 'The configured record must tag the page it is displayed on.');
     }
 
     #[Test]
     public function savingTheConfiguredRecordDiscardsThePage(): void
     {
         $this->request(10);
-        self::assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'));
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'));
 
         $this->saveRecord(21, ['title' => 'Goethe-Erlebnisweg, neu benannt'], self::TABLE);
 
-        self::assertSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'),
-            'Saving the displayed record must discard its page.'
-        );
+        $this->assertSame([], $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'), 'Saving the displayed record must discard its page.');
     }
 
     #[Test]
@@ -78,12 +70,8 @@ class TrailShowPageCacheTest extends AbstractCachingTestCase
 
         $body = (string)$this->request(10)->getBody();
 
-        self::assertStringContainsString('Goethe-Erlebnisweg, neu benannt', $body);
-        self::assertStringNotContainsString(
-            '<h2>Goethe-Erlebnisweg</h2>',
-            $body,
-            'The superseded title must not survive in a cached page.'
-        );
+        $this->assertStringContainsString('Goethe-Erlebnisweg, neu benannt', $body);
+        $this->assertStringNotContainsString('<h2>Goethe-Erlebnisweg</h2>', $body, 'The superseded title must not survive in a cached page.');
     }
 
     #[Test]
@@ -93,10 +81,6 @@ class TrailShowPageCacheTest extends AbstractCachingTestCase
 
         $this->request(13);
 
-        self::assertNotSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_24'),
-            'The empty page must stay reachable through the configured uid.'
-        );
+        $this->assertNotSame([], $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_24'), 'The empty page must stay reachable through the configured uid.');
     }
 }

@@ -52,7 +52,7 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
         );
         sort($names);
 
-        self::assertSame(['categories', 'keywords', 'towns'], $names);
+        $this->assertSame(['categories', 'keywords', 'towns'], $names);
     }
 
     #[Test]
@@ -61,9 +61,9 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
         $options = $this->get(SearchFilterOptionsService::class)->build($this->request(), 'tx_thuecat_tourist_attraction', [11]);
 
         // All three read the same storage, so each offers what page 11 holds.
-        self::assertSame(['Erfurt', 'Weimar'], $this->titles($options['towns']));
-        self::assertSame(['Gebäudetyp', 'Haus'], $this->titles($options['categories']));
-        self::assertSame(['Ambiente', 'Hauptstadt'], $this->titles($options['keywords']));
+        $this->assertSame(['Erfurt', 'Weimar'], $this->titles($options['towns']));
+        $this->assertSame(['Gebäudetyp', 'Haus'], $this->titles($options['categories']));
+        $this->assertSame(['Ambiente', 'Hauptstadt'], $this->titles($options['keywords']));
     }
 
     #[Test]
@@ -71,8 +71,8 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
     {
         $options = $this->get(SearchFilterOptionsService::class)->build($this->request(), 'tx_thuecat_tourist_attraction', []);
 
-        self::assertContainsOnlyInstancesOf(FilterOptions::class, $options);
-        self::assertArrayHasKey('towns', $options);
+        $this->assertContainsOnlyInstancesOf(FilterOptions::class, $options);
+        $this->assertArrayHasKey('towns', $options);
     }
 
     #[Test]
@@ -85,8 +85,8 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
         // held from the first build would show up as the first site's tree.
         $foreign = $service->build($this->requestForAnchors(9000, 9001), 'tx_thuecat_tourist_attraction', [11]);
 
-        self::assertSame(['Gebäudetyp', 'Haus'], $this->titles($configured['categories']));
-        self::assertSame([], $foreign['categories']->getOptions());
+        $this->assertSame(['Gebäudetyp', 'Haus'], $this->titles($configured['categories']));
+        $this->assertSame([], $foreign['categories']->getOptions());
     }
 
     #[Test]
@@ -97,8 +97,8 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
         $inStorage = $service->build($this->request(), 'tx_thuecat_tourist_attraction', [11]);
         $elsewhere = $service->build($this->request(), 'tx_thuecat_tourist_attraction', [10]);
 
-        self::assertSame(['Erfurt', 'Weimar'], $this->titles($inStorage['towns']));
-        self::assertSame([], $elsewhere['towns']->getOptions());
+        $this->assertSame(['Erfurt', 'Weimar'], $this->titles($inStorage['towns']));
+        $this->assertSame([], $elsewhere['towns']->getOptions());
     }
 
     private function request(): ServerRequest

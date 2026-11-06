@@ -65,6 +65,6 @@ final class InlineParkingFacilitySelectionTest extends AbstractBackendTestCase
                 $offered[] = (int)$value;
             }
         }
-        self::assertSame([4801], $offered);
+        $this->assertSame([4801], $offered);
     }
 }

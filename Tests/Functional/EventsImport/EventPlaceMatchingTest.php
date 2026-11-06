@@ -45,11 +45,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_refloc-hubev');
 
-        self::assertSame(
-            [$eventUid],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'The referenced attraction does not list the event.'
-        );
+        $this->assertSame([$eventUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'The referenced attraction does not list the event.');
     }
 
     #[Test]
@@ -62,16 +58,9 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         // The event still imports; only the relation is absent.
-        self::assertGreaterThan(
-            0,
-            $this->eventUidOf('https://int.thuecat.org/resources/e_unknownref-hubev')
-        );
+        $this->assertGreaterThan(0, $this->eventUidOf('https://int.thuecat.org/resources/e_unknownref-hubev'));
 
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'An unresolvable reference related the event to a place anyway.'
-        );
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'An unresolvable reference related the event to a place anyway.');
     }
 
     #[Test]
@@ -84,17 +73,9 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
 
-        self::assertSame(
-            [$eventUid],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'The spelling variant was not matched to the place.'
-        );
+        $this->assertSame([$eventUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'The spelling variant was not matched to the place.');
 
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2),
-            'The postal code alone related the event to the wrong place.'
-        );
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2), 'The postal code alone related the event to the wrong place.');
     }
 
     #[Test]
@@ -105,10 +86,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [$this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')],
-            $this->hostedEventsOf('tx_thuecat_place', 1)
-        );
+        $this->assertSame([$this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')], $this->hostedEventsOf('tx_thuecat_place', 1));
     }
 
     #[Test]
@@ -116,11 +94,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importNegativeFixtures();
 
-        self::assertNotContains(
-            $this->eventUidOf('https://int.thuecat.org/resources/e_otherzip-hubev'),
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'A venue whose postal code differs was matched on its name alone.'
-        );
+        $this->assertNotContains($this->eventUidOf('https://int.thuecat.org/resources/e_otherzip-hubev'), $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'A venue whose postal code differs was matched on its name alone.');
     }
 
     /**
@@ -133,11 +107,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importNegativeFixtures();
 
-        self::assertContains(
-            $this->eventUidOf('https://int.thuecat.org/resources/e_otherstreet-hubev'),
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'A differing street blocked a match that name and postal code agreed on.'
-        );
+        $this->assertContains($this->eventUidOf('https://int.thuecat.org/resources/e_otherstreet-hubev'), $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'A differing street blocked a match that name and postal code agreed on.');
     }
 
     #[Test]
@@ -145,11 +115,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importNegativeFixtures();
 
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 3),
-            'A place carrying no address was matched despite having no postal code.'
-        );
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 3), 'A place carrying no address was matched despite having no postal code.');
     }
 
     #[Test]
@@ -162,16 +128,9 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
 
-        self::assertSame(
-            [$eventUid],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1)
-        );
+        $this->assertSame([$eventUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
 
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2),
-            'A place of another site was matched.'
-        );
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2), 'A place of another site was matched.');
     }
 
     /**
@@ -186,21 +145,10 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertGreaterThan(
-            0,
-            $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')
-        );
+        $this->assertGreaterThan(0, $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev'));
 
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'An ambiguous match picked the first candidate.'
-        );
-        self::assertSame(
-            [],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2),
-            'An ambiguous match picked the second candidate.'
-        );
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'An ambiguous match picked the first candidate.');
+        $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2), 'An ambiguous match picked the second candidate.');
     }
 
     #[Test]
@@ -208,10 +156,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importOrganizerFixtures();
 
-        self::assertSame(
-            [$this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
-            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event')
-        );
+        $this->assertSame([$this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')], $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event'));
     }
 
     #[Test]
@@ -223,10 +168,10 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
             $this->fetchMatchResults(),
             static fn (array $result): bool => $result['remote_id'] === 'https://int.thuecat.org/resources/e_orghosts-hubev'
         ));
-        self::assertCount(1, $results);
+        $this->assertCount(1, $results);
 
-        self::assertSame('unmatched', $results[0]['context']['outcome']);
-        self::assertSame(0, $results[0]['record_uid']);
+        $this->assertSame('unmatched', $results[0]['context']['outcome']);
+        $this->assertSame(0, $results[0]['record_uid']);
     }
 
     /**
@@ -238,15 +183,8 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     {
         $this->importOrganizerFixtures();
 
-        self::assertGreaterThan(
-            0,
-            $this->eventUidOf('https://int.thuecat.org/resources/e_orgrefattr-hubev')
-        );
-        self::assertSame(
-            [],
-            $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 1, 'hosts_events'),
-            'An organizer reference filled the attraction anyway.'
-        );
+        $this->assertGreaterThan(0, $this->eventUidOf('https://int.thuecat.org/resources/e_orgrefattr-hubev'));
+        $this->assertSame([], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 1, 'hosts_events'), 'An organizer reference filled the attraction anyway.');
     }
 
     /**
@@ -261,16 +199,9 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            901,
-            $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev'),
-            'The seeded event was not reused, so this run matched a different row.'
-        );
+        $this->assertSame(901, $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev'), 'The seeded event was not reused, so this run matched a different row.');
 
-        self::assertSame(
-            [900, 901],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1)
-        );
+        $this->assertSame([900, 901], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
     }
 
     /**
@@ -286,20 +217,13 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $firstUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
-        self::assertSame(
-            [$firstUid],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1)
-        );
+        $this->assertSame([$firstUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
 
         $this->expectFetch('e_bauhaus2-hubev.json');
         $this->importConfiguration(2);
 
         $secondUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus2-hubev');
-        self::assertSame(
-            [$firstUid, $secondUid],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1),
-            'The second configuration dropped the first one\'s relation.'
-        );
+        $this->assertSame([$firstUid, $secondUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'The second configuration dropped the first one\'s relation.');
     }
 
     #[Test]
@@ -310,10 +234,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')],
-            $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1)
-        );
+        $this->assertSame([...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
     }
 
     #[Test]
@@ -324,10 +245,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')],
-            $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event')
-        );
+        $this->assertSame([...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')], $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event'));
     }
 
     #[Test]
@@ -340,13 +258,13 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $results = $this->fetchMatchResults();
-        self::assertCount(1, $results, 'The run recorded no match result.');
+        $this->assertCount(1, $results, 'The run recorded no match result.');
 
-        self::assertSame('https://int.thuecat.org/resources/e_refloc-hubev', $results[0]['remote_id']);
-        self::assertSame('tx_thuecat_tourist_attraction', $results[0]['table_name']);
-        self::assertSame(1, $results[0]['record_uid']);
-        self::assertSame('resolvedByReference', $results[0]['context']['outcome']);
-        self::assertSame('hosts_events', $results[0]['context']['field']);
+        $this->assertSame('https://int.thuecat.org/resources/e_refloc-hubev', $results[0]['remote_id']);
+        $this->assertSame('tx_thuecat_tourist_attraction', $results[0]['table_name']);
+        $this->assertSame(1, $results[0]['record_uid']);
+        $this->assertSame('resolvedByReference', $results[0]['context']['outcome']);
+        $this->assertSame('hosts_events', $results[0]['context']['field']);
     }
 
     #[Test]
@@ -358,13 +276,13 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $results = $this->fetchMatchResults();
-        self::assertCount(1, $results);
+        $this->assertCount(1, $results);
 
-        self::assertSame('tx_thuecat_tourist_attraction', $results[0]['table_name']);
-        self::assertSame(1, $results[0]['record_uid']);
-        self::assertSame('resolvedByNameAndPostalCode', $results[0]['context']['outcome']);
-        self::assertSame('Bauhaus Museum Weimar', $results[0]['context']['name']);
-        self::assertSame('99423', $results[0]['context']['postalCode']);
+        $this->assertSame('tx_thuecat_tourist_attraction', $results[0]['table_name']);
+        $this->assertSame(1, $results[0]['record_uid']);
+        $this->assertSame('resolvedByNameAndPostalCode', $results[0]['context']['outcome']);
+        $this->assertSame('Bauhaus Museum Weimar', $results[0]['context']['name']);
+        $this->assertSame('99423', $results[0]['context']['postalCode']);
     }
 
     #[Test]
@@ -376,13 +294,13 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
             $this->fetchMatchResults(),
             static fn (array $result): bool => $result['remote_id'] === 'https://int.thuecat.org/resources/e_otherzip-hubev'
         ));
-        self::assertCount(1, $results);
+        $this->assertCount(1, $results);
 
-        self::assertSame('unmatched', $results[0]['context']['outcome']);
-        self::assertSame('', $results[0]['table_name']);
-        self::assertSame(0, $results[0]['record_uid']);
-        self::assertSame('Bauhaus Museum Weimar', $results[0]['context']['name']);
-        self::assertSame('99425', $results[0]['context']['postalCode']);
+        $this->assertSame('unmatched', $results[0]['context']['outcome']);
+        $this->assertSame('', $results[0]['table_name']);
+        $this->assertSame(0, $results[0]['record_uid']);
+        $this->assertSame('Bauhaus Museum Weimar', $results[0]['context']['name']);
+        $this->assertSame('99425', $results[0]['context']['postalCode']);
     }
 
     #[Test]
@@ -395,10 +313,10 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $results = $this->fetchMatchResults();
-        self::assertCount(1, $results);
+        $this->assertCount(1, $results);
 
-        self::assertSame('unresolvedReference', $results[0]['context']['outcome']);
-        self::assertSame(0, $results[0]['record_uid']);
+        $this->assertSame('unresolvedReference', $results[0]['context']['outcome']);
+        $this->assertSame(0, $results[0]['record_uid']);
     }
 
     #[Test]
@@ -410,14 +328,11 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $results = $this->fetchMatchResults();
-        self::assertCount(1, $results);
+        $this->assertCount(1, $results);
 
-        self::assertSame('ambiguous', $results[0]['context']['outcome']);
-        self::assertSame(0, $results[0]['record_uid']);
-        self::assertSame(
-            ['tx_thuecat_tourist_attraction:1', 'tx_thuecat_tourist_attraction:2'],
-            $results[0]['context']['candidates']
-        );
+        $this->assertSame('ambiguous', $results[0]['context']['outcome']);
+        $this->assertSame(0, $results[0]['record_uid']);
+        $this->assertSame(['tx_thuecat_tourist_attraction:1', 'tx_thuecat_tourist_attraction:2'], $results[0]['context']['candidates']);
     }
 
     /**
@@ -475,7 +390,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
     protected function eventUidOf(string $remoteId): int
     {
         $uid = $this->fetchRowByRemoteId('tx_events_domain_model_event', $remoteId)['uid'] ?? null;
-        self::assertIsNumeric($uid, 'No event row for ' . $remoteId);
+        $this->assertIsNumeric($uid, 'No event row for ' . $remoteId);
 
         return (int)$uid;
     }

@@ -45,9 +45,9 @@ class OpeningHoursFormatterTest extends TestCase
     {
         $result = $this->subject->buildPerDayTable([]);
 
-        self::assertTrue($result->isEmpty());
-        self::assertSame([], $result->getPeriods());
-        self::assertFalse($result->isOpenNow());
+        $this->assertTrue($result->isEmpty());
+        $this->assertSame([], $result->getPeriods());
+        $this->assertFalse($result->isOpenNow());
     }
 
     #[Test]
@@ -62,14 +62,14 @@ class OpeningHoursFormatterTest extends TestCase
 
         // Monday sorts first; the other six scaffolded days follow as closed.
         $weekDays = $result->getPeriods()[0]->getWeekDays();
-        self::assertSame('Monday', $weekDays[0]->getDayOfWeek());
+        $this->assertSame('Monday', $weekDays[0]->getDayOfWeek());
 
         $timePeriods = $weekDays[0]->getTimePeriods();
-        self::assertCount(2, $timePeriods);
-        self::assertSame('08:00', $timePeriods[0]->getOpens()->format('H:i'));
-        self::assertSame('12:00', $timePeriods[0]->getCloses()->format('H:i'));
-        self::assertSame('13:00', $timePeriods[1]->getOpens()->format('H:i'));
-        self::assertSame('18:00', $timePeriods[1]->getCloses()->format('H:i'));
+        $this->assertCount(2, $timePeriods);
+        $this->assertSame('08:00', $timePeriods[0]->getOpens()->format('H:i'));
+        $this->assertSame('12:00', $timePeriods[0]->getCloses()->format('H:i'));
+        $this->assertSame('13:00', $timePeriods[1]->getOpens()->format('H:i'));
+        $this->assertSame('18:00', $timePeriods[1]->getCloses()->format('H:i'));
     }
 
     #[Test]
@@ -87,13 +87,10 @@ class OpeningHoursFormatterTest extends TestCase
             $byDay[$weekDay->getDayOfWeek()] = $weekDay;
         }
 
-        self::assertSame(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            array_keys($byDay)
-        );
-        self::assertFalse($byDay['Monday']->isClosed());
-        self::assertTrue($byDay['Tuesday']->isClosed());
-        self::assertTrue($byDay['Sunday']->isClosed());
+        $this->assertSame(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], array_keys($byDay));
+        $this->assertFalse($byDay['Monday']->isClosed());
+        $this->assertTrue($byDay['Tuesday']->isClosed());
+        $this->assertTrue($byDay['Sunday']->isClosed());
     }
 
     #[Test]
@@ -109,7 +106,7 @@ class OpeningHoursFormatterTest extends TestCase
             $result->getPeriods()[0]->getWeekDays()
         );
 
-        self::assertNotContains('PublicHolidays', $days);
+        $this->assertNotContains('PublicHolidays', $days);
     }
 
     #[Test]
@@ -128,10 +125,7 @@ class OpeningHoursFormatterTest extends TestCase
         );
 
         // All 7 weekdays are scaffolded Monday-first; PublicHolidays sorts last.
-        self::assertSame(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'PublicHolidays'],
-            $days
-        );
+        $this->assertSame(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'PublicHolidays'], $days);
     }
 
     #[Test]
@@ -143,8 +137,8 @@ class OpeningHoursFormatterTest extends TestCase
             $this->specification('regular', 'Monday', '09:00', '17:00', '2026-01-01', '2026-12-31'),
         ], $now);
 
-        self::assertCount(1, $result->getPeriods());
-        self::assertSame('2026-01-01', $result->getPeriods()[0]->getValidFrom()?->format('Y-m-d'));
+        $this->assertCount(1, $result->getPeriods());
+        $this->assertSame('2026-01-01', $result->getPeriods()[0]->getValidFrom()?->format('Y-m-d'));
     }
 
     #[Test]
@@ -157,11 +151,11 @@ class OpeningHoursFormatterTest extends TestCase
         ], $now);
 
         $periods = $result->getPeriods();
-        self::assertCount(2, $periods);
-        self::assertTrue($periods[0]->isCurrent());
-        self::assertSame('2026-01-01', $periods[0]->getValidFrom()?->format('Y-m-d'));
-        self::assertFalse($periods[1]->isCurrent());
-        self::assertSame('2026-11-02', $periods[1]->getValidFrom()?->format('Y-m-d'));
+        $this->assertCount(2, $periods);
+        $this->assertTrue($periods[0]->isCurrent());
+        $this->assertSame('2026-01-01', $periods[0]->getValidFrom()?->format('Y-m-d'));
+        $this->assertFalse($periods[1]->isCurrent());
+        $this->assertSame('2026-11-02', $periods[1]->getValidFrom()?->format('Y-m-d'));
     }
 
     #[Test]
@@ -173,7 +167,7 @@ class OpeningHoursFormatterTest extends TestCase
             $this->specification('regular', 'Monday', '08:00', '18:00'),
         ], $now);
 
-        self::assertTrue($result->isOpenNow());
+        $this->assertTrue($result->isOpenNow());
     }
 
     #[Test]
@@ -186,7 +180,7 @@ class OpeningHoursFormatterTest extends TestCase
             $this->specification('regular', 'Monday', '13:00', '18:00'),
         ], $now);
 
-        self::assertFalse($result->isOpenNow());
+        $this->assertFalse($result->isOpenNow());
     }
 
     #[Test]
@@ -211,22 +205,19 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $groups = $result->getPeriods()[0]->getWeekDayGroups();
-        self::assertCount(2, $groups);
+        $this->assertCount(2, $groups);
 
-        self::assertSame(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            $groups[0]->getDaysOfWeek()
-        );
+        $this->assertSame(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], $groups[0]->getDaysOfWeek());
         $spans = $groups[0]->getTimePeriods();
-        self::assertCount(2, $spans);
-        self::assertSame('08:00', $spans[0]->getOpens()->format('H:i'));
-        self::assertSame('12:00', $spans[0]->getCloses()->format('H:i'));
-        self::assertSame('13:00', $spans[1]->getOpens()->format('H:i'));
-        self::assertSame('19:00', $spans[1]->getCloses()->format('H:i'));
+        $this->assertCount(2, $spans);
+        $this->assertSame('08:00', $spans[0]->getOpens()->format('H:i'));
+        $this->assertSame('12:00', $spans[0]->getCloses()->format('H:i'));
+        $this->assertSame('13:00', $spans[1]->getOpens()->format('H:i'));
+        $this->assertSame('19:00', $spans[1]->getCloses()->format('H:i'));
 
-        self::assertSame(['Saturday', 'Sunday'], $groups[1]->getDaysOfWeek());
-        self::assertSame('08:00', $groups[1]->getTimePeriods()[0]->getOpens()->format('H:i'));
-        self::assertSame('14:00', $groups[1]->getTimePeriods()[0]->getCloses()->format('H:i'));
+        $this->assertSame(['Saturday', 'Sunday'], $groups[1]->getDaysOfWeek());
+        $this->assertSame('08:00', $groups[1]->getTimePeriods()[0]->getOpens()->format('H:i'));
+        $this->assertSame('14:00', $groups[1]->getTimePeriods()[0]->getCloses()->format('H:i'));
     }
 
     #[Test]
@@ -243,18 +234,18 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $groups = $result->getPeriods()[0]->getWeekDayGroups();
-        self::assertCount(2, $groups);
+        $this->assertCount(2, $groups);
 
-        self::assertSame(['Monday', 'Wednesday', 'Friday'], $groups[0]->getDaysOfWeek());
-        self::assertSame(['Saturday'], $groups[1]->getDaysOfWeek());
+        $this->assertSame(['Monday', 'Wednesday', 'Friday'], $groups[0]->getDaysOfWeek());
+        $this->assertSame(['Saturday'], $groups[1]->getDaysOfWeek());
 
         $allDays = array_merge(...array_map(
             static fn ($group): array => $group->getDaysOfWeek(),
             $groups
         ));
-        self::assertNotContains('Tuesday', $allDays);
-        self::assertNotContains('Thursday', $allDays);
-        self::assertNotContains('Sunday', $allDays);
+        $this->assertNotContains('Tuesday', $allDays);
+        $this->assertNotContains('Thursday', $allDays);
+        $this->assertNotContains('Sunday', $allDays);
     }
 
     #[Test]
@@ -273,13 +264,10 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $groups = $result->getPeriods()[0]->getWeekDayGroups();
-        self::assertCount(2, $groups);
+        $this->assertCount(2, $groups);
 
-        self::assertSame(
-            ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            $groups[0]->getDaysOfWeek()
-        );
-        self::assertSame(['PublicHolidays'], $groups[1]->getDaysOfWeek());
+        $this->assertSame(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], $groups[0]->getDaysOfWeek());
+        $this->assertSame(['PublicHolidays'], $groups[1]->getDaysOfWeek());
     }
 
     #[Test]
@@ -305,16 +293,16 @@ class OpeningHoursFormatterTest extends TestCase
         $groups = $result->getPeriods()[0]->getWeekDayGroups();
 
         $weekRanges = $groups[0]->getDayRanges();
-        self::assertCount(1, $weekRanges);
-        self::assertTrue($weekRanges[0]->isRange());
-        self::assertSame('Monday', $weekRanges[0]->getFirstDay());
-        self::assertSame('Friday', $weekRanges[0]->getLastDay());
+        $this->assertCount(1, $weekRanges);
+        $this->assertTrue($weekRanges[0]->isRange());
+        $this->assertSame('Monday', $weekRanges[0]->getFirstDay());
+        $this->assertSame('Friday', $weekRanges[0]->getLastDay());
 
         $weekendRanges = $groups[1]->getDayRanges();
-        self::assertCount(1, $weekendRanges);
-        self::assertTrue($weekendRanges[0]->isRange());
-        self::assertSame('Saturday', $weekendRanges[0]->getFirstDay());
-        self::assertSame('Sunday', $weekendRanges[0]->getLastDay());
+        $this->assertCount(1, $weekendRanges);
+        $this->assertTrue($weekendRanges[0]->isRange());
+        $this->assertSame('Saturday', $weekendRanges[0]->getFirstDay());
+        $this->assertSame('Sunday', $weekendRanges[0]->getLastDay());
     }
 
     #[Test]
@@ -330,14 +318,11 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $ranges = $result->getPeriods()[0]->getWeekDayGroups()[0]->getDayRanges();
-        self::assertCount(3, $ranges);
+        $this->assertCount(3, $ranges);
         foreach ($ranges as $range) {
-            self::assertFalse($range->isRange());
+            $this->assertFalse($range->isRange());
         }
-        self::assertSame(
-            ['Monday', 'Wednesday', 'Friday'],
-            array_map(static fn ($range): string => $range->getFirstDay(), $ranges)
-        );
+        $this->assertSame(['Monday', 'Wednesday', 'Friday'], array_map(static fn ($range): string => $range->getFirstDay(), $ranges));
     }
 
     #[Test]
@@ -356,13 +341,13 @@ class OpeningHoursFormatterTest extends TestCase
 
         $groups = $result->getPeriods()[0]->getWeekDayGroups();
 
-        self::assertCount(1, $groups[0]->getDayRanges());
-        self::assertTrue($groups[0]->getDayRanges()[0]->isRange());
+        $this->assertCount(1, $groups[0]->getDayRanges());
+        $this->assertTrue($groups[0]->getDayRanges()[0]->isRange());
 
         $holidayRanges = $groups[1]->getDayRanges();
-        self::assertCount(1, $holidayRanges);
-        self::assertFalse($holidayRanges[0]->isRange());
-        self::assertSame('PublicHolidays', $holidayRanges[0]->getFirstDay());
+        $this->assertCount(1, $holidayRanges);
+        $this->assertFalse($holidayRanges[0]->isRange());
+        $this->assertSame('PublicHolidays', $holidayRanges[0]->getFirstDay());
     }
 
     private function specification(

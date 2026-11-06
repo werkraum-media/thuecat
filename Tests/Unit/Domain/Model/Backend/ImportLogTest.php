@@ -39,7 +39,7 @@ class ImportLogTest extends TestCase
         $configuration = new ImportConfiguration();
         $subject = new ImportLog($configuration);
 
-        self::assertSame($configuration, $subject->getConfiguration());
+        $this->assertSame($configuration, $subject->getConfiguration());
     }
 
     #[Test]
@@ -47,7 +47,7 @@ class ImportLogTest extends TestCase
     {
         $subject = new ImportLog();
 
-        self::assertNull($subject->getConfiguration());
+        $this->assertNull($subject->getConfiguration());
     }
 
     #[Test]
@@ -57,7 +57,7 @@ class ImportLogTest extends TestCase
         $configuration->_setProperty('uid', 10);
         $subject = new ImportLog($configuration);
 
-        self::assertSame(10, $subject->getConfigurationUid());
+        $this->assertSame(10, $subject->getConfigurationUid());
     }
 
     #[Test]
@@ -65,7 +65,7 @@ class ImportLogTest extends TestCase
     {
         $subject = new ImportLog();
 
-        self::assertSame(0, $subject->getConfigurationUid());
+        $this->assertSame(0, $subject->getConfigurationUid());
     }
 
     #[Test]
@@ -77,13 +77,10 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->savingEntry('tx_events_domain_model_event', false));
         $subject->addEntry($this->savingEntry('tx_thuecat_organisation', true));
 
-        self::assertSame(
-            [
-                'tx_events_domain_model_event' => ['total' => 3, 'inserted' => 1, 'updated' => 2],
-                'tx_thuecat_organisation' => ['total' => 1, 'inserted' => 1, 'updated' => 0],
-            ],
-            $subject->getSummaryOfEntries()
-        );
+        $this->assertSame([
+            'tx_events_domain_model_event' => ['total' => 3, 'inserted' => 1, 'updated' => 2],
+            'tx_thuecat_organisation' => ['total' => 1, 'inserted' => 1, 'updated' => 0],
+        ], $subject->getSummaryOfEntries());
     }
 
     #[Test]
@@ -92,12 +89,8 @@ class ImportLogTest extends TestCase
         $subject = new ImportLog();
         $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
 
-        self::assertSame(
-            ['Resource: remote-a Warning: Skipped reference'],
-            $subject->getListOfErrors(),
-            'A warning-only run showed an empty Errors column, so the referenceSkipped '
-            . 'rows were invisible in the BE module — the only place their detail lives.'
-        );
+        $this->assertSame(['Resource: remote-a Warning: Skipped reference'], $subject->getListOfErrors(), 'A warning-only run showed an empty Errors column, so the referenceSkipped '
+        . 'rows were invisible in the BE module — the only place their detail lives.');
     }
 
     #[Test]
@@ -107,11 +100,7 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
         $subject->addEntry($this->entryWithSeverity('error', 'remote-b', 'Mapping failed'));
 
-        self::assertSame(
-            ['Resource: remote-b Error: Mapping failed'],
-            $subject->getListOfErrors(),
-            'Errors take precedence: a run with both shows only what blocks it.'
-        );
+        $this->assertSame(['Resource: remote-b Error: Mapping failed'], $subject->getListOfErrors(), 'Errors take precedence: a run with both shows only what blocks it.');
     }
 
     #[Test]
@@ -120,10 +109,7 @@ class ImportLogTest extends TestCase
         $subject = new ImportLog();
         $subject->addEntry($this->entryWithSeverity('warning', 'remote-a', 'Skipped reference'));
 
-        self::assertFalse(
-            $subject->hasErrors(),
-            'A warning must not mark the row as danger; it is not a failure.'
-        );
+        $this->assertFalse($subject->hasErrors(), 'A warning must not mark the row as danger; it is not a failure.');
     }
 
     #[Test]
@@ -133,15 +119,11 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->typedEntry('vocabularyStale', 'warning', '', 'Vocabulary is 20 days old'));
         $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
 
-        self::assertSame(
-            [
-                'vocabularyStale' => ['Vocabulary is 20 days old'],
-                'categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat'],
-            ],
-            $subject->getGroupedNotices(),
-            'Notices and warnings both belong here, keyed by type so one noisy type '
-            . 'cannot bury another.'
-        );
+        $this->assertSame([
+            'vocabularyStale' => ['Vocabulary is 20 days old'],
+            'categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat'],
+        ], $subject->getGroupedNotices(), 'Notices and warnings both belong here, keyed by type so one noisy type '
+        . 'cannot bury another.');
     }
 
     #[Test]
@@ -151,12 +133,8 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->typedEntry('vocabularyStale', 'warning', '', 'Vocabulary is 20 days old'));
         $subject->addEntry($this->entryWithSeverity('error', 'remote-b', 'Mapping failed'));
 
-        self::assertSame(
-            ['vocabularyStale' => ['Vocabulary is 20 days old']],
-            $subject->getGroupedNotices(),
-            'Unlike getListOfErrors(), this column is not a fallback: an error elsewhere '
-            . 'must not hide why the vocabulary was stale.'
-        );
+        $this->assertSame(['vocabularyStale' => ['Vocabulary is 20 days old']], $subject->getGroupedNotices(), 'Unlike getListOfErrors(), this column is not a fallback: an error elsewhere '
+        . 'must not hide why the vocabulary was stale.');
     }
 
     #[Test]
@@ -166,11 +144,7 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->typedEntry('categoryParentChosen', 'debug', 'schema:Museum', 'Placed beneath Place'));
         $subject->addEntry($this->typedEntry('categoryMatched', 'info', 'schema:Museum', 'Matched'));
 
-        self::assertSame(
-            [],
-            $subject->getGroupedNotices(),
-            'Debug fires once per branching class per run; it would drown the column.'
-        );
+        $this->assertSame([], $subject->getGroupedNotices(), 'Debug fires once per branching class per run; it would drown the column.');
     }
 
     #[Test]
@@ -180,11 +154,7 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
         $subject->addEntry($this->typedEntry('categoryWithoutHierarchy', 'notice', 'thuecat:Studio', 'Stays flat'));
 
-        self::assertSame(
-            ['categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat']],
-            $subject->getGroupedNotices(),
-            'The same class recurs on every record carrying it.'
-        );
+        $this->assertSame(['categoryWithoutHierarchy' => ['thuecat:Studio: Stays flat']], $subject->getGroupedNotices(), 'The same class recurs on every record carrying it.');
     }
 
     /**
@@ -197,7 +167,7 @@ class ImportLogTest extends TestCase
         $subject = new ImportLog();
         $subject->addEntry($this->typedEntry('categoryMatched', 'info', 'schema:Museum', 'Matched'));
 
-        self::assertSame([], $subject->getEventPlaceMatches());
+        $this->assertSame([], $subject->getEventPlaceMatches());
     }
 
     #[Test]
@@ -207,13 +177,10 @@ class ImportLogTest extends TestCase
         $subject->addEntry($this->eventPlaceMatch('event-b', 'Name matches no place.', 0));
         $subject->addEntry($this->eventPlaceMatch('event-a', 'Related by reference.', 7));
 
-        self::assertSame(
-            [
-                'event-a: Related by reference.',
-                'event-b: Name matches no place.',
-            ],
-            $subject->getEventPlaceMatches()
-        );
+        $this->assertSame([
+            'event-a: Related by reference.',
+            'event-b: Name matches no place.',
+        ], $subject->getEventPlaceMatches());
     }
 
     private function eventPlaceMatch(string $remoteId, string $message, int $recordUid): EventPlaceMatch

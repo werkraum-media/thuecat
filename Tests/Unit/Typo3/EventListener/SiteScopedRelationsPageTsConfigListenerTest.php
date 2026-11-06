@@ -40,10 +40,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ]),
         ]);
 
-        self::assertStringContainsString(
-            'TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 7,11,12',
-            $emitted
-        );
+        $this->assertStringContainsString('TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 7,11,12', $emitted);
     }
 
     #[Test]
@@ -55,7 +52,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ]),
         ]);
 
-        self::assertStringNotContainsString('tx_thuecat_import_log_entry', $emitted);
+        $this->assertStringNotContainsString('tx_thuecat_import_log_entry', $emitted);
     }
 
     #[Test]
@@ -67,10 +64,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ]),
         ]);
 
-        self::assertStringContainsString(
-            'TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 0',
-            $emitted
-        );
+        $this->assertStringContainsString('TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 0', $emitted);
     }
 
     #[Test]
@@ -85,8 +79,8 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ]),
         ]);
 
-        self::assertStringContainsString('TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 7', $emitted);
-        self::assertStringContainsString('TCEFORM.tx_thuecat_trail.managed_by.PAGE_TSCONFIG_IDLIST = 7', $emitted);
+        $this->assertStringContainsString('TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 7', $emitted);
+        $this->assertStringContainsString('TCEFORM.tx_thuecat_trail.managed_by.PAGE_TSCONFIG_IDLIST = 7', $emitted);
     }
 
     #[Test]
@@ -101,7 +95,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ),
         ]);
 
-        self::assertStringNotContainsString('l10n_parent', $emitted);
+        $this->assertStringNotContainsString('l10n_parent', $emitted);
     }
 
     #[Test]
@@ -143,11 +137,8 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             ]
         );
 
-        self::assertStringContainsString(
-            'TCEFORM.tt_content.pi_flexform.werkraummedia_thuecatattractionlistfiltered'
-            . '.sDEF.settings\\.towns.PAGE_TSCONFIG_IDLIST = 7,11',
-            $emitted
-        );
+        $this->assertStringContainsString('TCEFORM.tt_content.pi_flexform.werkraummedia_thuecatattractionlistfiltered'
+        . '.sDEF.settings\\.towns.PAGE_TSCONFIG_IDLIST = 7,11', $emitted);
     }
 
     #[Test]
@@ -173,7 +164,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             []
         );
 
-        self::assertStringNotContainsString('broken', $emitted);
+        $this->assertStringNotContainsString('broken', $emitted);
     }
 
     #[Test]
@@ -182,7 +173,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
         // The rootline runs root first and opens with a synthetic uid 0; the
         // page being edited is the last entry.
         $sitePageIds = $this->createMock(SitePageIds::class);
-        $sitePageIds->expects(self::once())
+        $sitePageIds->expects($this->once())
             ->method('forStoragePidOrEmpty')
             ->with(4010)
             ->willReturn([4000, 4010])
@@ -214,10 +205,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
             }
         }
 
-        self::assertStringContainsString(
-            'TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 4000,4010',
-            implode("\n", $emitted)
-        );
+        $this->assertStringContainsString('TCEFORM.tx_thuecat_town.managed_by.PAGE_TSCONFIG_IDLIST = 4000,4010', implode("\n", $emitted));
     }
 
     #[Test]
@@ -232,7 +220,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
         $event = new ModifyLoadedPageTsConfigEvent([], []);
         $listener($event);
 
-        self::assertSame([], $event->getTsConfig());
+        $this->assertSame([], $event->getTsConfig());
     }
 
     /**
@@ -268,7 +256,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
      */
     private function flexFormToolsReturning(array $dataStructures): FlexFormTools
     {
-        $flexFormTools = self::createStub(FlexFormTools::class);
+        $flexFormTools = $this->createStub(FlexFormTools::class);
         $flexFormTools->method('parseDataStructureByIdentifier')->willReturnCallback(
             static function (string $identifier) use ($dataStructures): array {
                 $decoded = json_decode($identifier, true);
@@ -290,7 +278,7 @@ class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
      */
     private function sitePageIdsReturning(array $pageIds): SitePageIds
     {
-        $sitePageIds = self::createStub(SitePageIds::class);
+        $sitePageIds = $this->createStub(SitePageIds::class);
         $sitePageIds->method('forStoragePidOrEmpty')->willReturn($pageIds);
 
         return $sitePageIds;

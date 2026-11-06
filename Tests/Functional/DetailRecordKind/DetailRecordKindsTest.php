@@ -36,10 +36,7 @@ final class DetailRecordKindsTest extends AbstractFunctionalTestCase
     {
         $subject = $this->get(DetailRecordKinds::class);
 
-        self::assertSame(
-            ['attraction', 'trail', 'example'],
-            array_map(static fn ($kind): string => $kind->identifier, $subject->all())
-        );
-        self::assertSame('tx_thuecattestdetailkind_example', $subject->get('example')->table);
+        $this->assertSame(['attraction', 'trail', 'example'], array_map(static fn ($kind): string => $kind->identifier, $subject->all()));
+        $this->assertSame('tx_thuecattestdetailkind_example', $subject->get('example')->table);
     }
 }

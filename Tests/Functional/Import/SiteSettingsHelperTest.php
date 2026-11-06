@@ -50,8 +50,8 @@ class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
 
         $settings = $this->get(SiteFinder::class)->getSiteByPageId(210)->getSettings();
 
-        self::assertSame(100, $settings->get('import.thuecat.keywords.parent'));
-        self::assertSame(30, $settings->get('import.thuecat.keywords.storagePid'));
+        $this->assertSame(100, $settings->get('import.thuecat.keywords.parent'));
+        $this->assertSame(30, $settings->get('import.thuecat.keywords.storagePid'));
     }
 
     #[Test]
@@ -61,7 +61,7 @@ class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
 
         $settings = $this->get(SiteFinder::class)->getSiteByPageId(210)->getSettings();
 
-        self::assertNull($settings->get('import.thuecat.keywords.parent'));
+        $this->assertNull($settings->get('import.thuecat.keywords.parent'));
     }
 
     // The import suite reaches its site fixtures through a symlink, so a write
@@ -76,6 +76,6 @@ class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
             'import' => ['keywords' => ['parent' => 100]],
         ], 'settings_helper', 200);
 
-        self::assertSame($before, scandir($fixtures));
+        $this->assertSame($before, scandir($fixtures));
     }
 }

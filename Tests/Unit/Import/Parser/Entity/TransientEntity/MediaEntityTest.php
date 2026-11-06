@@ -30,65 +30,50 @@ class MediaEntityTest extends TestCase
     #[Test]
     public function prefersTheContentUrlOverTheSizedRendition(): void
     {
-        self::assertSame(
-            'http://img.oastatic.com/img/16864060/.jpg',
-            $this->urlOf([
-                'schema:url' => $this->value('http://img.oastatic.com/img/1250/625/16864060/.jpg'),
-                'schema:contentUrl' => $this->value('http://img.oastatic.com/img/16864060/.jpg'),
-            ])
-        );
+        $this->assertSame('http://img.oastatic.com/img/16864060/.jpg', $this->urlOf([
+            'schema:url' => $this->value('http://img.oastatic.com/img/1250/625/16864060/.jpg'),
+            'schema:contentUrl' => $this->value('http://img.oastatic.com/img/16864060/.jpg'),
+        ]));
     }
 
     // www.kulturcarre.de: the pair differs by format, not size.
     #[Test]
     public function prefersTheContentUrlWhenTheUrlsDifferByFormat(): void
     {
-        self::assertSame(
-            'https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp',
-            $this->urlOf([
-                'schema:url' => $this->value('https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.jpg'),
-                'schema:contentUrl' => $this->value('https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp'),
-            ])
-        );
+        $this->assertSame('https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp', $this->urlOf([
+            'schema:url' => $this->value('https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.jpg'),
+            'schema:contentUrl' => $this->value('https://www.kulturcarre.de/media/a1b2c3d4e5f6/ansicht.webp'),
+        ]));
     }
 
     // The fallback is load-bearing: this shape occurs upstream.
     #[Test]
     public function fallsBackToTheUrlWhenNoContentUrlIsOffered(): void
     {
-        self::assertSame(
-            'http://img.oastatic.com/img/22900410/.jpg',
-            $this->urlOf(['schema:url' => $this->value('http://img.oastatic.com/img/22900410/.jpg')])
-        );
+        $this->assertSame('http://img.oastatic.com/img/22900410/.jpg', $this->urlOf(['schema:url' => $this->value('http://img.oastatic.com/img/22900410/.jpg')]));
     }
 
     // Referenced nodes never carry contentUrl (measured 347/347).
     #[Test]
     public function usesTheUrlOfAReferencedMediaResource(): void
     {
-        self::assertSame(
-            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
-            $this->urlOf([
-                'schema:url' => $this->value('https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image'),
-            ])
-        );
+        $this->assertSame('https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image', $this->urlOf([
+            'schema:url' => $this->value('https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image'),
+        ]));
     }
 
     #[Test]
     public function usesTheContentUrlWhenItIsTheOnlyOneOffered(): void
     {
-        self::assertSame(
-            'https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg',
-            $this->urlOf([
-                'schema:contentUrl' => $this->value('https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg'),
-            ])
-        );
+        $this->assertSame('https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg', $this->urlOf([
+            'schema:contentUrl' => $this->value('https://cdb.thuecat.org/assets/ttg/m-tdm/original/foo/bar.jpg'),
+        ]));
     }
 
     #[Test]
     public function hasNoUrlWhenNeitherIsOffered(): void
     {
-        self::assertSame('', $this->urlOf(['schema:name' => $this->localised('Ohne URL')]));
+        $this->assertSame('', $this->urlOf(['schema:name' => $this->localised('Ohne URL')]));
     }
 
     /**

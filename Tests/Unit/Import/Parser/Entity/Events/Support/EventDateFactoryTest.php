@@ -74,9 +74,9 @@ class EventDateFactoryTest extends TestCase
     {
         $occurrences = $this->factory->toOccurrences($this->eventLevelNode());
 
-        self::assertCount(1, $occurrences);
-        self::assertSame('2026-12-01T08:00:00+01:00', $occurrences[0]->start);
-        self::assertSame('2026-12-01T10:00:00+01:00', $occurrences[0]->end);
+        $this->assertCount(1, $occurrences);
+        $this->assertSame('2026-12-01T08:00:00+01:00', $occurrences[0]->start);
+        $this->assertSame('2026-12-01T10:00:00+01:00', $occurrences[0]->end);
     }
 
     #[Test]
@@ -84,8 +84,8 @@ class EventDateFactoryTest extends TestCase
     {
         $occurrences = $this->factory->toOccurrences($this->scheduleNode());
 
-        self::assertCount(1, $occurrences);
-        self::assertSame('2026-12-05T14:00:00+01:00', $occurrences[0]->start);
+        $this->assertCount(1, $occurrences);
+        $this->assertSame('2026-12-05T14:00:00+01:00', $occurrences[0]->start);
     }
 
     // The mixed shape: 39 of 156 probed events. The event-level pair spans the
@@ -99,9 +99,9 @@ class EventDateFactoryTest extends TestCase
 
         $occurrences = $this->factory->toOccurrences($node);
 
-        self::assertCount(1, $occurrences);
-        self::assertSame('2026-12-05T14:00:00+01:00', $occurrences[0]->start);
-        self::assertSame('2026-12-05T16:00:00+01:00', $occurrences[0]->end);
+        $this->assertCount(1, $occurrences);
+        $this->assertSame('2026-12-05T14:00:00+01:00', $occurrences[0]->start);
+        $this->assertSame('2026-12-05T16:00:00+01:00', $occurrences[0]->end);
     }
 
     // Presence, not yield: a schedule that expands to nothing still wins.
@@ -114,13 +114,13 @@ class EventDateFactoryTest extends TestCase
             '@type' => ['schema:Thing', 'schema:Schedule', 'schema:Intangible'],
         ];
 
-        self::assertSame([], $this->factory->toOccurrences($node));
+        $this->assertSame([], $this->factory->toOccurrences($node));
     }
 
     #[Test]
     public function returnsNothingWhenTheEventPublishesNoDatesAtAll(): void
     {
-        self::assertSame([], $this->factory->toOccurrences([]));
+        $this->assertSame([], $this->factory->toOccurrences([]));
     }
 
     #[Test]
@@ -128,7 +128,7 @@ class EventDateFactoryTest extends TestCase
     {
         $factory = $this->factoryWithToday('2026-12-01T09:00:00+01:00');
 
-        self::assertSame([], $factory->toOccurrences($this->nodeStartingAt('2026-11-30T20:00:00+01:00')));
+        $this->assertSame([], $factory->toOccurrences($this->nodeStartingAt('2026-11-30T20:00:00+01:00')));
     }
 
     #[Test]
@@ -136,7 +136,7 @@ class EventDateFactoryTest extends TestCase
     {
         $factory = $this->factoryWithToday('2026-12-01T09:00:00+01:00');
 
-        self::assertCount(1, $factory->toOccurrences($this->nodeStartingAt('2026-12-01T20:00:00+01:00')));
+        $this->assertCount(1, $factory->toOccurrences($this->nodeStartingAt('2026-12-01T20:00:00+01:00')));
     }
 
     /**
@@ -149,7 +149,7 @@ class EventDateFactoryTest extends TestCase
     {
         $factory = $this->factoryWithToday('2026-12-01T09:00:00+01:00');
 
-        self::assertSame([], $factory->toOccurrences($this->nodeStartingAt('2026-12-01T00:00:00+01:00')));
+        $this->assertSame([], $factory->toOccurrences($this->nodeStartingAt('2026-12-01T00:00:00+01:00')));
     }
 
     #[Test]
@@ -158,8 +158,8 @@ class EventDateFactoryTest extends TestCase
         $node = $this->eventLevelNode();
         unset($node['schema:endDate']);
 
-        self::assertSame([], $this->factory->toOccurrences($node));
-        self::assertTrue($this->factory->hadUnresolvableEventLevelDate());
+        $this->assertSame([], $this->factory->toOccurrences($node));
+        $this->assertTrue($this->factory->hadUnresolvableEventLevelDate());
     }
 
     #[Test]
@@ -167,7 +167,7 @@ class EventDateFactoryTest extends TestCase
     {
         $this->factory->toOccurrences($this->eventLevelNode());
 
-        self::assertFalse($this->factory->hadUnresolvableEventLevelDate());
+        $this->assertFalse($this->factory->hadUnresolvableEventLevelDate());
     }
 
     // A schedule-less event with no dates is not an unresolvable DATE — that
@@ -177,7 +177,7 @@ class EventDateFactoryTest extends TestCase
     {
         $this->factory->toOccurrences([]);
 
-        self::assertFalse($this->factory->hadUnresolvableEventLevelDate());
+        $this->assertFalse($this->factory->hadUnresolvableEventLevelDate());
     }
 
     #[Test]
@@ -188,7 +188,7 @@ class EventDateFactoryTest extends TestCase
 
         $this->factory->toOccurrences($node);
 
-        self::assertFalse($this->factory->hadUnresolvableEventLevelDate());
+        $this->assertFalse($this->factory->hadUnresolvableEventLevelDate());
     }
 
     /**

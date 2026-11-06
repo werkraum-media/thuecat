@@ -55,10 +55,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $other = $this->demand();
         $other->setTowns([1, 2]);
 
-        self::assertSame(
-            $this->subject->forList(12, $one, 1, 0),
-            $this->subject->forList(12, $other, 1, 0)
-        );
+        $this->assertSame($this->subject->forList(12, $one, 1, 0), $this->subject->forList(12, $other, 1, 0));
     }
 
     /**
@@ -75,10 +72,10 @@ class CacheIdentifierFactoryTest extends TestCase
 
         $base = $this->subject->forList(12, $demand, 1, 0);
 
-        self::assertNotSame($base, $this->subject->forList(13, $demand, 1, 0), 'Plugin uid.');
-        self::assertNotSame($base, $this->subject->forList(12, $otherDemand, 1, 0), 'Demand.');
-        self::assertNotSame($base, $this->subject->forList(12, $demand, 2, 0), 'Pagination page.');
-        self::assertNotSame($base, $this->subject->forList(12, $demand, 1, 1), 'Language.');
+        $this->assertNotSame($base, $this->subject->forList(13, $demand, 1, 0), 'Plugin uid.');
+        $this->assertNotSame($base, $this->subject->forList(12, $otherDemand, 1, 0), 'Demand.');
+        $this->assertNotSame($base, $this->subject->forList(12, $demand, 2, 0), 'Pagination page.');
+        $this->assertNotSame($base, $this->subject->forList(12, $demand, 1, 1), 'Language.');
     }
 
     #[Test]
@@ -91,10 +88,10 @@ class CacheIdentifierFactoryTest extends TestCase
 
         $base = $this->subject->forSearchMask(12, 10, $demand, 0);
 
-        self::assertNotSame($base, $this->subject->forSearchMask(13, 10, $demand, 0), 'Plugin uid.');
-        self::assertNotSame($base, $this->subject->forSearchMask(12, 11, $demand, 0), 'Page uid.');
-        self::assertNotSame($base, $this->subject->forSearchMask(12, 10, $otherDemand, 0), 'Demand.');
-        self::assertNotSame($base, $this->subject->forSearchMask(12, 10, $demand, 1), 'Language.');
+        $this->assertNotSame($base, $this->subject->forSearchMask(13, 10, $demand, 0), 'Plugin uid.');
+        $this->assertNotSame($base, $this->subject->forSearchMask(12, 11, $demand, 0), 'Page uid.');
+        $this->assertNotSame($base, $this->subject->forSearchMask(12, 10, $otherDemand, 0), 'Demand.');
+        $this->assertNotSame($base, $this->subject->forSearchMask(12, 10, $demand, 1), 'Language.');
     }
 
     /**
@@ -106,20 +103,17 @@ class CacheIdentifierFactoryTest extends TestCase
     {
         $base = $this->subject->forTeaser('tx_thuecat_tourist_attraction', 100, 20, 0);
 
-        self::assertNotSame($base, $this->subject->forTeaser('tx_thuecat_trail', 100, 20, 0), 'Table.');
-        self::assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 101, 20, 0), 'Record uid.');
-        self::assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 100, 21, 0), 'Detail page uid.');
-        self::assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 100, 20, 1), 'Language.');
+        $this->assertNotSame($base, $this->subject->forTeaser('tx_thuecat_trail', 100, 20, 0), 'Table.');
+        $this->assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 101, 20, 0), 'Record uid.');
+        $this->assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 100, 21, 0), 'Detail page uid.');
+        $this->assertNotSame($base, $this->subject->forTeaser('tx_thuecat_tourist_attraction', 100, 20, 1), 'Language.');
     }
 
     /** Uids are unique only within a table. */
     #[Test]
     public function recordsOfDifferentTypesSharingAUidDoNotCollide(): void
     {
-        self::assertNotSame(
-            $this->subject->forTeaser('tx_thuecat_tourist_attraction', 12, 20, 0),
-            $this->subject->forTeaser('tx_thuecat_trail', 12, 20, 0)
-        );
+        $this->assertNotSame($this->subject->forTeaser('tx_thuecat_tourist_attraction', 12, 20, 0), $this->subject->forTeaser('tx_thuecat_trail', 12, 20, 0));
     }
 
     /**
@@ -131,10 +125,7 @@ class CacheIdentifierFactoryTest extends TestCase
     {
         $demand = $this->demand();
 
-        self::assertNotSame(
-            $this->subject->forList(12, $demand, 1, 0),
-            $this->subject->forSearchMask(12, 1, $demand, 0)
-        );
+        $this->assertNotSame($this->subject->forList(12, $demand, 1, 0), $this->subject->forSearchMask(12, 1, $demand, 0));
     }
 
     /**
@@ -152,10 +143,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $shuffled->setTowns([3, 1, 2]);
         $shuffled->setCategories([8, 7]);
 
-        self::assertSame(
-            $this->subject->forList(12, $ascending, 1, 0),
-            $this->subject->forList(12, $shuffled, 1, 0)
-        );
+        $this->assertSame($this->subject->forList(12, $ascending, 1, 0), $this->subject->forList(12, $shuffled, 1, 0));
     }
 
     /**
@@ -173,10 +161,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $empty->setSearchword('');
         $empty->setPetsAllowed(false);
 
-        self::assertSame(
-            $this->subject->forList(12, $absent, 1, 0),
-            $this->subject->forList(12, $empty, 1, 0)
-        );
+        $this->assertSame($this->subject->forList(12, $absent, 1, 0), $this->subject->forList(12, $empty, 1, 0));
     }
 
     /**
@@ -193,10 +178,7 @@ class CacheIdentifierFactoryTest extends TestCase
         /** @phpstan-ignore argument.type (Extbase hands over strings from the URL.) */
         $strings->setTowns(['1', '2']);
 
-        self::assertSame(
-            $this->subject->forList(12, $integers, 1, 0),
-            $this->subject->forList(12, $strings, 1, 0)
-        );
+        $this->assertSame($this->subject->forList(12, $integers, 1, 0), $this->subject->forList(12, $strings, 1, 0));
     }
 
     /**
@@ -211,10 +193,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $twice = $this->demand();
         $twice->setTowns([1, 2, 2, 1]);
 
-        self::assertSame(
-            $this->subject->forList(12, $once, 1, 0),
-            $this->subject->forList(12, $twice, 1, 0)
-        );
+        $this->assertSame($this->subject->forList(12, $once, 1, 0), $this->subject->forList(12, $twice, 1, 0));
     }
 
     /**
@@ -240,11 +219,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $set = clone $unset;
         $set->setFutureFilter('someValue');
 
-        self::assertNotSame(
-            $this->subject->forList(12, $unset, 1, 0),
-            $this->subject->forList(12, $set, 1, 0),
-            'A filter added later must reach the identifier without touching the factory.'
-        );
+        $this->assertNotSame($this->subject->forList(12, $unset, 1, 0), $this->subject->forList(12, $set, 1, 0), 'A filter added later must reach the identifier without touching the factory.');
     }
 
     /**
@@ -265,10 +240,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $other->setTowns([1]);
         $other->setCategories([2, 3]);
 
-        self::assertNotSame(
-            $this->subject->forList(12, $one, 1, 0),
-            $this->subject->forList(12, $other, 1, 0)
-        );
+        $this->assertNotSame($this->subject->forList(12, $one, 1, 0), $this->subject->forList(12, $other, 1, 0));
     }
 
     /**
@@ -285,10 +257,7 @@ class CacheIdentifierFactoryTest extends TestCase
         $other = $this->demand();
         $other->setSearchword('12');
 
-        self::assertNotSame(
-            $this->subject->forList(12, $one, 1, 0),
-            $this->subject->forList(12, $other, 1, 0)
-        );
+        $this->assertNotSame($this->subject->forList(12, $one, 1, 0), $this->subject->forList(12, $other, 1, 0));
     }
 
     /**
@@ -319,11 +288,7 @@ class CacheIdentifierFactoryTest extends TestCase
         ];
 
         foreach ($identifiers as $name => $identifier) {
-            self::assertLessThanOrEqual(
-                250,
-                strlen($identifier),
-                $name . ' identifier must never exceed the cache framework limit.'
-            );
+            $this->assertLessThanOrEqual(250, strlen($identifier), $name . ' identifier must never exceed the cache framework limit.');
         }
     }
 
@@ -347,11 +312,7 @@ class CacheIdentifierFactoryTest extends TestCase
         ];
 
         foreach ($identifiers as $name => $identifier) {
-            self::assertMatchesRegularExpression(
-                FrontendInterface::PATTERN_ENTRYIDENTIFIER,
-                $identifier,
-                $name . ' identifier must be storable.'
-            );
+            $this->assertMatchesRegularExpression(FrontendInterface::PATTERN_ENTRYIDENTIFIER, $identifier, $name . ' identifier must be storable.');
         }
     }
 }

@@ -38,11 +38,11 @@ class EffectiveSettingsInModuleTest extends AbstractImportTestCase
 
         $settings = $this->latestLog()->getEffectiveSettings();
 
-        self::assertSame(11, $settings['storagePid'] ?? null);
-        self::assertArrayNotHasKey('importTarget', $settings);
-        self::assertSame('unset', $settings['import.thuecat.category.parent'] ?? null);
-        self::assertSame('unset', $settings['import.trails.keywords.parent'] ?? null);
-        self::assertArrayNotHasKey('apiKey', $settings);
+        $this->assertSame(11, $settings['storagePid'] ?? null);
+        $this->assertArrayNotHasKey('importTarget', $settings);
+        $this->assertSame('unset', $settings['import.thuecat.category.parent'] ?? null);
+        $this->assertSame('unset', $settings['import.trails.keywords.parent'] ?? null);
+        $this->assertArrayNotHasKey('apiKey', $settings);
     }
 
     #[Test]
@@ -50,7 +50,7 @@ class EffectiveSettingsInModuleTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/LogWithoutSummary.php');
 
-        self::assertSame([], $this->latestLog()->getEffectiveSettings());
+        $this->assertSame([], $this->latestLog()->getEffectiveSettings());
     }
 
     private function latestLog(): ImportLog
@@ -59,7 +59,7 @@ class EffectiveSettingsInModuleTest extends AbstractImportTestCase
         foreach ($this->get(ImportLogRepository::class)->findAll() as $candidate) {
             $log = $candidate;
         }
-        self::assertInstanceOf(ImportLog::class, $log);
+        $this->assertInstanceOf(ImportLog::class, $log);
 
         return $log;
     }

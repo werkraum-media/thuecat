@@ -56,12 +56,12 @@ final class RecordTypeListCacheTest extends AbstractCachingTestCase
     #[Test]
     public function theNextRequestFollowsTheChangedRecordTypes(): void
     {
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', (string)$this->request(20)->getBody());
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', (string)$this->request(20)->getBody());
 
         $this->saveRecord(20, ['pi_flexform' => self::EVERY_TYPE_FLEXFORM], 'tt_content');
 
         $body = (string)$this->request(20)->getBody();
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Tagungshotel am Dom', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Tagungshotel am Dom', $body);
     }
 }

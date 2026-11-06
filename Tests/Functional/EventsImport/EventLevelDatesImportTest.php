@@ -53,10 +53,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     {
         $this->importEventLevelEvents();
 
-        self::assertSame(
-            [['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']],
-            $this->datesOf(self::TDM . 'tdm')
-        );
+        $this->assertSame([['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']], $this->datesOf(self::TDM . 'tdm'));
     }
 
     // Would previously have imported with zero dates.
@@ -67,7 +64,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $reported = array_column($this->getLogEntriesOfType('eventWithoutDates'), 'remote_id');
 
-        self::assertNotContains(self::TDM . 'tdm', $reported);
+        $this->assertNotContains(self::TDM . 'tdm', $reported);
     }
 
     #[Test]
@@ -77,7 +74,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $dates = $this->datesOf(self::TDM . 'tdm');
 
-        self::assertNotSame($dates[0]['start'], $dates[0]['end']);
+        $this->assertNotSame($dates[0]['start'], $dates[0]['end']);
     }
 
     #[Test]
@@ -85,10 +82,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     {
         $this->importEventLevelEvents();
 
-        self::assertSame(
-            [['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']],
-            $this->datesOf(self::TDM . 'notimes')
-        );
+        $this->assertSame([['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']], $this->datesOf(self::TDM . 'notimes'));
     }
 
     // The time keys say 19:30/21:30, the datetimes say 08:00/10:00.
@@ -97,10 +91,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     {
         $this->importEventLevelEvents();
 
-        self::assertSame(
-            [['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']],
-            $this->datesOf(self::TDM . 'timedisagree')
-        );
+        $this->assertSame([['start' => '2026-12-01T08:00:00+01:00', 'end' => '2026-12-01T10:00:00+01:00']], $this->datesOf(self::TDM . 'timedisagree'));
     }
 
     #[Test]
@@ -108,10 +99,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     {
         $this->importEventLevelEvents();
 
-        self::assertSame(
-            [['start' => '2026-12-01T00:00:00+01:00', 'end' => '2026-12-03T23:59:00+01:00']],
-            $this->datesOf(self::TDM . 'dateonly')
-        );
+        $this->assertSame([['start' => '2026-12-01T00:00:00+01:00', 'end' => '2026-12-03T23:59:00+01:00']], $this->datesOf(self::TDM . 'dateonly'));
     }
 
     /**
@@ -126,14 +114,11 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         // Upstream states these in UTC; rendered here as the same instants in
         // Berlin local time.
-        self::assertSame(
-            [
-                ['start' => '2026-12-08T17:00:00+01:00', 'end' => '2026-12-08T19:00:00+01:00'],
-                ['start' => '2026-12-19T17:00:00+01:00', 'end' => '2026-12-19T19:00:00+01:00'],
-                ['start' => '2026-12-26T17:00:00+01:00', 'end' => '2026-12-26T19:00:00+01:00'],
-            ],
-            $this->datesOf(self::MIXED)
-        );
+        $this->assertSame([
+            ['start' => '2026-12-08T17:00:00+01:00', 'end' => '2026-12-08T19:00:00+01:00'],
+            ['start' => '2026-12-19T17:00:00+01:00', 'end' => '2026-12-19T19:00:00+01:00'],
+            ['start' => '2026-12-26T17:00:00+01:00', 'end' => '2026-12-26T19:00:00+01:00'],
+        ], $this->datesOf(self::MIXED));
     }
 
     #[Test]
@@ -142,11 +127,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
         $this->importEventLevelEvents();
 
         foreach ($this->datesOf(self::MIXED) as $date) {
-            self::assertSame(
-                substr($date['start'], 0, 10),
-                substr($date['end'], 0, 10),
-                'An occurrence spanning several days would be the envelope, not a date.'
-            );
+            $this->assertSame(substr($date['start'], 0, 10), substr($date['end'], 0, 10), 'An occurrence spanning several days would be the envelope, not a date.');
         }
     }
 
@@ -161,12 +142,12 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        self::assertNotSame([], $rows);
+        $this->assertNotSame([], $rows);
         foreach ($rows as $row) {
-            self::assertIsString($row['remote_id']);
-            self::assertSame('no', $row['canceled']);
-            self::assertGreaterThan(0, $row['event'], 'Every date must be wired to its event.');
-            self::assertStringContainsString('::date::', $row['remote_id']);
+            $this->assertIsString($row['remote_id']);
+            $this->assertSame('no', $row['canceled']);
+            $this->assertGreaterThan(0, $row['event'], 'Every date must be wired to its event.');
+            $this->assertStringContainsString('::date::', $row['remote_id']);
         }
     }
 
@@ -187,8 +168,8 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
         $eventLevel = $this->datesOf(self::TDM . 'tdm');
         $scheduled = $this->datesOf('https://thuecat.org/resources/e_101176534-hubev');
 
-        self::assertCount(1, $eventLevel);
-        self::assertCount(1, $scheduled);
+        $this->assertCount(1, $eventLevel);
+        $this->assertCount(1, $scheduled);
     }
 
     #[Test]
@@ -201,11 +182,8 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $this->importEventLevelEvents();
 
-        self::assertSame([], $this->datesOf(self::TDM . 'tdm'));
-        self::assertContains(
-            self::TDM . 'tdm',
-            array_column($this->getLogEntriesOfType('eventWithoutDates'), 'remote_id')
-        );
+        $this->assertSame([], $this->datesOf(self::TDM . 'tdm'));
+        $this->assertContains(self::TDM . 'tdm', array_column($this->getLogEntriesOfType('eventWithoutDates'), 'remote_id'));
     }
 
     /**
@@ -221,18 +199,14 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $dates = $this->datesOf('https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm');
 
-        self::assertGreaterThan(1, count($dates), 'The series must expand, not collapse into one date.');
+        $this->assertGreaterThan(1, count($dates), 'The series must expand, not collapse into one date.');
         foreach ($dates as $date) {
-            self::assertSame(
-                substr($date['start'], 0, 10),
-                substr($date['end'], 0, 10),
-                'Each occurrence runs within one day; only repeatUntil reaches 2026-12-31.'
-            );
+            $this->assertSame(substr($date['start'], 0, 10), substr($date['end'], 0, 10), 'Each occurrence runs within one day; only repeatUntil reaches 2026-12-31.');
         }
 
         $last = end($dates);
-        self::assertIsArray($last);
-        self::assertSame('2026-12-31', substr($last['start'], 0, 10));
+        $this->assertIsArray($last);
+        $this->assertSame('2026-12-31', substr($last['start'], 0, 10));
     }
 
     // D12: presence, not yield. The event-level envelope beside it spans
@@ -244,11 +218,8 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $remoteId = 'https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-emptysched';
 
-        self::assertSame([], $this->datesOf($remoteId));
-        self::assertContains(
-            $remoteId,
-            array_column($this->getLogEntriesOfType('eventWithoutDates'), 'remote_id')
-        );
+        $this->assertSame([], $this->datesOf($remoteId));
+        $this->assertContains($remoteId, array_column($this->getLogEntriesOfType('eventWithoutDates'), 'remote_id'));
     }
 
     /**
@@ -268,7 +239,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
         $dates = [];
         foreach ($rows as $row) {
-            self::assertIsString($row['remote_id']);
+            $this->assertIsString($row['remote_id']);
             if (!str_starts_with($row['remote_id'], $eventRemoteId . '::date::')) {
                 continue;
             }
@@ -283,7 +254,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
     private function toIso(mixed $timestamp): string
     {
-        self::assertIsInt($timestamp);
+        $this->assertIsInt($timestamp);
 
         return (new DateTimeImmutable('@' . $timestamp))
             ->setTimezone(new DateTimeZone('Europe/Berlin'))

@@ -43,11 +43,8 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
             'settings.towns' => $this->selectField('tx_thuecat_town'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.towns')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.towns'));
     }
 
     #[Test]
@@ -64,11 +61,8 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
             ),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)'
-            . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)',
-            $this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.towns')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)'
+        . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)', $this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.towns'));
     }
 
     #[Test]
@@ -87,9 +81,7 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
             ],
         ]);
 
-        self::assertNull(
-            $this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.categories')
-        );
+        $this->assertNull($this->clauseFor($this->process($dataStructure), 'sDEF', 'settings.categories'));
     }
 
     #[Test]
@@ -108,16 +100,10 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
 
         $result = $this->process($dataStructure);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($result, 'sDEF', 'settings.towns')
-        );
-        self::assertSame(
-            'AND {#tx_thuecat_trail}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_trail}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($result, 'extra', 'settings.selectedRecords')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($result, 'sDEF', 'settings.towns'));
+        $this->assertSame('AND {#tx_thuecat_trail}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_trail}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($result, 'extra', 'settings.selectedRecords'));
     }
 
     #[Test]
@@ -127,11 +113,8 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
             'settings.towns' => $this->selectField('tx_thuecat_town'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($this->process($dataStructure)), 'sDEF', 'settings.towns')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($this->process($dataStructure)), 'sDEF', 'settings.towns'));
     }
 
     #[Test]
@@ -139,7 +122,7 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
     {
         $result = $this->process(['ROOT' => []]);
 
-        self::assertSame(['ROOT' => []], $result);
+        $this->assertSame(['ROOT' => []], $result);
     }
 
     /**

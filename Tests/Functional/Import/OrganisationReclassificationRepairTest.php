@@ -47,23 +47,20 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
         $this->importConfiguration(1);
 
         $hotel = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel');
-        self::assertSame('Hotel am Markt', $hotel['title']);
-        self::assertIsInt($hotel['uid']);
-        self::assertSame(
-            'Hotel on the market square',
-            $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $hotel['uid'])[1]['title'] ?? null
-        );
+        $this->assertSame('Hotel am Markt', $hotel['title']);
+        $this->assertIsInt($hotel['uid']);
+        $this->assertSame('Hotel on the market square', $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $hotel['uid'])[1]['title'] ?? null);
 
         $addresses = array_values(array_filter(
             $this->fetchChildren('tx_thuecat_address'),
             static fn (array $address): bool => $address['remote_id'] === self::RESOURCES . 'repair-hotel::addr::0'
         ));
-        self::assertCount(1, $addresses);
-        self::assertSame('tx_thuecat_tourist_attraction', $addresses[0]['parenttable']);
-        self::assertSame($hotel['uid'], $addresses[0]['parentid']);
+        $this->assertCount(1, $addresses);
+        $this->assertSame('tx_thuecat_tourist_attraction', $addresses[0]['parenttable']);
+        $this->assertSame($hotel['uid'], $addresses[0]['parentid']);
 
-        self::assertSame(2, $this->countDeletedRows('tx_thuecat_organisation'));
-        self::assertSame([], $this->fetchTranslationsByParent('tx_thuecat_organisation', 21));
+        $this->assertSame(2, $this->countDeletedRows('tx_thuecat_organisation'));
+        $this->assertSame([], $this->fetchTranslationsByParent('tx_thuecat_organisation', 21));
     }
 
     #[Test]
@@ -73,19 +70,19 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
+        $this->assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
         $hotelTranslation = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel')[1] ?? [];
         $addresses = array_values(array_filter(
             $this->fetchChildren('tx_thuecat_address'),
             static fn (array $address): bool => $address['remote_id'] === self::RESOURCES . 'repair-hotel::addr::0'
         ));
-        self::assertCount(1, $addresses);
-        self::assertNotSame(31, $addresses[0]['uid']);
-        self::assertIsInt($addresses[0]['uid']);
+        $this->assertCount(1, $addresses);
+        $this->assertNotSame(31, $addresses[0]['uid']);
+        $this->assertIsInt($addresses[0]['uid']);
         $addressTranslation = $this->fetchTranslationsByParent('tx_thuecat_address', $addresses[0]['uid'])[1] ?? [];
-        self::assertSame('tx_thuecat_tourist_attraction', $addressTranslation['parenttable'] ?? null);
-        self::assertSame($hotelTranslation['uid'] ?? null, $addressTranslation['parentid'] ?? null);
-        self::assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 31));
+        $this->assertSame('tx_thuecat_tourist_attraction', $addressTranslation['parenttable'] ?? null);
+        $this->assertSame($hotelTranslation['uid'] ?? null, $addressTranslation['parentid'] ?? null);
+        $this->assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 31));
     }
 
     #[Test]
@@ -96,9 +93,9 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
         $this->importConfiguration(5);
 
         $flatUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-holiday-flat');
-        self::assertGreaterThan(0, $flatUid);
-        self::assertSame([], $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $flatUid));
-        self::assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 33));
+        $this->assertGreaterThan(0, $flatUid);
+        $this->assertSame([], $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $flatUid));
+        $this->assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 33));
     }
 
     /**
@@ -113,18 +110,18 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $this->importConfiguration(6);
 
-        self::assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
+        $this->assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
         $squareUid = $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'repair-square');
         $fountain = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-fountain-on-square');
-        self::assertSame((string)$squareUid, $fountain['contained_in_place']);
+        $this->assertSame((string)$squareUid, $fountain['contained_in_place']);
         $addresses = array_values(array_filter(
             $this->fetchChildren('tx_thuecat_address'),
             static fn (array $address): bool => $address['remote_id'] === self::RESOURCES . 'repair-square::addr::0'
         ));
-        self::assertCount(1, $addresses);
-        self::assertNotSame(34, $addresses[0]['uid']);
-        self::assertSame('tx_thuecat_place', $addresses[0]['parenttable']);
-        self::assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 34));
+        $this->assertCount(1, $addresses);
+        $this->assertNotSame(34, $addresses[0]['uid']);
+        $this->assertSame('tx_thuecat_place', $addresses[0]['parenttable']);
+        $this->assertSame([], $this->fetchTranslationsByParent('tx_thuecat_address', 34));
     }
 
     #[Test]
@@ -134,8 +131,8 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $this->importConfiguration(2);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-store'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'place-store'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-store'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'place-store'));
     }
 
     #[Test]
@@ -146,8 +143,8 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
         $this->importConfiguration(1);
 
         $organisation = $this->fetchRowByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'repair-hotel');
-        self::assertSame(26, $organisation['uid']);
-        self::assertSame(4010, $organisation['pid']);
+        $this->assertSame(26, $organisation['uid']);
+        $this->assertSame(4010, $organisation['pid']);
     }
 
     #[Test]
@@ -158,9 +155,9 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
         $this->importConfiguration(4);
 
         $organisation = $this->fetchRowByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-dmo');
-        self::assertSame(25, $organisation['uid']);
-        self::assertSame('Tourismusverband', $organisation['title']);
-        self::assertSame(0, $this->countDeletedRows('tx_thuecat_organisation'));
+        $this->assertSame(25, $organisation['uid']);
+        $this->assertSame('Tourismusverband', $organisation['title']);
+        $this->assertSame(0, $this->countDeletedRows('tx_thuecat_organisation'));
     }
 
     #[Test]
@@ -172,9 +169,9 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel');
         $restaurant = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-restaurant');
-        self::assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
-        self::assertSame('', $restaurant['contained_in_organisation']);
-        self::assertSame(0, $restaurant['managed_by']);
+        $this->assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
+        $this->assertSame('', $restaurant['contained_in_organisation']);
+        $this->assertSame(0, $restaurant['managed_by']);
     }
 
     #[Test]
@@ -186,8 +183,8 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $squareUid = $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-square');
         $fountain = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-attraction-on-square');
-        self::assertSame((string)$squareUid, $fountain['contained_in_place']);
-        self::assertSame('', $fountain['contained_in_organisation']);
+        $this->assertSame((string)$squareUid, $fountain['contained_in_place']);
+        $this->assertSame('', $fountain['contained_in_organisation']);
     }
 
     #[Test]
@@ -199,22 +196,19 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel');
         $entries = $this->getLogEntriesOfType('recordReclassification');
-        self::assertCount(1, $entries);
-        self::assertSame('warning', $entries[0]['severity']);
-        self::assertSame(self::RESOURCES . 'repair-hotel', $entries[0]['remote_id']);
-        self::assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
-        self::assertIsString($entries[0]['context']);
-        self::assertSame(
-            [
-                'previousTable' => 'tx_thuecat_organisation',
-                'previousUid' => 21,
-                'table' => 'tx_thuecat_tourist_attraction',
-                'uid' => $hotelUid,
-                'moved' => ['tx_thuecat_tourist_attraction:41'],
-                'droppedManagedBy' => ['tx_thuecat_tourist_attraction:41'],
-                'droppedManagedEvents' => [51, 52],
-            ],
-            json_decode($entries[0]['context'], true)
-        );
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
+        $this->assertSame(self::RESOURCES . 'repair-hotel', $entries[0]['remote_id']);
+        $this->assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
+        $this->assertIsString($entries[0]['context']);
+        $this->assertSame([
+            'previousTable' => 'tx_thuecat_organisation',
+            'previousUid' => 21,
+            'table' => 'tx_thuecat_tourist_attraction',
+            'uid' => $hotelUid,
+            'moved' => ['tx_thuecat_tourist_attraction:41'],
+            'droppedManagedBy' => ['tx_thuecat_tourist_attraction:41'],
+            'droppedManagedEvents' => [51, 52],
+        ], json_decode($entries[0]['context'], true));
     }
 }

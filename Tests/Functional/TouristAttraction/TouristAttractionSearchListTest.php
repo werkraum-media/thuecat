@@ -45,9 +45,9 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
-        self::assertStringContainsString('Erfurt Frei 01', $body);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('name="tx_thuecat_touristattractionlist[demand][searchword]"', $body);
+        $this->assertStringContainsString('Erfurt Frei 01', $body);
     }
 
     #[Test]
@@ -58,9 +58,9 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // Exactly one form (search plugin), and no list articles appear before it.
-        self::assertSame(1, substr_count($body, '<form'));
+        $this->assertSame(1, substr_count($body, '<form'));
         $beforeForm = substr($body, 0, (int)strpos($body, '<form'));
-        self::assertStringNotContainsString('Erfurt Frei', $beforeForm);
+        $this->assertStringNotContainsString('Erfurt Frei', $beforeForm);
     }
 
     #[Test]
@@ -76,9 +76,9 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Erfurt Frei 01', $body);
-        self::assertStringNotContainsString('Erfurt Kostenpflichtig', $body);
-        self::assertStringNotContainsString('Weimar Frei', $body);
+        $this->assertStringContainsString('Erfurt Frei 01', $body);
+        $this->assertStringNotContainsString('Erfurt Kostenpflichtig', $body);
+        $this->assertStringNotContainsString('Weimar Frei', $body);
     }
 
     #[Test]
@@ -94,11 +94,8 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression('#<option value="1"[^>]*selected#', $body);
-        self::assertMatchesRegularExpression(
-            '#name="tx_thuecat_touristattractionlist\[demand\]\[isAccessibleForFree\]"[^>]*checked#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<option value="1"[^>]*selected#', $body);
+        $this->assertMatchesRegularExpression('#name="tx_thuecat_touristattractionlist\[demand\]\[isAccessibleForFree\]"[^>]*checked#', $body);
     }
 
     #[Test]
@@ -116,9 +113,9 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         // 15 free Erfurt records, itemsPerPage 10 -> a second page exists, and its
         // link must keep the active filter so paging does not reset the search.
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Btowns%5D=1', $body);
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5BisAccessibleForFree%5D=1', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Btowns%5D=1', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5BisAccessibleForFree%5D=1', $body);
     }
 
     #[Test]
@@ -134,10 +131,10 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
 
         $response = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(303, $response->getStatusCode());
+        $this->assertSame(303, $response->getStatusCode());
         $location = $response->getHeaderLine('location');
-        self::assertStringEndsWith('?q=Erfurt%20Frei%2001', $location);
-        self::assertStringNotContainsString('__referrer', $location);
-        self::assertStringNotContainsString('__trustedProperties', $location);
+        $this->assertStringEndsWith('?q=Erfurt%20Frei%2001', $location);
+        $this->assertStringNotContainsString('__referrer', $location);
+        $this->assertStringNotContainsString('__trustedProperties', $location);
     }
 }

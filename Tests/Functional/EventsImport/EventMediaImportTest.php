@@ -85,15 +85,12 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
+        $this->assertSame([
             [
-                [
-                    'tablenames' => 'tx_events_domain_model_event',
-                    'fieldname' => 'images',
-                ],
+                'tablenames' => 'tx_events_domain_model_event',
+                'fieldname' => 'images',
             ],
-            $this->fetchReferences()
-        );
+        ], $this->fetchReferences());
     }
 
     #[Test]
@@ -109,16 +106,12 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
+        $this->assertSame([
             [
-                [
-                    'tablenames' => 'tx_events_domain_model_event',
-                    'fieldname' => 'images',
-                ],
+                'tablenames' => 'tx_events_domain_model_event',
+                'fieldname' => 'images',
             ],
-            $this->fetchReferences(),
-            'An inline media node carries everything needed; it must import like a referenced one.'
-        );
+        ], $this->fetchReferences(), 'An inline media node carries everything needed; it must import like a referenced one.');
     }
 
     #[Test]
@@ -132,12 +125,8 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [['uid' => 1, 'deleted' => 0]],
-            $this->fetchReferenceState(),
-            'A stable identity means the stored file and its reference are reused.'
-        );
-        self::assertSame(1, $this->countFiles(), 'No second sys_file for the same asset.');
+        $this->assertSame([['uid' => 1, 'deleted' => 0]], $this->fetchReferenceState(), 'A stable identity means the stored file and its reference are reused.');
+        $this->assertSame(1, $this->countFiles(), 'No second sys_file for the same asset.');
     }
 
     private function countFiles(): int
@@ -181,13 +170,10 @@ class EventMediaImportTest extends AbstractImportTestCase
         // both being present is.
         $names = $this->fetchRelatedFileNamesInOrder();
         sort($names);
-        self::assertSame(
-            [
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-                'image_3e6a3987344f6d38.jpg',
-            ],
-            $names
-        );
+        $this->assertSame([
+            'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+            'image_3e6a3987344f6d38.jpg',
+        ], $names);
     }
 
     #[Test]
@@ -213,13 +199,10 @@ class EventMediaImportTest extends AbstractImportTestCase
         // One field, entries of both shapes: each is judged on its own.
         $names = $this->fetchRelatedFileNamesInOrder();
         sort($names);
-        self::assertSame(
-            [
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-                'image_3e6a3987344f6d38.jpg',
-            ],
-            $names
-        );
+        $this->assertSame([
+            'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+            'image_3e6a3987344f6d38.jpg',
+        ], $names);
     }
 
     #[Test]
@@ -235,14 +218,10 @@ class EventMediaImportTest extends AbstractImportTestCase
         $this->runImport();
 
         // uid 1 keeps its uid: still supplied, so reused rather than recreated.
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 1],
-            ],
-            $this->fetchReferenceState(),
-            'The reap must sweep the field the owner declares, not a hardcoded one.'
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 1],
+        ], $this->fetchReferenceState(), 'The reap must sweep the field the owner declares, not a hardcoded one.');
     }
 
     // The old per-path staging could not express this: the inline path ran
@@ -258,15 +237,12 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 0],
-                ['uid' => 3, 'deleted' => 1],
-                ['uid' => 4, 'deleted' => 1],
-            ],
-            $this->fetchReferenceState()
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 0],
+            ['uid' => 3, 'deleted' => 1],
+            ['uid' => 4, 'deleted' => 1],
+        ], $this->fetchReferenceState());
     }
 
     #[Test]
@@ -282,11 +258,7 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         // A type:file relation appends, so without the reap this climbs on
         // every run.
-        self::assertSame(
-            2,
-            $this->countLiveReferences(),
-            'The two supplied images stay two references.'
-        );
+        $this->assertSame(2, $this->countLiveReferences(), 'The two supplied images stay two references.');
     }
 
     // Reaping compares against what this run produced.
@@ -301,15 +273,12 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 1],
-                // Belongs to the event this run never fetched.
-                ['uid' => 3, 'deleted' => 0],
-            ],
-            $this->fetchReferenceState()
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 1],
+            // Belongs to the event this run never fetched.
+            ['uid' => 3, 'deleted' => 0],
+        ], $this->fetchReferenceState());
     }
 
     // A failing server says nothing about whether the asset still exists.
@@ -318,14 +287,10 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         $this->stageOwnerWithOneGoodImageAnd(503, 503, 503);
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 0],
-            ],
-            $this->fetchReferenceState(),
-            'A 5xx must never reap.'
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 0],
+        ], $this->fetchReferenceState(), 'A 5xx must never reap.');
     }
 
     // 404 is the one signal that positively means the asset is gone.
@@ -334,14 +299,10 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         $this->stageOwnerWithOneGoodImageAnd(404);
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 1],
-                ['uid' => 2, 'deleted' => 0],
-            ],
-            $this->fetchReferenceState(),
-            'A 404 means the asset is gone, so the reference goes with it.'
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 1],
+            ['uid' => 2, 'deleted' => 0],
+        ], $this->fetchReferenceState(), 'A 404 means the asset is gone, so the reference goes with it.');
     }
 
     // 403 arrives for every asset on the host at once when a credential expires.
@@ -350,14 +311,10 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         $this->stageOwnerWithOneGoodImageAnd(403);
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 0],
-            ],
-            $this->fetchReferenceState(),
-            'A refused request is a credential fault, not a removal.'
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 0],
+        ], $this->fetchReferenceState(), 'A refused request is a credential fault, not a removal.');
     }
 
     #[Test]
@@ -368,14 +325,10 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImportSkippingMedia();
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'deleted' => 0],
-                ['uid' => 2, 'deleted' => 0],
-            ],
-            $this->fetchReferenceState(),
-            'Media was never retrieved, so nothing may be concluded about it.'
-        );
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 0],
+        ], $this->fetchReferenceState(), 'Media was never retrieved, so nothing may be concluded about it.');
     }
 
     /** The success is what makes the owner reach the flush at all. */
@@ -448,13 +401,10 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         // Both slots share one field, so the source ranking is all that
         // distinguishes them: schema:photo before schema:image.
-        self::assertSame(
-            [
-                'image_3e6a3987344f6d38.jpg',
-                'image_6ab24be70ef3f2e8.jpg',
-            ],
-            $this->fetchRelatedFileNamesInOrder()
-        );
+        $this->assertSame([
+            'image_3e6a3987344f6d38.jpg',
+            'image_6ab24be70ef3f2e8.jpg',
+        ], $this->fetchRelatedFileNamesInOrder());
     }
 
     #[Test]
@@ -471,11 +421,7 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            ['e_unusable_media-tdm' => ['image_3e6a3987344f6d38.jpg']],
-            $this->fetchFileNamesByEventRemoteId(),
-            'An uninterpretable entry costs that entry, not the root URL.'
-        );
+        $this->assertSame(['e_unusable_media-tdm' => ['image_3e6a3987344f6d38.jpg']], $this->fetchFileNamesByEventRemoteId(), 'An uninterpretable entry costs that entry, not the root URL.');
     }
 
     #[Test]
@@ -488,10 +434,7 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         // Nothing usable alongside it, so the skipped entry alone has to drain
         // the bucket — an undrained one raises "no progress" and costs the root.
-        self::assertSame(
-            ['e_only_unusable_media-tdm' => []],
-            $this->fetchFileNamesByEventRemoteId()
-        );
+        $this->assertSame(['e_only_unusable_media-tdm' => []], $this->fetchFileNamesByEventRemoteId());
     }
 
     #[Test]
@@ -508,12 +451,8 @@ class EventMediaImportTest extends AbstractImportTestCase
 
         $severity = $this->runImportReturningSeverity();
 
-        self::assertSame(
-            'warning',
-            $severity,
-            'Data drift, not an operator error — at error a scheduler treats a '
-            . 'healthy import as broken.'
-        );
+        $this->assertSame('warning', $severity, 'Data drift, not an operator error — at error a scheduler treats a '
+        . 'healthy import as broken.');
     }
 
     #[Test]
@@ -539,13 +478,10 @@ class EventMediaImportTest extends AbstractImportTestCase
         // The fixture's schema:position values contradict the delivery order
         // (photo carries 2, image 1), so an implementation sorting by position
         // would return these reversed.
-        self::assertSame(
-            [
-                'ad455b3e-dbfd-488a-92d5-9679fab51418_85662d8758cdca09.jpg',
-                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-            ],
-            $this->fetchRelatedFileNamesInOrder()
-        );
+        $this->assertSame([
+            'ad455b3e-dbfd-488a-92d5-9679fab51418_85662d8758cdca09.jpg',
+            'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+        ], $this->fetchRelatedFileNamesInOrder());
     }
 
     #[Test]
@@ -568,16 +504,13 @@ class EventMediaImportTest extends AbstractImportTestCase
         $this->runImport();
 
         // Both media paths sit on the first event, so both are on trial.
-        self::assertSame(
-            [
-                'e_mixed_media-tdm' => [
-                    'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
-                    'image_3e6a3987344f6d38.jpg',
-                ],
-                'e_no_media-tdm' => [],
+        $this->assertSame([
+            'e_mixed_media-tdm' => [
+                'c4915c4a-9a68-4a51-8d4e-782158f6887d_31222b4549bdcfaa.jpg',
+                'image_3e6a3987344f6d38.jpg',
             ],
-            $this->fetchFileNamesByEventRemoteId()
-        );
+            'e_no_media-tdm' => [],
+        ], $this->fetchFileNamesByEventRemoteId());
     }
 
     /**
@@ -734,7 +667,7 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Fixture configuration uid=1 not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=1 not found');
         $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
     }
 
@@ -742,7 +675,7 @@ class EventMediaImportTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Fixture configuration uid=1 not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=1 not found');
         return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

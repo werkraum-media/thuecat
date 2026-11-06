@@ -30,63 +30,60 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
     #[Test]
     public function everyRelationFieldOfEveryRecordKindIsScoped(): void
     {
-        self::assertSame(
-            [
-                'tx_events_domain_model_event' => [
-                    'location',
-                    'organizer',
-                ],
-                'tx_events_domain_model_location' => [
-                    'children',
-                ],
-                'tx_thuecat_meeting_room' => [
-                    'contained_rooms',
-                    'managed_by',
-                ],
-                'tx_thuecat_parking_facility' => [
-                    'contained_in_attraction',
-                    'contained_in_organisation',
-                    'contained_in_parking_facility',
-                    'contained_in_place',
-                    'contained_in_tourist_information',
-                    'contained_in_trail',
-                    'managed_by',
-                    'town',
-                ],
-                'tx_thuecat_tourist_attraction' => [
-                    'contained_in_attraction',
-                    'contained_in_organisation',
-                    'contained_in_parking_facility',
-                    'contained_in_place',
-                    'contained_in_tourist_information',
-                    'contained_in_trail',
-                    'geo_touches_trail',
-                    'managed_by',
-                    'managed_objects',
-                    'meeting_rooms',
-                    'operated_by',
-                    'parking_facility_near_by',
-                    'town',
-                ],
-                'tx_thuecat_tourist_information' => [
-                    'contained_in_attraction',
-                    'contained_in_organisation',
-                    'contained_in_parking_facility',
-                    'contained_in_place',
-                    'contained_in_tourist_information',
-                    'contained_in_trail',
-                    'managed_by',
-                    'town',
-                ],
-                'tx_thuecat_town' => [
-                    'managed_by',
-                ],
-                'tx_thuecat_trail' => [
-                    'managed_by',
-                ],
+        $this->assertSame([
+            'tx_events_domain_model_event' => [
+                'location',
+                'organizer',
             ],
-            $this->scopedColumnsPerTable()
-        );
+            'tx_events_domain_model_location' => [
+                'children',
+            ],
+            'tx_thuecat_meeting_room' => [
+                'contained_rooms',
+                'managed_by',
+            ],
+            'tx_thuecat_parking_facility' => [
+                'contained_in_attraction',
+                'contained_in_organisation',
+                'contained_in_parking_facility',
+                'contained_in_place',
+                'contained_in_tourist_information',
+                'contained_in_trail',
+                'managed_by',
+                'town',
+            ],
+            'tx_thuecat_tourist_attraction' => [
+                'contained_in_attraction',
+                'contained_in_organisation',
+                'contained_in_parking_facility',
+                'contained_in_place',
+                'contained_in_tourist_information',
+                'contained_in_trail',
+                'geo_touches_trail',
+                'managed_by',
+                'managed_objects',
+                'meeting_rooms',
+                'operated_by',
+                'parking_facility_near_by',
+                'town',
+            ],
+            'tx_thuecat_tourist_information' => [
+                'contained_in_attraction',
+                'contained_in_organisation',
+                'contained_in_parking_facility',
+                'contained_in_place',
+                'contained_in_tourist_information',
+                'contained_in_trail',
+                'managed_by',
+                'town',
+            ],
+            'tx_thuecat_town' => [
+                'managed_by',
+            ],
+            'tx_thuecat_trail' => [
+                'managed_by',
+            ],
+        ], $this->scopedColumnsPerTable());
     }
 
     #[Test]
@@ -95,8 +92,8 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
         $scoped = $this->scopedColumnsPerTable();
 
         foreach ($scoped as $table => $columns) {
-            self::assertNotContains('l10n_parent', $columns, $table);
-            self::assertNotContains('l18n_parent', $columns, $table);
+            $this->assertNotContains('l10n_parent', $columns, $table);
+            $this->assertNotContains('l18n_parent', $columns, $table);
         }
     }
 
@@ -105,17 +102,17 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
     {
         $scoped = $this->scopedColumnsPerTable();
 
-        self::assertArrayNotHasKey('tx_thuecat_import_log', $scoped);
-        self::assertArrayNotHasKey('tx_thuecat_import_log_entry', $scoped);
-        self::assertArrayNotHasKey('tx_thuecat_import_configuration', $scoped);
+        $this->assertArrayNotHasKey('tx_thuecat_import_log', $scoped);
+        $this->assertArrayNotHasKey('tx_thuecat_import_log_entry', $scoped);
+        $this->assertArrayNotHasKey('tx_thuecat_import_configuration', $scoped);
     }
 
     #[Test]
     public function categoryFieldsAreNotScoped(): void
     {
         foreach ($this->scopedColumnsPerTable() as $table => $columns) {
-            self::assertNotContains('categories', $columns, $table);
-            self::assertNotContains('keywords', $columns, $table);
+            $this->assertNotContains('categories', $columns, $table);
+            $this->assertNotContains('keywords', $columns, $table);
         }
     }
 

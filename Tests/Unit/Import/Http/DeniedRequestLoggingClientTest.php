@@ -58,12 +58,9 @@ final class DeniedRequestLoggingClientTest extends TestCase
 
         (new DeniedRequestLoggingClient($this->clientAnswering($status), $logger))->sendRequest($request);
 
-        self::assertCount(1, $logger->records);
-        self::assertSame(LogLevel::WARNING, $logger->records[0]['level']);
-        self::assertSame(
-            ['method' => 'GET', 'url' => $url, 'status' => $status, 'credential' => $credential],
-            $logger->records[0]['context']
-        );
+        $this->assertCount(1, $logger->records);
+        $this->assertSame(LogLevel::WARNING, $logger->records[0]['level']);
+        $this->assertSame(['method' => 'GET', 'url' => $url, 'status' => $status, 'credential' => $credential], $logger->records[0]['context']);
     }
 
     #[Test]
@@ -74,8 +71,8 @@ final class DeniedRequestLoggingClientTest extends TestCase
 
         (new DeniedRequestLoggingClient($this->clientAnswering($status), $logger))->sendRequest($request);
 
-        self::assertNotSame([], $logger->records);
-        self::assertStringNotContainsString('test-secret-key', (string)json_encode($logger->records));
+        $this->assertNotSame([], $logger->records);
+        $this->assertStringNotContainsString('test-secret-key', (string)json_encode($logger->records));
     }
 
     /**
@@ -98,26 +95,23 @@ final class DeniedRequestLoggingClientTest extends TestCase
             ->sendRequest(new Request('https://cdb.thuecat.org/assets/test.jpg?api_key=test-secret-key', 'GET'))
         ;
 
-        self::assertSame([], $logger->records);
+        $this->assertSame([], $logger->records);
     }
 
     #[Test]
     public function handsTheResponseOnUnchanged(): void
     {
         $response = new Response('php://temp', 403);
-        $client = self::createStub(ImportHttpClient::class);
+        $client = $this->createStub(ImportHttpClient::class);
         $client->method('sendRequest')->willReturn($response);
 
-        self::assertSame(
-            $response,
-            (new DeniedRequestLoggingClient($client, new CapturingLogger()))
-                ->sendRequest(new Request('https://cdb.thuecat.org/assets/test.jpg', 'GET'))
-        );
+        $this->assertSame($response, (new DeniedRequestLoggingClient($client, new CapturingLogger()))
+            ->sendRequest(new Request('https://cdb.thuecat.org/assets/test.jpg', 'GET')));
     }
 
     protected function clientAnswering(int $status): ImportHttpClient
     {
-        $client = self::createStub(ImportHttpClient::class);
+        $client = $this->createStub(ImportHttpClient::class);
         $client->method('sendRequest')->willReturn(new Response('php://temp', $status));
 
         return $client;

@@ -52,8 +52,8 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
 
         $this->requestMask(20);
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(1, $this->maskIdentifiers(), 'The mask leaves one entry.');
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(1, $this->maskIdentifiers(), 'The mask leaves one entry.');
     }
 
     /** The mask is identical across the pagination pages of one demand. */
@@ -62,15 +62,11 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
     {
         $this->requestPaged(20, 1);
         $afterFirstPage = $this->storedMasks();
-        self::assertCount(1, $afterFirstPage, 'Page 1 stored its mask.');
+        $this->assertCount(1, $afterFirstPage, 'Page 1 stored its mask.');
 
         $this->requestPaged(20, 2);
 
-        self::assertSame(
-            $afterFirstPage,
-            $this->storedMasks(),
-            'Paging must not build a second mask.'
-        );
+        $this->assertSame($afterFirstPage, $this->storedMasks(), 'Paging must not build a second mask.');
     }
 
     /**
@@ -85,12 +81,8 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
 
         $this->requestMask(10);
 
-        self::assertCount(1, $afterPlainList, 'Plain-list page stored its mask.');
-        self::assertCount(
-            2,
-            $this->maskIdentifiers(),
-            'The filtered-list page renders its own mask.'
-        );
+        $this->assertCount(1, $afterPlainList, 'Plain-list page stored its mask.');
+        $this->assertCount(2, $this->maskIdentifiers(), 'The filtered-list page renders its own mask.');
     }
 
     #[Test]
@@ -101,12 +93,8 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
 
         $this->requestMask(20, ['demand' => ['searchword' => 'Museum']]);
 
-        self::assertCount(1, $unselected, 'Mask without selection stored.');
-        self::assertCount(
-            2,
-            $this->maskIdentifiers(),
-            'The mask reflects the selection, so it is its own entry.'
-        );
+        $this->assertCount(1, $unselected, 'Mask without selection stored.');
+        $this->assertCount(2, $this->maskIdentifiers(), 'The mask reflects the selection, so it is its own entry.');
     }
 
     /**
@@ -121,8 +109,8 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
 
         $this->requestMask(50, [], 1);
 
-        self::assertCount(1, $german, 'German mask stored.');
-        self::assertCount(2, $this->allMaskIdentifiers(), 'English renders its own mask.');
+        $this->assertCount(1, $german, 'German mask stored.');
+        $this->assertCount(2, $this->allMaskIdentifiers(), 'English renders its own mask.');
     }
 
     /**
@@ -134,12 +122,8 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
     {
         $this->requestMask(20, [], 2);
 
-        self::assertCount(1, $this->allMaskIdentifiers(), 'The mask is stored.');
-        self::assertCount(
-            1,
-            $this->cacheIdentifiersTaggedWith(Extension::CACHE_SEARCH_MASK, 'tx_thuecat_town'),
-            'With no option to tag, the table itself is the tag.'
-        );
+        $this->assertCount(1, $this->allMaskIdentifiers(), 'The mask is stored.');
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith(Extension::CACHE_SEARCH_MASK, 'tx_thuecat_town'), 'With no option to tag, the table itself is the tag.');
     }
 
     /** Option lists are DB-backed, so a renamed town must not survive. */
@@ -148,11 +132,11 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
     {
         $this->setUpBackendUserForDataHandler();
         $this->requestMask(20);
-        self::assertCount(1, $this->allMaskIdentifiers(), 'Mask stored.');
+        $this->assertCount(1, $this->allMaskIdentifiers(), 'Mask stored.');
 
         $this->saveRecord(1, ['title' => 'Erfurt, neu benannt'], 'tx_thuecat_town');
 
-        self::assertSame([], $this->allMaskIdentifiers(), 'The stored mask is discarded.');
+        $this->assertSame([], $this->allMaskIdentifiers(), 'The stored mask is discarded.');
     }
 
     #[Test]
@@ -164,7 +148,7 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
         $this->saveRecord(1, ['title' => 'Erfurt, neu benannt'], 'tx_thuecat_town');
         $body = (string)$this->requestMask(20)->getBody();
 
-        self::assertStringContainsString('Erfurt, neu benannt', $body);
+        $this->assertStringContainsString('Erfurt, neu benannt', $body);
     }
 
     /** Paging travels in the list namespace; the search action has no such argument. */

@@ -50,8 +50,8 @@ class CollectedKeywordTest extends TestCase
     {
         $keyword = $this->keyword(['de' => 'Blasmusik', 'en' => 'Brass music']);
 
-        self::assertSame('Blasmusik', $keyword->titleFor('de'));
-        self::assertSame('Brass music', $keyword->titleFor('en'));
+        $this->assertSame('Blasmusik', $keyword->titleFor('de'));
+        $this->assertSame('Brass music', $keyword->titleFor('en'));
     }
 
     #[Test]
@@ -59,7 +59,7 @@ class CollectedKeywordTest extends TestCase
     {
         $keyword = $this->keyword(['de' => 'Blasmusik']);
 
-        self::assertNull($keyword->titleFor('en'));
+        $this->assertNull($keyword->titleFor('en'));
     }
 
     #[Test]
@@ -67,7 +67,7 @@ class CollectedKeywordTest extends TestCase
     {
         $keyword = $this->keyword(['de' => 'Blasmusik', 'en' => '']);
 
-        self::assertNull($keyword->titleFor('en'), 'An empty label is no label.');
+        $this->assertNull($keyword->titleFor('en'), 'An empty label is no label.');
     }
 
     #[Test]
@@ -75,6 +75,6 @@ class CollectedKeywordTest extends TestCase
     {
         $keyword = $this->keyword(['de' => 'Blasmusik', 'en' => 'Brass music']);
 
-        self::assertSame(['de' => 'Blasmusik', 'en' => 'Brass music'], $keyword->titles);
+        $this->assertSame(['de' => 'Blasmusik', 'en' => 'Brass music'], $keyword->titles);
     }
 }

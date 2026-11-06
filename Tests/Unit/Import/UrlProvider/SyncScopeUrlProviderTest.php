@@ -35,14 +35,14 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('type', 'syncScope');
 
-        $fetchData = self::createStub(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
 
         $subject = new SyncScopeUrlProvider(
             $fetchData
         );
 
         $result = $subject->canProvideForConfiguration($configuration);
-        self::assertTrue($result);
+        $this->assertTrue($result);
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = self::createStub(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
         $fetchData->method('updatedNodes')->willReturn([
             'data' => [
                 'canBeCreated' => [
@@ -67,7 +67,7 @@ class SyncScopeUrlProviderTest extends TestCase
 
         $result = $subject->createWithConfiguration($configuration);
 
-        self::assertInstanceOf(SyncScopeUrlProvider::class, $result);
+        $this->assertInstanceOf(SyncScopeUrlProvider::class, $result);
     }
 
     #[Test]
@@ -76,7 +76,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('syncScopeId', 10);
 
-        $fetchData = self::createStub(FetchData::class);
+        $fetchData = $this->createStub(FetchData::class);
         $fetchData->method('getFullResourceUrl')->willReturnOnConsecutiveCalls(
             'https://example.com/api/835224016581-dara',
             'https://example.com/api/165868194223-zmqf'
@@ -97,7 +97,7 @@ class SyncScopeUrlProviderTest extends TestCase
         $concreteProvider = $subject->createWithConfiguration($configuration);
         $result = $concreteProvider->getUrls();
 
-        self::assertSame([
+        $this->assertSame([
             'https://example.com/api/835224016581-dara',
             'https://example.com/api/165868194223-zmqf',
         ], $result);

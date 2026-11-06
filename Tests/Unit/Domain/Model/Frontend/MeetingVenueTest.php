@@ -54,13 +54,13 @@ class MeetingVenueTest extends TestCase
         $subject = new MeetingVenue();
         $subject->_setProperty($property, $stored);
 
-        self::assertSame($expected, $subject->{$getter}());
+        $this->assertSame($expected, $subject->{$getter}());
     }
 
     #[Test]
     public function returnsNoEnumListMembersWhenNothingIsStored(): void
     {
-        self::assertSame([], (new MeetingVenue())->getMeetingFacilityMembers());
+        $this->assertSame([], (new MeetingVenue())->getMeetingFacilityMembers());
     }
 
     #[Test]
@@ -73,7 +73,7 @@ class MeetingVenueTest extends TestCase
         $subject->_setProperty('distanceFreeway', 0);
         $subject->_setProperty('distanceIceStation', 999);
 
-        self::assertSame([
+        $this->assertSame([
             'airport' => ['value' => 12.5, 'unit' => 'km'],
             'cityCenter' => ['value' => 800, 'unit' => 'm'],
             'fair' => ['value' => 1.0, 'unit' => 'km'],
@@ -95,7 +95,7 @@ class MeetingVenueTest extends TestCase
         $subject = new MeetingVenue();
         $subject->_setProperty('venueType', $venueType);
 
-        self::assertSame($expected, $subject->getAdditionalType());
+        $this->assertSame($expected, $subject->getAdditionalType());
     }
 
     public static function meetingRoomTables(): iterable
@@ -137,9 +137,6 @@ class MeetingVenueTest extends TestCase
         $subject = new MeetingVenue();
         $subject->_setProperty('meetingRooms', $venueRooms);
 
-        self::assertSame(
-            $expectedUids,
-            array_map(static fn (MeetingRoom $room): ?int => $room->getUid(), $subject->getMeetingRoomTable())
-        );
+        $this->assertSame($expectedUids, array_map(static fn (MeetingRoom $room): ?int => $room->getUid(), $subject->getMeetingRoomTable()));
     }
 }

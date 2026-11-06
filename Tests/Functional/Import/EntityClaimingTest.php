@@ -45,8 +45,8 @@ final class EntityClaimingTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-hotel'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-hotel'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-hotel'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-hotel'));
     }
 
     #[Test]
@@ -56,8 +56,8 @@ final class EntityClaimingTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-bed-and-breakfast'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-bed-and-breakfast'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-bed-and-breakfast'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-bed-and-breakfast'));
     }
 
     #[Test]
@@ -69,10 +69,10 @@ final class EntityClaimingTest extends AbstractImportTestCase
         $this->importConfiguration(3);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-hotel');
-        self::assertGreaterThan(0, $hotelUid);
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-hotel'));
+        $this->assertGreaterThan(0, $hotelUid);
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-hotel'));
         $restaurant = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-restaurant-in-hotel');
-        self::assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
+        $this->assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
     }
 
     #[Test]
@@ -82,7 +82,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-dmo'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-dmo'));
     }
 
     #[Test]
@@ -92,7 +92,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-store'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-store'));
     }
 
     #[Test]
@@ -102,8 +102,8 @@ final class EntityClaimingTest extends AbstractImportTestCase
 
         $this->importConfiguration(6);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', self::RESOURCES . 'claiming-parking'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-parking'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', self::RESOURCES . 'claiming-parking'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-parking'));
     }
 
     #[Test]
@@ -115,11 +115,11 @@ final class EntityClaimingTest extends AbstractImportTestCase
         $this->importConfiguration(7);
 
         $attraction = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-attraction-in-untyped-place');
-        self::assertSame('', $attraction['contained_in_attraction']);
-        self::assertSame('', $attraction['contained_in_organisation']);
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-untyped-place'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-untyped-place'));
-        self::assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'));
-        self::assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
+        $this->assertSame('', $attraction['contained_in_attraction']);
+        $this->assertSame('', $attraction['contained_in_organisation']);
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-untyped-place'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-untyped-place'));
+        $this->assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'));
+        $this->assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
     }
 }

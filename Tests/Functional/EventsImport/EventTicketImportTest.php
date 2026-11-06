@@ -44,10 +44,7 @@ class EventTicketImportTest extends AbstractImportTestCase
     #[Test]
     public function singleOfferNodeFillsTicket(): void
     {
-        self::assertSame(
-            'https://www.eventim.de/?affiliate=EUM',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_ticket_single-hubev')['ticket'] ?? null
-        );
+        $this->assertSame('https://www.eventim.de/?affiliate=EUM', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_ticket_single-hubev')['ticket'] ?? null);
     }
 
     /**
@@ -57,10 +54,7 @@ class EventTicketImportTest extends AbstractImportTestCase
     #[Test]
     public function listOfOffersFillsTicketFromTheOfferCarryingAUrl(): void
     {
-        self::assertSame(
-            'https://www.eventim.de/?affiliate=EUM',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_ticket_list-hubev')['ticket'] ?? null
-        );
+        $this->assertSame('https://www.eventim.de/?affiliate=EUM', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_ticket_list-hubev')['ticket'] ?? null);
     }
 
     #[Test]
@@ -68,7 +62,7 @@ class EventTicketImportTest extends AbstractImportTestCase
     {
         $event = $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_ticket_nourl-hubev');
 
-        self::assertSame('Angebote ohne Link', $event['title'] ?? null);
-        self::assertSame('', $event['ticket'] ?? '');
+        $this->assertSame('Angebote ohne Link', $event['title'] ?? null);
+        $this->assertSame('', $event['ticket'] ?? '');
     }
 }

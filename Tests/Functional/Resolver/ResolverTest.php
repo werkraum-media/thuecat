@@ -50,18 +50,18 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_organisation', 'tx_thuecat_address'], array_keys($data));
+        $this->assertSame(['tx_thuecat_organisation', 'tx_thuecat_address'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_organisation']);
-        self::assertCount(1, $keys);
-        self::assertStringStartsWith('NEW', (string)$keys[0]);
+        $this->assertCount(1, $keys);
+        $this->assertStringStartsWith('NEW', (string)$keys[0]);
 
         $row = $data['tx_thuecat_organisation'][$keys[0]];
-        self::assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
-        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
-        self::assertSame(10, $row['pid']);
+        $this->assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
+        $this->assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        $this->assertSame(10, $row['pid']);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -79,12 +79,12 @@ final class ResolverTest extends AbstractImportTestCase
         $data = $payload->getDataMap();
         // PHP casts numeric-string array keys back to int automatically, so the
         // outer key the resolver sets as '1' ends up as int 1 in the array.
-        self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame([1], array_keys($data['tx_thuecat_organisation']));
 
         $row = $data['tx_thuecat_organisation'][1];
-        self::assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
-        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
-        self::assertSame(10, $row['pid']);
+        $this->assertSame(self::ORG_REMOTE_ID, $row['remote_id']);
+        $this->assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        $this->assertSame(10, $row['pid']);
     }
 
     #[Test]
@@ -102,22 +102,19 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            ['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'],
-            array_keys($data)
-        );
+        $this->assertSame(['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'], array_keys($data));
 
         $townKeys = array_keys($data['tx_thuecat_town']);
-        self::assertCount(1, $townKeys);
-        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+        $this->assertCount(1, $townKeys);
+        $this->assertStringStartsWith('NEW', (string)$townKeys[0]);
 
         $townRow = $data['tx_thuecat_town'][$townKeys[0]];
-        self::assertSame('7', $townRow['managed_by']);
-        self::assertSame(10, $townRow['pid']);
+        $this->assertSame('7', $townRow['managed_by']);
+        $this->assertSame(10, $townRow['pid']);
 
-        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame([7], array_keys($data['tx_thuecat_organisation']));
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -135,27 +132,24 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            ['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'],
-            array_keys($data)
-        );
+        $this->assertSame(['tx_thuecat_town', 'tx_thuecat_address', 'tx_thuecat_organisation'], array_keys($data));
 
         $townKeys = array_keys($data['tx_thuecat_town']);
-        self::assertCount(1, $townKeys);
-        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+        $this->assertCount(1, $townKeys);
+        $this->assertStringStartsWith('NEW', (string)$townKeys[0]);
 
         $orgKeys = array_keys($data['tx_thuecat_organisation']);
-        self::assertCount(1, $orgKeys);
-        self::assertStringStartsWith('NEW', (string)$orgKeys[0]);
+        $this->assertCount(1, $orgKeys);
+        $this->assertStringStartsWith('NEW', (string)$orgKeys[0]);
 
         $townRow = $data['tx_thuecat_town'][$townKeys[0]];
-        self::assertSame((string)$orgKeys[0], $townRow['managed_by']);
-        self::assertSame(10, $townRow['pid']);
+        $this->assertSame((string)$orgKeys[0], $townRow['managed_by']);
+        $this->assertSame(10, $townRow['pid']);
 
         $orgRow = $data['tx_thuecat_organisation'][$orgKeys[0]];
-        self::assertSame(10, $orgRow['pid']);
+        $this->assertSame(10, $orgRow['pid']);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -184,15 +178,15 @@ final class ResolverTest extends AbstractImportTestCase
                 $ownerKey = $key;
             }
         }
-        self::assertNotNull($ownerKey, 'Owner row is in the payload.');
+        $this->assertNotNull($ownerKey, 'Owner row is in the payload.');
 
         $row = $data['tx_thuecat_tourist_attraction'][$ownerKey];
 
         $townKey = array_key_first($data['tx_thuecat_town']);
-        self::assertSame((string)$townKey, $row['town'] ?? '');
+        $this->assertSame((string)$townKey, $row['town'] ?? '');
 
         $orgKey = array_key_first($data['tx_thuecat_organisation']);
-        self::assertSame((string)$orgKey, $row['contained_in_organisation'] ?? '');
+        $this->assertSame((string)$orgKey, $row['contained_in_organisation'] ?? '');
 
         $parkKey = null;
         foreach ($keys as $key) {
@@ -202,10 +196,10 @@ final class ResolverTest extends AbstractImportTestCase
                 $parkKey = $key;
             }
         }
-        self::assertNotNull($parkKey, 'The park imported as a tourist attraction.');
-        self::assertSame((string)$parkKey, $row['contained_in_attraction'] ?? '');
+        $this->assertNotNull($parkKey, 'The park imported as a tourist attraction.');
+        $this->assertSame((string)$parkKey, $row['contained_in_attraction'] ?? '');
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -228,21 +222,15 @@ final class ResolverTest extends AbstractImportTestCase
             'tx_thuecat_tourist_attraction',
             'https://thuecat.org/resources/attraction-in-two-towns'
         );
-        self::assertNotNull($ownerKey);
+        $this->assertNotNull($ownerKey);
 
         $towns = explode(',', (string)($data['tx_thuecat_tourist_attraction'][$ownerKey]['town'] ?? ''));
-        self::assertCount(2, $towns, 'Both towns are held, the repeat is not a third entry.');
-        self::assertSame($towns, array_unique($towns));
-        self::assertContains(
-            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'),
-            $towns
-        );
-        self::assertContains(
-            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/second-town'),
-            $towns
-        );
+        $this->assertCount(2, $towns, 'Both towns are held, the repeat is not a third entry.');
+        $this->assertSame($towns, array_unique($towns));
+        $this->assertContains((string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'), $towns);
+        $this->assertContains((string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/second-town'), $towns);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -264,13 +252,13 @@ final class ResolverTest extends AbstractImportTestCase
             'tx_thuecat_tourist_attraction',
             'https://thuecat.org/resources/attraction-contained-in-organisation'
         );
-        self::assertNotNull($ownerKey);
+        $this->assertNotNull($ownerKey);
 
         $row = $data['tx_thuecat_tourist_attraction'][$ownerKey];
-        self::assertSame('7', $row['contained_in_organisation'] ?? '');
-        self::assertSame('', $row['town'] ?? '', 'An organisation never lands on the town field.');
+        $this->assertSame('7', $row['contained_in_organisation'] ?? '');
+        $this->assertSame('', $row['town'] ?? '', 'An organisation never lands on the town field.');
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -292,23 +280,17 @@ final class ResolverTest extends AbstractImportTestCase
             'tx_thuecat_tourist_information',
             'https://thuecat.org/resources/tourist-information-contained-in-two-kinds'
         );
-        self::assertNotNull($ownerKey, 'The tourist information imported.');
+        $this->assertNotNull($ownerKey, 'The tourist information imported.');
 
         $row = $data['tx_thuecat_tourist_information'][$ownerKey];
-        self::assertSame(
-            (string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'),
-            $row['town'] ?? ''
-        );
-        self::assertSame(
-            (string)$this->findKeyByRemoteId(
-                $data,
-                'tx_thuecat_tourist_attraction',
-                'https://thuecat.org/resources/a-park-not-a-town'
-            ),
-            $row['contained_in_attraction'] ?? ''
-        );
+        $this->assertSame((string)$this->findKeyByRemoteId($data, 'tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt'), $row['town'] ?? '');
+        $this->assertSame((string)$this->findKeyByRemoteId(
+            $data,
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/a-park-not-a-town'
+        ), $row['contained_in_attraction'] ?? '');
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -342,13 +324,13 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(ImportLogger::class)->writeLog(null, [], []);
 
         $entries = $this->getLogEntriesOfType('referenceUnrelatable');
-        self::assertCount(1, $entries, 'A table with no field is reported, not silently dropped.');
+        $this->assertCount(1, $entries, 'A table with no field is reported, not silently dropped.');
 
-        self::assertIsString($entries[0]['context']);
+        $this->assertIsString($entries[0]['context']);
         $reported = json_decode($entries[0]['context'], true);
-        self::assertIsArray($reported);
-        self::assertSame('tx_thuecat_unroutable', $reported['actualTable'] ?? null);
-        self::assertSame($unroutable, $reported['url'] ?? null);
+        $this->assertIsArray($reported);
+        $this->assertSame('tx_thuecat_unroutable', $reported['actualTable'] ?? null);
+        $this->assertSame($unroutable, $reported['url'] ?? null);
     }
 
     #[Test]
@@ -375,13 +357,10 @@ final class ResolverTest extends AbstractImportTestCase
             'tx_thuecat_tourist_attraction',
             'https://thuecat.org/resources/a-park-not-a-town'
         );
-        self::assertNotNull($ownerKey);
-        self::assertNotNull($parkKey);
+        $this->assertNotNull($ownerKey);
+        $this->assertNotNull($parkKey);
 
-        self::assertSame(
-            (string)$parkKey,
-            $data['tx_thuecat_tourist_attraction'][$ownerKey]['contained_in_attraction'] ?? ''
-        );
+        $this->assertSame((string)$parkKey, $data['tx_thuecat_tourist_attraction'][$ownerKey]['contained_in_attraction'] ?? '');
     }
 
     #[Test]
@@ -408,28 +387,25 @@ final class ResolverTest extends AbstractImportTestCase
         // STATUS_FOUND refresh, the fetched payload enters under the type
         // its JSON actually declares — tourist_attraction — alongside the
         // organisation refresh keyed by uid=7.
-        self::assertSame(
-            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'],
-            array_keys($data)
-        );
+        $this->assertSame(['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_tourist_attraction', 'tx_thuecat_organisation'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_parking_facility']);
-        self::assertCount(1, $keys);
-        self::assertStringStartsWith('NEW', (string)$keys[0]);
+        $this->assertCount(1, $keys);
+        $this->assertStringStartsWith('NEW', (string)$keys[0]);
 
         $attractionKeys = array_keys($data['tx_thuecat_tourist_attraction']);
-        self::assertCount(1, $attractionKeys);
-        self::assertStringStartsWith('NEW', (string)$attractionKeys[0]);
+        $this->assertCount(1, $attractionKeys);
+        $this->assertStringStartsWith('NEW', (string)$attractionKeys[0]);
 
         $row = $data['tx_thuecat_parking_facility'][$keys[0]];
-        self::assertSame('', $row['town']);
-        self::assertSame((string)$attractionKeys[0], $row['contained_in_attraction']);
-        self::assertSame('7', $row['managed_by']);
-        self::assertSame(10, $row['pid']);
+        $this->assertSame('', $row['town']);
+        $this->assertSame((string)$attractionKeys[0], $row['contained_in_attraction']);
+        $this->assertSame('7', $row['managed_by']);
+        $this->assertSame(10, $row['pid']);
 
-        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame([7], array_keys($data['tx_thuecat_organisation']));
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -460,30 +436,27 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            [
-                'tx_thuecat_tourist_attraction',
-                'tx_thuecat_address',
-                'tx_thuecat_town',
-                'tx_thuecat_organisation',
-                'tx_thuecat_parking_facility',
-                'tx_thuecat_opening_hours',
-            ],
-            array_keys($data)
-        );
+        $this->assertSame([
+            'tx_thuecat_tourist_attraction',
+            'tx_thuecat_address',
+            'tx_thuecat_town',
+            'tx_thuecat_organisation',
+            'tx_thuecat_parking_facility',
+            'tx_thuecat_opening_hours',
+        ], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
-        self::assertCount(2, $keys);
-        self::assertStringStartsWith('NEW', (string)$keys[1]);
+        $this->assertCount(2, $keys);
+        $this->assertStringStartsWith('NEW', (string)$keys[1]);
         $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
 
-        self::assertSame('5', $row['town']);
-        self::assertSame((string)$keys[1], $row['contained_in_attraction']);
-        self::assertSame('9,11', $row['parking_facility_near_by']);
-        self::assertSame('7', $row['managed_by']);
-        self::assertSame(10, $row['pid']);
+        $this->assertSame('5', $row['town']);
+        $this->assertSame((string)$keys[1], $row['contained_in_attraction']);
+        $this->assertSame('9,11', $row['parking_facility_near_by']);
+        $this->assertSame('7', $row['managed_by']);
+        $this->assertSame(10, $row['pid']);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -505,31 +478,28 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            ['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'],
-            array_keys($data)
-        );
+        $this->assertSame(['tx_thuecat_parking_facility', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'], array_keys($data));
 
         $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
-        self::assertCount(1, $parkingKeys);
-        self::assertStringStartsWith('NEW', (string)$parkingKeys[0]);
+        $this->assertCount(1, $parkingKeys);
+        $this->assertStringStartsWith('NEW', (string)$parkingKeys[0]);
 
         $townKeys = array_keys($data['tx_thuecat_town']);
-        self::assertCount(1, $townKeys);
-        self::assertStringStartsWith('NEW', (string)$townKeys[0]);
+        $this->assertCount(1, $townKeys);
+        $this->assertStringStartsWith('NEW', (string)$townKeys[0]);
 
         $parkingRow = $data['tx_thuecat_parking_facility'][$parkingKeys[0]];
-        self::assertSame((string)$townKeys[0], $parkingRow['town']);
+        $this->assertSame((string)$townKeys[0], $parkingRow['town']);
         // ocar maps thuecat:contentResponsible into the managedBy bucket and
         // the existing ngbe uid=7 wires the FK directly.
-        self::assertSame('7', $parkingRow['managed_by']);
+        $this->assertSame('7', $parkingRow['managed_by']);
 
         $townRow = $data['tx_thuecat_town'][$townKeys[0]];
-        self::assertSame('7', $townRow['managed_by']);
+        $this->assertSame('7', $townRow['managed_by']);
 
-        self::assertSame([7], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame([7], array_keys($data['tx_thuecat_organisation']));
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -562,38 +532,32 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            [
-                'tx_thuecat_tourist_attraction',
-                'tx_thuecat_address',
-                'tx_thuecat_town',
-                'tx_thuecat_organisation',
-                'tx_thuecat_parking_facility',
-                'tx_thuecat_opening_hours',
-            ],
-            array_keys($data)
-        );
+        $this->assertSame([
+            'tx_thuecat_tourist_attraction',
+            'tx_thuecat_address',
+            'tx_thuecat_town',
+            'tx_thuecat_organisation',
+            'tx_thuecat_parking_facility',
+            'tx_thuecat_opening_hours',
+        ], array_keys($data));
 
         $attractionKeys = array_keys($data['tx_thuecat_tourist_attraction']);
-        self::assertCount(2, $attractionKeys);
+        $this->assertCount(2, $attractionKeys);
 
         $parkingKeys = array_keys($data['tx_thuecat_parking_facility']);
-        self::assertCount(2, $parkingKeys);
+        $this->assertCount(2, $parkingKeys);
         foreach ($parkingKeys as $parkingKey) {
-            self::assertStringStartsWith('NEW', (string)$parkingKey);
+            $this->assertStringStartsWith('NEW', (string)$parkingKey);
         }
 
         $row = $data['tx_thuecat_tourist_attraction'][$attractionKeys[0]];
-        self::assertSame(
-            implode(',', array_map('strval', $parkingKeys)),
-            $row['parking_facility_near_by']
-        );
-        self::assertStringStartsWith('NEW', (string)$attractionKeys[1]);
-        self::assertSame('5', $row['town']);
-        self::assertSame((string)$attractionKeys[1], $row['contained_in_attraction']);
-        self::assertSame('7', $row['managed_by']);
+        $this->assertSame(implode(',', array_map('strval', $parkingKeys)), $row['parking_facility_near_by']);
+        $this->assertStringStartsWith('NEW', (string)$attractionKeys[1]);
+        $this->assertSame('5', $row['town']);
+        $this->assertSame((string)$attractionKeys[1], $row['contained_in_attraction']);
+        $this->assertSame('7', $row['managed_by']);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -622,19 +586,16 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, new ResolverContext(10, new ParserContext(0)));
 
         $data = $payload->getDataMap();
-        self::assertSame(
-            ['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'],
-            array_keys($data)
-        );
+        $this->assertSame(['tx_thuecat_tourist_attraction', 'tx_thuecat_opening_hours', 'tx_thuecat_address', 'tx_thuecat_town', 'tx_thuecat_organisation'], array_keys($data));
 
         $keys = array_keys($data['tx_thuecat_tourist_attraction']);
-        self::assertCount(2, $keys);
+        $this->assertCount(2, $keys);
 
         $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
-        self::assertArrayHasKey('accessibility_specification', $row);
+        $this->assertArrayHasKey('accessibility_specification', $row);
 
         $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
-        self::assertSame([
+        $this->assertSame([
             'accessibilityCertificationStatus' => 'AccessibilityChecked',
             'certificationAccessibilityDeaf' => 'None',
             'certificationAccessibilityMental' => 'None',
@@ -676,7 +637,7 @@ final class ResolverTest extends AbstractImportTestCase
             'shortDescriptionAccessibilityWalking' => 'Deutsche Beschreibung von shortDescriptionAccessibilityWalking',
         ], $blob);
 
-        self::assertSame([], $payload->getTransients());
+        $this->assertSame([], $payload->getTransients());
     }
 
     #[Test]
@@ -703,15 +664,15 @@ final class ResolverTest extends AbstractImportTestCase
         $row = $data['tx_thuecat_tourist_attraction'][$keys[0]];
         $blob = json_decode((string)$row['accessibility_specification'], true, 512, JSON_THROW_ON_ERROR);
 
-        self::assertIsArray($blob);
-        self::assertArrayNotHasKey('shortDescriptionAccessibilityDeaf', $blob);
-        self::assertArrayNotHasKey('shortDescriptionAccessibilityMental', $blob);
-        self::assertArrayNotHasKey('shortDescriptionAccessibilityVisual', $blob);
-        self::assertArrayNotHasKey('shortDescriptionAccessibilityWalking', $blob);
+        $this->assertIsArray($blob);
+        $this->assertArrayNotHasKey('shortDescriptionAccessibilityDeaf', $blob);
+        $this->assertArrayNotHasKey('shortDescriptionAccessibilityMental', $blob);
+        $this->assertArrayNotHasKey('shortDescriptionAccessibilityVisual', $blob);
+        $this->assertArrayNotHasKey('shortDescriptionAccessibilityWalking', $blob);
 
         // Certifications + search criteria still shaped.
-        self::assertSame('AccessibilityChecked', $blob['accessibilityCertificationStatus']);
-        self::assertArrayHasKey('accessibilitySearchCriteria', $blob);
+        $this->assertSame('AccessibilityChecked', $blob['accessibilityCertificationStatus']);
+        $this->assertArrayHasKey('accessibilitySearchCriteria', $blob);
     }
 
     #[Test]
@@ -735,23 +696,23 @@ final class ResolverTest extends AbstractImportTestCase
         );
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
-        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame(['tx_thuecat_organisation'], array_keys($data));
+        $this->assertSame([1, 2, 3], array_keys($data['tx_thuecat_organisation']));
 
-        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
-        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
-        self::assertSame(10, $data['tx_thuecat_organisation'][1]['pid']);
+        $this->assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        $this->assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+        $this->assertSame(10, $data['tx_thuecat_organisation'][1]['pid']);
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Tourism Ltd.',
             'description' => 'We market the region.',
         ], $data['tx_thuecat_organisation'][2]);
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Tourisme SARL',
         ], $data['tx_thuecat_organisation'][3]);
 
-        self::assertSame([], $payload->getTranslations());
+        $this->assertSame([], $payload->getTranslations());
     }
 
     #[Test]
@@ -776,29 +737,23 @@ final class ResolverTest extends AbstractImportTestCase
         );
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
-        self::assertSame([1], array_keys($data['tx_thuecat_organisation']));
-        self::assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
-        self::assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
+        $this->assertSame(['tx_thuecat_organisation'], array_keys($data));
+        $this->assertSame([1], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame('Tourismus GmbH', $data['tx_thuecat_organisation'][1]['title']);
+        $this->assertSame('Wir vermarkten die Region.', $data['tx_thuecat_organisation'][1]['description']);
 
         // PHP coerces the numeric-string key '1' (the parent uid the resolver
         // writes) to int 1 at array-set time, so we assert against int keys.
-        self::assertSame(
-            ['tx_thuecat_organisation' => [1 => [['localize', 1], ['localize', 2]]]],
-            $payload->getCmdMap()
-        );
+        $this->assertSame(['tx_thuecat_organisation' => [1 => [['localize', 1], ['localize', 2]]]], $payload->getCmdMap());
 
-        self::assertSame(
-            [
-                'tx_thuecat_organisation' => [
-                    'https://thuecat.org/resources/organisation-translated' => [
-                        1 => ['title' => 'Tourism Ltd.', 'description' => 'We market the region.'],
-                        2 => ['title' => 'Tourisme SARL'],
-                    ],
+        $this->assertSame([
+            'tx_thuecat_organisation' => [
+                'https://thuecat.org/resources/organisation-translated' => [
+                    1 => ['title' => 'Tourism Ltd.', 'description' => 'We market the region.'],
+                    2 => ['title' => 'Tourisme SARL'],
                 ],
             ],
-            $payload->getTranslations()
-        );
+        ], $payload->getTranslations());
     }
 
     #[Test]
@@ -822,22 +777,22 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, $context);
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_organisation'], array_keys($data));
+        $this->assertSame(['tx_thuecat_organisation'], array_keys($data));
         // Parent row not in the datamap on this pass — the parent fields were
         // already written in round one; round two only writes translations.
-        self::assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
+        $this->assertSame([2, 3], array_keys($data['tx_thuecat_organisation']));
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Tourism Ltd.',
             'description' => 'We market the region.',
         ], $data['tx_thuecat_organisation'][2]);
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Tourisme SARL',
         ], $data['tx_thuecat_organisation'][3]);
 
-        self::assertSame([], $payload->getTranslations());
-        self::assertSame([], $payload->getCmdMap());
+        $this->assertSame([], $payload->getTranslations());
+        $this->assertSame([], $payload->getCmdMap());
     }
 
     #[Test]
@@ -858,11 +813,8 @@ final class ResolverTest extends AbstractImportTestCase
         $this->get(Resolver::class)->resolve($payload, $context);
 
         $data = $payload->getDataMap();
-        self::assertArrayHasKey(1, $data['tx_thuecat_organisation']);
-        self::assertSame(
-            '1',
-            $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] ?? null
-        );
+        $this->assertArrayHasKey(1, $data['tx_thuecat_organisation']);
+        $this->assertSame('1', $context->remoteIdToKey['https://thuecat.org/resources/organisation-translated'] ?? null);
     }
 
     #[Test]
@@ -882,23 +834,23 @@ final class ResolverTest extends AbstractImportTestCase
         );
 
         $data = $payload->getDataMap();
-        self::assertSame(['tx_thuecat_town'], array_keys($data));
-        self::assertSame([1, 2, 3], array_keys($data['tx_thuecat_town']));
+        $this->assertSame(['tx_thuecat_town'], array_keys($data));
+        $this->assertSame([1, 2, 3], array_keys($data['tx_thuecat_town']));
 
-        self::assertSame('Erfurt', $data['tx_thuecat_town'][1]['title']);
-        self::assertSame('Thüringer Landeshauptstadt.', $data['tx_thuecat_town'][1]['description']);
-        self::assertSame(10, $data['tx_thuecat_town'][1]['pid']);
+        $this->assertSame('Erfurt', $data['tx_thuecat_town'][1]['title']);
+        $this->assertSame('Thüringer Landeshauptstadt.', $data['tx_thuecat_town'][1]['description']);
+        $this->assertSame(10, $data['tx_thuecat_town'][1]['pid']);
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Erfurt (EN)',
             'description' => 'Capital of Thuringia.',
         ], $data['tx_thuecat_town'][2]);
 
-        self::assertSame([
+        $this->assertSame([
             'title' => 'Erfurt (FR)',
         ], $data['tx_thuecat_town'][3]);
 
-        self::assertSame([], $payload->getTranslations());
+        $this->assertSame([], $payload->getTranslations());
     }
 
     #[Test]
@@ -993,11 +945,8 @@ final class ResolverTest extends AbstractImportTestCase
             new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
         );
 
-        self::assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
-        self::assertArrayHasKey(
-            self::ADDRESS_REMOTE_ID,
-            $payload->getTranslations()['tx_thuecat_address'] ?? []
-        );
+        $this->assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
+        $this->assertArrayHasKey(self::ADDRESS_REMOTE_ID, $payload->getTranslations()['tx_thuecat_address'] ?? []);
     }
 
     /**
@@ -1018,8 +967,8 @@ final class ResolverTest extends AbstractImportTestCase
             new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
         );
 
-        self::assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
-        self::assertSame([], $payload->getTranslations());
+        $this->assertArrayNotHasKey('tx_thuecat_address', $payload->getCmdMap());
+        $this->assertSame([], $payload->getTranslations());
     }
 
     /**
@@ -1038,10 +987,7 @@ final class ResolverTest extends AbstractImportTestCase
             new ResolverContext(10, new ParserContext(0), 'de', null, ['en' => 1])
         );
 
-        self::assertSame(
-            [['localize', 1]],
-            $payload->getCmdMap()['tx_thuecat_address']['1'] ?? []
-        );
+        $this->assertSame([['localize', 1]], $payload->getCmdMap()['tx_thuecat_address']['1'] ?? []);
     }
 
     /**

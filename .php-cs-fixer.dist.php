@@ -65,7 +65,7 @@ return (new \PhpCsFixer\Config())
         'ordered_imports' => true,
         'php_unit_construct' => ['assertions' => ['assertEquals', 'assertSame', 'assertNotEquals', 'assertNotSame']],
         'php_unit_mock_short_will_return' => true,
-        'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+        'php_unit_test_case_static_method_calls' => ['call_type' => 'this'],
         'phpdoc_no_access' => true,
         'phpdoc_no_package' => true,
         'phpdoc_order' => ['order' => ['test', 'dataProvider', 'param', 'throws', 'return']],

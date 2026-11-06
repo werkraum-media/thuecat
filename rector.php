@@ -146,8 +146,6 @@ return RectorConfig::configure()
         RemoveTypo3VersionChecksRector::TARGET_VERSION => 14,
     ])
     ->withSkip([
-        // php-cs-fixer enforces self:: via php_unit_test_case_static_method_calls.
-        PreferPHPUnitThisCallRector::class,
         // AGENTS.md mandates Connection::PARAM_*; TYPO3's Connection defines them itself.
         RenameClassConstFetchRector::class,
         // Exception codes are unix timestamps, not random numbers.
@@ -281,4 +279,5 @@ return RectorConfig::configure()
         ReturnNullableTypeRector::class,
         // 1 file
         AddParamArrayDocblockFromAssignsParamToParamReferenceRector::class,
-    ]);
+    ])
+;

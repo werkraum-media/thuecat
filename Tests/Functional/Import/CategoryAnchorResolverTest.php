@@ -47,9 +47,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Keyword);
 
-        self::assertSame(110, $pair->parent);
-        self::assertSame(330, $pair->storagePid);
-        self::assertSame('thuecat', $pair->scope?->value);
+        $this->assertSame(110, $pair->parent);
+        $this->assertSame(330, $pair->storagePid);
+        $this->assertSame('thuecat', $pair->scope?->value);
     }
 
     // Two sites must not see each other's anchors.
@@ -65,8 +65,8 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Keyword, 910);
 
-        self::assertSame(910, $pair->parent);
-        self::assertSame(930, $pair->storagePid);
+        $this->assertSame(910, $pair->parent);
+        $this->assertSame(930, $pair->storagePid);
     }
 
     #[Test]
@@ -81,9 +81,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(140, $pair->parent);
-        self::assertSame(360, $pair->storagePid);
-        self::assertSame('trails', $pair->scope?->value);
+        $this->assertSame(140, $pair->parent);
+        $this->assertSame(360, $pair->storagePid);
+        $this->assertSame('trails', $pair->scope?->value);
     }
 
     #[Test]
@@ -98,9 +98,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_tourist_attraction', AnchorKind::Category);
 
-        self::assertSame(100, $pair->parent);
-        self::assertSame(320, $pair->storagePid);
-        self::assertSame('thuecat', $pair->scope?->value);
+        $this->assertSame(100, $pair->parent);
+        $this->assertSame(320, $pair->storagePid);
+        $this->assertSame('thuecat', $pair->scope?->value);
     }
 
     /**
@@ -118,9 +118,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(110, $pair->parent);
-        self::assertSame(330, $pair->storagePid);
-        self::assertSame('thuecat', $pair->scope?->value);
+        $this->assertSame(110, $pair->parent);
+        $this->assertSame(330, $pair->storagePid);
+        $this->assertSame('thuecat', $pair->scope?->value);
     }
 
     #[Test]
@@ -132,8 +132,8 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_events_domain_model_event', AnchorKind::Category);
 
-        self::assertSame(100, $pair->parent);
-        self::assertSame('thuecat', $pair->scope?->value);
+        $this->assertSame(100, $pair->parent);
+        $this->assertSame('thuecat', $pair->scope?->value);
     }
 
     /**
@@ -153,8 +153,8 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_tourist_information', AnchorKind::Keyword);
 
-        self::assertSame(110, $pair->parent);
-        self::assertSame('thuecat', $pair->scope?->value);
+        $this->assertSame(110, $pair->parent);
+        $this->assertSame('thuecat', $pair->scope?->value);
     }
 
     #[Test]
@@ -164,9 +164,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(0, $pair->parent);
-        self::assertSame(0, $pair->storagePid);
-        self::assertNull($pair->scope);
+        $this->assertSame(0, $pair->parent);
+        $this->assertSame(0, $pair->storagePid);
+        $this->assertNull($pair->scope);
     }
 
     #[Test]
@@ -181,9 +181,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(140, $pair->parent);
-        self::assertSame(360, $pair->storagePid);
-        self::assertSame('trails', $pair->scope?->value);
+        $this->assertSame(140, $pair->parent);
+        $this->assertSame(360, $pair->storagePid);
+        $this->assertSame('trails', $pair->scope?->value);
     }
 
     /**
@@ -202,9 +202,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(140, $pair->parent);
-        self::assertSame(0, $pair->storagePid);
-        self::assertSame('trails', $pair->scope?->value);
+        $this->assertSame(140, $pair->parent);
+        $this->assertSame(0, $pair->storagePid);
+        $this->assertSame('trails', $pair->scope?->value);
     }
 
     #[Test]
@@ -220,9 +220,9 @@ class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 
         $pair = $this->resolvePair('tx_thuecat_trail', AnchorKind::Keyword);
 
-        self::assertSame(140, $pair->parent);
-        self::assertSame(360, $pair->storagePid);
-        self::assertSame('trails', $pair->scope?->value);
+        $this->assertSame(140, $pair->parent);
+        $this->assertSame(360, $pair->storagePid);
+        $this->assertSame('trails', $pair->scope?->value);
     }
 
     private function resolvePair(string $table, AnchorKind $kind, int $pageId = 310): AnchorPair

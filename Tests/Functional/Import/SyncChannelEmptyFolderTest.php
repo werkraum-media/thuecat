@@ -65,8 +65,8 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(4);
 
         $entries = $this->getLogEntriesOfType('storageFolderEmpty');
-        self::assertCount(1, $entries);
-        self::assertSame('warning', $entries[0]['severity']);
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
     }
 
     #[Test]
@@ -76,7 +76,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
+        $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
     }
 
     #[Test]
@@ -91,10 +91,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
             ->select(['crdate'], 'tx_thuecat_import_log', ['configuration' => 4], [], ['uid' => 'DESC'], 1)
             ->fetchOne()
         ;
-        self::assertSame(
-            $runCreated,
-            $this->get(ImportLogRepository::class)->findLatestSuccessfulCreation(4)?->getTimestamp()
-        );
+        $this->assertSame($runCreated, $this->get(ImportLogRepository::class)->findLatestSuccessfulCreation(4)?->getTimestamp());
     }
 
     // The module lists a warning only once the entry hydrates to its own class.
@@ -111,18 +108,15 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
                 $log = $candidate;
             }
         }
-        self::assertInstanceOf(ImportLog::class, $log);
+        $this->assertInstanceOf(ImportLog::class, $log);
         $found = [];
         foreach ($log->getEntries() as $entry) {
             if ($entry instanceof StorageFolderEmpty) {
                 $found[] = $entry;
             }
         }
-        self::assertCount(1, $found);
-        self::assertSame(
-            ['Storage folder 50 holds no event after the import.'],
-            $log->getGroupedNotices()['storageFolderEmpty'] ?? []
-        );
+        $this->assertCount(1, $found);
+        $this->assertSame(['Storage folder 50 holds no event after the import.'], $log->getGroupedNotices()['storageFolderEmpty'] ?? []);
     }
 
     protected function expectEventMatchingElsewhere(): void

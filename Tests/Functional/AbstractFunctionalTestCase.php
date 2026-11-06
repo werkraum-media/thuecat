@@ -151,7 +151,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             ->fetchAssociative()
         ;
 
-        self::assertIsArray($row, 'No record in ' . $table . ' for ' . $remoteId);
+        $this->assertIsArray($row, 'No record in ' . $table . ' for ' . $remoteId);
 
         return $row;
     }
@@ -218,7 +218,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
 
         $selected = [];
         foreach ($columns as $column) {
-            self::assertArrayHasKey($column, $row, 'No column ' . $column . ' in ' . $table);
+            $this->assertArrayHasKey($column, $row, 'No column ' . $column . ' in ' . $table);
             $selected[$column] = $row[$column];
         }
 
@@ -237,7 +237,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             ->getField($field)
             ->getConfiguration()['MM'] ?? null
         ;
-        self::assertIsString($mmTable, $table . '.' . $field . ' is not an MM relation.');
+        $this->assertIsString($mmTable, $table . '.' . $field . ' is not an MM relation.');
 
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($mmTable);
         $queryBuilder->getRestrictions()->removeAll();
@@ -269,7 +269,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             ->getField($field)
             ->getConfiguration()['foreign_table'] ?? null
         ;
-        self::assertIsString($foreignTable, $table . '.' . $field . ' names no foreign table.');
+        $this->assertIsString($foreignTable, $table . '.' . $field . ' names no foreign table.');
 
         $remoteIds = [];
         foreach ($this->fetchMmRelatedUids($table, $this->fetchUidByRemoteId($table, $ownerRemoteId), $field) as $uid) {

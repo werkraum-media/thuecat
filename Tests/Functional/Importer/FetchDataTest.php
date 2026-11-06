@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Importer;
 
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\RequestInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -36,9 +37,9 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject = $this->get(FetchData::class);
         $result = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
 
-        self::assertArrayHasKey('@graph', $result);
-        self::assertIsArray($result['@graph']);
-        self::assertNotEmpty($result['@graph']);
+        $this->assertArrayHasKey('@graph', $result);
+        $this->assertIsArray($result['@graph']);
+        $this->assertNotEmpty($result['@graph']);
     }
 
     #[Test]
@@ -52,7 +53,7 @@ final class FetchDataTest extends AbstractImportTestCase
         $first = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
         $second = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
 
-        self::assertSame($first, $second);
+        $this->assertSame($first, $second);
     }
 
     #[Test]
@@ -70,7 +71,7 @@ final class FetchDataTest extends AbstractImportTestCase
         $result = $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe', 'key-b');
 
         // Both responses consumed — two real HTTP calls, no cache collision.
-        self::assertArrayHasKey('@graph', $result);
+        $this->assertArrayHasKey('@graph', $result);
     }
 
     #[Test]
@@ -82,9 +83,9 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe', 'my-secret-key');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         parse_str($lastRequest->getUri()->getQuery(), $query);
-        self::assertSame('my-secret-key', $query['api_key']);
+        $this->assertSame('my-secret-key', $query['api_key']);
     }
 
     #[Test]
@@ -96,9 +97,9 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         parse_str($lastRequest->getUri()->getQuery(), $query);
-        self::assertSame('jsonld', $query['format']);
+        $this->assertSame('jsonld', $query['format']);
     }
 
     #[Test]
@@ -110,9 +111,9 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->jsonLDFromUrl('https://thuecat.org/resources/018132452787-ngbe?format=xml');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         parse_str($lastRequest->getUri()->getQuery(), $query);
-        self::assertSame('jsonld', $query['format']);
+        $this->assertSame('jsonld', $query['format']);
     }
 
     #[Test]
@@ -149,8 +150,8 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->updatedNodes('scope-1');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
-        self::assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
+        $this->assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
     }
 
     #[Test]
@@ -165,8 +166,8 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->updatedNodes('scope-1', null, 'https://cdb.int.thuecat.org');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
-        self::assertSame('cdb.int.thuecat.org', $lastRequest->getUri()->getHost());
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
+        $this->assertSame('cdb.int.thuecat.org', $lastRequest->getUri()->getHost());
     }
 
     #[Test]
@@ -205,7 +206,7 @@ final class FetchDataTest extends AbstractImportTestCase
         $subject->updatedNodes('scope-1', null, '');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
-        self::assertNotNull($lastRequest);
-        self::assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
+        $this->assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
     }
 }

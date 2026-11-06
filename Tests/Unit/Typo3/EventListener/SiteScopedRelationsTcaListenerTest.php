@@ -43,11 +43,8 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'town' => $this->selectColumn('tx_thuecat_town'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($tca), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($tca), 'town'));
     }
 
     #[Test]
@@ -57,7 +54,7 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'log' => $this->selectColumn('tx_thuecat_import_log'),
         ]);
 
-        self::assertNull($this->clauseFor($this->process($tca), 'log'));
+        $this->assertNull($this->clauseFor($this->process($tca), 'log'));
     }
 
     #[Test]
@@ -67,12 +64,9 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'town' => $this->selectColumn('tx_thuecat_town', 'AND {#tx_thuecat_town}.{#title} != \'\''),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#title} != \'\''
-            . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($tca), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#title} != \'\''
+        . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($tca), 'town'));
     }
 
     #[Test]
@@ -85,11 +79,8 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             ),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)'
-            . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)',
-            $this->clauseFor($this->process($tca), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)'
+        . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)', $this->clauseFor($this->process($tca), 'town'));
     }
 
     #[Test]
@@ -99,11 +90,8 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'town' => $this->selectColumn('tx_thuecat_town'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($this->process($tca)), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($this->process($tca)), 'town'));
     }
 
     #[Test]
@@ -114,12 +102,9 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'town' => $this->selectColumn('tx_thuecat_town', 'AND {#tx_thuecat_town}.{#pid} > 0'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#pid} > 0'
-            . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($tca), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#pid} > 0'
+        . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($tca), 'town'));
     }
 
     #[Test]
@@ -132,11 +117,8 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             ),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_town}.{#sys_language_uid} IN (0,-1)'
-            . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)',
-            $this->clauseFor($this->process($tca), 'town')
-        );
+        $this->assertSame('AND {#tx_thuecat_town}.{#sys_language_uid} IN (0,-1)'
+        . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)', $this->clauseFor($this->process($tca), 'town'));
     }
 
     #[Test]
@@ -149,7 +131,7 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'l18n_parent'
         );
 
-        self::assertNull($this->clauseFor($this->process($tca), 'l18n_parent'));
+        $this->assertNull($this->clauseFor($this->process($tca), 'l18n_parent'));
     }
 
     #[Test]
@@ -161,11 +143,8 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
             'managed_by' => $this->selectColumn('tx_thuecat_organisation'),
         ]);
 
-        self::assertSame(
-            'AND {#tx_thuecat_organisation}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
-            . ' AND {#tx_thuecat_organisation}.{#sys_language_uid} IN (0, -1)',
-            $this->clauseFor($this->process($tca), 'managed_by')
-        );
+        $this->assertSame('AND {#tx_thuecat_organisation}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
+        . ' AND {#tx_thuecat_organisation}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($tca), 'managed_by'));
     }
 
     /**

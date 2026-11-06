@@ -54,7 +54,7 @@ class OfferEntityTest extends TestCase
         $entity = new OfferEntity();
         $entity->configure($node, 'de');
 
-        self::assertSame([
+        $this->assertSame([
             'types' => ['GuidedTourOffer'],
             'title' => 'Führungen',
             'description' => 'Immer samstags, um 11:15 Uhr',
@@ -94,11 +94,11 @@ class OfferEntityTest extends TestCase
         $entity = new OfferEntity();
         $entity->configure($node, 'de');
 
-        self::assertCount(1, $entity->toArray()['prices']);
+        $this->assertCount(1, $entity->toArray()['prices']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('Familienkarte', $entity->toArray()['prices'][0]['title']);
+        $this->assertSame('Familienkarte', $entity->toArray()['prices'][0]['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('PerGroup', $entity->toArray()['prices'][0]['rule']);
+        $this->assertSame('PerGroup', $entity->toArray()['prices'][0]['rule']);
     }
 
     #[Test]
@@ -124,18 +124,18 @@ class OfferEntityTest extends TestCase
         $entity->configure($node, 'en');
 
         $result = $entity->toArray();
-        self::assertSame('', $result['title']);
+        $this->assertSame('', $result['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('', $result['prices'][0]['title']);
+        $this->assertSame('', $result['prices'][0]['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('', $result['prices'][0]['description']);
+        $this->assertSame('', $result['prices'][0]['description']);
         // Numeric and enum fields stay language-independent.
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame(14.90, $result['prices'][0]['price']);
+        $this->assertEqualsWithDelta(14.90, $result['prices'][0]['price'], PHP_FLOAT_EPSILON);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible(this array is artificially constructed, so we trust it here)
-        self::assertSame('EUR', $result['prices'][0]['currency']);
+        $this->assertSame('EUR', $result['prices'][0]['currency']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible(this array is artificially constructed, so we trust it here)
-        self::assertSame('PerPackage', $result['prices'][0]['rule']);
+        $this->assertSame('PerPackage', $result['prices'][0]['rule']);
     }
 
     #[Test]
@@ -148,7 +148,7 @@ class OfferEntityTest extends TestCase
         $entity = new OfferEntity();
         $entity->configure($node, 'de');
 
-        self::assertSame([], $entity->toArray()['types']);
-        self::assertSame([], $entity->toArray()['prices']);
+        $this->assertSame([], $entity->toArray()['types']);
+        $this->assertSame([], $entity->toArray()['prices']);
     }
 }

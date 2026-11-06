@@ -48,10 +48,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            $this->meetingVenueRoomRemoteIds(),
-            $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms')
-        );
+        $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
 
     #[Test]
@@ -63,11 +60,8 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
-        self::assertSame(
-            (string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS),
-            $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']
-        );
+        $this->assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
+        $this->assertSame((string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS), $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
     }
 
     #[Test]
@@ -80,12 +74,9 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
-        self::assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
-        self::assertCount(
-            count(self::MEETING_VENUE_ROOM_FIXTURES),
-            $this->fetchMmRelatedUids(self::TABLE, 1, 'meeting_rooms')
-        );
+        $this->assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
+        $this->assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
+        $this->assertCount(count(self::MEETING_VENUE_ROOM_FIXTURES), $this->fetchMmRelatedUids(self::TABLE, 1, 'meeting_rooms'));
     }
 
     #[Test]
@@ -100,8 +91,8 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $operator = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . '214681324608-rqzg');
-        self::assertGreaterThan(0, $operator);
-        self::assertSame($operator, $this->fetchRowByRemoteId(self::TABLE, self::OPERATED_VENUE)['operated_by']);
+        $this->assertGreaterThan(0, $operator);
+        $this->assertSame($operator, $this->fetchRowByRemoteId(self::TABLE, self::OPERATED_VENUE)['operated_by']);
     }
 
     #[Test]
@@ -113,14 +104,8 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertCount(
-            count(self::MEETING_VENUE_ROOM_FIXTURES),
-            $this->fetchChildren('tx_thuecat_meeting_room')
-        );
-        self::assertSame(
-            $this->meetingVenueRoomRemoteIds(),
-            $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms')
-        );
+        $this->assertCount(count(self::MEETING_VENUE_ROOM_FIXTURES), $this->fetchChildren('tx_thuecat_meeting_room'));
+        $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
 
     // The fetch cache would hide a repeat, so the run bypasses it: once as a reference, once as a root.
@@ -135,10 +120,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfigurationBypassingCache(5);
 
-        self::assertSame(
-            (string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS),
-            $this->fetchRowByRemoteId(self::TABLE, self::RESOURCES . 'attraction-also-in-meeting-venue')['contained_in_attraction']
-        );
+        $this->assertSame((string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS), $this->fetchRowByRemoteId(self::TABLE, self::RESOURCES . 'attraction-also-in-meeting-venue')['contained_in_attraction']);
     }
 
     #[Test]
@@ -152,11 +134,8 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(6);
 
-        self::assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
-        self::assertCount(
-            count(self::MEETING_VENUE_ROOM_FIXTURES),
-            $this->fetchMmRelatedUids(self::TABLE, 1, 'meeting_rooms')
-        );
+        $this->assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
+        $this->assertCount(count(self::MEETING_VENUE_ROOM_FIXTURES), $this->fetchMmRelatedUids(self::TABLE, 1, 'meeting_rooms'));
     }
 
     #[Test]
@@ -169,20 +148,17 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->importConfiguration(3);
 
         $children = $this->fetchChildren('tx_thuecat_parking_facility');
-        self::assertSame(
-            [[
-                'remote_id' => self::PARKING_VENUE . '::parking::0',
-                'parentid' => $this->fetchUidByRemoteId(self::TABLE, self::PARKING_VENUE),
-                'parenttable' => self::TABLE,
-            ]],
-            array_map(
-                static fn (array $row): array => [
-                    'remote_id' => $row['remote_id'],
-                    'parentid' => $row['parentid'],
-                    'parenttable' => $row['parenttable'],
-                ],
-                $children
-            )
-        );
+        $this->assertSame([[
+            'remote_id' => self::PARKING_VENUE . '::parking::0',
+            'parentid' => $this->fetchUidByRemoteId(self::TABLE, self::PARKING_VENUE),
+            'parenttable' => self::TABLE,
+        ]], array_map(
+            static fn (array $row): array => [
+                'remote_id' => $row['remote_id'],
+                'parentid' => $row['parentid'],
+                'parenttable' => $row['parenttable'],
+            ],
+            $children
+        ));
     }
 }

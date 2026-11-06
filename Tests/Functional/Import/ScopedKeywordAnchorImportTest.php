@@ -51,7 +51,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
-        self::assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
+        $this->assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
     }
 
     /**
@@ -71,7 +71,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->importConfiguration(4);
 
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
-        self::assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
+        $this->assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
     }
 
     #[Test]
@@ -83,15 +83,12 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertCount(2, $this->keywordUids(), 'One record per keyword tree.');
+        $this->assertCount(2, $this->keywordUids(), 'One record per keyword tree.');
 
         $attraction = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION);
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
-        self::assertSame(
-            self::THUECAT_ANCHOR,
-            $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_attraction', $attraction)
-        );
-        self::assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
+        $this->assertSame(self::THUECAT_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_attraction', $attraction));
+        $this->assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
     }
 
     #[Test]
@@ -103,15 +100,12 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, $this->keywordUids());
+        $this->assertCount(1, $this->keywordUids());
 
         $attraction = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION);
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
-        self::assertSame(
-            self::SHARED_TREE_ANCHOR,
-            $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_attraction', $attraction)
-        );
-        self::assertSame(self::SHARED_TREE_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
+        $this->assertSame(self::SHARED_TREE_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_attraction', $attraction));
+        $this->assertSame(self::SHARED_TREE_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
     }
 
     /**
@@ -128,10 +122,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->importConfiguration(3);
 
         $touristInformation = $this->fetchUidByRemoteId('tx_thuecat_tourist_information', self::TOURIST_INFORMATION);
-        self::assertSame(
-            self::THUECAT_ANCHOR,
-            $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_information', $touristInformation)
-        );
+        $this->assertSame(self::THUECAT_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_information', $touristInformation));
     }
 
     private function expectTrailFetches(): void
@@ -156,10 +147,10 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
      */
     private function anchorOfKeywordRelatedTo(string $table, int $ownerUid): int
     {
-        self::assertGreaterThan(0, $ownerUid, $table . ' record must be imported.');
+        $this->assertGreaterThan(0, $ownerUid, $table . ' record must be imported.');
 
         $related = array_values(array_intersect($this->keywordUids(), $this->relatedCategoryUids($table, $ownerUid)));
-        self::assertCount(1, $related, 'The owner relates to exactly one record of the shared keyword.');
+        $this->assertCount(1, $related, 'The owner relates to exactly one record of the shared keyword.');
 
         $uid = $related[0];
         for ($depth = 0; $depth < 10; $depth++) {
@@ -173,7 +164,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
             $uid = $parent;
         }
 
-        self::fail('The keyword hangs below no configured anchor.');
+        $this->fail('The keyword hangs below no configured anchor.');
     }
 
     /**

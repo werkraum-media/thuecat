@@ -41,20 +41,20 @@ class AnchorScopeRegistryTest extends TestCase
     #[DataProvider('declaredScopes')]
     public function answersTheScopeTheEntityDeclares(string $table, string $expectedScope): void
     {
-        self::assertSame($expectedScope, $this->createSubject()->forTable($table)?->value);
+        $this->assertSame($expectedScope, $this->createSubject()->forTable($table)?->value);
     }
 
     #[Test]
     #[DataProvider('scopelessTables')]
     public function answersNoScopeForAKindWithoutOne(string $table): void
     {
-        self::assertNull($this->createSubject()->forTable($table));
+        $this->assertNull($this->createSubject()->forTable($table));
     }
 
     #[Test]
     public function answersNoScopeForATableNoEntityWrites(): void
     {
-        self::assertNull($this->createSubject()->forTable('tt_content'));
+        $this->assertNull($this->createSubject()->forTable('tt_content'));
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class AnchorScopeRegistryTest extends TestCase
         );
         sort($scopes);
 
-        self::assertSame(['events', 'thuecat', 'trails'], $scopes);
+        $this->assertSame(['events', 'thuecat', 'trails'], $scopes);
     }
 
     /**
@@ -97,7 +97,7 @@ class AnchorScopeRegistryTest extends TestCase
     {
         $subject = $this->createSubject([InheritingAttractionEntity::class]);
 
-        self::assertSame('thuecat', $subject->forTable('tx_thuecat_tourist_attraction')?->value);
+        $this->assertSame('thuecat', $subject->forTable('tx_thuecat_tourist_attraction')?->value);
     }
 
     /**
@@ -118,11 +118,11 @@ class AnchorScopeRegistryTest extends TestCase
             $exception = $caught;
         }
 
-        self::assertNotNull($exception, 'Two scopes for one table must be rejected.');
-        self::assertSame(1790929291, $exception->getCode());
-        self::assertStringContainsString('tx_thuecat_tourist_attraction', $exception->getMessage());
-        self::assertStringContainsString('thuecat', $exception->getMessage());
-        self::assertStringContainsString('conflicting', $exception->getMessage());
+        $this->assertInstanceOf(RuntimeException::class, $exception, 'Two scopes for one table must be rejected.');
+        $this->assertSame(1790929291, $exception->getCode());
+        $this->assertStringContainsString('tx_thuecat_tourist_attraction', $exception->getMessage());
+        $this->assertStringContainsString('thuecat', $exception->getMessage());
+        $this->assertStringContainsString('conflicting', $exception->getMessage());
     }
 
     /**

@@ -43,13 +43,9 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_abc' => 42]);
 
-        self::assertSame(
-            '42',
-            $context->remoteIdToKey[self::REMOTE_A],
-            'promoteNewKeys must rewrite NEW… placeholder to the assigned uid as a string. '
-            . 'If this fails, the persistent map still carries the NEW… placeholder into '
-            . 'round 2 and downstream wiring will use the wrong key.'
-        );
+        $this->assertSame('42', $context->remoteIdToKey[self::REMOTE_A], 'promoteNewKeys must rewrite NEW… placeholder to the assigned uid as a string. '
+        . 'If this fails, the persistent map still carries the NEW… placeholder into '
+        . 'round 2 and downstream wiring will use the wrong key.');
     }
 
     #[Test]
@@ -60,13 +56,9 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_abc' => 7]);
 
-        self::assertSame(
-            '7',
-            $context->remoteIdToKey[self::REMOTE_A],
-            'DataHandler may hand integer uids in substNEWwithIDs. The map type is '
-            . 'array<string, string>; a leaked int would break === comparisons '
-            . 'downstream (e.g. ctype_digit() on int throws TypeError).'
-        );
+        $this->assertSame('7', $context->remoteIdToKey[self::REMOTE_A], 'DataHandler may hand integer uids in substNEWwithIDs. The map type is '
+        . 'array<string, string>; a leaked int would break === comparisons '
+        . 'downstream (e.g. ctype_digit() on int throws TypeError).');
     }
 
     #[Test]
@@ -77,12 +69,8 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys([]);
 
-        self::assertSame(
-            '7',
-            $context->remoteIdToKey[self::REMOTE_A],
-            'A remote_id already promoted in a prior round must survive promotion '
-            . 'with an empty subst array unchanged.'
-        );
+        $this->assertSame('7', $context->remoteIdToKey[self::REMOTE_A], 'A remote_id already promoted in a prior round must survive promotion '
+        . 'with an empty subst array unchanged.');
     }
 
     #[Test]
@@ -96,13 +84,9 @@ final class ResolverContextTest extends TestCase
             'NEW_unrelated' => 2,
         ]);
 
-        self::assertSame(
-            [self::REMOTE_A => '1'],
-            $context->remoteIdToKey,
-            'promoteNewKeys must (a) rewrite the matched entry and (b) not invent new '
-            . 'remote_id entries from unrelated subst keys. The map is keyed by '
-            . 'remote_id; subst keys are NEW… placeholders, never remote_ids.'
-        );
+        $this->assertSame([self::REMOTE_A => '1'], $context->remoteIdToKey, 'promoteNewKeys must (a) rewrite the matched entry and (b) not invent new '
+        . 'remote_id entries from unrelated subst keys. The map is keyed by '
+        . 'remote_id; subst keys are NEW… placeholders, never remote_ids.');
     }
 
     #[Test]
@@ -114,17 +98,9 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_a' => 11]);
 
-        self::assertSame(
-            '11',
-            $context->remoteIdToKey[self::REMOTE_A],
-            'REMOTE_A had a matching subst entry and must be promoted.'
-        );
-        self::assertSame(
-            'NEW_b',
-            $context->remoteIdToKey[self::REMOTE_B],
-            'REMOTE_B had no matching subst entry and must keep its NEW… placeholder. '
-            . 'A regression here would silently drop or mutate unrelated rows in the map.'
-        );
+        $this->assertSame('11', $context->remoteIdToKey[self::REMOTE_A], 'REMOTE_A had a matching subst entry and must be promoted.');
+        $this->assertSame('NEW_b', $context->remoteIdToKey[self::REMOTE_B], 'REMOTE_B had no matching subst entry and must keep its NEW… placeholder. '
+        . 'A regression here would silently drop or mutate unrelated rows in the map.');
     }
 
     #[Test]
@@ -135,12 +111,8 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_abc' => '42']);
 
-        self::assertSame(
-            '42',
-            $context->remoteIdToKey[self::REMOTE_A],
-            'substNEWwithIDs is typed array<string, int|string>; numeric string values '
-            . 'must round-trip through promoteNewKeys unchanged.'
-        );
+        $this->assertSame('42', $context->remoteIdToKey[self::REMOTE_A], 'substNEWwithIDs is typed array<string, int|string>; numeric string values '
+        . 'must round-trip through promoteNewKeys unchanged.');
     }
 
     #[Test]
@@ -150,11 +122,7 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_abc' => 42]);
 
-        self::assertSame(
-            [],
-            $context->remoteIdToKey,
-            'Empty remoteIdToKey must stay empty regardless of subst contents.'
-        );
+        $this->assertSame([], $context->remoteIdToKey, 'Empty remoteIdToKey must stay empty regardless of subst contents.');
     }
 
     #[Test]
@@ -165,14 +133,10 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_kw' => 77]);
 
-        self::assertSame(
-            '77',
-            $context->keywordKeyByRemoteId['keyword:text:theater'],
-            'Keyword keys staged in one round must carry their assigned uid into the next. '
-            . 'If this fails, round 2 reuses the NEW… placeholder and stages a second '
-            . 'sys_category row for a keyword that already exists — silently, since '
-            . 'nothing errors.'
-        );
+        $this->assertSame('77', $context->keywordKeyByRemoteId['keyword:text:theater'], 'Keyword keys staged in one round must carry their assigned uid into the next. '
+        . 'If this fails, round 2 reuses the NEW… placeholder and stages a second '
+        . 'sys_category row for a keyword that already exists — silently, since '
+        . 'nothing errors.');
     }
 
     #[Test]
@@ -184,8 +148,8 @@ final class ResolverContextTest extends TestCase
 
         $context->promoteNewKeys(['NEW_cat' => 5]);
 
-        self::assertSame('5', $context->categoryKeyByRemoteId['type:schema:Museum']);
-        self::assertSame('NEW_kw', $context->keywordKeyByRemoteId['keyword:text:theater']);
+        $this->assertSame('5', $context->categoryKeyByRemoteId['type:schema:Museum']);
+        $this->assertSame('NEW_kw', $context->keywordKeyByRemoteId['keyword:text:theater']);
     }
 
     #[Test]
@@ -195,12 +159,9 @@ final class ResolverContextTest extends TestCase
 
         $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
 
-        self::assertTrue(
-            $context->hasReferenceFailed(self::REMOTE_A),
-            'A URL marked as failed must be reported as failed for the rest of the run. '
-            . 'This is what suppresses a second HTTP request for a reference already '
-            . 'known to be broken.'
-        );
+        $this->assertTrue($context->hasReferenceFailed(self::REMOTE_A), 'A URL marked as failed must be reported as failed for the rest of the run. '
+        . 'This is what suppresses a second HTTP request for a reference already '
+        . 'known to be broken.');
     }
 
     #[Test]
@@ -210,11 +171,8 @@ final class ResolverContextTest extends TestCase
 
         $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
 
-        self::assertFalse(
-            $context->hasReferenceFailed(self::REMOTE_B),
-            'Marking one URL must not mark unrelated URLs. A false positive here would '
-            . 'silently drop healthy references.'
-        );
+        $this->assertFalse($context->hasReferenceFailed(self::REMOTE_B), 'Marking one URL must not mark unrelated URLs. A false positive here would '
+        . 'silently drop healthy references.');
     }
 
     #[Test]
@@ -224,12 +182,8 @@ final class ResolverContextTest extends TestCase
 
         $context->markReferenceFailed(self::REMOTE_A, 'ResourceNotFoundException: 404');
 
-        self::assertSame(
-            'ResourceNotFoundException: 404',
-            $context->getReferenceFailureReason(self::REMOTE_A),
-            'The reason is logged per affected parent. A suppressed second occurrence '
-            . 'never re-fetches, so it can only report why by reading it back here.'
-        );
+        $this->assertSame('ResourceNotFoundException: 404', $context->getReferenceFailureReason(self::REMOTE_A), 'The reason is logged per affected parent. A suppressed second occurrence '
+        . 'never re-fetches, so it can only report why by reading it back here.');
     }
 
     #[Test]
@@ -240,13 +194,9 @@ final class ResolverContextTest extends TestCase
         $context->markReferenceFailed(self::REMOTE_A, 'first');
         $context->markReferenceFailed(self::REMOTE_A, 'second');
 
-        self::assertSame(
-            'first',
-            $context->getReferenceFailureReason(self::REMOTE_A),
-            'Only the first attempt actually hit the network; later parents reuse that '
-            . 'result, so the recorded reason must not be overwritten by a caller that '
-            . 'never made a request.'
-        );
+        $this->assertSame('first', $context->getReferenceFailureReason(self::REMOTE_A), 'Only the first attempt actually hit the network; later parents reuse that '
+        . 'result, so the recorded reason must not be overwritten by a caller that '
+        . 'never made a request.');
     }
 
     #[Test]
@@ -254,10 +204,7 @@ final class ResolverContextTest extends TestCase
     {
         $context = new ResolverContext(10, new ParserContext(0));
 
-        self::assertNull(
-            $context->getReferenceFailureReason(self::REMOTE_A),
-            'An unmarked URL has no reason. Callers distinguish "never failed" from '
-            . '"failed with empty reason" on this.'
-        );
+        $this->assertNull($context->getReferenceFailureReason(self::REMOTE_A), 'An unmarked URL has no reason. Callers distinguish "never failed" from '
+        . '"failed with empty reason" on this.');
     }
 }

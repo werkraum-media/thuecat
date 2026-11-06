@@ -37,12 +37,12 @@ class RecoveredRetryTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('retriesRecovered');
 
-        self::assertCount(1, $entries, 'One summary entry per run, not one per request.');
-        self::assertIsString($entries[0]['context']);
+        $this->assertCount(1, $entries, 'One summary entry per run, not one per request.');
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame(1, $context['recoveredRequests'] ?? null);
-        self::assertSame(1, $context['wastedAttempts'] ?? null);
+        $this->assertIsArray($context);
+        $this->assertSame(1, $context['recoveredRequests'] ?? null);
+        $this->assertSame(1, $context['wastedAttempts'] ?? null);
     }
 
     /**
@@ -60,12 +60,8 @@ class RecoveredRetryTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('notice', $severity);
-        self::assertSame(
-            'notice',
-            $this->getLogEntriesOfType('retriesRecovered')[0]['severity'] ?? null,
-            'A resource that was fetched is not a failure.'
-        );
+        $this->assertSame('notice', $severity);
+        $this->assertSame('notice', $this->getLogEntriesOfType('retriesRecovered')[0]['severity'] ?? null, 'A resource that was fetched is not a failure.');
     }
 
     /**
@@ -88,14 +84,10 @@ class RecoveredRetryTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        self::assertSame(
-            [[
-                'remote_id' => 'https://thuecat.org/resources/018132452787-ngbe',
-                'title' => 'Erfurt Tourismus und Marketing GmbH',
-            ]],
-            $organisations,
-            'The retry cost attempts, not records.'
-        );
+        $this->assertSame([[
+            'remote_id' => 'https://thuecat.org/resources/018132452787-ngbe',
+            'title' => 'Erfurt Tourismus und Marketing GmbH',
+        ]], $organisations, 'The retry cost attempts, not records.');
     }
 
     #[Test]
@@ -106,10 +98,6 @@ class RecoveredRetryTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [],
-            $this->getLogEntriesOfType('retriesRecovered'),
-            'Presence of the entry is the signal, so a clean run must write none.'
-        );
+        $this->assertSame([], $this->getLogEntriesOfType('retriesRecovered'), 'Presence of the entry is the signal, so a clean run must write none.');
     }
 }

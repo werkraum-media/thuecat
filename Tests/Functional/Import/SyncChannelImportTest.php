@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\RequestInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
@@ -35,11 +36,11 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         try {
             $this->importConfiguration(1);
-            self::fail('The run went on without the expiry list.');
+            $this->fail('The run went on without the expiry list.');
         } catch (InvalidResponseException) {
         }
 
-        self::assertCount(1, $this->getLogEntriesOfType('runFailed'));
+        $this->assertCount(1, $this->getLogEntriesOfType('runFailed'));
     }
 
     #[Test]
@@ -60,9 +61,9 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         $request = GuzzleClientFaker::getRequestForUrl(self::RECORD . 'test-event-1');
-        self::assertNotNull($request);
-        self::assertSame(self::RECORD . 'test-event-1', (string)$request->getUri());
-        self::assertSame('APIKEY test-sync-key', $request->getHeaderLine('Authorization'));
+        $this->assertInstanceOf(RequestInterface::class, $request);
+        $this->assertSame(self::RECORD . 'test-event-1', (string)$request->getUri());
+        $this->assertSame('APIKEY test-sync-key', $request->getHeaderLine('Authorization'));
     }
 
     #[Test]
@@ -76,10 +77,10 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(1);
 
         $errors = $this->getLogEntriesOfType('fetchingError');
-        self::assertCount(1, $errors);
-        self::assertIsString($errors[0]['message']);
-        self::assertStringContainsString(self::RECORD . 'test-event-unserved', $errors[0]['message']);
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'));
+        $this->assertCount(1, $errors);
+        $this->assertIsString($errors[0]['message']);
+        $this->assertStringContainsString(self::RECORD . 'test-event-unserved', $errors[0]['message']);
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'));
     }
 
     #[Test]
@@ -89,10 +90,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            'https://thuecat.org',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')['source_url']
-        );
+        $this->assertSame('https://thuecat.org', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')['source_url']);
     }
 
     #[Test]
@@ -102,14 +100,11 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [$this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')],
-            $this->fetchMmRelatedUids(
-                'tx_thuecat_tourist_attraction',
-                $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-1'),
-                'hosts_events'
-            )
-        );
+        $this->assertSame([$this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')], $this->fetchMmRelatedUids(
+            'tx_thuecat_tourist_attraction',
+            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-1'),
+            'hosts_events'
+        ));
     }
 
     #[Test]
@@ -120,8 +115,8 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
-        self::assertSame([], $this->getLogEntriesOfType('fetchingError'));
+        $this->assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
+        $this->assertSame([], $this->getLogEntriesOfType('fetchingError'));
     }
 
     #[Test]
@@ -132,7 +127,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
 
     #[Test]
@@ -144,8 +139,8 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2a'));
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2b'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2a'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2b'));
     }
 
     #[Test]
@@ -161,7 +156,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
 
     // The keyword and the term set it belongs to.

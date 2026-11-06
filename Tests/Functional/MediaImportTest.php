@@ -107,11 +107,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            ['main_image', 'media_files'],
-            $this->fetchReferenceFields(),
-            'schema:photo belongs in main_image, schema:image in media_files.'
-        );
+        $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'schema:photo belongs in main_image, schema:image in media_files.');
     }
 
     #[Test]
@@ -128,11 +124,7 @@ class MediaImportTest extends AbstractImportTestCase
         // Default language only: allowLanguageSynchronization gives every
         // language row its own reference, so the whole table holds one set per
         // language and the slot split is what this asserts.
-        self::assertSame(
-            ['logo', 'media_files', 'media_files'],
-            $this->fetchReferenceFields(0),
-            'The logo is editorially distinct and must not join the gallery.'
-        );
+        $this->assertSame(['logo', 'media_files', 'media_files'], $this->fetchReferenceFields(0), 'The logo is editorially distinct and must not join the gallery.');
     }
 
     #[Test]
@@ -156,7 +148,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         $fields = array_column($this->fetchChildren('sys_file_reference'), 'fieldname');
         sort($fields);
-        self::assertSame(['logo', 'subject_of_media'], $fields);
+        $this->assertSame(['logo', 'subject_of_media'], $fields);
     }
 
     #[Test]
@@ -181,7 +173,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         $fields = array_column($this->fetchChildren('sys_file_reference'), 'fieldname');
         sort($fields);
-        self::assertSame(['logo', 'subject_of_media'], $fields);
+        $this->assertSame(['logo', 'subject_of_media'], $fields);
     }
 
     #[Test]
@@ -215,7 +207,7 @@ class MediaImportTest extends AbstractImportTestCase
         );
         $fields = array_column($references, 'fieldname');
         sort($fields);
-        self::assertSame(['floor_plan', 'main_image', 'media_files'], $fields);
+        $this->assertSame(['floor_plan', 'main_image', 'media_files'], $fields);
     }
 
     #[Test]
@@ -229,15 +221,11 @@ class MediaImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         foreach ([0, 1, 2] as $language) {
-            self::assertSame(
-                ['logo', 'media_files', 'media_files'],
-                $this->fetchReferenceFields($language),
-                'Language ' . $language . ' relates each slot once.'
-            );
+            $this->assertSame(['logo', 'media_files', 'media_files'], $this->fetchReferenceFields($language), 'Language ' . $language . ' relates each slot once.');
         }
 
         // Two distinct URLs, so two files back the six references.
-        self::assertSame(2, $this->countRows('sys_file'));
+        $this->assertSame(2, $this->countRows('sys_file'));
     }
 
     #[Test]
@@ -248,11 +236,8 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            1,
-            $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_16571065-oatour')
-        );
-        self::assertSame([], $this->fetchReferenceFields());
+        $this->assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_16571065-oatour'));
+        $this->assertSame([], $this->fetchReferenceFields());
     }
 
     /**
@@ -293,10 +278,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         // Inline is a capability of the media import, not an event feature: a
         // POI carrying one lands it in the field that POI declares.
-        self::assertSame(
-            ['media_files'],
-            $this->fetchReferenceFields()
-        );
+        $this->assertSame(['media_files'], $this->fetchReferenceFields());
     }
 
     #[Test]
@@ -319,13 +301,10 @@ class MediaImportTest extends AbstractImportTestCase
         // A collection field makes no promise that its entries share a shape.
         $names = $this->fetchRelatedFileNamesInOrder();
         sort($names);
-        self::assertSame(
-            [
-                '1a2b3c4d-0000-4000-8000-000000000001_54eec04d6322ae4b.jpg',
-                'image_652e88519d22ddba.jpg',
-            ],
-            $names
-        );
+        $this->assertSame([
+            '1a2b3c4d-0000-4000-8000-000000000001_54eec04d6322ae4b.jpg',
+            'image_652e88519d22ddba.jpg',
+        ], $names);
     }
 
     /**
@@ -368,16 +347,8 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            ['media_files'],
-            $this->fetchReferenceFields(),
-            'Same file, same field: the first node wins and the second is discarded.'
-        );
-        self::assertSame(
-            1,
-            $this->countRows('sys_file'),
-            'One asset URL is one file, whatever the editorial title says.'
-        );
+        $this->assertSame(['media_files'], $this->fetchReferenceFields(), 'Same file, same field: the first node wins and the second is discarded.');
+        $this->assertSame(1, $this->countRows('sys_file'), 'One asset URL is one file, whatever the editorial title says.');
     }
 
     #[Test]
@@ -395,16 +366,8 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            ['media_files', 'media_files'],
-            $this->fetchReferenceFields(),
-            'Each record keeps its own reference to the shared file.'
-        );
-        self::assertSame(
-            1,
-            $this->countRows('sys_file'),
-            'Two owners of one asset share one file.'
-        );
+        $this->assertSame(['media_files', 'media_files'], $this->fetchReferenceFields(), 'Each record keeps its own reference to the shared file.');
+        $this->assertSame(1, $this->countRows('sys_file'), 'Two owners of one asset share one file.');
     }
 
     // Only the expected URL of each pair is staged, so a wrong pick trips the faker.
@@ -428,7 +391,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
+        $this->assertSame(
             // oastatic paths end in "/.jpg", so those two have no stem to keep.
             [
                 '1234967583140fb6.jpg',
@@ -477,17 +440,9 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
-        self::assertSame(
-            ['main_image', 'media_files'],
-            $this->fetchReferenceFields(),
-            'photo and image map to separate fields, so both keep a reference.'
-        );
-        self::assertSame(
-            ['main_image' => 'Als photo', 'media_files' => 'Als image'],
-            $this->fetchReferenceTitlesByField(),
-            'Each reference carries the title of the slot it came from.'
-        );
+        $this->assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
+        $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'photo and image map to separate fields, so both keep a reference.');
+        $this->assertSame(['main_image' => 'Als photo', 'media_files' => 'Als image'], $this->fetchReferenceTitlesByField(), 'Each reference carries the title of the slot it came from.');
     }
 
     /**
@@ -514,12 +469,8 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
-        self::assertSame(
-            ['main_image', 'media_files'],
-            $this->fetchReferenceFields(),
-            'The relation-first attraction lost the media its slots map to.'
-        );
+        $this->assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
+        $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'The relation-first attraction lost the media its slots map to.');
     }
 
     /**
@@ -564,22 +515,19 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [
-                ['uid' => 1, 'lang' => 0, 'deleted' => 0],
-                ['uid' => 2, 'lang' => 0, 'deleted' => 0],
-                ['uid' => 3, 'lang' => 0, 'deleted' => 0],
-                ['uid' => 4, 'lang' => 0, 'deleted' => 0],
-                ['uid' => 5, 'lang' => 1, 'deleted' => 0],
-                ['uid' => 6, 'lang' => 1, 'deleted' => 0],
-                ['uid' => 7, 'lang' => 1, 'deleted' => 0],
-                ['uid' => 8, 'lang' => 1, 'deleted' => 0],
-                // No longer supplied: the default row and its translation go.
-                ['uid' => 9, 'lang' => 0, 'deleted' => 1],
-                ['uid' => 10, 'lang' => 1, 'deleted' => 1],
-            ],
-            $this->fetchReferenceStateWithLanguage()
-        );
+        $this->assertSame([
+            ['uid' => 1, 'lang' => 0, 'deleted' => 0],
+            ['uid' => 2, 'lang' => 0, 'deleted' => 0],
+            ['uid' => 3, 'lang' => 0, 'deleted' => 0],
+            ['uid' => 4, 'lang' => 0, 'deleted' => 0],
+            ['uid' => 5, 'lang' => 1, 'deleted' => 0],
+            ['uid' => 6, 'lang' => 1, 'deleted' => 0],
+            ['uid' => 7, 'lang' => 1, 'deleted' => 0],
+            ['uid' => 8, 'lang' => 1, 'deleted' => 0],
+            // No longer supplied: the default row and its translation go.
+            ['uid' => 9, 'lang' => 0, 'deleted' => 1],
+            ['uid' => 10, 'lang' => 1, 'deleted' => 1],
+        ], $this->fetchReferenceStateWithLanguage());
     }
 
     /**
@@ -694,22 +642,19 @@ class MediaImportTest extends AbstractImportTestCase
         $severity = $this->importConfigurationReturningSeverity(1);
 
         // Unfetchable images are data drift: the command must still exit 0.
-        self::assertSame('warning', $severity);
+        $this->assertSame('warning', $severity);
 
         // Queried rather than asserted as a data set: the surrounding savingEntity
         // rows are noise here, and only the skip entry is this test's subject.
-        self::assertSame(
+        $this->assertSame([
             [
-                [
-                    'type' => 'referenceSkipped',
-                    'severity' => 'warning',
-                    'table_name' => 'tx_thuecat_tourist_attraction',
-                    'remote_id' => 'https://thuecat.org/resources/attraction-with-failing-image',
-                    'message' => 'Skipped reference "https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image" for field "media_files": Image could not be downloaded.',
-                ],
+                'type' => 'referenceSkipped',
+                'severity' => 'warning',
+                'table_name' => 'tx_thuecat_tourist_attraction',
+                'remote_id' => 'https://thuecat.org/resources/attraction-with-failing-image',
+                'message' => 'Skipped reference "https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image" for field "media_files": Image could not be downloaded.',
             ],
-            $this->getSkippedReferenceLogEntries()
-        );
+        ], $this->getSkippedReferenceLogEntries());
     }
 
     /**
@@ -747,16 +692,12 @@ class MediaImportTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('warning', $severity, 'An unfetchable image stays a warning.');
+        $this->assertSame('warning', $severity, 'An unfetchable image stays a warning.');
 
         $entries = $this->getSkippedReferenceLogEntries();
-        self::assertCount(1, $entries);
-        self::assertIsString($entries[0]['message']);
-        self::assertStringContainsString(
-            'after 3 attempts',
-            $entries[0]['message'],
-            'The message names how many attempts were made.'
-        );
+        $this->assertCount(1, $entries);
+        $this->assertIsString($entries[0]['message']);
+        $this->assertStringContainsString('after 3 attempts', $entries[0]['message'], 'The message names how many attempts were made.');
     }
 
     // Promotion was gated on the run's overall severity while the finally
@@ -777,16 +718,9 @@ class MediaImportTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('error', $severity, 'The failed root must still be reported.');
-        self::assertFileExists(
-            $this->instancePath . '/fileadmin-thuecat/thuecat/image_2173acbddcfbcdb1.jpg',
-            'Media of the healthy root must be promoted despite the other root failing.'
-        );
-        self::assertSame(
-            [],
-            glob($this->instancePath . '/fileadmin-thuecat/thuecat/_thuecat_import_*') ?: [],
-            'The per-run staging folder must not outlive the run.'
-        );
+        $this->assertSame('error', $severity, 'The failed root must still be reported.');
+        $this->assertFileExists($this->instancePath . '/fileadmin-thuecat/thuecat/image_2173acbddcfbcdb1.jpg', 'Media of the healthy root must be promoted despite the other root failing.');
+        $this->assertSame([], glob($this->instancePath . '/fileadmin-thuecat/thuecat/_thuecat_import_*') ?: [], 'The per-run staging folder must not outlive the run.');
     }
 
     /**
@@ -804,13 +738,9 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfigurationSkippingMedia(1);
 
-        self::assertSame([], $this->fetchReferenceFields(), 'No media may be related.');
-        self::assertSame(0, $this->countRows('sys_file'), 'No media may be downloaded.');
-        self::assertSame(
-            ['Attraction with mixed gallery'],
-            $this->fetchAttractionTitles(),
-            'The record itself must still import.'
-        );
+        $this->assertSame([], $this->fetchReferenceFields(), 'No media may be related.');
+        $this->assertSame(0, $this->countRows('sys_file'), 'No media may be downloaded.');
+        $this->assertSame(['Attraction with mixed gallery'], $this->fetchAttractionTitles(), 'The record itself must still import.');
     }
 
     /**
@@ -827,11 +757,7 @@ class MediaImportTest extends AbstractImportTestCase
 
         $this->importConfigurationSkippingMedia(1);
 
-        self::assertSame(
-            ['Attraction with mixed gallery'],
-            $this->fetchAttractionTitles(),
-            'The record must import even with the configured folder gone.'
-        );
+        $this->assertSame(['Attraction with mixed gallery'], $this->fetchAttractionTitles(), 'The record must import even with the configured folder gone.');
     }
 
     /**

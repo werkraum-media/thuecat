@@ -50,17 +50,17 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $unrelatedTranslation = $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 6)[1];
-        self::assertSame(7, $unrelatedTranslation['uid']);
-        self::assertSame('https://thuecat.org/resources/unrelated-attraction', $unrelatedTranslation['remote_id']);
-        self::assertSame("Children's traffic area", $unrelatedTranslation['title']);
+        $this->assertSame(7, $unrelatedTranslation['uid']);
+        $this->assertSame('https://thuecat.org/resources/unrelated-attraction', $unrelatedTranslation['remote_id']);
+        $this->assertSame("Children's traffic area", $unrelatedTranslation['title']);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
-        self::assertGreaterThan(0, $hotelUid);
-        self::assertNotSame(7, $hotelUid);
+        $this->assertGreaterThan(0, $hotelUid);
+        $this->assertNotSame(7, $hotelUid);
 
         $restaurant = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESTAURANT);
-        self::assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
-        self::assertSame('', $restaurant['contained_in_organisation']);
+        $this->assertSame((string)$hotelUid, $restaurant['contained_in_attraction']);
+        $this->assertSame('', $restaurant['contained_in_organisation']);
     }
 
     #[Test]
@@ -71,15 +71,9 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
-        self::assertGreaterThan(0, $hotelUid);
-        self::assertSame(
-            'Hotel of a changed kind',
-            $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $hotelUid)[1]['title'] ?? null
-        );
-        self::assertSame(
-            "Children's traffic area",
-            $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 6)[1]['title']
-        );
+        $this->assertGreaterThan(0, $hotelUid);
+        $this->assertSame('Hotel of a changed kind', $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $hotelUid)[1]['title'] ?? null);
+        $this->assertSame("Children's traffic area", $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 6)[1]['title']);
     }
 
     #[Test]
@@ -91,22 +85,19 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
         $entries = $this->getLogEntriesOfType('recordReclassification');
-        self::assertCount(1, $entries);
-        self::assertSame('warning', $entries[0]['severity']);
-        self::assertSame(self::HOTEL, $entries[0]['remote_id']);
-        self::assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
-        self::assertIsString($entries[0]['context']);
-        self::assertSame(
-            [
-                'previousTable' => 'tx_thuecat_organisation',
-                'previousUid' => 7,
-                'table' => 'tx_thuecat_tourist_attraction',
-                'uid' => $hotelUid,
-                'moved' => [],
-                'droppedManagedBy' => [],
-                'droppedManagedEvents' => [],
-            ],
-            json_decode($entries[0]['context'], true)
-        );
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
+        $this->assertSame(self::HOTEL, $entries[0]['remote_id']);
+        $this->assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
+        $this->assertIsString($entries[0]['context']);
+        $this->assertSame([
+            'previousTable' => 'tx_thuecat_organisation',
+            'previousUid' => 7,
+            'table' => 'tx_thuecat_tourist_attraction',
+            'uid' => $hotelUid,
+            'moved' => [],
+            'droppedManagedBy' => [],
+            'droppedManagedEvents' => [],
+        ], json_decode($entries[0]['context'], true));
     }
 }

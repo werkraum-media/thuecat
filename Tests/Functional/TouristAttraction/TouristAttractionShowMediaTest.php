@@ -73,10 +73,10 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($this->attractionShowRequest('21'));
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
         // Processed (cropped) image lands in fileadmin processed folder.
-        self::assertStringContainsString('fileadmin-thuecat/_processed_/', $body);
-        self::assertStringContainsString('Foto: Main Author', $body);
+        $this->assertStringContainsString('fileadmin-thuecat/_processed_/', $body);
+        $this->assertStringContainsString('Foto: Main Author', $body);
     }
 
     // Square 20x20 source, 2:1 crop: an uncropped render would be 20x20.
@@ -85,8 +85,8 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
-        self::assertMatchesRegularExpression('#<img[^>]+width="10"#', $body);
-        self::assertMatchesRegularExpression('#<img[^>]+height="5"#', $body);
+        $this->assertMatchesRegularExpression('#<img[^>]+width="10"#', $body);
+        $this->assertMatchesRegularExpression('#<img[^>]+height="5"#', $body);
     }
 
     #[Test]
@@ -94,8 +94,8 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
-        self::assertStringContainsString('<section class="gallery">', $body);
-        self::assertStringContainsString('Foto: Gallery Author', $body);
+        $this->assertStringContainsString('<section class="gallery">', $body);
+        $this->assertStringContainsString('Foto: Gallery Author', $body);
     }
 
     #[Test]
@@ -104,8 +104,8 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
         // Native editorial_images FAL property; processed via the reference crop.
-        self::assertStringContainsString('<section class="editorial">', $body);
-        self::assertStringContainsString('fileadmin-thuecat/_processed_/', $body);
+        $this->assertStringContainsString('<section class="editorial">', $body);
+        $this->assertStringContainsString('fileadmin-thuecat/_processed_/', $body);
     }
 
     #[Test]
@@ -115,7 +115,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         // FAL-only (no blob fallback) so the section must not appear.
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('22'));
 
-        self::assertStringNotContainsString('<section class="editorial">', $body);
+        $this->assertStringNotContainsString('<section class="editorial">', $body);
     }
 
     #[Test]
@@ -123,9 +123,9 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $media = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'media');
 
-        self::assertStringContainsString('Foto: Main Author', $media);
-        self::assertStringContainsString('Foto: Gallery Author', $media);
-        self::assertSame(2, substr_count($media, '<img '));
+        $this->assertStringContainsString('Foto: Main Author', $media);
+        $this->assertStringContainsString('Foto: Gallery Author', $media);
+        $this->assertSame(2, substr_count($media, '<img '));
     }
 
     #[Test]
@@ -133,9 +133,9 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $parking = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'parkingFacilities');
 
-        self::assertStringContainsString('Foto: Editorial Author', $parking);
-        self::assertStringContainsString('Foto: Gallery Author', $parking);
-        self::assertSame(2, substr_count($parking, '<img '));
+        $this->assertStringContainsString('Foto: Editorial Author', $parking);
+        $this->assertStringContainsString('Foto: Gallery Author', $parking);
+        $this->assertSame(2, substr_count($parking, '<img '));
     }
 
     #[Test]
@@ -143,9 +143,9 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $details = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'meetingRoomDetails');
 
-        self::assertStringContainsString('Foto: Main Author', $details);
-        self::assertStringContainsString('Foto: Editorial Author', $details);
-        self::assertSame(2, substr_count($details, '<img '));
+        $this->assertStringContainsString('Foto: Main Author', $details);
+        $this->assertStringContainsString('Foto: Editorial Author', $details);
+        $this->assertSame(2, substr_count($details, '<img '));
     }
 
     /**
@@ -170,10 +170,10 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         $markup = $this->renderedSection($this->attractionShowRequest($uid), $attribute, $section);
 
-        self::assertMatchesRegularExpression('#<img [^>]*alt="Alternative: ' . $title . '"#', $markup);
+        $this->assertMatchesRegularExpression('#<img [^>]*alt="Alternative: ' . $title . '"#', $markup);
         // Title and description in one and the same caption.
         $inCaption = '(?:(?!</figcaption>).)*';
-        self::assertMatchesRegularExpression('#<figcaption[^>]*>' . $inCaption . $title . $inCaption . $description . $inCaption . '</figcaption>#s', $markup);
+        $this->assertMatchesRegularExpression('#<figcaption[^>]*>' . $inCaption . $title . $inCaption . $description . $inCaption . '</figcaption>#s', $markup);
     }
 
     #[Test]
@@ -182,11 +182,11 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($this->attractionShowRequest('23'));
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Attraktion ohne Medien', $body);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Attraktion ohne Medien', $body);
         // Neither FAL nor blob: no figure, no gallery, no editorial, no broken markup.
-        self::assertStringNotContainsString('<figure>', $body);
-        self::assertStringNotContainsString('class="gallery"', $body);
-        self::assertStringNotContainsString('class="editorial"', $body);
+        $this->assertStringNotContainsString('<figure>', $body);
+        $this->assertStringNotContainsString('class="gallery"', $body);
+        $this->assertStringNotContainsString('class="editorial"', $body);
     }
 }

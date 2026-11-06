@@ -37,22 +37,22 @@ class PlaceCategoryMapperTest extends TestCase
     #[Test]
     public function mapsSingleKnownTypeToLabel(): void
     {
-        self::assertSame('Museum', $this->mapper->titleFor('schema:Museum'));
-        self::assertSame('Kathedrale', $this->mapper->titleFor('thuecat:Cathedral'));
+        $this->assertSame('Museum', $this->mapper->titleFor('schema:Museum'));
+        $this->assertSame('Kathedrale', $this->mapper->titleFor('thuecat:Cathedral'));
     }
 
     #[Test]
     public function returnsNullForUnmappedType(): void
     {
-        self::assertNull($this->mapper->titleFor('schema:Place'));
-        self::assertNull($this->mapper->titleFor('schema:TouristAttraction'));
-        self::assertNull($this->mapper->titleFor('test:UnmappedByConstruction'));
+        $this->assertNull($this->mapper->titleFor('schema:Place'));
+        $this->assertNull($this->mapper->titleFor('schema:TouristAttraction'));
+        $this->assertNull($this->mapper->titleFor('test:UnmappedByConstruction'));
     }
 
     #[Test]
     public function prefixesASourceValueWithTheSourceField(): void
     {
-        self::assertSame('type:schema:Museum', $this->mapper->prefixed('schema:Museum'));
+        $this->assertSame('type:schema:Museum', $this->mapper->prefixed('schema:Museum'));
     }
 
     /**
@@ -71,10 +71,7 @@ class PlaceCategoryMapperTest extends TestCase
             'schema:Museum',
         ];
 
-        self::assertSame(
-            [['remoteId' => 'schema:Museum', 'title' => 'Museum']],
-            $this->mapper->categoriesFor($types)
-        );
+        $this->assertSame([['remoteId' => 'schema:Museum', 'title' => 'Museum']], $this->mapper->categoriesFor($types));
     }
 
     #[Test]
@@ -86,13 +83,10 @@ class PlaceCategoryMapperTest extends TestCase
             'schema:Museum',
         ];
 
-        self::assertSame(
-            [
-                ['remoteId' => 'schema:Synagogue', 'title' => 'Synagoge'],
-                ['remoteId' => 'schema:Museum', 'title' => 'Museum'],
-            ],
-            $this->mapper->categoriesFor($types)
-        );
+        $this->assertSame([
+            ['remoteId' => 'schema:Synagogue', 'title' => 'Synagoge'],
+            ['remoteId' => 'schema:Museum', 'title' => 'Museum'],
+        ], $this->mapper->categoriesFor($types));
     }
 
     #[Test]
@@ -107,13 +101,10 @@ class PlaceCategoryMapperTest extends TestCase
             'schema:Museum',             // matched
         ];
 
-        self::assertSame(
-            [
-                'matched' => ['schema:Museum' => 'Museum'],
-                'unmatched' => ['test:UnmappedByConstruction'],
-            ],
-            $this->mapper->reportMatchStatus($types)
-        );
+        $this->assertSame([
+            'matched' => ['schema:Museum' => 'Museum'],
+            'unmatched' => ['test:UnmappedByConstruction'],
+        ], $this->mapper->reportMatchStatus($types));
     }
 
     #[Test]
@@ -122,8 +113,8 @@ class PlaceCategoryMapperTest extends TestCase
         // Assert absence rather than pinning the whole (growing) ignore set.
         $report = $this->mapper->reportMatchStatus(['schema:Place', 'test:UnmappedByConstruction']);
 
-        self::assertArrayNotHasKey('schema:Place', $report['matched']);
-        self::assertNotContains('schema:Place', $report['unmatched']);
-        self::assertContains('test:UnmappedByConstruction', $report['unmatched']);
+        $this->assertArrayNotHasKey('schema:Place', $report['matched']);
+        $this->assertNotContains('schema:Place', $report['unmatched']);
+        $this->assertContains('test:UnmappedByConstruction', $report['unmatched']);
     }
 }

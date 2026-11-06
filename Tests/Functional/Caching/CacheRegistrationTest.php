@@ -54,10 +54,7 @@ class CacheRegistrationTest extends AbstractCachingTestCase
     #[DataProvider('cacheIdentifiers')]
     public function cacheIsRegisteredAsVariableFrontend(string $identifier): void
     {
-        self::assertInstanceOf(
-            VariableFrontend::class,
-            $this->get(CacheManager::class)->getCache($identifier)
-        );
+        $this->assertInstanceOf(VariableFrontend::class, $this->get(CacheManager::class)->getCache($identifier));
     }
 
     /**
@@ -76,9 +73,9 @@ class CacheRegistrationTest extends AbstractCachingTestCase
             ->fetchOne()
         ;
 
-        self::assertIsNumeric($expires);
+        $this->assertIsNumeric($expires);
         // Well past the one-hour default, without pinning the exact second.
-        self::assertGreaterThan(time() + 31535000, (int)$expires);
+        $this->assertGreaterThan(time() + 31535000, (int)$expires);
     }
 
     #[Test]
@@ -89,13 +86,10 @@ class CacheRegistrationTest extends AbstractCachingTestCase
         $cache = $cacheManager->getCache($identifier);
 
         $cache->set('entry', 'rendered', ['tx_thuecat_tourist_attraction_1']);
-        self::assertSame('rendered', $cache->get('entry'), 'Entry must be stored to prove anything.');
+        $this->assertSame('rendered', $cache->get('entry'), 'Entry must be stored to prove anything.');
 
         $cacheManager->flushCachesInGroupByTags('pages', ['tx_thuecat_tourist_attraction_1']);
 
-        self::assertFalse(
-            $cache->get('entry'),
-            'Flushing the pages group must discard this entry; the cache is outside the group.'
-        );
+        $this->assertFalse($cache->get('entry'), 'Flushing the pages group must discard this entry; the cache is outside the group.');
     }
 }

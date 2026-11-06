@@ -34,10 +34,7 @@ final class TownSlugImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            'erfurt',
-            $this->fetchRowByRemoteId('tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt')['slug']
-        );
+        $this->assertSame('erfurt', $this->fetchRowByRemoteId('tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt')['slug']);
     }
 
     #[Test]
@@ -50,6 +47,6 @@ final class TownSlugImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
         $this->importConfiguration(2);
 
-        self::assertSame(['erfurt', 'erfurt'], array_column($this->fetchChildren('tx_thuecat_town'), 'slug'));
+        $this->assertSame(['erfurt', 'erfurt'], array_column($this->fetchChildren('tx_thuecat_town'), 'slug'));
     }
 }

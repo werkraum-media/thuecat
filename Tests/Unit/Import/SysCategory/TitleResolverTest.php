@@ -72,7 +72,7 @@ class TitleResolverTest extends TestCase
             $this->upstream('thuecat:BrassMusic', ['de' => 'Blasmusik', 'en' => 'Brass music'])
         );
 
-        self::assertSame(['de' => 'Blasmusik', 'en' => 'Brass music'], $resolution->titles);
+        $this->assertSame(['de' => 'Blasmusik', 'en' => 'Brass music'], $resolution->titles);
     }
 
     #[Test]
@@ -83,8 +83,8 @@ class TitleResolverTest extends TestCase
             $this->upstream('thuecat:BeerBar', ['de' => 'Bierbar upstream', 'en' => 'Beer bar'])
         );
 
-        self::assertFalse($resolution->usedFallback, 'The map was never needed.');
-        self::assertSame('Bierbar upstream', $resolution->titles['de'] ?? null);
+        $this->assertFalse($resolution->usedFallback, 'The map was never needed.');
+        $this->assertSame('Bierbar upstream', $resolution->titles['de'] ?? null);
     }
 
     #[Test]
@@ -92,8 +92,8 @@ class TitleResolverTest extends TestCase
     {
         $resolution = $this->resolve('thuecat:BeerBar', null);
 
-        self::assertSame('Bierbar', $resolution->titles['de'] ?? null);
-        self::assertTrue($resolution->usedFallback);
+        $this->assertSame('Bierbar', $resolution->titles['de'] ?? null);
+        $this->assertTrue($resolution->usedFallback);
     }
 
     #[Test]
@@ -108,8 +108,8 @@ class TitleResolverTest extends TestCase
         // The map holds default-language titles only, so it could never have
         // supplied French. Counting that as "consulted" would report nearly
         // every type on a multilingual site.
-        self::assertFalse($resolution->usedFallback);
-        self::assertSame(['de' => 'Bierbar upstream'], $resolution->titles);
+        $this->assertFalse($resolution->usedFallback);
+        $this->assertSame(['de' => 'Bierbar upstream'], $resolution->titles);
     }
 
     #[Test]
@@ -120,7 +120,7 @@ class TitleResolverTest extends TestCase
             $this->upstream('schema:Bridge', [VocabularyClass::UNTAGGED => 'Bridge'])
         );
 
-        self::assertSame('Bridge', $resolution->titles['en'] ?? null);
+        $this->assertSame('Bridge', $resolution->titles['en'] ?? null);
     }
 
     #[Test]
@@ -133,7 +133,7 @@ class TitleResolverTest extends TestCase
 
         // German comes from the map; showing "Bridge" under a German language
         // is exactly what this rule prevents.
-        self::assertSame('Brücke', $resolution->titles['de'] ?? null);
+        $this->assertSame('Brücke', $resolution->titles['de'] ?? null);
     }
 
     #[Test]
@@ -144,8 +144,8 @@ class TitleResolverTest extends TestCase
             $this->upstream('schema:Bridge', [VocabularyClass::UNTAGGED => 'Bridge'])
         );
 
-        self::assertSame(['de' => 'Brücke', 'en' => 'Bridge'], $resolution->titles);
-        self::assertTrue($resolution->usedFallback, 'The map carried the default language.');
+        $this->assertSame(['de' => 'Brücke', 'en' => 'Bridge'], $resolution->titles);
+        $this->assertTrue($resolution->usedFallback, 'The map carried the default language.');
     }
 
     #[Test]
@@ -159,7 +159,7 @@ class TitleResolverTest extends TestCase
             ])
         );
 
-        self::assertSame('Bridge tagged', $resolution->titles['en'] ?? null);
+        $this->assertSame('Bridge tagged', $resolution->titles['en'] ?? null);
     }
 
     #[Test]
@@ -171,7 +171,7 @@ class TitleResolverTest extends TestCase
             ['de']
         );
 
-        self::assertSame(['de' => 'Brücke'], $resolution->titles);
+        $this->assertSame(['de' => 'Brücke'], $resolution->titles);
     }
 
     #[Test]
@@ -182,8 +182,8 @@ class TitleResolverTest extends TestCase
             $this->upstream('thuecat:BeerBar', ['en' => 'Beer bar'])
         );
 
-        self::assertSame(['de' => 'Bierbar', 'en' => 'Beer bar'], $resolution->titles);
-        self::assertTrue($resolution->usedFallback);
+        $this->assertSame(['de' => 'Bierbar', 'en' => 'Beer bar'], $resolution->titles);
+        $this->assertTrue($resolution->usedFallback);
     }
 
     #[Test]
@@ -191,8 +191,8 @@ class TitleResolverTest extends TestCase
     {
         $resolution = $this->resolve('thuecat:Unknown', null);
 
-        self::assertSame([], $resolution->titles);
-        self::assertFalse($resolution->hasTitleFor('de'));
+        $this->assertSame([], $resolution->titles);
+        $this->assertFalse($resolution->hasTitleFor('de'));
     }
 
     #[Test]
@@ -202,7 +202,7 @@ class TitleResolverTest extends TestCase
 
         // Consulting is the trigger, not succeeding: this is what the report
         // lists as unmatched.
-        self::assertTrue($resolution->usedFallback);
+        $this->assertTrue($resolution->usedFallback);
     }
 
     #[Test]
@@ -210,7 +210,7 @@ class TitleResolverTest extends TestCase
     {
         $resolution = $this->resolve('thuecat:Unknown', null);
 
-        self::assertNotContains('thuecat:Unknown', $resolution->titles);
+        $this->assertNotContains('thuecat:Unknown', $resolution->titles);
     }
 
     #[Test]
@@ -225,6 +225,6 @@ class TitleResolverTest extends TestCase
             ])
         );
 
-        self::assertSame(['de' => 'Bierbar upstream', 'en' => 'Beer bar'], $resolution->titles);
+        $this->assertSame(['de' => 'Bierbar upstream', 'en' => 'Beer bar'], $resolution->titles);
     }
 }

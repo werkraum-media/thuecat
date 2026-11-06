@@ -30,13 +30,13 @@ class KeywordReaderTest extends TestCase
     #[Test]
     public function returnsNothingWhenPropertyAbsent(): void
     {
-        self::assertSame([], $this->read([]));
+        $this->assertSame([], $this->read([]));
     }
 
     #[Test]
     public function returnsNothingWhenPropertyIsNull(): void
     {
-        self::assertSame([], $this->read(['schema:keywords' => null]));
+        $this->assertSame([], $this->read(['schema:keywords' => null]));
     }
 
     #[Test]
@@ -46,9 +46,9 @@ class KeywordReaderTest extends TestCase
             'schema:keywords' => ['@id' => 'https://thuecat.org/resources/475728955106-qdcc'],
         ]);
 
-        self::assertCount(1, $entries);
-        self::assertSame(KeywordEntry::SHAPE_REFERENCE, $entries[0]->shape);
-        self::assertSame('https://thuecat.org/resources/475728955106-qdcc', $entries[0]->value);
+        $this->assertCount(1, $entries);
+        $this->assertSame(KeywordEntry::SHAPE_REFERENCE, $entries[0]->shape);
+        $this->assertSame('https://thuecat.org/resources/475728955106-qdcc', $entries[0]->value);
     }
 
     #[Test]
@@ -58,9 +58,9 @@ class KeywordReaderTest extends TestCase
             'schema:keywords' => ['@language' => 'de', '@value' => 'Theater'],
         ]);
 
-        self::assertCount(1, $entries);
-        self::assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[0]->shape);
-        self::assertSame('Theater', $entries[0]->value);
+        $this->assertCount(1, $entries);
+        $this->assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[0]->shape);
+        $this->assertSame('Theater', $entries[0]->value);
     }
 
     #[Test]
@@ -73,13 +73,13 @@ class KeywordReaderTest extends TestCase
             ],
         ]);
 
-        self::assertSame(KeywordEntry::SHAPE_ONTOLOGY, $entries[0]->shape);
-        self::assertSame('thuecat:Urban', $entries[0]->value);
+        $this->assertSame(KeywordEntry::SHAPE_ONTOLOGY, $entries[0]->shape);
+        $this->assertSame('thuecat:Urban', $entries[0]->value);
         // The usage-site type decides the parent; the fetched term cannot.
-        self::assertSame('thuecat:ConventionLocationTopics', $entries[0]->usageType);
+        $this->assertSame('thuecat:ConventionLocationTopics', $entries[0]->usageType);
 
-        self::assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[1]->shape);
-        self::assertNull($entries[1]->usageType);
+        $this->assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[1]->shape);
+        $this->assertNull($entries[1]->usageType);
     }
 
     // Shapes coexist in one root; none may be dropped because of another.
@@ -94,15 +94,12 @@ class KeywordReaderTest extends TestCase
             ],
         ]);
 
-        self::assertCount(3, $entries);
-        self::assertSame(
-            [
-                KeywordEntry::SHAPE_REFERENCE,
-                KeywordEntry::SHAPE_ONTOLOGY,
-                KeywordEntry::SHAPE_FREE_TEXT,
-            ],
-            array_map(static fn (KeywordEntry $e): string => $e->shape, $entries)
-        );
+        $this->assertCount(3, $entries);
+        $this->assertSame([
+            KeywordEntry::SHAPE_REFERENCE,
+            KeywordEntry::SHAPE_ONTOLOGY,
+            KeywordEntry::SHAPE_FREE_TEXT,
+        ], array_map(static fn (KeywordEntry $e): string => $e->shape, $entries));
     }
 
     // A datatype is not a vocabulary: xsd:string stays free text.
@@ -113,9 +110,9 @@ class KeywordReaderTest extends TestCase
             'schema:keywords' => ['@type' => 'xsd:string', '@value' => 'Sommer'],
         ]);
 
-        self::assertCount(1, $entries);
-        self::assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[0]->shape);
-        self::assertNull($entries[0]->usageType);
+        $this->assertCount(1, $entries);
+        $this->assertSame(KeywordEntry::SHAPE_FREE_TEXT, $entries[0]->shape);
+        $this->assertNull($entries[0]->usageType);
     }
 
     #[Test]
@@ -130,8 +127,8 @@ class KeywordReaderTest extends TestCase
             ],
         ]);
 
-        self::assertCount(1, $entries);
-        self::assertSame('Theater', $entries[0]->value);
+        $this->assertCount(1, $entries);
+        $this->assertSame('Theater', $entries[0]->value);
     }
 
     #[Test]
@@ -144,7 +141,7 @@ class KeywordReaderTest extends TestCase
             ],
         ]);
 
-        self::assertCount(1, $entries);
+        $this->assertCount(1, $entries);
     }
 
     /**

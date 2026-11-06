@@ -57,10 +57,10 @@ class EventDateSkippedTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('eventDateSkipped');
 
-        self::assertCount(1, $entries);
-        self::assertSame('warning', $entries[0]['severity']);
-        self::assertSame('tx_events_domain_model_event', $entries[0]['table_name']);
-        self::assertSame(self::REMOTE_ID, $entries[0]['remote_id']);
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
+        $this->assertSame('tx_events_domain_model_event', $entries[0]['table_name']);
+        $this->assertSame(self::REMOTE_ID, $entries[0]['remote_id']);
     }
 
     #[Test]
@@ -73,7 +73,7 @@ class EventDateSkippedTest extends AbstractImportTestCase
             ->count('uid', 'tx_events_domain_model_date', [])
         ;
 
-        self::assertSame(0, $count, 'An unresolvable date must not be completed by guesswork.');
+        $this->assertSame(0, $count, 'An unresolvable date must not be completed by guesswork.');
     }
 
     // The two entries answer different questions: a published value was
@@ -83,8 +83,8 @@ class EventDateSkippedTest extends AbstractImportTestCase
     {
         $this->importEventWithUnresolvableDate();
 
-        self::assertCount(1, $this->getLogEntriesOfType('eventDateSkipped'));
-        self::assertCount(1, $this->getLogEntriesOfType('eventWithoutDates'));
+        $this->assertCount(1, $this->getLogEntriesOfType('eventDateSkipped'));
+        $this->assertCount(1, $this->getLogEntriesOfType('eventWithoutDates'));
     }
 
     #[Test]
@@ -98,7 +98,7 @@ class EventDateSkippedTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        self::assertCount(1, $rows);
+        $this->assertCount(1, $rows);
     }
 
     #[Test]
@@ -109,7 +109,7 @@ class EventDateSkippedTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('warning', $severity, 'A skipped date must not fail the run.');
+        $this->assertSame('warning', $severity, 'A skipped date must not fail the run.');
     }
 
     #[Test]
@@ -119,10 +119,10 @@ class EventDateSkippedTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('eventDateSkipped');
 
-        self::assertNotSame([], $entries);
+        $this->assertNotSame([], $entries);
         $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringContainsString('Test-Festival ohne Enddatum', $message);
+        $this->assertIsString($message);
+        $this->assertStringContainsString('Test-Festival ohne Enddatum', $message);
     }
 
     // The trap eventWithoutDates hit: a type that stages but cannot be mapped
@@ -133,7 +133,7 @@ class EventDateSkippedTest extends AbstractImportTestCase
         $this->importEventWithUnresolvableDate();
 
         $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
-        self::assertInstanceOf(ImportLog::class, $log);
+        $this->assertInstanceOf(ImportLog::class, $log);
 
         $matching = [];
         foreach ($log->getEntries() as $entry) {
@@ -142,8 +142,8 @@ class EventDateSkippedTest extends AbstractImportTestCase
             }
         }
 
-        self::assertCount(1, $matching);
-        self::assertSame('eventDateSkipped', $matching[0]->getType());
+        $this->assertCount(1, $matching);
+        $this->assertSame('eventDateSkipped', $matching[0]->getType());
     }
 
     private function importEventWithUnresolvableDate(): void

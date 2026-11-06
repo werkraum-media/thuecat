@@ -52,7 +52,7 @@ class AbstractImportTestCase extends TestCase
     {
         $path = $this->fixturePath . $filename;
         $raw = file_get_contents($path);
-        self::assertIsString($raw, 'Fixture not readable: ' . $path);
+        $this->assertIsString($raw, 'Fixture not readable: ' . $path);
         $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($decoded)) {
             return null;
@@ -83,9 +83,9 @@ class AbstractImportTestCase extends TestCase
      */
     protected function decodeJson(mixed $raw): array
     {
-        self::assertIsString($raw);
+        $this->assertIsString($raw);
         $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
-        self::assertIsArray($decoded);
+        $this->assertIsArray($decoded);
         return $decoded;
     }
 }

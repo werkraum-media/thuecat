@@ -51,8 +51,8 @@ class TeaserCacheTest extends AbstractCachingTestCase
         $first = (string)$this->request(10)->getBody();
         $second = (string)$this->request(13)->getBody();
 
-        self::assertStringContainsString('/detail/', $first, 'List on page 10 links detail page 20.');
-        self::assertStringContainsString('/other-detail/', $second, 'List on page 13 links detail page 21.');
+        $this->assertStringContainsString('/detail/', $first, 'List on page 10 links detail page 20.');
+        $this->assertStringContainsString('/other-detail/', $second, 'List on page 13 links detail page 21.');
     }
 
     #[Test]
@@ -62,12 +62,8 @@ class TeaserCacheTest extends AbstractCachingTestCase
 
         $this->request(10);
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(
-            2,
-            $this->teaserIdentifiers(),
-            'Both attractions of the list must leave a teaser entry.'
-        );
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(2, $this->teaserIdentifiers(), 'Both attractions of the list must leave a teaser entry.');
         $this->assertCachedEntriesHaveContent(
             Extension::CACHE_TEASER,
             'tx_thuecat_tourist_attraction_10'
@@ -86,9 +82,9 @@ class TeaserCacheTest extends AbstractCachingTestCase
         }
         $combined = implode("\n", $stored);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $combined);
-        self::assertStringContainsString('Domberg Erfurt', $combined);
-        self::assertStringContainsString('/detail/', $combined, 'Teaser links its detail page.');
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $combined);
+        $this->assertStringContainsString('Domberg Erfurt', $combined);
+        $this->assertStringContainsString('/detail/', $combined, 'Teaser links its detail page.');
     }
 
     /** What the visitor sees is what the cache holds. */
@@ -99,12 +95,8 @@ class TeaserCacheTest extends AbstractCachingTestCase
 
         foreach ($this->teaserIdentifiers() as $identifier) {
             $stored = trim($this->cachedContent(Extension::CACHE_TEASER, $identifier));
-            self::assertNotSame('', $stored, 'Entry holds nothing but whitespace.');
-            self::assertStringContainsString(
-                $stored,
-                $body,
-                'The rendered list must contain the stored teaser verbatim.'
-            );
+            $this->assertNotSame('', $stored, 'Entry holds nothing but whitespace.');
+            $this->assertStringContainsString($stored, $body, 'The rendered list must contain the stored teaser verbatim.');
         }
     }
 
@@ -114,21 +106,13 @@ class TeaserCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $afterFirstList = $this->teaserIdentifiers();
-        self::assertCount(2, $afterFirstList, 'Nothing stored means nothing to reuse.');
+        $this->assertCount(2, $afterFirstList, 'Nothing stored means nothing to reuse.');
         $before = $this->storedTeasers();
 
         $this->request(10);
 
-        self::assertSame(
-            $afterFirstList,
-            $this->teaserIdentifiers(),
-            'Repeating a list must not write further teaser entries.'
-        );
-        self::assertSame(
-            $before,
-            $this->storedTeasers(),
-            'The stored markup must be served, not rebuilt.'
-        );
+        $this->assertSame($afterFirstList, $this->teaserIdentifiers(), 'Repeating a list must not write further teaser entries.');
+        $this->assertSame($before, $this->storedTeasers(), 'The stored markup must be served, not rebuilt.');
     }
 
     /**
@@ -144,12 +128,8 @@ class TeaserCacheTest extends AbstractCachingTestCase
         $this->request(13);
         $afterSecondList = $this->teaserIdentifiers();
 
-        self::assertCount(2, $afterFirstList, 'First list stores its two teasers.');
-        self::assertCount(
-            4,
-            $afterSecondList,
-            'The second list links another detail page, so its teasers are their own entries.'
-        );
+        $this->assertCount(2, $afterFirstList, 'First list stores its two teasers.');
+        $this->assertCount(4, $afterSecondList, 'The second list links another detail page, so its teasers are their own entries.');
 
         // The point of keying on the detail page: the two entries for one
         // attraction differ, and each links its own page.
@@ -159,8 +139,8 @@ class TeaserCacheTest extends AbstractCachingTestCase
         }
         $combined = implode("\n", $links);
 
-        self::assertStringContainsString('/detail/', $combined, 'Teasers of the first list.');
-        self::assertStringContainsString('/other-detail/', $combined, 'Teasers of the second list.');
+        $this->assertStringContainsString('/detail/', $combined, 'Teasers of the first list.');
+        $this->assertStringContainsString('/other-detail/', $combined, 'Teasers of the second list.');
     }
 
     /**
@@ -172,19 +152,15 @@ class TeaserCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $existing = $this->storedTeasers();
-        self::assertCount(2, $existing, 'Attractions 10 and 11 are stored.');
+        $this->assertCount(2, $existing, 'Attractions 10 and 11 are stored.');
 
         $this->request(14);
         $afterWiderList = $this->storedTeasers();
 
-        self::assertCount(3, $afterWiderList, 'Only the third attraction is added.');
+        $this->assertCount(3, $afterWiderList, 'Only the third attraction is added.');
         foreach ($existing as $identifier => $markup) {
-            self::assertArrayHasKey($identifier, $afterWiderList, 'Stored entry survives.');
-            self::assertSame(
-                $markup,
-                $afterWiderList[$identifier],
-                'A stored teaser is reused, not rendered again.'
-            );
+            $this->assertArrayHasKey($identifier, $afterWiderList, 'Stored entry survives.');
+            $this->assertSame($markup, $afterWiderList[$identifier], 'A stored teaser is reused, not rendered again.');
         }
     }
 
@@ -197,15 +173,11 @@ class TeaserCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
         $fromFilteredList = $this->storedTeasers();
-        self::assertCount(2, $fromFilteredList, 'Attractions 10 and 11 are stored.');
+        $this->assertCount(2, $fromFilteredList, 'Attractions 10 and 11 are stored.');
 
         $this->request(15);
 
-        self::assertSame(
-            $fromFilteredList,
-            $this->storedTeasers(),
-            'The curated list must reuse the stored entries, adding none.'
-        );
+        $this->assertSame($fromFilteredList, $this->storedTeasers(), 'The curated list must reuse the stored entries, adding none.');
     }
 
     /**

@@ -51,10 +51,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Top' => [],
         ]);
 
-        self::assertSame(
-            'schema:Deep',
-            (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Shallow', 'schema:Deep'])
-        );
+        $this->assertSame('schema:Deep', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Shallow', 'schema:Deep']));
     }
 
     #[Test]
@@ -66,10 +63,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Shallow' => [],
         ]);
 
-        self::assertSame(
-            'schema:Deep',
-            (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Deep', 'schema:Shallow'])
-        );
+        $this->assertSame('schema:Deep', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Deep', 'schema:Shallow']));
     }
 
     #[Test]
@@ -80,10 +74,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Second' => [],
         ]);
 
-        self::assertSame(
-            'schema:First',
-            (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:First', 'schema:Second'])
-        );
+        $this->assertSame('schema:First', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:First', 'schema:Second']));
     }
 
     #[Test]
@@ -96,15 +87,12 @@ class LongestChainStrategyTest extends TestCase
         ]);
         $strategy = new LongestChainStrategy();
 
-        self::assertSame(
-            $strategy->choose($index, 'thuecat:X', ['schema:A', 'schema:B']),
-            $strategy->choose($index, 'thuecat:X', ['schema:A', 'schema:B'])
-        );
+        $this->assertSame($strategy->choose($index, 'thuecat:X', ['schema:A', 'schema:B']), $strategy->choose($index, 'thuecat:X', ['schema:A', 'schema:B']));
     }
 
     #[Test]
     public function namesItselfForTheImportReport(): void
     {
-        self::assertSame('longestChain', (new LongestChainStrategy())->name());
+        $this->assertSame('longestChain', (new LongestChainStrategy())->name());
     }
 }

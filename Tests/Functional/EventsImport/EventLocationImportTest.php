@@ -46,37 +46,34 @@ class EventLocationImportTest extends AbstractImportTestCase
             'https://int.thuecat.org/resources/e_101155874-hubev'
         );
 
-        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
 
         $locationUid = $event['location'] ?? null;
-        self::assertIsNumeric($locationUid, 'Event carries no location uid.');
+        $this->assertIsNumeric($locationUid, 'Event carries no location uid.');
 
         $location = $this->fetchLocationByUid((int)$locationUid);
-        self::assertSame(
-            [
-                'name' => 'Messe Erfurt',
-                'street' => 'Gothaer Straße 34',
-                'zip' => '99094',
-                'city' => 'Erfurt - Brühlervorstadt',
-                // ThueCat supplies no district, and it is part of the hash.
-                'district' => '',
-                'country' => 'Deutschland',
-                'phone' => '0361 400-0',
-                'latitude' => '50.959650',
-                'longitude' => '10.992270',
-            ],
-            [
-                'name' => $location['name'],
-                'street' => $location['street'],
-                'zip' => $location['zip'],
-                'city' => $location['city'],
-                'district' => $location['district'],
-                'country' => $location['country'],
-                'phone' => $location['phone'],
-                'latitude' => $location['latitude'],
-                'longitude' => $location['longitude'],
-            ]
-        );
+        $this->assertSame([
+            'name' => 'Messe Erfurt',
+            'street' => 'Gothaer Straße 34',
+            'zip' => '99094',
+            'city' => 'Erfurt - Brühlervorstadt',
+            // ThueCat supplies no district, and it is part of the hash.
+            'district' => '',
+            'country' => 'Deutschland',
+            'phone' => '0361 400-0',
+            'latitude' => '50.959650',
+            'longitude' => '10.992270',
+        ], [
+            'name' => $location['name'],
+            'street' => $location['street'],
+            'zip' => $location['zip'],
+            'city' => $location['city'],
+            'district' => $location['district'],
+            'country' => $location['country'],
+            'phone' => $location['phone'],
+            'latitude' => $location['latitude'],
+            'longitude' => $location['longitude'],
+        ]);
     }
 
     #[Test]
@@ -88,11 +85,7 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            1,
-            $this->countRows('tx_events_domain_model_location'),
-            'The literal and the CURIE country forked the venue into two rows.'
-        );
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'), 'The literal and the CURIE country forked the venue into two rows.');
 
         $literalEvent = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',
@@ -105,11 +98,11 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $literalUid = $literalEvent['location'] ?? null;
         $curieUid = $curieEvent['location'] ?? null;
-        self::assertIsNumeric($literalUid, 'Literal-country event carries no location uid.');
-        self::assertIsNumeric($curieUid, 'CURIE-country event carries no location uid.');
-        self::assertSame((int)$literalUid, (int)$curieUid);
+        $this->assertIsNumeric($literalUid, 'Literal-country event carries no location uid.');
+        $this->assertIsNumeric($curieUid, 'CURIE-country event carries no location uid.');
+        $this->assertSame((int)$literalUid, (int)$curieUid);
 
-        self::assertSame('Deutschland', $this->fetchLocationByUid((int)$curieUid)['country']);
+        $this->assertSame('Deutschland', $this->fetchLocationByUid((int)$curieUid)['country']);
     }
 
     /**
@@ -125,17 +118,10 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(2, $this->countRows('tx_events_domain_model_event'));
-        self::assertSame(
-            1,
-            $this->countRows('tx_events_domain_model_location'),
-            'The shared venue was written twice.'
-        );
+        $this->assertSame(2, $this->countRows('tx_events_domain_model_event'));
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'), 'The shared venue was written twice.');
 
-        self::assertSame(
-            $this->locationUidOf('https://int.thuecat.org/resources/e_101155874-hubev'),
-            $this->locationUidOf('https://int.thuecat.org/resources/e_samevenue-hubev')
-        );
+        $this->assertSame($this->locationUidOf('https://int.thuecat.org/resources/e_101155874-hubev'), $this->locationUidOf('https://int.thuecat.org/resources/e_samevenue-hubev'));
     }
 
     #[Test]
@@ -147,12 +133,8 @@ class EventLocationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         // The seeded pair, and no third row.
-        self::assertSame(2, $this->countRows('tx_events_domain_model_location'));
-        self::assertSame(
-            77,
-            $this->locationUidOf('https://int.thuecat.org/resources/e_101155874-hubev'),
-            'The import did not attach to the venue already stored.'
-        );
+        $this->assertSame(2, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame(77, $this->locationUidOf('https://int.thuecat.org/resources/e_101155874-hubev'), 'The import did not attach to the venue already stored.');
     }
 
     /**
@@ -169,30 +151,27 @@ class EventLocationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $reused = $this->fetchLocationByUid(77);
-        self::assertSame(
-            [
-                'global_id' => 'e0f2faeb81126342ae90a5445a7d7420fdcd421ab97b0cba09fbcad0695ae5fd',
-                'name' => 'Messe Erfurt',
-                'street' => 'Gothaer Straße 34',
-                'zip' => '99094',
-                'city' => 'Erfurt - Brühlervorstadt',
-                'district' => '',
-                'country' => 'Deutschland',
-            ],
-            [
-                'global_id' => $reused['global_id'],
-                'name' => $reused['name'],
-                'street' => $reused['street'],
-                'zip' => $reused['zip'],
-                'city' => $reused['city'],
-                'district' => $reused['district'],
-                'country' => $reused['country'],
-            ]
-        );
+        $this->assertSame([
+            'global_id' => 'e0f2faeb81126342ae90a5445a7d7420fdcd421ab97b0cba09fbcad0695ae5fd',
+            'name' => 'Messe Erfurt',
+            'street' => 'Gothaer Straße 34',
+            'zip' => '99094',
+            'city' => 'Erfurt - Brühlervorstadt',
+            'district' => '',
+            'country' => 'Deutschland',
+        ], [
+            'global_id' => $reused['global_id'],
+            'name' => $reused['name'],
+            'street' => $reused['street'],
+            'zip' => $reused['zip'],
+            'city' => $reused['city'],
+            'district' => $reused['district'],
+            'country' => $reused['country'],
+        ]);
 
         // The untouched neighbour, proving the match was on the hash and not
         // on "whatever row happened to be there".
-        self::assertSame('Ein anderer Ort', $this->fetchLocationByUid(78)['name']);
+        $this->assertSame('Ein anderer Ort', $this->fetchLocationByUid(78)['name']);
     }
 
     /**
@@ -208,14 +187,14 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
 
         $location = $this->fetchLocationByUid(
             $this->locationUidOf('https://int.thuecat.org/resources/e_nostreet-hubev')
         );
-        self::assertSame('', $location['street']);
-        self::assertSame('Messe Erfurt', $location['name']);
-        self::assertSame('99094', $location['zip']);
+        $this->assertSame('', $location['street']);
+        $this->assertSame('Messe Erfurt', $location['name']);
+        $this->assertSame('99094', $location['zip']);
     }
 
     #[Test]
@@ -227,35 +206,32 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
 
         $location = $this->fetchLocationByUid(
             $this->locationUidOf('https://int.thuecat.org/resources/e_locref-hubev')
         );
-        self::assertSame(
-            [
-                'name' => 'Messe Erfurt',
-                'street' => 'Gothaer Straße 34',
-                'zip' => '99094',
-                'city' => 'Erfurt - Brühlervorstadt',
-                'district' => '',
-                'country' => 'Deutschland',
-                'phone' => '0361 400-0',
-                'latitude' => '50.959650',
-                'longitude' => '10.992270',
-            ],
-            [
-                'name' => $location['name'],
-                'street' => $location['street'],
-                'zip' => $location['zip'],
-                'city' => $location['city'],
-                'district' => $location['district'],
-                'country' => $location['country'],
-                'phone' => $location['phone'],
-                'latitude' => $location['latitude'],
-                'longitude' => $location['longitude'],
-            ]
-        );
+        $this->assertSame([
+            'name' => 'Messe Erfurt',
+            'street' => 'Gothaer Straße 34',
+            'zip' => '99094',
+            'city' => 'Erfurt - Brühlervorstadt',
+            'district' => '',
+            'country' => 'Deutschland',
+            'phone' => '0361 400-0',
+            'latitude' => '50.959650',
+            'longitude' => '10.992270',
+        ], [
+            'name' => $location['name'],
+            'street' => $location['street'],
+            'zip' => $location['zip'],
+            'city' => $location['city'],
+            'district' => $location['district'],
+            'country' => $location['country'],
+            'phone' => $location['phone'],
+            'latitude' => $location['latitude'],
+            'longitude' => $location['longitude'],
+        ]);
     }
 
     /**
@@ -271,12 +247,9 @@ class EventLocationImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(2, $this->countRows('tx_events_domain_model_event'));
-        self::assertSame(1, $this->countRows('tx_events_domain_model_location'));
-        self::assertSame(
-            $this->locationUidOf('https://int.thuecat.org/resources/e_locref-hubev'),
-            $this->locationUidOf('https://int.thuecat.org/resources/e_locref2-hubev')
-        );
+        $this->assertSame(2, $this->countRows('tx_events_domain_model_event'));
+        $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame($this->locationUidOf('https://int.thuecat.org/resources/e_locref-hubev'), $this->locationUidOf('https://int.thuecat.org/resources/e_locref2-hubev'));
     }
 
     #[Test]
@@ -293,20 +266,17 @@ class EventLocationImportTest extends AbstractImportTestCase
             'https://int.thuecat.org/resources/e_locref_dead-hubev'
         );
 
-        self::assertSame('Veranstaltung am toten Verweis', $event['title'] ?? null);
-        self::assertEmpty($event['location'] ?? 0);
-        self::assertSame(0, $this->countRows('tx_events_domain_model_location'));
+        $this->assertSame('Veranstaltung am toten Verweis', $event['title'] ?? null);
+        $this->assertEmpty($event['location'] ?? 0);
+        $this->assertSame(0, $this->countRows('tx_events_domain_model_location'));
 
         $entries = $this->getSkippedReferenceLogEntries();
-        self::assertCount(1, $entries);
-        self::assertSame('warning', $entries[0]['severity']);
-        self::assertSame('tx_events_domain_model_event', $entries[0]['table_name']);
-        self::assertSame('https://int.thuecat.org/resources/e_locref_dead-hubev', $entries[0]['remote_id']);
-        self::assertIsString($entries[0]['message']);
-        self::assertStringContainsString(
-            'Skipped reference "https://thuecat.org/resources/900000000003-dead" for field "location"',
-            $entries[0]['message']
-        );
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
+        $this->assertSame('tx_events_domain_model_event', $entries[0]['table_name']);
+        $this->assertSame('https://int.thuecat.org/resources/e_locref_dead-hubev', $entries[0]['remote_id']);
+        $this->assertIsString($entries[0]['message']);
+        $this->assertStringContainsString('Skipped reference "https://thuecat.org/resources/900000000003-dead" for field "location"', $entries[0]['message']);
     }
 
     #[Test]
@@ -321,14 +291,14 @@ class EventLocationImportTest extends AbstractImportTestCase
         $location = $this->fetchLocationByUid(
             $this->locationUidOf('https://int.thuecat.org/resources/e_locref_multi-hubev')
         );
-        self::assertSame('Gothaer Straße 34', $location['street']);
-        self::assertSame('99094', $location['zip']);
+        $this->assertSame('Gothaer Straße 34', $location['street']);
+        $this->assertSame('99094', $location['zip']);
     }
 
     protected function locationUidOf(string $eventRemoteId): int
     {
         $uid = $this->fetchRowByRemoteId('tx_events_domain_model_event', $eventRemoteId)['location'] ?? null;
-        self::assertIsNumeric($uid, 'Event ' . $eventRemoteId . ' carries no location uid.');
+        $this->assertIsNumeric($uid, 'Event ' . $eventRemoteId . ' carries no location uid.');
 
         return (int)$uid;
     }
@@ -350,7 +320,7 @@ class EventLocationImportTest extends AbstractImportTestCase
             ->fetchAssociative()
         ;
 
-        self::assertIsArray($row, 'No location row for uid ' . $uid);
+        $this->assertIsArray($row, 'No location row for uid ' . $uid);
 
         return $row;
     }

@@ -47,8 +47,8 @@ class PageRoleHintTest extends AbstractBackendTestCase
     {
         $header = $this->pageModuleHeader(10);
 
-        self::assertStringContainsString('callout-warning', $header);
-        self::assertStringContainsString('Tourist attraction detail', $header);
+        $this->assertStringContainsString('callout-warning', $header);
+        $this->assertStringContainsString('Tourist attraction detail', $header);
     }
 
     #[Test]
@@ -56,9 +56,9 @@ class PageRoleHintTest extends AbstractBackendTestCase
     {
         $header = $this->pageModuleHeader(20);
 
-        self::assertStringContainsString('callout-info', $header);
-        self::assertStringContainsString('Tourist attraction detail', $header);
-        self::assertStringNotContainsString('callout-warning', $header);
+        $this->assertStringContainsString('callout-info', $header);
+        $this->assertStringContainsString('Tourist attraction detail', $header);
+        $this->assertStringNotContainsString('callout-warning', $header);
     }
 
     #[Test]
@@ -66,21 +66,21 @@ class PageRoleHintTest extends AbstractBackendTestCase
     {
         $header = $this->pageModuleHeader(30);
 
-        self::assertStringContainsString('callout-warning', $header);
-        self::assertStringContainsString('Trail detail', $header);
-        self::assertStringContainsString('Tourist attraction detail', $header);
+        $this->assertStringContainsString('callout-warning', $header);
+        $this->assertStringContainsString('Trail detail', $header);
+        $this->assertStringContainsString('Tourist attraction detail', $header);
     }
 
     #[Test]
     public function showsNothingWithoutRoutedPlugin(): void
     {
-        self::assertSame('', $this->pageModuleHeader(40));
+        $this->assertSame('', $this->pageModuleHeader(40));
     }
 
     #[Test]
     public function showsNothingForUnmappedContentElement(): void
     {
-        self::assertSame('', $this->pageModuleHeader(50));
+        $this->assertSame('', $this->pageModuleHeader(50));
     }
 
     protected function pageModuleHeader(int $pageId): string
@@ -93,7 +93,7 @@ class PageRoleHintTest extends AbstractBackendTestCase
             ->withAttribute('route', $this->get(Router::class)->getRoute('web_layout'))
         ;
         $backendUser = $GLOBALS['BE_USER'];
-        self::assertInstanceOf(BackendUserAuthentication::class, $backendUser);
+        $this->assertInstanceOf(BackendUserAuthentication::class, $backendUser);
         $request = $request->withAttribute(
             'pageContext',
             $this->get(PageContextFactory::class)->createFromRequest($request, $pageId, $backendUser)
@@ -103,7 +103,7 @@ class PageRoleHintTest extends AbstractBackendTestCase
         $event = $this->get(EventDispatcherInterface::class)->dispatch(
             new ModifyPageLayoutContentEvent($request, $this->get(ModuleTemplateFactory::class)->create($request))
         );
-        self::assertInstanceOf(ModifyPageLayoutContentEvent::class, $event);
+        $this->assertInstanceOf(ModifyPageLayoutContentEvent::class, $event);
 
         return $event->getHeaderContent();
     }

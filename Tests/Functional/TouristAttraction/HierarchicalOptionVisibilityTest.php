@@ -45,8 +45,8 @@ class HierarchicalOptionVisibilityTest extends AbstractFrontendTestCase
     {
         $titles = $this->offeredTitles();
 
-        self::assertContains('Museum', $titles);
-        self::assertNotContains('Versteckte Kategorie', $titles);
+        $this->assertContains('Museum', $titles);
+        $this->assertNotContains('Versteckte Kategorie', $titles);
     }
 
     #[Test]
@@ -57,8 +57,8 @@ class HierarchicalOptionVisibilityTest extends AbstractFrontendTestCase
         // Parented under the used set Museum, so its rootline reaches our
         // anchor exactly like a local value. Being in another site is the only
         // thing that excludes it.
-        self::assertContains('Museum', $titles);
-        self::assertNotContains('Kategorie der anderen Site', $titles);
+        $this->assertContains('Museum', $titles);
+        $this->assertNotContains('Kategorie der anderen Site', $titles);
     }
 
     #[Test]
@@ -72,7 +72,7 @@ class HierarchicalOptionVisibilityTest extends AbstractFrontendTestCase
         // Reaching this line at all is the assertion: an unbounded recursive
         // term would never return. Each member of the cycle appears once.
         sort($uids);
-        self::assertSame([305, 306], $uids);
+        $this->assertSame([305, 306], $uids);
     }
 
     /**

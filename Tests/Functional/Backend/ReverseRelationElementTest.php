@@ -57,9 +57,9 @@ class ReverseRelationElementTest extends AbstractBackendTestCase
     {
         $html = $this->renderFormField($table, $uid, $field);
 
-        self::assertStringContainsString($listed, $html);
+        $this->assertStringContainsString($listed, $html);
         foreach ($notListed as $title) {
-            self::assertStringNotContainsString($title, $html);
+            $this->assertStringNotContainsString($title, $html);
         }
     }
 
@@ -68,6 +68,6 @@ class ReverseRelationElementTest extends AbstractBackendTestCase
     {
         $html = $this->renderFormField('tx_thuecat_organisation', 3, 'manages_towns');
 
-        self::assertStringContainsString('No records', $html);
+        $this->assertStringContainsString('No records', $html);
     }
 }

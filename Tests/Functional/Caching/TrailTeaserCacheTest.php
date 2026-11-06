@@ -45,12 +45,8 @@ class TrailTeaserCacheTest extends AbstractCachingTestCase
 
         $this->request(10);
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(
-            2,
-            $this->trailTeaserIdentifiers(),
-            'Both trails of the list must leave a teaser entry.'
-        );
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(2, $this->trailTeaserIdentifiers(), 'Both trails of the list must leave a teaser entry.');
         $this->assertCachedEntriesHaveContent(Extension::CACHE_TEASER, 'tx_thuecat_trail_10');
     }
 
@@ -60,12 +56,9 @@ class TrailTeaserCacheTest extends AbstractCachingTestCase
         $this->request(10);
 
         $identifiers = $this->cacheIdentifiersTaggedWith(Extension::CACHE_TEASER, 'tx_thuecat_trail_10');
-        self::assertCount(1, $identifiers, 'Trail 10 must leave exactly one entry.');
+        $this->assertCount(1, $identifiers, 'Trail 10 must leave exactly one entry.');
 
-        self::assertStringContainsString(
-            'Goethe-Erlebnisweg',
-            $this->cachedContent(Extension::CACHE_TEASER, $identifiers[0])
-        );
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(Extension::CACHE_TEASER, $identifiers[0]));
     }
 
     #[Test]
@@ -76,11 +69,7 @@ class TrailTeaserCacheTest extends AbstractCachingTestCase
 
         $this->request(10);
 
-        self::assertSame(
-            $stored,
-            $this->storedContent(Extension::CACHE_TEASER, $this->trailTeaserIdentifiers()),
-            'A second request must serve the stored entries rather than replace them.'
-        );
+        $this->assertSame($stored, $this->storedContent(Extension::CACHE_TEASER, $this->trailTeaserIdentifiers()), 'A second request must serve the stored entries rather than replace them.');
     }
 
     /**
@@ -100,18 +89,12 @@ class TrailTeaserCacheTest extends AbstractCachingTestCase
             'tx_thuecat_tourist_attraction_10'
         );
 
-        self::assertCount(1, $trail);
-        self::assertCount(1, $attraction);
-        self::assertNotSame($trail[0], $attraction[0], 'One uid, two tables, two entries.');
+        $this->assertCount(1, $trail);
+        $this->assertCount(1, $attraction);
+        $this->assertNotSame($trail[0], $attraction[0], 'One uid, two tables, two entries.');
 
-        self::assertStringContainsString(
-            'Goethe-Erlebnisweg',
-            $this->cachedContent(Extension::CACHE_TEASER, $trail[0])
-        );
-        self::assertStringContainsString(
-            'Stadtmuseum Erfurt',
-            $this->cachedContent(Extension::CACHE_TEASER, $attraction[0])
-        );
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(Extension::CACHE_TEASER, $trail[0]));
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $this->cachedContent(Extension::CACHE_TEASER, $attraction[0]));
     }
 
     /**

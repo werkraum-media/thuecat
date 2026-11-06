@@ -35,9 +35,9 @@ class RetryTallyTest extends TestCase
     {
         $subject = new RetryTally();
 
-        self::assertSame(0, $subject->recoveredRequests());
-        self::assertSame(0, $subject->wastedAttempts());
-        self::assertFalse($subject->hasRecoveries());
+        $this->assertSame(0, $subject->recoveredRequests());
+        $this->assertSame(0, $subject->wastedAttempts());
+        $this->assertFalse($subject->hasRecoveries());
     }
 
     #[Test]
@@ -47,8 +47,8 @@ class RetryTallyTest extends TestCase
 
         $subject->recordAttempts(1);
 
-        self::assertSame(0, $subject->recoveredRequests(), 'One attempt means nothing went wrong.');
-        self::assertFalse($subject->hasRecoveries());
+        $this->assertSame(0, $subject->recoveredRequests(), 'One attempt means nothing went wrong.');
+        $this->assertFalse($subject->hasRecoveries());
     }
 
     #[Test]
@@ -58,10 +58,10 @@ class RetryTallyTest extends TestCase
 
         $subject->recordAttempts(3);
 
-        self::assertSame(1, $subject->recoveredRequests());
+        $this->assertSame(1, $subject->recoveredRequests());
         // Three attempts to fetch one resource wasted two of them.
-        self::assertSame(2, $subject->wastedAttempts());
-        self::assertTrue($subject->hasRecoveries());
+        $this->assertSame(2, $subject->wastedAttempts());
+        $this->assertTrue($subject->hasRecoveries());
     }
 
     #[Test]
@@ -73,8 +73,8 @@ class RetryTallyTest extends TestCase
         $subject->recordAttempts(1);
         $subject->recordAttempts(3);
 
-        self::assertSame(2, $subject->recoveredRequests(), 'The single-attempt request does not count.');
-        self::assertSame(3, $subject->wastedAttempts());
+        $this->assertSame(2, $subject->recoveredRequests(), 'The single-attempt request does not count.');
+        $this->assertSame(3, $subject->wastedAttempts());
     }
 
     #[Test]
@@ -85,7 +85,7 @@ class RetryTallyTest extends TestCase
 
         $subject->reset();
 
-        self::assertSame(0, $subject->recoveredRequests());
-        self::assertFalse($subject->hasRecoveries());
+        $this->assertSame(0, $subject->recoveredRequests());
+        $this->assertFalse($subject->hasRecoveries());
     }
 }

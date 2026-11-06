@@ -35,10 +35,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
-        self::assertMatchesRegularExpression(
-            '#<meta[^>]+name="keywords"[^>]+content="romantisch, barrierefrei"#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<meta[^>]+name="keywords"[^>]+content="romantisch, barrierefrei"#', $body);
     }
 
     #[Test]
@@ -46,7 +43,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('20'));
 
-        self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
+        $this->assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 
     #[Test]
@@ -56,9 +53,6 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression(
-            '#<meta[^>]+name="keywords"[^>]+content="romantic, accessible"#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<meta[^>]+name="keywords"[^>]+content="romantic, accessible"#', $body);
     }
 }

@@ -43,12 +43,8 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(2, $towns, 'Each site must hold its own town record.');
-        self::assertSame(
-            [4010, 5010],
-            array_column($towns, 'pid'),
-            'One town per site, each in its own storage folder.'
-        );
+        $this->assertCount(2, $towns, 'Each site must hold its own town record.');
+        $this->assertSame([4010, 5010], array_column($towns, 'pid'), 'One town per site, each in its own storage folder.');
     }
 
     #[Test]
@@ -62,15 +58,11 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(2, $towns, 'The second site creates its own town beside the first site\'s.');
+        $this->assertCount(2, $towns, 'The second site creates its own town beside the first site\'s.');
 
         $foreign = $this->recordWithPid($towns, 4010);
-        self::assertSame(
-            'Stale title of the first site',
-            $foreign['title'],
-            'The first site\'s town must keep its stored title.'
-        );
-        self::assertSame(4010, $foreign['pid'], 'The first site\'s town must keep its pid.');
+        $this->assertSame('Stale title of the first site', $foreign['title'], 'The first site\'s town must keep its stored title.');
+        $this->assertSame(4010, $foreign['pid'], 'The first site\'s town must keep its pid.');
     }
 
     #[Test]
@@ -84,11 +76,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
         $this->importConfiguration(2);
 
-        self::assertCount(
-            2,
-            $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID),
-            'A second run per site updates its own record rather than adding one.'
-        );
+        $this->assertCount(2, $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID), 'A second run per site updates its own record rather than adding one.');
     }
 
     #[Test]
@@ -103,12 +91,8 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(1, $towns, 'A record elsewhere in the same site is matched, not duplicated.');
-        self::assertNotSame(
-            'Stale title on another page of the site',
-            $towns[0]['title'],
-            'The matched record must have been updated by the import.'
-        );
+        $this->assertCount(1, $towns, 'A record elsewhere in the same site is matched, not duplicated.');
+        $this->assertNotSame('Stale title on another page of the site', $towns[0]['title'], 'The matched record must have been updated by the import.');
     }
 
     #[Test]
@@ -123,11 +107,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
         $this->importConfiguration(2);
 
-        self::assertCount(
-            1,
-            $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID),
-            'Two configurations of one site share the record for an upstream object.'
-        );
+        $this->assertCount(1, $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID), 'Two configurations of one site share the record for an upstream object.');
     }
 
     #[Test]
@@ -142,16 +122,12 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             'tx_thuecat_organisation',
             self::ORGANISATION_REMOTE_ID
         );
-        self::assertCount(2, $organisations, 'The importing site resolves the relation target within itself.');
+        $this->assertCount(2, $organisations, 'The importing site resolves the relation target within itself.');
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $importedTown = $this->recordWithPid($towns, 5010);
         $ownOrganisation = $this->recordWithPid($organisations, 5010);
-        self::assertSame(
-            $ownOrganisation['uid'],
-            $importedTown['managed_by'],
-            'The relation must point at the importing site\'s organisation, never the foreign one.'
-        );
+        $this->assertSame($ownOrganisation['uid'], $importedTown['managed_by'], 'The relation must point at the importing site\'s organisation, never the foreign one.');
     }
 
     #[Test]
@@ -166,14 +142,10 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             'tx_thuecat_organisation',
             self::ORGANISATION_REMOTE_ID
         );
-        self::assertCount(1, $organisations, 'The relation target is created once within the site.');
+        $this->assertCount(1, $organisations, 'The relation target is created once within the site.');
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertSame(
-            $organisations[0]['uid'],
-            $towns[0]['managed_by'],
-            'The town relates to the organisation of its own site.'
-        );
+        $this->assertSame($organisations[0]['uid'], $towns[0]['managed_by'], 'The town relates to the organisation of its own site.');
     }
 
     #[Test]
@@ -185,12 +157,8 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(1, $towns, 'A hidden storage folder must not cause a duplicate record.');
-        self::assertNotSame(
-            'Stale title on a hidden page',
-            $towns[0]['title'],
-            'The record on the hidden page must have been matched and updated.'
-        );
+        $this->assertCount(1, $towns, 'A hidden storage folder must not cause a duplicate record.');
+        $this->assertNotSame('Stale title on a hidden page', $towns[0]['title'], 'The record on the hidden page must have been matched and updated.');
     }
 
     #[Test]
@@ -205,7 +173,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(1, $towns, 'An expired storage folder must not cause a duplicate record.');
+        $this->assertCount(1, $towns, 'An expired storage folder must not cause a duplicate record.');
     }
 
     #[Test]
@@ -222,12 +190,8 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        self::assertCount(2, $towns, 'A record on a deleted page is out of scope, so a fresh one is created.');
-        self::assertSame(
-            'Stale title on a deleted page',
-            $this->recordWithPid($towns, 4040)['title'],
-            'The record on the deleted page is left untouched.'
-        );
+        $this->assertCount(2, $towns, 'A record on a deleted page is out of scope, so a fresh one is created.');
+        $this->assertSame('Stale title on a deleted page', $this->recordWithPid($towns, 4040)['title'], 'The record on the deleted page is left untouched.');
     }
 
     private function makeStorageFolderExpired(int $pid): void
@@ -282,7 +246,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             'tx_thuecat_import_configuration',
             ['uid' => $uid]
         )->fetchAssociative();
-        self::assertIsArray($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertIsArray($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         $flexForm = is_string($configuration['configuration'] ?? null)
             ? $configuration['configuration']
@@ -292,8 +256,8 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             '${1}' . $storagePid . '${2}',
             $flexForm
         );
-        self::assertIsString($replaced);
-        self::assertNotSame($flexForm, $replaced, 'storagePid was not rewritten in the flexform');
+        $this->assertIsString($replaced);
+        $this->assertNotSame($flexForm, $replaced, 'storagePid was not rewritten in the flexform');
 
         $connection->update(
             'tx_thuecat_import_configuration',
@@ -315,7 +279,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             }
         }
 
-        self::fail('No record stored on pid ' . $pid);
+        $this->fail('No record stored on pid ' . $pid);
     }
 
     /**

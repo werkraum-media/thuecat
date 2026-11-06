@@ -39,7 +39,7 @@ final class KeywordCollectorTest extends TestCase
     #[Test]
     public function startsEmpty(): void
     {
-        self::assertSame([], $this->context()->collectedKeywords);
+        $this->assertSame([], $this->context()->collectedKeywords);
     }
 
     #[Test]
@@ -50,10 +50,7 @@ final class KeywordCollectorTest extends TestCase
         $context->collectKeyword($this->keyword('42', self::TERM, 'Landeshauptstadt Erfurt'));
         $context->collectKeyword($this->keyword('42', 'keyword:text:theater', 'Theater'));
 
-        self::assertSame(
-            [self::TERM, 'keyword:text:theater'],
-            array_map(static fn (CollectedKeyword $k): string => $k->remoteId, $context->collectedKeywords)
-        );
+        $this->assertSame([self::TERM, 'keyword:text:theater'], array_map(static fn (CollectedKeyword $k): string => $k->remoteId, $context->collectedKeywords));
     }
 
     // Shared terms get resolved once per referencing root.
@@ -65,7 +62,7 @@ final class KeywordCollectorTest extends TestCase
         $context->collectKeyword($this->keyword('42', self::TERM, 'Landeshauptstadt Erfurt'));
         $context->collectKeyword($this->keyword('42', self::TERM, 'Landeshauptstadt Erfurt'));
 
-        self::assertCount(1, $context->collectedKeywords);
+        $this->assertCount(1, $context->collectedKeywords);
     }
 
     #[Test]
@@ -76,7 +73,7 @@ final class KeywordCollectorTest extends TestCase
         $context->collectKeyword($this->keyword('42', self::TERM, 'Landeshauptstadt Erfurt'));
         $context->collectKeyword($this->keyword('43', self::TERM, 'Landeshauptstadt Erfurt'));
 
-        self::assertCount(2, $context->collectedKeywords);
+        $this->assertCount(2, $context->collectedKeywords);
     }
 
     #[Test]
@@ -87,7 +84,7 @@ final class KeywordCollectorTest extends TestCase
         $context->collectKeyword($this->keyword('42', self::TERM, 'Erfurt', 'keywords'));
         $context->collectKeyword($this->keyword('42', self::TERM, 'Erfurt', 'other_keywords'));
 
-        self::assertCount(2, $context->collectedKeywords);
+        $this->assertCount(2, $context->collectedKeywords);
     }
 
     #[Test]
@@ -104,10 +101,7 @@ final class KeywordCollectorTest extends TestCase
             'keyword:https://thuecat.org/resources/155933862969-mofh',
         ));
 
-        self::assertSame(
-            'keyword:https://thuecat.org/resources/155933862969-mofh',
-            $context->collectedKeywords[0]->parentRemoteId
-        );
+        $this->assertSame('keyword:https://thuecat.org/resources/155933862969-mofh', $context->collectedKeywords[0]->parentRemoteId);
     }
 
     #[Test]
@@ -117,8 +111,8 @@ final class KeywordCollectorTest extends TestCase
 
         $context->collectKeyword($this->keyword('42', 'keyword:text:theater', 'Theater'));
 
-        self::assertCount(1, $context->collectedKeywords);
-        self::assertNull($context->collectedKeywords[0]->parentRemoteId);
+        $this->assertCount(1, $context->collectedKeywords);
+        $this->assertNull($context->collectedKeywords[0]->parentRemoteId);
     }
 
     private function context(): ResolverContext

@@ -31,36 +31,30 @@ class ImportConfigurationDataStructureTest extends TestCase
     public function syncChannelHasOnlyItsOwnFields(): void
     {
         $dataStructure = (new ImportConfigurationDataStructure())->forType('syncChannel');
-        self::assertIsArray($dataStructure);
+        $this->assertIsArray($dataStructure);
 
         $fields = ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el');
-        self::assertIsArray($fields);
+        $this->assertIsArray($fields);
 
-        self::assertSame(
-            ['storagePid', 'fileFolder', 'syncChannelId', 'apiKey', 'runBudget', 'fetchCacheLifetime'],
-            array_keys($fields)
-        );
+        $this->assertSame(['storagePid', 'fileFolder', 'syncChannelId', 'apiKey', 'runBudget', 'fetchCacheLifetime'], array_keys($fields));
     }
 
     #[Test]
     public function syncChannelRequiresChannelIdAndApiKey(): void
     {
         $dataStructure = (new ImportConfigurationDataStructure())->forType('syncChannel');
-        self::assertIsArray($dataStructure);
+        $this->assertIsArray($dataStructure);
 
-        self::assertTrue(ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/syncChannelId/config/required'));
-        self::assertTrue(ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/apiKey/config/required'));
+        $this->assertTrue(ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/syncChannelId/config/required'));
+        $this->assertTrue(ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/apiKey/config/required'));
     }
 
     #[Test]
     public function syncScopeKeepsItsApiDomainDefault(): void
     {
         $dataStructure = (new ImportConfigurationDataStructure())->forType('syncScope');
-        self::assertIsArray($dataStructure);
+        $this->assertIsArray($dataStructure);
 
-        self::assertSame(
-            'https://cdb.thuecat.org',
-            ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/apiDomain/config/default')
-        );
+        $this->assertSame('https://cdb.thuecat.org', ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/apiDomain/config/default'));
     }
 }

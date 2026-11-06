@@ -65,7 +65,7 @@ class ExtensionTest extends TestCase
     #[Test]
     public function returnsLanguagePath(): void
     {
-        self::assertSame('LLL:EXT:thuecat/Resources/Private/Language/', Extension::getLanguagePath());
+        $this->assertSame('LLL:EXT:thuecat/Resources/Private/Language/', Extension::getLanguagePath());
     }
 
     #[Test]
@@ -75,17 +75,13 @@ class ExtensionTest extends TestCase
 
         $configuration = self::cacheConfiguration('thuecat_vocabulary');
 
-        self::assertIsArray($configuration);
-        self::assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
+        $this->assertIsArray($configuration);
+        $this->assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
         // The index decides its own staleness from a stored timestamp, so the
         // backend must not expire the entry first.
         $lifetime = $configuration['options']['defaultLifetime'] ?? null;
-        self::assertIsInt($lifetime);
-        self::assertGreaterThan(
-            2 * VocabularyIndexCache::STALE_AFTER,
-            $lifetime,
-            'The cache entry must comfortably outlive the staleness window.'
-        );
+        $this->assertIsInt($lifetime);
+        $this->assertGreaterThan(2 * VocabularyIndexCache::STALE_AFTER, $lifetime, 'The cache entry must comfortably outlive the staleness window.');
     }
 
     #[Test]
@@ -93,8 +89,8 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        self::assertSame(['system'], self::cacheConfiguration('thuecat_vocabulary')['groups'] ?? null);
-        self::assertSame(['system'], self::cacheConfiguration('thuecat_fetchdata')['groups'] ?? null);
+        $this->assertSame(['system'], self::cacheConfiguration('thuecat_vocabulary')['groups'] ?? null);
+        $this->assertSame(['system'], self::cacheConfiguration('thuecat_fetchdata')['groups'] ?? null);
     }
 
     #[Test]
@@ -102,7 +98,7 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        self::assertSame(['pages'], self::cacheConfiguration(Extension::CACHE_TEASER)['groups'] ?? null);
+        $this->assertSame(['pages'], self::cacheConfiguration(Extension::CACHE_TEASER)['groups'] ?? null);
     }
 
     #[Test]
@@ -112,12 +108,9 @@ class ExtensionTest extends TestCase
 
         $configuration = self::cacheConfiguration('thuecat_fetchdata');
 
-        self::assertIsArray($configuration);
-        self::assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
-        self::assertSame(
-            ImportSetting::FetchCacheLifetime->default(),
-            $configuration['options']['defaultLifetime'] ?? null
-        );
+        $this->assertIsArray($configuration);
+        $this->assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
+        $this->assertSame(ImportSetting::FetchCacheLifetime->default(), $configuration['options']['defaultLifetime'] ?? null);
     }
 
     #[Test]
@@ -131,9 +124,9 @@ class ExtensionTest extends TestCase
 
         $configuration = self::cacheConfiguration('thuecat_vocabulary');
 
-        self::assertIsArray($configuration);
+        $this->assertIsArray($configuration);
         // Defended per key: an override survives, untouched keys are filled in.
-        self::assertSame(SimpleFileBackend::class, $configuration['backend']);
-        self::assertIsArray($configuration['options'] ?? null);
+        $this->assertSame(SimpleFileBackend::class, $configuration['backend']);
+        $this->assertIsArray($configuration['options'] ?? null);
     }
 }

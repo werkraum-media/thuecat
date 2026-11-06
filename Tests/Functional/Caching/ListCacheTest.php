@@ -50,8 +50,8 @@ class ListCacheTest extends AbstractCachingTestCase
 
         $this->requestPage();
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(1, $this->listIdentifiers(), 'The list leaves one entry.');
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(1, $this->listIdentifiers(), 'The list leaves one entry.');
     }
 
     #[Test]
@@ -62,7 +62,7 @@ class ListCacheTest extends AbstractCachingTestCase
 
         $this->requestPage();
 
-        self::assertSame($afterFirst, $this->storedLists(), 'No second entry, same markup.');
+        $this->assertSame($afterFirst, $this->storedLists(), 'No second entry, same markup.');
     }
 
     /** Pagination pages must not share an entry. */
@@ -75,8 +75,8 @@ class ListCacheTest extends AbstractCachingTestCase
         $this->requestPage(2);
         $afterPageTwo = $this->listIdentifiers();
 
-        self::assertCount(1, $afterPageOne, 'Page 1 stored.');
-        self::assertCount(2, $afterPageTwo, 'Page 2 must not reuse page 1.');
+        $this->assertCount(1, $afterPageOne, 'Page 1 stored.');
+        $this->assertCount(2, $afterPageTwo, 'Page 2 must not reuse page 1.');
     }
 
     /** Asserted on entries: a body looks right whenever the cache is cold. */
@@ -88,18 +88,15 @@ class ListCacheTest extends AbstractCachingTestCase
         $this->requestPage(2);
 
         $stored = $this->storedLists();
-        self::assertCount(2, $stored, 'One entry per pagination page.');
+        $this->assertCount(2, $stored, 'One entry per pagination page.');
 
         $combined = implode("\n", $stored);
-        self::assertStringContainsString('Attraction 01', $combined, 'Page 1 content.');
-        self::assertStringContainsString('Attraction 11', $combined, 'Page 2 content.');
+        $this->assertStringContainsString('Attraction 01', $combined, 'Page 1 content.');
+        $this->assertStringContainsString('Attraction 11', $combined, 'Page 2 content.');
 
         // No entry may hold both pages' content.
         foreach ($stored as $identifier => $markup) {
-            self::assertFalse(
-                str_contains($markup, 'Attraction 01') && str_contains($markup, 'Attraction 11'),
-                'Entry "' . $identifier . '" mixes both pagination pages.'
-            );
+            $this->assertFalse(str_contains($markup, 'Attraction 01') && str_contains($markup, 'Attraction 11'), 'Entry "' . $identifier . '" mixes both pagination pages.');
         }
     }
 
@@ -111,8 +108,8 @@ class ListCacheTest extends AbstractCachingTestCase
 
         $this->requestWithDemand(['searchword' => 'Attraction 07']);
 
-        self::assertCount(1, $unfiltered, 'Unfiltered list stored.');
-        self::assertCount(2, $this->listIdentifiers(), 'A filtered list is its own entry.');
+        $this->assertCount(1, $unfiltered, 'Unfiltered list stored.');
+        $this->assertCount(2, $this->listIdentifiers(), 'A filtered list is its own entry.');
     }
 
     /**
@@ -127,15 +124,11 @@ class ListCacheTest extends AbstractCachingTestCase
     {
         $this->requestWithDemand(['searchword' => 'Attraction 07', 'towns' => []]);
         $afterFirst = $this->listIdentifiers();
-        self::assertCount(1, $afterFirst, 'First demand stored.');
+        $this->assertCount(1, $afterFirst, 'First demand stored.');
 
         $this->requestWithDemand(['searchword' => 'Attraction 07']);
 
-        self::assertSame(
-            $afterFirst,
-            $this->listIdentifiers(),
-            'An empty filter and an absent one are the same demand.'
-        );
+        $this->assertSame($afterFirst, $this->listIdentifiers(), 'An empty filter and an absent one are the same demand.');
     }
 
     /**
@@ -152,7 +145,7 @@ class ListCacheTest extends AbstractCachingTestCase
             'tx_thuecat_tourist_attraction'
         );
 
-        self::assertCount(1, $entries, 'The empty result is stored and tagged.');
+        $this->assertCount(1, $entries, 'The empty result is stored and tagged.');
     }
 
     private function requestPage(?int $currentPage = null): ResponseInterface

@@ -45,13 +45,13 @@ class TouristAttractionTest extends TestCase
         $subject->_setProperty('parkingFacilityNearBy', $unsortedFacilities);
 
         $result = $subject->getParkingFacilitiesNearBySortedByAlphabet();
-        self::assertSame('007 Parking', $result[0]->getTitle());
-        self::assertSame('P+R Anlage Zoopark', $result[1]->getTitle());
-        self::assertSame('Parkhaus Domplatz', $result[2]->getTitle());
-        self::assertSame('Parkplatz Forum 1', $result[3]->getTitle());
-        self::assertSame('Parkplatz Forum 2', $result[4]->getTitle());
-        self::assertSame('Parkplatz Forum 2/3', $result[5]->getTitle());
-        self::assertSame('Parkplatz Forum 4', $result[6]->getTitle());
+        $this->assertSame('007 Parking', $result[0]->getTitle());
+        $this->assertSame('P+R Anlage Zoopark', $result[1]->getTitle());
+        $this->assertSame('Parkhaus Domplatz', $result[2]->getTitle());
+        $this->assertSame('Parkplatz Forum 1', $result[3]->getTitle());
+        $this->assertSame('Parkplatz Forum 2', $result[4]->getTitle());
+        $this->assertSame('Parkplatz Forum 2/3', $result[5]->getTitle());
+        $this->assertSame('Parkplatz Forum 4', $result[6]->getTitle());
     }
 
     private function parkingFacilityWithTitle(string $title): ParkingFacility
@@ -68,7 +68,7 @@ class TouristAttractionTest extends TestCase
         $subject = new TouristAttraction();
         $subject->_setProperty('distanceToPublicTransport', '300:MTR');
 
-        self::assertSame([
+        $this->assertSame([
             'value' => '300',
             'unit' => 'MTR',
             'types' => [],
@@ -81,7 +81,7 @@ class TouristAttractionTest extends TestCase
         $subject = new TouristAttraction();
         $subject->_setProperty('distanceToPublicTransport', '300:MTR:Streetcar:CityBus');
 
-        self::assertSame([
+        $this->assertSame([
             'value' => '300',
             'unit' => 'MTR',
             'types' => [
@@ -94,7 +94,7 @@ class TouristAttractionTest extends TestCase
     #[Test]
     public function returnsNoAdditionalType(): void
     {
-        self::assertSame('', (new TouristAttraction())->getAdditionalType());
+        $this->assertSame('', (new TouristAttraction())->getAdditionalType());
     }
 
     #[Test]
@@ -103,8 +103,8 @@ class TouristAttractionTest extends TestCase
         $subject = new TouristAttraction();
         $subject->_setProperty('slogan', 'Some text');
 
-        self::assertSame('Some text', $subject->getSlogan());
-        self::assertSame(['Some text'], $subject->getSlogans());
+        $this->assertSame('Some text', $subject->getSlogan());
+        $this->assertSame(['Some text'], $subject->getSlogans());
     }
 
     #[Test]
@@ -113,7 +113,7 @@ class TouristAttractionTest extends TestCase
         $subject = new TouristAttraction();
         $subject->_setProperty('slogan', 'Some text,Highlight');
 
-        self::assertSame('Some text', $subject->getSlogan());
-        self::assertSame(['Some text', 'Highlight'], $subject->getSlogans());
+        $this->assertSame('Some text', $subject->getSlogan());
+        $this->assertSame(['Some text', 'Highlight'], $subject->getSlogans());
     }
 }

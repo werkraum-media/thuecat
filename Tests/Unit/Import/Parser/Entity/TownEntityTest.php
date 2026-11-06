@@ -31,55 +31,55 @@ class TownEntityTest extends AbstractImportTestCase
     {
         $subject = new TownEntity();
 
-        self::assertSame('tx_thuecat_town', $subject::TABLE);
+        $this->assertSame('tx_thuecat_town', $subject::TABLE);
     }
 
     #[Test]
     public function returnsRemoteId(): void
     {
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
-        self::assertSame('https://thuecat.org/resources/043064193523-jcyt', $subject->getRemoteId($node));
+        $this->assertSame('https://thuecat.org/resources/043064193523-jcyt', $subject->getRemoteId($node));
     }
 
     #[Test]
     public function returnsTitle(): void
     {
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertSame('Erfurt', $row['title']);
+        $this->assertSame('Erfurt', $row['title']);
     }
 
     #[Test]
     public function returnsDescription(): void
     {
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge – die', (string)$row['description']);
+        $this->assertStringStartsWith('Krämerbrücke, Dom, Alte Synagoge – die', (string)$row['description']);
     }
 
     #[Test]
     public function rowOmitsResolverOwnedColumns(): void
     {
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
     }
 
     #[Test]
@@ -89,14 +89,14 @@ class TownEntityTest extends AbstractImportTestCase
         // present must yield '' rather than silently falling back to German.
         // toArray() then drops the empty strings, so the keys disappear entirely.
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
         $subject->parse($node, 'en', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertArrayNotHasKey('title', $row);
-        self::assertArrayNotHasKey('description', $row);
+        $this->assertArrayNotHasKey('title', $row);
+        $this->assertArrayNotHasKey('description', $row);
     }
 
     #[Test]
@@ -106,16 +106,13 @@ class TownEntityTest extends AbstractImportTestCase
         // encode the same relation as thuecat:contentResponsible. The bucket
         // key is 'managedBy' in both cases so the resolver treats them the same.
         $node = $this->nodeFromFixture('043064193523-jcyt.json', 'schema:City');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TownEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $transients = $subject->getTransients();
 
-        self::assertArrayHasKey('managedBy', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/018132452787-ngbe'],
-            $transients['managedBy']
-        );
+        $this->assertArrayHasKey('managedBy', $transients);
+        $this->assertSame(['https://thuecat.org/resources/018132452787-ngbe'], $transients['managedBy']);
     }
 }

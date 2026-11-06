@@ -35,7 +35,7 @@ class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning('60'));
 
-        self::assertSame(15, $subject->resolve(ImportSetting::ReadTimeout, 15));
+        $this->assertSame(15, $subject->resolve(ImportSetting::ReadTimeout, 15));
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning('60'));
 
-        self::assertSame(60, $subject->resolve(ImportSetting::ReadTimeout, ''));
+        $this->assertSame(60, $subject->resolve(ImportSetting::ReadTimeout, ''));
     }
 
     #[Test]
@@ -51,26 +51,20 @@ class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning(''));
 
-        self::assertSame(
-            ImportSetting::ReadTimeout->default(),
-            $subject->resolve(ImportSetting::ReadTimeout, '')
-        );
+        $this->assertSame(ImportSetting::ReadTimeout->default(), $subject->resolve(ImportSetting::ReadTimeout, ''));
     }
 
     #[Test]
     public function unconfiguredExtensionFallsBackToDefault(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')
             ->willThrowException(new ExtensionConfigurationExtensionNotConfiguredException())
         ;
 
         $subject = new ImportSettings($extensionConfiguration);
 
-        self::assertSame(
-            ImportSetting::MaxAttempts->default(),
-            $subject->resolve(ImportSetting::MaxAttempts, '')
-        );
+        $this->assertSame(ImportSetting::MaxAttempts->default(), $subject->resolve(ImportSetting::MaxAttempts, ''));
     }
 
     /**
@@ -84,7 +78,7 @@ class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning('45'));
 
-        self::assertSame(45, $subject->resolve(ImportSetting::ReadTimeout, $configurationValue));
+        $this->assertSame(45, $subject->resolve(ImportSetting::ReadTimeout, $configurationValue));
     }
 
     public static function unsetValues(): array
@@ -101,28 +95,25 @@ class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning('0'));
 
-        self::assertSame(
-            ImportSetting::RunBudget->default(),
-            $subject->resolve(ImportSetting::RunBudget, '')
-        );
+        $this->assertSame(ImportSetting::RunBudget->default(), $subject->resolve(ImportSetting::RunBudget, ''));
     }
 
     #[Test]
     public function eachSettingReadsItsOwnExtensionConfigurationKey(): void
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturnCallback(
             fn (string $extension, string $path): string => $path === 'connectTimeout' ? '7' : '99'
         );
 
         $subject = new ImportSettings($extensionConfiguration);
 
-        self::assertSame(7, $subject->resolve(ImportSetting::ConnectTimeout, ''));
+        $this->assertSame(7, $subject->resolve(ImportSetting::ConnectTimeout, ''));
     }
 
     private function extensionConfigurationReturning(string $value): ExtensionConfiguration
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn($value);
 
         return $extensionConfiguration;

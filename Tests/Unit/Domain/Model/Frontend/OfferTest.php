@@ -38,7 +38,7 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertSame('LegacyType', $subject->getType());
+        $this->assertSame('LegacyType', $subject->getType());
     }
 
     #[Test]
@@ -52,7 +52,7 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertSame('ParkingFee', $subject->getType());
+        $this->assertSame('ParkingFee', $subject->getType());
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertSame('CourseOffer', $subject->getType());
+        $this->assertSame('CourseOffer', $subject->getType());
     }
 
     #[Test]
@@ -78,6 +78,6 @@ class OfferTest extends TestCase
             'prices' => [],
         ]);
 
-        self::assertSame('', $subject->getType());
+        $this->assertSame('', $subject->getType());
     }
 }

@@ -45,21 +45,21 @@ final class PlaceImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $place = $this->fetchRowByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-store');
-        self::assertSame('Glaskunstladen', $place['title']);
-        self::assertSame('Mundgeblasenes Glas', $place['description']);
-        self::assertIsInt($place['uid']);
+        $this->assertSame('Glaskunstladen', $place['title']);
+        $this->assertSame('Mundgeblasenes Glas', $place['description']);
+        $this->assertIsInt($place['uid']);
         $translation = $this->fetchTranslationsByParent('tx_thuecat_place', $place['uid'])[1] ?? [];
-        self::assertSame('Glass art shop', $translation['title'] ?? null);
-        self::assertSame('Hand-blown glass', $translation['description'] ?? null);
+        $this->assertSame('Glass art shop', $translation['title'] ?? null);
+        $this->assertSame('Hand-blown glass', $translation['description'] ?? null);
 
         $addresses = $this->fetchChildren('tx_thuecat_address');
-        self::assertCount(1, $addresses);
-        self::assertSame('tx_thuecat_place', $addresses[0]['parenttable']);
-        self::assertSame($place['uid'], $addresses[0]['parentid']);
-        self::assertSame('99084', $addresses[0]['zip']);
+        $this->assertCount(1, $addresses);
+        $this->assertSame('tx_thuecat_place', $addresses[0]['parenttable']);
+        $this->assertSame($place['uid'], $addresses[0]['parentid']);
+        $this->assertSame('99084', $addresses[0]['zip']);
 
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'place-store'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'place-store'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'place-store'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'place-store'));
     }
 
     #[Test]
@@ -69,7 +69,7 @@ final class PlaceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-manufacturer'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-manufacturer'));
     }
 
     #[Test]
@@ -79,8 +79,8 @@ final class PlaceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(3);
 
-        self::assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'place-attraction'));
-        self::assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-attraction'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'place-attraction'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-attraction'));
     }
 
     #[Test]
@@ -92,8 +92,8 @@ final class PlaceImportTest extends AbstractImportTestCase
         $this->importConfiguration(4);
 
         $squareUid = $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-square');
-        self::assertGreaterThan(0, $squareUid);
+        $this->assertGreaterThan(0, $squareUid);
         $attraction = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'attraction-on-a-square');
-        self::assertSame((string)$squareUid, $attraction['contained_in_place']);
+        $this->assertSame((string)$squareUid, $attraction['contained_in_place']);
     }
 }

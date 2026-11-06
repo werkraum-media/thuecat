@@ -36,27 +36,24 @@ final class DetailRecordKindsTest extends TestCase
     {
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
 
-        self::assertEquals(
-            [
-                new DetailRecordKind(
-                    'attraction',
-                    'tx_thuecat_tourist_attraction',
-                    'ThueCat',
-                    'TouristAttractionShow',
-                    'attraction',
-                    'thuecat.pois.pid_show',
-                ),
-                new DetailRecordKind(
-                    'trail',
-                    'tx_thuecat_trail',
-                    'ThueCat',
-                    'TrailShow',
-                    'trail',
-                    'thuecat.trails.pid_show',
-                ),
-            ],
-            $subject->all()
-        );
+        $this->assertEquals([
+            new DetailRecordKind(
+                'attraction',
+                'tx_thuecat_tourist_attraction',
+                'ThueCat',
+                'TouristAttractionShow',
+                'attraction',
+                'thuecat.pois.pid_show',
+            ),
+            new DetailRecordKind(
+                'trail',
+                'tx_thuecat_trail',
+                'ThueCat',
+                'TrailShow',
+                'trail',
+                'thuecat.trails.pid_show',
+            ),
+        ], $subject->all());
     }
 
     #[Test]
@@ -64,7 +61,7 @@ final class DetailRecordKindsTest extends TestCase
     {
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
 
-        self::assertSame('tx_thuecat_trail', $subject->get('trail')->table);
+        $this->assertSame('tx_thuecat_trail', $subject->get('trail')->table);
     }
 
     #[Test]
@@ -72,7 +69,7 @@ final class DetailRecordKindsTest extends TestCase
     {
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
 
-        self::assertSame('attraction', $subject->forTable('tx_thuecat_tourist_attraction')?->identifier);
+        $this->assertSame('attraction', $subject->forTable('tx_thuecat_tourist_attraction')?->identifier);
     }
 
     #[Test]
@@ -80,7 +77,7 @@ final class DetailRecordKindsTest extends TestCase
     {
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
 
-        self::assertNull($subject->forTable('tx_thuecat_town'));
+        $this->assertNull($subject->forTable('tx_thuecat_town'));
     }
 
     #[Test]
@@ -100,7 +97,7 @@ final class DetailRecordKindsTest extends TestCase
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
         $site = new Site('example', 1, ['settings' => ['thuecat' => ['pois' => ['pid_show' => 71]]]]);
 
-        self::assertSame(71, $subject->showPageUid($subject->get('attraction'), $site));
+        $this->assertSame(71, $subject->showPageUid($subject->get('attraction'), $site));
     }
 
     #[Test]
@@ -109,6 +106,6 @@ final class DetailRecordKindsTest extends TestCase
         $subject = new DetailRecordKinds([new TouristAttractionKind(), new TrailKind()]);
         $site = new Site('example', 1, ['settings' => ['thuecat' => ['pois' => ['pid_show' => 71]]]]);
 
-        self::assertSame(0, $subject->showPageUid($subject->get('trail'), $site));
+        $this->assertSame(0, $subject->showPageUid($subject->get('trail'), $site));
     }
 }

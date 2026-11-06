@@ -33,8 +33,8 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 700, 'hosts_events'));
-        self::assertSame('3', $this->fetchChildren('tx_thuecat_tourist_attraction')[0]['hosts_events']);
+        $this->assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 700, 'hosts_events'));
+        $this->assertSame('3', $this->fetchChildren('tx_thuecat_tourist_attraction')[0]['hosts_events']);
     }
 
     #[Test]
@@ -44,8 +44,8 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 701, 'hosts_events'));
-        self::assertSame('3', $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 700)[1]['hosts_events']);
+        $this->assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 701, 'hosts_events'));
+        $this->assertSame('3', $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 700)[1]['hosts_events']);
     }
 
     /**
@@ -58,8 +58,8 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([12], $this->fetchMmRelatedUids('tx_thuecat_town', 720, 'hosts_events'));
-        self::assertSame('1', $this->fetchRowByRemoteId('tx_thuecat_town', 'test:wizard-town')['hosts_events']);
+        $this->assertSame([12], $this->fetchMmRelatedUids('tx_thuecat_town', 720, 'hosts_events'));
+        $this->assertSame('1', $this->fetchRowByRemoteId('tx_thuecat_town', 'test:wizard-town')['hosts_events']);
     }
 
     #[Test]
@@ -69,8 +69,8 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([30, 7], $this->fetchMmRelatedUids('tx_thuecat_tourist_information', 730, 'hosts_events'));
-        self::assertSame('2', $this->fetchRowByRemoteId('tx_thuecat_tourist_information', 'test:wizard-tourist-information')['hosts_events']);
+        $this->assertSame([30, 7], $this->fetchMmRelatedUids('tx_thuecat_tourist_information', 730, 'hosts_events'));
+        $this->assertSame('2', $this->fetchRowByRemoteId('tx_thuecat_tourist_information', 'test:wizard-tourist-information')['hosts_events']);
     }
 
     #[Test]
@@ -80,7 +80,7 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
 
         $this->get(EventRelationsToMmUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame([7, 30], $this->fetchMmRelatedUids('tx_thuecat_organisation', 710, 'manages_event'));
+        $this->assertSame([7, 30], $this->fetchMmRelatedUids('tx_thuecat_organisation', 710, 'manages_event'));
     }
 
     #[Test]
@@ -92,8 +92,8 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
         $wizard->executeUpdate();
         $wizard->executeUpdate();
 
-        self::assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 700, 'hosts_events'));
-        self::assertSame([12], $this->fetchMmRelatedUids('tx_thuecat_town', 720, 'hosts_events'));
+        $this->assertSame([12, 7, 30], $this->fetchMmRelatedUids('tx_thuecat_tourist_attraction', 700, 'hosts_events'));
+        $this->assertSame([12], $this->fetchMmRelatedUids('tx_thuecat_town', 720, 'hosts_events'));
     }
 
     #[Test]
@@ -101,7 +101,7 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/EventRelationsAsLists.csv');
 
-        self::assertTrue($this->get(EventRelationsToMmUpgradeWizard::class)->updateNecessary());
+        $this->assertTrue($this->get(EventRelationsToMmUpgradeWizard::class)->updateNecessary());
     }
 
     #[Test]
@@ -109,6 +109,6 @@ final class EventRelationsToMmUpgradeWizardTest extends AbstractFunctionalTestCa
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/EventRelationsMigrated.csv');
 
-        self::assertFalse($this->get(EventRelationsToMmUpgradeWizard::class)->updateNecessary());
+        $this->assertFalse($this->get(EventRelationsToMmUpgradeWizard::class)->updateNecessary());
     }
 }

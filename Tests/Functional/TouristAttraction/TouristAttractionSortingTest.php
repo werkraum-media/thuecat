@@ -95,12 +95,12 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
                 ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
         );
 
-        self::assertStringContainsString('Eta Brücke', $first);
-        self::assertStringContainsString('Theta Tor', $first);
-        self::assertStringNotContainsString('Zeta Turm', $first);
-        self::assertStringContainsString('Zeta Turm', $second);
-        self::assertStringNotContainsString('Eta Brücke', $second);
-        self::assertStringNotContainsString('Theta Tor', $second);
+        $this->assertStringContainsString('Eta Brücke', $first);
+        $this->assertStringContainsString('Theta Tor', $first);
+        $this->assertStringNotContainsString('Zeta Turm', $first);
+        $this->assertStringContainsString('Zeta Turm', $second);
+        $this->assertStringNotContainsString('Eta Brücke', $second);
+        $this->assertStringNotContainsString('Theta Tor', $second);
     }
 
     #[Test]
@@ -108,8 +108,8 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
 
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
-        self::assertStringNotContainsString('sortBy', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
+        $this->assertStringNotContainsString('sortBy', $body);
     }
 
     #[Test]
@@ -125,9 +125,9 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
 
         $response = $this->executeFrontendSubRequest($request);
 
-        self::assertSame(303, $response->getStatusCode());
+        $this->assertSame(303, $response->getStatusCode());
         $location = $response->getHeaderLine('location');
-        self::assertStringEndsWith('?q=Park', $location);
-        self::assertStringNotContainsString('sortBy', $location);
+        $this->assertStringEndsWith('?q=Park', $location);
+        $this->assertStringNotContainsString('sortBy', $location);
     }
 }

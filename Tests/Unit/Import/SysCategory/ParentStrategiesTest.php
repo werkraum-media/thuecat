@@ -32,7 +32,7 @@ class ParentStrategiesTest extends TestCase
     {
         return new ParentStrategies(
             new LongestChainStrategy(),
-            self::createStub(ImportLogger::class)
+            $this->createStub(ImportLogger::class)
         );
     }
 
@@ -41,11 +41,7 @@ class ParentStrategiesTest extends TestCase
     {
         $strategies = $this->strategies();
 
-        self::assertNotSame(
-            $strategies->forTable('tx_thuecat_tourist_attraction')->name(),
-            $strategies->forTable('tx_events_domain_model_event')->name(),
-            'What a parent should be depends on what the record is.'
-        );
+        $this->assertNotSame($strategies->forTable('tx_thuecat_tourist_attraction')->name(), $strategies->forTable('tx_events_domain_model_event')->name(), 'What a parent should be depends on what the record is.');
     }
 
     #[Test]
@@ -53,18 +49,12 @@ class ParentStrategiesTest extends TestCase
     {
         $strategies = $this->strategies();
 
-        self::assertSame(
-            $strategies->forTable('tx_thuecat_tourist_attraction'),
-            $strategies->forTable('tx_thuecat_tourist_attraction')
-        );
+        $this->assertSame($strategies->forTable('tx_thuecat_tourist_attraction'), $strategies->forTable('tx_thuecat_tourist_attraction'));
     }
 
     #[Test]
     public function fallsBackToTheDeepestBranchForATableWithNoRule(): void
     {
-        self::assertSame(
-            'longestChain',
-            $this->strategies()->forTable('tx_thuecat_organisation')->name()
-        );
+        $this->assertSame('longestChain', $this->strategies()->forTable('tx_thuecat_organisation')->name());
     }
 }

@@ -41,10 +41,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             'town' => $this->selectColumn('tx_thuecat_town'),
         ]);
 
-        self::assertSame(
-            ['town' => 'tx_thuecat_town'],
-            $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration)
-        );
+        $this->assertSame(['town' => 'tx_thuecat_town'], $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration));
     }
 
     #[Test]
@@ -55,10 +52,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             'log' => $this->selectColumn('tx_thuecat_import_log'),
         ]);
 
-        self::assertSame(
-            [],
-            $this->subject->matchingColumns('tx_thuecat_import_log_entry', $tableConfiguration)
-        );
+        $this->assertSame([], $this->subject->matchingColumns('tx_thuecat_import_log_entry', $tableConfiguration));
     }
 
     #[Test]
@@ -74,10 +68,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            [],
-            $this->subject->matchingColumns('tx_thuecat_town', $tableConfiguration)
-        );
+        $this->assertSame([], $this->subject->matchingColumns('tx_thuecat_town', $tableConfiguration));
     }
 
     #[Test]
@@ -93,10 +84,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            [],
-            $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration)
-        );
+        $this->assertSame([], $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration));
     }
 
     #[Test]
@@ -110,10 +98,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             'l10n_parent'
         );
 
-        self::assertSame(
-            [],
-            $this->subject->matchingColumns('tx_thuecat_town', $tableConfiguration)
-        );
+        $this->assertSame([], $this->subject->matchingColumns('tx_thuecat_town', $tableConfiguration));
     }
 
     #[Test]
@@ -128,10 +113,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             'l18n_parent'
         );
 
-        self::assertSame(
-            ['contained_in_trail' => 'tx_thuecat_trail'],
-            $this->subject->matchingColumns('tx_thuecat_trail', $tableConfiguration)
-        );
+        $this->assertSame(['contained_in_trail' => 'tx_thuecat_trail'], $this->subject->matchingColumns('tx_thuecat_trail', $tableConfiguration));
     }
 
     #[Test]
@@ -151,18 +133,15 @@ class SiteScopedSelectFieldsTest extends TestCase
             'l18n_parent'
         );
 
-        self::assertSame(
-            [
-                'town' => 'tx_thuecat_town',
-                'managed_by' => 'tx_thuecat_organisation',
-                'contained_in_organisation' => 'tx_thuecat_organisation',
-                'contained_in_attraction' => 'tx_thuecat_tourist_attraction',
-                'contained_in_tourist_information' => 'tx_thuecat_tourist_information',
-                'contained_in_parking_facility' => 'tx_thuecat_parking_facility',
-                'contained_in_trail' => 'tx_thuecat_trail',
-            ],
-            $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration)
-        );
+        $this->assertSame([
+            'town' => 'tx_thuecat_town',
+            'managed_by' => 'tx_thuecat_organisation',
+            'contained_in_organisation' => 'tx_thuecat_organisation',
+            'contained_in_attraction' => 'tx_thuecat_tourist_attraction',
+            'contained_in_tourist_information' => 'tx_thuecat_tourist_information',
+            'contained_in_parking_facility' => 'tx_thuecat_parking_facility',
+            'contained_in_trail' => 'tx_thuecat_trail',
+        ], $this->subject->matchingColumns('tx_thuecat_tourist_attraction', $tableConfiguration));
     }
 
     #[Test]
@@ -179,10 +158,7 @@ class SiteScopedSelectFieldsTest extends TestCase
             ],
         ]);
 
-        self::assertSame(
-            [],
-            $this->subject->matchingColumns('tx_thuecat_import_configuration', $tableConfiguration)
-        );
+        $this->assertSame([], $this->subject->matchingColumns('tx_thuecat_import_configuration', $tableConfiguration));
     }
 
     /**

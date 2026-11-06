@@ -46,17 +46,13 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $created = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $created, 'Exactly one category should be created.');
+        $this->assertCount(1, $created, 'Exactly one category should be created.');
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
-        self::assertCount(1, $ancestor);
-        self::assertSame(
-            $ancestor[0]['uid'],
-            $created[0]['parent'],
-            'Created beneath its own ancestor, which hangs off the configured parent.'
-        );
-        self::assertSame(100, $ancestor[0]['parent'], 'The chain still starts at the configured parent.');
-        self::assertSame(20, $created[0]['pid'], 'Created at the configured categoryStoragePid.');
-        self::assertSame('Kulturveranstaltung', $created[0]['title'], 'Seeded with the mapped label.');
+        $this->assertCount(1, $ancestor);
+        $this->assertSame($ancestor[0]['uid'], $created[0]['parent'], 'Created beneath its own ancestor, which hangs off the configured parent.');
+        $this->assertSame(100, $ancestor[0]['parent'], 'The chain still starts at the configured parent.');
+        $this->assertSame(20, $created[0]['pid'], 'Created at the configured categoryStoragePid.');
+        $this->assertSame('Kulturveranstaltung', $created[0]['title'], 'Seeded with the mapped label.');
 
         $this->assertEventHasCategory((int)$created[0]['uid']);
     }
@@ -73,23 +69,19 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
         $culture = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $series, 'Veranstaltungsserie category created.');
-        self::assertCount(1, $culture, 'Kulturveranstaltung category created.');
+        $this->assertCount(1, $series, 'Veranstaltungsserie category created.');
+        $this->assertCount(1, $culture, 'Kulturveranstaltung category created.');
 
         foreach ([$series[0], $culture[0]] as $category) {
-            self::assertGreaterThan(0, $category['parent'], 'Created somewhere in the anchor\'s tree.');
-            self::assertSame(20, $category['pid'], 'Created at categoryStoragePid.');
+            $this->assertGreaterThan(0, $category['parent'], 'Created somewhere in the anchor\'s tree.');
+            $this->assertSame(20, $category['pid'], 'Created at categoryStoragePid.');
         }
-        self::assertSame('Veranstaltungsserie', $series[0]['title']);
-        self::assertSame('Kulturveranstaltung', $culture[0]['title']);
+        $this->assertSame('Veranstaltungsserie', $series[0]['title']);
+        $this->assertSame('Kulturveranstaltung', $culture[0]['title']);
 
         // The unmappable type creates nothing. Counting every row under the
         // anchor would count ancestors too, which say nothing about it.
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('type:test:UnmappedByConstruction'),
-            'An unmappable type creates no category.'
-        );
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('type:test:UnmappedByConstruction'), 'An unmappable type creates no category.');
         $this->assertEventHasCategory((int)$series[0]['uid']);
         $this->assertEventHasCategory((int)$culture[0]['uid']);
     }
@@ -107,10 +99,10 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $culture = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $culture, 'Shared category is created once across both roots.');
+        $this->assertCount(1, $culture, 'Shared category is created once across both roots.');
 
         // Both events relate to the single shared category.
-        self::assertSame(2, $this->countCategoryRelations((int)$culture[0]['uid']), 'Both events wired to it.');
+        $this->assertSame(2, $this->countCategoryRelations((int)$culture[0]['uid']), 'Both events wired to it.');
     }
 
     #[Test]
@@ -138,32 +130,20 @@ class EventCategoryImportTest extends AbstractImportTestCase
         }
 
         $type = 'schema:EventSeries';
-        self::assertArrayHasKey($type, $matchedByType, $type . ' logged as matched.');
+        $this->assertArrayHasKey($type, $matchedByType, $type . ' logged as matched.');
         $entry = $matchedByType[$type];
-        self::assertSame('sys_category', $entry['table_name']);
-        self::assertGreaterThan(0, $entry['record_uid'], 'Resolved category uid is stored.');
-        self::assertSame(
-            'Veranstaltungsserie',
-            $this->categoryTitle($entry['record_uid']),
-            'record_uid points at the category created for this type.'
-        );
+        $this->assertSame('sys_category', $entry['table_name']);
+        $this->assertGreaterThan(0, $entry['record_uid'], 'Resolved category uid is stored.');
+        $this->assertSame('Veranstaltungsserie', $this->categoryTitle($entry['record_uid']), 'record_uid points at the category created for this type.');
 
-        self::assertArrayNotHasKey(
-            'thuecat:CultureEvent',
-            $matchedByType,
-            'Upstream titled it without the map, so it needs nobody\'s attention.'
-        );
+        $this->assertArrayNotHasKey('thuecat:CultureEvent', $matchedByType, 'Upstream titled it without the map, so it needs nobody\'s attention.');
 
         // Containment, not exact lists: the ignore list is intentionally sparse
         // and will grow, so pinning the full unmatched set would be brittle.
-        self::assertContains(
-            'test:UnmappedByConstruction',
-            array_column($unmatched, 'remote_id'),
-            'An unmappable type is logged as unmatched.'
-        );
+        $this->assertContains('test:UnmappedByConstruction', array_column($unmatched, 'remote_id'), 'An unmappable type is logged as unmatched.');
 
         foreach (array_merge($matched, $unmatched) as $entry) {
-            self::assertSame('categories', $entry['kind']);
+            $this->assertSame('categories', $entry['kind']);
         }
     }
 
@@ -178,11 +158,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertNotContains(
-            'thuecat:CultureEvent',
-            array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'),
-            'Upstream answered every configured language; the map was never consulted.'
-        );
+        $this->assertNotContains('thuecat:CultureEvent', array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'), 'Upstream answered every configured language; the map was never consulted.');
     }
 
     #[Test]
@@ -193,11 +169,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertContains(
-            'schema:EventSeries',
-            array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'),
-            'The vocabulary does not know it, so its title came from the map.'
-        );
+        $this->assertContains('schema:EventSeries', array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'), 'The vocabulary does not know it, so its title came from the map.');
     }
 
     #[Test]
@@ -208,10 +180,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertContains(
-            'test:UnmappedByConstruction',
-            array_column($this->fetchLogEntries('categoryUnmatched'), 'remote_id')
-        );
+        $this->assertContains('test:UnmappedByConstruction', array_column($this->fetchLogEntries('categoryUnmatched'), 'remote_id'));
     }
 
     #[Test]
@@ -228,7 +197,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         );
 
         foreach (['schema:Thing', 'dcmitype:Event', 'ttgds:Event'] as $structural) {
-            self::assertNotContains($structural, $reported, $structural . ' is consciously ignored.');
+            $this->assertNotContains($structural, $reported, $structural . ' is consciously ignored.');
         }
     }
 
@@ -242,10 +211,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertContains(
-            'schema:EventSeries',
-            array_column($this->fetchLogEntries('categoryWithoutHierarchy'), 'remote_id')
-        );
+        $this->assertContains('schema:EventSeries', array_column($this->fetchLogEntries('categoryWithoutHierarchy'), 'remote_id'));
     }
 
     #[Test]
@@ -265,11 +231,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $entries = $this->fetchLogEntries('categoryParentChosen');
 
-        self::assertContains(
-            'thuecat:CultureEvent',
-            array_column($entries, 'remote_id'),
-            'A genuine branch is a decision worth reviewing against real data.'
-        );
+        $this->assertContains('thuecat:CultureEvent', array_column($entries, 'remote_id'), 'A genuine branch is a decision worth reviewing against real data.');
     }
 
     #[Test]
@@ -287,7 +249,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame([], $this->fetchLogEntries('categoryParentChosen'));
+        $this->assertSame([], $this->fetchLogEntries('categoryParentChosen'));
     }
 
     // A category is a record like any other: an editor sees it in the language
@@ -300,11 +262,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            ['Culture event'],
-            $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1),
-            'The English label upstream carries must reach the database.'
-        );
+        $this->assertSame(['Culture event'], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1), 'The English label upstream carries must reach the database.');
     }
 
     #[Test]
@@ -315,11 +273,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            ['Event'],
-            $this->fetchCategoryTranslations('type:schema:Event', 1),
-            'An ancestor is as visible to an editor as the type itself.'
-        );
+        $this->assertSame(['Event'], $this->fetchCategoryTranslations('type:schema:Event', 1), 'An ancestor is as visible to an editor as the type itself.');
     }
 
     #[Test]
@@ -331,7 +285,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         // The site configures French; upstream offers none, so none is invented.
-        self::assertSame([], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 2));
+        $this->assertSame([], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 2));
     }
 
     // The two languages part company here, and the difference is worth
@@ -346,8 +300,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $all);
-        self::assertSame('Kultur (renamed)', $all[0]['title']);
+        $this->assertCount(1, $all);
+        $this->assertSame('Kultur (renamed)', $all[0]['title']);
     }
 
     #[Test]
@@ -362,11 +316,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         // keeps it current with upstream, and the same write discards an
         // editor's wording. The default language protects itself by never being
         // rewritten; a translation has no such guard.
-        self::assertSame(
-            ['Culture event'],
-            $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1),
-            'The editor\'s "Culture (renamed by editor)" does not survive.'
-        );
+        $this->assertSame(['Culture event'], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1), 'The editor\'s "Culture (renamed by editor)" does not survive.');
     }
 
     // The pre-state stands for a prior import: category and event already
@@ -379,11 +329,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertCount(
-            1,
-            $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1),
-            'A second run updates the translation rather than adding another.'
-        );
+        $this->assertCount(1, $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1), 'A second run updates the translation rather than adding another.');
     }
 
     #[Test]
@@ -397,9 +343,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
         // Matched by remote_id despite the changed title → uid 101 reused, no
         // duplicate, and the editor's rename is preserved.
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $all, 'No new category — the renamed one is reused by remote_id.');
-        self::assertSame(101, $all[0]['uid']);
-        self::assertSame('Kultur (renamed)', $all[0]['title'], 'Import must not rename an existing category.');
+        $this->assertCount(1, $all, 'No new category — the renamed one is reused by remote_id.');
+        $this->assertSame(101, $all[0]['uid']);
+        $this->assertSame('Kultur (renamed)', $all[0]['title'], 'Import must not rename an existing category.');
 
         $this->assertEventHasCategory(101);
     }
@@ -416,9 +362,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
 
-        self::assertCount(1, $series, 'No hierarchy must not cost the category.');
-        self::assertSame(100, $series[0]['parent'], 'With nothing above it, it hangs off the anchor.');
-        self::assertSame('Veranstaltungsserie', $series[0]['title'], 'Titled from the fallback map.');
+        $this->assertCount(1, $series, 'No hierarchy must not cost the category.');
+        $this->assertSame(100, $series[0]['parent'], 'With nothing above it, it hangs off the anchor.');
+        $this->assertSame('Veranstaltungsserie', $series[0]['title'], 'Titled from the fallback map.');
     }
 
     #[Test]
@@ -430,13 +376,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
-        self::assertCount(1, $series);
+        $this->assertCount(1, $series);
 
-        self::assertSame(
-            1,
-            $this->countCategoryRelations($series[0]['uid']),
-            'A type is related whether or not it has ancestry.'
-        );
+        $this->assertSame(1, $this->countCategoryRelations($series[0]['uid']), 'A type is related whether or not it has ancestry.');
     }
 
     #[Test]
@@ -447,11 +389,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('type:test:UnmappedByConstruction'),
-            'Unknown to both sources: the skipping rule governs, not this one.'
-        );
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('type:test:UnmappedByConstruction'), 'Unknown to both sources: the skipping rule governs, not this one.');
     }
 
     // The upgrade path: a type imported flat before its vocabulary covered it
@@ -473,10 +411,10 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
 
-        self::assertCount(1, $all, 'The flat category is moved, not replaced.');
-        self::assertSame(101, $all[0]['uid']);
-        self::assertCount(1, $ancestor);
-        self::assertSame($ancestor[0]['uid'], $all[0]['parent']);
+        $this->assertCount(1, $all, 'The flat category is moved, not replaced.');
+        $this->assertSame(101, $all[0]['uid']);
+        $this->assertCount(1, $ancestor);
+        $this->assertSame($ancestor[0]['uid'], $all[0]['parent']);
     }
 
     // The migration case: categories imported before the hierarchy existed sit
@@ -491,12 +429,12 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $all, 'Re-parenting must not create a second record.');
-        self::assertSame(101, $all[0]['uid'], 'The uid a plugin configuration may reference survives.');
+        $this->assertCount(1, $all, 'Re-parenting must not create a second record.');
+        $this->assertSame(101, $all[0]['uid'], 'The uid a plugin configuration may reference survives.');
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
-        self::assertCount(1, $ancestor);
-        self::assertSame($ancestor[0]['uid'], $all[0]['parent'], 'It moves beneath its ancestor.');
+        $this->assertCount(1, $ancestor);
+        $this->assertSame($ancestor[0]['uid'], $all[0]['parent'], 'It moves beneath its ancestor.');
     }
 
     #[Test]
@@ -521,11 +459,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertSame(
-            'Kultur (renamed)',
-            $all[0]['title'],
-            'Moving a category is not an occasion to rename it.'
-        );
+        $this->assertSame('Kultur (renamed)', $all[0]['title'], 'Moving a category is not an occasion to rename it.');
     }
 
     #[Test]
@@ -538,8 +472,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         // uid 101 is a grandchild of parent 100; no new category is created.
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $all, 'No duplicate category is created — the grandchild is reused.');
-        self::assertSame(101, $all[0]['uid']);
+        $this->assertCount(1, $all, 'No duplicate category is created — the grandchild is reused.');
+        $this->assertSame(101, $all[0]['uid']);
 
         $this->assertEventHasCategory(101);
     }
@@ -555,18 +489,18 @@ class EventCategoryImportTest extends AbstractImportTestCase
         // Decoys 301 (wrong parent) and 401 (other site) survive; a fresh one is
         // created under 100.
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(3, $all, 'Two decoys remain plus one freshly created category.');
+        $this->assertCount(3, $all, 'Two decoys remain plus one freshly created category.');
 
         $uids = array_column($all, 'uid');
-        self::assertContains(301, $uids, 'In-site wrong-parent decoy is left untouched.');
-        self::assertContains(401, $uids, 'Other-site decoy is left untouched.');
+        $this->assertContains(301, $uids, 'In-site wrong-parent decoy is left untouched.');
+        $this->assertContains(401, $uids, 'Other-site decoy is left untouched.');
 
         $created = array_values(array_filter(
             $all,
             fn (array $row): bool => $this->isInRootlineOf($row['uid'], 100)
         ));
-        self::assertCount(1, $created, 'Exactly one category is created within the configured parent\'s tree.');
-        self::assertSame(20, $created[0]['pid']);
+        $this->assertCount(1, $created, 'Exactly one category is created within the configured parent\'s tree.');
+        $this->assertSame(20, $created[0]['pid']);
 
         $this->assertEventHasCategory((int)$created[0]['uid']);
     }
@@ -582,11 +516,11 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $all, 'Re-import reuses the category, no duplicate sys_category row.');
-        self::assertSame(101, $all[0]['uid']);
+        $this->assertCount(1, $all, 'Re-import reuses the category, no duplicate sys_category row.');
+        $this->assertSame(101, $all[0]['uid']);
 
         $mmCount = $this->countCategoryRelations((int)$all[0]['uid']);
-        self::assertSame(1, $mmCount, 'Re-import does not duplicate the sys_category_record_mm row.');
+        $this->assertSame(1, $mmCount, 'Re-import does not duplicate the sys_category_record_mm row.');
     }
 
     // Pre-state: the event carries CultureEvent (still named), MusicEvent (no
@@ -605,9 +539,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
         $named = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
 
-        self::assertCount(1, $ancestor, 'The ancestor becomes a category of its own.');
-        self::assertCount(1, $named);
-        self::assertSame($ancestor[0]['uid'], $named[0]['parent'], 'The named type hangs beneath it.');
+        $this->assertCount(1, $ancestor, 'The ancestor becomes a category of its own.');
+        $this->assertCount(1, $named);
+        $this->assertSame($ancestor[0]['uid'], $named[0]['parent'], 'The named type hangs beneath it.');
     }
 
     #[Test]
@@ -620,19 +554,11 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
         $named = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
-        self::assertCount(1, $ancestor, 'The ancestor must exist before its relations mean anything.');
-        self::assertCount(1, $named);
+        $this->assertCount(1, $ancestor, 'The ancestor must exist before its relations mean anything.');
+        $this->assertCount(1, $named);
 
-        self::assertSame(
-            1,
-            $this->countCategoryRelations($named[0]['uid']),
-            'The type the payload names is related.'
-        );
-        self::assertSame(
-            0,
-            $this->countCategoryRelations($ancestor[0]['uid']),
-            'Its ancestor organises the tree without being a relation.'
-        );
+        $this->assertSame(1, $this->countCategoryRelations($named[0]['uid']), 'The type the payload names is related.');
+        $this->assertSame(0, $this->countCategoryRelations($ancestor[0]['uid']), 'Its ancestor organises the tree without being a relation.');
     }
 
     #[Test]
@@ -643,11 +569,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('type:schema:Thing'),
-            'Every record is a Thing, so a category for it says nothing.'
-        );
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('type:schema:Thing'), 'Every record is a Thing, so a category for it says nothing.');
     }
 
     #[Test]
@@ -659,9 +581,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
-        self::assertCount(1, $ancestor);
+        $this->assertCount(1, $ancestor);
 
-        self::assertSame(100, $ancestor[0]['parent'], 'The chain hangs off the anchor, not off nothing.');
+        $this->assertSame(100, $ancestor[0]['parent'], 'The chain hangs off the anchor, not off nothing.');
     }
 
     #[Test]
@@ -672,16 +594,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            0,
-            $this->countCategoryRelations(102),
-            'A type the payload no longer names loses its relation.'
-        );
-        self::assertSame(
-            1,
-            $this->countCategoryRelations(101),
-            'The type still named keeps its relation.'
-        );
+        $this->assertSame(0, $this->countCategoryRelations(102), 'A type the payload no longer names loses its relation.');
+        $this->assertSame(1, $this->countCategoryRelations(101), 'The type still named keeps its relation.');
     }
 
     #[Test]
@@ -692,11 +606,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId('type:schema:MusicEvent'),
-            'Only the relation goes; editors may still be using the category.'
-        );
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId('type:schema:MusicEvent'), 'Only the relation goes; editors may still be using the category.');
     }
 
     // The importer replaces the whole relation list, so anything it does not
@@ -709,11 +619,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            1,
-            $this->countCategoryRelations(103),
-            'A category with no remote_id is outside the importer\'s reach.'
-        );
+        $this->assertSame(1, $this->countCategoryRelations(103), 'A category with no remote_id is outside the importer\'s reach.');
     }
 
     // A root that never parsed submits no relation list, so nothing of its
@@ -731,21 +637,9 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            1,
-            $this->countCategoryRelations(101),
-            'A failed fetch must not be read as an upstream removal.'
-        );
-        self::assertSame(
-            1,
-            $this->countCategoryRelations(102),
-            'Not even the relation a healthy run would have dropped.'
-        );
-        self::assertSame(
-            1,
-            $this->countCategoryRelations(103),
-            'The editor\'s category is untouched either way.'
-        );
+        $this->assertSame(1, $this->countCategoryRelations(101), 'A failed fetch must not be read as an upstream removal.');
+        $this->assertSame(1, $this->countCategoryRelations(102), 'Not even the relation a healthy run would have dropped.');
+        $this->assertSame(1, $this->countCategoryRelations(103), 'The editor\'s category is untouched either way.');
     }
 
     #[Test]
@@ -758,8 +652,8 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertCount(0, $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent'));
-        self::assertSame(1, $this->countEvents(), 'Event is imported even though category wiring is skipped.');
+        $this->assertCount(0, $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent'));
+        $this->assertSame(1, $this->countEvents(), 'Event is imported even though category wiring is skipped.');
     }
 
     #[Test]
@@ -779,7 +673,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Import configuration not found in pre-state.');
+        $this->assertNotNull($configuration, 'Import configuration not found in pre-state.');
         $this->get(Importer::class)->importConfiguration($configuration);
     }
 
@@ -847,11 +741,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
     private function assertEventHasCategory(int $categoryUid): void
     {
-        self::assertSame(
-            1,
-            $this->countCategoryRelations($categoryUid),
-            'Event must be related to the category via sys_category_record_mm.'
-        );
+        $this->assertSame(1, $this->countCategoryRelations($categoryUid), 'Event must be related to the category via sys_category_record_mm.');
     }
 
     private function countCategoryRelations(int $categoryUid): int

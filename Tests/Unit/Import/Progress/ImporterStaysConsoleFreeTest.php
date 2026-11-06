@@ -62,20 +62,12 @@ class ImporterStaysConsoleFreeTest extends TestCase
         foreach ($reflection->getMethods() as $method) {
             foreach ($method->getParameters() as $parameter) {
                 foreach (self::typeNames($parameter->getType()) as $typeName) {
-                    self::assertStringNotContainsString(
-                        'Symfony\\Component\\Console',
-                        $typeName,
-                        sprintf('%s::%s() takes a console type.', $className, $method->getName())
-                    );
+                    $this->assertStringNotContainsString('Symfony\\Component\\Console', $typeName, sprintf('%s::%s() takes a console type.', $className, $method->getName()));
                 }
             }
 
             foreach (self::typeNames($method->getReturnType()) as $typeName) {
-                self::assertStringNotContainsString(
-                    'Symfony\\Component\\Console',
-                    $typeName,
-                    sprintf('%s::%s() returns a console type.', $className, $method->getName())
-                );
+                $this->assertStringNotContainsString('Symfony\\Component\\Console', $typeName, sprintf('%s::%s() returns a console type.', $className, $method->getName()));
             }
         }
     }
@@ -88,7 +80,7 @@ class ImporterStaysConsoleFreeTest extends TestCase
         foreach ($reflection->getMethods() as $method) {
             foreach ($method->getParameters() as $parameter) {
                 foreach (self::typeNames($parameter->getType()) as $typeName) {
-                    self::assertStringNotContainsString('Symfony\\Component\\Console', $typeName);
+                    $this->assertStringNotContainsString('Symfony\\Component\\Console', $typeName);
                 }
             }
         }

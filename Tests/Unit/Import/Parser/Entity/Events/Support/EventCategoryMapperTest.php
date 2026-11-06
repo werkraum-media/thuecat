@@ -37,22 +37,22 @@ class EventCategoryMapperTest extends TestCase
     #[Test]
     public function mapsSingleKnownTypeToLabel(): void
     {
-        self::assertSame('Kulturveranstaltung', $this->mapper->titleFor('thuecat:CultureEvent'));
-        self::assertSame('Theaterveranstaltung', $this->mapper->titleFor('schema:TheaterEvent'));
+        $this->assertSame('Kulturveranstaltung', $this->mapper->titleFor('thuecat:CultureEvent'));
+        $this->assertSame('Theaterveranstaltung', $this->mapper->titleFor('schema:TheaterEvent'));
     }
 
     #[Test]
     public function returnsNullForUnmappedType(): void
     {
-        self::assertNull($this->mapper->titleFor('schema:Event'));
-        self::assertNull($this->mapper->titleFor('schema:Thing'));
-        self::assertNull($this->mapper->titleFor('ttgds:Event'));
+        $this->assertNull($this->mapper->titleFor('schema:Event'));
+        $this->assertNull($this->mapper->titleFor('schema:Thing'));
+        $this->assertNull($this->mapper->titleFor('ttgds:Event'));
     }
 
     #[Test]
     public function prefixesASourceValueWithTheSourceField(): void
     {
-        self::assertSame('type:thuecat:CultureEvent', $this->mapper->prefixed('thuecat:CultureEvent'));
+        $this->assertSame('type:thuecat:CultureEvent', $this->mapper->prefixed('thuecat:CultureEvent'));
     }
 
     /**
@@ -71,10 +71,7 @@ class EventCategoryMapperTest extends TestCase
             'ttgds:Event',
         ];
 
-        self::assertSame(
-            [['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung']],
-            $this->mapper->categoriesFor($types)
-        );
+        $this->assertSame([['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung']], $this->mapper->categoriesFor($types));
     }
 
     #[Test]
@@ -86,13 +83,10 @@ class EventCategoryMapperTest extends TestCase
             'thuecat:CultureEvent',
         ];
 
-        self::assertSame(
-            [
-                ['remoteId' => 'schema:MusicEvent', 'title' => 'Musik'],
-                ['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
-            ],
-            $this->mapper->categoriesFor($types)
-        );
+        $this->assertSame([
+            ['remoteId' => 'schema:MusicEvent', 'title' => 'Musik'],
+            ['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung'],
+        ], $this->mapper->categoriesFor($types));
     }
 
     #[Test]
@@ -103,16 +97,13 @@ class EventCategoryMapperTest extends TestCase
             'thuecat:CultureEvent',
         ];
 
-        self::assertSame(
-            [['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung']],
-            $this->mapper->categoriesFor($types)
-        );
+        $this->assertSame([['remoteId' => 'thuecat:CultureEvent', 'title' => 'Kulturveranstaltung']], $this->mapper->categoriesFor($types));
     }
 
     #[Test]
     public function categoriesForReturnsEmptyWhenNothingMaps(): void
     {
-        self::assertSame([], $this->mapper->categoriesFor(['schema:Thing', 'schema:Event']));
+        $this->assertSame([], $this->mapper->categoriesFor(['schema:Thing', 'schema:Event']));
     }
 
     #[Test]
@@ -127,22 +118,16 @@ class EventCategoryMapperTest extends TestCase
             'ttgds:Event',         // ignored (structural)
         ];
 
-        self::assertSame(
-            [
-                'matched' => ['thuecat:CultureEvent' => 'Kulturveranstaltung'],
-                'unmatched' => ['test:UnmappedByConstruction'],
-            ],
-            $this->mapper->reportMatchStatus($types)
-        );
+        $this->assertSame([
+            'matched' => ['thuecat:CultureEvent' => 'Kulturveranstaltung'],
+            'unmatched' => ['test:UnmappedByConstruction'],
+        ], $this->mapper->reportMatchStatus($types));
     }
 
     #[Test]
     public function reportDeduplicatesUnmatchedTypes(): void
     {
-        self::assertSame(
-            ['matched' => [], 'unmatched' => ['test:UnmappedByConstruction']],
-            $this->mapper->reportMatchStatus(['test:UnmappedByConstruction', 'test:UnmappedByConstruction'])
-        );
+        $this->assertSame(['matched' => [], 'unmatched' => ['test:UnmappedByConstruction']], $this->mapper->reportMatchStatus(['test:UnmappedByConstruction', 'test:UnmappedByConstruction']));
     }
 
     #[Test]
@@ -153,9 +138,9 @@ class EventCategoryMapperTest extends TestCase
         // (intentionally sparse, growing) list can change without touching tests.
         $report = $this->mapper->reportMatchStatus(['schema:Thing', 'test:UnmappedByConstruction']);
 
-        self::assertArrayNotHasKey('schema:Thing', $report['matched']);
-        self::assertNotContains('schema:Thing', $report['unmatched']);
+        $this->assertArrayNotHasKey('schema:Thing', $report['matched']);
+        $this->assertNotContains('schema:Thing', $report['unmatched']);
         // The non-ignored unmappable type is still reported.
-        self::assertContains('test:UnmappedByConstruction', $report['unmatched']);
+        $this->assertContains('test:UnmappedByConstruction', $report['unmatched']);
     }
 }

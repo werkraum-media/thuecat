@@ -43,9 +43,9 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
         // pages=11, no filter -> every pid 11 record, nothing from pid 12.
         $body = $this->render(20);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Goethehaus Weimar', $body);
-        self::assertStringNotContainsString('Other Pid Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Other Pid Erfurt', $body);
     }
 
     #[Test]
@@ -54,9 +54,9 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
         // pages empty, no filter -> records from any pid, unrestricted.
         $body = $this->render(21);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Goethehaus Weimar', $body);
-        self::assertStringContainsString('Other Pid Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Other Pid Erfurt', $body);
     }
 
     #[Test]
@@ -65,9 +65,9 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
         // pages=11 AND towns=1 -> Erfurt on pid 11 only.
         $body = $this->render(22);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
-        self::assertStringNotContainsString('Other Pid Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Other Pid Erfurt', $body);
     }
 
     #[Test]
@@ -76,9 +76,9 @@ class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
         // towns=1, no pages -> every town 1 record, any pid.
         $body = $this->render(23);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Other Pid Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Other Pid Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     private function render(int $pageId): string

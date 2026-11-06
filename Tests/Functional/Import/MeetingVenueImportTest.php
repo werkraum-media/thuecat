@@ -43,8 +43,8 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::HOTEL);
-        self::assertSame('meeting_venue', $row['type']);
-        self::assertSame('meeting_congress_hotel', $row['venue_type']);
+        $this->assertSame('meeting_venue', $row['type']);
+        $this->assertSame('meeting_congress_hotel', $row['venue_type']);
     }
 
     #[Test]
@@ -56,8 +56,8 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::CONVENTION_CENTER);
-        self::assertSame('meeting_venue', $row['type']);
-        self::assertSame('meeting_congress', $row['venue_type']);
+        $this->assertSame('meeting_venue', $row['type']);
+        $this->assertSame('meeting_congress', $row['venue_type']);
     }
 
     #[Test]
@@ -68,7 +68,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
+        $this->assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
     }
 
     #[Test]
@@ -80,9 +80,9 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId(self::TABLE, self::HOTEL, self::STORAGE_PID));
-        self::assertSame(1, $this->fetchUidByRemoteId(self::TABLE, self::HOTEL));
-        self::assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
+        $this->assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId(self::TABLE, self::HOTEL, self::STORAGE_PID));
+        $this->assertSame(1, $this->fetchUidByRemoteId(self::TABLE, self::HOTEL));
+        $this->assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
     }
 
     #[Test]
@@ -94,11 +94,8 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(0, $this->countRows('sys_category'));
-        self::assertSame(
-            ['uid' => 1, 'type' => 'meeting_venue', 'venue_type' => 'meeting_congress_hotel'],
-            $this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, ['uid', 'type', 'venue_type'])
-        );
+        $this->assertSame(0, $this->countRows('sys_category'));
+        $this->assertSame(['uid' => 1, 'type' => 'meeting_venue', 'venue_type' => 'meeting_congress_hotel'], $this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, ['uid', 'type', 'venue_type']));
     }
 
     /**
@@ -120,11 +117,8 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importConfiguration($configuration);
 
         $categoryUid = $this->fetchUidByRemoteId('sys_category', $categoryRemoteId);
-        self::assertGreaterThan(0, $categoryUid);
+        $this->assertGreaterThan(0, $categoryUid);
 
-        self::assertContains(
-            $categoryUid,
-            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, $remoteId), 'categories')
-        );
+        $this->assertContains($categoryUid, $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, $remoteId), 'categories'));
     }
 }

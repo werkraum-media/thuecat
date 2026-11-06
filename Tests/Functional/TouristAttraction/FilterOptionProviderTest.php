@@ -47,10 +47,7 @@ class FilterOptionProviderTest extends AbstractFrontendTestCase
         // several. Deleted (4) and disabled (5) towns drop out, and town 6 has
         // only invisible records. "Stadt im fremden Ordner" sits outside the
         // list's storage but is still offered: filter values are site-bound.
-        self::assertSame(
-            ['Erfurt', 'Jena', 'Stadt im fremden Ordner', 'Weimar'],
-            $this->titles($options)
-        );
+        $this->assertSame(['Erfurt', 'Jena', 'Stadt im fremden Ordner', 'Weimar'], $this->titles($options));
     }
 
     #[Test]
@@ -62,9 +59,9 @@ class FilterOptionProviderTest extends AbstractFrontendTestCase
         );
 
         // Guard the loop below: on an empty set it would assert nothing.
-        self::assertNotSame([], $options->getOptions());
+        $this->assertNotSame([], $options->getOptions());
         foreach ($options as $option) {
-            self::assertNotSame(0, $option->getUid());
+            $this->assertNotSame(0, $option->getUid());
         }
     }
 
@@ -79,7 +76,7 @@ class FilterOptionProviderTest extends AbstractFrontendTestCase
         // The list is bound to page 11; this town lives on page 12 and is
         // reached only through a record on page 11. Records are storage-bound,
         // the values they point at are not.
-        self::assertContains('Stadt im fremden Ordner', $this->titles($options));
+        $this->assertContains('Stadt im fremden Ordner', $this->titles($options));
     }
 
     #[Test]
@@ -92,7 +89,7 @@ class FilterOptionProviderTest extends AbstractFrontendTestCase
 
         // Related by the same in-scope record as "Stadt im fremden Ordner", and
         // dropped only because it lives in another site.
-        self::assertNotContains('Stadt der anderen Site', $this->titles($options));
+        $this->assertNotContains('Stadt der anderen Site', $this->titles($options));
     }
 
     #[Test]
@@ -103,7 +100,7 @@ class FilterOptionProviderTest extends AbstractFrontendTestCase
             $this->scope()
         );
 
-        self::assertSame('towns', $options->getName());
+        $this->assertSame('towns', $options->getName());
     }
 
     private function scope(): FilterScope

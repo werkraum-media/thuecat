@@ -48,11 +48,11 @@ final class TouristAttractionRepositoryTest extends AbstractFunctionalTestCase
 
         $classes = [];
         foreach ($this->get(TouristAttractionRepository::class)->findByDemand(new TouristAttractionDemand()) as $record) {
-            self::assertInstanceOf(TouristAttraction::class, $record);
+            $this->assertInstanceOf(TouristAttraction::class, $record);
             $classes[(int)$record->getUid()] = $record::class;
         }
         ksort($classes);
 
-        self::assertSame([1 => TouristAttraction::class, 2 => MeetingVenue::class], $classes);
+        $this->assertSame([1 => TouristAttraction::class, 2 => MeetingVenue::class], $classes);
     }
 }

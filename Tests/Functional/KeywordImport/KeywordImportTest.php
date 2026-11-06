@@ -39,9 +39,9 @@ class KeywordImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $created = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
-        self::assertCount(1, $created, 'Exactly one keyword category should be created.');
-        self::assertSame('Landeshauptstadt Erfurt', $created[0]['title'], 'Seeded from the term label.');
-        self::assertSame(30, $created[0]['pid'], 'Created at the configured keywordStoragePid.');
+        $this->assertCount(1, $created, 'Exactly one keyword category should be created.');
+        $this->assertSame('Landeshauptstadt Erfurt', $created[0]['title'], 'Seeded from the term label.');
+        $this->assertSame(30, $created[0]['pid'], 'Created at the configured keywordStoragePid.');
     }
 
     // The set sits between anchor and term; the term must not be a direct child.
@@ -56,10 +56,10 @@ class KeywordImportTest extends AbstractImportTestCase
         $set = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
 
-        self::assertCount(1, $set, 'The term set becomes an intermediate category.');
-        self::assertSame('Landkreise', $set[0]['title']);
-        self::assertSame(200, $set[0]['parent'], 'The set hangs off the keyword anchor.');
-        self::assertSame($set[0]['uid'], $term[0]['parent'], 'The term hangs off its set.');
+        $this->assertCount(1, $set, 'The term set becomes an intermediate category.');
+        $this->assertSame('Landkreise', $set[0]['title']);
+        $this->assertSame(200, $set[0]['parent'], 'The set hangs off the keyword anchor.');
+        $this->assertSame($set[0]['uid'], $term[0]['parent'], 'The term hangs off its set.');
     }
 
     // Live data never nests deeper than set -> term, so a fixed two-step walk
@@ -79,17 +79,17 @@ class KeywordImportTest extends AbstractImportTestCase
         $mid = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/deep-set-mid');
         $leaf = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/deep-term-leaf');
 
-        self::assertCount(1, $top, 'The topmost group becomes a category.');
-        self::assertCount(1, $mid, 'The intermediate set becomes a category.');
-        self::assertCount(1, $leaf, 'The term itself becomes a category.');
+        $this->assertCount(1, $top, 'The topmost group becomes a category.');
+        $this->assertCount(1, $mid, 'The intermediate set becomes a category.');
+        $this->assertCount(1, $leaf, 'The term itself becomes a category.');
 
-        self::assertSame('Oberste Gruppe', $top[0]['title']);
-        self::assertSame('Mittlere Gruppe', $mid[0]['title']);
-        self::assertSame('Blattbegriff', $leaf[0]['title']);
+        $this->assertSame('Oberste Gruppe', $top[0]['title']);
+        $this->assertSame('Mittlere Gruppe', $mid[0]['title']);
+        $this->assertSame('Blattbegriff', $leaf[0]['title']);
 
-        self::assertSame(200, $top[0]['parent'], 'The topmost group hangs off the keyword anchor.');
-        self::assertSame($top[0]['uid'], $mid[0]['parent'], 'The set hangs off the group.');
-        self::assertSame($mid[0]['uid'], $leaf[0]['parent'], 'The term hangs off the set.');
+        $this->assertSame(200, $top[0]['parent'], 'The topmost group hangs off the keyword anchor.');
+        $this->assertSame($top[0]['uid'], $mid[0]['parent'], 'The set hangs off the group.');
+        $this->assertSame($mid[0]['uid'], $leaf[0]['parent'], 'The term hangs off the set.');
     }
 
     // DEFENSIVE: no mid-chain husk exists upstream. Both surveyed husks
@@ -106,13 +106,9 @@ class KeywordImportTest extends AbstractImportTestCase
         $top = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-group-top');
         $leaf = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-term-leaf');
 
-        self::assertCount(1, $top, 'The usable group above the husk still becomes a category.');
-        self::assertCount(1, $leaf, 'The term itself is unaffected by its unusable ancestor.');
-        self::assertSame(
-            $top[0]['uid'],
-            $leaf[0]['parent'],
-            'The term must climb past the husk to the nearest usable ancestor, not fall back to the anchor.'
-        );
+        $this->assertCount(1, $top, 'The usable group above the husk still becomes a category.');
+        $this->assertCount(1, $leaf, 'The term itself is unaffected by its unusable ancestor.');
+        $this->assertSame($top[0]['uid'], $leaf[0]['parent'], 'The term must climb past the husk to the nearest usable ancestor, not fall back to the anchor.');
     }
 
     #[Test]
@@ -123,16 +119,8 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-set-mid'),
-            'A label-less group must never become a title-less category.'
-        );
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-standalone'),
-            'A husk referenced directly by the record is skipped outright.'
-        );
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-set-mid'), 'A label-less group must never become a title-less category.');
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-standalone'), 'A husk referenced directly by the record is skipped outright.');
     }
 
     // A keyword is decoration; one bad vocabulary node may not cost the POI.
@@ -146,37 +134,29 @@ class KeywordImportTest extends AbstractImportTestCase
 
         // Order follows the POI's keyword list: the referenced term is walked
         // first, so its husk ancestor precedes the standalone husk.
-        self::assertSame(
+        $this->assertSame([
             [
-                [
-                    'type' => 'referenceSkipped',
-                    'severity' => 'warning',
-                    'table_name' => 'sys_category',
-                    'remote_id' => 'https://thuecat.org/resources/husk-set-mid',
-                    'message' => 'Skipped reference "https://thuecat.org/resources/husk-set-mid"'
-                        . ' for field "keywords": Keyword resource carries no usable label.',
-                ],
-                [
-                    'type' => 'referenceSkipped',
-                    'severity' => 'warning',
-                    'table_name' => 'sys_category',
-                    'remote_id' => 'https://thuecat.org/resources/husk-standalone',
-                    'message' => 'Skipped reference "https://thuecat.org/resources/husk-standalone"'
-                        . ' for field "keywords": Keyword resource carries no usable label.',
-                ],
+                'type' => 'referenceSkipped',
+                'severity' => 'warning',
+                'table_name' => 'sys_category',
+                'remote_id' => 'https://thuecat.org/resources/husk-set-mid',
+                'message' => 'Skipped reference "https://thuecat.org/resources/husk-set-mid"'
+                    . ' for field "keywords": Keyword resource carries no usable label.',
             ],
-            $this->getSkippedReferenceLogEntries(),
-            'Each unusable node is reported once, naming the resource.'
-        );
+            [
+                'type' => 'referenceSkipped',
+                'severity' => 'warning',
+                'table_name' => 'sys_category',
+                'remote_id' => 'https://thuecat.org/resources/husk-standalone',
+                'message' => 'Skipped reference "https://thuecat.org/resources/husk-standalone"'
+                    . ' for field "keywords": Keyword resource carries no usable label.',
+            ],
+        ], $this->getSkippedReferenceLogEntries(), 'Each unusable node is reported once, naming the resource.');
 
-        self::assertNotSame(
-            [],
-            $this->fetchRowsByRemoteId(
-                'tx_thuecat_tourist_attraction',
-                'https://thuecat.org/resources/husk-poi'
-            ),
-            'The owning record still imports.'
-        );
+        $this->assertNotSame([], $this->fetchRowsByRemoteId(
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/husk-poi'
+        ), 'The owning record still imports.');
     }
 
     /**
@@ -205,20 +185,12 @@ class KeywordImportTest extends AbstractImportTestCase
         $enum = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Ambiance');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/CollisionWeingut');
 
-        self::assertCount(1, $enum, 'The usage-site enum becomes a category of its own.');
-        self::assertSame('Ambiente', $enum[0]['title'], 'Titled from the enum\'s own upstream label, not the CURIE.');
-        self::assertSame(
-            200,
-            $enum[0]['parent'],
-            'The enum carries no term set, so the chain ends here and it sits on the anchor.'
-        );
+        $this->assertCount(1, $enum, 'The usage-site enum becomes a category of its own.');
+        $this->assertSame('Ambiente', $enum[0]['title'], 'Titled from the enum\'s own upstream label, not the CURIE.');
+        $this->assertSame(200, $enum[0]['parent'], 'The enum carries no term set, so the chain ends here and it sits on the anchor.');
 
-        self::assertCount(1, $term, 'The typed literal becomes a category.');
-        self::assertSame(
-            $enum[0]['uid'],
-            $term[0]['parent'],
-            'The literal must hang off its usage-site enum, not directly off the anchor.'
-        );
+        $this->assertCount(1, $term, 'The typed literal becomes a category.');
+        $this->assertSame($enum[0]['uid'], $term[0]['parent'], 'The literal must hang off its usage-site enum, not directly off the anchor.');
     }
 
     // Before the keywords column existed, tableHasField() suppressed every
@@ -240,18 +212,10 @@ class KeywordImportTest extends AbstractImportTestCase
             $term[0]['uid'],
             'keywords'
         );
-        self::assertSame(
-            [0, 1, 2],
-            $related,
-            'The term must be related to the attraction in each language, once each.'
-        );
+        $this->assertSame([0, 1, 2], $related, 'The term must be related to the attraction in each language, once each.');
 
-        self::assertCount(1, $set, 'The term set still exists as a category.');
-        self::assertSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', $set[0]['uid']),
-            'Intermediate levels structure the tree; only the cited keyword is a relation.'
-        );
+        $this->assertCount(1, $set, 'The term set still exists as a category.');
+        $this->assertSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', $set[0]['uid']), 'Intermediate levels structure the tree; only the cited keyword is a relation.');
     }
 
     #[Test]
@@ -264,11 +228,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
 
-        self::assertSame(
-            0,
-            $this->countRelationsForField('tx_thuecat_tourist_attraction', $term[0]['uid'], 'categories'),
-            'A keyword must never be written into the @type category relation.'
-        );
+        $this->assertSame(0, $this->countRelationsForField('tx_thuecat_tourist_attraction', $term[0]['uid'], 'categories'), 'A keyword must never be written into the @type category relation.');
     }
 
     // Out of scope here: these entities never call recordKeywords(), so nothing
@@ -282,20 +242,12 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'),
-            'An out-of-scope type must not even create the keyword category.'
-        );
+        $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'), 'An out-of-scope type must not even create the keyword category.');
 
-        self::assertNotSame(
-            [],
-            $this->fetchRowsByRemoteId(
-                'tx_thuecat_organisation',
-                'https://thuecat.org/resources/organisation-with-keyword'
-            ),
-            'The organisation itself still imports.'
-        );
+        $this->assertNotSame([], $this->fetchRowsByRemoteId(
+            'tx_thuecat_organisation',
+            'https://thuecat.org/resources/organisation-with-keyword'
+        ), 'The organisation itself still imports.');
     }
 
     #[Test]
@@ -306,16 +258,8 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202),
-            'A keyword absent from the current payload must not stay related.'
-        );
-        self::assertSame(
-            [0, 1, 2],
-            $this->fetchRelatedRecordLanguages('tx_thuecat_tourist_attraction', 203, 'keywords'),
-            'The keyword still provided keeps its relation, once per language.'
-        );
+        $this->assertSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A keyword absent from the current payload must not stay related.');
+        $this->assertSame([0, 1, 2], $this->fetchRelatedRecordLanguages('tx_thuecat_tourist_attraction', 203, 'keywords'), 'The keyword still provided keeps its relation, once per language.');
     }
 
     // Submitting the relation list replaces it, so anything the importer omits
@@ -328,11 +272,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertNotSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204),
-            'A keyword with no remote_id is outside the importer\'s reach.'
-        );
+        $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204), 'A keyword with no remote_id is outside the importer\'s reach.');
     }
 
     // Editors may still use a keyword the import stopped delivering.
@@ -344,11 +284,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/stale-term'),
-            'Reaping removes the relation, never the category record.'
-        );
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/stale-term'), 'Reaping removes the relation, never the category record.');
     }
 
     // Submitting the relation list is what removes, so a keyword that failed to
@@ -369,11 +305,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertNotSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202),
-            'A term that failed to resolve keeps the relation it already had.'
-        );
+        $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A term that failed to resolve keeps the relation it already had.');
     }
 
     // 404 is upstream positively reporting the term absent, the one signal
@@ -389,11 +321,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202),
-            'A term upstream reports gone loses its relation.'
-        );
+        $this->assertSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A term upstream reports gone loses its relation.');
     }
 
     /**
@@ -411,20 +339,12 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertNotSame(
-            0,
-            $this->countKeywordRelations('tx_thuecat_tourist_attraction', 203),
-            'Not yet reaped: the owner collects nothing and never reaches the flush.'
-        );
+        $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 203), 'Not yet reaped: the owner collects nothing and never reaches the flush.');
 
-        self::assertNotSame(
-            [],
-            $this->fetchRowsByRemoteId(
-                'tx_thuecat_tourist_attraction',
-                'https://thuecat.org/resources/poi-without-keywords'
-            ),
-            'The record itself survives regardless.'
-        );
+        $this->assertNotSame([], $this->fetchRowsByRemoteId(
+            'tx_thuecat_tourist_attraction',
+            'https://thuecat.org/resources/poi-without-keywords'
+        ), 'The record itself survives regardless.');
     }
 
     // Reaping is per owner: a record this run never touched keeps its own
@@ -437,11 +357,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertSame(
-            1,
-            $this->countRelationsForOwner('tx_thuecat_tourist_attraction', 2, 'keywords'),
-            'The untouched record keeps its relation to the shared keyword.'
-        );
+        $this->assertSame(1, $this->countRelationsForOwner('tx_thuecat_tourist_attraction', 2, 'keywords'), 'The untouched record keeps its relation to the shared keyword.');
     }
 
     /**
@@ -473,12 +389,8 @@ class KeywordImportTest extends AbstractImportTestCase
             'free text' => 'keyword:text:museum',
         ] as $shape => $remoteId) {
             $rows = $this->fetchCategoriesByRemoteId($remoteId);
-            self::assertCount(1, $rows, sprintf('Shape "%s" yields one category.', $shape));
-            self::assertSame(
-                1,
-                $this->countKeywordRelations('tx_thuecat_tourist_attraction', $rows[0]['uid']),
-                sprintf('Shape "%s" is related to the place.', $shape)
-            );
+            $this->assertCount(1, $rows, sprintf('Shape "%s" yields one category.', $shape));
+            $this->assertSame(1, $this->countKeywordRelations('tx_thuecat_tourist_attraction', $rows[0]['uid']), sprintf('Shape "%s" is related to the place.', $shape));
         }
     }
 
@@ -495,7 +407,7 @@ class KeywordImportTest extends AbstractImportTestCase
         $this->runImport();
 
         $set = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/192875159827-xfqk');
-        self::assertCount(1, $set, 'Three members reaching one set create it once.');
+        $this->assertCount(1, $set, 'Three members reaching one set create it once.');
 
         foreach ([
             '023707063052-axjm',
@@ -503,8 +415,8 @@ class KeywordImportTest extends AbstractImportTestCase
             '887654277691-eatw',
         ] as $term) {
             $rows = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/' . $term);
-            self::assertCount(1, $rows, sprintf('Term %s becomes a category.', $term));
-            self::assertSame($set[0]['uid'], $rows[0]['parent'], sprintf('Term %s hangs off the set.', $term));
+            $this->assertCount(1, $rows, sprintf('Term %s becomes a category.', $term));
+            $this->assertSame($set[0]['uid'], $rows[0]['parent'], sprintf('Term %s hangs off the set.', $term));
         }
     }
 
@@ -521,15 +433,11 @@ class KeywordImportTest extends AbstractImportTestCase
         $enum = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Ambiance');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Historic');
 
-        self::assertCount(1, $enum, 'The usage-site enum becomes the parent.');
-        self::assertSame($enum[0]['uid'], $term[0]['parent']);
-        self::assertSame(
-            [],
-            $this->fetchCategoriesByRemoteId(
-                'keyword:https://thuecat.org/ontology/thuecat/1.0/ConventionLocationTopics'
-            ),
-            'The term\'s other enum is never created.'
-        );
+        $this->assertCount(1, $enum, 'The usage-site enum becomes the parent.');
+        $this->assertSame($enum[0]['uid'], $term[0]['parent']);
+        $this->assertSame([], $this->fetchCategoriesByRemoteId(
+            'keyword:https://thuecat.org/ontology/thuecat/1.0/ConventionLocationTopics'
+        ), 'The term\'s other enum is never created.');
     }
 
     #[Test]
@@ -541,11 +449,7 @@ class KeywordImportTest extends AbstractImportTestCase
         $this->runImport();
 
         foreach ($this->fetchCategoriesUnder(100) as $row) {
-            self::assertStringStartsNotWith(
-                'keyword:',
-                (string)$row['remote_id'],
-                'A keyword category appeared under the category anchor.'
-            );
+            $this->assertStringStartsNotWith('keyword:', (string)$row['remote_id'], 'A keyword category appeared under the category anchor.');
         }
     }
 
@@ -563,16 +467,8 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'),
-            'The shared term must yield exactly one category.'
-        );
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh'),
-            'Its set must not be duplicated either.'
-        );
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'), 'The shared term must yield exactly one category.');
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh'), 'Its set must not be duplicated either.');
     }
 
     /**
@@ -604,17 +500,13 @@ class KeywordImportTest extends AbstractImportTestCase
         $museumRows = $this->fetchCategoriesByTitle('Museum');
         $weingutRows = $this->fetchCategoriesByTitle('Weingut');
 
-        self::assertCount(3, $museumRows, 'Museum collides across both trees three ways.');
-        self::assertCount(2, $weingutRows, 'Weingut collides across both trees two ways.');
-        self::assertCount(1, $this->fetchCategoriesByTitle('Sammlung'), 'The term set is created once.');
+        $this->assertCount(3, $museumRows, 'Museum collides across both trees three ways.');
+        $this->assertCount(2, $weingutRows, 'Weingut collides across both trees two ways.');
+        $this->assertCount(1, $this->fetchCategoriesByTitle('Sammlung'), 'The term set is created once.');
 
         foreach ([$museumRows, $weingutRows] as $sameTitle) {
             $remoteIds = array_column($sameTitle, 'remote_id');
-            self::assertSame(
-                $remoteIds,
-                array_unique($remoteIds),
-                'Same-titled rows must be distinct records with distinct remote_ids.'
-            );
+            $this->assertSame($remoteIds, array_unique($remoteIds), 'Same-titled rows must be distinct records with distinct remote_ids.');
         }
 
         $checked = 0;
@@ -628,19 +520,15 @@ class KeywordImportTest extends AbstractImportTestCase
             $underKeywordAnchor = $this->isDescendantOf((int)$row['uid'], 200);
             $isKeyword = str_starts_with((string)$row['remote_id'], 'keyword:');
 
-            self::assertSame(
-                $isKeyword,
-                $underKeywordAnchor,
-                sprintf(
-                    'Row "%s" (%s) sits under the wrong anchor.',
-                    $row['title'],
-                    $row['remote_id']
-                )
-            );
+            $this->assertSame($isKeyword, $underKeywordAnchor, sprintf(
+                'Row "%s" (%s) sits under the wrong anchor.',
+                $row['title'],
+                $row['remote_id']
+            ));
         }
 
         // Guards the loop: without imported rows the assertions above are vacuous.
-        self::assertGreaterThanOrEqual(5, $checked, 'Both trees must have been populated.');
+        $this->assertGreaterThanOrEqual(5, $checked, 'Both trees must have been populated.');
     }
 
     /**
@@ -883,7 +771,7 @@ class KeywordImportTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Import configuration not found in pre-state.');
+        $this->assertNotNull($configuration, 'Import configuration not found in pre-state.');
         $this->get(Importer::class)->importConfiguration($configuration);
     }
 

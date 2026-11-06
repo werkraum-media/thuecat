@@ -35,8 +35,8 @@ final class SyncChannelUrlProviderTest extends TestCase
     public function canProvideForSyncChannelOnly(): void
     {
         $subject = new SyncChannelUrlProvider(
-            self::createStub(SyncChannel::class),
-            self::createStub(SyncWindow::class),
+            $this->createStub(SyncChannel::class),
+            $this->createStub(SyncWindow::class),
         );
 
         $syncChannel = new ImportConfiguration();
@@ -44,8 +44,8 @@ final class SyncChannelUrlProviderTest extends TestCase
         $syncScope = new ImportConfiguration();
         $syncScope->_setProperty('type', 'syncScope');
 
-        self::assertTrue($subject->canProvideForConfiguration($syncChannel));
-        self::assertFalse($subject->canProvideForConfiguration($syncScope));
+        $this->assertTrue($subject->canProvideForConfiguration($syncChannel));
+        $this->assertFalse($subject->canProvideForConfiguration($syncScope));
     }
 
     #[Test]
@@ -53,15 +53,15 @@ final class SyncChannelUrlProviderTest extends TestCase
     {
         $since = new DateTimeImmutable('2026-10-14T03:00:00+02:00');
         $syncWindow = $this->createMock(SyncWindow::class);
-        $syncWindow->expects(self::once())->method('since')->with(34, 10)->willReturn($since);
+        $syncWindow->expects($this->once())->method('since')->with(34, 10)->willReturn($since);
         $syncChannel = $this->createMock(SyncChannel::class);
-        $syncChannel->expects(self::once())
+        $syncChannel->expects($this->once())
             ->method('read')
             ->with('https://widgets.thuecat.org', 'test-channel', $since)
             ->willReturn(new SyncChannelLists(['test-event-1', 'test-event-2'], []))
         ;
 
-        $configuration = self::createConfiguredStub(ImportConfiguration::class, [
+        $configuration = $this->createConfiguredStub(ImportConfiguration::class, [
             'getUid' => 34,
             'getType' => 'syncChannel',
             'getStoragePid' => 10,
@@ -71,7 +71,7 @@ final class SyncChannelUrlProviderTest extends TestCase
 
         $subject = (new SyncChannelUrlProvider($syncChannel, $syncWindow))->createWithConfiguration($configuration);
 
-        self::assertSame(
+        $this->assertSame(
             [
                 'https://widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1',
                 'https://widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-2',

@@ -59,8 +59,8 @@ class ShowPageCacheTest extends AbstractCachingTestCase
         $this->request(10);
         $warm = $this->cacheIdentifiersTaggedWith('pages', 'pageId_10');
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(1, $warm, 'A show request must leave one page-cache entry.');
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(1, $warm, 'A show request must leave one page-cache entry.');
     }
 
     #[Test]
@@ -68,11 +68,7 @@ class ShowPageCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
 
-        self::assertNotSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_21'),
-            'The configured record must tag the page it is displayed on.'
-        );
+        $this->assertNotSame([], $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_21'), 'The configured record must tag the page it is displayed on.');
     }
 
     #[Test]
@@ -84,26 +80,18 @@ class ShowPageCacheTest extends AbstractCachingTestCase
             $this->attractionShowRequest('23', 11)
         );
 
-        self::assertNotSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_23'),
-            'A record shown via the query parameter must tag the page.'
-        );
+        $this->assertNotSame([], $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_23'), 'A record shown via the query parameter must tag the page.');
     }
 
     #[Test]
     public function savingTheConfiguredRecordDiscardsThePage(): void
     {
         $this->request(10);
-        self::assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'));
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'));
 
         $this->saveRecord(21, ['title' => 'Stadtmuseum Erfurt, neu benannt'], self::TABLE);
 
-        self::assertSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'),
-            'Saving the displayed record must discard its page.'
-        );
+        $this->assertSame([], $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'), 'Saving the displayed record must discard its page.');
     }
 
     #[Test]
@@ -114,12 +102,8 @@ class ShowPageCacheTest extends AbstractCachingTestCase
 
         $body = (string)$this->request(10)->getBody();
 
-        self::assertStringContainsString('Stadtmuseum Erfurt, neu benannt', $body);
-        self::assertStringNotContainsString(
-            '<h2>Stadtmuseum Erfurt</h2>',
-            $body,
-            'The superseded title must not survive in a cached page.'
-        );
+        $this->assertStringContainsString('Stadtmuseum Erfurt, neu benannt', $body);
+        $this->assertStringNotContainsString('<h2>Stadtmuseum Erfurt</h2>', $body, 'The superseded title must not survive in a cached page.');
     }
 
     #[Test]
@@ -131,8 +115,8 @@ class ShowPageCacheTest extends AbstractCachingTestCase
 
         $body = (string)$this->request(13)->getBody();
 
-        self::assertStringContainsString('Keine Daten vorhanden.', $body);
-        self::assertStringNotContainsString('Ort der verschwindet', $body);
+        $this->assertStringContainsString('Keine Daten vorhanden.', $body);
+        $this->assertStringNotContainsString('Ort der verschwindet', $body);
     }
 
     /**
@@ -144,19 +128,11 @@ class ShowPageCacheTest extends AbstractCachingTestCase
     {
         $this->deleteRecord(24, self::TABLE);
         $this->request(13);
-        self::assertCount(
-            1,
-            $this->cacheIdentifiersTaggedWith('pages', 'pageId_13'),
-            'The empty page is cached.'
-        );
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_13'), 'The empty page is cached.');
 
         $this->undeleteRecord(24, self::TABLE);
 
-        self::assertSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', 'pageId_13'),
-            'A restored record must discard the empty page that waited for it.'
-        );
+        $this->assertSame([], $this->cacheIdentifiersTaggedWith('pages', 'pageId_13'), 'A restored record must discard the empty page that waited for it.');
     }
 
     #[Test]
@@ -166,24 +142,20 @@ class ShowPageCacheTest extends AbstractCachingTestCase
 
         $this->request(13);
 
-        self::assertNotSame(
-            [],
-            $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_24'),
-            'The empty page must stay reachable through the configured uid.'
-        );
+        $this->assertNotSame([], $this->cacheIdentifiersTaggedWith('pages', self::TABLE . '_24'), 'The empty page must stay reachable through the configured uid.');
     }
 
     #[Test]
     public function theNextRequestRendersAChangedRoomCapacityOfTheVenue(): void
     {
         $this->request(16);
-        self::assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_16'), 'The venue page is cached.');
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith('pages', 'pageId_16'), 'The venue page is cached.');
 
         $this->saveRecord(1, ['capacity_theatre' => '310'], 'tx_thuecat_meeting_room');
 
         $rooms = $this->renderedSection((new InternalRequest())->withPageId(16), 'venue', 'meetingRooms');
-        self::assertStringContainsString('310', $rooms);
-        self::assertStringNotContainsString('200', $rooms);
+        $this->assertStringContainsString('310', $rooms);
+        $this->assertStringNotContainsString('200', $rooms);
     }
 
     #[Test]
@@ -194,10 +166,6 @@ class ShowPageCacheTest extends AbstractCachingTestCase
 
         $this->request(10);
 
-        self::assertSame(
-            $afterFirst,
-            $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'),
-            'The same request must not create a second entry.'
-        );
+        $this->assertSame($afterFirst, $this->cacheIdentifiersTaggedWith('pages', 'pageId_10'), 'The same request must not create a second entry.');
     }
 }

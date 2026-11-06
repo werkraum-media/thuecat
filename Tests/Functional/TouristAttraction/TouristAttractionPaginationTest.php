@@ -43,9 +43,9 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Attraction 01', $body);
-        self::assertStringContainsString('Attraction 10', $body);
-        self::assertStringNotContainsString('Attraction 11', $body);
+        $this->assertStringContainsString('Attraction 01', $body);
+        $this->assertStringContainsString('Attraction 10', $body);
+        $this->assertStringNotContainsString('Attraction 11', $body);
     }
 
     #[Test]
@@ -58,10 +58,10 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Attraction 11', $body);
-        self::assertStringContainsString('Attraction 20', $body);
-        self::assertStringNotContainsString('Attraction 01<', $body);
-        self::assertStringNotContainsString('Attraction 21', $body);
+        $this->assertStringContainsString('Attraction 11', $body);
+        $this->assertStringContainsString('Attraction 20', $body);
+        $this->assertStringNotContainsString('Attraction 01<', $body);
+        $this->assertStringNotContainsString('Attraction 21', $body);
     }
 
     #[Test]
@@ -71,8 +71,8 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
-        self::assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=3', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=3', $body);
     }
 
     #[Test]
@@ -83,7 +83,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // 25 fixtures, itemsPerPage = 10 => 3 pages
-        self::assertStringContainsString('10 Einträge pro Seite, 3 Seiten insgesamt', $body);
+        $this->assertStringContainsString('10 Einträge pro Seite, 3 Seiten insgesamt', $body);
     }
 
     // 3.5: a keyword-filtered list must keep its selection across pages, both in
@@ -99,11 +99,8 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // 13 odd-numbered attractions carry the keyword => 2 pages.
-        self::assertStringContainsString('10 Einträge pro Seite, 2 Seiten insgesamt', $body);
-        self::assertStringContainsString(
-            'tx_thuecat_touristattractionlist%5Bdemand%5D%5Bkeywords%5D=501',
-            $body
-        );
+        $this->assertStringContainsString('10 Einträge pro Seite, 2 Seiten insgesamt', $body);
+        $this->assertStringContainsString('tx_thuecat_touristattractionlist%5Bdemand%5D%5Bkeywords%5D=501', $body);
     }
 
     #[Test]
@@ -120,9 +117,9 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // Page 1 holds the first ten odd ones (01-19); page 2 the rest (21-25).
-        self::assertStringContainsString('Attraction 21', $body);
-        self::assertStringContainsString('Attraction 25', $body);
+        $this->assertStringContainsString('Attraction 21', $body);
+        $this->assertStringContainsString('Attraction 25', $body);
         // An even-numbered attraction would mean the filter was dropped.
-        self::assertStringNotContainsString('Attraction 22', $body);
+        $this->assertStringNotContainsString('Attraction 22', $body);
     }
 }

@@ -90,10 +90,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration($configuration);
 
-        self::assertSame(
-            $expected,
-            $this->fetchColumnsByRemoteId(self::TABLE, 'https://thuecat.org/resources/' . $room, array_keys($expected))
-        );
+        $this->assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, 'https://thuecat.org/resources/' . $room, array_keys($expected)));
     }
 
     #[Test]
@@ -107,12 +104,12 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::GALERIE);
-        self::assertIsString($row['description']);
-        self::assertStringStartsWith('Die Galerie ist eine Veranstaltungsfläche', $row['description']);
-        self::assertSame('Gallery', $translations[1]['title'] ?? null);
-        self::assertIsString($translations[1]['description'] ?? null);
-        self::assertStringStartsWith('The gallery is an event space', $translations[1]['description']);
-        self::assertSame('Galerie', $translations[2]['title'] ?? null);
+        $this->assertIsString($row['description']);
+        $this->assertStringStartsWith('Die Galerie ist eine Veranstaltungsfläche', $row['description']);
+        $this->assertSame('Gallery', $translations[1]['title'] ?? null);
+        $this->assertIsString($translations[1]['description'] ?? null);
+        $this->assertStringStartsWith('The gallery is an event space', $translations[1]['description']);
+        $this->assertSame('Galerie', $translations[2]['title'] ?? null);
     }
 
     #[Test]
@@ -124,10 +121,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertContains(
-            $this->fetchUidByRemoteId('sys_category', 'type:thuecat:MajorEventRoom'),
-            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'categories')
-        );
+        $this->assertContains($this->fetchUidByRemoteId('sys_category', 'type:thuecat:MajorEventRoom'), $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'categories'));
     }
 
     // A room is fetched as a reference, so its organisation relates only when already stored.
@@ -144,11 +138,8 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $room = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
-        self::assertSame(1, $room['managed_by']);
-        self::assertContains(
-            $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/537010241706-gncn'),
-            $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'keywords')
-        );
+        $this->assertSame(1, $room['managed_by']);
+        $this->assertContains($this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/537010241706-gncn'), $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'keywords'));
     }
 
     // DEFENSIVE: not observed upstream.
@@ -161,10 +152,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            ['floor_size' => '0.00', 'room_height' => '11.50'],
-            $this->fetchColumnsByRemoteId(self::TABLE, self::GALERIE, ['floor_size', 'room_height'])
-        );
+        $this->assertSame(['floor_size' => '0.00', 'room_height' => '11.50'], $this->fetchColumnsByRemoteId(self::TABLE, self::GALERIE, ['floor_size', 'room_height']));
         $this->assertSingleUnmatchedValue(self::TABLE, self::GALERIE, 'schema:floorSize', 'test:UnknownUnit');
     }
 
@@ -178,7 +166,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(0, $this->fetchRowByRemoteId(self::TABLE, self::GALERIE)['floor_plan']);
+        $this->assertSame(0, $this->fetchRowByRemoteId(self::TABLE, self::GALERIE)['floor_plan']);
         $this->assertSingleUnmatchedValue(self::TABLE, self::GALERIE, 'schema:accommodationFloorPlan', 'https://example.com/test-floor-plan.pdf');
     }
 
@@ -192,7 +180,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([[1, 160]], array_map(
+        $this->assertSame([[1, 160]], array_map(
             static fn (array $room): array => [$room['uid'], $room['capacity_banquet']],
             $this->fetchChildren(self::TABLE)
         ));
@@ -208,13 +196,10 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            [[7, 50, 'Galerie of the second site'], [8, 10, 'Galerie']],
-            array_map(
-                static fn (array $room): array => [$room['uid'], $room['pid'], $room['title']],
-                $this->fetchChildren(self::TABLE)
-            )
-        );
+        $this->assertSame([[7, 50, 'Galerie of the second site'], [8, 10, 'Galerie']], array_map(
+            static fn (array $room): array => [$room['uid'], $room['pid'], $room['title']],
+            $this->fetchChildren(self::TABLE)
+        ));
     }
 
     #[Test]
@@ -226,17 +211,17 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $tripleRoom = 'https://thuecat.org/resources/853365081548-bobo';
-        self::assertCount(1, array_filter(
+        $this->assertCount(1, array_filter(
             $this->fetchChildren(self::TABLE),
             static fn (array $room): bool => $room['remote_id'] === $tripleRoom
         ));
         $uid = $this->fetchUidByRemoteId(self::TABLE, $tripleRoom);
-        self::assertContains($uid, $this->fetchMmRelatedUids(
+        $this->assertContains($uid, $this->fetchMmRelatedUids(
             'tx_thuecat_tourist_attraction',
             $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::MEETING_VENUE_WITH_ROOMS),
             'meeting_rooms'
         ));
-        self::assertContains($uid, $this->fetchMmRelatedUids(
+        $this->assertContains($uid, $this->fetchMmRelatedUids(
             self::TABLE,
             $this->fetchUidByRemoteId(self::TABLE, 'https://thuecat.org/resources/380984144868-tjdz'),
             'contained_rooms'

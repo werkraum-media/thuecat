@@ -41,10 +41,10 @@ final class TranslationRelationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $translations = $this->fetchTranslationsByParent('tx_thuecat_tourist_information', 1);
-        self::assertArrayHasKey(1, $translations);
-        self::assertSame(1, $translations[1]['managed_by']);
-        self::assertSame('1', $translations[1]['town']);
-        self::assertSame('1', $translations[1]['contained_in_organisation']);
+        $this->assertArrayHasKey(1, $translations);
+        $this->assertSame(1, $translations[1]['managed_by']);
+        $this->assertSame('1', $translations[1]['town']);
+        $this->assertSame('1', $translations[1]['contained_in_organisation']);
     }
 
     #[Test]
@@ -58,7 +58,7 @@ final class TranslationRelationImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $translations = $this->fetchTranslationsByParent('tx_thuecat_town', 3);
-        self::assertArrayHasKey(1, $translations);
-        self::assertSame(1, $translations[1]['managed_by']);
+        $this->assertArrayHasKey(1, $translations);
+        $this->assertSame(1, $translations[1]['managed_by']);
     }
 }

@@ -71,8 +71,8 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
 
         $section = $this->renderedSection($request, 'relation', 'mainImage');
 
-        self::assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
-        self::assertStringContainsString('Foto: Main Author', $section);
+        $this->assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
+        $this->assertStringContainsString('Foto: Main Author', $section);
     }
 
     #[Test]
@@ -82,8 +82,8 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
 
         $section = $this->renderedSection($request, 'relation', 'mediaFiles');
 
-        self::assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
-        self::assertStringContainsString('Foto: Gallery Author', $section);
+        $this->assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
+        $this->assertStringContainsString('Foto: Gallery Author', $section);
     }
 
     #[Test]
@@ -93,7 +93,7 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
 
         $section = $this->renderedSection($request, 'relation', 'logo');
 
-        self::assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
+        $this->assertStringContainsString('fileadmin-thuecat/_processed_/', $section);
     }
 
     // Square 20x20 source, 2:1 crop: an uncropped render would be 200 high.
@@ -104,8 +104,8 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
 
         $section = $this->renderedSection($request, 'relation', 'mainImage');
 
-        self::assertMatchesRegularExpression('#<img[^>]+width="200"#', $section);
-        self::assertMatchesRegularExpression('#<img[^>]+height="100"#', $section);
+        $this->assertMatchesRegularExpression('#<img[^>]+width="200"#', $section);
+        $this->assertMatchesRegularExpression('#<img[^>]+height="100"#', $section);
     }
 
     #[Test]
@@ -116,8 +116,8 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('Weg ohne Medien', $body);
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('Weg ohne Medien', $body);
         self::assertSectionNotRendered($body, 'relation', 'mainImage');
         self::assertSectionNotRendered($body, 'relation', 'mediaFiles');
         self::assertSectionNotRendered($body, 'relation', 'logo');

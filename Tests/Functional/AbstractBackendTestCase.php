@@ -83,7 +83,7 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
         $processedTca = is_array($formData['processedTca'] ?? null) ? $formData['processedTca'] : [];
         $columns = is_array($processedTca['columns'] ?? null) ? $processedTca['columns'] : [];
         $fieldConf = $columns[$field] ?? null;
-        self::assertIsArray($fieldConf, 'Field ' . $field . ' is not part of the ' . $table . ' form.');
+        $this->assertIsArray($fieldConf, 'Field ' . $field . ' is not part of the ' . $table . ' form.');
         $config = is_array($fieldConf['config'] ?? null) ? $fieldConf['config'] : [];
         $databaseRow = is_array($formData['databaseRow'] ?? null) ? $formData['databaseRow'] : [];
 

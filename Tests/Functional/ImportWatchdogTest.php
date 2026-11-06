@@ -40,8 +40,8 @@ class ImportWatchdogTest extends AbstractImportTestCase
 
         $entries = $this->getLogEntriesOfType('runAborted');
 
-        self::assertCount(1, $entries, 'The abort is recorded.');
-        self::assertSame('error', $entries[0]['severity']);
+        $this->assertCount(1, $entries, 'The abort is recorded.');
+        $this->assertSame('error', $entries[0]['severity']);
     }
 
     #[Test]
@@ -52,13 +52,13 @@ class ImportWatchdogTest extends AbstractImportTestCase
         $this->importWithExpiredDeadline(1);
 
         $entries = $this->getLogEntriesOfType('runAborted');
-        self::assertIsString($entries[0]['context']);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
 
-        self::assertIsArray($context);
-        self::assertSame('fetch', $context['phase'] ?? null, 'The phase reached is named.');
-        self::assertArrayHasKey('budgetSeconds', $context);
-        self::assertArrayHasKey('elapsedSeconds', $context);
+        $this->assertIsArray($context);
+        $this->assertSame('fetch', $context['phase'] ?? null, 'The phase reached is named.');
+        $this->assertArrayHasKey('budgetSeconds', $context);
+        $this->assertArrayHasKey('elapsedSeconds', $context);
     }
 
     #[Test]
@@ -68,7 +68,7 @@ class ImportWatchdogTest extends AbstractImportTestCase
 
         $severity = $this->importWithExpiredDeadline(1);
 
-        self::assertSame('error', $severity, 'The command must exit non-zero.');
+        $this->assertSame('error', $severity, 'The command must exit non-zero.');
     }
 
     /**
@@ -93,8 +93,8 @@ class ImportWatchdogTest extends AbstractImportTestCase
             ->fetchAllAssociative()
         ;
 
-        self::assertCount(1, $log, 'An import log record exists for the aborted run.');
-        self::assertCount(1, $this->getLogEntriesOfType('runAborted'));
+        $this->assertCount(1, $log, 'An import log record exists for the aborted run.');
+        $this->assertCount(1, $this->getLogEntriesOfType('runAborted'));
     }
 
     /**
@@ -113,19 +113,19 @@ class ImportWatchdogTest extends AbstractImportTestCase
                 null,
                 new DeadlineThrowingOnCheck(2)
             );
-            self::fail('Expected the run-ending throwable to surface.');
+            $this->fail('Expected the run-ending throwable to surface.');
         } catch (RuntimeException $expected) {
-            self::assertSame('deliberate mid-run failure', $expected->getMessage());
+            $this->assertSame('deliberate mid-run failure', $expected->getMessage());
         }
 
         $entries = $this->getLogEntriesOfType('runFailed');
 
-        self::assertCount(1, $entries, 'The run-ending failure is recorded.');
-        self::assertSame('error', $entries[0]['severity']);
-        self::assertIsString($entries[0]['context']);
+        $this->assertCount(1, $entries, 'The run-ending failure is recorded.');
+        $this->assertSame('error', $entries[0]['severity']);
+        $this->assertIsString($entries[0]['context']);
         $context = json_decode($entries[0]['context'], true);
-        self::assertIsArray($context);
-        self::assertSame('persist', $context['phase'] ?? null, 'The phase reached is named.');
+        $this->assertIsArray($context);
+        $this->assertSame('persist', $context['phase'] ?? null, 'The phase reached is named.');
     }
 
     #[Test]
@@ -137,7 +137,7 @@ class ImportWatchdogTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
-        self::assertSame([], $this->getLogEntriesOfType('runAborted'));
+        $this->assertSame([], $this->getLogEntriesOfType('runAborted'));
     }
 
     private function importWithExpiredDeadline(int $uid): string
@@ -158,7 +158,7 @@ class ImportWatchdogTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         return $configuration;
     }

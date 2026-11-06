@@ -68,9 +68,6 @@ final class SyncWindowTest extends AbstractFunctionalTestCase
             new FixedClock(new DateTimeImmutable(self::NOW, $zone)),
         );
 
-        self::assertEquals(
-            new DateTimeImmutable($expectedSince, $zone),
-            $subject->since($configurationUid, $storagePid)
-        );
+        $this->assertEquals(new DateTimeImmutable($expectedSince, $zone), $subject->since($configurationUid, $storagePid));
     }
 }

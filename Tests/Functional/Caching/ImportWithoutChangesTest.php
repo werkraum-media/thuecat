@@ -73,11 +73,11 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
     {
         $this->import();
         $timestamps = $this->timestamps();
-        self::assertNotSame([], $timestamps, 'The first import must store a record.');
+        $this->assertNotSame([], $timestamps, 'The first import must store a record.');
 
         $this->import();
 
-        self::assertSame($timestamps, $this->timestamps());
+        $this->assertSame($timestamps, $this->timestamps());
     }
 
     /**
@@ -92,16 +92,12 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
         $this->import();
         $this->warmCaches();
 
-        self::assertNotSame([], $this->storedEntries()['teaser'], 'Teasers stored.');
-        self::assertNotSame([], $this->storedEntries()['list'], 'A list stored.');
+        $this->assertNotSame([], $this->storedEntries()['teaser'], 'Teasers stored.');
+        $this->assertNotSame([], $this->storedEntries()['list'], 'A list stored.');
 
         $this->import();
 
-        self::assertSame(
-            ['teaser' => [], 'list' => []],
-            $this->storedEntries(),
-            'Known limitation: an import discards the caches of every record it visits.'
-        );
+        $this->assertSame(['teaser' => [], 'list' => []], $this->storedEntries(), 'Known limitation: an import discards the caches of every record it visits.');
     }
 
     #[Test]
@@ -109,15 +105,11 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
     {
         $this->import();
         $this->warmCaches();
-        self::assertNotSame([], $this->storedEntries()['teaser'], 'Teasers stored.');
+        $this->assertNotSame([], $this->storedEntries()['teaser'], 'Teasers stored.');
 
         $this->import('attraction-with-category-renamed.json');
 
-        self::assertSame(
-            [],
-            $this->storedEntries()['teaser'],
-            'A changed record discards what displayed it.'
-        );
+        $this->assertSame([], $this->storedEntries()['teaser'], 'A changed record discards what displayed it.');
     }
 
     protected function import(string $fixture = 'attraction-with-category.json'): void
@@ -153,7 +145,7 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
     private function identifiers(string $cacheIdentifier): array
     {
         $backend = $this->get(CacheManager::class)->getCache($cacheIdentifier)->getBackend();
-        self::assertInstanceOf(Typo3DatabaseBackend::class, $backend);
+        $this->assertInstanceOf(Typo3DatabaseBackend::class, $backend);
 
         $identifiers = [];
         foreach ($backend->findIdentifiersByTag('tx_thuecat_tourist_attraction') as $identifier) {

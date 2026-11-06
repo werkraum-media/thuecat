@@ -37,7 +37,7 @@ final class ImportModulePaginationTest extends AbstractBackendTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportLogsForPagination.php');
 
-        self::assertSame([12, 11, 10, 9, 8], $this->uidsOnPage(1));
+        $this->assertSame([12, 11, 10, 9, 8], $this->uidsOnPage(1));
     }
 
     #[Test]
@@ -45,7 +45,7 @@ final class ImportModulePaginationTest extends AbstractBackendTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportLogsForPagination.php');
 
-        self::assertSame([2, 1], $this->uidsOnPage(3));
+        $this->assertSame([2, 1], $this->uidsOnPage(3));
     }
 
     #[Test]
@@ -55,7 +55,7 @@ final class ImportModulePaginationTest extends AbstractBackendTestCase
 
         $pagination = $this->paginate(1)->getPagination();
 
-        self::assertSame(3, $pagination->getLastPageNumber());
+        $this->assertSame(3, $pagination->getLastPageNumber());
     }
 
     /**
@@ -66,7 +66,7 @@ final class ImportModulePaginationTest extends AbstractBackendTestCase
         $uids = [];
 
         foreach ($this->paginate($page)->getPaginatedItems() as $log) {
-            self::assertInstanceOf(ImportLog::class, $log);
+            $this->assertInstanceOf(ImportLog::class, $log);
             $uids[] = (int)$log->getUid();
         }
 

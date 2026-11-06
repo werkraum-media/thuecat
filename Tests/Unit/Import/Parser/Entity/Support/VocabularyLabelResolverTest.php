@@ -48,8 +48,8 @@ class VocabularyLabelResolverTest extends TestCase
             self::GERMANY => new VocabularyClass(self::GERMANY, [], ['de' => 'Deutschland', 'en' => 'Germany']),
         ]);
 
-        self::assertSame('Deutschland', $subject->resolve('thuecat:Germany', 'de'));
-        self::assertSame('Germany', $subject->resolve('thuecat:Germany', 'en'));
+        $this->assertSame('Deutschland', $subject->resolve('thuecat:Germany', 'de'));
+        $this->assertSame('Germany', $subject->resolve('thuecat:Germany', 'en'));
     }
 
     #[Test]
@@ -59,7 +59,7 @@ class VocabularyLabelResolverTest extends TestCase
             self::THURINGIA => new VocabularyClass(self::THURINGIA, [], ['de' => 'Thüringen']),
         ]);
 
-        self::assertSame('Thüringen', $subject->resolve('thuecat:Thuringia', 'de'));
+        $this->assertSame('Thüringen', $subject->resolve('thuecat:Thuringia', 'de'));
     }
 
     #[Test]
@@ -67,14 +67,14 @@ class VocabularyLabelResolverTest extends TestCase
     {
         $subject = $this->subject([]);
 
-        self::assertSame('Deutschland', $subject->resolve('Deutschland', 'de'));
-        self::assertSame('Thüringen', $subject->resolve('Thüringen', 'de'));
+        $this->assertSame('Deutschland', $subject->resolve('Deutschland', 'de'));
+        $this->assertSame('Thüringen', $subject->resolve('Thüringen', 'de'));
     }
 
     #[Test]
     public function keepsEmptyValueEmpty(): void
     {
-        self::assertSame('', $this->subject([])->resolve('', 'de'));
+        $this->assertSame('', $this->subject([])->resolve('', 'de'));
     }
 
     /**
@@ -86,7 +86,7 @@ class VocabularyLabelResolverTest extends TestCase
     {
         $subject = $this->subject([]);
 
-        self::assertSame('Germany', $subject->resolve('thuecat:Germany', 'de'));
+        $this->assertSame('Germany', $subject->resolve('thuecat:Germany', 'de'));
     }
 
     #[Test]
@@ -96,18 +96,18 @@ class VocabularyLabelResolverTest extends TestCase
             self::GERMANY => new VocabularyClass(self::GERMANY, [], ['de' => 'Deutschland']),
         ]);
 
-        self::assertSame('Germany', $subject->resolve('thuecat:Germany', 'fr'));
+        $this->assertSame('Germany', $subject->resolve('thuecat:Germany', 'fr'));
     }
 
     #[Test]
     public function fallsBackToMemberNameWhenVocabularyFails(): void
     {
-        $provider = self::createStub(VocabularyProvider::class);
+        $provider = $this->createStub(VocabularyProvider::class);
         $provider->method('index')->willThrowException(new RuntimeException('upstream down', 1758000000));
 
         $subject = new VocabularyLabelResolver($provider);
 
-        self::assertSame('Germany', $subject->resolve('thuecat:Germany', 'de'));
+        $this->assertSame('Germany', $subject->resolve('thuecat:Germany', 'de'));
     }
 
     /**
@@ -123,7 +123,7 @@ class VocabularyLabelResolverTest extends TestCase
 
         $subject->resolve('thuecat:Germany', 'de', 'the-api-key');
 
-        self::assertSame(['the-api-key'], $this->apiKeys);
+        $this->assertSame(['the-api-key'], $this->apiKeys);
     }
 
     /**
@@ -133,7 +133,7 @@ class VocabularyLabelResolverTest extends TestCase
     {
         $index = new VocabularyIndex($classes);
 
-        $provider = self::createStub(VocabularyProvider::class);
+        $provider = $this->createStub(VocabularyProvider::class);
         $provider->method('index')->willReturnCallback(
             function (?string $apiKey = null) use ($index): VocabularyIndex {
                 $this->apiKeys[] = $apiKey;

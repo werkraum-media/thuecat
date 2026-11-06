@@ -34,7 +34,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('title', 'Example Title');
 
-        self::assertSame('Example Title', $subject->getTitle());
+        $this->assertSame('Example Title', $subject->getTitle());
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('type', 'static');
 
-        self::assertSame('static', $subject->getType());
+        $this->assertSame('static', $subject->getType());
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class ImportConfigurationTest extends TestCase
     {
         $subject = new ImportConfiguration();
 
-        self::assertSame('tx_thuecat_import_configuration', $subject->getTableName());
+        $this->assertSame('tx_thuecat_import_configuration', $subject->getTableName());
     }
 
     #[Test]
@@ -63,7 +63,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('tstamp', $lastChanged);
 
-        self::assertSame($lastChanged, $subject->getLastChanged());
+        $this->assertSame($lastChanged, $subject->getLastChanged());
     }
 
     #[Test]
@@ -88,7 +88,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame(20, $subject->getStoragePid());
+        $this->assertSame(20, $subject->getStoragePid());
     }
 
     #[Test]
@@ -100,7 +100,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame(0, $subject->getStoragePid());
+        $this->assertSame(0, $subject->getStoragePid());
     }
 
     #[Test]
@@ -125,7 +125,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame(0, $subject->getStoragePid());
+        $this->assertSame(0, $subject->getStoragePid());
     }
 
     #[Test]
@@ -150,7 +150,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame(0, $subject->getStoragePid());
+        $this->assertSame(0, $subject->getStoragePid());
     }
 
     #[Test]
@@ -175,7 +175,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('1:/thuecat/', $subject->getFileFolder());
+        $this->assertSame('1:/thuecat/', $subject->getFileFolder());
     }
 
     #[Test]
@@ -185,7 +185,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', '');
 
-        self::assertSame('', $subject->getFileFolder());
+        $this->assertSame('', $subject->getFileFolder());
     }
 
     #[Test]
@@ -221,7 +221,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame([
+        $this->assertSame([
             'https://thuecat.org/resources/942302009360-jopp',
         ], $subject->getUrls());
     }
@@ -235,7 +235,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame([], $subject->getUrls());
+        $this->assertSame([], $subject->getUrls());
     }
 
     #[Test]
@@ -260,7 +260,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame([], $subject->getUrls());
+        $this->assertSame([], $subject->getUrls());
     }
 
     #[Test]
@@ -285,7 +285,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('dd4639dc-58a7-4648-a6ce-4950293a06db', $subject->getSyncScopeId());
+        $this->assertSame('dd4639dc-58a7-4648-a6ce-4950293a06db', $subject->getSyncScopeId());
     }
 
     #[Test]
@@ -297,7 +297,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('', $subject->getSyncScopeId());
+        $this->assertSame('', $subject->getSyncScopeId());
     }
 
     #[Test]
@@ -322,7 +322,7 @@ class ImportConfigurationTest extends TestCase
 
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('', $subject->getSyncScopeId());
+        $this->assertSame('', $subject->getSyncScopeId());
     }
 
     #[Test]
@@ -346,7 +346,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('https://cdb.int.thuecat.org', $subject->getApiDomain());
+        $this->assertSame('https://cdb.int.thuecat.org', $subject->getApiDomain());
     }
 
     #[Test]
@@ -370,7 +370,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('', $subject->getApiDomain());
+        $this->assertSame('', $subject->getApiDomain());
     }
 
     #[Test]
@@ -394,7 +394,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('', $subject->getApiDomain());
+        $this->assertSame('', $subject->getApiDomain());
     }
 
     #[Test]
@@ -403,7 +403,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', '');
 
-        self::assertSame('', $subject->getApiDomain());
+        $this->assertSame('', $subject->getApiDomain());
     }
 
     #[Test]
@@ -427,7 +427,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('test-channel', $subject->getSyncChannelId());
+        $this->assertSame('test-channel', $subject->getSyncChannelId());
     }
 
     #[Test]
@@ -451,7 +451,7 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', $flexForm);
 
-        self::assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
+        $this->assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
     }
 
     #[Test]
@@ -460,6 +460,6 @@ class ImportConfigurationTest extends TestCase
         $subject = new ImportConfiguration();
         $subject->_setProperty('configuration', '');
 
-        self::assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
+        $this->assertSame('https://widgets.thuecat.org', $subject->getSyncApiDomain());
     }
 }

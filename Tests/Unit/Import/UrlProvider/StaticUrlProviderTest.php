@@ -37,7 +37,7 @@ class StaticUrlProviderTest extends TestCase
         $subject = new StaticUrlProvider();
 
         $result = $subject->canProvideForConfiguration($configuration);
-        self::assertTrue($result);
+        $this->assertTrue($result);
     }
 
     #[Test]
@@ -49,7 +49,7 @@ class StaticUrlProviderTest extends TestCase
         $subject = new StaticUrlProvider();
 
         $result = $subject->createWithConfiguration($configuration);
-        self::assertInstanceOf(StaticUrlProvider::class, $result);
+        $this->assertInstanceOf(StaticUrlProvider::class, $result);
     }
 
     #[Test]
@@ -62,7 +62,7 @@ class StaticUrlProviderTest extends TestCase
 
         $concreteProvider = $subject->createWithConfiguration($configuration);
         $result = $concreteProvider->getUrls();
-        self::assertSame([
+        $this->assertSame([
             'https://example.com',
         ], $result);
     }

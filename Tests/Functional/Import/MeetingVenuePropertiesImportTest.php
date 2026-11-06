@@ -142,7 +142,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $this->importConfiguration($configuration);
 
-        self::assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, $remoteId, array_keys($expected)));
+        $this->assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, $remoteId, array_keys($expected)));
     }
 
     #[Test]
@@ -154,8 +154,8 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importConfiguration(4);
 
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::HOTEL_WITH_GASTRONOMY);
-        self::assertSame('Motorcycle-Friendly Hotel and Restaurant', $translations[1]['certifications'] ?? null);
-        self::assertSame('Établissement hôtelier et de restauration adapté aux motards', $translations[2]['certifications'] ?? null);
+        $this->assertSame('Motorcycle-Friendly Hotel and Restaurant', $translations[1]['certifications'] ?? null);
+        $this->assertSame('Établissement hôtelier et de restauration adapté aux motards', $translations[2]['certifications'] ?? null);
     }
 
     #[Test]
@@ -166,7 +166,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([], array_filter($this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, self::VENUE_COLUMNS)));
+        $this->assertSame([], array_filter($this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, self::VENUE_COLUMNS)));
     }
 
     #[Test]
@@ -178,8 +178,8 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importConfiguration(3);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::MEETING_LOCATION);
-        self::assertSame(0, $row['distance_fair']);
-        self::assertSame(2000, $row['distance_city_center']);
+        $this->assertSame(0, $row['distance_fair']);
+        $this->assertSame(2000, $row['distance_city_center']);
 
         $this->assertSingleUnmatchedValue(self::TABLE, self::MEETING_LOCATION, 'thuecat:distanceFair', 'test:UnknownUnit');
     }
@@ -194,10 +194,10 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $german = $this->fetchRowByRemoteId(self::TABLE, self::MEMORIAL)['description_culture_portal'];
         $english = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::MEMORIAL)[1]['description_culture_portal'] ?? null;
-        self::assertIsString($german);
-        self::assertIsString($english);
-        self::assertStringStartsWith('<p>Was die Gedenk- und Bildungsstätte Andreasstraße besonders macht:', $german);
-        self::assertStringStartsWith('<p>What makes the Andreasstraße Memorial and Educational Center special', $english);
+        $this->assertIsString($german);
+        $this->assertIsString($english);
+        $this->assertStringStartsWith('<p>Was die Gedenk- und Bildungsstätte Andreasstraße besonders macht:', $german);
+        $this->assertStringStartsWith('<p>What makes the Andreasstraße Memorial and Educational Center special', $english);
     }
 
     #[Test]
@@ -209,9 +209,9 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importConfiguration(7);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::VILLA);
-        self::assertIsString($row['description_lodging_meeting']);
-        self::assertStringStartsWith('<p>Kommunikation und Konzentration:', $row['description_lodging_meeting']);
-        self::assertEmpty($row['description_culture_portal']);
+        $this->assertIsString($row['description_lodging_meeting']);
+        $this->assertStringStartsWith('<p>Kommunikation und Konzentration:', $row['description_lodging_meeting']);
+        $this->assertEmpty($row['description_culture_portal']);
     }
 
     #[Test]
@@ -223,8 +223,8 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importConfiguration(6);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::MEMORIAL);
-        self::assertEmpty($row['description_culture_portal']);
-        self::assertEmpty($row['description_lodging_meeting']);
+        $this->assertEmpty($row['description_culture_portal']);
+        $this->assertEmpty($row['description_lodging_meeting']);
 
         $this->assertSingleUnmatchedValue(self::TABLE, self::MEMORIAL, 'thuecat:additionalDescriptions', 'test:UnknownDescription');
     }

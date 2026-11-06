@@ -47,13 +47,7 @@ class ContainsPlaceImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertGreaterThan(
-            0,
-            $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_52469786-oatour')
-        );
-        self::assertGreaterThan(
-            0,
-            $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_106954656-oatour')
-        );
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_52469786-oatour'));
+        $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_106954656-oatour'));
     }
 }

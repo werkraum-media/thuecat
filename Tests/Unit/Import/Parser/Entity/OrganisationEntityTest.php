@@ -31,43 +31,43 @@ final class OrganisationEntityTest extends AbstractImportTestCase
     {
         $subject = new OrganisationEntity();
 
-        self::assertSame('tx_thuecat_organisation', $subject::TABLE);
+        $this->assertSame('tx_thuecat_organisation', $subject::TABLE);
     }
 
     #[Test]
     public function returnsRemoteId(): void
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new OrganisationEntity();
 
-        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $subject->getRemoteId($node));
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $subject->getRemoteId($node));
     }
 
     #[Test]
     public function returnsTitle(): void
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
+        $this->assertSame('Erfurt Tourismus und Marketing GmbH', $row['title']);
     }
 
     #[Test]
     public function returnsDescription(): void
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
+        $this->assertStringStartsWith('Die Erfurt Tourismus', (string)$row['description']);
     }
 
     #[Test]
@@ -77,26 +77,26 @@ final class OrganisationEntityTest extends AbstractImportTestCase
         // present must yield '' rather than silently falling back to German.
         // toArray() then drops the empty strings, so the keys disappear entirely.
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->parse($node, 'en', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertArrayNotHasKey('title', $row);
-        self::assertArrayNotHasKey('description', $row);
+        $this->assertArrayNotHasKey('title', $row);
+        $this->assertArrayNotHasKey('description', $row);
     }
 
     #[Test]
     public function rowContainsRemoteId(): void
     {
         $node = $this->nodeFromFixture('018132452787-ngbe.json', 'schema:Organization');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new OrganisationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
+        $this->assertSame('https://thuecat.org/resources/018132452787-ngbe', $row['remote_id']);
     }
 }

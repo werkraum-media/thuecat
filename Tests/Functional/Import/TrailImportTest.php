@@ -42,38 +42,29 @@ class TrailImportTest extends AbstractImportTestCase
 
         $row = $this->fetchTrail();
 
-        self::assertSame(self::REMOTE_ID, $row['remote_id']);
-        self::assertSame('Radtour "Nessetal-Radweg" – Von Erfurt nach Eisenach', $row['title']);
-        self::assertSame(
-            'Entspannt radeln von Erfurt über die Thüringer Ackerscholle nach Eisenach.',
-            $row['short_description']
-        );
-        self::assertSame('Open', $row['opening_status']);
+        $this->assertSame(self::REMOTE_ID, $row['remote_id']);
+        $this->assertSame('Radtour "Nessetal-Radweg" – Von Erfurt nach Eisenach', $row['title']);
+        $this->assertSame('Entspannt radeln von Erfurt über die Thüringer Ackerscholle nach Eisenach.', $row['short_description']);
+        $this->assertSame('Open', $row['opening_status']);
 
-        self::assertIsString($row['route_line']);
-        self::assertStringStartsWith('11.0298,50.978492,193 ', $row['route_line']);
-        self::assertSame(
-            'https://www.outdooractive.com/de/download.tour.gpx?i=52469786&exportWaypoints=true',
-            $row['gpx_url']
-        );
-        self::assertSame(
-            'https://www.outdooractive.com/api/v2/project/api-thue-cat/tour/52469786/export/elpro?key=1',
-            $row['elevation_profile']
-        );
-        self::assertSame('69103.255127', $row['distance']);
-        self::assertSame('MTR', $row['distance_unit']);
-        self::assertSame('285', $row['duration']);
-        self::assertSame('MIN', $row['duration_unit']);
-        self::assertSame('Radtour', $row['exercise_type']);
-        self::assertSame('193', $row['min_altitude']);
-        self::assertSame('346', $row['max_altitude']);
-        self::assertSame('268', $row['ascent_elevation']);
-        self::assertSame('272', $row['descent_elevation']);
+        $this->assertIsString($row['route_line']);
+        $this->assertStringStartsWith('11.0298,50.978492,193 ', $row['route_line']);
+        $this->assertSame('https://www.outdooractive.com/de/download.tour.gpx?i=52469786&exportWaypoints=true', $row['gpx_url']);
+        $this->assertSame('https://www.outdooractive.com/api/v2/project/api-thue-cat/tour/52469786/export/elpro?key=1', $row['elevation_profile']);
+        $this->assertSame('69103.255127', $row['distance']);
+        $this->assertSame('MTR', $row['distance_unit']);
+        $this->assertSame('285', $row['duration']);
+        $this->assertSame('MIN', $row['duration_unit']);
+        $this->assertSame('Radtour', $row['exercise_type']);
+        $this->assertSame('193', $row['min_altitude']);
+        $this->assertSame('346', $row['max_altitude']);
+        $this->assertSame('268', $row['ascent_elevation']);
+        $this->assertSame('272', $row['descent_elevation']);
 
         // A rating is meaningless without the scale it was measured on.
-        self::assertSame('1', $row['rating_difficulty']);
-        self::assertSame('1', $row['rating_difficulty_min']);
-        self::assertSame('5', $row['rating_difficulty_max']);
+        $this->assertSame('1', $row['rating_difficulty']);
+        $this->assertSame('1', $row['rating_difficulty_min']);
+        $this->assertSame('5', $row['rating_difficulty_max']);
     }
 
     #[Test]
@@ -93,7 +84,7 @@ class TrailImportTest extends AbstractImportTestCase
             | TrailSeason::Sep->bit()
             | TrailSeason::Oct->bit();
 
-        self::assertSame($expected, $this->fetchTrailSeason());
+        $this->assertSame($expected, $this->fetchTrailSeason());
     }
 
     #[Test]
@@ -102,7 +93,7 @@ class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
         $this->importConfiguration(1);
-        self::assertNotSame(0, $this->fetchTrailSeason());
+        $this->assertNotSame(0, $this->fetchTrailSeason());
 
         // Same remote id, no thuecat:season. Without the parsed-empty sentinel
         // toArray() drops the 0 and DataHandler leaves the old bitmask.
@@ -112,7 +103,7 @@ class TrailImportTest extends AbstractImportTestCase
         );
         $this->importConfigurationBypassingCache(1);
 
-        self::assertSame(0, $this->fetchTrailSeason());
+        $this->assertSame(0, $this->fetchTrailSeason());
     }
 
     // Proven red 2026-08-26: the re-import kept the old German text verbatim.
@@ -121,7 +112,7 @@ class TrailImportTest extends AbstractImportTestCase
     #[Test]
     public function upstreamDroppingAStringClearsTheColumn(): void
     {
-        self::markTestSkipped(
+        $this->markTestSkipped(
             'Known defect: a string cleared upstream keeps its previous value. Re-importing a trail whose'
             . ' thuecat:shortDescription upstream removed still yields "Entspannt radeln von Erfurt…".'
             . ' toArray() drops the empty string, so the row omits the column and DataHandler leaves it.'
@@ -131,7 +122,7 @@ class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
         $this->importConfiguration(1);
-        self::assertNotSame('', $this->fetchTrail()['short_description']);
+        $this->assertNotSame('', $this->fetchTrail()['short_description']);
 
         $this->expectFetchForUrl(
             'https://thuecat.org/resources/e_52469786-oatour',
@@ -139,7 +130,7 @@ class TrailImportTest extends AbstractImportTestCase
         );
         $this->importConfigurationBypassingCache(1);
 
-        self::assertSame('', $this->fetchTrail()['short_description']);
+        $this->assertSame('', $this->fetchTrail()['short_description']);
     }
 
     #[Test]
@@ -150,12 +141,12 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(0, $this->countRows('tx_thuecat_address'));
-        self::assertSame(0, $this->countRows('tx_thuecat_opening_hours'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_address'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_opening_hours'));
 
         $row = $this->fetchTrail();
-        self::assertArrayNotHasKey('offers', $row);
-        self::assertArrayNotHasKey('distance_to_public_transport', $row);
+        $this->assertArrayNotHasKey('offers', $row);
+        $this->assertArrayNotHasKey('distance_to_public_transport', $row);
     }
 
     #[Test]
@@ -166,8 +157,8 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
-        self::assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID));
+        $this->assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
+        $this->assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID));
     }
 
     #[Test]
@@ -180,13 +171,13 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID)['sorting']);
+        $this->assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID)['sorting']);
     }
 
     protected function fetchTrailSeason(): int
     {
         $season = $this->fetchTrail()['season'];
-        self::assertIsNumeric($season);
+        $this->assertIsNumeric($season);
 
         return (int)$season;
     }
@@ -201,15 +192,11 @@ class TrailImportTest extends AbstractImportTestCase
 
         $rows = $this->fetchChildren('tx_thuecat_trail_way_type');
 
-        self::assertCount(5, $rows);
-        self::assertSame('Asphalt', $rows[0]['title']);
-        self::assertSame('47630.14144', $rows[0]['length']);
-        self::assertSame('MTR', $rows[0]['length_unit']);
-        self::assertSame(
-            ['Asphalt', 'Schotterweg', 'Naturweg', 'Pfad', 'Straße'],
-            array_column($rows, 'title'),
-            'Segments keep the order upstream delivered them in.'
-        );
+        $this->assertCount(5, $rows);
+        $this->assertSame('Asphalt', $rows[0]['title']);
+        $this->assertSame('47630.14144', $rows[0]['length']);
+        $this->assertSame('MTR', $rows[0]['length_unit']);
+        $this->assertSame(['Asphalt', 'Schotterweg', 'Naturweg', 'Pfad', 'Straße'], array_column($rows, 'title'), 'Segments keep the order upstream delivered them in.');
     }
 
     #[Test]
@@ -223,18 +210,18 @@ class TrailImportTest extends AbstractImportTestCase
         $byType = [];
         foreach ($this->fetchChildren('tx_thuecat_trail_location') as $row) {
             $locationType = $row['location_type'];
-            self::assertIsString($locationType);
+            $this->assertIsString($locationType);
             $byType[$locationType] = $row;
         }
 
-        self::assertSame(['start', 'end'], array_keys($byType));
-        self::assertSame('Benediktsplatz – Erfurt', $byType['start']['title']);
-        self::assertSame('50.978492', $byType['start']['latitude']);
-        self::assertSame('11.0298', $byType['start']['longitude']);
+        $this->assertSame(['start', 'end'], array_keys($byType));
+        $this->assertSame('Benediktsplatz – Erfurt', $byType['start']['title']);
+        $this->assertSame('50.978492', $byType['start']['latitude']);
+        $this->assertSame('11.0298', $byType['start']['longitude']);
 
         // The end location carries no schema:geo in any sample.
-        self::assertSame('Marktplatz – Eisenach', $byType['end']['title']);
-        self::assertSame('', $byType['end']['latitude']);
+        $this->assertSame('Marktplatz – Eisenach', $byType['end']['title']);
+        $this->assertSame('', $byType['end']['latitude']);
     }
 
     #[Test]
@@ -247,13 +234,13 @@ class TrailImportTest extends AbstractImportTestCase
 
         $rows = $this->fetchChildren('tx_thuecat_trail_condition');
 
-        self::assertCount(2, $rows);
-        self::assertIsString($rows[0]['title']);
-        self::assertStringStartsWith('Vollsperrung Ilmtal-Radweg', $rows[0]['title']);
-        self::assertSame('2026-03-02', $rows[0]['valid_from']);
-        self::assertSame('50.894491', $rows[0]['latitude']);
-        self::assertSame('11.286409', $rows[0]['longitude']);
-        self::assertNotSame('', $rows[0]['description']);
+        $this->assertCount(2, $rows);
+        $this->assertIsString($rows[0]['title']);
+        $this->assertStringStartsWith('Vollsperrung Ilmtal-Radweg', $rows[0]['title']);
+        $this->assertSame('2026-03-02', $rows[0]['valid_from']);
+        $this->assertSame('50.894491', $rows[0]['latitude']);
+        $this->assertSame('11.286409', $rows[0]['longitude']);
+        $this->assertNotSame('', $rows[0]['description']);
     }
 
     #[Test]
@@ -264,8 +251,8 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
-        self::assertSame(0, $this->countRows('tx_thuecat_trail_way_type'));
+        $this->assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_trail_way_type'));
     }
 
     #[Test]
@@ -281,7 +268,7 @@ class TrailImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_51872708-oatour');
-        self::assertGreaterThan(0, $trailUid, 'The trail must be imported.');
+        $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
 
         $attraction = $this->fetchRowByRemoteId(
             'tx_thuecat_tourist_attraction',
@@ -289,12 +276,8 @@ class TrailImportTest extends AbstractImportTestCase
         );
 
         $relation = $attraction['contained_in_trail'];
-        self::assertIsNumeric($relation);
-        self::assertSame(
-            $trailUid,
-            (int)$relation,
-            'The attraction must resolve its containment to the real trail row.'
-        );
+        $this->assertIsNumeric($relation);
+        $this->assertSame($trailUid, (int)$relation, 'The attraction must resolve its containment to the real trail row.');
     }
 
     #[Test]
@@ -307,19 +290,10 @@ class TrailImportTest extends AbstractImportTestCase
 
         $byLanguage = $this->fetchTrailsByLanguage();
 
-        self::assertSame([0, 1, 2], array_keys($byLanguage));
-        self::assertSame(
-            'Radtour "Nessetal-Radweg" – Von Erfurt nach Eisenach',
-            $byLanguage[0]['title']
-        );
-        self::assertSame(
-            'Cycle route "Nessetal cycle path" – From Erfurt to Eisenach',
-            $byLanguage[1]['title']
-        );
-        self::assertSame(
-            'Balade à vélo « Nessetal-Radweg » – D’Erfurt à Eisenach',
-            $byLanguage[2]['title']
-        );
+        $this->assertSame([0, 1, 2], array_keys($byLanguage));
+        $this->assertSame('Radtour "Nessetal-Radweg" – Von Erfurt nach Eisenach', $byLanguage[0]['title']);
+        $this->assertSame('Cycle route "Nessetal cycle path" – From Erfurt to Eisenach', $byLanguage[1]['title']);
+        $this->assertSame('Balade à vélo « Nessetal-Radweg » – D’Erfurt à Eisenach', $byLanguage[2]['title']);
     }
 
     #[Test]
@@ -337,16 +311,16 @@ class TrailImportTest extends AbstractImportTestCase
             static fn (array $row): bool => $row['location_type'] === TrailLocationEntity::TYPE_START
         ));
 
-        self::assertCount(3, $starts, 'One start location per language.');
+        $this->assertCount(3, $starts, 'One start location per language.');
         // The label is the same string in every language here; what matters is
         // that a row exists per language rather than one shared row.
-        self::assertSame([0, 1, 2], array_column($starts, 'sys_language_uid'));
+        $this->assertSame([0, 1, 2], array_column($starts, 'sys_language_uid'));
 
         // Coordinates are l10n_mode=exclude: the same place in every language,
         // parsed once rather than per language.
         foreach ($starts as $start) {
-            self::assertSame('50.978492', $start['latitude']);
-            self::assertSame('11.0298', $start['longitude']);
+            $this->assertSame('50.978492', $start['latitude']);
+            $this->assertSame('11.0298', $start['longitude']);
         }
     }
 
@@ -358,7 +332,7 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(3, $this->fetchTrailsByLanguage());
+        $this->assertCount(3, $this->fetchTrailsByLanguage());
     }
 
     #[Test]
@@ -369,7 +343,7 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
+        $this->assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
     }
 
     #[Test]
@@ -385,13 +359,10 @@ class TrailImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $survivors = $this->fetchChildren('tx_thuecat_trail_way_type');
-        self::assertCount(3, $survivors);
-        self::assertSame(
-            ['Asphalt', 'Schotterweg', 'Naturweg'],
-            array_column($survivors, 'title')
-        );
+        $this->assertCount(3, $survivors);
+        $this->assertSame(['Asphalt', 'Schotterweg', 'Naturweg'], array_column($survivors, 'title'));
 
-        self::assertSame(2, $this->countDeletedRows('tx_thuecat_trail_way_type'));
+        $this->assertSame(2, $this->countDeletedRows('tx_thuecat_trail_way_type'));
     }
 
     #[Test]
@@ -408,8 +379,8 @@ class TrailImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
-        self::assertSame(0, $this->countDeletedRows('tx_thuecat_trail_way_type'));
+        $this->assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
+        $this->assertSame(0, $this->countDeletedRows('tx_thuecat_trail_way_type'));
     }
 
     /** @return array<int, array<string, mixed>> keyed by sys_language_uid */
@@ -429,7 +400,7 @@ class TrailImportTest extends AbstractImportTestCase
         $byLanguage = [];
         foreach ($rows as $row) {
             $language = $row['sys_language_uid'];
-            self::assertIsNumeric($language);
+            $this->assertIsNumeric($language);
             $byLanguage[(int)$language] = $row;
         }
 

@@ -48,10 +48,7 @@ class EventDescriptionImportTest extends AbstractImportTestCase
     #[Test]
     public function thuecatHtmlEntryFillsDetails(): void
     {
-        self::assertSame(
-            '<p>Am 28. Juni findet ein CSD-Special statt.</p>',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_html-hubev')['details'] ?? null
-        );
+        $this->assertSame('<p>Am 28. Juni findet ein CSD-Special statt.</p>', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_html-hubev')['details'] ?? null);
     }
 
     /**
@@ -60,19 +57,13 @@ class EventDescriptionImportTest extends AbstractImportTestCase
     #[Test]
     public function textObjectHtmlFillsDetailsInTheImportLanguage(): void
     {
-        self::assertSame(
-            '<p>Eine Testveranstaltung.</p>',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_textobject-hubev')['details'] ?? null
-        );
+        $this->assertSame('<p>Eine Testveranstaltung.</p>', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_textobject-hubev')['details'] ?? null);
     }
 
     #[Test]
     public function textObjectWithoutHtmlFallsBackToPlainText(): void
     {
-        self::assertSame(
-            'Nur Text ohne HTML.',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_textonly-hubev')['details'] ?? null
-        );
+        $this->assertSame('Nur Text ohne HTML.', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_textonly-hubev')['details'] ?? null);
     }
 
     /**
@@ -81,10 +72,7 @@ class EventDescriptionImportTest extends AbstractImportTestCase
     #[Test]
     public function plainLiteralWithoutHtmlEntryFallsBackToEscapedText(): void
     {
-        self::assertSame(
-            'Tom &amp; Jerry &lt;live&gt;',
-            $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_literal-hubev')['details'] ?? null
-        );
+        $this->assertSame('Tom &amp; Jerry &lt;live&gt;', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_literal-hubev')['details'] ?? null);
     }
 
     #[Test]
@@ -92,7 +80,7 @@ class EventDescriptionImportTest extends AbstractImportTestCase
     {
         $event = $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://int.thuecat.org/resources/e_desc_none-hubev');
 
-        self::assertSame('Veranstaltung ohne Beschreibung', $event['title'] ?? null);
-        self::assertSame('', $event['details'] ?? '');
+        $this->assertSame('Veranstaltung ohne Beschreibung', $event['title'] ?? null);
+        $this->assertSame('', $event['details'] ?? '');
     }
 }

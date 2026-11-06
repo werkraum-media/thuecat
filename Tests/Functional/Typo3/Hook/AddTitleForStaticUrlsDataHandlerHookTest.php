@@ -68,11 +68,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
 
         $errorLog = $this->executeDataHandler($this->createDataMap($submittedValues));
 
-        self::assertCount(
-            0,
-            $errorLog,
-            'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog)
-        );
+        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
 
         $this->assertUrlTitles(
             'Titel Eins',
@@ -225,11 +221,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
 
         $errorLog = $this->executeDataHandler($dataMap);
 
-        self::assertCount(
-            0,
-            $errorLog,
-            'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog)
-        );
+        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
 
         $this->assertUrlTitles(
             'Titel Eins',
@@ -256,11 +248,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
 
         $errorLog = $this->executeDataHandler($dataMap);
 
-        self::assertCount(
-            0,
-            $errorLog,
-            'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog)
-        );
+        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
 
         $this->assertUrlTitles();
     }
@@ -351,19 +339,19 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         /** @var array<int, array<mixed>> $configurations */
         $configurations = $this->getAllRecords('tx_thuecat_import_configuration', true);
         $configuration = GeneralUtility::xml2array($configurations[1]['configuration']);
-        self::assertIsArray($configuration);
+        $this->assertIsArray($configuration);
 
         $urls = ArrayUtility::getValueByPath($configuration, 'data/sDEF/lDEF/urls/el');
         if ($titles === []) {
-            self::assertSame('', $urls);
+            $this->assertSame('', $urls);
             return;
         }
-        self::assertIsArray($urls);
+        $this->assertIsArray($urls);
 
-        self::assertCount(count($titles), $urls);
+        $this->assertCount(count($titles), $urls);
         $position = 0;
         foreach ($urls as $url) {
-            self::assertSame(
+            $this->assertSame(
                 $titles[$position++],
                 // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
                 $url['url']['el']['title']['vDEF'],

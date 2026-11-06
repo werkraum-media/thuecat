@@ -53,19 +53,16 @@ class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
         // Museum and Kirche hang below the set Gebäudetyp, Haus is a set of its
         // own. Burg is offered although no record uses it: the set is offered
         // whole. Region/Innenstadt sit outside the anchor and never appear.
-        self::assertSame(
-            [
-                'Gebäudetyp' => [
-                    'Burg' => [],
-                    'Kirche' => [],
-                    'Museum' => [
-                        'Freilichtmuseum' => [],
-                    ],
+        $this->assertSame([
+            'Gebäudetyp' => [
+                'Burg' => [],
+                'Kirche' => [],
+                'Museum' => [
+                    'Freilichtmuseum' => [],
                 ],
-                'Haus' => [],
             ],
-            $this->flattenOptions($options)
-        );
+            'Haus' => [],
+        ], $this->flattenOptions($options));
     }
 
     #[Test]
@@ -78,18 +75,15 @@ class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
 
         // Records carry the leaves romantisch (502) and Erfurt (505); the sets
         // above them are Ambiente and Hauptstadt.
-        self::assertSame(
-            [
-                'Ambiente' => [
-                    'modern' => [],
-                    'romantisch' => [],
-                ],
-                'Hauptstadt' => [
-                    'Erfurt' => [],
-                ],
+        $this->assertSame([
+            'Ambiente' => [
+                'modern' => [],
+                'romantisch' => [],
             ],
-            $this->flattenOptions($options)
-        );
+            'Hauptstadt' => [
+                'Erfurt' => [],
+            ],
+        ], $this->flattenOptions($options));
     }
 
     #[Test]
@@ -100,7 +94,7 @@ class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
             new FilterScope('tx_thuecat_tourist_attraction', [11], null)
         );
 
-        self::assertSame([], $options->getOptions());
+        $this->assertSame([], $options->getOptions());
     }
 
     #[Test]
@@ -112,8 +106,8 @@ class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
         );
 
         $root = $options->getOptions()[0];
-        self::assertSame('Gebäudetyp', $root->getTitle());
-        self::assertSame(100, $root->getUid());
+        $this->assertSame('Gebäudetyp', $root->getTitle());
+        $this->assertSame(100, $root->getUid());
     }
 
     #[Test]
@@ -127,7 +121,7 @@ class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
         // The set itself plus everything below it, so a record carrying only
         // the leaf Freilichtmuseum matches a selection of Gebäudetyp.
         sort($uids);
-        self::assertSame([10, 11, 13, 15, 100], $uids);
+        $this->assertSame([10, 11, 13, 15, 100], $uids);
     }
 
     private function scope(): FilterScope

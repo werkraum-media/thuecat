@@ -66,20 +66,20 @@ class EventEntityMappingTest extends AbstractFunctionalTestCase
         $expected = require __DIR__ . '/Assertions/' . $assertionFile . '.php';
 
         $payload = json_decode((string)file_get_contents($fixture), true);
-        self::assertIsArray($payload);
+        $this->assertIsArray($payload);
         $graph = $payload['@graph'] ?? [];
-        self::assertIsArray($graph);
-        self::assertArrayHasKey(0, $graph);
-        self::assertIsArray($graph[0]);
+        $this->assertIsArray($graph);
+        $this->assertArrayHasKey(0, $graph);
+        $this->assertIsArray($graph[0]);
 
         /** @var array<string, mixed> $node JSON objects decode to string-keyed arrays. */
         $node = $graph[0];
         $entity = new EventEntity();
         $entity->parse($node, 'de', new ParserContext(0), []);
 
-        self::assertIsArray($expected);
-        self::assertSame($expected['event'], $entity->toArray());
-        self::assertSame($expected['dates'], $entity->getDates());
-        self::assertSame($expected['categories'], $entity->getCategories());
+        $this->assertIsArray($expected);
+        $this->assertSame($expected['event'], $entity->toArray());
+        $this->assertSame($expected['dates'], $entity->getDates());
+        $this->assertSame($expected['categories'], $entity->getCategories());
     }
 }

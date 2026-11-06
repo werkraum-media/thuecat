@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Support;
 
-use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingRoomEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\ParkingFacilityEntity;

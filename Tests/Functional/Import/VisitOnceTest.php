@@ -62,11 +62,7 @@ class VisitOnceTest extends AbstractImportTestCase
         $this->importConfigurationBypassingCache(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL_ID);
-        self::assertGreaterThan(0, $trailUid, 'The trail must be imported.');
-        self::assertSame(
-            (string)$trailUid,
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION_ID)['contained_in_trail'] ?? null,
-            'The attraction relates the trail stored by the earlier root.'
-        );
+        $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
+        $this->assertSame((string)$trailUid, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION_ID)['contained_in_trail'] ?? null, 'The attraction relates the trail stored by the earlier root.');
     }
 }

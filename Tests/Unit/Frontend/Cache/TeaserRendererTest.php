@@ -50,14 +50,14 @@ class TeaserRendererTest extends TestCase
     #[DataProvider('records')]
     public function rendersTheListItemTemplateOfTheTableRootModel(Base $record, string $expectedTemplate, string $expectedVariable): void
     {
-        $cache = self::createStub(FrontendInterface::class);
+        $cache = $this->createStub(FrontendInterface::class);
         $cache->method('get')->willReturn(false);
-        $cacheManager = self::createStub(CacheManager::class);
+        $cacheManager = $this->createStub(CacheManager::class);
         $cacheManager->method('getCache')->willReturn($cache);
 
         $assigned = [];
         $rendered = '';
-        $view = self::createStub(ViewInterface::class);
+        $view = $this->createStub(ViewInterface::class);
         $view->method('assignMultiple')->willReturnCallback(static function (array $values) use (&$assigned, $view): ViewInterface {
             $assigned = $values;
             return $view;
@@ -66,7 +66,7 @@ class TeaserRendererTest extends TestCase
             $rendered = $template;
             return '';
         });
-        $viewFactory = self::createStub(ViewFactoryInterface::class);
+        $viewFactory = $this->createStub(ViewFactoryInterface::class);
         $viewFactory->method('create')->willReturn($view);
 
         $tables = [
@@ -74,16 +74,16 @@ class TeaserRendererTest extends TestCase
             MeetingVenue::class => 'tx_thuecat_tourist_attraction',
             Trail::class => 'tx_thuecat_trail',
         ];
-        $dataMapper = self::createStub(DataMapper::class);
+        $dataMapper = $this->createStub(DataMapper::class);
         $dataMapper->method('getDataMap')->willReturnCallback(
             static fn (string $className): DataMap => new DataMap($className, $tables[$className] ?? 'test:unmapped')
         );
 
         $subject = new TeaserRenderer($cacheManager, $viewFactory, new CacheIdentifierFactory(), $dataMapper);
-        $subject->render($record, 0, 0, [], [], self::createStub(ServerRequestInterface::class));
+        $subject->render($record, 0, 0, [], [], $this->createStub(ServerRequestInterface::class));
 
-        self::assertSame($expectedTemplate, $rendered);
-        self::assertArrayHasKey($expectedVariable, $assigned);
-        self::assertSame($record, $assigned[$expectedVariable]);
+        $this->assertSame($expectedTemplate, $rendered);
+        $this->assertArrayHasKey($expectedVariable, $assigned);
+        $this->assertSame($record, $assigned[$expectedVariable]);
     }
 }

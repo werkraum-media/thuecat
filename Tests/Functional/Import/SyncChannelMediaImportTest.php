@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
+use Psr\Http\Message\RequestInterface;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
@@ -86,9 +87,9 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
         $download = GuzzleClientFaker::getRequestForUrl(
             'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg'
         );
-        self::assertNotNull($download);
-        self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
-        self::assertSame('api_key=test-sync-key', $download->getUri()->getQuery());
+        $this->assertInstanceOf(RequestInterface::class, $download);
+        $this->assertSame('cdb.thuecat.org', $download->getUri()->getHost());
+        $this->assertSame('api_key=test-sync-key', $download->getUri()->getQuery());
     }
 
     #[Test]
@@ -109,9 +110,9 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
         $download = GuzzleClientFaker::getRequestForUrl(
             'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg'
         );
-        self::assertNotNull($download);
-        self::assertSame('cdb.thuecat.org', $download->getUri()->getHost());
-        self::assertSame('api_key=test-static-key', $download->getUri()->getQuery());
+        $this->assertInstanceOf(RequestInterface::class, $download);
+        $this->assertSame('cdb.thuecat.org', $download->getUri()->getHost());
+        $this->assertSame('api_key=test-static-key', $download->getUri()->getQuery());
     }
 
     #[Test]

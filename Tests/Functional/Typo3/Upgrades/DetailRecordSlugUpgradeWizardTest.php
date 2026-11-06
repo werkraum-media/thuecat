@@ -34,17 +34,11 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
 
         $this->get(DetailRecordSlugUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame(
-            'gemeindebrunnen-weimar',
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction')['slug']
-        );
+        $this->assertSame('gemeindebrunnen-weimar', $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction')['slug']);
         $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction');
-        self::assertArrayHasKey(1, $translations);
-        self::assertSame('community-fountain-weimar', $translations[1]['slug']);
-        self::assertSame(
-            'rennsteig',
-            $this->fetchRowByRemoteId('tx_thuecat_trail', 'test:wizard-trail')['slug']
-        );
+        $this->assertArrayHasKey(1, $translations);
+        $this->assertSame('community-fountain-weimar', $translations[1]['slug']);
+        $this->assertSame('rennsteig', $this->fetchRowByRemoteId('tx_thuecat_trail', 'test:wizard-trail')['slug']);
     }
 
     #[Test]
@@ -54,10 +48,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
 
         $this->get(DetailRecordSlugUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame(
-            'eigener-slug',
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-own-slug')['slug']
-        );
+        $this->assertSame('eigener-slug', $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-own-slug')['slug']);
     }
 
     #[Test]
@@ -67,14 +58,8 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
 
         $this->get(DetailRecordSlugUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame(
-            'wunderbar-gerber3',
-            $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-slash-attraction')['slug']
-        );
-        self::assertSame(
-            'weimar-erfurt',
-            $this->fetchRowByRemoteId('tx_thuecat_trail', 'test:wizard-slash-trail')['slug']
-        );
+        $this->assertSame('wunderbar-gerber3', $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-slash-attraction')['slug']);
+        $this->assertSame('weimar-erfurt', $this->fetchRowByRemoteId('tx_thuecat_trail', 'test:wizard-slash-trail')['slug']);
     }
 
     #[Test]
@@ -82,7 +67,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/DetailRecordsWithoutSlugs.csv');
 
-        self::assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+        $this->assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
     }
 
     #[Test]
@@ -90,7 +75,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/DetailRecordsWithSlugs.csv');
 
-        self::assertFalse($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+        $this->assertFalse($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
     }
 
     #[Test]
@@ -100,18 +85,9 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
 
         $this->get(DetailRecordSlugUpgradeWizard::class)->executeUpdate();
 
-        self::assertSame(
-            'bad-langensalza',
-            $this->fetchRowByRemoteId('tx_thuecat_town', 'test:wizard-town')['slug']
-        );
-        self::assertSame(
-            'museen-ausstellungen',
-            $this->fetchRowByRemoteId('sys_category', 'test:wizard-category')['slug']
-        );
-        self::assertSame(
-            'eigene-burgen',
-            $this->fetchRowByRemoteId('sys_category', 'test:wizard-own-category-slug')['slug']
-        );
+        $this->assertSame('bad-langensalza', $this->fetchRowByRemoteId('tx_thuecat_town', 'test:wizard-town')['slug']);
+        $this->assertSame('museen-ausstellungen', $this->fetchRowByRemoteId('sys_category', 'test:wizard-category')['slug']);
+        $this->assertSame('eigene-burgen', $this->fetchRowByRemoteId('sys_category', 'test:wizard-own-category-slug')['slug']);
     }
 
     #[Test]
@@ -119,7 +95,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/FilterRecordsWithoutSlugs.csv');
 
-        self::assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+        $this->assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
     }
 
     #[Test]
@@ -136,7 +112,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
             'slug' => '',
         ]);
 
-        self::assertFalse($upgradeWizards->isWizardDone('thuecat_detailRecordSlugs'));
-        self::assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
+        $this->assertFalse($upgradeWizards->isWizardDone('thuecat_detailRecordSlugs'));
+        $this->assertTrue($this->get(DetailRecordSlugUpgradeWizard::class)->updateNecessary());
     }
 }

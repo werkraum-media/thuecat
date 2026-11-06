@@ -63,7 +63,7 @@ class PreferredRootStrategyTest extends TestCase
 
     private function logger(): ImportLogger
     {
-        $logger = self::createStub(ImportLogger::class);
+        $logger = $this->createStub(ImportLogger::class);
         $logger->method('recordUnpreferredParent')->willReturnCallback(
             function (string $class, string $chosen): void {
                 $this->warnings[] = ['class' => $class, 'chosen' => $chosen];
@@ -90,7 +90,7 @@ class PreferredRootStrategyTest extends TestCase
             ['schema:Series', 'schema:Event']
         );
 
-        self::assertSame('schema:Event', $chosen);
+        $this->assertSame('schema:Event', $chosen);
     }
 
     #[Test]
@@ -103,7 +103,7 @@ class PreferredRootStrategyTest extends TestCase
             ['thuecat:OtherBuilding', 'schema:CivicStructure']
         );
 
-        self::assertSame('thuecat:OtherBuilding', $chosen);
+        $this->assertSame('thuecat:OtherBuilding', $chosen);
     }
 
     #[Test]
@@ -116,7 +116,7 @@ class PreferredRootStrategyTest extends TestCase
             ['schema:Organization', 'schema:CivicStructure']
         );
 
-        self::assertSame('schema:CivicStructure', $chosen);
+        $this->assertSame('schema:CivicStructure', $chosen);
     }
 
     #[Test]
@@ -128,7 +128,7 @@ class PreferredRootStrategyTest extends TestCase
             ['schema:CivicStructure', 'schema:TouristAttraction']
         );
 
-        self::assertSame('schema:CivicStructure', $chosen, 'Upstream order decides among equals.');
+        $this->assertSame('schema:CivicStructure', $chosen, 'Upstream order decides among equals.');
     }
 
     #[Test]
@@ -141,7 +141,7 @@ class PreferredRootStrategyTest extends TestCase
         );
 
         // Series is deeper than Book, so the fallback picks it.
-        self::assertSame('schema:Series', $chosen);
+        $this->assertSame('schema:Series', $chosen);
     }
 
     #[Test]
@@ -154,7 +154,7 @@ class PreferredRootStrategyTest extends TestCase
         );
 
         // Nobody's rule fits this class, so a person has to look at it.
-        self::assertSame([['class' => 'thuecat:Odd', 'chosen' => 'schema:Series']], $this->warnings);
+        $this->assertSame([['class' => 'thuecat:Odd', 'chosen' => 'schema:Series']], $this->warnings);
     }
 
     #[Test]
@@ -166,6 +166,6 @@ class PreferredRootStrategyTest extends TestCase
             ['schema:Series', 'schema:Event']
         );
 
-        self::assertSame([], $this->warnings);
+        $this->assertSame([], $this->warnings);
     }
 }

@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Vocabulary;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexFactory;
 
 class VocabularyIndexFactoryTest extends TestCase
@@ -54,8 +55,8 @@ class VocabularyIndexFactoryTest extends TestCase
     {
         $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
-        self::assertTrue($index->has('schema:Event'), 'schema.org class missing from merged index');
-        self::assertTrue($index->has('thuecat:BrassMusic'), 'ThueCat class missing from merged index');
+        $this->assertTrue($index->has('schema:Event'), 'schema.org class missing from merged index');
+        $this->assertTrue($index->has('thuecat:BrassMusic'), 'ThueCat class missing from merged index');
     }
 
     #[Test]
@@ -63,10 +64,7 @@ class VocabularyIndexFactoryTest extends TestCase
     {
         $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
-        self::assertSame(
-            ['schema:MusicEvent', 'schema:Event'],
-            $index->ancestors('thuecat:BrassMusic')
-        );
+        $this->assertSame(['schema:MusicEvent', 'schema:Event'], $index->ancestors('thuecat:BrassMusic'));
     }
 
     #[Test]
@@ -74,7 +72,7 @@ class VocabularyIndexFactoryTest extends TestCase
     {
         $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
-        self::assertSame([], $index->danglingReferences());
+        $this->assertSame([], $index->danglingReferences());
     }
 
     #[Test]
@@ -82,7 +80,7 @@ class VocabularyIndexFactoryTest extends TestCase
     {
         $index = (new VocabularyIndexFactory())->fromDocuments([self::THUECAT]);
 
-        self::assertSame(['schema:MusicEvent'], $index->danglingReferences());
+        $this->assertSame(['schema:MusicEvent'], $index->danglingReferences());
     }
 
     #[Test]
@@ -91,8 +89,8 @@ class VocabularyIndexFactoryTest extends TestCase
         $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
         $brassMusic = $index->get('thuecat:BrassMusic');
-        self::assertNotNull($brassMusic);
-        self::assertSame('Blasmusik', $brassMusic->label('de'));
+        $this->assertInstanceOf(VocabularyClass::class, $brassMusic);
+        $this->assertSame('Blasmusik', $brassMusic->label('de'));
     }
 
     #[Test]
@@ -113,8 +111,8 @@ class VocabularyIndexFactoryTest extends TestCase
         $index = (new VocabularyIndexFactory())->fromDocuments([$first, $second]);
         $museum = $index->get('schema:Museum');
 
-        self::assertNotNull($museum);
-        self::assertSame(['schema:CivicStructure'], $museum->parents);
+        $this->assertInstanceOf(VocabularyClass::class, $museum);
+        $this->assertSame(['schema:CivicStructure'], $museum->parents);
     }
 
     #[Test]
@@ -122,7 +120,7 @@ class VocabularyIndexFactoryTest extends TestCase
     {
         $index = (new VocabularyIndexFactory())->fromDocuments([]);
 
-        self::assertFalse($index->has('schema:Museum'));
-        self::assertSame([], $index->danglingReferences());
+        $this->assertFalse($index->has('schema:Museum'));
+        $this->assertSame([], $index->danglingReferences());
     }
 }

@@ -115,20 +115,17 @@ class EventImportTest extends AbstractImportTestCase
 
         $severity = $this->importConfigurationReturningSeverity(1);
 
-        self::assertSame('warning', $severity);
-        self::assertSame(
+        $this->assertSame('warning', $severity);
+        $this->assertSame([
             [
-                [
-                    'type' => 'scheduleDaySkipped',
-                    'severity' => 'warning',
-                    'table_name' => 'tx_events_domain_model_event',
-                    'remote_id' => 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm',
-                    'message' => 'Skipped schedule day(s) "PublicHolidays": no date series can be built from them.',
-                    'context' => '{"days":["PublicHolidays"]}',
-                ],
+                'type' => 'scheduleDaySkipped',
+                'severity' => 'warning',
+                'table_name' => 'tx_events_domain_model_event',
+                'remote_id' => 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm',
+                'message' => 'Skipped schedule day(s) "PublicHolidays": no date series can be built from them.',
+                'context' => '{"days":["PublicHolidays"]}',
             ],
-            $this->getLogEntriesOfType('scheduleDaySkipped')
-        );
-        self::assertSame([], $this->getLogEntriesOfType('scheduleDayDropped'));
+        ], $this->getLogEntriesOfType('scheduleDaySkipped'));
+        $this->assertSame([], $this->getLogEntriesOfType('scheduleDayDropped'));
     }
 }

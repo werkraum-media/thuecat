@@ -59,9 +59,7 @@ class FileFolderAccessTest extends AbstractFunctionalTestCase
             'absolute'
         );
 
-        self::assertTrue(
-            $this->createSubject()->assertWritable($storageUid . ':/')
-        );
+        $this->assertTrue($this->createSubject()->assertWritable($storageUid . ':/'));
     }
 
     private function createSubject(): FileFolderAccess

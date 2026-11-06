@@ -44,7 +44,7 @@ class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTestCase
     {
         $taskType = $this->get(TcaSchemaFactory::class)->get('tx_scheduler_task.' . TableGarbageCollectionTask::class);
 
-        self::assertSame(
+        $this->assertSame(
             ['dateField' => 'crdate', 'expirePeriod' => 180],
             // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
             $taskType->getRawConfiguration()['taskOptions']['tables'][$tableName] ?? null

@@ -43,10 +43,7 @@ class AccessibilitySpecificationEntityTest extends TestCase
             ],
         ], 'de');
 
-        self::assertSame(
-            ['accessibilityCertificationStatus' => 'CertificationValid'],
-            $subject->toArray()
-        );
+        $this->assertSame(['accessibilityCertificationStatus' => 'CertificationValid'], $subject->toArray());
     }
 
     #[Test]
@@ -62,10 +59,7 @@ class AccessibilitySpecificationEntityTest extends TestCase
             ],
         ], 'de');
 
-        self::assertSame(
-            ['certificationAccessibilityWalking' => 'PartiallyAccessible'],
-            $subject->toArray()
-        );
+        $this->assertSame(['certificationAccessibilityWalking' => 'PartiallyAccessible'], $subject->toArray());
     }
 
     #[Test]
@@ -84,10 +78,7 @@ class AccessibilitySpecificationEntityTest extends TestCase
             ],
         ], 'de');
 
-        self::assertSame(
-            ['certificationAccessibilityVisual' => 'FullyAccessible'],
-            $subject->toArray()
-        );
+        $this->assertSame(['certificationAccessibilityVisual' => 'FullyAccessible'], $subject->toArray());
     }
 
     #[Test]
@@ -107,15 +98,12 @@ class AccessibilitySpecificationEntityTest extends TestCase
             ],
         ], 'de');
 
-        self::assertSame(
-            [
-                'accessibilitySearchCriteria' => [
-                    'facilityAccessibilityWalking' => ['Handrail'],
-                    'facilityAccessibilityVisual' => ['BrailleSignage'],
-                ],
+        $this->assertSame([
+            'accessibilitySearchCriteria' => [
+                'facilityAccessibilityWalking' => ['Handrail'],
+                'facilityAccessibilityVisual' => ['BrailleSignage'],
             ],
-            $subject->toArray()
-        );
+        ], $subject->toArray());
     }
 
     /** The localised path stays language-selective; only untagged falls back. */
@@ -131,16 +119,10 @@ class AccessibilitySpecificationEntityTest extends TestCase
 
         $german = new AccessibilitySpecificationEntity();
         $german->configure($node, 'de');
-        self::assertSame(
-            ['shortDescriptionAccessibilityWalking' => 'Stufenloser Zugang'],
-            $german->toArray()
-        );
+        $this->assertSame(['shortDescriptionAccessibilityWalking' => 'Stufenloser Zugang'], $german->toArray());
 
         $english = new AccessibilitySpecificationEntity();
         $english->configure($node, 'en');
-        self::assertSame(
-            ['shortDescriptionAccessibilityWalking' => 'Step-free access'],
-            $english->toArray()
-        );
+        $this->assertSame(['shortDescriptionAccessibilityWalking' => 'Step-free access'], $english->toArray());
     }
 }

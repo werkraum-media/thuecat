@@ -37,10 +37,7 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression(
-            '#<meta[^>]+name="keywords"[^>]+content="Themenweg, Fahrradfreundlich"#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<meta[^>]+name="keywords"[^>]+content="Themenweg, Fahrradfreundlich"#', $body);
     }
 
     #[Test]
@@ -50,7 +47,7 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
+        $this->assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
 
     #[Test]
@@ -60,9 +57,6 @@ class TrailMetaTagsTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertMatchesRegularExpression(
-            '#<meta[^>]+name="keywords"[^>]+content="themed trail, bicycle friendly"#',
-            $body
-        );
+        $this->assertMatchesRegularExpression('#<meta[^>]+name="keywords"[^>]+content="themed trail, bicycle friendly"#', $body);
     }
 }

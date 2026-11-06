@@ -49,16 +49,8 @@ class KeywordFolderVisibilityTest extends AbstractImportTestCase
         $this->runImport();
         $this->runImport();
 
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId(self::TERM_REMOTE_ID),
-            'The keyword term must be reused, not duplicated, on a hidden folder.'
-        );
-        self::assertCount(
-            1,
-            $this->fetchCategoriesByRemoteId(self::SET_REMOTE_ID),
-            'The term set must be reused, not duplicated, on a hidden folder.'
-        );
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId(self::TERM_REMOTE_ID), 'The keyword term must be reused, not duplicated, on a hidden folder.');
+        $this->assertCount(1, $this->fetchCategoriesByRemoteId(self::SET_REMOTE_ID), 'The term set must be reused, not duplicated, on a hidden folder.');
     }
 
     // Deleting the keyword storage folder itself is not tested here: it is a
@@ -80,7 +72,7 @@ class KeywordFolderVisibilityTest extends AbstractImportTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        self::assertNotNull($configuration, 'Import configuration not found in pre-state.');
+        $this->assertNotNull($configuration, 'Import configuration not found in pre-state.');
         $this->get(Importer::class)->importConfiguration($configuration);
     }
 

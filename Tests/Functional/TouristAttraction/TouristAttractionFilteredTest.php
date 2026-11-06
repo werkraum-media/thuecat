@@ -53,9 +53,9 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // settings.towns = 1 (Erfurt) -> Stadtmuseum (1) and Domberg (2)
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Domberg Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Domberg Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -69,7 +69,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 }

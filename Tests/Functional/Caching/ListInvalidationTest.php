@@ -59,23 +59,15 @@ class ListInvalidationTest extends AbstractCachingTestCase
     {
         $this->requestPage(1);
         $this->requestPage(2);
-        self::assertCount(2, $this->listIdentifiers(), 'Both pages stored.');
+        $this->assertCount(2, $this->listIdentifiers(), 'Both pages stored.');
 
         $pageOneBefore = $this->identifiersForRecords(Extension::CACHE_LIST, [1]);
-        self::assertCount(1, $pageOneBefore, 'Page 1 shows attraction 1.');
+        $this->assertCount(1, $pageOneBefore, 'Page 1 shows attraction 1.');
 
         $this->saveRecord(15, ['title' => 'Attraction 15, neu benannt']);
 
-        self::assertSame(
-            $pageOneBefore,
-            $this->identifiersForRecords(Extension::CACHE_LIST, [1]),
-            'Page 1 does not show attraction 15, so it survives.'
-        );
-        self::assertSame(
-            [],
-            $this->identifiersForRecords(Extension::CACHE_LIST, [15]),
-            'Page 2 shows attraction 15, so it is discarded.'
-        );
+        $this->assertSame($pageOneBefore, $this->identifiersForRecords(Extension::CACHE_LIST, [1]), 'Page 1 does not show attraction 15, so it survives.');
+        $this->assertSame([], $this->identifiersForRecords(Extension::CACHE_LIST, [15]), 'Page 2 shows attraction 15, so it is discarded.');
     }
 
     #[Test]
@@ -86,7 +78,7 @@ class ListInvalidationTest extends AbstractCachingTestCase
 
         $body = (string)$this->requestPage(2)->getBody();
 
-        self::assertStringContainsString('Attraction 15, neu benannt', $body);
+        $this->assertStringContainsString('Attraction 15, neu benannt', $body);
     }
 
     /** A list matching nothing carries its table tag. */
@@ -94,19 +86,11 @@ class ListInvalidationTest extends AbstractCachingTestCase
     public function anEmptyListIsDiscardedWhenTheTableChanges(): void
     {
         $this->request(10, ['demand' => ['searchword' => 'Nichts trifft zu']]);
-        self::assertCount(
-            1,
-            $this->cacheIdentifiersTaggedWith(Extension::CACHE_LIST, 'tx_thuecat_tourist_attraction'),
-            'The empty result is stored.'
-        );
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith(Extension::CACHE_LIST, 'tx_thuecat_tourist_attraction'), 'The empty result is stored.');
 
         $this->saveRecord(1, ['title' => 'Attraction 01, neu benannt']);
 
-        self::assertSame(
-            [],
-            $this->cacheIdentifiersTaggedWith(Extension::CACHE_LIST, 'tx_thuecat_tourist_attraction'),
-            'Any change to the table discards a list that matched nothing.'
-        );
+        $this->assertSame([], $this->cacheIdentifiersTaggedWith(Extension::CACHE_LIST, 'tx_thuecat_tourist_attraction'), 'Any change to the table discards a list that matched nothing.');
     }
 
     protected function requestPage(int $currentPage): ResponseInterface

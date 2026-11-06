@@ -42,7 +42,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
-        self::assertSame(42, $subject->resolve(
+        $this->assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]),
             new AnchorScope('thuecat')
@@ -54,7 +54,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
-        self::assertSame(60, $subject->resolve(
+        $this->assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
             new AnchorScope('thuecat')
@@ -68,7 +68,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationReturning(['importThuecatKeywordsParent' => 60]));
 
-        self::assertSame(60, $subject->resolve(
+        $this->assertSame(60, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => $unusable]),
             new AnchorScope('thuecat')
@@ -83,7 +83,7 @@ class CategoryAnchorResolverTest extends TestCase
             $this->extensionConfigurationReturning(['importThuecatKeywordsParent' => $unusable])
         );
 
-        self::assertSame(0, $subject->resolve(
+        $this->assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
             new AnchorScope('thuecat')
@@ -95,7 +95,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
 
-        self::assertSame(0, $subject->resolve(
+        $this->assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
             new AnchorScope('thuecat')
@@ -107,7 +107,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationMissingPath());
 
-        self::assertSame(0, $subject->resolve(
+        $this->assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
             new AnchorScope('thuecat')
@@ -123,8 +123,8 @@ class CategoryAnchorResolverTest extends TestCase
         ]));
         $site = $this->siteWithSettings(['import.thuecat.keywords.parent' => 42]);
 
-        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
-        self::assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('thuecat')));
+        $this->assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
+        $this->assertSame(30, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('thuecat')));
     }
 
     #[Test]
@@ -136,8 +136,8 @@ class CategoryAnchorResolverTest extends TestCase
             'import.thuecat.keywords.storagePid' => 30,
         ]);
 
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site, new AnchorScope('thuecat')));
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, new AnchorScope('thuecat')));
+        $this->assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryParent, $site, new AnchorScope('thuecat')));
+        $this->assertSame(0, $subject->resolve(CategoryAnchorSetting::CategoryStoragePid, $site, new AnchorScope('thuecat')));
     }
 
     /**
@@ -154,8 +154,8 @@ class CategoryAnchorResolverTest extends TestCase
             'import.thuecat.keywords.storagePid' => 30,
         ]);
 
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
-        self::assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('events')));
+        $this->assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
+        $this->assertSame(0, $subject->resolve(CategoryAnchorSetting::KeywordStoragePid, $site, new AnchorScope('events')));
     }
 
     #[Test]
@@ -167,8 +167,8 @@ class CategoryAnchorResolverTest extends TestCase
             'import.events.keywords.parent' => 77,
         ]);
 
-        self::assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
-        self::assertSame(77, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
+        $this->assertSame(42, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('thuecat')));
+        $this->assertSame(77, $subject->resolve(CategoryAnchorSetting::KeywordParent, $site, new AnchorScope('events')));
     }
 
     // Nor may another scope's value be borrowed one level down.
@@ -179,7 +179,7 @@ class CategoryAnchorResolverTest extends TestCase
             'importThuecatKeywordsParent' => 60,
         ]));
 
-        self::assertSame(0, $subject->resolve(
+        $this->assertSame(0, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings([]),
             new AnchorScope('events')
@@ -191,7 +191,7 @@ class CategoryAnchorResolverTest extends TestCase
     {
         $subject = $this->resolverWith($this->extensionConfigurationNotConfigured());
 
-        self::assertSame(42, $subject->resolve(
+        $this->assertSame(42, $subject->resolve(
             CategoryAnchorSetting::KeywordParent,
             $this->siteWithSettings(['import.thuecat.keywords.parent' => '42']),
             new AnchorScope('thuecat')
@@ -231,7 +231,7 @@ class CategoryAnchorResolverTest extends TestCase
             $tree = ArrayUtility::setValueByPath($tree, $path, $value, '.');
         }
 
-        $site = self::createStub(Site::class);
+        $site = $this->createStub(Site::class);
         $site->method('getSettings')->willReturn(SiteSettings::createFromSettingsTree($tree));
 
         return $site;
@@ -242,7 +242,7 @@ class CategoryAnchorResolverTest extends TestCase
      */
     private function extensionConfigurationReturning(array $values): ExtensionConfiguration
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturnCallback(
             function (string $extension, string $path = '') use ($values) {
                 if (!array_key_exists($path, $values)) {
@@ -261,7 +261,7 @@ class CategoryAnchorResolverTest extends TestCase
 
     private function extensionConfigurationNotConfigured(): ExtensionConfiguration
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(
             new ExtensionConfigurationExtensionNotConfiguredException('Not configured.', 1_753_000_001)
         );
@@ -271,7 +271,7 @@ class CategoryAnchorResolverTest extends TestCase
 
     private function extensionConfigurationMissingPath(): ExtensionConfiguration
     {
-        $extensionConfiguration = self::createStub(ExtensionConfiguration::class);
+        $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willThrowException(
             new ExtensionConfigurationPathDoesNotExistException('Path missing.', 1_753_000_002)
         );

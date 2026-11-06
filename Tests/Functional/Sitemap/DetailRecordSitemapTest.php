@@ -44,9 +44,9 @@ class DetailRecordSitemapTest extends AbstractFrontendTestCase
     {
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction'));
 
-        self::assertStringContainsString('<loc>/show/gemeindebrunnen-weimar</loc>', $sitemap);
-        self::assertStringContainsString('<loc>/show/goethehaus-weimar</loc>', $sitemap);
-        self::assertStringNotContainsString('wartburg', $sitemap);
+        $this->assertStringContainsString('<loc>/show/gemeindebrunnen-weimar</loc>', $sitemap);
+        $this->assertStringContainsString('<loc>/show/goethehaus-weimar</loc>', $sitemap);
+        $this->assertStringNotContainsString('wartburg', $sitemap);
     }
 
     #[Test]
@@ -54,9 +54,9 @@ class DetailRecordSitemapTest extends AbstractFrontendTestCase
     {
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction', 1));
 
-        self::assertStringContainsString('<loc>/en/show/community-fountain-weimar</loc>', $sitemap);
-        self::assertStringNotContainsString('goethehaus-weimar', $sitemap);
-        self::assertStringNotContainsString('gemeindebrunnen-weimar', $sitemap);
+        $this->assertStringContainsString('<loc>/en/show/community-fountain-weimar</loc>', $sitemap);
+        $this->assertStringNotContainsString('goethehaus-weimar', $sitemap);
+        $this->assertStringNotContainsString('gemeindebrunnen-weimar', $sitemap);
     }
 
     #[Test]
@@ -64,8 +64,8 @@ class DetailRecordSitemapTest extends AbstractFrontendTestCase
     {
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction'));
 
-        self::assertStringContainsString('<loc>/show/gemeindebrunnen-weimar</loc>', $sitemap);
-        self::assertStringNotContainsString('herderkirche-weimar', $sitemap);
+        $this->assertStringContainsString('<loc>/show/gemeindebrunnen-weimar</loc>', $sitemap);
+        $this->assertStringNotContainsString('herderkirche-weimar', $sitemap);
     }
 
     #[Test]
@@ -73,18 +73,18 @@ class DetailRecordSitemapTest extends AbstractFrontendTestCase
     {
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('trail'));
 
-        self::assertStringNotContainsString('<url>', $sitemap);
+        $this->assertStringNotContainsString('<url>', $sitemap);
     }
 
     #[Test]
     public function translatedLocationRendersTranslatedAttraction(): void
     {
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction', 1));
-        self::assertSame(1, preg_match('#<loc>(/en/show/[^<]+)</loc>#', $sitemap, $matches));
+        $this->assertSame(1, preg_match('#<loc>(/en/show/[^<]+)</loc>#', $sitemap, $matches));
 
         $result = $this->executeFrontendSubRequest(new InternalRequest('http://localhost' . $matches[1]));
 
-        self::assertSame(200, $result->getStatusCode());
-        self::assertStringContainsString('<h2>Community Fountain Weimar</h2>', (string)$result->getBody());
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertStringContainsString('<h2>Community Fountain Weimar</h2>', (string)$result->getBody());
     }
 }

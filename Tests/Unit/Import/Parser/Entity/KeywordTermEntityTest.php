@@ -31,8 +31,8 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     {
         $handled = (new KeywordTermEntity())->handlesTypes();
 
-        self::assertContains('schema:DefinedTerm', $handled);
-        self::assertContains('schema:DefinedTermSet', $handled);
+        $this->assertContains('schema:DefinedTerm', $handled);
+        $this->assertContains('schema:DefinedTermSet', $handled);
     }
 
     // Carries a resolved label for the collector; the sys_category row is
@@ -42,8 +42,8 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     {
         $row = $this->parse($this->termNode(), 'de')->toArray();
 
-        self::assertSame('Landeshauptstadt Erfurt', $row['title'] ?? null);
-        self::assertArrayNotHasKey('pid', $row);
+        $this->assertSame('Landeshauptstadt Erfurt', $row['title'] ?? null);
+        $this->assertArrayNotHasKey('pid', $row);
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     {
         $entity = $this->parse($this->termNode(), 'en');
 
-        self::assertSame('State capital Erfurt', $entity->getTitle());
+        $this->assertSame('State capital Erfurt', $entity->getTitle());
     }
 
     #[Test]
@@ -59,7 +59,7 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     {
         $entity = $this->parse($this->termNode(), 'nl');
 
-        self::assertSame('Landeshauptstadt Erfurt', $entity->getTitle());
+        $this->assertSame('Landeshauptstadt Erfurt', $entity->getTitle());
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class KeywordTermEntityTest extends AbstractImportTestCase
             'thuecat:keywordOf' => [['@id' => 'https://thuecat.org/resources/114290407966-exnz']],
         ], 'de');
 
-        self::assertFalse($entity->isUsable());
+        $this->assertFalse($entity->isUsable());
     }
 
     #[Test]
@@ -79,10 +79,7 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     {
         $entity = $this->parse($this->termNode(), 'de');
 
-        self::assertSame(
-            ['https://thuecat.org/resources/155933862969-mofh'],
-            $entity->getTransients()['keywords'] ?? []
-        );
+        $this->assertSame(['https://thuecat.org/resources/155933862969-mofh'], $entity->getTransients()['keywords'] ?? []);
     }
 
     // A set is the top of its chain; nothing above it to walk to.
@@ -95,8 +92,8 @@ class KeywordTermEntityTest extends AbstractImportTestCase
             'rdfs:label' => [['@language' => 'de', '@value' => 'Landkreise']],
         ], 'de');
 
-        self::assertArrayNotHasKey('keywords', $entity->getTransients());
-        self::assertSame('Landkreise', $entity->getTitle());
+        $this->assertArrayNotHasKey('keywords', $entity->getTransients());
+        $this->assertSame('Landkreise', $entity->getTitle());
     }
 
     // keywordOf lists every object using the term — hundreds of entries on a
@@ -108,10 +105,10 @@ class KeywordTermEntityTest extends AbstractImportTestCase
 
         $referenced = array_merge(...array_values($entity->getTransients()));
 
-        self::assertNotContains('https://thuecat.org/resources/043064193523-jcyt', $referenced);
+        $this->assertNotContains('https://thuecat.org/resources/043064193523-jcyt', $referenced);
         // Guards the guard: without a transient at all the assertion above
         // would hold vacuously.
-        self::assertContains('https://thuecat.org/resources/155933862969-mofh', $referenced);
+        $this->assertContains('https://thuecat.org/resources/155933862969-mofh', $referenced);
     }
 
     /**

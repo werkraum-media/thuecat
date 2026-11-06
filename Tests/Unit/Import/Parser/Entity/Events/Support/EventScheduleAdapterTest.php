@@ -41,7 +41,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->weeklySchedule(['schema:Thursday', 'schema:PublicHolidays'])
         );
 
-        self::assertSame(['Thursday'], $intervals[0]['weekdays']);
+        $this->assertSame(['Thursday'], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->weeklySchedule(['schema:PublicHolidays', 'schema:Thursday'])
         );
 
-        self::assertSame(['Thursday'], $intervals[0]['weekdays']);
+        $this->assertSame(['Thursday'], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -61,7 +61,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->weeklySchedule(['schema:Monday', 'schema:PublicHolidays', 'schema:Friday'])
         );
 
-        self::assertSame(['Monday', 'Friday'], $intervals[0]['weekdays']);
+        $this->assertSame(['Monday', 'Friday'], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -76,7 +76,7 @@ class EventScheduleAdapterTest extends TestCase
             ])
         );
 
-        self::assertSame(['Tuesday', 'Saturday'], $intervals[0]['weekdays']);
+        $this->assertSame(['Tuesday', 'Saturday'], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -86,7 +86,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->weeklySchedule(['schema:PublicHolidays'])
         );
 
-        self::assertSame([], $intervals[0]['weekdays']);
+        $this->assertSame([], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -96,7 +96,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->weeklySchedule(['schema:Monday', 'schema:Friday'])
         );
 
-        self::assertSame(['Monday', 'Friday'], $intervals[0]['weekdays']);
+        $this->assertSame(['Monday', 'Friday'], $intervals[0]['weekdays']);
     }
 
     #[Test]
@@ -106,7 +106,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->monthlySchedule(['schema:PublicHolidays', 'schema:Thursday'])
         );
 
-        self::assertSame('Thursday', $intervals[0]['weekday']);
+        $this->assertSame('Thursday', $intervals[0]['weekday']);
     }
 
     #[Test]
@@ -116,7 +116,7 @@ class EventScheduleAdapterTest extends TestCase
             $this->monthlySchedule(['schema:PublicHolidays'])
         );
 
-        self::assertSame('', $intervals[0]['weekday']);
+        $this->assertSame('', $intervals[0]['weekday']);
     }
 
     #[Test]
@@ -124,7 +124,7 @@ class EventScheduleAdapterTest extends TestCase
     {
         $schedule = $this->weeklySchedule(['schema:Thursday', 'schema:PublicHolidays']);
 
-        self::assertSame(['PublicHolidays'], $this->adapter->toUnusableDays($schedule));
+        $this->assertSame(['PublicHolidays'], $this->adapter->toUnusableDays($schedule));
     }
 
     #[Test]
@@ -132,7 +132,7 @@ class EventScheduleAdapterTest extends TestCase
     {
         $schedule = $this->weeklySchedule(['schema:Monday', 'schema:Friday']);
 
-        self::assertSame([], $this->adapter->toUnusableDays($schedule));
+        $this->assertSame([], $this->adapter->toUnusableDays($schedule));
     }
 
     #[Test]
@@ -140,7 +140,7 @@ class EventScheduleAdapterTest extends TestCase
     {
         $schedule = $this->monthlySchedule(['schema:Monday', 'schema:Thursday', 'schema:Friday']);
 
-        self::assertSame(['Thursday', 'Friday'], $this->adapter->toDroppedDays($schedule));
+        $this->assertSame(['Thursday', 'Friday'], $this->adapter->toDroppedDays($schedule));
     }
 
     #[Test]
@@ -148,7 +148,7 @@ class EventScheduleAdapterTest extends TestCase
     {
         $schedule = $this->monthlySchedule(['schema:Monday']);
 
-        self::assertSame([], $this->adapter->toDroppedDays($schedule));
+        $this->assertSame([], $this->adapter->toDroppedDays($schedule));
     }
 
     #[Test]
@@ -156,7 +156,7 @@ class EventScheduleAdapterTest extends TestCase
     {
         $schedule = $this->weeklySchedule(['schema:Monday', 'schema:Friday']);
 
-        self::assertSame([], $this->adapter->toDroppedDays($schedule));
+        $this->assertSame([], $this->adapter->toDroppedDays($schedule));
     }
 
     #[Test]
@@ -166,7 +166,7 @@ class EventScheduleAdapterTest extends TestCase
             'schema:exceptDate' => ['@type' => 'schema:Date', '@value' => '2026-12-17'],
         ];
 
-        self::assertSame(['2026-12-17'], $this->adapter->toExcludedDates($schedule));
+        $this->assertSame(['2026-12-17'], $this->adapter->toExcludedDates($schedule));
     }
 
     #[Test]
@@ -179,13 +179,13 @@ class EventScheduleAdapterTest extends TestCase
             ],
         ];
 
-        self::assertSame(['2026-12-17', '2026-12-24'], $this->adapter->toExcludedDates($schedule));
+        $this->assertSame(['2026-12-17', '2026-12-24'], $this->adapter->toExcludedDates($schedule));
     }
 
     #[Test]
     public function yieldsNoExcludedDatesWhenNoneAreDeclared(): void
     {
-        self::assertSame([], $this->adapter->toExcludedDates($this->weeklySchedule(['schema:Thursday'])));
+        $this->assertSame([], $this->adapter->toExcludedDates($this->weeklySchedule(['schema:Thursday'])));
     }
 
     #[Test]
@@ -200,7 +200,7 @@ class EventScheduleAdapterTest extends TestCase
             ],
         ];
 
-        self::assertSame(['2026-12-17', '2026-12-21'], $this->adapter->toExcludedDates($schedules));
+        $this->assertSame(['2026-12-17', '2026-12-21'], $this->adapter->toExcludedDates($schedules));
     }
 
     #[Test]
@@ -210,7 +210,7 @@ class EventScheduleAdapterTest extends TestCase
             'schema:exceptDate' => ['@type' => 'schema:Date', '@value' => '2026-12-17'],
         ];
 
-        self::assertArrayNotHasKey('exceptDate', $this->adapter->toTimeIntervals($schedule)[0]);
+        $this->assertArrayNotHasKey('exceptDate', $this->adapter->toTimeIntervals($schedule)[0]);
     }
 
     /**

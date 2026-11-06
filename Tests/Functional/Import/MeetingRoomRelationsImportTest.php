@@ -43,10 +43,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame(
-            $this->meetingVenueRoomRemoteIds(),
-            $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms')
-        );
+        $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
 
     #[Test]
@@ -59,12 +56,9 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(3);
 
-        self::assertSame(
-            [self::RESOURCES . '201162676710-tagb'],
-            $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . 'r_22033376-oapoi', 'meeting_rooms')
-        );
-        self::assertNotContains(self::RESOURCES . '394356958814-mhch', $this->fetchChildRemoteIds(self::VENUE_TABLE));
-        self::assertSame([], $this->getSkippedReferenceLogEntries());
+        $this->assertSame([self::RESOURCES . '201162676710-tagb'], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . 'r_22033376-oapoi', 'meeting_rooms'));
+        $this->assertNotContains(self::RESOURCES . '394356958814-mhch', $this->fetchChildRemoteIds(self::VENUE_TABLE));
+        $this->assertSame([], $this->getSkippedReferenceLogEntries());
     }
 
     #[Test]
@@ -79,16 +73,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertSame(
-            [
-                '059632237210-rbpe' => [self::RESOURCES . '019950652406-nywx'],
-                'r_22033376-oapoi' => [self::RESOURCES . '201162676710-tagb'],
-            ],
-            [
-                '059632237210-rbpe' => $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '059632237210-rbpe', 'meeting_rooms'),
-                'r_22033376-oapoi' => $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . 'r_22033376-oapoi', 'meeting_rooms'),
-            ]
-        );
+        $this->assertSame([
+            '059632237210-rbpe' => [self::RESOURCES . '019950652406-nywx'],
+            'r_22033376-oapoi' => [self::RESOURCES . '201162676710-tagb'],
+        ], [
+            '059632237210-rbpe' => $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '059632237210-rbpe', 'meeting_rooms'),
+            'r_22033376-oapoi' => $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . 'r_22033376-oapoi', 'meeting_rooms'),
+        ]);
     }
 
     // The direction stays as delivered.
@@ -100,10 +91,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame(
-            [self::RESOURCES . '541146409582-zdzo', self::RESOURCES . '853365081548-bobo'],
-            $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms')
-        );
+        $this->assertSame([self::RESOURCES . '541146409582-zdzo', self::RESOURCES . '853365081548-bobo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }
 
     // DEFENSIVE: not observed upstream.
@@ -118,16 +106,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame(
-            [
-                'division' => [self::RESOURCES . '757717628971-kyro'],
-                'sub-division' => [self::RESOURCES . '737866811554-cmed'],
-            ],
-            [
-                'division' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '199366862325-pbyc', 'contained_rooms'),
-                'sub-division' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '757717628971-kyro', 'contained_rooms'),
-            ]
-        );
+        $this->assertSame([
+            'division' => [self::RESOURCES . '757717628971-kyro'],
+            'sub-division' => [self::RESOURCES . '737866811554-cmed'],
+        ], [
+            'division' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '199366862325-pbyc', 'contained_rooms'),
+            'sub-division' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '757717628971-kyro', 'contained_rooms'),
+        ]);
     }
 
     // DEFENSIVE: not observed upstream.
@@ -142,8 +127,8 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '737866811554-cmed', 'contained_rooms'));
-        self::assertNotContains(self::RESOURCES . '452821338011-thxk', $this->fetchChildRemoteIds(self::TABLE));
+        $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '737866811554-cmed', 'contained_rooms'));
+        $this->assertNotContains(self::RESOURCES . '452821338011-thxk', $this->fetchChildRemoteIds(self::TABLE));
     }
 
     // DEFENSIVE: not observed upstream.
@@ -158,17 +143,14 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(6);
 
-        self::assertCount(3, $this->fetchChildren(self::TABLE));
-        self::assertSame(
-            [
-                'combination' => [self::RESOURCES . '279158168683-ypnr', self::RESOURCES . '113066118073-geqe'],
-                'part' => [self::RESOURCES . '927752209912-nrho'],
-            ],
-            [
-                'combination' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '927752209912-nrho', 'contained_rooms'),
-                'part' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '279158168683-ypnr', 'contained_rooms'),
-            ]
-        );
+        $this->assertCount(3, $this->fetchChildren(self::TABLE));
+        $this->assertSame([
+            'combination' => [self::RESOURCES . '279158168683-ypnr', self::RESOURCES . '113066118073-geqe'],
+            'part' => [self::RESOURCES . '927752209912-nrho'],
+        ], [
+            'combination' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '927752209912-nrho', 'contained_rooms'),
+            'part' => $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '279158168683-ypnr', 'contained_rooms'),
+        ]);
     }
 
     #[Test]
@@ -180,14 +162,14 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(7);
 
-        self::assertSame('meeting_venue', $this->fetchRowByRemoteId(self::VENUE_TABLE, self::RESOURCES . 'e_ttg00020050000285951-tomas')['type']);
-        self::assertSame([], $this->fetchChildren(self::TABLE));
+        $this->assertSame('meeting_venue', $this->fetchRowByRemoteId(self::VENUE_TABLE, self::RESOURCES . 'e_ttg00020050000285951-tomas')['type']);
+        $this->assertSame([], $this->fetchChildren(self::TABLE));
     }
 
     #[Test]
     public function droppedRoomIsUnrelated(): void
     {
-        self::markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
@@ -197,13 +179,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame([self::RESOURCES . '380984144868-tjdz'], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
+        $this->assertSame([self::RESOURCES . '380984144868-tjdz'], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
     }
 
     #[Test]
     public function allDroppedRoomsAreUnrelated(): void
     {
-        self::markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
@@ -212,13 +194,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame([], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
+        $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
     }
 
     #[Test]
     public function droppedRelatedRoomIsUnrelated(): void
     {
-        self::markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
@@ -229,13 +211,13 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame([self::RESOURCES . '541146409582-zdzo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
+        $this->assertSame([self::RESOURCES . '541146409582-zdzo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }
 
     #[Test]
     public function allDroppedRelatedRoomsAreUnrelated(): void
     {
-        self::markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
@@ -245,6 +227,6 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
+        $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }
 }

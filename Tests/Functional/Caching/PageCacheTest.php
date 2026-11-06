@@ -53,12 +53,8 @@ class PageCacheTest extends AbstractCachingTestCase
         $this->requestPage();
         $warm = $this->pageCacheIdentifiers();
 
-        self::assertSame([], $cold, 'Cache starts cold.');
-        self::assertCount(
-            1,
-            $warm,
-            'A list request must leave exactly one page-cache entry.'
-        );
+        $this->assertSame([], $cold, 'Cache starts cold.');
+        $this->assertCount(1, $warm, 'A list request must leave exactly one page-cache entry.');
     }
 
     #[Test]
@@ -69,11 +65,7 @@ class PageCacheTest extends AbstractCachingTestCase
 
         $this->requestPage();
 
-        self::assertSame(
-            $afterFirst,
-            $this->pageCacheIdentifiers(),
-            'The same request must not create a second entry.'
-        );
+        $this->assertSame($afterFirst, $this->pageCacheIdentifiers(), 'The same request must not create a second entry.');
     }
 
     /**
@@ -89,11 +81,7 @@ class PageCacheTest extends AbstractCachingTestCase
 
         $this->requestPage(2);
 
-        self::assertSame(
-            $afterFirst,
-            $this->pageCacheIdentifiers(),
-            'Paging must not add page-cache entries; the list is rendered per request.'
-        );
+        $this->assertSame($afterFirst, $this->pageCacheIdentifiers(), 'Paging must not add page-cache entries; the list is rendered per request.');
     }
 
     #[Test]
@@ -103,8 +91,8 @@ class PageCacheTest extends AbstractCachingTestCase
 
         $body = (string)$this->requestPage(2)->getBody();
 
-        self::assertStringContainsString('Attraction 11', $body, 'Page 2 content.');
-        self::assertStringNotContainsString('Attraction 01<', $body, 'Page 1 content leaked.');
+        $this->assertStringContainsString('Attraction 11', $body, 'Page 2 content.');
+        $this->assertStringNotContainsString('Attraction 01<', $body, 'Page 1 content leaked.');
     }
 
     private function requestPage(?int $currentPage = null): ResponseInterface

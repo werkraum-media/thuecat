@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
-use TYPO3\CMS\Core\Log\LogLevel;
-use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Log\LogLevel;
+use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
@@ -177,11 +177,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
             return;
         }
         foreach ($this->getLogFiles() as $file) {
-            self::assertSame(
-                '',
-                file_get_contents($file),
-                'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.'
-            );
+            $this->assertSame('', file_get_contents($file), 'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.');
         }
     }
 
@@ -191,7 +187,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         $problems = GuzzleClientFaker::tearDown();
         parent::tearDown();
         if ($problems !== []) {
-            self::fail(implode("\n\n", $problems));
+            $this->fail(implode("\n\n", $problems));
         }
     }
 
@@ -327,7 +323,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         return $this->get(Importer::class)->importConfiguration($configuration);
     }
@@ -337,7 +333,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
     }
@@ -347,7 +343,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        self::assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
 
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
     }
@@ -373,13 +369,13 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     protected function assertSingleUnmatchedValue(string $table, string $remoteId, string $property, string $value): void
     {
         $entries = $this->getLogEntriesOfType('valueUnmatched');
-        self::assertCount(1, $entries);
-        self::assertSame($remoteId, $entries[0]['remote_id']);
-        self::assertSame($table, $entries[0]['table_name']);
+        $this->assertCount(1, $entries);
+        $this->assertSame($remoteId, $entries[0]['remote_id']);
+        $this->assertSame($table, $entries[0]['table_name']);
         $message = $entries[0]['message'];
-        self::assertIsString($message);
-        self::assertStringContainsString($property, $message);
-        self::assertStringContainsString($value, $message);
+        $this->assertIsString($message);
+        $this->assertStringContainsString($property, $message);
+        $this->assertStringContainsString($value, $message);
     }
 
     /**

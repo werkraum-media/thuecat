@@ -39,9 +39,9 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         // pi_flexform settings.selectedRecords = 3,6,1,7,999 -> Goethehaus (3) and Stadtmuseum (1)
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringContainsString('Goethehaus Weimar', $body);
-        self::assertStringNotContainsString('Domberg Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Domberg Erfurt', $body);
     }
 
     #[Test]
@@ -60,10 +60,10 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
-        self::assertStringContainsString('Goethehaus Weimar', $body);
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Hidden Attraction', $body);
-        self::assertStringNotContainsString('Deleted Attraction', $body);
+        $this->assertStringContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Hidden Attraction', $body);
+        $this->assertStringNotContainsString('Deleted Attraction', $body);
     }
 
     #[Test]
@@ -71,8 +71,8 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
-        self::assertStringContainsString('Goethe House Weimar', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Goethe House Weimar', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -80,8 +80,8 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 1));
 
-        self::assertStringContainsString('Goethe House Weimar', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Goethe House Weimar', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -89,8 +89,8 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Casa de Goethe Weimar', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringContainsString('Casa de Goethe Weimar', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -98,7 +98,7 @@ class TouristAttractionSelectedTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10, 3));
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]

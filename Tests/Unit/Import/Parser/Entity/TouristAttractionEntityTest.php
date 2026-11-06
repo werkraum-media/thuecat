@@ -33,7 +33,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         $entity = new TouristAttractionEntity();
 
-        self::assertSame('tx_thuecat_tourist_attraction', $entity::TABLE);
+        $this->assertSame('tx_thuecat_tourist_attraction', $entity::TABLE);
     }
 
     #[Test]
@@ -43,7 +43,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // resolver silently skipped every TouristAttraction node.
         $entity = new TouristAttractionEntity();
 
-        self::assertContains('schema:TouristAttraction', $entity->handlesTypes());
+        $this->assertContains('schema:TouristAttraction', $entity->handlesTypes());
     }
 
     #[Test]
@@ -69,11 +69,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->parse($node, 'de', new ParserContext(0));
         $result = $entity->toArray();
 
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $result['remote_id']);
-        self::assertSame('Erfurt Tourist Information', $result['title']);
-        self::assertSame('Direkt an der Krämerbrücke liegt die Erfurter Tourist Information.', $result['description']);
-        self::assertSame('https://www.erfurt-tourismus.de', $result['url']);
-        self::assertArrayNotHasKey('address', $result);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg', $result['remote_id']);
+        $this->assertSame('Erfurt Tourist Information', $result['title']);
+        $this->assertSame('Direkt an der Krämerbrücke liegt die Erfurter Tourist Information.', $result['description']);
+        $this->assertSame('https://www.erfurt-tourismus.de', $result['url']);
+        $this->assertArrayNotHasKey('address', $result);
     }
 
     #[Test]
@@ -132,11 +132,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         // The legacy blob column is never written any more; the address is a
         // staged child row keyed by the derived remote_id.
-        self::assertArrayNotHasKey('address', $result);
+        $this->assertArrayNotHasKey('address', $result);
 
         $children = $this->childRowsOf($entity, AddressEntity::TABLE);
-        self::assertCount(1, $children);
-        self::assertSame([
+        $this->assertCount(1, $children);
+        $this->assertSame([
             'remote_id' => 'https://thuecat.org/resources/333039283321-xxwg::addr::0',
             'street' => 'Benediktsplatz 1',
             'zip' => '99084',
@@ -180,42 +180,42 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->parse($node, 'de', new ParserContext(0));
 
         $children = $this->childRowsOf($entity, AddressEntity::TABLE);
-        self::assertCount(2, $children);
+        $this->assertCount(2, $children);
 
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::0', $children[0]['remote_id']);
-        self::assertSame('Benediktsplatz 1', $children[0]['street']);
-        self::assertSame('50.9784118', $children[0]['latitude']);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::0', $children[0]['remote_id']);
+        $this->assertSame('Benediktsplatz 1', $children[0]['street']);
+        $this->assertSame('50.9784118', $children[0]['latitude']);
 
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::1', $children[1]['remote_id']);
-        self::assertSame('Domplatz 2', $children[1]['street']);
-        self::assertArrayNotHasKey('latitude', $children[1]);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg::addr::1', $children[1]['remote_id']);
+        $this->assertSame('Domplatz 2', $children[1]['street']);
+        $this->assertArrayNotHasKey('latitude', $children[1]);
     }
 
     #[Test]
     public function extractsFlatEnumAndValueFields(): void
     {
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $row = $entity->toArray();
 
-        self::assertSame('Highlight', $row['slogan']);
-        self::assertSame('11. Jh.', $row['start_of_construction']);
-        self::assertSame('Toilets,DisabledToilets,NappyChangingArea,FamilyAndChildFriendly', $row['sanitation']);
-        self::assertSame('SeatingPossibilitiesRestArea,LockBoxes,SouvenirShop,BaggageStorage', $row['other_service']);
-        self::assertSame('MuseumShop', $row['museum_service']);
-        self::assertSame('GothicArt', $row['architectural_style']);
-        self::assertSame('ZeroSpecialTrafficInfrastructure', $row['traffic_infrastructure']);
-        self::assertSame('CashPayment,EC', $row['payment_accepted']);
-        self::assertSame('AudioGuide,VideoGuide', $row['digital_offer']);
-        self::assertSame('ZeroPhotography', $row['photography']);
-        self::assertSame('Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.', $row['pets_allowed']);
-        self::assertSame('false', $row['is_accessible_for_free']);
-        self::assertSame('true', $row['public_access']);
-        self::assertSame('German,English,French', $row['available_languages']);
-        self::assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame('Highlight', $row['slogan']);
+        $this->assertSame('11. Jh.', $row['start_of_construction']);
+        $this->assertSame('Toilets,DisabledToilets,NappyChangingArea,FamilyAndChildFriendly', $row['sanitation']);
+        $this->assertSame('SeatingPossibilitiesRestArea,LockBoxes,SouvenirShop,BaggageStorage', $row['other_service']);
+        $this->assertSame('MuseumShop', $row['museum_service']);
+        $this->assertSame('GothicArt', $row['architectural_style']);
+        $this->assertSame('ZeroSpecialTrafficInfrastructure', $row['traffic_infrastructure']);
+        $this->assertSame('CashPayment,EC', $row['payment_accepted']);
+        $this->assertSame('AudioGuide,VideoGuide', $row['digital_offer']);
+        $this->assertSame('ZeroPhotography', $row['photography']);
+        $this->assertSame('Tiere sind im Gebäude nicht gestattet, ausgenommen sind Blinden- und Blindenbegleithunde.', $row['pets_allowed']);
+        $this->assertSame('false', $row['is_accessible_for_free']);
+        $this->assertSame('true', $row['public_access']);
+        $this->assertSame('German,English,French', $row['available_languages']);
+        $this->assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
     }
 
     #[Test]
@@ -224,11 +224,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // Dom fixture carries two means (Streetcar + CityBus) as a list; the
         // result is a single colon-joined string.
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        self::assertSame('350:MTR:Streetcar:CityBus', $entity->toArray()['distance_to_public_transport']);
+        $this->assertSame('350:MTR:Streetcar:CityBus', $entity->toArray()['distance_to_public_transport']);
     }
 
     #[Test]
@@ -237,35 +237,35 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // Resolver-owned columns: parser mustn't pre-fill them. The JSON-LD
         // stub only carries @id, and containedInPlace mixes several place types.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $row = $entity->toArray();
 
-        self::assertArrayNotHasKey('town', $row);
-        self::assertArrayNotHasKey('managed_by', $row);
-        self::assertArrayNotHasKey('parking_facility_near_by', $row);
+        $this->assertArrayNotHasKey('town', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('parking_facility_near_by', $row);
         // accessibility_specification is resolver-owned too: the JSON-LD only
         // carries an @id pointing at a separate resource we can't fetch here.
-        self::assertArrayNotHasKey('accessibility_specification', $row);
+        $this->assertArrayNotHasKey('accessibility_specification', $row);
         // media follows the same fetch-and-shape-to-JSON path: schema:image /
         // schema:photo / schema:video all point at separate dms_* resources.
-        self::assertArrayNotHasKey('media', $row);
+        $this->assertArrayNotHasKey('media', $row);
     }
 
     #[Test]
     public function capturesContainedInPlaceRefsAsTransient(): void
     {
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('containedInPlace', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('containedInPlace', $transients);
+        $this->assertSame([
             'https://thuecat.org/resources/043064193523-jcyt',
             'https://thuecat.org/resources/573211638937-gmqb',
             'https://thuecat.org/resources/497839263245-edbm',
@@ -279,31 +279,28 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // ParkingFacility use thuecat:managedBy. Same semantic target (an
         // organisation), so we normalise to a single bucket key for the resolver.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('managedBy', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/018132452787-ngbe'],
-            $transients['managedBy']
-        );
+        $this->assertArrayHasKey('managedBy', $transients);
+        $this->assertSame(['https://thuecat.org/resources/018132452787-ngbe'], $transients['managedBy']);
     }
 
     #[Test]
     public function capturesParkingFacilityNearByRefsAsTransient(): void
     {
         $node = $this->nodeFromFixture('215230952334-yyno.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('parkingFacilityNearBy', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('parkingFacilityNearBy', $transients);
+        $this->assertSame([
             'https://thuecat.org/resources/396420044896-drzt',
             'https://thuecat.org/resources/440055527204-ocar',
         ], $transients['parkingFacilityNearBy']);
@@ -315,21 +312,21 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // Two specs (list-shaped + object-shaped dayOfWeek); both kept — import
         // is lossless, no past-date filtering (that moved to display).
         $node = $this->nodeFromFixture('opening-hours-to-filter.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
-        self::assertCount(2, $rows);
+        $this->assertCount(2, $rows);
         foreach ($rows as $row) {
-            self::assertSame('regular', $row['specification_type']);
+            $this->assertSame('regular', $row['specification_type']);
         }
         $byDay = array_column($rows, null, 'day_of_week');
-        self::assertSame('09:30:00', $byDay['Wednesday']['opens']);
-        self::assertSame('2021-10-31', $byDay['Wednesday']['valid_through']);
-        self::assertSame('13:00:00', $byDay['Sunday']['opens']);
-        self::assertSame('2050-04-30', $byDay['Sunday']['valid_through']);
+        $this->assertSame('09:30:00', $byDay['Wednesday']['opens']);
+        $this->assertSame('2021-10-31', $byDay['Wednesday']['valid_through']);
+        $this->assertSame('13:00:00', $byDay['Sunday']['opens']);
+        $this->assertSame('2050-04-30', $byDay['Sunday']['valid_through']);
     }
 
     #[Test]
@@ -338,26 +335,26 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // schema:openingHoursSpecification is a single object (not a list) but
         // carries 6 weekdays → one child row per day.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $rows = $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE);
 
-        self::assertCount(6, $rows);
+        $this->assertCount(6, $rows);
         foreach ($rows as $row) {
-            self::assertSame('10:00:00', $row['opens']);
-            self::assertSame('18:00:00', $row['closes']);
-            self::assertSame('regular', $row['specification_type']);
+            $this->assertSame('10:00:00', $row['opens']);
+            $this->assertSame('18:00:00', $row['closes']);
+            $this->assertSame('regular', $row['specification_type']);
         }
-        self::assertContains('Saturday', array_column($rows, 'day_of_week'));
+        $this->assertContains('Saturday', array_column($rows, 'day_of_week'));
     }
 
     #[Test]
     public function buildsSpecialOpeningHourSpecificationChildren(): void
     {
         $node = $this->nodeFromFixture('special-opening-hours.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
@@ -366,10 +363,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             static fn (array $row) => $row['specification_type'] === 'special'
         ));
 
-        self::assertNotEmpty($special);
-        self::assertSame('10:00:00', $special[0]['opens']);
-        self::assertSame('14:00:00', $special[0]['closes']);
-        self::assertSame('Saturday', $special[0]['day_of_week']);
+        $this->assertNotEmpty($special);
+        $this->assertSame('10:00:00', $special[0]['opens']);
+        $this->assertSame('14:00:00', $special[0]['closes']);
+        $this->assertSame('Saturday', $special[0]['day_of_week']);
     }
 
     #[Test]
@@ -381,10 +378,10 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             '@type' => ['schema:TouristAttraction'],
         ], 'de', new ParserContext(0));
 
-        self::assertSame([], $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE));
+        $this->assertSame([], $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE));
         // Blob columns are no longer written either.
-        self::assertArrayNotHasKey('opening_hours', $entity->toArray());
-        self::assertArrayNotHasKey('special_opening_hours', $entity->toArray());
+        $this->assertArrayNotHasKey('opening_hours', $entity->toArray());
+        $this->assertArrayNotHasKey('special_opening_hours', $entity->toArray());
     }
 
     #[Test]
@@ -394,17 +391,14 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // not a uid. The resolver fetches the referenced resource and shapes
         // the spec into accessibility_specification.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('accessibilitySpecification', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa'],
-            $transients['accessibilitySpecification']
-        );
+        $this->assertArrayHasKey('accessibilitySpecification', $transients);
+        $this->assertSame(['https://thuecat.org/resources/e_23bec7f80c864c358da033dd75328f27-rfa'], $transients['accessibilitySpecification']);
     }
 
     #[Test]
@@ -418,14 +412,14 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // shaped output. Photo entries come first to preserve legacy ordering
         // where the schema:photo ref is emitted as the principal image.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('media', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('media', $transients);
+        $this->assertSame([
             ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5099196'],
             ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5099196'],
         ], $transients['media']);
@@ -440,14 +434,14 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // legacy `mainImage:true` entry (photo) and the subsequent
         // `mainImage:false` entries (image). Duplicates between slots stay.
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $transients = $entity->getTransients();
 
-        self::assertArrayHasKey('media', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('media', $transients);
+        $this->assertSame([
             ['kind' => 'photo', 'id' => 'https://thuecat.org/resources/dms_5159216'],
             ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5713563'],
             ['kind' => 'image', 'id' => 'https://thuecat.org/resources/dms_5159186'],
@@ -464,7 +458,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             '@type' => ['schema:TouristAttraction'],
         ], 'de', new ParserContext(0));
 
-        self::assertSame([], $entity->getTransients());
+        $this->assertSame([], $entity->getTransients());
     }
 
     #[Test]
@@ -474,20 +468,20 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         // EntryOffer with four — so one fixture covers offerType extraction,
         // nested priceSpecification list handling, and the full price shape.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
 
-        self::assertCount(2, $decoded);
+        $this->assertCount(2, $decoded);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame(['GuidedTourOffer'], $decoded[0]['types']);
+        $this->assertSame(['GuidedTourOffer'], $decoded[0]['types']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('Führungen', $decoded[0]['title']);
+        $this->assertSame('Führungen', $decoded[0]['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertCount(2, $decoded[0]['prices']);
-        self::assertSame(
+        $this->assertCount(2, $decoded[0]['prices']);
+        $this->assertSame(
             [
                 'title' => 'Erwachsene',
                 'description' => '',
@@ -500,11 +494,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         );
 
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame(['EntryOffer'], $decoded[1]['types']);
+        $this->assertSame(['EntryOffer'], $decoded[1]['types']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('Eintritt', $decoded[1]['title']);
+        $this->assertSame('Eintritt', $decoded[1]['title']);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertCount(4, $decoded[1]['prices']);
+        $this->assertCount(4, $decoded[1]['prices']);
     }
 
     #[Test]
@@ -529,9 +523,9 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         $entity->parse($node, 'de', new ParserContext(0));
 
         $decoded = $this->decodeJson($entity->toArray()['offers']);
-        self::assertCount(1, $decoded);
+        $this->assertCount(1, $decoded);
         // @phpstan-ignore offsetAccess.nonOffsetAccessible (this array is artificially constructed, so we trust it here)
-        self::assertSame('Eintritt', $decoded[0]['title']);
+        $this->assertSame('Eintritt', $decoded[0]['title']);
     }
 
     #[Test]
@@ -539,11 +533,11 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
     {
         // Order follows the @type array; ignored structural types drop out.
         $node = $this->nodeFromFixture('165868194223-zmqf.json', 'schema:TouristAttraction');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        self::assertSame([
+        $this->assertSame([
             ['field' => 'categories', 'remoteId' => 'type:schema:PlaceOfWorship', 'title' => 'Sakralbau'],
             ['field' => 'categories', 'remoteId' => 'type:schema:Museum', 'title' => 'Museum'],
             ['field' => 'categories', 'remoteId' => 'type:schema:Synagogue', 'title' => 'Synagoge'],
@@ -564,6 +558,6 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         // Same array_filter contract as opening_hours: '' is dropped, so the
         // column simply doesn't appear.
-        self::assertArrayNotHasKey('offers', $entity->toArray());
+        $this->assertArrayNotHasKey('offers', $entity->toArray());
     }
 }

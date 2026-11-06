@@ -31,7 +31,7 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     {
         $subject = new TouristInformationEntity();
 
-        self::assertSame('tx_thuecat_tourist_information', $subject::TABLE);
+        $this->assertSame('tx_thuecat_tourist_information', $subject::TABLE);
     }
 
     #[Test]
@@ -39,21 +39,21 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     {
         $subject = new TouristInformationEntity();
 
-        self::assertSame(['thuecat:TouristInformation'], $subject->handlesTypes());
+        $this->assertSame(['thuecat:TouristInformation'], $subject->handlesTypes());
     }
 
     #[Test]
     public function returnsTitleAndDescriptionForDefaultLanguage(): void
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertSame('Erfurt Tourist Information', $row['title']);
-        self::assertStringStartsWith('Direkt an der Krämerbrücke', (string)$row['description']);
+        $this->assertSame('Erfurt Tourist Information', $row['title']);
+        $this->assertStringStartsWith('Direkt an der Krämerbrücke', (string)$row['description']);
     }
 
     #[Test]
@@ -63,27 +63,27 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         // present must yield '' rather than silently falling back to German.
         // toArray() then drops the empty strings, so the keys disappear entirely.
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'en', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertArrayNotHasKey('title', $row);
-        self::assertArrayNotHasKey('description', $row);
+        $this->assertArrayNotHasKey('title', $row);
+        $this->assertArrayNotHasKey('description', $row);
     }
 
     #[Test]
     public function rowContainsRemoteId(): void
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
+        $this->assertSame('https://thuecat.org/resources/333039283321-xxwg', $row['remote_id']);
     }
 
     #[Test]
@@ -92,28 +92,28 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
         // The resolver decides the target row for each referenced @id after a
         // type lookup, so the parser must not pre-fill town or managed_by.
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $row = $subject->toArray();
 
-        self::assertArrayNotHasKey('town', $row);
-        self::assertArrayNotHasKey('managed_by', $row);
+        $this->assertArrayNotHasKey('town', $row);
+        $this->assertArrayNotHasKey('managed_by', $row);
     }
 
     #[Test]
     public function capturesContainedInPlaceRefsAsTransient(): void
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $transients = $subject->getTransients();
 
-        self::assertArrayHasKey('containedInPlace', $transients);
-        self::assertSame([
+        $this->assertArrayHasKey('containedInPlace', $transients);
+        $this->assertSame([
             'https://thuecat.org/resources/043064193523-jcyt',
             'https://thuecat.org/resources/573211638937-gmqb',
             'https://thuecat.org/resources/e_108867196-oatour',
@@ -135,17 +135,14 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
     public function capturesManagedByRefAsTransient(): void
     {
         $node = $this->nodeFromFixture('333039283321-xxwg.json', 'thuecat:TouristInformation');
-        self::assertNotNull($node);
+        $this->assertNotNull($node);
         $subject = new TouristInformationEntity();
         $subject->parse($node, 'de', new ParserContext(0));
 
         $transients = $subject->getTransients();
 
-        self::assertArrayHasKey('managedBy', $transients);
-        self::assertSame(
-            ['https://thuecat.org/resources/018132452787-ngbe'],
-            $transients['managedBy']
-        );
+        $this->assertArrayHasKey('managedBy', $transients);
+        $this->assertSame(['https://thuecat.org/resources/018132452787-ngbe'], $transients['managedBy']);
     }
 
     #[Test]
@@ -157,6 +154,6 @@ final class TouristInformationEntityTest extends AbstractImportTestCase
             '@type' => ['thuecat:TouristInformation'],
         ], 'de', new ParserContext(0));
 
-        self::assertSame([], $subject->getTransients());
+        $this->assertSame([], $subject->getTransients());
     }
 }

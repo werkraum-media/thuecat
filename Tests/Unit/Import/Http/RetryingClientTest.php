@@ -43,8 +43,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame(1, $client->attempts);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(1, $client->attempts);
     }
 
     #[Test]
@@ -55,8 +55,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame(2, $client->attempts);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(2, $client->attempts);
     }
 
     #[Test]
@@ -67,8 +67,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame(2, $client->attempts);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(2, $client->attempts);
     }
 
     /**
@@ -83,8 +83,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame($status, $response->getStatusCode());
-        self::assertSame(1, $client->attempts);
+        $this->assertSame($status, $response->getStatusCode());
+        $this->assertSame(1, $client->attempts);
     }
 
     public static function clientErrorStatuses(): array
@@ -109,8 +109,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(500, $response->getStatusCode());
-        self::assertSame(3, $client->attempts);
+        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(3, $client->attempts);
     }
 
     /**
@@ -128,13 +128,13 @@ class RetryingClientTest extends TestCase
 
         try {
             $subject->sendRequest(new Request('https://example.com/a', 'GET'));
-            self::fail('Expected RetryExhaustedException.');
+            $this->fail('Expected RetryExhaustedException.');
         } catch (RetryExhaustedException $exception) {
-            self::assertSame(3, $exception->attempts);
-            self::assertSame('https://example.com/a', $exception->url);
+            $this->assertSame(3, $exception->attempts);
+            $this->assertSame('https://example.com/a', $exception->url);
         }
 
-        self::assertSame(3, $client->attempts);
+        $this->assertSame(3, $client->attempts);
     }
 
     /**
@@ -163,8 +163,8 @@ class RetryingClientTest extends TestCase
 
         $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertCount(2, $slept, 'One wait per retry, none after the final attempt.');
-        self::assertGreaterThan($slept[0], $slept[1], 'Backoff grows.');
+        $this->assertCount(2, $slept, 'One wait per retry, none after the final attempt.');
+        $this->assertGreaterThan($slept[0], $slept[1], 'Backoff grows.');
     }
 
     #[Test]
@@ -175,8 +175,8 @@ class RetryingClientTest extends TestCase
 
         $response = $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(500, $response->getStatusCode());
-        self::assertSame(1, $client->attempts);
+        $this->assertSame(500, $response->getStatusCode());
+        $this->assertSame(1, $client->attempts);
     }
 
     private function transportFailure(): ClientExceptionInterface
@@ -194,8 +194,8 @@ class RetryingClientTest extends TestCase
 
         $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertSame(1, $tally->recoveredRequests(), 'The recovery is the whole signal.');
-        self::assertSame(1, $tally->wastedAttempts());
+        $this->assertSame(1, $tally->recoveredRequests(), 'The recovery is the whole signal.');
+        $this->assertSame(1, $tally->wastedAttempts());
     }
 
     #[Test]
@@ -207,7 +207,7 @@ class RetryingClientTest extends TestCase
 
         $subject->sendRequest(new Request('https://example.com/a', 'GET'));
 
-        self::assertFalse($tally->hasRecoveries(), 'A clean request must leave no trace.');
+        $this->assertFalse($tally->hasRecoveries(), 'A clean request must leave no trace.');
     }
 
     /**
@@ -226,7 +226,7 @@ class RetryingClientTest extends TestCase
         } catch (RetryExhaustedException) {
         }
 
-        self::assertFalse($tally->hasRecoveries());
+        $this->assertFalse($tally->hasRecoveries());
     }
 
     /**

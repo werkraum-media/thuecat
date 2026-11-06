@@ -46,12 +46,9 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
     {
         $body = $this->render(10);
 
-        self::assertMatchesRegularExpression(
-            '#<input type="hidden" name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[\d*\]" value="1"#',
-            $body
-        );
-        self::assertStringNotContainsString('<select', $body);
-        self::assertMatchesRegularExpression('#<form[^>]+action="[^"]*/filtered-combined/[^"]*"#', $body);
+        $this->assertMatchesRegularExpression('#<input type="hidden" name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[\d*\]" value="1"#', $body);
+        $this->assertStringNotContainsString('<select', $body);
+        $this->assertMatchesRegularExpression('#<form[^>]+action="[^"]*/filtered-combined/[^"]*"#', $body);
     }
 
     #[Test]
@@ -59,8 +56,8 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
     {
         $body = $this->render(20);
 
-        self::assertStringContainsString('<select', $body);
-        self::assertMatchesRegularExpression('#<form[^>]+action="[^"]*/plain-combined/[^"]*"#', $body);
+        $this->assertStringContainsString('<select', $body);
+        $this->assertMatchesRegularExpression('#<form[^>]+action="[^"]*/plain-combined/[^"]*"#', $body);
     }
 
     #[Test]
@@ -70,10 +67,10 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
         // offered. Gera lives in folder 12; Jena in 11 but has no attraction.
         $body = $this->render(70);
 
-        self::assertStringContainsString('>Erfurt</option>', $body);
-        self::assertStringContainsString('>Weimar</option>', $body);
-        self::assertStringNotContainsString('>Gera</option>', $body);
-        self::assertStringNotContainsString('>Jena</option>', $body);
+        $this->assertStringContainsString('>Erfurt</option>', $body);
+        $this->assertStringContainsString('>Weimar</option>', $body);
+        $this->assertStringNotContainsString('>Gera</option>', $body);
+        $this->assertStringNotContainsString('>Jena</option>', $body);
     }
 
     #[Test]
@@ -83,8 +80,8 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
 
         // No list here -> form falls back to the settings central pid (page 40),
         // i.e. NOT the current page 30.
-        self::assertMatchesRegularExpression('#<form[^>]+action="[^"]*/central-search/[^"]*"#', $body);
-        self::assertDoesNotMatchRegularExpression('#<form[^>]+action="[^"]*/search-only/[^"]*"#', $body);
+        $this->assertMatchesRegularExpression('#<form[^>]+action="[^"]*/central-search/[^"]*"#', $body);
+        $this->assertDoesNotMatchRegularExpression('#<form[^>]+action="[^"]*/search-only/[^"]*"#', $body);
     }
 
     #[Test]
@@ -92,9 +89,9 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
     {
         $body = $this->render(60);
 
-        self::assertMatchesRegularExpression('#name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[0\]" value="1"#', $body);
-        self::assertMatchesRegularExpression('#name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[1\]" value="2"#', $body);
-        self::assertStringNotContainsString('<select', $body);
+        $this->assertMatchesRegularExpression('#name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[0\]" value="1"#', $body);
+        $this->assertMatchesRegularExpression('#name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[1\]" value="2"#', $body);
+        $this->assertStringNotContainsString('<select', $body);
     }
 
     #[Test]
@@ -103,8 +100,8 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
         // default language locks Erfurt (town 1); the en overlay locks Weimar (2).
         $lockedTown = '#<input type="hidden" name="tx_thuecat_touristattractionlist\[demand\]\[towns\]\[\d*\]" value="%d"#';
 
-        self::assertMatchesRegularExpression(sprintf($lockedTown, 1), $this->render(50));
-        self::assertMatchesRegularExpression(sprintf($lockedTown, 2), $this->render(50, 1));
+        $this->assertMatchesRegularExpression(sprintf($lockedTown, 1), $this->render(50));
+        $this->assertMatchesRegularExpression(sprintf($lockedTown, 2), $this->render(50, 1));
     }
 
     private function render(int $pageId, int $language = 0): string

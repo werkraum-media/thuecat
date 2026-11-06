@@ -33,7 +33,7 @@ class RunDeadlineTest extends TestCase
     {
         $subject = new RunDeadline(60, microtime(true));
 
-        self::assertFalse($subject->isExpired());
+        $this->assertFalse($subject->isExpired());
     }
 
     #[Test]
@@ -41,7 +41,7 @@ class RunDeadlineTest extends TestCase
     {
         $subject = new RunDeadline(10, microtime(true) - 11.0);
 
-        self::assertTrue($subject->isExpired());
+        $this->assertTrue($subject->isExpired());
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class RunDeadlineTest extends TestCase
 
         $subject->assertNotExpired(ImportPhase::Fetch);
 
-        self::assertFalse($subject->isExpired());
+        $this->assertFalse($subject->isExpired());
     }
 
     #[Test]
@@ -61,11 +61,11 @@ class RunDeadlineTest extends TestCase
 
         try {
             $subject->assertNotExpired(ImportPhase::Persist);
-            self::fail('Expected RunBudgetExhaustedException.');
+            $this->fail('Expected RunBudgetExhaustedException.');
         } catch (RunBudgetExhaustedException $exception) {
-            self::assertSame(ImportPhase::Persist, $exception->phase, 'The phase reached is carried.');
-            self::assertSame(10, $exception->budgetSeconds);
-            self::assertGreaterThanOrEqual(12.5, $exception->elapsedSeconds);
+            $this->assertSame(ImportPhase::Persist, $exception->phase, 'The phase reached is carried.');
+            $this->assertSame(10, $exception->budgetSeconds);
+            $this->assertGreaterThanOrEqual(12.5, $exception->elapsedSeconds);
         }
     }
 
@@ -75,7 +75,7 @@ class RunDeadlineTest extends TestCase
     {
         $subject = new RunDeadline(0, microtime(true) - 100000.0);
 
-        self::assertFalse($subject->isExpired());
+        $this->assertFalse($subject->isExpired());
         $subject->assertNotExpired(ImportPhase::Fetch);
     }
 }

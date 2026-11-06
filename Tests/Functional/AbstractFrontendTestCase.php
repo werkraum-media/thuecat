@@ -157,7 +157,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
             ->fetchOne()
         ;
 
-        self::assertIsString($slug, 'Page ' . $pageId . ' must carry a slug to be requested by URL.');
+        $this->assertIsString($slug, 'Page ' . $pageId . ' must carry a slug to be requested by URL.');
 
         return $slug === '/' ? '/' : rtrim($slug, '/') . '/';
     }
@@ -174,7 +174,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         $marker = '<section data-' . $attribute . '="';
         $open = $marker . $value . '">';
         $start = strpos($body, $open);
-        self::assertNotFalse($start, 'Section ' . $attribute . '="' . $value . '" not rendered.');
+        $this->assertNotFalse($start, 'Section ' . $attribute . '="' . $value . '" not rendered.');
 
         $rest = substr($body, $start + strlen($open));
         $end = strpos($rest, $marker);

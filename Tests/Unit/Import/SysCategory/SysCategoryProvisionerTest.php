@@ -50,7 +50,7 @@ class SysCategoryProvisionerTest extends TestCase
      */
     private function provisioner(): SysCategoryProvisioner
     {
-        $repository = self::createStub(SysCategoryRepository::class);
+        $repository = $this->createStub(SysCategoryRepository::class);
         $repository->method('findUidsByRemoteId')->willReturn([]);
 
         return new SysCategoryProvisioner($repository);
@@ -93,7 +93,7 @@ class SysCategoryProvisionerTest extends TestCase
     private function rowFor(DataHandlerPayload $payload, string $key): array
     {
         $row = $payload->getDataMap()['sys_category'][$key] ?? null;
-        self::assertIsArray($row, 'No sys_category row staged under key ' . $key);
+        $this->assertIsArray($row, 'No sys_category row staged under key ' . $key);
 
         return $row;
     }
@@ -105,10 +105,7 @@ class SysCategoryProvisionerTest extends TestCase
     private function columnOf(DataHandlerPayload $payload, string $key, string $column): string
     {
         $value = $this->rowFor($payload, $key)[$column] ?? null;
-        self::assertTrue(
-            is_string($value) || is_int($value),
-            'Column "' . $column . '" should be scalar, got ' . get_debug_type($value)
-        );
+        $this->assertTrue(is_string($value) || is_int($value), 'Column "' . $column . '" should be scalar, got ' . get_debug_type($value));
 
         return (string)$value;
     }
@@ -121,7 +118,7 @@ class SysCategoryProvisionerTest extends TestCase
     public function reusesAStoredTermWhateverParentItArrivesWith(): void
     {
         $payload = new DataHandlerPayload();
-        $repository = self::createStub(SysCategoryRepository::class);
+        $repository = $this->createStub(SysCategoryRepository::class);
         $repository->method('findUidsByRemoteId')->willReturn([77]);
         $repository->method('findParent')->willReturn(100);
         $provisioner = new SysCategoryProvisioner($repository);
@@ -145,9 +142,9 @@ class SysCategoryProvisionerTest extends TestCase
             []
         );
 
-        self::assertSame('77', $underOne, 'The stored record is reused.');
-        self::assertSame($underOne, $underTwo, 'A different parent must not mint a second record.');
-        self::assertSame([], $payload->getDataMap()['sys_category'] ?? []);
+        $this->assertSame('77', $underOne, 'The stored record is reused.');
+        $this->assertSame($underOne, $underTwo, 'A different parent must not mint a second record.');
+        $this->assertSame([], $payload->getDataMap()['sys_category'] ?? []);
     }
 
     #[Test]
@@ -162,8 +159,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('thuecat:Unknown', [])
         );
 
-        self::assertNull($key, 'A term without a title cannot be created.');
-        self::assertSame([], $payload->getDataMap()['sys_category'] ?? []);
+        $this->assertNull($key, 'A term without a title cannot be created.');
+        $this->assertSame([], $payload->getDataMap()['sys_category'] ?? []);
     }
 
     #[Test]
@@ -180,8 +177,8 @@ class SysCategoryProvisionerTest extends TestCase
         );
 
         // A translation cannot stand without the record it translates.
-        self::assertNull($key);
-        self::assertSame([], $payload->getDataMap()['sys_category'] ?? []);
+        $this->assertNull($key);
+        $this->assertSame([], $payload->getDataMap()['sys_category'] ?? []);
     }
 
     #[Test]
@@ -197,7 +194,7 @@ class SysCategoryProvisionerTest extends TestCase
             ['en' => 1]
         );
 
-        self::assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:thuecat:Unknown')));
+        $this->assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:thuecat:Unknown')));
     }
 
     #[Test]
@@ -213,8 +210,8 @@ class SysCategoryProvisionerTest extends TestCase
         );
 
         $titles = array_column($payload->getDataMap()['sys_category'] ?? [], 'title');
-        self::assertNotContains('thuecat:Unknown', $titles);
-        self::assertNotContains('type:thuecat:Unknown', $titles);
+        $this->assertNotContains('thuecat:Unknown', $titles);
+        $this->assertNotContains('type:thuecat:Unknown', $titles);
     }
 
     #[Test]
@@ -226,8 +223,8 @@ class SysCategoryProvisionerTest extends TestCase
         $skipped = $this->provision($payload, $state, $this->types(), new SysCategoryTerm('thuecat:Unknown', []));
         $kept = $this->provision($payload, $state, $this->types(), new SysCategoryTerm('schema:Museum', ['de' => 'Museum']));
 
-        self::assertNull($skipped);
-        self::assertIsString($kept, 'A term with a title is unaffected by its neighbour.');
+        $this->assertNull($skipped);
+        $this->assertIsString($kept, 'A term with a title is unaffected by its neighbour.');
     }
 
     #[Test]
@@ -237,11 +234,8 @@ class SysCategoryProvisionerTest extends TestCase
         $state = new SysCategoryProvisioningState();
         $term = new SysCategoryTerm('thuecat:Unknown', []);
 
-        self::assertNull($this->provision($payload, $state, $this->types(), $term));
-        self::assertTrue(
-            $state->wasSkipped($this->types()->stagingKey('type:thuecat:Unknown')),
-            'The skip is recorded, so the value is not reconsidered for every record carrying it.'
-        );
+        $this->assertNull($this->provision($payload, $state, $this->types(), $term));
+        $this->assertTrue($state->wasSkipped($this->types()->stagingKey('type:thuecat:Unknown')), 'The skip is recorded, so the value is not reconsidered for every record carrying it.');
     }
 
     #[Test]
@@ -260,12 +254,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'], 'thuecat:Untitled')
         );
 
-        self::assertIsString($leaf);
-        self::assertSame(
-            $top,
-            $this->columnOf($payload, $leaf, 'parent'),
-            'A missing title costs its own level only, not every level above it.'
-        );
+        $this->assertIsString($leaf);
+        $this->assertSame($top, $this->columnOf($payload, $leaf, 'parent'), 'A missing title costs its own level only, not every level above it.');
     }
 
     #[Test]
@@ -284,8 +274,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'], 'thuecat:UntitledTwo')
         );
 
-        self::assertIsString($leaf);
-        self::assertSame($top, $this->columnOf($payload, $leaf, 'parent'));
+        $this->assertIsString($leaf);
+        $this->assertSame($top, $this->columnOf($payload, $leaf, 'parent'));
     }
 
     #[Test]
@@ -302,8 +292,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'], 'thuecat:Untitled')
         );
 
-        self::assertIsString($leaf);
-        self::assertSame('100', $this->columnOf($payload, $leaf, 'parent'));
+        $this->assertIsString($leaf);
+        $this->assertSame('100', $this->columnOf($payload, $leaf, 'parent'));
     }
 
     /**
@@ -320,12 +310,12 @@ class SysCategoryProvisionerTest extends TestCase
         $first = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
         $second = $this->provision($payload, $state, new SysCategoryAnchor(300, 30, 'keyword:'), $term);
 
-        self::assertIsString($first);
-        self::assertIsString($second);
-        self::assertNotSame($first, $second);
-        self::assertSame('200', $this->columnOf($payload, $first, 'parent'));
-        self::assertSame('300', $this->columnOf($payload, $second, 'parent'));
-        self::assertSame('keyword:Historisch', $this->rowFor($payload, $second)['remote_id'] ?? null);
+        $this->assertIsString($first);
+        $this->assertIsString($second);
+        $this->assertNotSame($first, $second);
+        $this->assertSame('200', $this->columnOf($payload, $first, 'parent'));
+        $this->assertSame('300', $this->columnOf($payload, $second, 'parent'));
+        $this->assertSame('keyword:Historisch', $this->rowFor($payload, $second)['remote_id'] ?? null);
     }
 
     #[Test]
@@ -338,7 +328,7 @@ class SysCategoryProvisionerTest extends TestCase
         $first = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
         $second = $this->provision($payload, $state, new SysCategoryAnchor(200, 30, 'keyword:'), $term);
 
-        self::assertSame($first, $second);
+        $this->assertSame($first, $second);
     }
 
     #[Test]
@@ -356,8 +346,8 @@ class SysCategoryProvisionerTest extends TestCase
 
         $translations = $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'));
 
-        self::assertSame('Museum EN', $translations[1]['title'] ?? null);
-        self::assertSame('Musée', $translations[2]['title'] ?? null);
+        $this->assertSame('Museum EN', $translations[1]['title'] ?? null);
+        $this->assertSame('Musée', $translations[2]['title'] ?? null);
     }
 
     #[Test]
@@ -377,8 +367,8 @@ class SysCategoryProvisionerTest extends TestCase
 
         // Not the default language's title either: an untranslated row would
         // read as a deliberate choice.
-        self::assertArrayNotHasKey(1, $translations, 'English has no title to stage.');
-        self::assertSame('Musée', $translations[2]['title'] ?? null);
+        $this->assertArrayNotHasKey(1, $translations, 'English has no title to stage.');
+        $this->assertSame('Musée', $translations[2]['title'] ?? null);
     }
 
     #[Test]
@@ -397,7 +387,7 @@ class SysCategoryProvisionerTest extends TestCase
 
         $translations = $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'));
 
-        self::assertSame([1], array_keys($translations), 'Only the configured language is staged.');
+        $this->assertSame([1], array_keys($translations), 'Only the configured language is staged.');
     }
 
     #[Test]
@@ -412,14 +402,14 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum', 'en' => 'Museum EN'])
         );
 
-        self::assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum')));
+        $this->assertSame([], $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum')));
     }
 
     #[Test]
     public function stagesTranslationsForATermReusedFromStorage(): void
     {
         $payload = new DataHandlerPayload();
-        $repository = self::createStub(SysCategoryRepository::class);
+        $repository = $this->createStub(SysCategoryRepository::class);
         $repository->method('findUidsByRemoteId')->willReturn([77]);
         $repository->method('findParent')->willReturn(100);
 
@@ -434,10 +424,7 @@ class SysCategoryProvisionerTest extends TestCase
         );
 
         // A stored term still needs its translation kept current.
-        self::assertSame(
-            'Museum EN',
-            $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'))[1]['title'] ?? null
-        );
+        $this->assertSame('Museum EN', $this->translationsFor($payload, $this->types()->stagingKey('type:schema:Museum'))[1]['title'] ?? null);
     }
 
     #[Test]
@@ -452,10 +439,10 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'])
         );
 
-        self::assertIsString($key);
-        self::assertSame('Museum', $this->columnOf($payload, $key, 'title'));
-        self::assertSame('20', $this->columnOf($payload, $key, 'pid'), 'Staged at the anchor\'s storage pid.');
-        self::assertSame('100', $this->columnOf($payload, $key, 'parent'), 'Hangs off the anchor.');
+        $this->assertIsString($key);
+        $this->assertSame('Museum', $this->columnOf($payload, $key, 'title'));
+        $this->assertSame('20', $this->columnOf($payload, $key, 'pid'), 'Staged at the anchor\'s storage pid.');
+        $this->assertSame('100', $this->columnOf($payload, $key, 'parent'), 'Hangs off the anchor.');
     }
 
     #[Test]
@@ -470,8 +457,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'])
         );
 
-        self::assertIsString($key);
-        self::assertSame('type:schema:Museum', $this->rowFor($payload, $key)['remote_id'] ?? null);
+        $this->assertIsString($key);
+        $this->assertSame('type:schema:Museum', $this->rowFor($payload, $key)['remote_id'] ?? null);
     }
 
     #[Test]
@@ -492,11 +479,11 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('thuecat:Historisch', ['de' => 'Historisch'])
         );
 
-        self::assertNotSame($typeKey, $keywordKey, 'Sharing the service must not merge the trees.');
-        self::assertIsString($typeKey);
-        self::assertIsString($keywordKey);
-        self::assertSame('20', $this->columnOf($payload, $typeKey, 'pid'));
-        self::assertSame('30', $this->columnOf($payload, $keywordKey, 'pid'));
+        $this->assertNotSame($typeKey, $keywordKey, 'Sharing the service must not merge the trees.');
+        $this->assertIsString($typeKey);
+        $this->assertIsString($keywordKey);
+        $this->assertSame('20', $this->columnOf($payload, $typeKey, 'pid'));
+        $this->assertSame('30', $this->columnOf($payload, $keywordKey, 'pid'));
     }
 
     #[Test]
@@ -517,10 +504,10 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('Historisch', ['de' => 'Historisch'])
         );
 
-        self::assertIsString($typeKey);
-        self::assertIsString($keywordKey);
-        self::assertSame('type:Historisch', $this->rowFor($payload, $typeKey)['remote_id'] ?? null);
-        self::assertSame('keyword:Historisch', $this->rowFor($payload, $keywordKey)['remote_id'] ?? null);
+        $this->assertIsString($typeKey);
+        $this->assertIsString($keywordKey);
+        $this->assertSame('type:Historisch', $this->rowFor($payload, $typeKey)['remote_id'] ?? null);
+        $this->assertSame('keyword:Historisch', $this->rowFor($payload, $keywordKey)['remote_id'] ?? null);
     }
 
     #[Test]
@@ -532,8 +519,8 @@ class SysCategoryProvisionerTest extends TestCase
         $first = $this->provision($payload, $state, $this->types(), new SysCategoryTerm('schema:Museum', ['de' => 'Museum']));
         $second = $this->provision($payload, $state, $this->types(), new SysCategoryTerm('schema:Museum', ['de' => 'Museum']));
 
-        self::assertSame($first, $second, 'A value seen twice in one run yields one record.');
-        self::assertCount(1, $payload->getDataMap()['sys_category'] ?? []);
+        $this->assertSame($first, $second, 'A value seen twice in one run yields one record.');
+        $this->assertCount(1, $payload->getDataMap()['sys_category'] ?? []);
     }
 
     #[Test]
@@ -544,8 +531,8 @@ class SysCategoryProvisionerTest extends TestCase
         $typeKey = $this->provision($payload, new SysCategoryProvisioningState(), $this->types(), new SysCategoryTerm('Historisch', ['de' => 'Historisch']));
         $keywordKey = $this->provision($payload, new SysCategoryProvisioningState(), $this->keywords(), new SysCategoryTerm('Historisch', ['de' => 'Historisch']));
 
-        self::assertNotSame($typeKey, $keywordKey);
-        self::assertCount(2, $payload->getDataMap()['sys_category'] ?? []);
+        $this->assertNotSame($typeKey, $keywordKey);
+        $this->assertCount(2, $payload->getDataMap()['sys_category'] ?? []);
     }
 
     #[Test]
@@ -567,8 +554,8 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'], 'schema:CivicStructure')
         );
 
-        self::assertIsString($childKey);
-        self::assertSame($parentKey, $this->columnOf($payload, $childKey, 'parent'));
+        $this->assertIsString($childKey);
+        $this->assertSame($parentKey, $this->columnOf($payload, $childKey, 'parent'));
     }
 
     #[Test]
@@ -583,7 +570,7 @@ class SysCategoryProvisionerTest extends TestCase
             new SysCategoryTerm('schema:Museum', ['de' => 'Museum'], 'schema:NeverSeen')
         );
 
-        self::assertIsString($key);
-        self::assertSame('100', $this->columnOf($payload, $key, 'parent'));
+        $this->assertIsString($key);
+        $this->assertSame('100', $this->columnOf($payload, $key, 'parent'));
     }
 }

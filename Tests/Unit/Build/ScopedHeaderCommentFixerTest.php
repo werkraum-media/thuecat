@@ -52,10 +52,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
     #[Test]
     public function insertsTheHeaderAfterDeclare(): void
     {
-        self::assertSame(
-            "<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\nnamespace Foo;\n\nclass Bar\n{\n}\n",
-            $this->fix('Classes/Bar.php', "<?php\n\ndeclare(strict_types=1);\n\nnamespace Foo;\n\nclass Bar\n{\n}\n")
-        );
+        $this->assertSame("<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\nnamespace Foo;\n\nclass Bar\n{\n}\n", $this->fix('Classes/Bar.php', "<?php\n\ndeclare(strict_types=1);\n\nnamespace Foo;\n\nclass Bar\n{\n}\n"));
     }
 
     #[Test]
@@ -63,10 +60,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
     {
         $outdated = "/*\n * Copyright (C) 2026 werkraum-media\n *\n * This program is free software.\n */";
 
-        self::assertSame(
-            "<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\nnamespace Foo;\n",
-            $this->fix('Classes/Bar.php', "<?php\n\ndeclare(strict_types=1);\n\n" . $outdated . "\n\nnamespace Foo;\n")
-        );
+        $this->assertSame("<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\nnamespace Foo;\n", $this->fix('Classes/Bar.php', "<?php\n\ndeclare(strict_types=1);\n\n" . $outdated . "\n\nnamespace Foo;\n"));
     }
 
     #[Test]
@@ -74,10 +68,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
     {
         $misplaced = "/*\n" . self::DANIEL . "\n *\n * This program is free software.\n */";
 
-        self::assertSame(
-            "<?php\n\ndeclare(strict_types=1);\n\n" . $this->headerWithDaniel() . "\n\nnamespace Foo;\n\nuse Baz;\n",
-            $this->fix('Tests/Unit/BarTest.php', "<?php\n\ndeclare(strict_types=1);\n\nnamespace Foo;\n\n" . $misplaced . "\n\nuse Baz;\n")
-        );
+        $this->assertSame("<?php\n\ndeclare(strict_types=1);\n\n" . $this->headerWithDaniel() . "\n\nnamespace Foo;\n\nuse Baz;\n", $this->fix('Tests/Unit/BarTest.php', "<?php\n\ndeclare(strict_types=1);\n\nnamespace Foo;\n\n" . $misplaced . "\n\nuse Baz;\n"));
     }
 
     #[Test]
@@ -85,7 +76,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
     {
         $code = "<?php\n\ndeclare(strict_types=1);\n\n" . $this->headerWithDaniel() . "\n\nnamespace Foo;\n";
 
-        self::assertSame($code, $this->fix('Classes/Bar.php', $code));
+        $this->assertSame($code, $this->fix('Classes/Bar.php', $code));
     }
 
     #[Test]
@@ -93,13 +84,10 @@ class ScopedHeaderCommentFixerTest extends TestCase
     {
         $explanation = "/*\n * Two rows, one per language.\n */";
 
-        self::assertSame(
-            "<?php\n\ndeclare(strict_types=1);\n\n" . $explanation . "\n\nreturn [];\n",
-            $this->fix(
-                'Tests/Functional/Fixtures/Rows.php',
-                "<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\n" . $explanation . "\n\nreturn [];\n"
-            )
-        );
+        $this->assertSame("<?php\n\ndeclare(strict_types=1);\n\n" . $explanation . "\n\nreturn [];\n", $this->fix(
+            'Tests/Functional/Fixtures/Rows.php',
+            "<?php\n\ndeclare(strict_types=1);\n\n" . self::HEADER . "\n\n" . $explanation . "\n\nreturn [];\n"
+        ));
     }
 
     private function fix(string $relativePath, string $code): string
@@ -107,7 +95,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
         $fixer = new ScopedHeaderCommentFixer('/project');
         $fixer->setWhitespacesConfig(new WhitespacesFixerConfig());
         $file = new SplFileInfo('/project/' . $relativePath);
-        self::assertTrue($fixer->supports($file), 'Precondition: the fixer handles ' . $relativePath);
+        $this->assertTrue($fixer->supports($file), 'Precondition: the fixer handles ' . $relativePath);
 
         Tokens::clearCache();
         $tokens = Tokens::fromCode($code);

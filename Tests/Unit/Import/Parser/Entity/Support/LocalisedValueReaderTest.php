@@ -35,7 +35,7 @@ class LocalisedValueReaderTest extends TestCase
             ['@language' => 'en', '@value' => 'At the Horn 1'],
         ];
 
-        self::assertSame('At the Horn 1', (new LocalisedValueReader())->read($value, 'en'));
+        $this->assertSame('At the Horn 1', (new LocalisedValueReader())->read($value, 'en'));
     }
 
     #[Test]
@@ -46,7 +46,7 @@ class LocalisedValueReaderTest extends TestCase
             ['@language' => 'en', '@value' => 'At the Horn 1'],
         ];
 
-        self::assertSame('', (new LocalisedValueReader())->read($value, 'fr'));
+        $this->assertSame('', (new LocalisedValueReader())->read($value, 'fr'));
     }
 
     #[Test]
@@ -57,7 +57,7 @@ class LocalisedValueReaderTest extends TestCase
             ['@language' => 'de', '@value' => 'second'],
         ];
 
-        self::assertSame('first', (new LocalisedValueReader())->read($value, 'de'));
+        $this->assertSame('first', (new LocalisedValueReader())->read($value, 'de'));
     }
 
     #[Test]
@@ -65,7 +65,7 @@ class LocalisedValueReaderTest extends TestCase
     {
         $value = ['@language' => 'de', '@value' => 'Am Horn 1'];
 
-        self::assertSame('Am Horn 1', (new LocalisedValueReader())->read($value, 'de'));
+        $this->assertSame('Am Horn 1', (new LocalisedValueReader())->read($value, 'de'));
     }
 
     #[Test]
@@ -73,7 +73,7 @@ class LocalisedValueReaderTest extends TestCase
     {
         $value = ['@language' => 'de', '@value' => 'Am Horn 1'];
 
-        self::assertSame('', (new LocalisedValueReader())->read($value, 'en'));
+        $this->assertSame('', (new LocalisedValueReader())->read($value, 'en'));
     }
 
     /** The fallback that must not be lost: typed enums carry no language tag. */
@@ -82,20 +82,20 @@ class LocalisedValueReaderTest extends TestCase
     {
         $value = ['@type' => 'schema:Text', '@value' => 'thuecat:CC0'];
 
-        self::assertSame('thuecat:CC0', (new LocalisedValueReader())->read($value, 'en'));
+        $this->assertSame('thuecat:CC0', (new LocalisedValueReader())->read($value, 'en'));
     }
 
     #[Test]
     public function fallsBackToBareValueObject(): void
     {
-        self::assertSame('99425', (new LocalisedValueReader())->read(['@value' => '99425'], 'de'));
+        $this->assertSame('99425', (new LocalisedValueReader())->read(['@value' => '99425'], 'de'));
     }
 
     /** The concatenated path feeds bare strings through per member. */
     #[Test]
     public function returnsBareScalarUnchanged(): void
     {
-        self::assertSame('thuecat:Streetcar', (new LocalisedValueReader())->read('thuecat:Streetcar', 'de'));
+        $this->assertSame('thuecat:Streetcar', (new LocalisedValueReader())->read('thuecat:Streetcar', 'de'));
     }
 
     #[Test]
@@ -106,14 +106,14 @@ class LocalisedValueReaderTest extends TestCase
             ['@type' => 'schema:Text', '@value' => 'untagged'],
         ];
 
-        self::assertSame('untagged', (new LocalisedValueReader())->read($value, 'fr'));
+        $this->assertSame('untagged', (new LocalisedValueReader())->read($value, 'fr'));
     }
 
     #[Test]
     #[DataProvider('unusableValues')]
     public function returnsEmptyStringForUnusableInput(mixed $value): void
     {
-        self::assertSame('', (new LocalisedValueReader())->read($value, 'de'));
+        $this->assertSame('', (new LocalisedValueReader())->read($value, 'de'));
     }
 
     /** @return array<string, array{mixed}> */

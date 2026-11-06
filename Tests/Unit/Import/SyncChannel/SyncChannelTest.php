@@ -51,10 +51,7 @@ final class SyncChannelTest extends TestCase
             self::LIST_EXPIRED => ['expired' => ['test-event-4']],
         ]);
 
-        self::assertSame(
-            ['test-event-3', 'test-event-1'],
-            $this->read($subject)->idsToImport
-        );
+        $this->assertSame(['test-event-3', 'test-event-1'], $this->read($subject)->idsToImport);
     }
 
     #[Test]
@@ -68,10 +65,7 @@ final class SyncChannelTest extends TestCase
             self::LIST_EXPIRED => ['expired' => ['test-event-4', 'test-event-2']],
         ]);
 
-        self::assertSame(
-            ['https://thuecat.org/resources/test-event-2', 'https://thuecat.org/resources/test-event-4'],
-            $this->read($subject)->remoteIdsToDelete
-        );
+        $this->assertSame(['https://thuecat.org/resources/test-event-2', 'https://thuecat.org/resources/test-event-4'], $this->read($subject)->remoteIdsToDelete);
     }
 
     #[Test]
@@ -96,16 +90,13 @@ final class SyncChannelTest extends TestCase
 
         $lists = $this->read($subject);
 
-        self::assertSame(['test-event-1', 'test-event-3'], $lists->idsToImport);
-        self::assertSame(
-            [
-                'https://thuecat.org/resources/test-event-2',
-                'https://thuecat.org/resources/test-event-4',
-                'https://thuecat.org/resources/test-event-5',
-                'https://thuecat.org/resources/test-event-6',
-            ],
-            $lists->remoteIdsToDelete
-        );
+        $this->assertSame(['test-event-1', 'test-event-3'], $lists->idsToImport);
+        $this->assertSame([
+            'https://thuecat.org/resources/test-event-2',
+            'https://thuecat.org/resources/test-event-4',
+            'https://thuecat.org/resources/test-event-5',
+            'https://thuecat.org/resources/test-event-6',
+        ], $lists->remoteIdsToDelete);
     }
 
     #[Test]
@@ -118,7 +109,7 @@ final class SyncChannelTest extends TestCase
 
         $this->read($subject);
 
-        self::assertSame([self::LIST_CHANGED, self::LIST_EXPIRED], $this->requestedUrls);
+        $this->assertSame([self::LIST_CHANGED, self::LIST_EXPIRED], $this->requestedUrls);
     }
 
     protected function read(SyncChannel $subject): SyncChannelLists
@@ -140,7 +131,7 @@ final class SyncChannelTest extends TestCase
             ->onlyMethods(['jsonLDFromUrlIgnoringCache', 'jsonLDFromUrl'])
             ->getMock()
         ;
-        $fetchData->expects(self::never())->method('jsonLDFromUrl');
+        $fetchData->expects($this->never())->method('jsonLDFromUrl');
         $fetchData->method('jsonLDFromUrlIgnoringCache')->willReturnCallback(
             function (string $url) use ($responses): array {
                 $this->requestedUrls[] = $url;

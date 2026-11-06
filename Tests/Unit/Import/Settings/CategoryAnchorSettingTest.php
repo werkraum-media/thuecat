@@ -38,7 +38,7 @@ class CategoryAnchorSettingTest extends TestCase
         string $scope,
         string $expectedPath
     ): void {
-        self::assertSame($expectedPath, $setting->settingsPath(new AnchorScope($scope)));
+        $this->assertSame($expectedPath, $setting->settingsPath(new AnchorScope($scope)));
     }
 
     /**
@@ -51,7 +51,7 @@ class CategoryAnchorSettingTest extends TestCase
         string $scope,
         string $expectedKey
     ): void {
-        self::assertSame($expectedKey, $setting->extensionConfigurationKey(new AnchorScope($scope)));
+        $this->assertSame($expectedKey, $setting->extensionConfigurationKey(new AnchorScope($scope)));
     }
 
     /**
@@ -63,11 +63,7 @@ class CategoryAnchorSettingTest extends TestCase
     {
         foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
-                self::assertNotSame(
-                    $setting->settingsPath($scope),
-                    $setting->extensionConfigurationKey($scope),
-                    $setting->name . ' uses one spelling for both levels.'
-                );
+                $this->assertNotSame($setting->settingsPath($scope), $setting->extensionConfigurationKey($scope), $setting->name . ' uses one spelling for both levels.');
             }
         }
     }
@@ -88,8 +84,8 @@ class CategoryAnchorSettingTest extends TestCase
             }
         }
 
-        self::assertSame($paths, array_unique($paths), 'Two cases share a site settings path.');
-        self::assertSame($keys, array_unique($keys), 'Two cases share an extension configuration key.');
+        $this->assertSame($paths, array_unique($paths), 'Two cases share a site settings path.');
+        $this->assertSame($keys, array_unique($keys), 'Two cases share an extension configuration key.');
     }
 
     /**
@@ -101,16 +97,8 @@ class CategoryAnchorSettingTest extends TestCase
     {
         foreach (self::scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
-                self::assertStringContainsString(
-                    '.' . $scope->value . '.',
-                    $setting->settingsPath($scope),
-                    $setting->name . ' settings path does not name its scope.'
-                );
-                self::assertStringContainsString(
-                    ucfirst($scope->value),
-                    $setting->extensionConfigurationKey($scope),
-                    $setting->name . ' extension configuration key does not name its scope.'
-                );
+                $this->assertStringContainsString('.' . $scope->value . '.', $setting->settingsPath($scope), $setting->name . ' settings path does not name its scope.');
+                $this->assertStringContainsString(ucfirst($scope->value), $setting->extensionConfigurationKey($scope), $setting->name . ' extension configuration key does not name its scope.');
             }
         }
     }

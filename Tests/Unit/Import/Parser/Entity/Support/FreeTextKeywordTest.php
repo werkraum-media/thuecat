@@ -30,16 +30,13 @@ class FreeTextKeywordTest extends TestCase
     #[Test]
     public function identityIsLowercasedAndTrimmed(): void
     {
-        self::assertSame('theater', FreeTextKeyword::identity('  Theater '));
+        $this->assertSame('theater', FreeTextKeyword::identity('  Theater '));
     }
 
     #[Test]
     public function casingVariantsShareOneIdentity(): void
     {
-        self::assertSame(
-            FreeTextKeyword::identity('THEATER'),
-            FreeTextKeyword::identity('Theater')
-        );
+        $this->assertSame(FreeTextKeyword::identity('THEATER'), FreeTextKeyword::identity('Theater'));
     }
 
     // strtolower() is byte-wise and leaves these untouched, which would yield
@@ -47,17 +44,14 @@ class FreeTextKeywordTest extends TestCase
     #[Test]
     public function umlautVariantsShareOneIdentity(): void
     {
-        self::assertSame(
-            FreeTextKeyword::identity('Ölmühle'),
-            FreeTextKeyword::identity('ölmühle')
-        );
+        $this->assertSame(FreeTextKeyword::identity('Ölmühle'), FreeTextKeyword::identity('ölmühle'));
     }
 
     #[Test]
     #[DataProvider('titleCases')]
     public function titleIsHumanReadable(string $raw, string $expected): void
     {
-        self::assertSame($expected, FreeTextKeyword::title($raw));
+        $this->assertSame($expected, FreeTextKeyword::title($raw));
     }
 
     /**
@@ -79,16 +73,13 @@ class FreeTextKeywordTest extends TestCase
     #[Test]
     public function remoteIdCarriesShapeMarker(): void
     {
-        self::assertSame('keyword:text:theater', FreeTextKeyword::remoteId('Theater'));
+        $this->assertSame('keyword:text:theater', FreeTextKeyword::remoteId('Theater'));
     }
 
     // Distinct words must not merge just because casing folded them.
     #[Test]
     public function differentWordsKeepDifferentIdentities(): void
     {
-        self::assertNotSame(
-            FreeTextKeyword::identity('Familie'),
-            FreeTextKeyword::identity('Familien')
-        );
+        $this->assertNotSame(FreeTextKeyword::identity('Familie'), FreeTextKeyword::identity('Familien'));
     }
 }

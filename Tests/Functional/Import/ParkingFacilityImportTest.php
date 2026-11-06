@@ -52,10 +52,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame(
-            ['spaces_car' => 120, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 0],
-            $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES)
-        );
+        $this->assertSame(['spaces_car' => 120, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 0], $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES));
     }
 
     // Shared spaces count for every vehicle type they name.
@@ -67,10 +64,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame(
-            ['spaces_car' => 5, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 5],
-            $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES)
-        );
+        $this->assertSame(['spaces_car' => 5, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 5], $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES));
     }
 
     // DEFENSIVE: not observed upstream.
@@ -82,7 +76,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(5);
 
-        self::assertSame(120, $this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY)['spaces_car']);
+        $this->assertSame(120, $this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY)['spaces_car']);
 
         $this->assertSingleUnmatchedValue(self::TABLE, self::PARKING_FACILITY, 'thuecat:numberOfParkingSpace', 'test:UnknownVehicle');
     }
@@ -95,7 +89,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([self::MULTI_PURPOSE_HALL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
+        $this->assertSame([self::MULTI_PURPOSE_HALL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
         $expected = [
             'title' => 'Parkplatz am Haupteingang',
             'parentid' => $this->fetchUidByRemoteId(self::VENUE_TABLE, self::MULTI_PURPOSE_HALL),
@@ -106,10 +100,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
             'spaces_ev_charging' => 1,
             'spaces_motorcycle' => 0,
         ];
-        self::assertSame(
-            $expected,
-            $this->fetchColumnsByRemoteId(self::TABLE, self::MULTI_PURPOSE_HALL . '::parking::0', array_keys($expected))
-        );
+        $this->assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, self::MULTI_PURPOSE_HALL . '::parking::0', array_keys($expected)));
     }
 
     #[Test]
@@ -120,10 +111,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(2);
 
-        self::assertSame(
-            'Parkplätze an der Kirche können ebenfalls genutzt werden.',
-            $this->fetchRowByRemoteId(self::TABLE, self::CULTURAL_ESTATE . '::parking::0')['description']
-        );
+        $this->assertSame('Parkplätze an der Kirche können ebenfalls genutzt werden.', $this->fetchRowByRemoteId(self::TABLE, self::CULTURAL_ESTATE . '::parking::0')['description']);
     }
 
     #[Test]
@@ -135,8 +123,8 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importConfiguration(3);
 
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT . '::parking::0');
-        self::assertSame('Parking', $translations[1]['title'] ?? null);
-        self::assertSame('Parking', $translations[2]['title'] ?? null);
+        $this->assertSame('Parking', $translations[1]['title'] ?? null);
+        $this->assertSame('Parking', $translations[2]['title'] ?? null);
     }
 
     // DEFENSIVE: not observed upstream.
@@ -149,14 +137,11 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $parkingFacility = self::MULTI_PURPOSE_HALL . '::parking::0';
-        self::assertSame(
-            ['parentid' => $this->fetchUidByRemoteId(self::TABLE, $parkingFacility), 'parenttable' => self::TABLE],
-            $this->fetchColumnsByRemoteId(
-                'tx_thuecat_opening_hours',
-                $parkingFacility . '::oh::regular::Monday::00:00:00::2026-10-06::2029-03-20',
-                ['parentid', 'parenttable']
-            )
-        );
+        $this->assertSame(['parentid' => $this->fetchUidByRemoteId(self::TABLE, $parkingFacility), 'parenttable' => self::TABLE], $this->fetchColumnsByRemoteId(
+            'tx_thuecat_opening_hours',
+            $parkingFacility . '::oh::regular::Monday::00:00:00::2026-10-06::2029-03-20',
+            ['parentid', 'parenttable']
+        ));
     }
 
     #[Test]
@@ -169,9 +154,9 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $parkingFacilities = $this->fetchChildren(self::TABLE);
-        self::assertCount(1, $parkingFacilities);
-        self::assertSame(1, $parkingFacilities[0]['uid']);
-        self::assertSame(2, $parkingFacilities[0]['spaces_handicapped']);
+        $this->assertCount(1, $parkingFacilities);
+        $this->assertSame(1, $parkingFacilities[0]['uid']);
+        $this->assertSame(2, $parkingFacilities[0]['spaces_handicapped']);
     }
 
     #[Test]
@@ -183,16 +168,13 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertSame(
-            [self::HOTEL . '::parking::0'],
-            $this->fetchChildRemoteIds(self::TABLE)
-        );
+        $this->assertSame([self::HOTEL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
     }
 
     #[Test]
     public function allDroppedParkingFacilitiesAreDeleted(): void
     {
-        self::markTestSkipped('Inline reaping never clears an empty set; see resolve-relation-reap-gap.');
+        $this->markTestSkipped('Inline reaping never clears an empty set; see resolve-relation-reap-gap.');
 
         // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
@@ -201,6 +183,6 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        self::assertSame([], $this->fetchChildren(self::TABLE));
+        $this->assertSame([], $this->fetchChildren(self::TABLE));
     }
 }

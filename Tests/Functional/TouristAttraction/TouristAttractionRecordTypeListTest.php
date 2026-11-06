@@ -39,8 +39,8 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(20));
 
-        self::assertStringContainsString('Tagungshotel am Dom', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Tagungshotel am Dom', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -48,8 +48,8 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
-        self::assertStringContainsString('Tagungshotel am Dom', $body);
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Tagungshotel am Dom', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -57,8 +57,8 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(30));
 
-        self::assertStringContainsString('Tagungshotel am Dom', $body);
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Tagungshotel am Dom', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -71,8 +71,8 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Tagungshotel am Dom', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Tagungshotel am Dom', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -85,7 +85,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $body);
     }
 
     #[Test]
@@ -93,7 +93,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     {
         $body = $this->executeFrontendSubRequestAndReturnBody($this->pageRequest(10));
 
-        self::assertSame(1, substr_count($body, 'data-venue="listItem"'));
-        self::assertStringContainsString('250', $this->renderedSection($this->pageRequest(10), 'venue', 'listItem'));
+        $this->assertSame(1, substr_count($body, 'data-venue="listItem"'));
+        $this->assertStringContainsString('250', $this->renderedSection($this->pageRequest(10), 'venue', 'listItem'));
     }
 }

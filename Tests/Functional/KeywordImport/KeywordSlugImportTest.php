@@ -37,9 +37,6 @@ final class KeywordSlugImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame(
-            'landeshauptstadt-erfurt',
-            $this->fetchRowByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/475728955106-qdcc')['slug']
-        );
+        $this->assertSame('landeshauptstadt-erfurt', $this->fetchRowByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/475728955106-qdcc')['slug']);
     }
 }

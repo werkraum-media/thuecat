@@ -76,8 +76,8 @@ final class BackendOrderInvalidationTest extends AbstractCachingTestCase
         $first = (string)$this->request(60, ['currentPage' => '1'])->getBody();
         $second = (string)$this->request(60, ['currentPage' => '2'])->getBody();
         foreach (self::TITLES as $title) {
-            self::assertSame(in_array($title, $firstPage, true), str_contains($first, $title), 'Page 1, ' . $title);
-            self::assertSame(in_array($title, $secondPage, true), str_contains($second, $title), 'Page 2, ' . $title);
+            $this->assertSame(in_array($title, $firstPage, true), str_contains($first, $title), 'Page 1, ' . $title);
+            $this->assertSame(in_array($title, $secondPage, true), str_contains($second, $title), 'Page 2, ' . $title);
         }
     }
 
@@ -97,9 +97,9 @@ final class BackendOrderInvalidationTest extends AbstractCachingTestCase
 
         $first = (string)$this->request(70, ['currentPage' => '1'])->getBody();
         $second = (string)$this->request(70, ['currentPage' => '2'])->getBody();
-        self::assertStringContainsString('Iota Insel', $first);
-        self::assertStringContainsString('Kappa Kapelle', $first);
-        self::assertStringContainsString('Lambda Linde', $second);
+        $this->assertStringContainsString('Iota Insel', $first);
+        $this->assertStringContainsString('Kappa Kapelle', $first);
+        $this->assertStringContainsString('Lambda Linde', $second);
     }
 
     /**

@@ -44,7 +44,7 @@ class SitemapInvalidationTest extends AbstractCachingTestCase
         $this->createRecord(11, ['title' => 'Schillerhaus Weimar']);
 
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction'));
-        self::assertStringContainsString('<loc>/show/schillerhaus-weimar</loc>', $sitemap);
+        $this->assertStringContainsString('<loc>/show/schillerhaus-weimar</loc>', $sitemap);
     }
 
     #[Test]
@@ -56,7 +56,7 @@ class SitemapInvalidationTest extends AbstractCachingTestCase
         $this->deleteRecord(21);
 
         $sitemap = $this->executeFrontendSubRequestAndReturnBody($this->sitemapRequest('attraction'));
-        self::assertStringContainsString('<loc>/show/goethehaus-weimar</loc>', $sitemap);
-        self::assertStringNotContainsString('gemeindebrunnen-weimar', $sitemap);
+        $this->assertStringContainsString('<loc>/show/goethehaus-weimar</loc>', $sitemap);
+        $this->assertStringNotContainsString('gemeindebrunnen-weimar', $sitemap);
     }
 }

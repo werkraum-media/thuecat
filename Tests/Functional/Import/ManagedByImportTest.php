@@ -43,8 +43,8 @@ final class ManagedByImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        self::assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId('tx_thuecat_organisation', self::ORGANISATION, self::STORAGE_PID));
-        self::assertSame([0, 1], $this->fetchLanguagesByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION, self::STORAGE_PID));
+        $this->assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId('tx_thuecat_organisation', self::ORGANISATION, self::STORAGE_PID));
+        $this->assertSame([0, 1], $this->fetchLanguagesByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION, self::STORAGE_PID));
     }
 
     #[Test]
@@ -57,13 +57,13 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION);
-        self::assertArrayHasKey(1, $this->fetchTranslationsByParent('tx_thuecat_organisation', $organisationUid));
+        $this->assertArrayHasKey(1, $this->fetchTranslationsByParent('tx_thuecat_organisation', $organisationUid));
 
         $attractionTranslations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION);
-        self::assertArrayHasKey(1, $attractionTranslations);
+        $this->assertArrayHasKey(1, $attractionTranslations);
 
-        self::assertSame($organisationUid, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION)['managed_by']);
-        self::assertSame($organisationUid, $attractionTranslations[1]['managed_by']);
+        $this->assertSame($organisationUid, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION)['managed_by']);
+        $this->assertSame($organisationUid, $attractionTranslations[1]['managed_by']);
     }
 
     #[Test]
@@ -77,7 +77,7 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $attractionTranslations = $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 1);
-        self::assertArrayHasKey(1, $attractionTranslations);
-        self::assertSame(1, $attractionTranslations[1]['managed_by']);
+        $this->assertArrayHasKey(1, $attractionTranslations);
+        $this->assertSame(1, $attractionTranslations[1]['managed_by']);
     }
 }

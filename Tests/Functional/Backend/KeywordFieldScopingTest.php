@@ -41,13 +41,13 @@ class KeywordFieldScopingTest extends AbstractBackendTestCase
     #[Test]
     public function keywordFieldOffersTheKeywordAnchorOnly(): void
     {
-        self::assertSame('500', $this->startingPointsFor('keywords'));
+        $this->assertSame('500', $this->startingPointsFor('keywords'));
     }
 
     #[Test]
     public function categoryFieldOffersTheCategoryAnchorOnly(): void
     {
-        self::assertSame('300', $this->startingPointsFor('categories'));
+        $this->assertSame('300', $this->startingPointsFor('categories'));
     }
 
     /**

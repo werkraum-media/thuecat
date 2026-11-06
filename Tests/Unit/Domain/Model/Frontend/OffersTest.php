@@ -34,7 +34,7 @@ class OffersTest extends TestCase
     {
         $subject = new Offers($serialized);
 
-        self::assertCount($expected, $subject);
+        $this->assertCount($expected, $subject);
     }
 
     public static function forCount(): array

@@ -52,14 +52,14 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
     public function attractionInTwoTownsMatchesAFilterOnEither(): void
     {
         $erfurt = $this->requestWithSearch(['towns' => ['1']]);
-        self::assertStringContainsString('Flughafen Erfurt-Weimar', $erfurt);
-        self::assertStringContainsString('Stadtmuseum Erfurt', $erfurt);
-        self::assertStringNotContainsString('Goethehaus Weimar', $erfurt);
+        $this->assertStringContainsString('Flughafen Erfurt-Weimar', $erfurt);
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $erfurt);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $erfurt);
 
         $weimar = $this->requestWithSearch(['towns' => ['2']]);
-        self::assertStringContainsString('Flughafen Erfurt-Weimar', $weimar);
-        self::assertStringContainsString('Goethehaus Weimar', $weimar);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $weimar);
+        $this->assertStringContainsString('Flughafen Erfurt-Weimar', $weimar);
+        $this->assertStringContainsString('Goethehaus Weimar', $weimar);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $weimar);
     }
 
     #[Test]
@@ -67,11 +67,7 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
     {
         $body = $this->requestWithSearch(['towns' => ['1', '2']]);
 
-        self::assertSame(
-            1,
-            substr_count($body, 'Flughafen Erfurt-Weimar'),
-            'Matching two selected towns must not duplicate the record.'
-        );
+        $this->assertSame(1, substr_count($body, 'Flughafen Erfurt-Weimar'), 'Matching two selected towns must not duplicate the record.');
     }
 
     #[Test]
@@ -79,9 +75,9 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
     {
         $body = $this->requestWithSearch(['towns' => ['3']]);
 
-        self::assertStringNotContainsString('Flughafen Erfurt-Weimar', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Flughafen Erfurt-Weimar', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -89,9 +85,9 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
     {
         $body = $this->requestWithSearch(['towns' => ['999']]);
 
-        self::assertStringNotContainsString('Flughafen Erfurt-Weimar', $body);
-        self::assertStringNotContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('Goethehaus Weimar', $body);
+        $this->assertStringNotContainsString('Flughafen Erfurt-Weimar', $body);
+        $this->assertStringNotContainsString('Stadtmuseum Erfurt', $body);
+        $this->assertStringNotContainsString('Goethehaus Weimar', $body);
     }
 
     #[Test]
@@ -109,6 +105,6 @@ class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
 
         // Erfurt and Weimar each carried by two records, listed once; Jena is
         // stored but carried by none; the town-less record adds nothing.
-        self::assertSame(['Erfurt', 'Weimar'], $titles);
+        $this->assertSame(['Erfurt', 'Weimar'], $titles);
     }
 }
