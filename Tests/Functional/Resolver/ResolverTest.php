@@ -1066,7 +1066,7 @@ final class ResolverTest extends AbstractImportTestCase
     private function parseFixture(
         string $filename,
         array $translationLanguages = []
-    ): \WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload {
+    ): DataHandlerPayload {
         $path = self::FIXTURE_PATH . $filename;
         $decoded = json_decode((string)file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
         $graph = is_array($decoded) && is_array($decoded['@graph'] ?? null) ? $decoded['@graph'] : [];

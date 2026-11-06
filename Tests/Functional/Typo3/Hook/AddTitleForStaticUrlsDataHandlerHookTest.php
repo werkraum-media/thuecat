@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Typo3\Hook;
 
 use Codappix\Typo3PhpDatasets\PhpDataSet;
-use Codappix\Typo3PhpDatasets\TestingFramework;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

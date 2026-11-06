@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use TYPO3\CMS\Core\Log\LogLevel;
+use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
@@ -79,8 +81,8 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         'LOG' => [
             'WerkraumMedia' => [
                 'writerConfiguration' => [
-                    \TYPO3\CMS\Core\Log\LogLevel::ERROR => [
-                        \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+                    LogLevel::ERROR => [
+                        FileWriter::class => [
                             'logFileInfix' => 'error',
                         ],
                     ],

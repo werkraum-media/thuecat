@@ -141,8 +141,7 @@ return RectorConfig::configure()
         $typo3Sets . '/v14/typo3-142.php',
     ])
     ->withPHPStanConfigs([Typo3Option::PHPSTAN_FOR_RECTOR_PATH])
-    // 4 files
-    // ->withImportNames(importShortClasses: false)
+    ->withImportNames(importShortClasses: false)
     ->withConfiguredRule(RemoveTypo3VersionChecksRector::class, [
         RemoveTypo3VersionChecksRector::TARGET_VERSION => 14,
     ])

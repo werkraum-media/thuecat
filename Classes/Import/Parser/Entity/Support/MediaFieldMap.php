@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Support;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\MeetingRoomEntity;
@@ -39,7 +40,7 @@ class MediaFieldMap
      * Entities that import media — each MUST declare MEDIA_FIELDS. An entity
      * absent here stores none.
      *
-     * @var list<class-string<\WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface>>
+     * @var list<class-string<EntityInterface>>
      */
     protected const OWNERS = [
         TouristAttractionEntity::class,
