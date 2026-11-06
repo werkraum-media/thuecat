@@ -99,6 +99,11 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         ;
     }
 
+    protected function attractionShowRequest(string $attractionUid, int $pageId = 10, int $languageId = 0): InternalRequest
+    {
+        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid, $pageId, $languageId);
+    }
+
     /**
      * A request for one sitemap of the `EXT:seo` sitemap page type on the root page, carrying a valid cHash the way
      * the sitemap index links it.
@@ -175,6 +180,16 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         $end = strpos($rest, $marker);
 
         return $end === false ? $rest : substr($rest, 0, $end);
+    }
+
+    /**
+     * Without a value: no section of that attribute at all.
+     */
+    protected static function assertSectionNotRendered(string $body, string $attribute, ?string $value = null): void
+    {
+        $open = '<section data-' . $attribute . '=' . ($value === null ? '' : '"' . $value . '"');
+
+        self::assertStringNotContainsString($open, $body);
     }
 
     protected function executeFrontendSubRequestAndReturnBody(InternalRequest $request): string

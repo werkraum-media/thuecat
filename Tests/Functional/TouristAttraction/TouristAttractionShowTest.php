@@ -56,7 +56,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsContainingOrganisationsAndPlaces(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $organisations = $this->renderedSection($request, 'relation', 'containedInOrganisation');
         self::assertStringContainsString('Erfurt Tourismus GmbH', $organisations);
@@ -69,7 +69,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheManagingOrganisation(): void
     {
-        $managedBy = $this->renderedSection($this->generateRequestWithCHash('21'), 'relation', 'managedBy');
+        $managedBy = $this->renderedSection($this->attractionShowRequest('21'), 'relation', 'managedBy');
 
         self::assertStringContainsString('Erfurt Tourismus GmbH', $managedBy);
     }
@@ -77,7 +77,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function translatedAttractionShowsTheTranslatedManagingOrganisation(): void
     {
-        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+        $request = $this->attractionShowRequest('21', 10, 1);
 
         $managedBy = $this->renderedSection($request, 'relation', 'managedBy');
 
@@ -90,17 +90,17 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         // Attraction 24 carries neither relation: an empty set renders no
         // container at all, rather than an empty one.
         $body = $this->executeFrontendSubRequestAndReturnBody(
-            $this->generateRequestWithCHash('24')
+            $this->attractionShowRequest('24')
         );
 
-        self::assertStringNotContainsString('data-relation="containedInOrganisation"', $body);
-        self::assertStringNotContainsString('data-relation="containedInPlace"', $body);
+        self::assertSectionNotRendered($body, 'relation', 'containedInOrganisation');
+        self::assertSectionNotRendered($body, 'relation', 'containedInPlace');
     }
 
     #[Test]
     public function showsTheEventsHostedAtTheAttraction(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $events = $this->renderedSection($request, 'relation', 'hostsEvents');
 
@@ -111,7 +111,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function translatedAttractionShowsTheEventsOfItsDefaultLanguageRecord(): void
     {
-        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+        $request = $this->attractionShowRequest('21', 10, 1);
 
         $events = $this->renderedSection($request, 'relation', 'hostsEvents');
 
@@ -122,16 +122,16 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     public function showsNoEventSectionWhenTheAttractionHostsNone(): void
     {
         $body = $this->executeFrontendSubRequestAndReturnBody(
-            $this->generateRequestWithCHash('24')
+            $this->attractionShowRequest('24')
         );
 
-        self::assertStringNotContainsString('data-relation="hostsEvents"', $body);
+        self::assertSectionNotRendered($body, 'relation', 'hostsEvents');
     }
 
     #[Test]
     public function showsTheVisitInformation(): void
     {
-        $visitInfo = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'visitInfo');
+        $visitInfo = $this->renderedSection($this->attractionShowRequest('27'), 'attraction', 'visitInfo');
 
         self::assertStringContainsString('Geschichte erleben', $visitInfo);
         self::assertStringContainsString('1293', $visitInfo);
@@ -152,7 +152,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheWebsiteAndTheDistanceToPublicTransport(): void
     {
-        $location = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'location');
+        $location = $this->renderedSection($this->attractionShowRequest('27'), 'attraction', 'location');
 
         self::assertStringContainsString('https://example.com/vollstaendiges-museum', $location);
         self::assertStringContainsString('200', $location);
@@ -162,7 +162,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheOffersWithTheirPrices(): void
     {
-        $offers = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'offers');
+        $offers = $this->renderedSection($this->attractionShowRequest('27'), 'attraction', 'offers');
 
         self::assertStringContainsString('Öffentliche Führung', $offers);
         self::assertStringContainsString('Jeden Sonntag', $offers);
@@ -173,7 +173,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheAccessibilitySpecification(): void
     {
-        $accessibility = $this->renderedSection($this->generateRequestWithCHash('27'), 'attraction', 'accessibility');
+        $accessibility = $this->renderedSection($this->attractionShowRequest('27'), 'attraction', 'accessibility');
 
         self::assertStringContainsString('barrierefrei', $accessibility);
         self::assertStringContainsString('Stufenloser Zugang', $accessibility);
@@ -182,7 +182,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheParkingFacilitiesNearByInFull(): void
     {
-        $parking = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'parkingFacilityNearBy');
+        $parking = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'parkingFacilityNearBy');
 
         self::assertStringContainsString('Parkhaus Domplatz', $parking);
         self::assertStringContainsString('Parkhaus mit direktem Zugang zum Domplatz', $parking);
@@ -209,7 +209,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function listsTheRelationsOfAParkingFacilityNearByByName(): void
     {
-        $parking = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'parkingFacilityNearBy');
+        $parking = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'parkingFacilityNearBy');
 
         self::assertMatchesRegularExpression('#<dd class="town">Erfurt</dd>#', $parking);
         self::assertMatchesRegularExpression('#<dd class="organisation">Erfurt Tourismus GmbH</dd>#', $parking);
@@ -219,7 +219,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheInlineParkingFacilitiesOfAVenue(): void
     {
-        $parking = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'parkingFacilities');
+        $parking = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'parkingFacilities');
 
         self::assertStringContainsString('Tiefgarage des Hotels', $parking);
         self::assertStringContainsString('Zufahrt über den Hof', $parking);
@@ -232,7 +232,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheContainingTrails(): void
     {
-        $trails = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInTrail');
+        $trails = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'containedInTrail');
 
         self::assertStringContainsString('Lutherweg', $trails);
     }
@@ -240,7 +240,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheCategoriesAndKeywords(): void
     {
-        $request = $this->generateRequestWithCHash('27');
+        $request = $this->attractionShowRequest('27');
 
         self::assertStringContainsString('Museum', $this->renderedSection($request, 'relation', 'categories'));
         self::assertStringContainsString('romantisch', $this->renderedSection($request, 'relation', 'keywords'));
@@ -249,7 +249,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheManagingOrganisationInFull(): void
     {
-        $organisation = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'managedBy');
+        $organisation = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'managedBy');
 
         self::assertStringContainsString('Erfurt Tourismus GmbH', $organisation);
         self::assertStringContainsString('Die Tourismusgesellschaft der Stadt', $organisation);
@@ -260,7 +260,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheContainingOrganisationsInFull(): void
     {
-        $organisations = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInOrganisation');
+        $organisations = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'containedInOrganisation');
 
         self::assertStringContainsString('Die Tourismusgesellschaft der Stadt', $organisations);
         self::assertStringContainsString('Benediktsplatz 1', $organisations);
@@ -269,7 +269,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheTownsInFull(): void
     {
-        $towns = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'towns');
+        $towns = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'towns');
 
         self::assertStringContainsString('Erfurt', $towns);
         self::assertStringContainsString('Landeshauptstadt Thüringens', $towns);
@@ -281,7 +281,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function summarisesEachContainingPlace(): void
     {
-        $places = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'containedInPlace');
+        $places = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'containedInPlace');
 
         self::assertStringContainsString('Domplatz Erfurt', $places);
         self::assertStringContainsString('Platz vor dem Dom', $places);
@@ -298,7 +298,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheFullAddressOfTheAttraction(): void
     {
-        $address = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', 'address');
+        $address = $this->renderedSection($this->attractionShowRequest('27'), 'relation', 'address');
 
         self::assertStringContainsString('Domstraße 5', $address);
         self::assertStringContainsString('99084', $address);
@@ -326,7 +326,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[DataProvider('sectionsOfRelatedRecordsWithAnAddress')]
     public function showsTheFullAddressOfARelatedRecord(string $section): void
     {
-        $related = $this->renderedSection($this->generateRequestWithCHash('27'), 'relation', $section);
+        $related = $this->renderedSection($this->attractionShowRequest('27'), 'relation', $section);
 
         self::assertStringContainsString('Thüringen', $related);
         self::assertStringContainsString('Deutschland', $related);
@@ -338,19 +338,19 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsNoSectionOfAnEmptyFieldGroup(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('24'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('24'));
 
-        self::assertStringNotContainsString('data-attraction=', $body);
-        self::assertStringNotContainsString('data-relation="parkingFacilityNearBy"', $body);
-        self::assertStringNotContainsString('data-relation="containedInTrail"', $body);
-        self::assertStringNotContainsString('data-relation="categories"', $body);
-        self::assertStringNotContainsString('data-relation="keywords"', $body);
+        self::assertSectionNotRendered($body, 'attraction');
+        self::assertSectionNotRendered($body, 'relation', 'parkingFacilityNearBy');
+        self::assertSectionNotRendered($body, 'relation', 'containedInTrail');
+        self::assertSectionNotRendered($body, 'relation', 'categories');
+        self::assertSectionNotRendered($body, 'relation', 'keywords');
     }
 
     #[Test]
     public function showsTheVenueFieldsOfAMeetingVenue(): void
     {
-        $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
+        $venue = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'meeting');
 
         self::assertStringContainsString('250', $venue);
         self::assertStringContainsString('Beamer', $venue);
@@ -361,7 +361,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheMeetingRoomTableOfAMeetingVenue(): void
     {
-        $rooms = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRooms');
+        $rooms = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'meetingRooms');
 
         self::assertStringContainsString('180,50', $rooms);
         self::assertStringContainsString('4,20', $rooms);
@@ -373,7 +373,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheDetailsOfEachMeetingRoom(): void
     {
-        $details = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRoomDetails');
+        $details = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'meetingRoomDetails');
 
         self::assertStringContainsString('Großer Saal mit Domblick', $details);
         self::assertStringContainsString('https://example.com/saal-erfurt', $details);
@@ -387,7 +387,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function linksEachRoomOfTheTableToItsDetails(): void
     {
-        $request = $this->generateRequestWithCHash('25');
+        $request = $this->attractionShowRequest('25');
 
         $table = $this->renderedSection($request, 'venue', 'meetingRooms');
         self::assertMatchesRegularExpression('#<a href="\#meeting-room-1">Saal Erfurt</a>#', $table);
@@ -401,7 +401,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function listsTheRelationsOfAMeetingRoomByName(): void
     {
-        $details = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meetingRoomDetails');
+        $details = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'meetingRoomDetails');
 
         self::assertMatchesRegularExpression('#<dd class="organisation">Erfurt Tourismus GmbH</dd>#', $details);
         self::assertMatchesRegularExpression('#<dd class="category">Kongressraum</dd>#', $details);
@@ -412,7 +412,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheVenueTypeAndTheMeetingDescription(): void
     {
-        $venue = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'meeting');
+        $venue = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'meeting');
 
         self::assertStringContainsString('Tagungshotel', $venue);
         self::assertStringContainsString('Tagen mit Blick auf den Dom', $venue);
@@ -421,7 +421,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheLodgingFactsOfAVenue(): void
     {
-        $lodging = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'lodging');
+        $lodging = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'lodging');
 
         self::assertStringContainsString('16:00', $lodging);
         self::assertStringContainsString('11:00', $lodging);
@@ -438,7 +438,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheGastronomyFactsOfAVenue(): void
     {
-        $gastronomy = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'gastronomy');
+        $gastronomy = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'gastronomy');
 
         self::assertStringContainsString('Restaurant', $gastronomy);
         self::assertStringContainsString('Regionale Küche', $gastronomy);
@@ -458,7 +458,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheVisitFactsOfAVenue(): void
     {
-        $visit = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'visit');
+        $visit = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'visit');
 
         self::assertStringContainsString('Angebot im Indoorbereich', $visit);
         self::assertStringContainsString('Führung mit Anmeldung', $visit);
@@ -477,7 +477,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheBuildingFactsOfAVenue(): void
     {
-        $building = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'building');
+        $building = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'building');
 
         self::assertStringContainsString('UNESCO Welterbe (Kultur)', $building);
         self::assertMatchesRegularExpression('#Ruine</dt>\s*<dd>nein</dd>#', $building);
@@ -490,7 +490,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheLinksOfAVenue(): void
     {
-        $links = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'links');
+        $links = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'links');
 
         self::assertStringContainsString('https://example.com/karte', $links);
         self::assertStringContainsString('https://example.com/same-a', $links);
@@ -502,7 +502,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheAdditionalTextsOfAVenue(): void
     {
-        $texts = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'texts');
+        $texts = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'texts');
 
         self::assertStringContainsString('Motorradfreundlicher Hotel- und Gastronomiebetrieb', $texts);
         self::assertStringContainsString('Text aus dem Kulturportal', $texts);
@@ -511,7 +511,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheRelationsOfAVenue(): void
     {
-        $relations = $this->renderedSection($this->generateRequestWithCHash('25'), 'venue', 'relations');
+        $relations = $this->renderedSection($this->attractionShowRequest('25'), 'venue', 'relations');
 
         self::assertStringContainsString('Erfurt Tourismus GmbH', $relations);
         self::assertStringContainsString('Lutherweg', $relations);
@@ -521,10 +521,10 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function showsNoVenueGroupWithoutData(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->generateRequestWithCHash('26'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('26'));
 
         foreach (['lodging', 'gastronomy', 'visit', 'building', 'links', 'texts', 'relations', 'media', 'parkingFacilities', 'meetingRoomDetails'] as $group) {
-            self::assertStringNotContainsString('data-venue="' . $group . '"', $body);
+            self::assertSectionNotRendered($body, 'venue', $group);
         }
     }
 
@@ -532,29 +532,26 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     public function showsNoVenueOutputForAPlainAttraction(): void
     {
         $body = $this->executeFrontendSubRequestAndReturnBody(
-            $this->generateRequestWithCHash('21')
+            $this->attractionShowRequest('21')
         );
 
         self::assertStringContainsString('Stadtmuseum Erfurt', $body);
-        self::assertStringNotContainsString('data-venue=', $body);
+        self::assertSectionNotRendered($body, 'venue');
     }
 
     #[Test]
     public function showsNoMeetingRoomTableForAVenueWithoutRooms(): void
     {
-        $request = $this->generateRequestWithCHash('26');
+        $request = $this->attractionShowRequest('26');
 
         self::assertStringContainsString('40', $this->renderedSection($request, 'venue', 'meeting'));
-        self::assertStringNotContainsString(
-            'data-venue="meetingRooms"',
-            $this->executeFrontendSubRequestAndReturnBody($request)
-        );
+        self::assertSectionNotRendered($this->executeFrontendSubRequestAndReturnBody($request), 'venue', 'meetingRooms');
     }
 
     #[Test]
     public function showsAttractionTitle(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -576,7 +573,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function hiddenAttractionShowsNoDataLabel(): void
     {
-        $request = $this->generateRequestWithCHash('20');
+        $request = $this->attractionShowRequest('20');
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -588,7 +585,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersBothOpenSpansOfALunchBreakUnderOneWeekday(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
@@ -604,7 +601,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersSpecialPublicHolidayHours(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
@@ -616,7 +613,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersFuturePeriodAfterCurrentOne(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $section = $this->renderedSection($request, 'openinghours-format', 'perDayTable');
 
@@ -628,7 +625,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function mergedByWeekdayFormatCollapsesDaysSharingTheSameHours(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $section = $this->renderedSection($request, 'openinghours-format', 'mergedByWeekday');
 
@@ -642,7 +639,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function mergedByWeekdayRangesFormatCollapsesConsecutiveDaysIntoARange(): void
     {
-        $request = $this->generateRequestWithCHash('21');
+        $request = $this->attractionShowRequest('21');
 
         $section = $this->renderedSection($request, 'openinghours-format', 'mergedByWeekdayRanges');
 
@@ -650,10 +647,5 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         // format collapses them to "Montag–Dienstag" rather than listing both.
         self::assertStringContainsString('Montag&ndash;Dienstag', $section);
         self::assertStringNotContainsString('Montag, Dienstag', $section);
-    }
-
-    private function generateRequestWithCHash(string $attractionUid): InternalRequest
-    {
-        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }

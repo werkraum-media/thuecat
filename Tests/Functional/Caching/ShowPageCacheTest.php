@@ -81,7 +81,7 @@ class ShowPageCacheTest extends AbstractCachingTestCase
         // Via detailRequest: the record argument is cacheable, so a request
         // without a valid cHash never reaches the controller.
         $this->executeFrontendSubRequest(
-            $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '23', 11)
+            $this->attractionShowRequest('23', 11)
         );
 
         self::assertNotSame(

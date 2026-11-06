@@ -75,7 +75,7 @@ class TrailShowTest extends AbstractFrontendTestCase
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
-        self::assertStringNotContainsString('data-trail="season"', $body);
+        self::assertSectionNotRendered($body, 'trail', 'season');
     }
 
     #[Test]
@@ -86,7 +86,7 @@ class TrailShowTest extends AbstractFrontendTestCase
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
         self::assertStringContainsString('Weg ohne Schlagworte', $body);
-        self::assertStringNotContainsString('data-relation="keywords"', $body);
+        self::assertSectionNotRendered($body, 'relation', 'keywords');
     }
 
     #[Test]

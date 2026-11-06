@@ -122,7 +122,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function formerQueryStringUrlKeepsRendering(): void
     {
-        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21');
+        $request = $this->attractionShowRequest('21');
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -144,7 +144,7 @@ class DetailRoutingTest extends AbstractFrontendTestCase
     #[Test]
     public function queryStringLinkToShowPageWithoutRoleResolves(): void
     {
-        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '24', 50);
+        $request = $this->attractionShowRequest('24', 50);
 
         $result = $this->executeFrontendSubRequest($request);
 

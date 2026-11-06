@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
@@ -34,7 +33,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function emitsKeywordsMetaTagFromRelatedCategories(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->showRequest('21'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
         self::assertMatchesRegularExpression(
             '#<meta[^>]+name="keywords"[^>]+content="romantisch, barrierefrei"#',
@@ -45,7 +44,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function emitsNoKeywordsMetaTagWithoutRelations(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->showRequest('20'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('20'));
 
         self::assertDoesNotMatchRegularExpression('#<meta[^>]+name="keywords"#', $body);
     }
@@ -53,7 +52,7 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
     #[Test]
     public function keywordsMetaTagUsesTranslatedTitles(): void
     {
-        $request = $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', '21', 10, 1);
+        $request = $this->attractionShowRequest('21', 10, 1);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -61,10 +60,5 @@ class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
             '#<meta[^>]+name="keywords"[^>]+content="romantic, accessible"#',
             $body
         );
-    }
-
-    private function showRequest(string $attractionUid): InternalRequest
-    {
-        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }

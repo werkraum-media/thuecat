@@ -118,8 +118,8 @@ class TrailShowMediaTest extends AbstractFrontendTestCase
 
         self::assertSame(200, $result->getStatusCode());
         self::assertStringContainsString('Weg ohne Medien', $body);
-        self::assertStringNotContainsString('data-relation="mainImage"', $body);
-        self::assertStringNotContainsString('data-relation="mediaFiles"', $body);
-        self::assertStringNotContainsString('data-relation="logo"', $body);
+        self::assertSectionNotRendered($body, 'relation', 'mainImage');
+        self::assertSectionNotRendered($body, 'relation', 'mediaFiles');
+        self::assertSectionNotRendered($body, 'relation', 'logo');
     }
 }

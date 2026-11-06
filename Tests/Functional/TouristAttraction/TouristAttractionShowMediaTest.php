@@ -24,7 +24,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
@@ -71,7 +70,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersMainImageFromFal(): void
     {
-        $result = $this->executeFrontendSubRequest($this->requestForAttraction('21'));
+        $result = $this->executeFrontendSubRequest($this->attractionShowRequest('21'));
         $body = (string)$result->getBody();
 
         self::assertSame(200, $result->getStatusCode());
@@ -84,7 +83,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function appliesTheEditorsCropToTheProcessedImage(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->requestForAttraction('21'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
         self::assertMatchesRegularExpression('#<img[^>]+width="10"#', $body);
         self::assertMatchesRegularExpression('#<img[^>]+height="5"#', $body);
@@ -93,7 +92,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersGalleryFromFalMediaFiles(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->requestForAttraction('21'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
         self::assertStringContainsString('<section class="gallery">', $body);
         self::assertStringContainsString('Foto: Gallery Author', $body);
@@ -102,7 +101,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersEditorialImagesFromFal(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->requestForAttraction('21'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('21'));
 
         // Native editorial_images FAL property; processed via the reference crop.
         self::assertStringContainsString('<section class="editorial">', $body);
@@ -114,7 +113,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     {
         // Record 22 has the legacy blob but no editorial_images relation; editorial is
         // FAL-only (no blob fallback) so the section must not appear.
-        $body = $this->executeFrontendSubRequestAndReturnBody($this->requestForAttraction('22'));
+        $body = $this->executeFrontendSubRequestAndReturnBody($this->attractionShowRequest('22'));
 
         self::assertStringNotContainsString('<section class="editorial">', $body);
     }
@@ -122,7 +121,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersTheLogoAndTheSubjectMediaOfAVenue(): void
     {
-        $media = $this->renderedSection($this->requestForAttraction('24'), 'venue', 'media');
+        $media = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'media');
 
         self::assertStringContainsString('Foto: Main Author', $media);
         self::assertStringContainsString('Foto: Gallery Author', $media);
@@ -132,7 +131,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersTheMediaOfAnInlineParkingFacility(): void
     {
-        $parking = $this->renderedSection($this->requestForAttraction('24'), 'venue', 'parkingFacilities');
+        $parking = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'parkingFacilities');
 
         self::assertStringContainsString('Foto: Editorial Author', $parking);
         self::assertStringContainsString('Foto: Gallery Author', $parking);
@@ -142,7 +141,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersTheMediaOfAMeetingRoom(): void
     {
-        $details = $this->renderedSection($this->requestForAttraction('24'), 'venue', 'meetingRoomDetails');
+        $details = $this->renderedSection($this->attractionShowRequest('24'), 'venue', 'meetingRoomDetails');
 
         self::assertStringContainsString('Foto: Main Author', $details);
         self::assertStringContainsString('Foto: Editorial Author', $details);
@@ -169,7 +168,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[DataProvider('imagesWithTheirMetadata')]
     public function rendersTheMetadataOfAnImage(string $uid, string $attribute, string $section, string $title, string $description): void
     {
-        $markup = $this->renderedSection($this->requestForAttraction($uid), $attribute, $section);
+        $markup = $this->renderedSection($this->attractionShowRequest($uid), $attribute, $section);
 
         self::assertMatchesRegularExpression('#<img [^>]*alt="Alternative: ' . $title . '"#', $markup);
         // Title and description in one and the same caption.
@@ -180,7 +179,7 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersWithoutAnyMedia(): void
     {
-        $result = $this->executeFrontendSubRequest($this->requestForAttraction('23'));
+        $result = $this->executeFrontendSubRequest($this->attractionShowRequest('23'));
         $body = (string)$result->getBody();
 
         self::assertSame(200, $result->getStatusCode());
@@ -189,10 +188,5 @@ class TouristAttractionShowMediaTest extends AbstractFrontendTestCase
         self::assertStringNotContainsString('<figure>', $body);
         self::assertStringNotContainsString('class="gallery"', $body);
         self::assertStringNotContainsString('class="editorial"', $body);
-    }
-
-    private function requestForAttraction(string $attractionUid): InternalRequest
-    {
-        return $this->detailRequest('tx_thuecat_touristattractionshow', 'attraction', $attractionUid);
     }
 }
