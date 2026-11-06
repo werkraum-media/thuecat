@@ -79,3 +79,40 @@ relates the same events as before, so no cache needs flushing.
 
 The wizard is repeatable: it is offered again while a stored list remains, and running it twice
 creates no duplicate relation.
+
+.. _maintenance-meeting-venues:
+
+Meeting venues
+==============
+
+Conference hotels and meeting and congress locations are tourist attractions of the record type
+meeting venue, see :ref:`frontend-output-meeting-venues`. The import writes the type on every run.
+Attractions stored before the record type existed get it from the
+:ref:`upgrade wizard <t3coreapi:upgrade-wizards>` :guilabel:`ThueCat: Type stored meeting venues`:
+
+#. Update the database schema, so the record type column exists:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 extension:setup
+
+#. Run the wizard, in the Install Tool under :guilabel:`Upgrade > Upgrade Wizard`, or on the
+   console:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 upgrade:run thuecat_meetingVenueType
+
+#. Flush the caches. The wizard writes the type directly, without the DataHandler, so no cache is
+   flushed per record:
+
+   .. code-block:: bash
+
+      vendor/bin/typo3 cache:flush
+
+The wizard types every attraction related to the conference hotel or the meeting and congress
+category, translations included. Uids, URLs, categories and relations stay as they are. A site
+whose import writes no type categories has nothing the wizard can judge by: its venues get their
+type from the next import.
+
+The wizard is repeatable: it is offered again while such an attraction is not yet typed.

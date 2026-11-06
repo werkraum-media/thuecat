@@ -1,0 +1,77 @@
+.. include:: ../Includes.txt
+.. _changelog-6-2-0:
+
+=====
+6.2.0
+=====
+
+.. contents:: On this page
+   :local:
+   :depth: 1
+
+Breaking
+--------
+
+Nothing
+
+Important
+---------
+
+* **[FEATURE] Import meeting places as meeting venues**
+
+* **[FEATURE] Add an upgrade wizard typing stored meeting venues**
+
+Features
+--------
+
+* **[FEATURE] Import the properties of meeting venues**
+
+* **[FEATURE] Relate meeting venues to their operator, trails and events**
+
+* **[FEATURE] Import parking spaces and inline parking facilities**
+
+* **[FEATURE] Import the meeting rooms of meeting venues**
+
+* **[FEATURE] Expose meeting venue data to templates**
+
+* **[FEATURE] Render meeting venues in attraction lists and detail pages**
+
+* **[FEATURE] Offer and filter attraction records by record type in forms**
+
+* **[FEATURE] Render every attraction field on the detail page**
+
+* **[FEATURE] Render every meeting venue field on the detail page**
+
+* **[FEATURE] Render parking facilities in full on the detail page**
+
+* **[FEATURE] Render every meeting room field on the venue detail page**
+
+* **[FEATURE] Render organisations, towns and containing places in full**
+
+* **[FEATURE] Render every address field on the detail page**
+
+* **[FEATURE] Render image titles, descriptions and copyrights**
+
+Fixes
+-----
+
+* **[BUGFIX] Build opening hours for the date of the request**
+
+* **[BUGFIX] Make nearby parking facilities a site-scoped select field**
+
+Deprecation
+-----------
+
+Nothing
+
+Upgrade
+-------
+
+#. Run the database analyser and add the record type and venue columns of
+   :sql:`tx_thuecat_tourist_attraction`, the table :sql:`tx_thuecat_meeting_room`, and the parking
+   space and parent columns of :sql:`tx_thuecat_parking_facility`.
+#. Run the upgrade wizard ``thuecat_meetingVenueType``, see :ref:`maintenance-meeting-venues`.
+#. Run the attraction import configurations of each site. They fill the venue fields, import the
+   meeting rooms and type the venues of sites without type categories.
+#. Templates overriding :file:`TouristAttraction/Show` or :file:`TouristAttraction/ListItem` render
+   no venue output until they call the venue partials, see :ref:`frontend-output-meeting-venues`.

@@ -94,6 +94,65 @@ Picking records
    Do not pin a record on a page that list items link to as detail page: every link would show the
    pinned record.
 
+.. _frontend-output-plugin-settings-record-types:
+
+Record types
+============
+
+:typoscript:`settings.recordTypes`
+   Attraction lists only: the record types to list, for example only meeting venues. Several types
+   can be ticked; none ticked lists every type. Like a preset, a request cannot widen it.
+
+   In a selected list the ticks are a backend aid: they narrow the records offered in
+   :typoscript:`settings.selectedRecords`. Records already picked stay, and the frontend renders
+   every picked record whatever its type.
+
+Offer the field as checkboxes whose items are the record types of the table. The items processor
+``RecordTypeChoicesItemsProcessor`` copies them from the table's type column, so a record type added
+later appears without a change to the content element:
+
+.. code-block:: yaml
+   :caption: EXT:myextension/ContentBlocks/ContentElements/attraction-list/config.yaml
+
+   - identifier: 'settings.recordTypes'
+     type: 'Select'
+     renderType: 'selectCheckBox'
+     itemsProcessors:
+       100:
+         class: 'WerkraumMedia\ThueCat\Typo3\FormEngine\RecordTypeChoicesItemsProcessor'
+         parameters:
+           table: 'tx_thuecat_tourist_attraction'
+
+In a selected list, group the offered records by type and let the ticks filter them. The ticks
+reload the form; ``RecordTypeItemsProcessor`` reads them from the field named by ``typesField``:
+
+.. code-block:: yaml
+   :caption: EXT:myextension/ContentBlocks/ContentElements/attraction-list-selected/config.yaml
+
+   - identifier: 'settings.recordTypes'
+     type: 'Select'
+     renderType: 'selectCheckBox'
+     onChange: 'reload'
+     itemsProcessors:
+       100:
+         class: 'WerkraumMedia\ThueCat\Typo3\FormEngine\RecordTypeChoicesItemsProcessor'
+         parameters:
+           table: 'tx_thuecat_tourist_attraction'
+   - identifier: 'settings.selectedRecords'
+     type: 'Select'
+     renderType: 'selectMultipleSideBySide'
+     foreign_table: 'tx_thuecat_tourist_attraction'
+     foreign_table_where: 'AND {#tx_thuecat_tourist_attraction}.{#sys_language_uid} IN (0, -1)'
+     foreign_table_item_group: 'type'
+     itemGroups:
+       attraction: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.type.attraction'
+       meeting_venue: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.type.meeting_venue'
+     itemsProcessors:
+       100:
+         class: 'WerkraumMedia\ThueCat\Typo3\FormEngine\RecordTypeItemsProcessor'
+         parameters:
+           typesField: 'settings.recordTypes'
+
 .. _frontend-output-plugin-settings-presets:
 
 Presets

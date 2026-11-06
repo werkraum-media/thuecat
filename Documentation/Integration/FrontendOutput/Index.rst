@@ -48,12 +48,13 @@ Tourist attractions
      - optional preset: ``towns``, ``categories``, ``keywords``, ``petsAllowed``,
        ``isAccessibleForFree``, ``publicAccess``. Optional overrides of the `Site settings`_:
        ``itemsPerPage``, ``page.pid.thuecat_attraction_show``. Optional sort order: ``sortBy``, see
-       :ref:`frontend-output-plugin-settings-sort-order`.
+       :ref:`frontend-output-plugin-settings-sort-order`. Optional ``recordTypes``, see
+       :ref:`frontend-output-plugin-settings-record-types`.
    * - ``TouristAttractionListSelected``
      - Fixed set of attractions picked by the editor, in the picked order.
        No filtering, no pagination.
      - ``SelectedList``
-     - ``selectedRecords``
+     - ``selectedRecords``, optional ``recordTypes`` as a backend aid
    * - ``TouristAttractionSearch``
      - Search-and-filter form. Submits into the list plugin on the same page, or to the configured
        search page.
@@ -188,7 +189,8 @@ The templates are
   :ref:`frontend-output-caching`
 * :file:`TouristAttraction/SelectedList`
 * :file:`TouristAttraction/SearchForm`
-* :file:`TouristAttraction/Show`
+* :file:`TouristAttraction/Show` - meeting venues render here too, see
+  :ref:`frontend-output-meeting-venues`
 * :file:`Trail/ListItem` - one list item, cached on its own, see :ref:`frontend-output-caching`
 * :file:`Trail/SelectedList`
 * :file:`Trail/Show`

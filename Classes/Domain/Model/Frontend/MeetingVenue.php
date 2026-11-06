@@ -595,7 +595,7 @@ class MeetingVenue extends TouristAttraction
         // Rooms the venue names keep their venue position, so they count as seen before the walk starts.
         $seen = [];
         foreach ($this->meetingRooms as $room) {
-            $seen[$room->getUid()] = true;
+            $seen[(int)$room->getUid()] = true;
         }
 
         $table = [];
@@ -609,15 +609,16 @@ class MeetingVenue extends TouristAttraction
 
     /**
      * @param list<MeetingRoom> $table
-     * @param array<int|null, true> $seen
+     * @param array<int, true> $seen
      */
     protected function appendRoomsReachedOnlyThrough(MeetingRoom $room, array &$table, array &$seen): void
     {
         foreach ($room->getContainedRooms() as $containedRoom) {
-            if (isset($seen[$containedRoom->getUid()])) {
+            $uid = (int)$containedRoom->getUid();
+            if (isset($seen[$uid])) {
                 continue;
             }
-            $seen[$containedRoom->getUid()] = true;
+            $seen[$uid] = true;
             $table[] = $containedRoom;
             $this->appendRoomsReachedOnlyThrough($containedRoom, $table, $seen);
         }

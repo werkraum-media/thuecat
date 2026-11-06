@@ -16,3 +16,4 @@ Prepared rendering sections or complex relations are described here.
 
    OpeningHours
    Media
+   MeetingVenues
