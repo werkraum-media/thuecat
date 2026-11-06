@@ -38,10 +38,7 @@ final class DetailRecordSlugUpgradeWizardTest extends AbstractBackendTestCase
             'gemeindebrunnen-weimar',
             $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction')['slug']
         );
-        $translations = $this->fetchTranslationsByParent(
-            'tx_thuecat_tourist_attraction',
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction')
-        );
+        $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', 'test:wizard-attraction');
         self::assertArrayHasKey(1, $translations);
         self::assertSame('community-fountain-weimar', $translations[1]['slug']);
         self::assertSame(

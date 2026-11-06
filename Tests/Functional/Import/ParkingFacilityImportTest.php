@@ -54,7 +54,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         self::assertSame(
             ['spaces_car' => 120, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 0],
-            array_intersect_key($this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY), array_flip(self::SPACES))
+            $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES)
         );
     }
 
@@ -69,7 +69,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         self::assertSame(
             ['spaces_car' => 5, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 5],
-            array_intersect_key($this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY), array_flip(self::SPACES))
+            $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES)
         );
     }
 
@@ -95,10 +95,8 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $parkingFacilities = $this->fetchChildren(self::TABLE);
-        self::assertCount(1, $parkingFacilities);
+        self::assertSame([self::MULTI_PURPOSE_HALL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
         $expected = [
-            'remote_id' => self::MULTI_PURPOSE_HALL . '::parking::0',
             'title' => 'Parkplatz am Haupteingang',
             'parentid' => $this->fetchUidByRemoteId(self::VENUE_TABLE, self::MULTI_PURPOSE_HALL),
             'parenttable' => self::VENUE_TABLE,
@@ -110,7 +108,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         ];
         self::assertSame(
             $expected,
-            array_map(static fn (string $column): mixed => $parkingFacilities[0][$column] ?? null, array_combine(array_keys($expected), array_keys($expected)))
+            $this->fetchColumnsByRemoteId(self::TABLE, self::MULTI_PURPOSE_HALL . '::parking::0', array_keys($expected))
         );
     }
 
@@ -136,10 +134,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(3);
 
-        $translations = $this->fetchTranslationsByParent(
-            self::TABLE,
-            $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT . '::parking::0')
-        );
+        $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT . '::parking::0');
         self::assertSame('Parking', $translations[1]['title'] ?? null);
         self::assertSame('Parking', $translations[2]['title'] ?? null);
     }
@@ -154,13 +149,13 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $parkingFacility = self::MULTI_PURPOSE_HALL . '::parking::0';
-        $openingHours = $this->fetchRowByRemoteId(
-            'tx_thuecat_opening_hours',
-            $parkingFacility . '::oh::regular::Monday::00:00:00::2026-10-06::2029-03-20'
-        );
         self::assertSame(
             ['parentid' => $this->fetchUidByRemoteId(self::TABLE, $parkingFacility), 'parenttable' => self::TABLE],
-            ['parentid' => $openingHours['parentid'], 'parenttable' => $openingHours['parenttable']]
+            $this->fetchColumnsByRemoteId(
+                'tx_thuecat_opening_hours',
+                $parkingFacility . '::oh::regular::Monday::00:00:00::2026-10-06::2029-03-20',
+                ['parentid', 'parenttable']
+            )
         );
     }
 

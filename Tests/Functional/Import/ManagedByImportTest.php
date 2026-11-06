@@ -59,10 +59,7 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION);
         self::assertArrayHasKey(1, $this->fetchTranslationsByParent('tx_thuecat_organisation', $organisationUid));
 
-        $attractionTranslations = $this->fetchTranslationsByParent(
-            'tx_thuecat_tourist_attraction',
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION)
-        );
+        $attractionTranslations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION);
         self::assertArrayHasKey(1, $attractionTranslations);
 
         self::assertSame($organisationUid, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION)['managed_by']);

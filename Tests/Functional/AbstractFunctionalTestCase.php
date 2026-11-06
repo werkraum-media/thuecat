@@ -199,6 +199,32 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return $byLanguage;
     }
 
+    /** @return array<int, array<string, mixed>> */
+    protected function fetchTranslationsByParentRemoteId(string $table, string $remoteId): array
+    {
+        return $this->fetchTranslationsByParent($table, $this->fetchUidByRemoteId($table, $remoteId));
+    }
+
+    /**
+     * The given columns of the row, in the given order, so an assertion compares only what it names.
+     *
+     * @param list<string> $columns
+     *
+     * @return array<string, mixed>
+     */
+    protected function fetchColumnsByRemoteId(string $table, string $remoteId, array $columns): array
+    {
+        $row = $this->fetchRowByRemoteId($table, $remoteId);
+
+        $selected = [];
+        foreach ($columns as $column) {
+            self::assertArrayHasKey($column, $row, 'No column ' . $column . ' in ' . $table);
+            $selected[$column] = $row[$column];
+        }
+
+        return $selected;
+    }
+
     /**
      * The foreign uids of one MM relation field, in stored order. The MM table comes from the field's TCA.
      *

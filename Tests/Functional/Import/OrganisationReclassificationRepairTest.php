@@ -74,8 +74,7 @@ final class OrganisationReclassificationRepairTest extends AbstractImportTestCas
         $this->importConfiguration(1);
 
         self::assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
-        $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel');
-        $hotelTranslation = $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', $hotelUid)[1] ?? [];
+        $hotelTranslation = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'repair-hotel')[1] ?? [];
         $addresses = array_values(array_filter(
             $this->fetchChildren('tx_thuecat_address'),
             static fn (array $address): bool => $address['remote_id'] === self::RESOURCES . 'repair-hotel::addr::0'

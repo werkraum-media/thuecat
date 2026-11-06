@@ -95,10 +95,9 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         self::assertSame(0, $this->countRows('sys_category'));
-        $row = $this->fetchRowByRemoteId(self::TABLE, self::HOTEL);
         self::assertSame(
-            [1, 'meeting_venue', 'meeting_congress_hotel'],
-            [$row['uid'], $row['type'], $row['venue_type']]
+            ['uid' => 1, 'type' => 'meeting_venue', 'venue_type' => 'meeting_congress_hotel'],
+            $this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, ['uid', 'type', 'venue_type'])
         );
     }
 

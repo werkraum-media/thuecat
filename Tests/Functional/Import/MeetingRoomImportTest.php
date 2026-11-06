@@ -90,12 +90,10 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration($configuration);
 
-        $row = $this->fetchRowByRemoteId(self::TABLE, 'https://thuecat.org/resources/' . $room);
-        $stored = [];
-        foreach (array_keys($expected) as $field) {
-            $stored[$field] = $row[$field] ?? null;
-        }
-        self::assertSame($expected, $stored);
+        self::assertSame(
+            $expected,
+            $this->fetchColumnsByRemoteId(self::TABLE, 'https://thuecat.org/resources/' . $room, array_keys($expected))
+        );
     }
 
     #[Test]
@@ -108,7 +106,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
-        $translations = $this->fetchTranslationsByParent(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE));
+        $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::GALERIE);
         self::assertIsString($row['description']);
         self::assertStringStartsWith('Die Galerie ist eine Veranstaltungsfläche', $row['description']);
         self::assertSame('Gallery', $translations[1]['title'] ?? null);
@@ -163,8 +161,10 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $row = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
-        self::assertSame(['floor_size' => '0.00', 'room_height' => '11.50'], ['floor_size' => $row['floor_size'], 'room_height' => $row['room_height']]);
+        self::assertSame(
+            ['floor_size' => '0.00', 'room_height' => '11.50'],
+            $this->fetchColumnsByRemoteId(self::TABLE, self::GALERIE, ['floor_size', 'room_height'])
+        );
         $this->assertSingleUnmatchedValue(self::TABLE, self::GALERIE, 'schema:floorSize', 'test:UnknownUnit');
     }
 

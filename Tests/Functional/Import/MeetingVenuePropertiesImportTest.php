@@ -142,12 +142,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $this->importConfiguration($configuration);
 
-        $row = $this->fetchRowByRemoteId(self::TABLE, $remoteId);
-        $stored = [];
-        foreach (array_keys($expected) as $field) {
-            $stored[$field] = $row[$field] ?? null;
-        }
-        self::assertSame($expected, $stored);
+        self::assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, $remoteId, array_keys($expected)));
     }
 
     #[Test]
@@ -158,7 +153,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(4);
 
-        $translations = $this->fetchTranslationsByParent(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::HOTEL_WITH_GASTRONOMY));
+        $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::HOTEL_WITH_GASTRONOMY);
         self::assertSame('Motorcycle-Friendly Hotel and Restaurant', $translations[1]['certifications'] ?? null);
         self::assertSame('Établissement hôtelier et de restauration adapté aux motards', $translations[2]['certifications'] ?? null);
     }
@@ -171,12 +166,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $venueColumns = array_intersect_key(
-            $this->fetchRowByRemoteId(self::TABLE, self::HOTEL),
-            array_flip(self::VENUE_COLUMNS)
-        );
-        self::assertCount(count(self::VENUE_COLUMNS), $venueColumns);
-        self::assertSame([], array_filter($venueColumns));
+        self::assertSame([], array_filter($this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, self::VENUE_COLUMNS)));
     }
 
     #[Test]
@@ -203,10 +193,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importConfiguration(6);
 
         $german = $this->fetchRowByRemoteId(self::TABLE, self::MEMORIAL)['description_culture_portal'];
-        $english = $this->fetchTranslationsByParent(
-            self::TABLE,
-            $this->fetchUidByRemoteId(self::TABLE, self::MEMORIAL)
-        )[1]['description_culture_portal'] ?? null;
+        $english = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::MEMORIAL)[1]['description_culture_portal'] ?? null;
         self::assertIsString($german);
         self::assertIsString($english);
         self::assertStringStartsWith('<p>Was die Gedenk- und Bildungsstätte Andreasstraße besonders macht:', $german);

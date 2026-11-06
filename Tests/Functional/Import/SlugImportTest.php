@@ -38,10 +38,7 @@ final class SlugImportTest extends AbstractImportTestCase
         $default = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', $remoteId);
         self::assertSame('attraktion-mit-single-slogan', $default['slug']);
 
-        $translations = $this->fetchTranslationsByParent(
-            'tx_thuecat_tourist_attraction',
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', $remoteId)
-        );
+        $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', $remoteId);
         self::assertArrayHasKey(1, $translations);
         self::assertSame('attraction-with-single-slogan', $translations[1]['slug']);
     }
@@ -80,10 +77,7 @@ final class SlugImportTest extends AbstractImportTestCase
         self::assertSame('Attraktion mit single slogan', $default['title']);
         self::assertSame('alter-titel', $default['slug']);
 
-        $translations = $this->fetchTranslationsByParent(
-            'tx_thuecat_tourist_attraction',
-            $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', $remoteId)
-        );
+        $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', $remoteId);
         self::assertArrayHasKey(1, $translations);
         self::assertSame('Attraction with single slogan', $translations[1]['title']);
         self::assertSame('old-title', $translations[1]['slug']);

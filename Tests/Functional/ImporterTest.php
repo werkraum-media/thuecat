@@ -505,10 +505,7 @@ class ImporterTest extends AbstractImportTestCase
         self::assertSame('Deutschland', $default['country']);
         self::assertSame('Thüringen', $default['region']);
 
-        $translations = $this->fetchTranslationsByParent(
-            'tx_thuecat_address',
-            $this->fetchUidByRemoteId('tx_thuecat_address', $remoteId)
-        );
+        $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_address', $remoteId);
         self::assertSame('Germany', $translations[1]['country'] ?? null);
         self::assertSame('Thuringia', $translations[1]['region'] ?? null);
         // fr is configured, but the fixture publishes no French content, so the

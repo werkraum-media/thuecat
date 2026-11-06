@@ -38,6 +38,11 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
 
     private const EVENT = 'https://thuecat.org/resources/e_100967287-hubev';
 
+    private const NAMED_REFERENCE_FIXTURES = [
+        '775941615571-khyx.json', '799431457224-zhww.json', '312868368592-wnce.json', '304061111979-rmed.json',
+        '290287712606-zkwq.json',
+    ];
+
     #[Test]
     public function operatorIsRelatedApartFromTheManagingOrganisation(): void
     {
@@ -48,13 +53,12 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $row = $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT);
         self::assertSame(
             [
                 'managed_by' => $this->fetchUidByRemoteId('tx_thuecat_organisation', 'https://thuecat.org/resources/079491439271-qqjm'),
                 'operated_by' => $this->fetchUidByRemoteId('tx_thuecat_organisation', 'https://thuecat.org/resources/214681324608-rqzg'),
             ],
-            ['managed_by' => $row['managed_by'], 'operated_by' => $row['operated_by']]
+            $this->fetchColumnsByRemoteId(self::TABLE, self::WIELANDGUT, ['managed_by', 'operated_by'])
         );
     }
 
@@ -135,17 +139,12 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
-        $this->expectFetch('775941615571-khyx.json');
-        $this->expectFetch('799431457224-zhww.json');
-        $this->expectFetch('312868368592-wnce.json');
-        $this->expectFetch('304061111979-rmed.json');
-        $this->expectFetch('290287712606-zkwq.json');
+        $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
         $this->importConfiguration(1);
 
-        $uid = $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT);
         self::assertSame('Christoph Martin Wieland', $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['who_was_here']);
-        self::assertSame('Christoph Martin Wieland', $this->fetchTranslationsByParent(self::TABLE, $uid)[1]['who_was_here'] ?? null);
+        self::assertSame('Christoph Martin Wieland', $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT)[1]['who_was_here'] ?? null);
     }
 
     // Audiences arrive in German only; no other language's name stands in.
@@ -154,20 +153,15 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
-        $this->expectFetch('775941615571-khyx.json');
-        $this->expectFetch('799431457224-zhww.json');
-        $this->expectFetch('312868368592-wnce.json');
-        $this->expectFetch('304061111979-rmed.json');
-        $this->expectFetch('290287712606-zkwq.json');
+        $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
         $this->importConfiguration(1);
 
-        $uid = $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT);
         self::assertSame(
             "Zielgruppe Konsum-Hedonisten\nZielgruppe Postmateriell\nKulturreisende\nZielgruppe Traditionelle",
             $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['tourist_types']
         );
-        self::assertSame('', $this->fetchTranslationsByParent(self::TABLE, $uid)[1]['tourist_types'] ?? null);
+        self::assertSame('', $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT)[1]['tourist_types'] ?? null);
     }
 
     #[Test]
@@ -175,11 +169,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
-        $this->expectFetch('775941615571-khyx.json');
-        $this->expectFetch('799431457224-zhww.json');
-        $this->expectFetch('312868368592-wnce.json');
-        $this->expectFetch('304061111979-rmed.json');
-        $this->expectFetch('290287712606-zkwq.json');
+        $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
         $this->importConfiguration(1);
 
