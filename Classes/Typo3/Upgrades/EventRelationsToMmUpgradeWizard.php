@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\Upgrades;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Database\Connection;
@@ -137,7 +138,7 @@ final class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, R
             ->from($table)
             ->where(
                 $queryBuilder->expr()->isNotNull($field),
-                $queryBuilder->expr()->notIn($field, $queryBuilder->createNamedParameter(['', '0'], Connection::PARAM_STR_ARRAY))
+                $queryBuilder->expr()->notIn($field, $queryBuilder->createNamedParameter(['', '0'], ArrayParameterType::STRING))
             )
             ->orderBy('uid')
             ->executeQuery()

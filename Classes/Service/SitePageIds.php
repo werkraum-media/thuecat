@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service;
 
-use TYPO3\CMS\Core\Database\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
@@ -124,7 +124,7 @@ class SitePageIds
             ->from('pages')
             ->where($queryBuilder->expr()->in(
                 'pid',
-                $queryBuilder->createNamedParameter($parentIds, Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($parentIds, ArrayParameterType::INTEGER)
             ))
             ->executeQuery()
             ->fetchAllAssociative()

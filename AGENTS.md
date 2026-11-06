@@ -18,7 +18,8 @@ This package supports **TYPO3 v14.3** (`^14.3`) on PHP 8.4 and 8.5.
 - A `::class` reference needs a matching `use`. Without one it passes `php -l` and silently
   resolves to the global namespace; config and array files are the riskiest place for this.
 - No `@`-operator, and no `assert()` outside tests.
-- `Connection::PARAM_*`, not `\PDO::PARAM_*`.
+- Scalar parameters use `Connection::PARAM_*`, never `\PDO::PARAM_*`. Lists use
+  `ArrayParameterType::*`; DBAL 4 removed `Connection::PARAM_*_ARRAY`.
 
 ## Fluid
 

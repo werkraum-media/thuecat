@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\FormEngine;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
-use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
@@ -102,7 +102,7 @@ class ReverseRelationElement extends AbstractFormElement
             ->from($table)
             ->where($queryBuilder->expr()->in(
                 $field,
-                $queryBuilder->createNamedParameter($this->editedRecordUids(), Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($this->editedRecordUids(), ArrayParameterType::INTEGER)
             ))
             ->orderBy($labelField)
         ;
@@ -110,7 +110,7 @@ class ReverseRelationElement extends AbstractFormElement
         if ($schema->isLanguageAware()) {
             $queryBuilder->andWhere($queryBuilder->expr()->in(
                 $schema->getCapability(TcaSchemaCapability::Language)->getLanguageField()->getName(),
-                $queryBuilder->createNamedParameter([$language, -1], Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter([$language, -1], ArrayParameterType::INTEGER)
             ));
         }
 

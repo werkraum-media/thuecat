@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\SyncChannel;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -105,11 +106,11 @@ class SyncChannelReaper
             ->where(
                 $queryBuilder->expr()->in(
                     'remote_id',
-                    $queryBuilder->createNamedParameter($remoteIds, Connection::PARAM_STR_ARRAY)
+                    $queryBuilder->createNamedParameter($remoteIds, ArrayParameterType::STRING)
                 ),
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->eq(
                     $languageField,

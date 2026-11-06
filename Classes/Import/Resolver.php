@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Exception;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
@@ -2971,7 +2972,7 @@ class Resolver
         if ($sitePageIds !== []) {
             $queryBuilder->andWhere($queryBuilder->expr()->in(
                 'pid',
-                $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
             ));
         }
 

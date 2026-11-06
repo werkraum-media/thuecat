@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service\FilterField\OptionProvider;
 
-use TYPO3\CMS\Core\Database\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
@@ -103,7 +103,7 @@ class CommaColumnOptionProvider extends AbstractOptionProvider implements Filter
             ->from($optionTable)
             ->where($queryBuilder->expr()->in(
                 'uid',
-                $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($uids, ArrayParameterType::INTEGER)
             ))
             ->orderBy('title')
         ;

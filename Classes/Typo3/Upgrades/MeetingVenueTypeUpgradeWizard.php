@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\Upgrades;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Attribute\UpgradeWizard;
 use TYPO3\CMS\Core\Database\Connection;
@@ -100,8 +101,8 @@ class MeetingVenueTypeUpgradeWizard implements UpgradeWizardInterface
             ->from(self::TABLE)
             ->where(
                 $queryBuilder->expr()->or(
-                    $queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY)),
-                    $queryBuilder->expr()->in($parentField, $queryBuilder->createNamedParameter($uids, Connection::PARAM_INT_ARRAY))
+                    $queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($uids, ArrayParameterType::INTEGER)),
+                    $queryBuilder->expr()->in($parentField, $queryBuilder->createNamedParameter($uids, ArrayParameterType::INTEGER))
                 ),
                 $queryBuilder->expr()->neq('type', $queryBuilder->createNamedParameter('meeting_venue'))
             )
@@ -141,7 +142,7 @@ class MeetingVenueTypeUpgradeWizard implements UpgradeWizardInterface
                 $queryBuilder->expr()->eq('category.deleted', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
                 $queryBuilder->expr()->in(
                     'category.remote_id',
-                    $queryBuilder->createNamedParameter(array_keys(self::VENUE_TYPE_BY_CATEGORY), Connection::PARAM_STR_ARRAY)
+                    $queryBuilder->createNamedParameter(array_keys(self::VENUE_TYPE_BY_CATEGORY), ArrayParameterType::STRING)
                 )
             )
             ->executeQuery()

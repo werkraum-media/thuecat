@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Repositories;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -165,7 +166,7 @@ class SysCategoryRepository
                 ),
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($pageIds, ArrayParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->eq(
                     'sys_language_uid',

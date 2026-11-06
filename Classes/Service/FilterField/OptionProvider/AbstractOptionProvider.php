@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service\FilterField\OptionProvider;
 
-use TYPO3\CMS\Core\Database\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
@@ -141,7 +141,7 @@ abstract class AbstractOptionProvider
 
         return $queryBuilder->expr()->in(
             $table . '.pid',
-            $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+            $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
         );
     }
 
@@ -164,7 +164,7 @@ abstract class AbstractOptionProvider
 
         return $queryBuilder->expr()->in(
             $table . '.' . $languageField,
-            $queryBuilder->createNamedParameter([0, -1], Connection::PARAM_INT_ARRAY)
+            $queryBuilder->createNamedParameter([0, -1], ArrayParameterType::INTEGER)
         );
     }
 
@@ -179,7 +179,7 @@ abstract class AbstractOptionProvider
 
         return $queryBuilder->expr()->in(
             $table . '.pid',
-            $queryBuilder->createNamedParameter($storagePageIds, Connection::PARAM_INT_ARRAY)
+            $queryBuilder->createNamedParameter($storagePageIds, ArrayParameterType::INTEGER)
         );
     }
 

@@ -36,7 +36,6 @@ use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php84\Rector\Foreach_\ForeachToArrayAnyRector;
 use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\PreferPHPUnitThisCallRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\TypeWillReturnCallableArrowFunctionRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
 use Rector\PHPUnit\CodeQuality\Rector\MethodCall\StringCastAssertStringContainsStringRector;
@@ -146,8 +145,6 @@ return RectorConfig::configure()
         RemoveTypo3VersionChecksRector::TARGET_VERSION => 14,
     ])
     ->withSkip([
-        // AGENTS.md mandates Connection::PARAM_*; TYPO3's Connection defines them itself.
-        RenameClassConstFetchRector::class,
         // Exception codes are unix timestamps, not random numbers.
         AddErrorCodeToExceptionRector::class,
         AddSeeTestAnnotationRector::class,

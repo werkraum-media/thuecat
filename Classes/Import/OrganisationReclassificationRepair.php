@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Doctrine\DBAL\ArrayParameterType;
 use RuntimeException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -160,7 +161,7 @@ class OrganisationReclassificationRepair
                     $queryBuilder->expr()->inSet('contained_in_organisation', (string)$organisationUid),
                     $queryBuilder->expr()->in(
                         'pid',
-                        $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
                     ),
                     $queryBuilder->expr()->eq(
                         'sys_language_uid',
@@ -214,7 +215,7 @@ class OrganisationReclassificationRepair
                     ),
                     $queryBuilder->expr()->in(
                         'pid',
-                        $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
                     ),
                     $queryBuilder->expr()->eq(
                         'sys_language_uid',
@@ -283,11 +284,11 @@ class OrganisationReclassificationRepair
                 ->where(
                     $queryBuilder->expr()->in(
                         'remote_id',
-                        $queryBuilder->createNamedParameter($chunk, Connection::PARAM_STR_ARRAY)
+                        $queryBuilder->createNamedParameter($chunk, ArrayParameterType::STRING)
                     ),
                     $queryBuilder->expr()->in(
                         'pid',
-                        $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                        $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
                     ),
                     $queryBuilder->expr()->eq(
                         'sys_language_uid',

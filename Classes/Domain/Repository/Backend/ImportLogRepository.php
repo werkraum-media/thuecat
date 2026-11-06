@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\ArrayParameterType;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -66,7 +67,7 @@ class ImportLogRepository extends Repository
                     $queryBuilder->expr()->eq('entry.import_log', $queryBuilder->quoteIdentifier('log.uid')),
                     $queryBuilder->expr()->in(
                         'entry.type',
-                        $queryBuilder->createNamedParameter(self::DISQUALIFYING_ENTRY_TYPES, Connection::PARAM_STR_ARRAY)
+                        $queryBuilder->createNamedParameter(self::DISQUALIFYING_ENTRY_TYPES, ArrayParameterType::STRING)
                     )
                 )
             )

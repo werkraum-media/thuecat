@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Service\FilterField\OptionProvider;
 
-use TYPO3\CMS\Core\Database\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOption;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOptions;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
@@ -191,7 +191,7 @@ class HierarchicalOptionProvider extends AbstractOptionProvider implements Filte
             ->executeQuery(
                 $sql,
                 ['terms' => $termUids, 'anchor' => $anchor],
-                ['terms' => Connection::PARAM_INT_ARRAY]
+                ['terms' => ArrayParameterType::INTEGER]
             )
             ->fetchFirstColumn()
         ;
@@ -288,7 +288,7 @@ class HierarchicalOptionProvider extends AbstractOptionProvider implements Filte
             ->executeQuery(
                 $sql,
                 ['roots' => $uids],
-                ['roots' => Connection::PARAM_INT_ARRAY]
+                ['roots' => ArrayParameterType::INTEGER]
             )
             ->fetchAllAssociative()
         ;

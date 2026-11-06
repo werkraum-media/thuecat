@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import;
 
+use Doctrine\DBAL\ArrayParameterType;
 use RuntimeException;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -294,7 +295,7 @@ class EventPlaceMatcher
         if ($sitePageIds !== []) {
             $queryBuilder->andWhere($queryBuilder->expr()->in(
                 $table . '.pid',
-                $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
             ));
         }
 
@@ -335,7 +336,7 @@ class EventPlaceMatcher
         if ($sitePageIds !== []) {
             $queryBuilder->andWhere($queryBuilder->expr()->in(
                 'pid',
-                $queryBuilder->createNamedParameter($sitePageIds, Connection::PARAM_INT_ARRAY)
+                $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
             ));
         }
 
