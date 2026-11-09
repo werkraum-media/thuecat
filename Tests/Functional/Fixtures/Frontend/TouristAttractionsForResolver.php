@@ -33,8 +33,7 @@ $translationOf = static function (string $table, array $row, int $originUid, int
 //  page 30 search only                      -> form targets central search page 40
 //  page 50 search + filtered list translated to a DIFFERENT town (en, towns=2)
 
-$townFlexform = static function (string $townUids): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$townFlexform = (static fn (string $townUids): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -45,53 +44,46 @@ $townFlexform = static function (string $townUids): string {
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
-$search = static function (int $uid, int $pid, int $sorting = 1, int $language = 0, int $l10nParent = 0): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'CType' => 'werkraummedia_thuecatattractionsearch',
-        'header' => 'Attraction Search',
-        'colPos' => '0',
-        'sorting' => (string)$sorting,
-        'sys_language_uid' => (string)$language,
-        'l18n_parent' => (string)$l10nParent,
-    ];
-};
+$search = (static fn (int $uid, int $pid, int $sorting = 1, int $language = 0, int $l10nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'CType' => 'werkraummedia_thuecatattractionsearch',
+    'header' => 'Attraction Search',
+    'colPos' => '0',
+    'sorting' => (string)$sorting,
+    'sys_language_uid' => (string)$language,
+    'l18n_parent' => (string)$l10nParent,
+]);
 
-$list = static function (int $uid, int $pid, string $cType, string $flexform = '', int $sorting = 2, int $language = 0, int $l10nParent = 0): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'CType' => $cType,
-        'header' => 'Attraction List',
-        'colPos' => '0',
-        'sorting' => (string)$sorting,
-        'sys_language_uid' => (string)$language,
-        'l18n_parent' => (string)$l10nParent,
-        'l10n_source' => (string)$l10nParent,
-        'pages' => '11',
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$list = (static fn (int $uid, int $pid, string $cType, string $flexform = '', int $sorting = 2, int $language = 0, int $l10nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'CType' => $cType,
+    'header' => 'Attraction List',
+    'colPos' => '0',
+    'sorting' => (string)$sorting,
+    'sys_language_uid' => (string)$language,
+    'l18n_parent' => (string)$l10nParent,
+    'l10n_source' => (string)$l10nParent,
+    'pages' => '11',
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
-$page = static function (int $uid, string $slug, string $title, int $language = 0, int $l10nParent = 0): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => PageRepository::DOKTYPE_DEFAULT,
-        'slug' => $slug,
-        'sorting' => (string)($uid * 10),
-        'deleted' => '0',
-        'sys_language_uid' => (string)$language,
-        'l10n_parent' => (string)$l10nParent,
-        'l10n_source' => (string)$l10nParent,
-    ];
-};
+$page = (static fn (int $uid, string $slug, string $title, int $language = 0, int $l10nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => PageRepository::DOKTYPE_DEFAULT,
+    'slug' => $slug,
+    'sorting' => (string)($uid * 10),
+    'deleted' => '0',
+    'sys_language_uid' => (string)$language,
+    'l10n_parent' => (string)$l10nParent,
+    'l10n_source' => (string)$l10nParent,
+]);
 
 return [
     'pages' => [

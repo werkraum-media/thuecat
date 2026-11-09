@@ -87,9 +87,7 @@ class GuzzleClientFaker
         self::$registered = true;
         self::reset();
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-        $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = function (callable $handler): callable {
-            return self::wrappedHandler();
-        };
+        $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = (fn (callable $handler): callable => self::wrappedHandler());
     }
 
     /**

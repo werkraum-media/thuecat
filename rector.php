@@ -7,7 +7,6 @@ use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
-use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
@@ -133,7 +132,5 @@ return RectorConfig::configure()
         NewlineBetweenClassLikeStmtsRector::class,
         // 31 files
         ReadOnlyClassRector::class,
-        // 21 files
-        ClosureToArrowFunctionRector::class,
     ])
 ;

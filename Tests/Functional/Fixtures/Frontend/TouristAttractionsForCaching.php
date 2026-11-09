@@ -8,8 +8,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 // teasers link to: page 10 -> detail 20, page 13 -> detail 21. Both show
 // attractions 10 and 11.
 
-$detailPageFlexform = static function (int $detailPageUid): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$detailPageFlexform = (static fn (int $detailPageUid): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -20,11 +19,9 @@ $detailPageFlexform = static function (int $detailPageUid): string {
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
-$selectedListFlexform = static function (int $detailPageUid, string $selectedRecords): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$selectedListFlexform = (static fn (int $detailPageUid, string $selectedRecords): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -38,51 +35,44 @@ $selectedListFlexform = static function (int $detailPageUid, string $selectedRec
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
-$page = static function (int $uid, string $slug, string $title, int $doktype = PageRepository::DOKTYPE_DEFAULT): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => (string)$doktype,
-        'slug' => $slug,
-        'sorting' => '256',
-        'deleted' => '0',
-    ];
-};
+$page = (static fn (int $uid, string $slug, string $title, int $doktype = PageRepository::DOKTYPE_DEFAULT): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => (string)$doktype,
+    'slug' => $slug,
+    'sorting' => '256',
+    'deleted' => '0',
+]);
 
-$list = static function (int $uid, int $pid, string $flexform, string $storagePages = '11'): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'hidden' => '0',
-        'sorting' => '1',
-        'CType' => 'werkraummedia_thuecatattractionlist',
-        'header' => 'Attraction List',
-        'deleted' => '0',
-        'starttime' => '0',
-        'endtime' => '0',
-        'colPos' => '0',
-        'sys_language_uid' => '0',
-        'pages' => $storagePages,
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$list = (static fn (int $uid, int $pid, string $flexform, string $storagePages = '11'): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'hidden' => '0',
+    'sorting' => '1',
+    'CType' => 'werkraummedia_thuecatattractionlist',
+    'header' => 'Attraction List',
+    'deleted' => '0',
+    'starttime' => '0',
+    'endtime' => '0',
+    'colPos' => '0',
+    'sys_language_uid' => '0',
+    'pages' => $storagePages,
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
-$attraction = static function (int $uid, string $title, string $description, int $pid = 11): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'title' => $title,
-        'description' => $description,
-        'town' => '0',
-        'url' => '',
-        'offers' => '',
-    ];
-};
+$attraction = (static fn (int $uid, string $title, string $description, int $pid = 11): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'title' => $title,
+    'description' => $description,
+    'town' => '0',
+    'url' => '',
+    'offers' => '',
+]);
 
 return [
     'pages' => [

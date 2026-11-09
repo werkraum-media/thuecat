@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-$selectedListFlexform = static function (string $selectedRecords, string $showPage = ''): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$selectedListFlexform = (static fn (string $selectedRecords, string $showPage = ''): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -19,8 +18,7 @@ $selectedListFlexform = static function (string $selectedRecords, string $showPa
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
 // The role is l10n_mode exclude, which DataHandler copies into translations.
 // The data set bypasses DataHandler, so translated pages carry it explicitly.

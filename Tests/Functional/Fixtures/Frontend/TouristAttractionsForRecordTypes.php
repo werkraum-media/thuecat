@@ -24,44 +24,38 @@ $flexform = static function (string ...$settings): string {
 </T3FlexForms>';
 };
 
-$page = static function (int $uid, string $title, string $slug): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => PageRepository::DOKTYPE_DEFAULT,
-        'slug' => $slug,
-    ];
-};
+$page = (static fn (int $uid, string $title, string $slug): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => PageRepository::DOKTYPE_DEFAULT,
+    'slug' => $slug,
+]);
 
-$plugin = static function (int $uid, string $flexform): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$uid,
-        'CType' => 'werkraummedia_thuecatattractionlist',
-        'header' => 'Attraction List',
-        'colPos' => '0',
-        'sys_language_uid' => '0',
-        'pages' => '11',
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$plugin = (static fn (int $uid, string $flexform): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$uid,
+    'CType' => 'werkraummedia_thuecatattractionlist',
+    'header' => 'Attraction List',
+    'colPos' => '0',
+    'sys_language_uid' => '0',
+    'pages' => '11',
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
-$attraction = static function (int $uid, string $title, string $type, array $venueFields = []): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '11',
-        'type' => $type,
-        'title' => $title,
-        'description' => '',
-        'town' => '',
-        'url' => '',
-        'offers' => '',
-        'sys_language_uid' => '0',
-        ...$venueFields,
-    ];
-};
+$attraction = (static fn (int $uid, string $title, string $type, array $venueFields = []): array => [
+    'uid' => (string)$uid,
+    'pid' => '11',
+    'type' => $type,
+    'title' => $title,
+    'description' => '',
+    'town' => '',
+    'url' => '',
+    'offers' => '',
+    'sys_language_uid' => '0',
+    ...$venueFields,
+]);
 
 return [
     'pages' => [

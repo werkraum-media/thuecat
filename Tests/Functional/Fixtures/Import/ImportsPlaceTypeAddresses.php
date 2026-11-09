@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-$configuration = static function (string $url): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$configuration = (static fn (string $url): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
         <T3FlexForms>
             <data>
                 <sheet index="sDEF">
@@ -31,8 +30,7 @@ $configuration = static function (string $url): string {
                 </sheet>
             </data>
         </T3FlexForms>
-    ';
-};
+    ');
 
 return [
     'pages' => [

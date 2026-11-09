@@ -7,8 +7,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 // One show page per precedence case, because the selection lives on the content
 // element: varying it within a page would mean several plugins on one page.
 
-$selectedRecordFlexform = static function (string $selectedRecord): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$selectedRecordFlexform = (static fn (string $selectedRecord): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -19,68 +18,43 @@ $selectedRecordFlexform = static function (string $selectedRecord): string {
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
-$page = static function (
-    int $uid,
-    string $slug,
-    string $title,
-    int $languageId = 0,
-    int $l10nParent = 0
-): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => PageRepository::DOKTYPE_DEFAULT,
-        'slug' => $slug,
-        'sorting' => (string)($uid * 16),
-        'deleted' => '0',
-        'sys_language_uid' => (string)$languageId,
-        'l10n_parent' => (string)$l10nParent,
-    ];
-};
+$page = (static fn (int $uid, string $slug, string $title, int $languageId = 0, int $l10nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => PageRepository::DOKTYPE_DEFAULT,
+    'slug' => $slug,
+    'sorting' => (string)($uid * 16),
+    'deleted' => '0',
+    'sys_language_uid' => (string)$languageId,
+    'l10n_parent' => (string)$l10nParent,
+]);
 
-$showPlugin = static function (
-    int $uid,
-    int $pid,
-    string $flexform,
-    int $languageId = 0,
-    int $l18nParent = 0
-): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'CType' => 'werkraummedia_thuecattrailshow',
-        'header' => 'Show Plugin',
-        'colPos' => '0',
-        'sorting' => '256',
-        'sys_language_uid' => (string)$languageId,
-        'l18n_parent' => (string)$l18nParent,
-        'hidden' => '0',
-        'deleted' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$showPlugin = (static fn (int $uid, int $pid, string $flexform, int $languageId = 0, int $l18nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'CType' => 'werkraummedia_thuecattrailshow',
+    'header' => 'Show Plugin',
+    'colPos' => '0',
+    'sorting' => '256',
+    'sys_language_uid' => (string)$languageId,
+    'l18n_parent' => (string)$l18nParent,
+    'hidden' => '0',
+    'deleted' => '0',
+    'pi_flexform' => $flexform,
+]);
 
-$trail = static function (
-    int $uid,
-    string $title,
-    string $disable = '0',
-    int $languageId = 0,
-    int $l18nParent = 0
-): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '14',
-        'disable' => $disable,
-        'title' => $title,
-        'description' => 'Beschreibung: ' . $title,
-        'sys_language_uid' => (string)$languageId,
-        'l18n_parent' => (string)$l18nParent,
-    ];
-};
+$trail = (static fn (int $uid, string $title, string $disable = '0', int $languageId = 0, int $l18nParent = 0): array => [
+    'uid' => (string)$uid,
+    'pid' => '14',
+    'disable' => $disable,
+    'title' => $title,
+    'description' => 'Beschreibung: ' . $title,
+    'sys_language_uid' => (string)$languageId,
+    'l18n_parent' => (string)$l18nParent,
+]);
 
 return [
     'pages' => [

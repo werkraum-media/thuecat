@@ -7,8 +7,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 // Trail 10 and attraction 10 share a uid on purpose: a teaser identity ignoring
 // the table would serve one record's markup for the other.
 
-$selectedListFlexform = static function (string $detailPageField, int $detailPageUid, string $selectedRecords): string {
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+$selectedListFlexform = (static fn (string $detailPageField, int $detailPageUid, string $selectedRecords): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">
@@ -22,39 +21,34 @@ $selectedListFlexform = static function (string $detailPageField, int $detailPag
             </language>
         </sheet>
     </data>
-</T3FlexForms>';
-};
+</T3FlexForms>');
 
-$page = static function (int $uid, string $slug, string $title, int $doktype = PageRepository::DOKTYPE_DEFAULT): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => (string)$doktype,
-        'slug' => $slug,
-        'sorting' => '256',
-        'deleted' => '0',
-    ];
-};
+$page = (static fn (int $uid, string $slug, string $title, int $doktype = PageRepository::DOKTYPE_DEFAULT): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => (string)$doktype,
+    'slug' => $slug,
+    'sorting' => '256',
+    'deleted' => '0',
+]);
 
-$list = static function (int $uid, int $pid, string $cType, string $flexform): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'hidden' => '0',
-        'sorting' => '1',
-        'CType' => $cType,
-        'header' => 'Selected List',
-        'deleted' => '0',
-        'starttime' => '0',
-        'endtime' => '0',
-        'colPos' => '0',
-        'sys_language_uid' => '0',
-        'pages' => '11',
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$list = (static fn (int $uid, int $pid, string $cType, string $flexform): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'hidden' => '0',
+    'sorting' => '1',
+    'CType' => $cType,
+    'header' => 'Selected List',
+    'deleted' => '0',
+    'starttime' => '0',
+    'endtime' => '0',
+    'colPos' => '0',
+    'sys_language_uid' => '0',
+    'pages' => '11',
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
 return [
     'pages' => [

@@ -113,9 +113,7 @@ class VocabularyProviderTest extends TestCase
     {
         $cache = $this->createStub(FrontendInterface::class);
         $cache->method('get')->willReturnCallback(
-            function (string $id): mixed {
-                return $this->entries[$id] ?? false;
-            }
+            fn (string $id): mixed => $this->entries[$id] ?? false
         );
         $cache->method('set')->willReturnCallback(
             function (string $id, mixed $data): void {

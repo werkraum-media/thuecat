@@ -20,19 +20,17 @@ $townFlexform = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
     </data>
 </T3FlexForms>';
 
-$plugin = static function (int $uid, int $pid, string $pages, string $flexform = ''): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$pid,
-        'CType' => 'werkraummedia_thuecatattractionlistfiltered',
-        'header' => 'Attraction List',
-        'colPos' => '0',
-        'sys_language_uid' => '0',
-        'pages' => $pages,
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$plugin = (static fn (int $uid, int $pid, string $pages, string $flexform = ''): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$pid,
+    'CType' => 'werkraummedia_thuecatattractionlistfiltered',
+    'header' => 'Attraction List',
+    'colPos' => '0',
+    'sys_language_uid' => '0',
+    'pages' => $pages,
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
 return [
     'pages' => [

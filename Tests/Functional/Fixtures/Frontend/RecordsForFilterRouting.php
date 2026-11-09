@@ -17,40 +17,29 @@ $lockedTownFlexform = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
     </data>
 </T3FlexForms>';
 
-$attraction = static function (
-    int $uid,
-    string $title,
-    int $town,
-    int $languageId = 0,
-    int $l18nParent = 0,
-    string $flag = 'false'
-): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '11',
-        'pets_allowed' => $flag,
-        'is_accessible_for_free' => $flag,
-        'public_access' => $flag,
-        'title' => $title,
-        'description' => '',
-        'town' => (string)$town,
-        'url' => '',
-        'offers' => '',
-        'categories' => '1',
-        'sys_language_uid' => (string)$languageId,
-        'l18n_parent' => (string)$l18nParent,
-    ];
-};
+$attraction = (static fn (int $uid, string $title, int $town, int $languageId = 0, int $l18nParent = 0, string $flag = 'false'): array => [
+    'uid' => (string)$uid,
+    'pid' => '11',
+    'pets_allowed' => $flag,
+    'is_accessible_for_free' => $flag,
+    'public_access' => $flag,
+    'title' => $title,
+    'description' => '',
+    'town' => (string)$town,
+    'url' => '',
+    'offers' => '',
+    'categories' => '1',
+    'sys_language_uid' => (string)$languageId,
+    'l18n_parent' => (string)$l18nParent,
+]);
 
-$category = static function (int $uid, int $attraction): array {
-    return [
-        'uid_local' => (string)$uid,
-        'uid_foreign' => (string)$attraction,
-        'tablenames' => 'tx_thuecat_tourist_attraction',
-        'fieldname' => 'categories',
-        'sorting_foreign' => '1',
-    ];
-};
+$category = (static fn (int $uid, int $attraction): array => [
+    'uid_local' => (string)$uid,
+    'uid_foreign' => (string)$attraction,
+    'tablenames' => 'tx_thuecat_tourist_attraction',
+    'fieldname' => 'categories',
+    'sorting_foreign' => '1',
+]);
 
 // The role is l10n_mode exclude, which DataHandler copies into translations.
 // The data set bypasses DataHandler, so translated pages carry it explicitly.

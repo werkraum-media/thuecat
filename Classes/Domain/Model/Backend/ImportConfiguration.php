@@ -121,9 +121,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
             return [];
         }
 
-        $entries = array_map(function (array $urlEntry) {
-            return ArrayUtility::getValueByPath($urlEntry, 'url/el/url/vDEF');
-        }, $this->getEntries());
+        $entries = array_map(fn (array $urlEntry): mixed => ArrayUtility::getValueByPath($urlEntry, 'url/el/url/vDEF'), $this->getEntries());
 
         $entries = array_filter($entries);
 

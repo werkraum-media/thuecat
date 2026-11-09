@@ -24,29 +24,25 @@ $flexform = static function (string ...$settings): string {
 </T3FlexForms>';
 };
 
-$page = static function (int $uid, string $title, string $slug): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => '1',
-        'title' => $title,
-        'doktype' => PageRepository::DOKTYPE_DEFAULT,
-        'slug' => $slug,
-    ];
-};
+$page = (static fn (int $uid, string $title, string $slug): array => [
+    'uid' => (string)$uid,
+    'pid' => '1',
+    'title' => $title,
+    'doktype' => PageRepository::DOKTYPE_DEFAULT,
+    'slug' => $slug,
+]);
 
-$plugin = static function (int $uid, string $cType, string $pages, string $flexform): array {
-    return [
-        'uid' => (string)$uid,
-        'pid' => (string)$uid,
-        'CType' => $cType,
-        'header' => 'Attraction List',
-        'colPos' => '0',
-        'sys_language_uid' => '0',
-        'pages' => $pages,
-        'recursive' => '0',
-        'pi_flexform' => $flexform,
-    ];
-};
+$plugin = (static fn (int $uid, string $cType, string $pages, string $flexform): array => [
+    'uid' => (string)$uid,
+    'pid' => (string)$uid,
+    'CType' => $cType,
+    'header' => 'Attraction List',
+    'colPos' => '0',
+    'sys_language_uid' => '0',
+    'pages' => $pages,
+    'recursive' => '0',
+    'pi_flexform' => $flexform,
+]);
 
 // Folder 11: backend order differs from both title and uid order.
 return [
