@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 /** Keywords travel in their own bucket, never among the categories. */
 class KeywordBucketTest extends AbstractImportTestCase
 {
-    private const REMOTE_ID = 'https://thuecat.org/resources/165868194223-zmqf';
+    private const string REMOTE_ID = 'https://thuecat.org/resources/165868194223-zmqf';
 
     #[Test]
     public function keywordsNeverAppearAmongCategories(): void

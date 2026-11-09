@@ -29,11 +29,11 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_meeting_room';
+    private const string TABLE = 'tx_thuecat_meeting_room';
 
-    private const VENUE_TABLE = 'tx_thuecat_tourist_attraction';
+    private const string VENUE_TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const RESOURCES = 'https://thuecat.org/resources/';
+    private const string RESOURCES = 'https://thuecat.org/resources/';
 
     #[Test]
     public function venueRelatesItsRoomsInUpstreamOrder(): void

@@ -55,7 +55,7 @@ final class EventScheduleAdapter
     /**
      * The only day values a date series can be seeded from.
      */
-    private const WEEKDAY_NAMES = [
+    private const array WEEKDAY_NAMES = [
         'Monday',
         'Tuesday',
         'Wednesday',

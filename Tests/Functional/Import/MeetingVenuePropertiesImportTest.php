@@ -29,19 +29,19 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const HOTEL = 'https://thuecat.org/resources/669150457039-gamn';
+    private const string HOTEL = 'https://thuecat.org/resources/669150457039-gamn';
 
-    private const MEETING_LOCATION = 'https://thuecat.org/resources/059632237210-rbpe';
+    private const string MEETING_LOCATION = 'https://thuecat.org/resources/059632237210-rbpe';
 
-    private const HOTEL_WITH_GASTRONOMY = 'https://thuecat.org/resources/554408963544-zftr';
+    private const string HOTEL_WITH_GASTRONOMY = 'https://thuecat.org/resources/554408963544-zftr';
 
-    private const MEMORIAL = 'https://thuecat.org/resources/838757899629-mqjw';
+    private const string MEMORIAL = 'https://thuecat.org/resources/838757899629-mqjw';
 
-    private const VILLA = 'https://thuecat.org/resources/447107981156-qmxj';
+    private const string VILLA = 'https://thuecat.org/resources/447107981156-qmxj';
 
-    private const VENUE_COLUMNS = [
+    private const array VENUE_COLUMNS = [
         'meeting_facilities', 'gastro', 'serves_cuisine', 'entrance', 'guided_tour', 'monument', 'ensemble',
         'exhibition_objects', 'sports_equipment', 'amenity_features', 'price_range', 'star_rating',
         'smoking_allowed', 'is_ruin', 'open_air_museum', 'bookable', 'has_drive_through_service', 'beer_garden',

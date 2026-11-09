@@ -30,9 +30,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class TableMismatchGuardTest extends AbstractImportTestCase
 {
-    private const HOTEL = 'https://thuecat.org/resources/hotel-kind-changed';
+    private const string HOTEL = 'https://thuecat.org/resources/hotel-kind-changed';
 
-    private const RESTAURANT = 'https://thuecat.org/resources/restaurant-in-kind-changed-hotel';
+    private const string RESTAURANT = 'https://thuecat.org/resources/restaurant-in-kind-changed-hotel';
 
     protected function setUp(): void
     {

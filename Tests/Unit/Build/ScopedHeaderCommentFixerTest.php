@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Build\PhpCsFixer\ScopedHeaderCommentFixer;
 
 class ScopedHeaderCommentFixerTest extends TestCase
 {
-    private const HEADER = <<<'TXT'
+    private const string HEADER = <<<'TXT'
         /*
          * This file is part of the TYPO3 CMS extension "thuecat".
          *
@@ -47,7 +47,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
          */
         TXT;
 
-    private const DANIEL = ' * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>';
+    private const string DANIEL = ' * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>';
 
     #[Test]
     public function insertsTheHeaderAfterDeclare(): void

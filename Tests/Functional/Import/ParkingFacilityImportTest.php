@@ -28,21 +28,21 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class ParkingFacilityImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_parking_facility';
+    private const string TABLE = 'tx_thuecat_parking_facility';
 
-    private const VENUE_TABLE = 'tx_thuecat_tourist_attraction';
+    private const string VENUE_TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const PARKING_FACILITY = 'https://thuecat.org/resources/109087118959-gwhg';
+    private const string PARKING_FACILITY = 'https://thuecat.org/resources/109087118959-gwhg';
 
-    private const MULTI_PURPOSE_HALL = 'https://thuecat.org/resources/160874095809-phhn';
+    private const string MULTI_PURPOSE_HALL = 'https://thuecat.org/resources/160874095809-phhn';
 
-    private const CULTURAL_ESTATE = 'https://thuecat.org/resources/332021174274-eyhf';
+    private const string CULTURAL_ESTATE = 'https://thuecat.org/resources/332021174274-eyhf';
 
-    private const WIELANDGUT = 'https://thuecat.org/resources/117034427781-ndta';
+    private const string WIELANDGUT = 'https://thuecat.org/resources/117034427781-ndta';
 
-    private const HOTEL = 'https://thuecat.org/resources/e_ttg00020050000287335-tomas';
+    private const string HOTEL = 'https://thuecat.org/resources/e_ttg00020050000287335-tomas';
 
-    private const SPACES = ['spaces_car', 'spaces_handicapped', 'spaces_bus', 'spaces_ev_charging', 'spaces_motorcycle'];
+    private const array SPACES = ['spaces_car', 'spaces_handicapped', 'spaces_bus', 'spaces_ev_charging', 'spaces_motorcycle'];
 
     #[Test]
     public function parkingFacilityStoresItsSpacesPerVehicleType(): void

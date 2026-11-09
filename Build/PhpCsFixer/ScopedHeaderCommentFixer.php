@@ -55,7 +55,7 @@ use const T_TRAIT;
  */
 final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAwareFixerInterface
 {
-    private const HEADER = <<<'TXT'
+    private const string HEADER = <<<'TXT'
         This file is part of the TYPO3 CMS extension "thuecat".
 
         Copyright (C) werkraum-media <https://werkraum-media.de/>
@@ -71,14 +71,14 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
         SPDX-License-Identifier: GPL-2.0-or-later
         TXT;
 
-    private const OWNER_LINE = 'Copyright (C) werkraum-media <https://werkraum-media.de/>';
+    private const string OWNER_LINE = 'Copyright (C) werkraum-media <https://werkraum-media.de/>';
 
-    private const ORIGINAL_AUTHOR_LINE = '/Copyright \(C\) \d{4}(?:-\d{4})? Daniel Siepmann <[^>\n]+>/';
+    private const string ORIGINAL_AUTHOR_LINE = '/Copyright \(C\) \d{4}(?:-\d{4})? Daniel Siepmann <[^>\n]+>/';
 
-    private const LICENCE_COMMENT = '/Copyright \(C\)|SPDX-License-Identifier/';
+    private const string LICENCE_COMMENT = '/Copyright \(C\)|SPDX-License-Identifier/';
 
     /** A licence header precedes the first declaration; comments past it are code comments. */
-    private const DECLARATION_TOKENS = [
+    private const array DECLARATION_TOKENS = [
         T_CLASS, T_INTERFACE, T_TRAIT, T_ENUM, T_FUNCTION, T_RETURN,
         T_ABSTRACT, T_FINAL, T_READONLY, T_ATTRIBUTE,
     ];

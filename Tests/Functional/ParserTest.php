@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 final class ParserTest extends AbstractFunctionalTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/';
+    private const string FIXTURE_PATH = __DIR__ . '/Fixtures/Import/Guzzle/thuecat.org/resources/';
 
     #[Test]
     public function parsesOrganisationNode(): void

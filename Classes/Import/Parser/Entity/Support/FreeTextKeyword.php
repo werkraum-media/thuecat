@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Support;
 /** Derives a stable identity for editor-typed keywords, which carry none upstream. */
 final class FreeTextKeyword
 {
-    public const REMOTE_ID_PREFIX = 'keyword:text:';
+    public const string REMOTE_ID_PREFIX = 'keyword:text:';
 
     // mb_* throughout: strtolower() is byte-wise, so 'Ölmühle' would survive
     // unchanged and split one keyword across two rows.

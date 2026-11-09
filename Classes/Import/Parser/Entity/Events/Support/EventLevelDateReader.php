@@ -37,7 +37,7 @@ final class EventLevelDateReader
 {
     // Matches EventScheduleAdapter::toInterval()'s fallback, so both paths read
     // an offsetless value in the same zone.
-    private const DEFAULT_TIMEZONE = 'Europe/Berlin';
+    private const string DEFAULT_TIMEZONE = 'Europe/Berlin';
 
     /**
      * @param array<string, mixed> $node

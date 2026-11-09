@@ -33,9 +33,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 class VisitOnceTest extends AbstractImportTestCase
 {
-    private const TRAIL_ID = 'https://thuecat.org/resources/e_106954656-oatour';
+    private const string TRAIL_ID = 'https://thuecat.org/resources/e_106954656-oatour';
 
-    private const ATTRACTION_ID = 'https://thuecat.org/resources/347070073883-rqbn';
+    private const string ATTRACTION_ID = 'https://thuecat.org/resources/347070073883-rqbn';
 
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';
 

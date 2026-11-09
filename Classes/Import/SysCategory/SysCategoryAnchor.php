@@ -56,5 +56,5 @@ final readonly class SysCategoryAnchor
         return $this->parentUid . self::STAGING_SEPARATOR . $identifier;
     }
 
-    public const STAGING_SEPARATOR = '|';
+    public const string STAGING_SEPARATOR = '|';
 }

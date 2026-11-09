@@ -38,9 +38,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
  */
 final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
 {
-    private const LIST_CHANGED_FIVE_YEARS = 'https://widgets.thuecat.org/api/sync/test-channel/list-changed?since=2021-10-19T12%3A00%3A00%2B02%3A00';
+    private const string LIST_CHANGED_FIVE_YEARS = 'https://widgets.thuecat.org/api/sync/test-channel/list-changed?since=2021-10-19T12%3A00%3A00%2B02%3A00';
 
-    private const LIST_EXPIRED_FIVE_YEARS = 'https://widgets.thuecat.org/api/sync/test-channel/list-expired?since=2021-10-19T12%3A00%3A00%2B02%3A00';
+    private const string LIST_EXPIRED_FIVE_YEARS = 'https://widgets.thuecat.org/api/sync/test-channel/list-expired?since=2021-10-19T12%3A00%3A00%2B02%3A00';
 
     protected function setUp(): void
     {

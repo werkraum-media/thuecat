@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 
 class VocabularyProviderTest extends TestCase
 {
-    private const SCHEMA_ORG = ['@graph' => [
+    private const array SCHEMA_ORG = ['@graph' => [
         ['@id' => 'schema:Event', '@type' => 'rdfs:Class', 'rdfs:label' => 'Event'],
         [
             '@id' => 'schema:MusicEvent',
@@ -43,7 +43,7 @@ class VocabularyProviderTest extends TestCase
         ],
     ]];
 
-    private const THUECAT = ['@graph' => [
+    private const array THUECAT = ['@graph' => [
         [
             '@id' => 'thuecat:BrassMusic',
             '@type' => ['rdfs:Class'],

@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 class TrailImportTest extends AbstractImportTestCase
 {
-    private const REMOTE_ID = 'https://thuecat.org/resources/e_52469786-oatour';
+    private const string REMOTE_ID = 'https://thuecat.org/resources/e_52469786-oatour';
 
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';
 

@@ -34,9 +34,9 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
  */
 class VocabularyLabelResolverTest extends TestCase
 {
-    private const GERMANY = 'https://thuecat.org/ontology/thuecat/1.0/Germany';
+    private const string GERMANY = 'https://thuecat.org/ontology/thuecat/1.0/Germany';
 
-    private const THURINGIA = 'https://thuecat.org/ontology/thuecat/1.0/Thuringia';
+    private const string THURINGIA = 'https://thuecat.org/ontology/thuecat/1.0/Thuringia';
 
     /** @var list<?string> */
     private array $apiKeys = [];

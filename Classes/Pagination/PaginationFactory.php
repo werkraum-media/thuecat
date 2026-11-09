@@ -27,7 +27,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 final class PaginationFactory
 {
-    private const DEFAULT_ITEMS_PER_PAGE = 20;
+    private const int DEFAULT_ITEMS_PER_PAGE = 20;
 
     /**
      * Build paginator + pagination for a query result, reading itemsPerPage

@@ -29,15 +29,15 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class RootAfterReferenceImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const RESOURCES = 'https://thuecat.org/resources/';
+    private const string RESOURCES = 'https://thuecat.org/resources/';
 
-    private const ATTRACTION = self::RESOURCES . 'attraction-in-meeting-venue';
+    private const string ATTRACTION = self::RESOURCES . 'attraction-in-meeting-venue';
 
-    private const OPERATED_VENUE = self::RESOURCES . '117034427781-ndta';
+    private const string OPERATED_VENUE = self::RESOURCES . '117034427781-ndta';
 
-    private const PARKING_VENUE = self::RESOURCES . '160874095809-phhn';
+    private const string PARKING_VENUE = self::RESOURCES . '160874095809-phhn';
 
     #[Test]
     public function venueRelatesItsRoomsInUpstreamOrder(): void

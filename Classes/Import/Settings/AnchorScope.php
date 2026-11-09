@@ -28,7 +28,7 @@ namespace WerkraumMedia\ThueCat\Import\Settings;
  */
 final readonly class AnchorScope
 {
-    public const DEFAULT = 'thuecat';
+    public const string DEFAULT = 'thuecat';
 
     /**
      * @param non-empty-string $value

@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  */
 final class RecordTypeListCacheTest extends AbstractCachingTestCase
 {
-    private const EVERY_TYPE_FLEXFORM = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+    private const string EVERY_TYPE_FLEXFORM = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">

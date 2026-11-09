@@ -38,7 +38,7 @@ final class ConsoleProgressRenderer implements ImportProgressListener
     private float $lastItemAt = 0.0;
 
     // Slow enough that a fast fan-out cannot flood a terminal.
-    private const DETAIL_INTERVAL_SECONDS = 0.2;
+    private const float DETAIL_INTERVAL_SECONDS = 0.2;
 
     public function __construct(
         private readonly OutputInterface $output,

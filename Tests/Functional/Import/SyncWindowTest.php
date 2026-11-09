@@ -33,9 +33,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 final class SyncWindowTest extends AbstractFunctionalTestCase
 {
-    private const NOW = '2026-10-19 12:00';
+    private const string NOW = '2026-10-19 12:00';
 
-    private const FIVE_YEARS_BEFORE_NOW = '2021-10-19 12:00';
+    private const string FIVE_YEARS_BEFORE_NOW = '2021-10-19 12:00';
 
     /**
      * Configuration uids and storage pids refer to Fixtures/Import/SyncWindow.csv.

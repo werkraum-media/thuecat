@@ -41,7 +41,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
 
     protected string $fixturePath = 'api/resources';
 
-    private const REMOTE_ID_PREFIX = 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-';
+    private const string REMOTE_ID_PREFIX = 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-';
 
     protected function setUp(): void
     {

@@ -41,7 +41,7 @@ final class ResolverContext
      * before returning — otherwise we'd write a uid into a relation while
      * the target row is still stale in the DB and unrefreshed.
      */
-    public const STATUS_FOUND = 'found';
+    public const string STATUS_FOUND = 'found';
 
     /**
      * Default-language status: row staged into the dataMap this run. Once a
@@ -50,7 +50,7 @@ final class ResolverContext
      * sightings collapse to "write the cached uid into the parent's relation
      * field and return."
      */
-    public const STATUS_UPDATED = 'updated';
+    public const string STATUS_UPDATED = 'updated';
 
     /**
      * Translation status: cmdMap localize staged this run; the localized row
@@ -58,14 +58,14 @@ final class ResolverContext
      * translated fields still need to be written via dataMap in a subsequent
      * pass before the (remote_id, sys_language_uid) pair is done.
      */
-    public const TRANSLATION_CREATED = 'created';
+    public const string TRANSLATION_CREATED = 'created';
 
     /**
      * Translation status: dataMap override of the translated fields staged
      * this run. The (remote_id, sys_language_uid) pair is done — never
      * revisit, never re-localize, never re-stage.
      */
-    public const TRANSLATION_UPDATED = 'updated';
+    public const string TRANSLATION_UPDATED = 'updated';
 
     /**
      * remote_id → current outer key for the in-flight import.
@@ -157,7 +157,7 @@ final class ResolverContext
      * oatours); without a cap, importing one root would fan out across the
      * whole catalog.
      */
-    public const MAX_FETCH_DEPTH = 1;
+    public const int MAX_FETCH_DEPTH = 1;
 
     /**
      * Keyword chains are exempt from MAX_FETCH_DEPTH — a term sits at depth 1
@@ -165,14 +165,14 @@ final class ResolverContext
      * category. Bounded here instead; the vocabulary is small and closed, so it
      * cannot fan out the way cross-referenced POIs do.
      */
-    public const MAX_KEYWORD_DEPTH = 10;
+    public const int MAX_KEYWORD_DEPTH = 10;
 
     /**
      * Room→room references are followed below the venue's own rooms: a room can be divided, and one of its parts
      * divided once more (venue 0 → room 1 → division 2 → sub-division 3). Applies to nothing but room-owned
      * references to rooms; it bounds the fan-out, while cycles are caught by the payload and the stored rows.
      */
-    public const MAX_MEETING_ROOM_DEPTH = 3;
+    public const int MAX_MEETING_ROOM_DEPTH = 3;
 
     /**
      * remote_id → tree depth at which the entity entered the payload. Roots

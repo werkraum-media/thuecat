@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Typo3\Upgrades\MeetingVenueTypeUpgradeWizard;
 
 final class MeetingVenueTypeUpgradeWizardTest extends AbstractFunctionalTestCase
 {
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
     #[Test]
     public function conferenceHotelBecomesMeetingVenueWithItsTranslation(): void

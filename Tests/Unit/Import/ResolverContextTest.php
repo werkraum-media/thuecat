@@ -32,9 +32,9 @@ use WerkraumMedia\ThueCat\Import\ResolverContext;
  */
 final class ResolverContextTest extends TestCase
 {
-    private const REMOTE_A = 'https://thuecat.org/resources/aaaa';
+    private const string REMOTE_A = 'https://thuecat.org/resources/aaaa';
 
-    private const REMOTE_B = 'https://thuecat.org/resources/bbbb';
+    private const string REMOTE_B = 'https://thuecat.org/resources/bbbb';
 
     #[Test]
     public function promoteRewritesNewPlaceholderToUidString(): void

@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  */
 class TrailShowPageCacheTest extends AbstractCachingTestCase
 {
-    private const TABLE = 'tx_thuecat_trail';
+    private const string TABLE = 'tx_thuecat_trail';
 
     protected function getDataSetFileName(): string
     {

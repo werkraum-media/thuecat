@@ -26,11 +26,11 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // A translation relates to the default-language organisation; the overlay resolves its language.
 final class ManagedByImportTest extends AbstractImportTestCase
 {
-    private const ATTRACTION = 'https://thuecat.org/resources/attraction-managed-by-translated-organisation';
+    private const string ATTRACTION = 'https://thuecat.org/resources/attraction-managed-by-translated-organisation';
 
-    private const ORGANISATION = 'https://thuecat.org/resources/organisation-translated';
+    private const string ORGANISATION = 'https://thuecat.org/resources/organisation-translated';
 
-    private const STORAGE_PID = 10;
+    private const int STORAGE_PID = 10;
 
     // The source delivers German and English only. Localizing the organisation must not
     // localize the records it manages.

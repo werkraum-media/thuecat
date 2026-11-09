@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class OrganisationReclassificationRepairTest extends AbstractImportTestCase
 {
-    private const RESOURCES = 'https://thuecat.org/resources/';
+    private const string RESOURCES = 'https://thuecat.org/resources/';
 
     protected function setUp(): void
     {

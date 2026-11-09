@@ -50,7 +50,7 @@ use WerkraumMedia\ThueCat\Domain\DetailRecordKind\DetailRecordKinds;
 final readonly class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
 {
     /** Tables whose slugs are list filter segments. */
-    private const FILTER_TABLES = [
+    private const array FILTER_TABLES = [
         'tx_thuecat_town',
         'sys_category',
     ];

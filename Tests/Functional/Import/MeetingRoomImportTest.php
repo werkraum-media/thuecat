@@ -30,11 +30,11 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class MeetingRoomImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_meeting_room';
+    private const string TABLE = 'tx_thuecat_meeting_room';
 
-    private const VENUE = 'https://thuecat.org/resources/059632237210-rbpe';
+    private const string VENUE = 'https://thuecat.org/resources/059632237210-rbpe';
 
-    private const GALERIE = 'https://thuecat.org/resources/019950652406-nywx';
+    private const string GALERIE = 'https://thuecat.org/resources/019950652406-nywx';
 
     /**
      * @return iterable<string, array{int, string, string, string, array<string, string|int>}>

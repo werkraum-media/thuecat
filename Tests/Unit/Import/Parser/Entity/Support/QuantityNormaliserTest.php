@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\QuantityNormaliser;
 
 final class QuantityNormaliserTest extends TestCase
 {
-    private const UNKNOWN_UNIT = [
+    private const array UNKNOWN_UNIT = [
         'schema:unitCode' => ['@type' => 'thuecat:Unit', '@value' => 'test:UnknownUnit'],
         'schema:value' => ['@type' => 'schema:Number', '@value' => '3'],
     ];

@@ -27,17 +27,17 @@ use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 
 class Extension
 {
-    final public const EXTENSION_KEY = 'thuecat';
+    final public const string EXTENSION_KEY = 'thuecat';
 
-    final public const EXTENSION_NAME = 'Thuecat';
+    final public const string EXTENSION_NAME = 'Thuecat';
 
-    final public const TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
+    final public const string TCA_SELECT_GROUP_IDENTIFIER = 'thuecat';
 
-    final public const CACHE_TEASER = 'tx_thuecat_teaser';
+    final public const string CACHE_TEASER = 'tx_thuecat_teaser';
 
-    final public const CACHE_LIST = 'tx_thuecat_list';
+    final public const string CACHE_LIST = 'tx_thuecat_list';
 
-    final public const CACHE_SEARCH_MASK = 'tx_thuecat_searchmask';
+    final public const string CACHE_SEARCH_MASK = 'tx_thuecat_searchmask';
 
     /** One year; invalidation is by tag. */
     protected const FRONTEND_CACHE_LIFETIME = 31536000;

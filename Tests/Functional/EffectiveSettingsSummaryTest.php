@@ -193,7 +193,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
      * Distinctive enough that any rendering of it — whole, masked or measured
      * — is recognisable in the serialised entry.
      */
-    private const API_KEY = 'sekrit-api-key-9f3a2b';
+    private const string API_KEY = 'sekrit-api-key-9f3a2b';
 
     #[Test]
     public function theApiKeyIsNeverRevealed(): void

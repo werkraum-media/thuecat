@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
  */
 final class SyncChannelReaperFailingStub extends SyncChannelReaper
 {
-    public const ERROR = 'Attempt to delete record without delete-permissions [test]';
+    public const string ERROR = 'Attempt to delete record without delete-permissions [test]';
 
     public function __construct()
     {

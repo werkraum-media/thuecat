@@ -32,9 +32,9 @@ use WerkraumMedia\ThueCat\Import\ResolverContext;
  */
 final class KeywordCollectorTest extends TestCase
 {
-    private const OWNER = 'tx_thuecat_tourist_attraction';
+    private const string OWNER = 'tx_thuecat_tourist_attraction';
 
-    private const TERM = 'keyword:https://thuecat.org/resources/475728955106-qdcc';
+    private const string TERM = 'keyword:https://thuecat.org/resources/475728955106-qdcc';
 
     #[Test]
     public function startsEmpty(): void

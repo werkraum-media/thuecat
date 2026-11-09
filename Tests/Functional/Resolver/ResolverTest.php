@@ -34,11 +34,11 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class ResolverTest extends AbstractImportTestCase
 {
-    private const FIXTURE_PATH = __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/';
+    private const string FIXTURE_PATH = __DIR__ . '/../Fixtures/Import/Guzzle/thuecat.org/resources/';
 
-    private const ORG_REMOTE_ID = 'https://thuecat.org/resources/018132452787-ngbe';
+    private const string ORG_REMOTE_ID = 'https://thuecat.org/resources/018132452787-ngbe';
 
-    private const ADDRESS_REMOTE_ID = self::ORG_REMOTE_ID . '::addr::0';
+    private const string ADDRESS_REMOTE_ID = self::ORG_REMOTE_ID . '::addr::0';
 
     #[Test]
     public function freshOrganisationGetsNewPlaceholderKey(): void

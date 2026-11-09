@@ -23,11 +23,11 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 /** One `schema:keywords` entry, tagged with the shape it arrived in. */
 final readonly class KeywordEntry
 {
-    public const SHAPE_REFERENCE = 'reference';
+    public const string SHAPE_REFERENCE = 'reference';
 
-    public const SHAPE_ONTOLOGY = 'ontology';
+    public const string SHAPE_ONTOLOGY = 'ontology';
 
-    public const SHAPE_FREE_TEXT = 'freeText';
+    public const string SHAPE_FREE_TEXT = 'freeText';
 
     public function __construct(
         public string $shape,

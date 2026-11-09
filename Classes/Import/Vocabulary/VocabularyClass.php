@@ -29,7 +29,7 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
  */
 final readonly class VocabularyClass
 {
-    public const UNTAGGED = '';
+    public const string UNTAGGED = '';
 
     /**
      * @param list<string>          $parents declared parents, in upstream order

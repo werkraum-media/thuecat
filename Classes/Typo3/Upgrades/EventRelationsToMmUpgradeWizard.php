@@ -45,7 +45,7 @@ use WerkraumMedia\ThueCat\Import\EventPlaceMatcher;
 #[Autoconfigure(public: true)]
 final readonly class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
 {
-    private const FIELDS = [
+    private const array FIELDS = [
         ['tx_thuecat_tourist_attraction', EventPlaceMatcher::FIELD_HOSTS],
         ['tx_thuecat_organisation', EventPlaceMatcher::FIELD_MANAGES],
         ['tx_thuecat_town', EventPlaceMatcher::FIELD_HOSTS],

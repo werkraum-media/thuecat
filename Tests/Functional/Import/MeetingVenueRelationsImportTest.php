@@ -28,17 +28,17 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  */
 final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
 {
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const WIELANDGUT = 'https://thuecat.org/resources/117034427781-ndta';
+    private const string WIELANDGUT = 'https://thuecat.org/resources/117034427781-ndta';
 
-    private const RIDING_HALL = 'https://thuecat.org/resources/700475118524-zdca';
+    private const string RIDING_HALL = 'https://thuecat.org/resources/700475118524-zdca';
 
-    private const CULTURAL_ESTATE = 'https://thuecat.org/resources/332021174274-eyhf';
+    private const string CULTURAL_ESTATE = 'https://thuecat.org/resources/332021174274-eyhf';
 
-    private const EVENT = 'https://thuecat.org/resources/e_100967287-hubev';
+    private const string EVENT = 'https://thuecat.org/resources/e_100967287-hubev';
 
-    private const NAMED_REFERENCE_FIXTURES = [
+    private const array NAMED_REFERENCE_FIXTURES = [
         '775941615571-khyx.json', '799431457224-zhww.json', '312868368592-wnce.json', '304061111979-rmed.json',
         '290287712606-zkwq.json',
     ];

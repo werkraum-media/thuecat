@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
  */
 class TitleResolverTest extends TestCase
 {
-    private const FALLBACK = [
+    private const array FALLBACK = [
         'schema:Bridge' => 'Brücke',
         'thuecat:BeerBar' => 'Bierbar',
     ];

@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexFactory;
 
 class VocabularyIndexFactoryTest extends TestCase
 {
-    private const SCHEMA_ORG = [
+    private const array SCHEMA_ORG = [
         '@graph' => [
             [
                 '@id' => 'schema:MusicEvent',
@@ -39,7 +39,7 @@ class VocabularyIndexFactoryTest extends TestCase
         ],
     ];
 
-    private const THUECAT = [
+    private const array THUECAT = [
         '@graph' => [
             [
                 '@id' => 'thuecat:BrassMusic',

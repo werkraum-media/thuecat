@@ -37,9 +37,9 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
 
     protected string $fixturePath = 'api/resources';
 
-    private const TDM = 'https://thuecat.org/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-';
+    private const string TDM = 'https://thuecat.org/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-';
 
-    private const MIXED = 'https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-kcev';
+    private const string MIXED = 'https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-kcev';
 
     protected function setUp(): void
     {

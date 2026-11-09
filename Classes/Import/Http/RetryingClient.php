@@ -34,7 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 final readonly class RetryingClient implements ImportHttpClient
 {
     // Internal, never sent upstream: how many attempts produced this response.
-    public const ATTEMPTS_HEADER = 'X-Thuecat-Import-Attempts';
+    public const string ATTEMPTS_HEADER = 'X-Thuecat-Import-Attempts';
 
     public function __construct(
         private ClientInterface $client,

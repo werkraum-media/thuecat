@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  */
 class ShowPageCacheTest extends AbstractCachingTestCase
 {
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
     protected function getDataSetFileName(): string
     {

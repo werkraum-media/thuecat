@@ -26,13 +26,13 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class MeetingVenueImportTest extends AbstractImportTestCase
 {
-    private const HOTEL = 'https://thuecat.org/resources/669150457039-gamn';
+    private const string HOTEL = 'https://thuecat.org/resources/669150457039-gamn';
 
-    private const CONVENTION_CENTER = 'https://thuecat.org/resources/766768028887-ohje';
+    private const string CONVENTION_CENTER = 'https://thuecat.org/resources/766768028887-ohje';
 
-    private const TABLE = 'tx_thuecat_tourist_attraction';
+    private const string TABLE = 'tx_thuecat_tourist_attraction';
 
-    private const STORAGE_PID = 10;
+    private const int STORAGE_PID = 10;
 
     #[Test]
     public function conferenceHotelIsStoredAsMeetingVenue(): void
