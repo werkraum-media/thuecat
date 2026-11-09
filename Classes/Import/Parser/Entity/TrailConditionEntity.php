@@ -55,6 +55,9 @@ class TrailConditionEntity extends AbstractEntity
         $this->extractGeo($node['schema:geo'] ?? null, $language);
     }
 
+    /**
+     * @param array<string, mixed> $node
+     */
     public function configureTranslation(array $node, string $language, int $sysLanguageUid): void
     {
         $fields = [

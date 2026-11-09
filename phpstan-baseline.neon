@@ -133,12 +133,6 @@ parameters:
 			path: Classes/Domain/Model/Frontend/Offer.php
 
 		-
-			message: '#^Parameter \#1 \$rawData of static method WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Price\:\:createFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Frontend/Offer.php
-
-		-
 			message: '#^Parameter \#1 \$title of class WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\Offer constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1

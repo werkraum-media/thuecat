@@ -34,6 +34,9 @@ class Price
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $rawData
+     */
     public static function createFromArray(array $rawData): self
     {
         return new self(

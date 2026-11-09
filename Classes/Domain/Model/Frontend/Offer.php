@@ -37,10 +37,14 @@ class Offer
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $rawData
+     */
     public static function createFromArray(array $rawData): Offer
     {
         $prices = [];
 
+        /** @var array<string, mixed> $price */
         foreach (ArrayUtility::sortArraysByKey($rawData['prices'], 'title') as $price) {
             $prices[] = Price::createFromArray($price);
         }

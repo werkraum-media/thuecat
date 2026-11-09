@@ -44,6 +44,9 @@ final class AddTitleForStaticUrlsDataHandlerHook
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $incomingFieldArray
+     */
     public function processDatamap_preProcessFieldArray(
         array &$incomingFieldArray,
         string $table,
@@ -65,6 +68,9 @@ final class AddTitleForStaticUrlsDataHandlerHook
         );
     }
 
+    /**
+     * @param array<string, mixed> $incomingFieldArray
+     */
     private function determineLanguage(string|int $id, array $incomingFieldArray): string
     {
         $pid = $incomingFieldArray['pid'] ?? '';
@@ -89,6 +95,9 @@ final class AddTitleForStaticUrlsDataHandlerHook
         ;
     }
 
+    /**
+     * @param array<string, mixed> $incomingFieldArray
+     */
     private function addTitles(array &$incomingFieldArray, array $urls, string $language): void
     {
         if ($language === '') {
@@ -131,6 +140,9 @@ final class AddTitleForStaticUrlsDataHandlerHook
         }
     }
 
+    /**
+     * @param array<string, mixed> $incomingFieldArray
+     */
     private function shouldSkip(string $table, array $incomingFieldArray): bool
     {
         return $table !== 'tx_thuecat_import_configuration'

@@ -57,6 +57,9 @@ class TrailWayTypeEntity extends AbstractEntity
         );
     }
 
+    /**
+     * @param array<string, mixed> $node
+     */
     public function configureTranslation(array $node, string $language, int $sysLanguageUid): void
     {
         $this->recordTranslation(

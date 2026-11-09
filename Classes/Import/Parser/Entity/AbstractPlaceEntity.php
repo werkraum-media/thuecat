@@ -47,6 +47,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
                 continue;
             }
             $entity = new OfferEntity();
+            /** @var array<string, mixed> $item A JSON-LD node is an object. */
             $entity->configure($item, $language);
             $offers[] = $entity->toArray();
         }

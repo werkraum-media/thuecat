@@ -43,6 +43,9 @@ class OfferEntity extends AbstractTransientEntity
      */
     protected array $prices = [];
 
+    /**
+     * @param array<string, mixed> $node
+     */
     public function configure(array $node, string $language): void
     {
         // Offer type lives in thuecat:offerType (typed @value), not in the

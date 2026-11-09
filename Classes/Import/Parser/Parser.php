@@ -64,6 +64,7 @@ class Parser
             if (!is_array($node)) {
                 continue;
             }
+            /** @var array<string, mixed> $node A JSON-LD node is an object. */
             $this->parseNode($node, $parserContext);
         }
     }
@@ -86,6 +87,9 @@ class Parser
         return $this->dataHandlerPayload;
     }
 
+    /**
+     * @param array<string, mixed> $node
+     */
     public function parseNode(array $node, ParserContext $parserContext): void
     {
         $entity = $this->resolveEntityClass($node['@type'] ?? []);
