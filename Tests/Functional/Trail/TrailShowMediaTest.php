@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * A real local storage holding a real image is set up so core can process the
  * cropped references; the crop on the sys_file_reference drives the processing.
  */
-class TrailShowMediaTest extends AbstractFrontendTestCase
+final class TrailShowMediaTest extends AbstractFrontendTestCase
 {
     // The testing framework forces GFX.processor to GraphicsMagick, which is not
     // installed here; point it back at ImageMagick so f:image actually processes.

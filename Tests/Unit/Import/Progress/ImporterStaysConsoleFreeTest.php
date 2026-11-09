@@ -37,7 +37,7 @@ use WerkraumMedia\ThueCat\Import\Resolver;
  * The importer must stay usable from the backend module, so the console may
  * only appear in the command that renders progress.
  */
-class ImporterStaysConsoleFreeTest extends TestCase
+final class ImporterStaysConsoleFreeTest extends TestCase
 {
     /**
      * @return Iterator<string, array{class-string}>

@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * 25 attractions and one list plugin, at `settings.itemsPerPage = 10` from
  * `PaginationRendering.typoscript`: page 1 shows 1-10, page 2 shows 11-20.
  */
-class ListCacheTest extends AbstractCachingTestCase
+final class ListCacheTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

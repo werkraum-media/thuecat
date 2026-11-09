@@ -36,7 +36,7 @@ use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
  * failure never reaches the faker, which only distinguishes staged responses
  * from unexpected requests.
  */
-class MediaFileDownloaderTest extends TestCase
+final class MediaFileDownloaderTest extends TestCase
 {
     #[Test]
     public function returnsNoFileOnTransportFailure(): void

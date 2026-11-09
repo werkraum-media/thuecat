@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
-class ExtensionTest extends TestCase
+final class ExtensionTest extends TestCase
 {
     /** @var mixed */
     private $cachingBackup;

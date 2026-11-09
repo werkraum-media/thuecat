@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 // Isolates the one link the rendered mask depends on: the site settings the
 // import writes against must be readable from a frontend request.
-class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
+final class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Service\SitePageIds;
 use WerkraumMedia\ThueCat\Service\SiteScopedSelectFields;
 use WerkraumMedia\ThueCat\Typo3\EventListener\SiteScopedRelationsPageTsConfigListener;
 
-class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
+final class SiteScopedRelationsPageTsConfigListenerTest extends TestCase
 {
     #[Test]
     public function everyScopedFieldGetsTheSitesPageIds(): void

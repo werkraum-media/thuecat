@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // Events publishing their dates on the event node instead of in a schedule.
 // Every fixture here is a real upstream document, trimmed.
-class EventLevelDatesImportTest extends AbstractImportTestCase
+final class EventLevelDatesImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class TouristAttractionShowTest extends AbstractFrontendTestCase
+final class TouristAttractionShowTest extends AbstractFrontendTestCase
 {
     private int $originalExecTime = 0;
 

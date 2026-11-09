@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyDistiller;
  * schema.org writes `@type` and labels as plain strings, ThueCat writes both
  * as lists, and both write `rdfs:subClassOf` as either a dict or a list.
  */
-class VocabularyDistillerTest extends TestCase
+final class VocabularyDistillerTest extends TestCase
 {
     /**
      * @param list<array<string, mixed>> $nodes

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\OfferEntity;
 
-class OfferEntityTest extends TestCase
+final class OfferEntityTest extends TestCase
 {
     #[Test]
     public function shapesOfferWithNestedPriceSpecificationList(): void

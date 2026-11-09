@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offer;
 
-class OfferTest extends TestCase
+final class OfferTest extends TestCase
 {
     #[Test]
     public function canBeCreatedWithLegacyTypeAsString(): void

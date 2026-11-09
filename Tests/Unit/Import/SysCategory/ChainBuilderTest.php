@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
  * `thuecat:Cinema` in particular are real: the first restates its own chain
  * through two parents, the second genuinely branches.
  */
-class ChainBuilderTest extends TestCase
+final class ChainBuilderTest extends TestCase
 {
     /**
      * @param array<string, list<string>> $parentsById

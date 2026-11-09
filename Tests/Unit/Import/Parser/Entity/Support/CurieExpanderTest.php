@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 
-class CurieExpanderTest extends TestCase
+final class CurieExpanderTest extends TestCase
 {
     #[Test]
     public function expandsKnownPrefixToOntologyUri(): void

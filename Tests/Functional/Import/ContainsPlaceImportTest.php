@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * The roots are trails that import from their own document alone, so every staged
  * fetch is one the containsPlace type itself must make.
  */
-class ContainsPlaceImportTest extends AbstractImportTestCase
+final class ContainsPlaceImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';
 

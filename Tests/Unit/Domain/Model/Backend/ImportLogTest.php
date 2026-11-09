@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\SavingEntity;
 
-class ImportLogTest extends TestCase
+final class ImportLogTest extends TestCase
 {
     #[Test]
     public function returnsConfigurationIfSet(): void
@@ -200,7 +200,7 @@ class ImportLogTest extends TestCase
         string $severity,
         string $remoteId,
         string $message
-    ): ImportLogEntry {
+    ): TypedLogEntry {
         $entry = new TypedLogEntry($type);
         $entry->_setProperty('severity', $severity);
         $entry->_setProperty('remoteId', $remoteId);

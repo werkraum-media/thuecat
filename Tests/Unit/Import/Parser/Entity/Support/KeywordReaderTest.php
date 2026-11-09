@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordEntry;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\KeywordReader;
 
-class KeywordReaderTest extends TestCase
+final class KeywordReaderTest extends TestCase
 {
     #[Test]
     public function returnsNothingWhenPropertyAbsent(): void

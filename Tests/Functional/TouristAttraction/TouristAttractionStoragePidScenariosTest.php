@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * Records: Stadtmuseum Erfurt (pid 11, town 1), Goethehaus Weimar (pid 11,
  * town 2), Other Pid Erfurt (pid 12, town 1).
  */
-class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
+final class TouristAttractionStoragePidScenariosTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * place suite alike: the observed split (typed literals on places, free text on
  * events) describes today's data, not a contract.
  */
-class EventKeywordImportTest extends AbstractImportTestCase
+final class EventKeywordImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

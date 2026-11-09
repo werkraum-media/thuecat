@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexFactory;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 
-class VocabularyProviderTest extends TestCase
+final class VocabularyProviderTest extends TestCase
 {
     private const array SCHEMA_ORG = ['@graph' => [
         ['@id' => 'schema:Event', '@type' => 'rdfs:Class', 'rdfs:label' => 'Event'],

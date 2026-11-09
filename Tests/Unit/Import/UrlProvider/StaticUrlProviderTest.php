@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Import\UrlProvider\StaticUrlProvider;
 
-class StaticUrlProviderTest extends TestCase
+final class StaticUrlProviderTest extends TestCase
 {
     #[Test]
     public function canProvideForStaticConfiguration(): void

@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\WeekDayGroup;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
-class OpeningHoursFormatterTest extends TestCase
+final class OpeningHoursFormatterTest extends TestCase
 {
     private OpeningHoursFormatter $subject;
 

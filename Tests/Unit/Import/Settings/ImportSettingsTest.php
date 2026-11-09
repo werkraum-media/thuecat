@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 
-class ImportSettingsTest extends TestCase
+final class ImportSettingsTest extends TestCase
 {
     #[Test]
     public function configurationValueWinsOverExtensionConfiguration(): void

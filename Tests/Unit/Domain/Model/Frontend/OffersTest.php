@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Offers;
 
-class OffersTest extends TestCase
+final class OffersTest extends TestCase
 {
     #[Test]
     #[DataProvider('forCount')]

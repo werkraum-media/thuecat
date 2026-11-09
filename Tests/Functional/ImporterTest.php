@@ -43,7 +43,7 @@ use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryProvisioner;
 use WerkraumMedia\ThueCat\Import\SysCategory\TitleResolver;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
 
-class ImporterTest extends AbstractImportTestCase
+final class ImporterTest extends AbstractImportTestCase
 {
     #[Test]
     public function importsFreshOrganization(): void

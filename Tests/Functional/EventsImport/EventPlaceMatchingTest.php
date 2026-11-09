@@ -25,7 +25,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // An imported event is related to the ThueCat place it takes place at, by
 // resolvable reference or by normalized name and postal code.
-class EventPlaceMatchingTest extends AbstractImportTestCase
+final class EventPlaceMatchingTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

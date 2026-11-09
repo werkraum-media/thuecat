@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
-class ReverseRelationElementTest extends AbstractBackendTestCase
+final class ReverseRelationElementTest extends AbstractBackendTestCase
 {
     protected function setUp(): void
     {

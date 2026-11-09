@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // The inline schema:organizer node becomes a row in
 // tx_events_domain_model_organizer, and the event points at it.
-class EventOrganizerImportTest extends AbstractImportTestCase
+final class EventOrganizerImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

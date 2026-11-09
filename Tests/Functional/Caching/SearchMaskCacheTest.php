@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * The fixture pairs search plugins with different siblings: page 10 has a
  * filtered list (towns locked), page 20 a plain list, page 30 no list at all.
  */
-class SearchMaskCacheTest extends AbstractCachingTestCase
+final class SearchMaskCacheTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

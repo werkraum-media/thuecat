@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * at depth 1, so its own reference buckets are dropped rather than followed.
  * Keywords and media short-circuit before that check and stay exempt.
  */
-class TrailDepthCapTest extends AbstractImportTestCase
+final class TrailDepthCapTest extends AbstractImportTestCase
 {
     private const string TRAIL_ID = 'https://thuecat.org/resources/e_106954656-oatour';
 

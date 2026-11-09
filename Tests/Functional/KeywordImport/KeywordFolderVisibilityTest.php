@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * storing page is visible in the frontend. Hiding the keyword storage folder
  * must not make an import build a second tree beside the existing one.
  */
-class KeywordFolderVisibilityTest extends AbstractImportTestCase
+final class KeywordFolderVisibilityTest extends AbstractImportTestCase
 {
     private const string TERM_REMOTE_ID = 'keyword:https://thuecat.org/resources/475728955106-qdcc';
 

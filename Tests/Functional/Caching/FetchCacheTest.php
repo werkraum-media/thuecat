@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
  * Staged-but-unconsumed fetches fail in tearDown, so what a run staged is the
  * assertion: nothing staged proves a cache hit, two staged prove two requests.
  */
-class FetchCacheTest extends AbstractImportTestCase
+final class FetchCacheTest extends AbstractImportTestCase
 {
     #[Test]
     public function cacheIsRegisteredWithAPersistentBackend(): void

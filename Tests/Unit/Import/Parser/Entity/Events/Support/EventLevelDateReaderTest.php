@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventOccurrence;
 
 // Values are the real ones from the fetched fixtures, so a change upstream
 // surfaces here and not only in a functional test.
-class EventLevelDateReaderTest extends TestCase
+final class EventLevelDateReaderTest extends TestCase
 {
     private EventLevelDateReader $reader;
 

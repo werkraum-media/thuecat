@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapt
 // Routing is decided on the PRESENCE of schema:eventSchedule, never on whether
 // it yields anything: in the mixed shape the event-level pair is the schedule's
 // envelope, so falling back to it would build one long wrong occurrence.
-class EventDateFactoryTest extends TestCase
+final class EventDateFactoryTest extends TestCase
 {
     private EventDateFactory $factory;
 

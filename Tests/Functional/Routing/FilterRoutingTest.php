@@ -25,7 +25,7 @@ use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class FilterRoutingTest extends AbstractFrontendTestCase
+final class FilterRoutingTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

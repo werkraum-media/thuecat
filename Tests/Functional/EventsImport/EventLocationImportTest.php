@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // The inline schema:location node becomes a row in
 // tx_events_domain_model_location, and the event points at it.
-class EventLocationImportTest extends AbstractImportTestCase
+final class EventLocationImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\SysCategory\LongestChainStrategy;
 use WerkraumMedia\ThueCat\Import\SysCategory\ParentStrategies;
 
-class ParentStrategiesTest extends TestCase
+final class ParentStrategiesTest extends TestCase
 {
     private function strategies(): ParentStrategies
     {

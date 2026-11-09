@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * settings.selectedRecord; no TypoScript sets that value, so the flexform is
  * the only source under test.
  */
-class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
+final class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

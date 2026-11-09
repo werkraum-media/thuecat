@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use WerkraumMedia\ThueCat\Service\SiteScopedSelectFields;
 use WerkraumMedia\ThueCat\Typo3\EventListener\SiteScopedRelationsTcaListener;
 
-class SiteScopedRelationsTcaListenerTest extends TestCase
+final class SiteScopedRelationsTcaListenerTest extends TestCase
 {
     private SiteScopedRelationsTcaListener $subject;
 

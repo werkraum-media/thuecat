@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 
-class RunDeadlineTest extends TestCase
+final class RunDeadlineTest extends TestCase
 {
     #[Test]
     public function isNotExpiredWithinItsBudget(): void

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Service\SiteScopedSelectFields;
 
-class SiteScopedSelectFieldsTest extends TestCase
+final class SiteScopedSelectFieldsTest extends TestCase
 {
     private SiteScopedSelectFields $subject;
 

@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
  * The fixture's flexform deliberately carries none of them; adding them there
  * would destroy what this file tests.
  */
-class LegacyImportConfigurationTest extends AbstractImportTestCase
+final class LegacyImportConfigurationTest extends AbstractImportTestCase
 {
     #[Test]
     public function aRecordWithoutTheNewFieldsReportsThemAsUnset(): void

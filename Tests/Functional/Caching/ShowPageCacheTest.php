@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * than the resolved record: a page rendering the empty state because its pick
  * vanished must still be discarded once that uid exists again.
  */
-class ShowPageCacheTest extends AbstractCachingTestCase
+final class ShowPageCacheTest extends AbstractCachingTestCase
 {
     private const string TABLE = 'tx_thuecat_tourist_attraction';
 

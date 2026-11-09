@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Import\CollectedKeyword;
  * entity resolves one per language, and a single flat title would discard every
  * one but the default.
  */
-class CollectedKeywordTest extends TestCase
+final class CollectedKeywordTest extends TestCase
 {
     /**
      * @param array<string, string> $titles

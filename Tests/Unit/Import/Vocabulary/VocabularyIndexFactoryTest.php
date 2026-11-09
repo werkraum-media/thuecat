@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexFactory;
 
-class VocabularyIndexFactoryTest extends TestCase
+final class VocabularyIndexFactoryTest extends TestCase
 {
     private const array SCHEMA_ORG = [
         '@graph' => [

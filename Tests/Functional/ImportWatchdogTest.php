@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 
-class ImportWatchdogTest extends AbstractImportTestCase
+final class ImportWatchdogTest extends AbstractImportTestCase
 {
     protected bool $expectErrors = true;
 

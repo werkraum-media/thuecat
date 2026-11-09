@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * Two guards hold this, `isUpdated()` and the `remoteIdToKey` map; the test fails
  * only when both do, which is the contract rather than either mechanism.
  */
-class VisitOnceTest extends AbstractImportTestCase
+final class VisitOnceTest extends AbstractImportTestCase
 {
     private const string TRAIL_ID = 'https://thuecat.org/resources/e_106954656-oatour';
 

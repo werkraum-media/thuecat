@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use WerkraumMedia\ThueCat\Typo3\FlexForm\ImportConfigurationDataStructure;
 
-class ImportConfigurationDataStructureTest extends TestCase
+final class ImportConfigurationDataStructureTest extends TestCase
 {
     #[Test]
     public function syncChannelHasOnlyItsOwnFields(): void

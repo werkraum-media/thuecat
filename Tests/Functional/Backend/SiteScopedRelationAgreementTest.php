@@ -39,7 +39,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
  * different queries, so agreement between them is the property under test
  * rather than the behaviour of either alone.
  */
-class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
+final class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
 {
     protected function setUp(): void
     {

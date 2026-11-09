@@ -25,7 +25,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 
-class ImportProgressTest extends AbstractImportTestCase
+final class ImportProgressTest extends AbstractImportTestCase
 {
     #[Test]
     public function runWithoutAListenerBehavesAsBefore(): void

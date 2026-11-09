@@ -36,7 +36,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
  * venue's content hash rather than its uid. The end-to-end result is asserted
  * by EventLocationImportTest.
  */
-class EventEntityMappingTest extends AbstractFunctionalTestCase
+final class EventEntityMappingTest extends AbstractFunctionalTestCase
 {
     #[Test]
     public function mapsKreuzchorFixtureToExpectedRows(): void

@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
  * Staleness is decided from a stored timestamp rather than by the backend,
  * because a caller that cannot refresh must still be able to read the entry.
  */
-class VocabularyIndexCacheTest extends TestCase
+final class VocabularyIndexCacheTest extends TestCase
 {
     /**
      * A cache frontend backed by a plain array, so a test can inspect exactly

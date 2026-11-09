@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 /**
  * The fixture site's base carries no host, so locations are rendered as paths.
  */
-class DetailRecordSitemapTest extends AbstractFrontendTestCase
+final class DetailRecordSitemapTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

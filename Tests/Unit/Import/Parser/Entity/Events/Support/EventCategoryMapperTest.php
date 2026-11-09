@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventCategoryMapper;
 
-class EventCategoryMapperTest extends TestCase
+final class EventCategoryMapperTest extends TestCase
 {
     private EventCategoryMapper $mapper;
 

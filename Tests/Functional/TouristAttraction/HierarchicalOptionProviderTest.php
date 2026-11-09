@@ -35,7 +35,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * ancestor whose own parent is the anchor — and each such set is offered with
  * its whole subtree, branches no record uses included.
  */
-class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
+final class HierarchicalOptionProviderTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

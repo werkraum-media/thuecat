@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\Events\Domain\Model\Location;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\LocationEntity;
 
-class LocationEntityTest extends TestCase
+final class LocationEntityTest extends TestCase
 {
     #[Test]
     public function returnsCorrectTable(): void

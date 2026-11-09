@@ -36,7 +36,7 @@ use WerkraumMedia\ThueCat\Import\Settings\AnchorScopeRegistry;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 
-class CategoryAnchorResolverTest extends TestCase
+final class CategoryAnchorResolverTest extends TestCase
 {
     #[Test]
     public function siteSettingsWinOverExtensionConfiguration(): void

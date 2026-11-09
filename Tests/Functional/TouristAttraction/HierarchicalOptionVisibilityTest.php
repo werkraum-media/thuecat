@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * container, and walks a table an editor can put a cycle into. Both are
  * therefore asserted rather than assumed.
  */
-class HierarchicalOptionVisibilityTest extends AbstractFrontendTestCase
+final class HierarchicalOptionVisibilityTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

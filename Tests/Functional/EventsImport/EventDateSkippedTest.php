@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // An event publishing schema:startDate without schema:endDate. The pair cannot
 // be resolved, so the occurrence is skipped and the event ends up dateless —
 // two findings, deliberately reported separately.
-class EventDateSkippedTest extends AbstractImportTestCase
+final class EventDateSkippedTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Trail;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class TrailMetaTagsTest extends AbstractFrontendTestCase
+final class TrailMetaTagsTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

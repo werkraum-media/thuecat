@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
-class TrailRelationImportTest extends AbstractImportTestCase
+final class TrailRelationImportTest extends AbstractImportTestCase
 {
     private const string REMOTE_ID = 'https://thuecat.org/resources/e_106954656-oatour';
 

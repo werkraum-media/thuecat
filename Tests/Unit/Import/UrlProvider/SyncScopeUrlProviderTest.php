@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncScopeUrlProvider;
 
-class SyncScopeUrlProviderTest extends TestCase
+final class SyncScopeUrlProviderTest extends TestCase
 {
     #[Test]
     public function canProvideForSyncScope(): void

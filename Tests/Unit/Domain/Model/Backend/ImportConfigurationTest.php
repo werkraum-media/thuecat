@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 
-class ImportConfigurationTest extends TestCase
+final class ImportConfigurationTest extends TestCase
 {
     #[Test]
     public function returnsTitle(): void

@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\LocalisedValueReader;
 
-class LocalisedValueReaderTest extends TestCase
+final class LocalisedValueReaderTest extends TestCase
 {
     #[Test]
     public function returnsMatchingEntryFromListOfLanguageVariants(): void

@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * Two list plugins over one storage differ only in the detail page they link
  * (page 10 → detail 20, page 13 → detail 21), both showing attractions 10, 11.
  */
-class TeaserCacheTest extends AbstractCachingTestCase
+final class TeaserCacheTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

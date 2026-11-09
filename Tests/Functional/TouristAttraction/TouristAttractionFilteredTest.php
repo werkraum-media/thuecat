@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * fixture settings and assertions as further filterable fields become available
  * in the imported records.
  */
-class TouristAttractionFilteredTest extends AbstractFrontendTestCase
+final class TouristAttractionFilteredTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

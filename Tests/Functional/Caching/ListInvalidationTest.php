@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * 25 attractions at 10 per page (`PaginationRendering.typoscript`), so page 1
  * holds uids 1-10, page 2 holds 11-20 and page 3 holds 21-25.
  */
-class ListInvalidationTest extends AbstractCachingTestCase
+final class ListInvalidationTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

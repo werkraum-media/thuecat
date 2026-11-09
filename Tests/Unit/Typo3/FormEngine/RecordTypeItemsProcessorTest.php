@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Typo3\FormEngine\RecordTypeItemsProcessor;
 /**
  * Items 1 and 2 are attractions, 3 and 4 meeting venues.
  */
-class RecordTypeItemsProcessorTest extends TestCase
+final class RecordTypeItemsProcessorTest extends TestCase
 {
     /**
      * A field processed earlier in the same sheet arrives as a list, the processed field itself as a comma string.

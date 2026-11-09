@@ -27,7 +27,7 @@ use PHPUnit\Framework\Attributes\Test;
  * production. The faker's exception is swallowed the same way, so the test harness
  * has to report it on its own.
  */
-class UnexpectedFetchTest extends AbstractImportTestCase
+final class UnexpectedFetchTest extends AbstractImportTestCase
 {
     #[Test]
     public function reportsAReferenceFetchNoTestStaged(): void

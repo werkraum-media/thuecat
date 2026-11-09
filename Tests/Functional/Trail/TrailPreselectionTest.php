@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * settings.selectedRecord; no TypoScript sets that value, so the flexform is
  * the only source under test.
  */
-class TrailPreselectionTest extends AbstractFrontendTestCase
+final class TrailPreselectionTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

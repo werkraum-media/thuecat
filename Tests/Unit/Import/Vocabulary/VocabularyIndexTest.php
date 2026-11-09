@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
  * Chains below mirror the published vocabularies, where ThueCat extends
  * schema.org, so an ancestry walk crosses from one into the other.
  */
-class VocabularyIndexTest extends TestCase
+final class VocabularyIndexTest extends TestCase
 {
     /**
      * @param array<string, list<string>> $parentsById

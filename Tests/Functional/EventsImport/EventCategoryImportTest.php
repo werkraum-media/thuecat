@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // ("Kulturveranstaltung"). These tests pin the find-or-create + site-scope +
 // rootline-guard behaviour of Resolver::wireCategories, plus idempotency on
 // re-import.
-class EventCategoryImportTest extends AbstractImportTestCase
+final class EventCategoryImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

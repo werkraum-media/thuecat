@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
 
 // Covers the writeSiteSettings() helper itself: the anchor tests are only
 // meaningful if a test can give a site its own settings.
-class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
+final class SiteSettingsHelperTest extends AbstractImportConfigurationTestCase
 {
     protected function setUp(): void
     {

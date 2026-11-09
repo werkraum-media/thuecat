@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // The summary column of the imports module shows what drove each run.
-class EffectiveSettingsInModuleTest extends AbstractImportTestCase
+final class EffectiveSettingsInModuleTest extends AbstractImportTestCase
 {
     #[Test]
     public function theRunsSettingsAreReadableFromItsLog(): void

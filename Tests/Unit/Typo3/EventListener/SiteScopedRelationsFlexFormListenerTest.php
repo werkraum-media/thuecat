@@ -26,7 +26,7 @@ use TYPO3\CMS\Core\Configuration\Event\AfterFlexFormDataStructureParsedEvent;
 use WerkraumMedia\ThueCat\Service\SiteScopedSelectFields;
 use WerkraumMedia\ThueCat\Typo3\EventListener\SiteScopedRelationsFlexFormListener;
 
-class SiteScopedRelationsFlexFormListenerTest extends TestCase
+final class SiteScopedRelationsFlexFormListenerTest extends TestCase
 {
     private SiteScopedRelationsFlexFormListener $subject;
 

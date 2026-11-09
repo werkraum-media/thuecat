@@ -27,7 +27,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\ParkingFacility;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 
-class TouristAttractionTest extends TestCase
+final class TouristAttractionTest extends TestCase
 {
     #[Test]
     public function returnsParkingFacilitiesNearBySorted(): void

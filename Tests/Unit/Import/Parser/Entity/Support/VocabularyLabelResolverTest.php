@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
  * Country and region arrive either as a language-tagged literal or as an
  * untagged CURIE; both must reach one stored value.
  */
-class VocabularyLabelResolverTest extends TestCase
+final class VocabularyLabelResolverTest extends TestCase
 {
     private const string GERMANY = 'https://thuecat.org/ontology/thuecat/1.0/Germany';
 

@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * Assertions are on the cache, not the body: a body looks correct whenever the
  * cache is cold, so it cannot tell a reused entry from a fresh one.
  */
-class TrailTeaserCacheTest extends AbstractCachingTestCase
+final class TrailTeaserCacheTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

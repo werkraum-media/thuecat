@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * cannot see this: every other test starts from a cold cache, where the wrong
  * entry does not exist yet.
  */
-class PageCacheTest extends AbstractCachingTestCase
+final class PageCacheTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

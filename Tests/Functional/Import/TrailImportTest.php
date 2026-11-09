@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
-class TrailImportTest extends AbstractImportTestCase
+final class TrailImportTest extends AbstractImportTestCase
 {
     private const string REMOTE_ID = 'https://thuecat.org/resources/e_52469786-oatour';
 

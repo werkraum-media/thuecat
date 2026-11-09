@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * The per-uid tag is what makes this narrow: tagging with the bare table name
  * would discard every teaser of the type on any save.
  */
-class TrailTeaserInvalidationTest extends AbstractCachingTestCase
+final class TrailTeaserInvalidationTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

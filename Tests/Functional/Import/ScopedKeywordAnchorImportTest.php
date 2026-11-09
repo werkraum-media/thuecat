@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * Keywords land under the anchors of the record kind that cites them, so one
  * run can write into several keyword trees.
  */
-class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
+final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
 {
     private const string TRAIL = 'https://thuecat.org/resources/e_106954656-oatour';
 

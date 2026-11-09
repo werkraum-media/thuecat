@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // tx_events_domain_model_event.images. Events keep every image in one field,
 // so these also pin that the target field comes from the owner rather than
 // the resolver.
-class EventMediaImportTest extends AbstractImportTestCase
+final class EventMediaImportTest extends AbstractImportTestCase
 {
     protected bool $stubMediaDownloader = false;
 

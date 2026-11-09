@@ -29,7 +29,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * makes the form stay (action -> same page) and a filtered list hides+locks its
  * preset fields.
  */
-class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
+final class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

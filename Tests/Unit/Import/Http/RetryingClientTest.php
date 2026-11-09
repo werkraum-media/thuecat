@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
 
-class RetryingClientTest extends TestCase
+final class RetryingClientTest extends TestCase
 {
     #[Test]
     public function returnsSuccessfulResponseWithoutRetrying(): void

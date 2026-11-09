@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 // field and the type-category tree in the categories field — never each other's.
 // The anchors come from the import's resolution chain, so the assertion is that
 // the form resolved ###THUECAT_ANCHOR### into the configured uids.
-class KeywordFieldScopingTest extends AbstractBackendTestCase
+final class KeywordFieldScopingTest extends AbstractBackendTestCase
 {
     protected array $pathsToLinkInTestInstance = [
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Frontend/Sites/' => 'typo3conf/sites',

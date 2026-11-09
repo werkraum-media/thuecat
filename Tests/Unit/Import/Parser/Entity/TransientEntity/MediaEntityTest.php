@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\MediaEntity;
 
 /** URL shapes from the -oatour fixtures and live cdb data. */
-class MediaEntityTest extends TestCase
+final class MediaEntityTest extends TestCase
 {
     #[Test]
     public function prefersTheContentUrlOverTheSizedRendition(): void

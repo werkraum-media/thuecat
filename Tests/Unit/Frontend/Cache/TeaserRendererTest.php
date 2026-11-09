@@ -37,7 +37,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\Trail;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
 
-class TeaserRendererTest extends TestCase
+final class TeaserRendererTest extends TestCase
 {
     public static function records(): iterable
     {

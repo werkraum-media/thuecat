@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryTerm;
  * The anchor and identifier prefix are inputs, so two consumers sharing this
  * service must not share the trees it builds.
  */
-class SysCategoryProvisionerTest extends TestCase
+final class SysCategoryProvisionerTest extends TestCase
 {
     private function types(): SysCategoryAnchor
     {

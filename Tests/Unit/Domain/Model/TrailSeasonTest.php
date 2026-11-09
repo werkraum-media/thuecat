@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 
-class TrailSeasonTest extends TestCase
+final class TrailSeasonTest extends TestCase
 {
     /**
      * Stored values depend on these bits, so a reordered or inserted case

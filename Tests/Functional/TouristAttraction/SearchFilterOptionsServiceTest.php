@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
  * filter cannot decide its own scoping and nothing a request resolved outlives
  * it.
  */
-class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
+final class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

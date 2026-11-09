@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
  * two that would not must not. A non-canonical form fails quietly, costing hit
  * rate rather than serving anything wrong, so it is pinned here.
  */
-class CacheIdentifierFactoryTest extends TestCase
+final class CacheIdentifierFactoryTest extends TestCase
 {
     private CacheIdentifierFactory $subject;
 

@@ -36,7 +36,7 @@ use WerkraumMedia\ThueCat\Import\Settings\AnchorScopeRegistry;
 use WerkraumMedia\ThueCat\Tests\Unit\Import\Settings\Fixtures\ConflictingAttractionEntity;
 use WerkraumMedia\ThueCat\Tests\Unit\Import\Settings\Fixtures\InheritingAttractionEntity;
 
-class AnchorScopeRegistryTest extends TestCase
+final class AnchorScopeRegistryTest extends TestCase
 {
     #[Test]
     #[DataProvider('declaredScopes')]

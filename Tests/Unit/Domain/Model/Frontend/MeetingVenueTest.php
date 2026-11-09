@@ -27,7 +27,7 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\MeetingRoom;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\MeetingVenue;
 
-class MeetingVenueTest extends TestCase
+final class MeetingVenueTest extends TestCase
 {
     public static function enumLists(): iterable
     {

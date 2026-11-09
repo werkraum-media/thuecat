@@ -40,7 +40,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * Needs the import harness and a real cache backend at once, so it adds the
  * caching configuration to the import base.
  */
-class ImportWithoutChangesTest extends AbstractImportTestCase
+final class ImportWithoutChangesTest extends AbstractImportTestCase
 {
     protected array $pathsToLinkInTestInstance = [
         // A renderable site that carries no import settings. The import fixture

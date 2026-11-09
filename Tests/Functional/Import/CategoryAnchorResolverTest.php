@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
 
 // Resolution against a real site, reached through the import's storagePid.
-class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
+final class CategoryAnchorResolverTest extends AbstractImportConfigurationTestCase
 {
     protected function setUp(): void
     {

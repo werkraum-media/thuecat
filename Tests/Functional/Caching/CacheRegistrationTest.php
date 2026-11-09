@@ -37,7 +37,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * CacheManager exposes no reader for group members, so membership is asserted
  * through the effect it exists for rather than by reflecting on configuration.
  */
-class CacheRegistrationTest extends AbstractCachingTestCase
+final class CacheRegistrationTest extends AbstractCachingTestCase
 {
     /**
      * @return Iterator<string, array{string}>

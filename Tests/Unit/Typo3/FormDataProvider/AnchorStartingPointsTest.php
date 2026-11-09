@@ -30,7 +30,7 @@ use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Typo3\FormDataProvider\AnchorStartingPoints;
 
-class AnchorStartingPointsTest extends TestCase
+final class AnchorStartingPointsTest extends TestCase
 {
     #[Test]
     public function replacesTheMarkerWithTheResolvedParent(): void

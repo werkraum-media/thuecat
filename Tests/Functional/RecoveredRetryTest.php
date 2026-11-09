@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 use PHPUnit\Framework\Attributes\Test;
 
 /** A struggling upstream must be distinguishable from a healthy one. */
-class RecoveredRetryTest extends AbstractImportTestCase
+final class RecoveredRetryTest extends AbstractImportTestCase
 {
     #[Test]
     public function aRecoveredRequestIsRecorded(): void

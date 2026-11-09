@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportConfigurationTestCase;
 // Pre-flight validation of the import configuration. storagePid 10 sits in the
 // site rooted at page 1; category anchors 100/pid 20 are in-site, 900/pid 91
 // and page 500 are out of it. See ValidatorScopePreState.
-class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCase
+final class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCase
 {
     protected function setUp(): void
     {

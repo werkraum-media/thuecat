@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use WerkraumMedia\ThueCat\Build\PhpCsFixer\ScopedHeaderCommentFixer;
 
-class ScopedHeaderCommentFixerTest extends TestCase
+final class ScopedHeaderCommentFixerTest extends TestCase
 {
     private const string HEADER = <<<'TXT'
         /*

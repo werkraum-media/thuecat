@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Command\ConsoleProgressRenderer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 
-class ConsoleProgressRendererTest extends TestCase
+final class ConsoleProgressRendererTest extends TestCase
 {
     #[Test]
     public function announcesEachPhaseOnFirstEventOnly(): void

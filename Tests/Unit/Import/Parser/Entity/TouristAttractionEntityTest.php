@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TouristAttractionEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TouristAttractionEntityTest extends AbstractImportTestCase
+final class TouristAttractionEntityTest extends AbstractImportTestCase
 {
     #[Test]
     public function returnsCorrectTable(): void

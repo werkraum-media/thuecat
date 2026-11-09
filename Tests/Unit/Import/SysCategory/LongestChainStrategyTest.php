@@ -26,7 +26,7 @@ use WerkraumMedia\ThueCat\Import\SysCategory\LongestChainStrategy;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 
-class LongestChainStrategyTest extends TestCase
+final class LongestChainStrategyTest extends TestCase
 {
     /**
      * @param array<string, list<string>> $parentsById

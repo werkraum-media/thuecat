@@ -31,7 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 // event row plus its single child Date row land in the ext:events tables
 // with the FK wired correctly. Proves the EventEntity → DateEntity →
 // Resolver → DataHandler chain works through the existing pipeline.
-class EventImportTest extends AbstractImportTestCase
+final class EventImportTest extends AbstractImportTestCase
 {
     // Override fixture roots: events fixtures live under the events test tree,
     // not the legacy thuecat one. The Guzzle fixtures sit under

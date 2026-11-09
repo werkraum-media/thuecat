@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 
-class CategoryAnchorSettingTest extends TestCase
+final class CategoryAnchorSettingTest extends TestCase
 {
     /**
      * @param non-empty-string $scope

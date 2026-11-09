@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
+final class TouristAttractionMetaTagsTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

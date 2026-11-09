@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
-class EventTicketImportTest extends AbstractImportTestCase
+final class EventTicketImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

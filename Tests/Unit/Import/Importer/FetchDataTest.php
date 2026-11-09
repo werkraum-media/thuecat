@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
 
-class FetchDataTest extends TestCase
+final class FetchDataTest extends TestCase
 {
     #[Test]
     public function returnsParsedJsonLdBasedOnUrl(): void

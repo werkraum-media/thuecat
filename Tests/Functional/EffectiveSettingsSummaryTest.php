@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 
 // Values driving a run are spread over site settings, extension configuration
 // and the import configuration, so each run reports what it actually used.
-class EffectiveSettingsSummaryTest extends AbstractImportTestCase
+final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 {
     /** @var array<mixed> */
     private array $extensionConfigurationBackup = [];

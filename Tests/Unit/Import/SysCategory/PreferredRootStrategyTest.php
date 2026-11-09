@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
  * really is both a local business and a tourist attraction, and an event series
  * really is both a series and an event.
  */
-class PreferredRootStrategyTest extends TestCase
+final class PreferredRootStrategyTest extends TestCase
 {
     /** @var list<array{class: string, chosen: string}> */
     private array $warnings = [];

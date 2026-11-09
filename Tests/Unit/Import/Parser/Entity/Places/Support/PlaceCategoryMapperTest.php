@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
 
-class PlaceCategoryMapperTest extends TestCase
+final class PlaceCategoryMapperTest extends TestCase
 {
     private PlaceCategoryMapper $mapper;
 

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
 
-class EventScheduleAdapterTest extends TestCase
+final class EventScheduleAdapterTest extends TestCase
 {
     private EventScheduleAdapter $adapter;
 

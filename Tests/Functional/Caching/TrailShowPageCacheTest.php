@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * The trail show page carries a cache tag for the record it displays, so an
  * import updating or deleting that record discards the rendered page.
  */
-class TrailShowPageCacheTest extends AbstractCachingTestCase
+final class TrailShowPageCacheTest extends AbstractCachingTestCase
 {
     private const string TABLE = 'tx_thuecat_trail';
 

@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
 
-class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTestCase
+final class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTestCase
 {
     protected array $coreExtensionsToLoad = [...AbstractImportConfigurationTestCase::CORE_EXTENSIONS, 'scheduler'];
 

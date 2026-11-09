@@ -27,7 +27,7 @@ use RuntimeException;
  * Only tearDown() reports violated expectations, so a registration that is
  * never torn down passes whatever it fetched.
  */
-class GuzzleClientFakerTest extends AbstractImportTestCase
+final class GuzzleClientFakerTest extends AbstractImportTestCase
 {
     #[Test]
     public function refusesToRegisterWhileTheLastRegistrationWasNeverTornDown(): void

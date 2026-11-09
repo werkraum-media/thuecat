@@ -29,7 +29,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * A real local storage is set up (DataHandler refuses references into the fallback legacy
  * storage) and the image bytes are faked per download.
  */
-class MediaImportTest extends AbstractImportTestCase
+final class MediaImportTest extends AbstractImportTestCase
 {
     protected bool $stubMediaDownloader = false;
 

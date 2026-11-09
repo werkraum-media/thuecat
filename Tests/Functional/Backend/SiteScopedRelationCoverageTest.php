@@ -25,7 +25,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
 // The coverage the derived registration actually reaches in the compiled TCA,
 // as opposed to what a fixture says it would reach.
-class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
+final class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
 {
     #[Test]
     public function everyRelationFieldOfEveryRecordKindIsScoped(): void

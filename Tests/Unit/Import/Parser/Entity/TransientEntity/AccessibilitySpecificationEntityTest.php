@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity\AccessibilitySpec
  * Pins the untagged-typed-enum reads: every value asserted here carries no
  * language tag, which is the fallback path text extraction must keep.
  */
-class AccessibilitySpecificationEntityTest extends TestCase
+final class AccessibilitySpecificationEntityTest extends TestCase
 {
     #[Test]
     public function readsUntaggedCertificationStatus(): void

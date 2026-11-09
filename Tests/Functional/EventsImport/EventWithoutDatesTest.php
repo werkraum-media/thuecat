@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * Four routes to zero dates: no schedule, only an unusable day, all excepted,
  * all past. One event per route, imported in a single run.
  */
-class EventWithoutDatesTest extends AbstractImportTestCase
+final class EventWithoutDatesTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
 
-class AddressEntityTest extends TestCase
+final class AddressEntityTest extends TestCase
 {
     #[Test]
     public function returnsCorrectTable(): void

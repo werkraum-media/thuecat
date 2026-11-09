@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\FreeTextKeyword;
 
-class FreeTextKeywordTest extends TestCase
+final class FreeTextKeywordTest extends TestCase
 {
     #[Test]
     public function identityIsLowercasedAndTrimmed(): void

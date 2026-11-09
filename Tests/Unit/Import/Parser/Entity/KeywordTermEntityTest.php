@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class KeywordTermEntityTest extends AbstractImportTestCase
+final class KeywordTermEntityTest extends AbstractImportTestCase
 {
     #[Test]
     public function handlesTermAndTermSetTypes(): void

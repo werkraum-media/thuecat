@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\CommaColumnOptionPr
 use WerkraumMedia\ThueCat\Service\FilterField\TownFilterField;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class FilterOptionProviderTest extends AbstractFrontendTestCase
+final class FilterOptionProviderTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\FileFolderAccessException;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
-class FileFolderAccessTest extends AbstractFunctionalTestCase
+final class FileFolderAccessTest extends AbstractFunctionalTestCase
 {
     #[Test]
     public function throwsWhenNoFolderConfigured(): void

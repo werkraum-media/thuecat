@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
  * are what lets one class draw its German from the map and its English from
  * upstream.
  */
-class TitleResolverTest extends TestCase
+final class TitleResolverTest extends TestCase
 {
     private const array FALLBACK = [
         'schema:Bridge' => 'Brücke',

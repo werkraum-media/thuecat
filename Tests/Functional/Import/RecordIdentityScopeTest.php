@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
  * importing the same upstream object each keep their own record; neither reads
  * or writes the other's.
  */
-class RecordIdentityScopeTest extends AbstractImportTestCase
+final class RecordIdentityScopeTest extends AbstractImportTestCase
 {
     private const string TOWN_REMOTE_ID = 'https://thuecat.org/resources/043064193523-jcyt';
 

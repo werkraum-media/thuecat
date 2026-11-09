@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Import\Http\RetryTally;
  * Counts requests that failed and then succeeded — the signal that separates a
  * struggling upstream from a healthy one, which exhaustion alone never shows.
  */
-class RetryTallyTest extends TestCase
+final class RetryTallyTest extends TestCase
 {
     #[Test]
     public function startsEmpty(): void

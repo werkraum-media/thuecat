@@ -27,7 +27,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 /**
  * Page 10 ticks no record type, page 20 only "meeting venue", page 30 both.
  */
-class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
+final class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
-class TrailSelectedTest extends AbstractFrontendTestCase
+final class TrailSelectedTest extends AbstractFrontendTestCase
 {
     protected function getDataSetFileName(): string
     {

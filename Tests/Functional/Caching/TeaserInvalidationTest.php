@@ -28,7 +28,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  * Saving a record discards what displayed it, through DataHandler's own tags
  * and the `pages` cache group. No invalidation code of ours is involved.
  */
-class TeaserInvalidationTest extends AbstractCachingTestCase
+final class TeaserInvalidationTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

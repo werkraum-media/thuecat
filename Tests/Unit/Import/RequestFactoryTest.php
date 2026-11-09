@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Http\RequestFactory as Typo3RequestFactory;
 use TYPO3\CMS\Core\Http\UriFactory;
 use WerkraumMedia\ThueCat\Import\RequestFactory;
 
-class RequestFactoryTest extends TestCase
+final class RequestFactoryTest extends TestCase
 {
     #[Test]
     public function returnsRequestWithJsonIdFormat(): void

@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TownEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
-class TownEntityTest extends AbstractImportTestCase
+final class TownEntityTest extends AbstractImportTestCase
 {
     #[Test]
     public function returnsTableName(): void

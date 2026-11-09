@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
-class SitemapInvalidationTest extends AbstractCachingTestCase
+final class SitemapInvalidationTest extends AbstractCachingTestCase
 {
     protected function getDataSetFileName(): string
     {

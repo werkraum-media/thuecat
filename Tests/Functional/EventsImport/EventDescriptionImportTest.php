@@ -25,7 +25,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // schema:description reaches the details column from either shape ThueCat
 // delivers, preferring HTML and falling back to escaped plain text.
-class EventDescriptionImportTest extends AbstractImportTestCase
+final class EventDescriptionImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
 
