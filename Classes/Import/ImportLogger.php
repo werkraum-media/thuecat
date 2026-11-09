@@ -114,7 +114,7 @@ class ImportLogger
                 'type' => 'dataHandlerError',
                 'severity' => self::SEVERITY_ERROR,
                 'message' => $message,
-                'context' => (string)(json_encode(['iteration' => $iteration]) ?: '{}'),
+                'context' => json_encode(['iteration' => $iteration]) ?: '{}',
             ]);
         }
     }
@@ -143,7 +143,7 @@ class ImportLogger
             'severity' => self::SEVERITY_ERROR,
             'remote_id' => $url,
             'message' => $exception->getMessage(),
-            'context' => (string)(json_encode($context) ?: '{}'),
+            'context' => json_encode($context) ?: '{}',
         ]);
     }
 
@@ -175,13 +175,13 @@ class ImportLogger
             'type' => 'runFailed',
             'severity' => self::SEVERITY_ERROR,
             'message' => $failure->getMessage(),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'phase' => $phaseReached->value,
                 'class' => $failure::class,
                 'code' => $failure->getCode(),
                 'file' => $failure->getFile(),
                 'line' => $failure->getLine(),
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -206,10 +206,10 @@ class ImportLogger
                 $recovered,
                 $this->retryTally->wastedAttempts()
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'recoveredRequests' => $recovered,
                 'wastedAttempts' => $this->retryTally->wastedAttempts(),
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
         $this->retryTally->reset();
     }
@@ -230,7 +230,7 @@ class ImportLogger
                     $rateLimit['host'],
                     $rateLimit['ordinal']
                 ),
-                'context' => (string)(json_encode($rateLimit) ?: '{}'),
+                'context' => json_encode($rateLimit) ?: '{}',
             ]);
         }
         $this->requestLedger->reset();
@@ -243,11 +243,11 @@ class ImportLogger
             'type' => 'runAborted',
             'severity' => self::SEVERITY_ERROR,
             'message' => $exception->getMessage(),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'phase' => $exception->phase->value,
                 'budgetSeconds' => $exception->budgetSeconds,
                 'elapsedSeconds' => round($exception->elapsedSeconds, 1),
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -273,11 +273,11 @@ class ImportLogger
                 $field,
                 $reason
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'url' => $url,
                 'field' => $field,
                 'reason' => $reason,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -307,12 +307,12 @@ class ImportLogger
                     $table,
                     $uid
                 ),
-                'context' => (string)(json_encode([
+                'context' => json_encode([
                     'previousTable' => $previous['table'],
                     'previousUid' => $previous['uid'],
                     'table' => $table,
                     'uid' => $uid,
-                ]) ?: '{}'),
+                ]) ?: '{}',
             ]);
         }
     }
@@ -348,7 +348,7 @@ class ImportLogger
                 count($moved),
                 count($droppedManagedBy) + count($droppedManagedEvents)
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'previousTable' => 'tx_thuecat_organisation',
                 'previousUid' => $organisationUid,
                 'table' => $table,
@@ -356,7 +356,7 @@ class ImportLogger
                 'moved' => $moved,
                 'droppedManagedBy' => $droppedManagedBy,
                 'droppedManagedEvents' => $droppedManagedEvents,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -387,12 +387,12 @@ class ImportLogger
                 $actualTable,
                 $expectedTable
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'url' => $url,
                 'field' => $field,
                 'expectedTable' => $expectedTable,
                 'actualTable' => $actualTable,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -438,7 +438,7 @@ class ImportLogger
                     'remote_id' => $value,
                     'table_name' => 'sys_category',
                     'record_uid' => $recordUid,
-                    'context' => (string)(json_encode(['kind' => $kind, 'matched' => true]) ?: '{}'),
+                    'context' => json_encode(['kind' => $kind, 'matched' => true]) ?: '{}',
                 ]);
             }
         }
@@ -450,7 +450,7 @@ class ImportLogger
                     'severity' => self::SEVERITY_INFO,
                     'kind' => $kind,
                     'remote_id' => $value,
-                    'context' => (string)(json_encode(['kind' => $kind, 'matched' => false]) ?: '{}'),
+                    'context' => json_encode(['kind' => $kind, 'matched' => false]) ?: '{}',
                 ]);
             }
         }
@@ -486,7 +486,7 @@ class ImportLogger
             'type' => 'effectiveSettings',
             'severity' => self::SEVERITY_DEBUG,
             'message' => 'Effective settings for this run.',
-            'context' => (string)(json_encode($settings) ?: '{}'),
+            'context' => json_encode($settings) ?: '{}',
         ];
     }
 
@@ -517,12 +517,12 @@ class ImportLogger
                 $strategy,
                 implode(', ', $discarded)
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'class' => $class,
                 'chosen' => $chosen,
                 'discarded' => $discarded,
                 'strategy' => $strategy,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -554,12 +554,12 @@ class ImportLogger
                 $chosen,
                 implode(', ', $candidates)
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'class' => $class,
                 'chosen' => $chosen,
                 'candidates' => $candidates,
                 'preferredRoots' => $preferredRoots,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -576,7 +576,7 @@ class ImportLogger
             'remote_id' => $type,
             'table_name' => 'sys_category',
             'message' => sprintf('No class hierarchy available for "%s"; its category stays flat.', $type),
-            'context' => (string)(json_encode(['type' => $type]) ?: '{}'),
+            'context' => json_encode(['type' => $type]) ?: '{}',
         ]);
     }
 
@@ -591,11 +591,11 @@ class ImportLogger
                 intdiv($ageInSeconds, 86400),
                 $reason
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'vocabulary' => $vocabulary,
                 'ageInSeconds' => $ageInSeconds,
                 'reason' => $reason,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -609,10 +609,10 @@ class ImportLogger
                 $vocabulary,
                 $reason
             ),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'vocabulary' => $vocabulary,
                 'reason' => $reason,
-            ]) ?: '{}'),
+            ]) ?: '{}',
         ]);
     }
 
@@ -623,7 +623,7 @@ class ImportLogger
                 'type' => 'categoriesFieldMissing',
                 'severity' => self::SEVERITY_NOTICE,
                 'message' => 'Categories were mapped but "' . $tableField . '" does not exist; mapping skipped.',
-                'context' => (string)(json_encode(['tableField' => $tableField]) ?: '{}'),
+                'context' => json_encode(['tableField' => $tableField]) ?: '{}',
             ]);
         }
     }
@@ -646,7 +646,7 @@ class ImportLogger
                     'Skipped schedule day(s) "%s": no date series can be built from them.',
                     implode('", "', $days)
                 ),
-                'context' => (string)(json_encode(['days' => $days]) ?: '{}'),
+                'context' => json_encode(['days' => $days]) ?: '{}',
             ]);
         }
     }
@@ -669,7 +669,7 @@ class ImportLogger
                     'Dropped schedule day(s) "%s": the schedule carries only one.',
                     implode('", "', $days)
                 ),
-                'context' => (string)(json_encode(['days' => $days]) ?: '{}'),
+                'context' => json_encode(['days' => $days]) ?: '{}',
             ]);
         }
     }
@@ -691,7 +691,7 @@ class ImportLogger
                 'remote_id' => $eventRemoteId,
                 'table_name' => 'tx_events_domain_model_event',
                 'message' => sprintf('Event "%s" was imported without any dates.', $name),
-                'context' => (string)(json_encode(['title' => $title]) ?: '{}'),
+                'context' => json_encode(['title' => $title]) ?: '{}',
             ]);
         }
     }
@@ -715,7 +715,7 @@ class ImportLogger
                     $value['value'],
                     $value['property']
                 ),
-                'context' => (string)(json_encode(['property' => $value['property'], 'value' => $value['value']]) ?: '{}'),
+                'context' => json_encode(['property' => $value['property'], 'value' => $value['value']]) ?: '{}',
             ]);
         }
     }
@@ -731,7 +731,7 @@ class ImportLogger
             'type' => 'storageFolderEmpty',
             'severity' => self::SEVERITY_WARNING,
             'message' => sprintf('Storage folder %d holds no event after the import.', $storagePid),
-            'context' => (string)(json_encode(['storagePid' => $storagePid]) ?: '{}'),
+            'context' => json_encode(['storagePid' => $storagePid]) ?: '{}',
         ]);
     }
 
@@ -756,7 +756,7 @@ class ImportLogger
                     'Event "%s" publishes a date that could not be resolved: skipped.',
                     $name
                 ),
-                'context' => (string)(json_encode(['title' => $title]) ?: '{}'),
+                'context' => json_encode(['title' => $title]) ?: '{}',
             ]);
         }
     }
@@ -784,10 +784,10 @@ class ImportLogger
             'table_name' => $placeTable,
             'record_uid' => $placeUid,
             'message' => $this->matchMessage($outcome, $context),
-            'context' => (string)(json_encode([
+            'context' => json_encode([
                 'outcome' => $outcome,
                 'field' => $field,
-            ] + $context) ?: '{}'),
+            ] + $context) ?: '{}',
         ]);
     }
 

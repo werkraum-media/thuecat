@@ -41,7 +41,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  */
 final class BackendOrderInvalidationTest extends AbstractCachingTestCase
 {
-    protected const TITLES = ['Iota Insel', 'Kappa Kapelle', 'Lambda Linde'];
+    private const TITLES = ['Iota Insel', 'Kappa Kapelle', 'Lambda Linde'];
 
     protected function getDataSetFileName(): string
     {

@@ -450,6 +450,9 @@ abstract class AbstractEntity implements EntityInterface
         return $ids;
     }
 
+    /**
+     * @return array<string, list<string>|list<array{kind: string, id: string}>|list<array{id: string, title?: string, usageType: string|null, field: string}>>
+     */
     public function getTransients(): array
     {
         return $this->transients;
@@ -586,7 +589,7 @@ abstract class AbstractEntity implements EntityInterface
     protected function applyCategoryMapper(SysCategoryMapper $mapper, array $node): void
     {
         $types = $node['@type'] ?? [];
-        $types = is_array($types) ? array_values(array_filter($types, 'is_string')) : [];
+        $types = is_array($types) ? array_values(array_filter($types, is_string(...))) : [];
 
         $this->_categories = array_map(
             static fn (array $category): array => [

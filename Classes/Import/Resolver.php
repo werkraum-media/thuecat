@@ -1000,11 +1000,9 @@ class Resolver
         string $identifierPrefix
     ): SysCategoryAnchor {
         $memoKey = $ownerTable . '|' . $kind->name;
-        if (!isset($context->anchorPairs[$memoKey])) {
-            $context->anchorPairs[$memoKey] = $context->site === null
-                ? new AnchorPair()
-                : $this->anchorResolver->resolvePair($context->site, $ownerTable, $kind);
-        }
+        $context->anchorPairs[$memoKey] ??= $context->site === null
+            ? new AnchorPair()
+            : $this->anchorResolver->resolvePair($context->site, $ownerTable, $kind);
         $pair = $context->anchorPairs[$memoKey];
 
         return new SysCategoryAnchor($pair->parent, $pair->storagePid, $identifierPrefix);
@@ -1450,9 +1448,7 @@ class Resolver
                 $payload->setField($table, $newKey, 'pid', $context->storagePid);
                 $context->remoteIdToKey[$remoteId] = $newKey;
                 $context->remoteIdToTable[$remoteId] = $table;
-                if (!isset($context->depthByRemoteId[$remoteId])) {
-                    $context->depthByRemoteId[$remoteId] = $depth;
-                }
+                $context->depthByRemoteId[$remoteId] ??= $depth;
 
                 $context->markUpdated($remoteId);
             }
@@ -2733,7 +2729,7 @@ class Resolver
                 $ownerTable,
                 $ownerKey,
                 'accessibility_specification',
-                (string)(json_encode($entity->toArray()) ?: '{}')
+                json_encode($entity->toArray()) ?: '{}'
             );
 
             // The blob is built by the resolver (not the parser), so per-
@@ -2757,7 +2753,7 @@ class Resolver
                     $ownerRemoteId,
                     $sysLanguageUid,
                     'accessibility_specification',
-                    (string)(json_encode($translatedEntity->toArray()) ?: '{}')
+                    json_encode($translatedEntity->toArray()) ?: '{}'
                 );
             }
 

@@ -121,14 +121,7 @@ class AddressEntity extends AbstractEntity
         if (!array_is_list($value)) {
             return ($value['@language'] ?? null) === $language;
         }
-
-        foreach ($value as $item) {
-            if (is_array($item) && ($item['@language'] ?? null) === $language) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($value, fn ($item) => is_array($item) && ($item['@language'] ?? null) === $language);
     }
 
     /** A namespaced member name the resolver can look a label up for. */

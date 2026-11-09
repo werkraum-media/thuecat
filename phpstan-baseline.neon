@@ -195,19 +195,19 @@ parameters:
 		-
 			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 5
 			path: Classes/Extension.php
 
 		-
 			message: '#^Cannot access offset ''cacheConfigurations'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 5
 			path: Classes/Extension.php
 
 		-
 			message: '#^Cannot access offset ''caching'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 5
 			path: Classes/Extension.php
 
 		-

@@ -117,8 +117,8 @@ class VocabularyIndexCache
             $labels = $class['labels'] ?? [];
             $restored[$id] = new VocabularyClass(
                 $id,
-                is_array($parents) ? array_values(array_filter($parents, 'is_string')) : [],
-                is_array($labels) ? array_filter($labels, 'is_string') : []
+                is_array($parents) ? array_values(array_filter($parents, is_string(...))) : [],
+                is_array($labels) ? array_filter($labels, is_string(...)) : []
             );
         }
 

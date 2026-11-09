@@ -551,7 +551,7 @@ final class ResolverTest extends AbstractImportTestCase
         }
 
         $row = $data['tx_thuecat_tourist_attraction'][$attractionKeys[0]];
-        $this->assertSame(implode(',', array_map('strval', $parkingKeys)), $row['parking_facility_near_by']);
+        $this->assertSame(implode(',', array_map(strval(...), $parkingKeys)), $row['parking_facility_near_by']);
         $this->assertStringStartsWith('NEW', (string)$attractionKeys[1]);
         $this->assertSame('5', $row['town']);
         $this->assertSame((string)$attractionKeys[1], $row['contained_in_attraction']);

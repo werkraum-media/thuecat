@@ -91,13 +91,7 @@ class OrganizerEntity extends AbstractEntity
      */
     public function isValid(): bool
     {
-        foreach (self::IDENTITY_FIELDS as $field) {
-            if ($this->{$field} !== '') {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(self::IDENTITY_FIELDS, fn (string $field) => $this->{$field} !== '');
     }
 
     /**

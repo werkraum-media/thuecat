@@ -176,7 +176,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
 
         return array_map(
-            self::asInt(...),
+            $this->asInt(...),
             $queryBuilder
                 ->select('uid')
                 ->from('sys_category')
@@ -197,7 +197,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_category_record_mm');
 
         return array_map(
-            self::asInt(...),
+            $this->asInt(...),
             $queryBuilder
                 ->select('uid_local')
                 ->from('sys_category_record_mm')
@@ -215,7 +215,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_category');
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
 
-        return self::asInt($queryBuilder
+        return $this->asInt($queryBuilder
             ->select('parent')
             ->from('sys_category')
             ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
@@ -223,7 +223,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
             ->fetchOne());
     }
 
-    private static function asInt(mixed $value): int
+    private function asInt(mixed $value): int
     {
         return is_numeric($value) ? (int)$value : 0;
     }

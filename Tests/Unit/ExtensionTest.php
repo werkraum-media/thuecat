@@ -55,7 +55,7 @@ class ExtensionTest extends TestCase
     /**
      * @return array<mixed>|null
      */
-    private static function cacheConfiguration(string $identifier): ?array
+    private function cacheConfiguration(string $identifier): ?array
     {
         $configuration = $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][$identifier] ?? null;
 
@@ -73,7 +73,7 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        $configuration = self::cacheConfiguration('thuecat_vocabulary');
+        $configuration = $this->cacheConfiguration('thuecat_vocabulary');
 
         $this->assertIsArray($configuration);
         $this->assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
@@ -89,8 +89,8 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        $this->assertSame(['system'], self::cacheConfiguration('thuecat_vocabulary')['groups'] ?? null);
-        $this->assertSame(['system'], self::cacheConfiguration('thuecat_fetchdata')['groups'] ?? null);
+        $this->assertSame(['system'], $this->cacheConfiguration('thuecat_vocabulary')['groups'] ?? null);
+        $this->assertSame(['system'], $this->cacheConfiguration('thuecat_fetchdata')['groups'] ?? null);
     }
 
     #[Test]
@@ -98,7 +98,7 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        $this->assertSame(['pages'], self::cacheConfiguration(Extension::CACHE_TEASER)['groups'] ?? null);
+        $this->assertSame(['pages'], $this->cacheConfiguration(Extension::CACHE_TEASER)['groups'] ?? null);
     }
 
     #[Test]
@@ -106,7 +106,7 @@ class ExtensionTest extends TestCase
     {
         Extension::registerExtLocalconfConfigConfig();
 
-        $configuration = self::cacheConfiguration('thuecat_fetchdata');
+        $configuration = $this->cacheConfiguration('thuecat_fetchdata');
 
         $this->assertIsArray($configuration);
         $this->assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
@@ -122,7 +122,7 @@ class ExtensionTest extends TestCase
 
         Extension::registerExtLocalconfConfigConfig();
 
-        $configuration = self::cacheConfiguration('thuecat_vocabulary');
+        $configuration = $this->cacheConfiguration('thuecat_vocabulary');
 
         $this->assertIsArray($configuration);
         // Defended per key: an override survives, untouched keys are filled in.

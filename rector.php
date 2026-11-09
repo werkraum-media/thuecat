@@ -3,36 +3,28 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\BooleanOr\RepeatedOrEqualToInArrayRector;
-use Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector;
 use Rector\CodeQuality\Rector\If_\ExplicitNullableObjectInstanceRector;
 use Rector\CodeQuality\Rector\LogicalAnd\LogicalToBooleanRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
-use Rector\CodingStyle\Rector\FuncCall\FunctionFirstClassCallableRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\CodingStyle\Rector\String_\SimplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
-use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
-use Rector\Php84\Rector\Foreach_\ForeachToArrayAnyRector;
 use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
-use Rector\Privatization\Rector\ClassConst\PrivatizeFinalClassConstantRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
-use Rector\TypeDeclaration\Rector\Closure\AddClosureVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclarationDocblocks\Rector\Class_\ClassMethodArrayDocblockParamFromLocalCallsRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromAssignsParamToParamReferenceRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromDimFetchAccessRector;
-use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockGetterReturnArrayFromPropertyDocblockVarRector;
 use Ssch\TYPO3Rector\CodeQuality\General\RemoveTypo3VersionChecksRector;
 use Ssch\TYPO3Rector\Configuration\Typo3Option;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
@@ -128,7 +120,7 @@ return RectorConfig::configure()
         ClassMethodArrayDocblockParamFromLocalCallsRector::class => [
             __DIR__ . '/Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php',
         ],
-        // assertions are performed on teardown, rector just don't recognizes this
+        // assertions are performed on teardown, rector just doesn't recognizes this
         AddDoesNotPerformAssertionToNonAssertingTestRector::class => [
             __DIR__ . '/Tests/Functional/Importer/FetchDataTest.php',
         ],
@@ -170,21 +162,5 @@ return RectorConfig::configure()
         RemoveObsoleteAppearanceConfigRector::class,
         // 6 files
         RepeatedOrEqualToInArrayRector::class,
-        // 4 files
-        RecastingRemovalRector::class,
-        // 4 files
-        LocallyCalledStaticMethodToNonStaticRector::class,
-        // 3 files
-        AddClosureVoidReturnTypeWhereNoReturnRector::class,
-        // 3 files
-        DocblockGetterReturnArrayFromPropertyDocblockVarRector::class,
-        // 3 files
-        PrivatizeFinalClassConstantRector::class,
-        // 3 files
-        ForeachToArrayAnyRector::class,
-        // 3 files
-        IfToNullCoalescingAssignRector::class,
-        // 3 files
-        FunctionFirstClassCallableRector::class,
     ])
 ;

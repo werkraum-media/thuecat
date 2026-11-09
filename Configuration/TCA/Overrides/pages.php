@@ -7,7 +7,7 @@ use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') or die();
 
-(static function (string $extensionKey, string $tableName) {
+(static function (string $extensionKey, string $tableName): void {
     $languagePath = Extension::getLanguagePath()
         . 'locallang_tca.xlf:' . $tableName;
 

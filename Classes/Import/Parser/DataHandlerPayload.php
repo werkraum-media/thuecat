@@ -123,9 +123,7 @@ class DataHandlerPayload
         $row = $this->resolveParsedEmpty($entity->toArray());
         $remoteId = (string)$row['remote_id'];
 
-        if (!isset($this->dataMap[$table])) {
-            $this->dataMap[$table] = [];
-        }
+        $this->dataMap[$table] ??= [];
 
         $this->dataMap[$table][$remoteId] = $row;
         $this->defaultLanguageKeys[$table][$remoteId] = true;

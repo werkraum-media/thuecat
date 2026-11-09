@@ -55,7 +55,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
             return '';
         }
 
-        return (string)(json_encode($offers) ?: '');
+        return json_encode($offers) ?: '';
     }
 
     /**

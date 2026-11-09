@@ -7,7 +7,7 @@ use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') or die();
 
-(static function () {
+(static function (): void {
     ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'tx_thuecat_page_role',

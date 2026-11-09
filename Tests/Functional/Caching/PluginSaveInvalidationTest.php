@@ -32,7 +32,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
  */
 final class PluginSaveInvalidationTest extends AbstractCachingTestCase
 {
-    protected const BACKEND_ORDER_FLEXFORM = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+    private const BACKEND_ORDER_FLEXFORM = '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
         <sheet index="sDEF">

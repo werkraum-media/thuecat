@@ -130,6 +130,9 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return array_values($entries);
     }
 
+    /**
+     * @return string[]
+     */
     public function getAllowedTypes(): array
     {
         return $this->allowedTypes;

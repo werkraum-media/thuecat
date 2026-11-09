@@ -61,7 +61,7 @@ class CategoryAnchorSettingTest extends TestCase
     #[Test]
     public function bothSpellingsAreDistinctPerCase(): void
     {
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
                 $this->assertNotSame($setting->settingsPath($scope), $setting->extensionConfigurationKey($scope), $setting->name . ' uses one spelling for both levels.');
             }
@@ -77,7 +77,7 @@ class CategoryAnchorSettingTest extends TestCase
     {
         $paths = [];
         $keys = [];
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
                 $paths[] = $setting->settingsPath($scope);
                 $keys[] = $setting->extensionConfigurationKey($scope);
@@ -95,7 +95,7 @@ class CategoryAnchorSettingTest extends TestCase
     #[Test]
     public function everySpellingCarriesItsScope(): void
     {
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $setting) {
                 $this->assertStringContainsString('.' . $scope->value . '.', $setting->settingsPath($scope), $setting->name . ' settings path does not name its scope.');
                 $this->assertStringContainsString(ucfirst($scope->value), $setting->extensionConfigurationKey($scope), $setting->name . ' extension configuration key does not name its scope.');
@@ -224,7 +224,7 @@ class CategoryAnchorSettingTest extends TestCase
     /**
      * @return list<AnchorScope>
      */
-    private static function scopes(): array
+    private function scopes(): array
     {
         return [new AnchorScope('thuecat'), new AnchorScope('events'), new AnchorScope('trails')];
     }

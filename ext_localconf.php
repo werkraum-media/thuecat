@@ -20,7 +20,7 @@ defined('TYPO3') or die();
 
 Extension::registerExtLocalconfConfigConfig();
 
-(static function (string $extensionKey) {
+(static function (string $extensionKey): void {
     ExtensionManagementUtility::addTypoScriptSetup(
         '@import "EXT:' . $extensionKey . '/Configuration/TypoScript/Default/Setup.typoscript"'
     );

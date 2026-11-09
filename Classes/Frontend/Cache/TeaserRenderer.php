@@ -141,7 +141,7 @@ class TeaserRenderer
 
         $parts = explode('\\', $className);
 
-        return (string)end($parts);
+        return end($parts);
     }
 
     protected function tableFor(Base $record): string

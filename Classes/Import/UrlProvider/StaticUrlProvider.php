@@ -45,6 +45,9 @@ class StaticUrlProvider implements UrlProvider
         return $instance;
     }
 
+    /**
+     * @return string[]
+     */
     public function getUrls(?string $apiDomain = null): array
     {
         return $this->urls;

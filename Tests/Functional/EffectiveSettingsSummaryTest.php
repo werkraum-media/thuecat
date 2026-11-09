@@ -121,7 +121,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $expected = ['storagePid', 'fileFolder', 'apiDomain'];
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $anchor) {
                 $expected[] = $anchor->settingsPath($scope);
             }
@@ -156,7 +156,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $reported = array_keys($this->summaryContext());
 
         $this->assertNotContains('importTarget', $reported);
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             $this->assertContains(CategoryAnchorSetting::KeywordParent->settingsPath($scope), $reported);
         }
     }
@@ -173,7 +173,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         // This fixture configures no anchors at all, so every kind of every
         // scope must report 'unset'.
-        foreach (self::scopes() as $scope) {
+        foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $anchor) {
                 $path = $anchor->settingsPath($scope);
                 $this->assertSame('unset', $context[$path] ?? null, $path . ' should report as unset.');
@@ -184,7 +184,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
     /**
      * @return list<AnchorScope>
      */
-    private static function scopes(): array
+    private function scopes(): array
     {
         return [new AnchorScope('thuecat'), new AnchorScope('events'), new AnchorScope('trails')];
     }

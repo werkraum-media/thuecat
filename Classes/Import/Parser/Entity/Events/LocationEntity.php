@@ -99,13 +99,7 @@ class LocationEntity extends AbstractEntity
      */
     public function isValid(): bool
     {
-        foreach ([...self::HASHED_FIELDS, 'phone'] as $field) {
-            if ($this->{$field} !== '') {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any([...self::HASHED_FIELDS, 'phone'], fn (string $field) => $this->{$field} !== '');
     }
 
     /**
