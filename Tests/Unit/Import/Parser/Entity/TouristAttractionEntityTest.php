@@ -362,7 +362,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         $special = array_values(array_filter(
             $this->childRowsOf($entity, OpeningHourSpecificationEntity::TABLE),
-            static fn (array $row) => $row['specification_type'] === 'special'
+            static fn (array $row): bool => $row['specification_type'] === 'special'
         ));
 
         $this->assertNotEmpty($special);

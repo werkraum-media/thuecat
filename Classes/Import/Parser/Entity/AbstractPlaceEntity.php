@@ -78,7 +78,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
 
         $parts = array_merge([$distance, $unit], $means);
 
-        return implode(':', array_filter($parts, static fn ($part) => $part !== ''));
+        return implode(':', array_filter($parts, static fn ($part): bool => $part !== ''));
     }
 
     /**

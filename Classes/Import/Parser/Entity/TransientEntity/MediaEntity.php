@@ -171,7 +171,7 @@ class MediaEntity extends AbstractTransientEntity
         $given = self::pickLocalised($personNode['schema:givenName'] ?? null, $language);
         $family = self::pickLocalised($personNode['schema:familyName'] ?? null, $language);
 
-        $parts = array_filter([$given, $family], static fn (string $part) => $part !== '');
+        $parts = array_filter([$given, $family], static fn (string $part): bool => $part !== '');
         if ($parts !== []) {
             return implode(' ', $parts);
         }

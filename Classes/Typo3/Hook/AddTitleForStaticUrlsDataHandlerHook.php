@@ -184,7 +184,7 @@ final class AddTitleForStaticUrlsDataHandlerHook
 
         usort(
             $candidates,
-            static fn (EntityInterface $a, EntityInterface $b) => $b->getPriority() <=> $a->getPriority()
+            static fn (EntityInterface $a, EntityInterface $b): int => $b->getPriority() <=> $a->getPriority()
         );
 
         return $candidates[0];

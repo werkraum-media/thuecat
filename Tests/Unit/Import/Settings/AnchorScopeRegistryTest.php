@@ -139,7 +139,7 @@ class AnchorScopeRegistryTest extends TestCase
             TouristInformationEntity::class,
             ...$additionalEntities,
         ] as $class) {
-            $factories[$class] = static fn () => throw new RuntimeException('Not to be instantiated.', 1790924770);
+            $factories[$class] = static fn (): never => throw new RuntimeException('Not to be instantiated.', 1790924770);
         }
 
         return new AnchorScopeRegistry(new ServiceLocator($factories));
