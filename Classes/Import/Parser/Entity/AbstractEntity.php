@@ -231,7 +231,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     protected function extractConcatenatedMembers(mixed $value, string $language): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
 
@@ -377,7 +377,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     protected function splitMediaByShape(mixed $value): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
@@ -409,7 +409,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     protected function bareReferencesOnly(mixed $value): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
@@ -434,7 +434,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     protected function collectIds(mixed $value): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
 

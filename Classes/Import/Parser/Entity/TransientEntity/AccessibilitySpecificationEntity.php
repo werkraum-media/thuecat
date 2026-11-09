@@ -139,7 +139,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
      */
     protected function groupSearchCriteria(mixed $value, string $language): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
 

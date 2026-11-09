@@ -36,7 +36,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
      */
     protected function buildOffers(mixed $value, string $language): string
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return '';
         }
 

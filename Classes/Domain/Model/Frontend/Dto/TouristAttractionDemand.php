@@ -216,7 +216,7 @@ class TouristAttractionDemand
         // Editor-only and re-applied on every request; kept out of URLs and the cHash.
         unset($properties['sortBy'], $properties['lockedProperties']);
         foreach ($properties as $name => $value) {
-            if ($value === '' || $value === [] || $value === false) {
+            if (in_array($value, ['', [], false], true)) {
                 continue;
             }
             $state[$name] = $value === true ? 1 : $value;

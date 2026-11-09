@@ -74,7 +74,7 @@ class OfferEntity extends AbstractTransientEntity
      */
     protected function extractTypes(mixed $value, string $language): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
 
@@ -101,7 +101,7 @@ class OfferEntity extends AbstractTransientEntity
      */
     protected function extractPrices(mixed $value, string $language): array
     {
-        if ($value === null || $value === '' || $value === []) {
+        if (in_array($value, [null, '', []], true)) {
             return [];
         }
 
