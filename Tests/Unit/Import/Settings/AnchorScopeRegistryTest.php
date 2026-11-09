@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -70,26 +71,22 @@ class AnchorScopeRegistryTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string, string}>
+     * @return Iterator<string, array{string, string}>
      */
-    public static function declaredScopes(): array
+    public static function declaredScopes(): Iterator
     {
-        return [
-            'tourist attraction' => ['tx_thuecat_tourist_attraction', 'thuecat'],
-            'event' => ['tx_events_domain_model_event', 'events'],
-            'trail' => ['tx_thuecat_trail', 'trails'],
-        ];
+        yield 'tourist attraction' => ['tx_thuecat_tourist_attraction', 'thuecat'];
+        yield 'event' => ['tx_events_domain_model_event', 'events'];
+        yield 'trail' => ['tx_thuecat_trail', 'trails'];
     }
 
     /**
-     * @return array<string, array{string}>
+     * @return Iterator<string, array{string}>
      */
-    public static function scopelessTables(): array
+    public static function scopelessTables(): Iterator
     {
-        return [
-            'organisation' => ['tx_thuecat_organisation'],
-            'tourist information' => ['tx_thuecat_tourist_information'],
-        ];
+        yield 'organisation' => ['tx_thuecat_organisation'];
+        yield 'tourist information' => ['tx_thuecat_tourist_information'];
     }
 
     #[Test]

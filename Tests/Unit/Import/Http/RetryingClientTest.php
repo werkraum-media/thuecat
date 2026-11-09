@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Http;
 
 use Closure;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -88,15 +89,13 @@ class RetryingClientTest extends TestCase
     }
 
     /**
-     * @return array<string, int[]>
+     * @return Iterator<string, int[]>
      */
-    public static function clientErrorStatuses(): array
+    public static function clientErrorStatuses(): Iterator
     {
-        return [
-            'unauthorized' => [401],
-            'not found' => [404],
-            'gone' => [410],
-        ];
+        yield 'unauthorized' => [401];
+        yield 'not found' => [404];
+        yield 'gone' => [410];
     }
 
     #[Test]

@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity\Support;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -116,18 +117,16 @@ class LocalisedValueReaderTest extends TestCase
         $this->assertSame('', (new LocalisedValueReader())->read($value, 'de'));
     }
 
-    /** @return array<string, array{mixed}> */
-    public static function unusableValues(): array
+    /** @return Iterator<string, array{mixed}> */
+    public static function unusableValues(): Iterator
     {
-        return [
-            'null' => [null],
-            'empty array' => [[]],
-            'empty string' => [''],
-            'false' => [false],
-            'integer' => [42],
-            'object without @value' => [['@language' => 'de']],
-            'nested array @value' => [['@value' => ['unexpected']]],
-            'list of non arrays' => [[null, false]],
-        ];
+        yield 'null' => [null];
+        yield 'empty array' => [[]];
+        yield 'empty string' => [''];
+        yield 'false' => [false];
+        yield 'integer' => [42];
+        yield 'object without @value' => [['@language' => 'de']];
+        yield 'nested array @value' => [['@value' => ['unexpected']]];
+        yield 'list of non arrays' => [[null, false]];
     }
 }

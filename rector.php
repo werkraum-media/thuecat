@@ -16,7 +16,6 @@ use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
@@ -125,6 +124,8 @@ return RectorConfig::configure()
         AddDoesNotPerformAssertionToNonAssertingTestRector::class => [
             __DIR__ . '/Tests/Functional/Importer/FetchDataTest.php',
         ],
+        // this is just bogus, short exception names are fine
+        CatchExceptionNameMatchingTypeRector::class,
 
         // Disabled until enabled one by one; the count is the files each rule changed.
         // 149 files
@@ -153,9 +154,5 @@ return RectorConfig::configure()
         ExplicitNullableObjectInstanceRector::class,
         // 12 files
         SimplifyQuoteEscapeRector::class,
-        // 10 files
-        YieldDataProviderRector::class,
-        // 10 files
-        CatchExceptionNameMatchingTypeRector::class,
     ])
 ;

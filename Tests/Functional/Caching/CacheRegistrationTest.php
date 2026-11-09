@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\CacheManager;
@@ -39,15 +40,13 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 class CacheRegistrationTest extends AbstractCachingTestCase
 {
     /**
-     * @return array<string, array{0: string}>
+     * @return Iterator<string, array{string}>
      */
-    public static function cacheIdentifiers(): array
+    public static function cacheIdentifiers(): Iterator
     {
-        return [
-            'teaser' => [Extension::CACHE_TEASER],
-            'list' => [Extension::CACHE_LIST],
-            'search mask' => [Extension::CACHE_SEARCH_MASK],
-        ];
+        yield 'teaser' => [Extension::CACHE_TEASER];
+        yield 'list' => [Extension::CACHE_LIST];
+        yield 'search mask' => [Extension::CACHE_SEARCH_MASK];
     }
 
     #[Test]

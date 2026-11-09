@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -38,103 +39,101 @@ class OffersTest extends TestCase
     }
 
     /**
-     * @return array<string, array<string, bool|int|string>>
+     * @return Iterator<string, array<string, bool|int|string>>
      */
-    public static function forCount(): array
+    public static function forCount(): Iterator
     {
-        return [
-            'zero' => [
-                'serialized' => '{}',
-                'expected' => 0,
-            ],
-            'one' => [
-                'serialized' => json_encode([
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+        yield 'zero' => [
+            'serialized' => '{}',
+            'expected' => 0,
+        ];
+        yield 'one' => [
+            'serialized' => json_encode([
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                ]),
-                'expected' => 1,
-            ],
-            'five' => [
-                'serialized' => json_encode([
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+                ],
+            ]),
+            'expected' => 1,
+        ];
+        yield 'five' => [
+            'serialized' => json_encode([
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+                ],
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+                ],
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+                ],
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                    [
-                        'title' => '',
-                        'description' => '',
-                        'prices' => [
-                            [
-                                'title' => '',
-                                'description' => '',
-                                'price' => 5.0,
-                                'currency' => '',
-                                'rule' => '',
-                            ],
+                ],
+                [
+                    'title' => '',
+                    'description' => '',
+                    'prices' => [
+                        [
+                            'title' => '',
+                            'description' => '',
+                            'price' => 5.0,
+                            'currency' => '',
+                            'rule' => '',
                         ],
                     ],
-                ]),
-                'expected' => 5,
-            ],
+                ],
+            ]),
+            'expected' => 5,
         ];
     }
 }

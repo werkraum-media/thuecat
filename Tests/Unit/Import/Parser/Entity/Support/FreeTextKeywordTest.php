@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity\Support;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -55,19 +56,17 @@ class FreeTextKeywordTest extends TestCase
     }
 
     /**
-     * @return array<string, array{string, string}>
+     * @return Iterator<string, array{string, string}>
      */
-    public static function titleCases(): array
+    public static function titleCases(): Iterator
     {
-        return [
-            'lowercase input' => ['erfurt', 'Erfurt'],
-            'shouting input' => ['THEATER', 'Theater'],
-            'umlaut preserved' => ['ölmühle', 'Ölmühle'],
-            // ucwords() would render this 'Electro-pop'.
-            'hyphenated keeps both parts' => ['Electro-Pop', 'Electro-Pop'],
-            'multi word' => ['sport und freizeit', 'Sport Und Freizeit'],
-            'surrounding space dropped' => ['  Kinder  ', 'Kinder'],
-        ];
+        yield 'lowercase input' => ['erfurt', 'Erfurt'];
+        yield 'shouting input' => ['THEATER', 'Theater'];
+        yield 'umlaut preserved' => ['ölmühle', 'Ölmühle'];
+        // ucwords() would render this 'Electro-pop'.
+        yield 'hyphenated keeps both parts' => ['Electro-Pop', 'Electro-Pop'];
+        yield 'multi word' => ['sport und freizeit', 'Sport Und Freizeit'];
+        yield 'surrounding space dropped' => ['  Kinder  ', 'Kinder'];
     }
 
     #[Test]

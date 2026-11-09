@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -82,15 +83,13 @@ class ImportSettingsTest extends TestCase
     }
 
     /**
-     * @return array<string, int[]|string[]>
+     * @return Iterator<string, int[]|string[]>
      */
-    public static function unsetValues(): array
+    public static function unsetValues(): Iterator
     {
-        return [
-            'empty string' => [''],
-            'integer zero' => [0],
-            'string zero' => ['0'],
-        ];
+        yield 'empty string' => [''];
+        yield 'integer zero' => [0];
+        yield 'string zero' => ['0'];
     }
 
     #[Test]

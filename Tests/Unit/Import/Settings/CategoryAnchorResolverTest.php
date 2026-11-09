@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -199,18 +200,16 @@ class CategoryAnchorResolverTest extends TestCase
     }
 
     /**
-     * @return array<string, array{mixed}>
+     * @return Iterator<string, array{mixed}>
      */
-    public static function unusableValues(): array
+    public static function unusableValues(): Iterator
     {
-        return [
-            'zero' => [0],
-            'zero string' => ['0'],
-            'empty string' => [''],
-            'negative' => [-1],
-            'non numeric' => ['not a uid'],
-            'null' => [null],
-        ];
+        yield 'zero' => [0];
+        yield 'zero string' => ['0'];
+        yield 'empty string' => [''];
+        yield 'negative' => [-1];
+        yield 'non numeric' => ['not a uid'];
+        yield 'null' => [null];
     }
 
     private function resolverWith(ExtensionConfiguration $extensionConfiguration): CategoryAnchorResolver

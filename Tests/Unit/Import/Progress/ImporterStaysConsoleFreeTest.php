@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Progress;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -39,15 +40,13 @@ use WerkraumMedia\ThueCat\Import\Resolver;
 class ImporterStaysConsoleFreeTest extends TestCase
 {
     /**
-     * @return array<string, array{class-string}>
+     * @return Iterator<string, array{class-string}>
      */
-    public static function importClasses(): array
+    public static function importClasses(): Iterator
     {
-        return [
-            'importer' => [Importer::class],
-            'resolver' => [Resolver::class],
-            'media downloader' => [MediaFileDownloader::class],
-        ];
+        yield 'importer' => [Importer::class];
+        yield 'resolver' => [Resolver::class];
+        yield 'media downloader' => [MediaFileDownloader::class];
     }
 
     /**

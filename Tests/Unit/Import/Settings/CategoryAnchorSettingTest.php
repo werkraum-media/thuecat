@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Settings;
 
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -104,120 +105,116 @@ class CategoryAnchorSettingTest extends TestCase
     }
 
     /**
-     * @return array<string, array{CategoryAnchorSetting, non-empty-string, string}>
+     * @return Iterator<string, array{CategoryAnchorSetting, non-empty-string, string}>
      */
-    public static function settingPaths(): array
+    public static function settingPaths(): Iterator
     {
-        return [
-            'thuecat category storage' => [
-                CategoryAnchorSetting::CategoryStoragePid,
-                'thuecat',
-                'import.thuecat.category.storagePid',
-            ],
-            'thuecat category parent' => [
-                CategoryAnchorSetting::CategoryParent,
-                'thuecat',
-                'import.thuecat.category.parent',
-            ],
-            'thuecat keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'thuecat',
-                'import.thuecat.keywords.storagePid',
-            ],
-            'thuecat keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'thuecat',
-                'import.thuecat.keywords.parent',
-            ],
-            'events category storage' => [
-                CategoryAnchorSetting::CategoryStoragePid,
-                'events',
-                'import.events.category.storagePid',
-            ],
-            'events category parent' => [
-                CategoryAnchorSetting::CategoryParent,
-                'events',
-                'import.events.category.parent',
-            ],
-            'events keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'events',
-                'import.events.keywords.storagePid',
-            ],
-            'events keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'events',
-                'import.events.keywords.parent',
-            ],
-            'trails keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'trails',
-                'import.trails.keywords.storagePid',
-            ],
-            'trails keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'trails',
-                'import.trails.keywords.parent',
-            ],
+        yield 'thuecat category storage' => [
+            CategoryAnchorSetting::CategoryStoragePid,
+            'thuecat',
+            'import.thuecat.category.storagePid',
+        ];
+        yield 'thuecat category parent' => [
+            CategoryAnchorSetting::CategoryParent,
+            'thuecat',
+            'import.thuecat.category.parent',
+        ];
+        yield 'thuecat keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'thuecat',
+            'import.thuecat.keywords.storagePid',
+        ];
+        yield 'thuecat keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'thuecat',
+            'import.thuecat.keywords.parent',
+        ];
+        yield 'events category storage' => [
+            CategoryAnchorSetting::CategoryStoragePid,
+            'events',
+            'import.events.category.storagePid',
+        ];
+        yield 'events category parent' => [
+            CategoryAnchorSetting::CategoryParent,
+            'events',
+            'import.events.category.parent',
+        ];
+        yield 'events keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'events',
+            'import.events.keywords.storagePid',
+        ];
+        yield 'events keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'events',
+            'import.events.keywords.parent',
+        ];
+        yield 'trails keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'trails',
+            'import.trails.keywords.storagePid',
+        ];
+        yield 'trails keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'trails',
+            'import.trails.keywords.parent',
         ];
     }
 
     /**
-     * @return array<string, array{CategoryAnchorSetting, non-empty-string, string}>
+     * @return Iterator<string, array{CategoryAnchorSetting, non-empty-string, string}>
      */
-    public static function extensionConfigurationKeys(): array
+    public static function extensionConfigurationKeys(): Iterator
     {
-        return [
-            'thuecat category storage' => [
-                CategoryAnchorSetting::CategoryStoragePid,
-                'thuecat',
-                'importThuecatCategoryStoragePid',
-            ],
-            'thuecat category parent' => [
-                CategoryAnchorSetting::CategoryParent,
-                'thuecat',
-                'importThuecatCategoryParent',
-            ],
-            'thuecat keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'thuecat',
-                'importThuecatKeywordsStoragePid',
-            ],
-            'thuecat keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'thuecat',
-                'importThuecatKeywordsParent',
-            ],
-            'events category storage' => [
-                CategoryAnchorSetting::CategoryStoragePid,
-                'events',
-                'importEventsCategoryStoragePid',
-            ],
-            'events category parent' => [
-                CategoryAnchorSetting::CategoryParent,
-                'events',
-                'importEventsCategoryParent',
-            ],
-            'events keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'events',
-                'importEventsKeywordsStoragePid',
-            ],
-            'events keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'events',
-                'importEventsKeywordsParent',
-            ],
-            'trails keyword storage' => [
-                CategoryAnchorSetting::KeywordStoragePid,
-                'trails',
-                'importTrailsKeywordsStoragePid',
-            ],
-            'trails keyword parent' => [
-                CategoryAnchorSetting::KeywordParent,
-                'trails',
-                'importTrailsKeywordsParent',
-            ],
+        yield 'thuecat category storage' => [
+            CategoryAnchorSetting::CategoryStoragePid,
+            'thuecat',
+            'importThuecatCategoryStoragePid',
+        ];
+        yield 'thuecat category parent' => [
+            CategoryAnchorSetting::CategoryParent,
+            'thuecat',
+            'importThuecatCategoryParent',
+        ];
+        yield 'thuecat keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'thuecat',
+            'importThuecatKeywordsStoragePid',
+        ];
+        yield 'thuecat keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'thuecat',
+            'importThuecatKeywordsParent',
+        ];
+        yield 'events category storage' => [
+            CategoryAnchorSetting::CategoryStoragePid,
+            'events',
+            'importEventsCategoryStoragePid',
+        ];
+        yield 'events category parent' => [
+            CategoryAnchorSetting::CategoryParent,
+            'events',
+            'importEventsCategoryParent',
+        ];
+        yield 'events keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'events',
+            'importEventsKeywordsStoragePid',
+        ];
+        yield 'events keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'events',
+            'importEventsKeywordsParent',
+        ];
+        yield 'trails keyword storage' => [
+            CategoryAnchorSetting::KeywordStoragePid,
+            'trails',
+            'importTrailsKeywordsStoragePid',
+        ];
+        yield 'trails keyword parent' => [
+            CategoryAnchorSetting::KeywordParent,
+            'trails',
+            'importTrailsKeywordsParent',
         ];
     }
 
