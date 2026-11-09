@@ -87,6 +87,9 @@ class RetryingClientTest extends TestCase
         $this->assertSame(1, $client->attempts);
     }
 
+    /**
+     * @return array<string, int[]>
+     */
     public static function clientErrorStatuses(): array
     {
         return [

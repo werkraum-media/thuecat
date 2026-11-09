@@ -25,6 +25,9 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\DateTimeAspect;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\DayRange;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\WeekDay;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours\WeekDayGroup;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHourSpecification;
 use WerkraumMedia\ThueCat\Service\OpeningHoursFormatter;
 
@@ -102,7 +105,7 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $days = array_map(
-            static fn ($weekDay): string => $weekDay->getDayOfWeek(),
+            static fn (WeekDay $weekDay): string => $weekDay->getDayOfWeek(),
             $result->getPeriods()[0]->getWeekDays()
         );
 
@@ -120,7 +123,7 @@ class OpeningHoursFormatterTest extends TestCase
         ]);
 
         $days = array_map(
-            static fn ($weekDay): string => $weekDay->getDayOfWeek(),
+            static fn (WeekDay $weekDay): string => $weekDay->getDayOfWeek(),
             $result->getPeriods()[0]->getWeekDays()
         );
 
@@ -240,7 +243,7 @@ class OpeningHoursFormatterTest extends TestCase
         $this->assertSame(['Saturday'], $groups[1]->getDaysOfWeek());
 
         $allDays = array_merge(...array_map(
-            static fn ($group): array => $group->getDaysOfWeek(),
+            static fn (WeekDayGroup $group): array => $group->getDaysOfWeek(),
             $groups
         ));
         $this->assertNotContains('Tuesday', $allDays);
@@ -322,7 +325,7 @@ class OpeningHoursFormatterTest extends TestCase
         foreach ($ranges as $range) {
             $this->assertFalse($range->isRange());
         }
-        $this->assertSame(['Monday', 'Wednesday', 'Friday'], array_map(static fn ($range): string => $range->getFirstDay(), $ranges));
+        $this->assertSame(['Monday', 'Wednesday', 'Friday'], array_map(static fn (DayRange $range): string => $range->getFirstDay(), $ranges));
     }
 
     #[Test]

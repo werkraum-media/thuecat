@@ -259,6 +259,8 @@ final class EventScheduleAdapter
      * schedules — endDate is the series-end date, used as repeatUntil. For
      * singles, endDate without endTime would still be date-only (midnight),
      * which is misleading for an evening event.
+     *
+     * @param array<string, mixed> $node
      */
     private function resolveOccurrenceEnd(array $node, string $start): string
     {
@@ -274,6 +276,8 @@ final class EventScheduleAdapter
     /**
      * Map schema:frequency / schema:repeatFrequency duration codes to the
      * factory's named frequencies. Returns null for non-recurring schedules.
+     *
+     * @param array<string, mixed> $node
      */
     private function resolveFrequency(array $node): ?string
     {

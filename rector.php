@@ -22,38 +22,25 @@ use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Instanceof_\Rector\Ternary\FlipNegatedTernaryInstanceofRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
-use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
-use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php84\Rector\Foreach_\ForeachToArrayAnyRector;
 use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
-use Rector\PHPUnit\CodeQuality\Rector\Class_\TypeWillReturnCallableArrowFunctionRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
-use Rector\PHPUnit\CodeQuality\Rector\MethodCall\StringCastAssertStringContainsStringRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
 use Rector\Privatization\Rector\ClassConst\PrivatizeFinalClassConstantRector;
-use Rector\Privatization\Rector\Property\PrivatizeFinalClassPropertyRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
-use Rector\Renaming\Rector\Name\RenameClassRector;
-use Rector\Symfony\Symfony61\Rector\Class_\CommandConfigureToAttributeRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
-use Rector\TypeDeclaration\Rector\Class_\ReturnTypeFromStrictTernaryRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\NarrowObjectReturnTypeRector;
-use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\FuncCall\AddArrayAnyAllClosureParamTypeRector;
-use Rector\TypeDeclaration\Rector\FuncCall\AddArrayFunctionClosureParamTypeRector;
 use Rector\TypeDeclaration\Rector\FunctionLike\AddParamTypeSplFixedArrayRector;
 use Rector\TypeDeclarationDocblocks\Rector\Class_\ClassMethodArrayDocblockParamFromLocalCallsRector;
-use Rector\TypeDeclarationDocblocks\Rector\Class_\DocblockVarFromParamDocblockInConstructorRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromAssignsParamToParamReferenceRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromDimFetchAccessRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockGetterReturnArrayFromPropertyDocblockVarRector;
-use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\DocblockReturnArrayFromDirectArrayInstanceRector;
 use Ssch\TYPO3Rector\CodeQuality\General\RemoveTypo3VersionChecksRector;
 use Ssch\TYPO3Rector\Configuration\Typo3Option;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
@@ -142,6 +129,10 @@ return RectorConfig::configure()
         AddParamArrayDocblockFromAssignsParamToParamReferenceRector::class => [
             __DIR__ . '/Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php',
         ],
+        // contradicts phpstan on format of dataMap
+        ClassMethodArrayDocblockParamFromLocalCallsRector::class => [
+            __DIR__ . '/Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php',
+        ],
 
         // Disabled until enabled one by one; the count is the files each rule changed.
         // 149 files
@@ -216,29 +207,5 @@ return RectorConfig::configure()
         SimplifyBoolIdenticalTrueRector::class,
         // 2 files
         SimplifyUselessVariableRector::class,
-        // 1 file
-        AddParamTypeSplFixedArrayRector::class,
-        // 1 file
-        AddArrayFunctionClosureParamTypeRector::class,
-        // 1 file
-        ReturnTypeFromStrictTernaryRector::class,
-        // 1 file
-        ReturnTypeFromReturnNewRector::class,
-        // 1 file
-        NarrowObjectReturnTypeRector::class,
-        // 1 file
-        DocblockReturnArrayFromDirectArrayInstanceRector::class,
-        // 1 file
-        DocblockVarFromParamDocblockInConstructorRector::class,
-        // 1 file
-        ClassMethodArrayDocblockParamFromLocalCallsRector::class,
-        // 1 file
-        CommandConfigureToAttributeRector::class,
-        // 1 file
-        RenameClassRector::class,
-        // 1 file
-        PrivatizeFinalClassPropertyRector::class,
-        // 1 file
-        StringCastAssertStringContainsStringRector::class,
     ])
 ;

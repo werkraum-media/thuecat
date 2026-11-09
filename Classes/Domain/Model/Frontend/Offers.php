@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Type\TypeInterface;
 class Offers implements TypeInterface, Iterator, Countable
 {
     /**
-     * @var mixed[]
+     * @var Offer[]
      */
     protected array $array = [];
 

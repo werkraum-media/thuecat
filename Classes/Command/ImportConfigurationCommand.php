@@ -34,7 +34,7 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepositor
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 
-#[AsCommand(name: 'thuecat:importviaconfiguration')]
+#[AsCommand(name: 'thuecat:importviaconfiguration', description: 'Executes a single import based on the given configuration.')]
 class ImportConfigurationCommand extends Command
 {
     public function __construct(
@@ -46,8 +46,6 @@ class ImportConfigurationCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Executes a single import based on the given configuration.');
-
         $this->addArgument(
             'configuration',
             InputArgument::REQUIRED,

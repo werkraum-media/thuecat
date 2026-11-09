@@ -37,6 +37,9 @@ class OffersTest extends TestCase
         $this->assertCount($expected, $subject);
     }
 
+    /**
+     * @return array<string, array<string, bool|int|string>>
+     */
     public static function forCount(): array
     {
         return [

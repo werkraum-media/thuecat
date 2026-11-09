@@ -81,6 +81,9 @@ class ImportSettingsTest extends TestCase
         $this->assertSame(45, $subject->resolve(ImportSetting::ReadTimeout, $configurationValue));
     }
 
+    /**
+     * @return array<string, int[]|string[]>
+     */
     public static function unsetValues(): array
     {
         return [

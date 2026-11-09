@@ -38,7 +38,7 @@ final class SyncChannelTest extends TestCase
     /**
      * @var list<string>
      */
-    protected array $requestedUrls = [];
+    private array $requestedUrls = [];
 
     #[Test]
     public function importsChangedIdsNeitherRemovedNorExpiredInListOrder(): void

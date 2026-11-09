@@ -281,7 +281,7 @@ final class ParserTest extends AbstractFunctionalTestCase
                 foreach ($buckets as $key => $ids) {
                     foreach ($ids as $id) {
                         $reference = is_array($id) ? $id['id'] : $id;
-                        $this->assertStringNotContainsString($needle, $reference, "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]");
+                        $this->assertStringNotContainsString($needle, (string)$reference, "REF: placeholder leaked into transients {$table}[{$remoteId}][{$key}]");
                     }
                 }
             }

@@ -24,6 +24,7 @@ use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
 use SplFileInfo;
@@ -106,6 +107,9 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
             && (str_starts_with($relative, 'Classes/') || str_starts_with($relative, 'Tests/'));
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $this->headerCommentFixer->isCandidate($tokens);
@@ -116,6 +120,9 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
         return $this->headerCommentFixer->isRisky();
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function fix(SplFileInfo $file, Tokens $tokens): void
     {
         $licenceComments = $this->findLicenceComments($tokens);
@@ -176,7 +183,11 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
         return $fixer;
     }
 
-    /** @return list<int> */
+    /**
+     * @param Tokens<Token> $tokens
+     *
+     * @return list<int>
+     */
     private function findLicenceComments(Tokens $tokens): array
     {
         $indices = [];
@@ -192,6 +203,9 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
         return $indices;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     private function isDirectlyAfterDeclare(Tokens $tokens, int $index): bool
     {
         $previous = $tokens->getPrevMeaningfulToken($index);
@@ -211,6 +225,8 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
     /**
      * Takes the whitespace after the comment along, so the lines on either side of it
      * close up instead of leaving an extra blank line.
+     *
+     * @param Tokens<Token> $tokens
      */
     private function removeComment(Tokens $tokens, int $index): void
     {

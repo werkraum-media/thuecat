@@ -254,6 +254,8 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
     }
 
     /**
+     * @param mixed[] $dataMap
+     *
      * @return string[]
      */
     private function executeDataHandler(array $dataMap): array
@@ -288,6 +290,9 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         ';
     }
 
+    /**
+     * @return array<string, non-empty-array<int|string, array<string, array<string, array<string, array<string, array<string, array<string, mixed>>>>>|string>>>
+     */
     private function createDataMap(array $urls, string|int $id = 1): array
     {
         $finalUrls = [];
