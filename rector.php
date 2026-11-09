@@ -29,7 +29,6 @@ use Ssch\TYPO3Rector\Configuration\Typo3Option;
 use Ssch\TYPO3Rector\Set\Typo3LevelSetList;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Ssch\TYPO3Rector\TYPO311\v0\DateTimeAspectInsteadOfGlobalsExecTimeRector;
-use Ssch\TYPO3Rector\TYPO312\v0\RemoveObsoleteAppearanceConfigRector;
 
 // The level set up to v14, without the files that register rules rector deprecated:
 // v10/typo3-100, v10/typo3-104, v11/typo3-115, v13/strict-types and v14/strict-types.
@@ -161,7 +160,5 @@ return RectorConfig::configure()
         CatchExceptionNameMatchingTypeRector::class,
         // 8 files
         AddParamArrayDocblockFromDimFetchAccessRector::class,
-        // 6 files
-        RemoveObsoleteAppearanceConfigRector::class,
     ])
 ;
