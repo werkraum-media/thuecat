@@ -5,7 +5,7 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use WerkraumMedia\ThueCat\Extension;
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
 (static function (string $extensionKey, string $tableName): void {
     $languagePath = Extension::getLanguagePath()

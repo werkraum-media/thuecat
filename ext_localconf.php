@@ -16,7 +16,7 @@ use WerkraumMedia\ThueCat\Typo3\FormDataProvider\AnchorStartingPoints;
 use WerkraumMedia\ThueCat\Typo3\FormEngine\ReverseRelationElement;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
-defined('TYPO3') or die();
+defined('TYPO3') || die();
 
 Extension::registerExtLocalconfConfigConfig();
 

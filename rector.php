@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\LogicalAnd\LogicalToBooleanRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
@@ -136,7 +135,5 @@ return RectorConfig::configure()
         ReadOnlyClassRector::class,
         // 21 files
         ClosureToArrowFunctionRector::class,
-        // 20 files
-        LogicalToBooleanRector::class,
     ])
 ;
