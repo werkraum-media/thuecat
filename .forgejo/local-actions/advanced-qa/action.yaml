@@ -27,7 +27,7 @@ runs:
       run: 'composer require --no-interaction --prefer-dist --no-progress "typo3/cms-core:${{ inputs.typo3-version }}" "typo3/cms-extbase:${{ inputs.typo3-version }}" "typo3/cms-filelist:${{ inputs.typo3-version }}" "typo3/cms-filemetadata:${{ inputs.typo3-version }}" "typo3/cms-fluid:${{ inputs.typo3-version }}" "typo3/cms-frontend:${{ inputs.typo3-version }}" "typo3/cms-install:${{ inputs.typo3-version }}"'
 
     - name: 'Rector'
-      run: '.vendor/bin/rector process --dry-run'
+      run: './vendor/bin/rector process --dry-run'
 
     - name: 'Code Quality (by PHPStan)'
       run: './vendor/bin/phpstan analyse'
