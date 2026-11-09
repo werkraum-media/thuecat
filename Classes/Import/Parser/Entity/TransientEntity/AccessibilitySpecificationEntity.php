@@ -116,15 +116,19 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
         if ($this->accessibilityCertificationStatus !== '') {
             $out['accessibilityCertificationStatus'] = $this->accessibilityCertificationStatus;
         }
+
         foreach ($this->certifications as $key => $value) {
             $out[$key] = $value;
         }
+
         if ($this->searchCriteria !== []) {
             $out['accessibilitySearchCriteria'] = $this->searchCriteria;
         }
+
         foreach ($this->shortDescriptions as $key => $value) {
             $out[$key] = $value;
         }
+
         return $out;
     }
 
@@ -149,11 +153,13 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
             if (!is_array($item)) {
                 continue;
             }
+
             $type = $this->stripNamespacePrefix(is_string($item['@type'] ?? null) ? $item['@type'] : '');
             $member = $this->stripNamespacePrefix($this->extractValue($item, $language));
             if ($type === '' || $member === '') {
                 continue;
             }
+
             $grouped[$type][] = $member;
         }
 
@@ -163,6 +169,7 @@ class AccessibilitySpecificationEntity extends AbstractTransientEntity
                 $ordered[$group] = $grouped[$group];
             }
         }
+
         return $ordered;
     }
 }

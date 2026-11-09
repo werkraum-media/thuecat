@@ -536,6 +536,7 @@ class EventMediaImportTest extends AbstractImportTestCase
             if (!is_string($event['remote_id']) || !is_numeric($event['uid'])) {
                 continue;
             }
+
             $key = (string)preg_replace('#^.*/#', '', $event['remote_id']);
             $names[$key] = $this->fetchFileNamesForEvent((int)$event['uid']);
         }
@@ -597,6 +598,7 @@ class EventMediaImportTest extends AbstractImportTestCase
                 $names[] = $row['name'];
             }
         }
+
         return $names;
     }
 

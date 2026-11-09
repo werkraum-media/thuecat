@@ -84,6 +84,7 @@ class GuzzleClientFaker
                 1791532593
             );
         }
+
         self::$registered = true;
         self::reset();
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
@@ -104,6 +105,7 @@ class GuzzleClientFaker
             if ($bag === []) {
                 continue;
             }
+
             $labels = array_map(static fn (array $entry): string => $entry['label'], $bag);
             $problems[] = sprintf(
                 'Expected HTTP fetch never happened: %s  ×%d  [%s]',
@@ -112,6 +114,7 @@ class GuzzleClientFaker
                 implode(', ', $labels)
             );
         }
+
         $problems = [...$problems, ...self::$unexpected];
         self::reset();
         self::$registered = false;
@@ -256,19 +259,23 @@ class GuzzleClientFaker
                 $lines[] = sprintf('  #%d %s  ←  %s', $i + 1, $entry['label'], $entry['url']);
             }
         }
+
         $lines[] = 'Still expected:';
         $anyPending = false;
         foreach (self::$expected as $url => $bag) {
             if ($bag === []) {
                 continue;
             }
+
             $anyPending = true;
             $labels = array_map(static fn (array $e): string => $e['label'], $bag);
             $lines[] = sprintf('  %s  ×%d  [%s]', $url, count($bag), implode(', ', $labels));
         }
+
         if (!$anyPending) {
             $lines[] = '  (none — every staged URL has been consumed)';
         }
+
         return implode("\n", $lines);
     }
 }

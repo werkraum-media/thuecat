@@ -208,9 +208,11 @@ class EventLevelDateReaderTest extends TestCase
         if ($start !== null) {
             $node['schema:startDate'] = ['@type' => $type, '@value' => $start];
         }
+
         if ($end !== null) {
             $node['schema:endDate'] = ['@type' => $type, '@value' => $end];
         }
+
         return $node;
     }
 }

@@ -178,6 +178,7 @@ final class ResolverTest extends AbstractImportTestCase
                 $ownerKey = $key;
             }
         }
+
         $this->assertNotNull($ownerKey, 'Owner row is in the payload.');
 
         $row = $data['tx_thuecat_tourist_attraction'][$ownerKey];
@@ -196,6 +197,7 @@ final class ResolverTest extends AbstractImportTestCase
                 $parkKey = $key;
             }
         }
+
         $this->assertNotNull($parkKey, 'The park imported as a tourist attraction.');
         $this->assertSame((string)$parkKey, $row['contained_in_attraction'] ?? '');
 

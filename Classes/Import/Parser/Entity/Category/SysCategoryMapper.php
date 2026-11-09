@@ -77,9 +77,11 @@ abstract class SysCategoryMapper
             if ($title === null || isset($seen[$value])) {
                 continue;
             }
+
             $seen[$value] = true;
             $categories[] = ['remoteId' => $value, 'title' => $title];
         }
+
         return $categories;
     }
 
@@ -98,6 +100,7 @@ abstract class SysCategoryMapper
             if (in_array($value, $this->ignoredValues(), true)) {
                 continue;
             }
+
             $title = $this->titleFor($value);
             if ($title !== null) {
                 $matched[$value] = $title;
@@ -105,6 +108,7 @@ abstract class SysCategoryMapper
                 $unmatched[] = $value;
             }
         }
+
         return ['matched' => $matched, 'unmatched' => $unmatched];
     }
 }

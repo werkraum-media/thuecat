@@ -74,6 +74,7 @@ final class EventLevelDateReader
         if (!is_array($value)) {
             return null;
         }
+
         $raw = $value['@value'] ?? null;
         if (!is_string($raw) || $raw === '') {
             return null;

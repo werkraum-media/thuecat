@@ -113,6 +113,7 @@ class VocabularyIndexCache
             if (!is_string($id) || !is_array($class)) {
                 continue;
             }
+
             $parents = $class['parents'] ?? [];
             $labels = $class['labels'] ?? [];
             $restored[$id] = new VocabularyClass(

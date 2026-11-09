@@ -67,6 +67,7 @@ class LocationEntity extends AbstractEntity
         if (is_array($address) && array_is_list($address)) {
             $address = $address[0] ?? [];
         }
+
         /** @var array<string, mixed> $address JSON-LD nodes are string-keyed. */
         $address = is_array($address) ? $address : [];
         $geo = $node['schema:geo'] ?? [];

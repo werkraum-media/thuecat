@@ -87,6 +87,7 @@ final readonly class VocabularyIndex
             if (isset($seen[$current])) {
                 continue;
             }
+
             $seen[$current] = true;
             $ancestors[] = $current;
 

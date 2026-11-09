@@ -174,6 +174,7 @@ class OpeningHoursFormatter
                 $groups[$key]['days'][] = $weekDay->getDayOfWeek();
                 continue;
             }
+
             $groups[$key] = ['days' => [$weekDay->getDayOfWeek()], 'spans' => $weekDay->getTimePeriods()];
         }
 
@@ -215,6 +216,7 @@ class OpeningHoursFormatter
                 $runs[count($runs) - 1][] = $day;
                 continue;
             }
+
             $runs[] = [$day];
         }
 
@@ -264,6 +266,7 @@ class OpeningHoursFormatter
             if ($opens === null || $closes === null) {
                 continue;
             }
+
             $periodsByDay[$row->getDayOfWeek()][] = new TimePeriod($opens, $closes);
         }
 
@@ -298,10 +301,12 @@ class OpeningHoursFormatter
             if (!$this->windowContains($window['from'], $window['through'], $today)) {
                 continue;
             }
+
             foreach ($window['rows'] as $row) {
                 if ($row->getDayOfWeek() !== $weekday) {
                     continue;
                 }
+
                 $opens = $row->getOpens();
                 $closes = $row->getCloses();
                 if ($opens !== null && $closes !== null && $this->timeWithin(new TimePeriod($opens, $closes), $now)) {

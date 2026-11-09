@@ -246,6 +246,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
             if (!str_starts_with($row['remote_id'], $eventRemoteId . '::date::')) {
                 continue;
             }
+
             $dates[] = [
                 'start' => $this->toIso($row['start']),
                 'end' => $this->toIso($row['end']),

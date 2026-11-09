@@ -54,6 +54,7 @@ class AnchorStartingPoints implements FormDataProviderInterface
             if (!is_array($column) || !is_array($column['config'] ?? null) || !is_array($column['config']['treeConfig'] ?? null)) {
                 continue;
             }
+
             $startingPoints = $column['config']['treeConfig']['startingPoints'] ?? null;
             if (!is_string($startingPoints) || !str_contains($startingPoints, '###THUECAT_ANCHOR:')) {
                 continue;
@@ -65,6 +66,7 @@ class AnchorStartingPoints implements FormDataProviderInterface
             );
             $columns[$field] = $column;
         }
+
         $processedTca['columns'] = $columns;
         $result['processedTca'] = $processedTca;
 

@@ -122,6 +122,7 @@ readonly class PageRoleHintListener
             if (!is_string($contentType)) {
                 continue;
             }
+
             $role = $mapping[$contentType] ?? null;
             if (is_string($role) && $role !== '') {
                 $roles[] = $role;
@@ -146,6 +147,7 @@ readonly class PageRoleHintListener
             if (!is_array($item) || !is_string($item['value'] ?? null) || !is_string($item['label'] ?? null)) {
                 continue;
             }
+
             $labels[$item['value']] = $languageService->sL($item['label']);
         }
 

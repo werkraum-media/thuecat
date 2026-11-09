@@ -242,6 +242,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
         foreach (self::ENUMS as $field => $property) {
             $this->$field = $this->extractConcatenatedString($node[$property] ?? null, $language);
         }
+
         $this->amenity_features = implode(',', array_filter(array_map(
             fn (array $feature): string => $this->stripNamespacePrefix($this->extractValue($feature['thuecat:featureName'] ?? null, $language)),
             $this->nodesOf($node['schema:amenityFeature'] ?? null)
@@ -252,21 +253,26 @@ class MeetingVenueEntity extends TouristAttractionEntity
         foreach ([...self::BOOLEANS, ...self::SCALARS] as $field => $property) {
             $this->$field = $this->extractValue($node[$property] ?? null, $language);
         }
+
         foreach (self::INTEGERS as $field => $property) {
             $this->$field = (int)$this->extractValue($node[$property] ?? null, $language);
         }
+
         foreach (self::QUANTITIES as $field => $property) {
             $this->$field = $this->normalisedQuantity($node, $property, $parserContext);
         }
+
         foreach (self::URL_LISTS as $field => $property) {
             $this->$field = implode("\n", $this->extractUrls($node[$property] ?? null, $language));
         }
+
         $this->recordMediaOfKind('logo', $node['schema:logo'] ?? null);
         $this->recordMediaOfKind('subjectOf', $this->mediaReferences($node['schema:subjectOf'] ?? null));
         $this->subject_of = implode("\n", $this->pageReferences($node['schema:subjectOf'] ?? null));
         foreach (self::REFERENCES as $property => $bucket) {
             $this->recordTransient($bucket, $node[$property] ?? null);
         }
+
         // Embedded nodes are hotel rooms, never meeting rooms.
         $this->recordTransient(self::ROOMS_BUCKET, $this->bareReferencesOnly($node['schema:containsPlace'] ?? null));
 
@@ -311,6 +317,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
         foreach (self::LOCALISED as $field => $property) {
             $values[$field] = $this->extractValue($node[$property] ?? null, $language);
         }
+
         $values['certifications'] = implode("\n", array_filter(array_map(
             fn (array $certification): string => $this->extractValue($certification['schema:name'] ?? null, $language),
             $this->nodesOf($node['schema:hasCertification'] ?? null)
@@ -318,6 +325,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
         foreach (self::DESCRIPTION_TYPES as $field) {
             $values[$field] = '';
         }
+
         foreach ($this->nodesOf($node['thuecat:additionalDescriptions'] ?? null) as $description) {
             $field = $this->descriptionField($description);
             if ($field === null) {
@@ -325,8 +333,10 @@ class MeetingVenueEntity extends TouristAttractionEntity
                 if ($sysLanguageUid === null) {
                     $this->reportUnmatched($parserContext, 'thuecat:additionalDescriptions', $this->descriptionType($description));
                 }
+
                 continue;
             }
+
             $text = $this->extractDescription($description, $language);
             $values[$field] = $values[$field] === '' ? $text : $values[$field] . "\n\n" . $text;
         }
@@ -385,6 +395,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
         if (is_array($additionalType) && is_string($additionalType['@id'] ?? null)) {
             return $additionalType['@id'];
         }
+
         $types = array_values(array_filter((array)($description['@type'] ?? []), is_string(...)));
 
         return $types === [] ? '' : $types[array_key_last($types)];
@@ -430,6 +441,7 @@ class MeetingVenueEntity extends TouristAttractionEntity
         if (in_array($value, [null, '', []], true)) {
             return [];
         }
+
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
 
         return array_values(array_filter(array_map(

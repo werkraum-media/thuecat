@@ -55,6 +55,7 @@ class VisitOnceTest extends AbstractImportTestCase
         ] as $keyword) {
             $this->expectFetch($keyword . '.json');
         }
+
         $this->expectFetchForUrl(
             self::ATTRACTION_ID,
             'thuecat.org/resources/attraction-in-trail-with-relations.json'

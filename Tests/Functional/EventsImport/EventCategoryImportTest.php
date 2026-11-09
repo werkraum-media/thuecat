@@ -78,6 +78,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
             $this->assertGreaterThan(0, $category['parent'], "Created somewhere in the anchor's tree.");
             $this->assertSame(20, $category['pid'], 'Created at categoryStoragePid.');
         }
+
         $this->assertSame('Veranstaltungsserie', $series[0]['title']);
         $this->assertSame('Kulturveranstaltung', $culture[0]['title']);
 

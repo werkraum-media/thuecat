@@ -87,6 +87,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         if ($this->logs->offsetExists($positionOfLastLog)) {
             $lastImport = $this->logs->offsetGet($positionOfLastLog);
         }
+
         if (!$lastImport instanceof ImportLog) {
             return null;
         }
@@ -180,6 +181,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         if (!is_scalar($value) || $value === '') {
             return 1;
         }
+
         return (int)$value;
     }
 
@@ -199,6 +201,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         if (!is_string($containsPlaceId)) {
             throw new Exception('Could not fetch containsPlaceId.', 1671027015);
         }
+
         return $containsPlaceId;
     }
 

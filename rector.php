@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
-use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
@@ -118,7 +117,5 @@ return RectorConfig::configure()
         // Disabled until enabled one by one; the count is the files each rule changed.
         // 149 files
         FinalizeTestCaseClassRector::class,
-        // 110 files
-        NewlineAfterStatementRector::class,
     ])
 ;

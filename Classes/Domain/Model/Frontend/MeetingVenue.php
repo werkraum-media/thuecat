@@ -571,6 +571,7 @@ class MeetingVenue extends TouristAttraction
             if ($metres === 0) {
                 continue;
             }
+
             $distances[$destination] = $metres >= 1000
                 ? ['value' => $metres / 1000.0, 'unit' => 'km']
                 : ['value' => $metres, 'unit' => 'm'];
@@ -618,6 +619,7 @@ class MeetingVenue extends TouristAttraction
             if (isset($seen[$uid])) {
                 continue;
             }
+
             $seen[$uid] = true;
             $table[] = $containedRoom;
             $this->appendRoomsReachedOnlyThrough($containedRoom, $table, $seen);

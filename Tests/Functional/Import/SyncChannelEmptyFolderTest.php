@@ -108,6 +108,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
                 $log = $candidate;
             }
         }
+
         $this->assertInstanceOf(ImportLog::class, $log);
         $found = [];
         foreach ($log->getEntries() as $entry) {
@@ -115,6 +116,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
                 $found[] = $entry;
             }
         }
+
         $this->assertCount(1, $found);
         $this->assertSame(['Storage folder 50 holds no event after the import.'], $log->getGroupedNotices()['storageFolderEmpty'] ?? []);
     }

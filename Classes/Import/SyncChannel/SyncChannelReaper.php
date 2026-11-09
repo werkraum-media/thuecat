@@ -67,6 +67,7 @@ class SyncChannelReaper
         foreach ($this->findUids($remoteIds, $sitePageIds) as $uid) {
             $cmd[self::TABLE][$uid]['delete'] = 1;
         }
+
         if ($cmd === []) {
             return [];
         }

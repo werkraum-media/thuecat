@@ -260,6 +260,7 @@ class MediaImportTest extends AbstractImportTestCase
                 $fields[] = $row['fieldname'];
             }
         }
+
         sort($fields);
         return $fields;
     }
@@ -329,6 +330,7 @@ class MediaImportTest extends AbstractImportTestCase
                 $names[] = $row['name'];
             }
         }
+
         return $names;
     }
 
@@ -423,6 +425,7 @@ class MediaImportTest extends AbstractImportTestCase
                 $names[] = $row['name'];
             }
         }
+
         sort($names);
         return $names;
     }
@@ -494,6 +497,7 @@ class MediaImportTest extends AbstractImportTestCase
                 $titles[$row['fieldname']] = $row['title'];
             }
         }
+
         ksort($titles);
         return $titles;
     }
@@ -781,6 +785,7 @@ class MediaImportTest extends AbstractImportTestCase
                 $titles[] = $row['title'];
             }
         }
+
         return $titles;
     }
 

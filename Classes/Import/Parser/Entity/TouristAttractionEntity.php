@@ -129,9 +129,11 @@ class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEnt
         foreach ($localisedFields as $field => $jsonldName) {
             $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
+
         foreach ($concatenatedFields as $field => $jsonldName) {
             $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
         }
+
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport(
             $node['thuecat:distanceToPublicTransport'] ?? null,
             $language
@@ -149,13 +151,16 @@ class TouristAttractionEntity extends AbstractPlaceEntity implements TopLevelEnt
                 $value = $this->extractValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+
             if (!isset($this->translations[$sysLanguageUid])) {
                 continue;
             }
+
             foreach ($concatenatedFields as $field => $jsonldName) {
                 $value = $this->extractConcatenatedString($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+
             $distance = $this->buildDistanceToPublicTransport(
                 $node['thuecat:distanceToPublicTransport'] ?? null,
                 $code

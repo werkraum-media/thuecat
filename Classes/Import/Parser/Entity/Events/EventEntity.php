@@ -205,6 +205,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
                 if (is_string($id) && $id !== '') {
                     $references[$field] = ['remoteId' => $id];
                 }
+
                 continue;
             }
 
@@ -321,6 +322,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
         if ($unusableDays !== []) {
             $parserContext->unusableScheduleDays[$this->remote_id] = $unusableDays;
         }
+
         $droppedDays = $adapter->toDroppedDays($schedule);
         if ($droppedDays !== []) {
             $parserContext->droppedScheduleDays[$this->remote_id] = $droppedDays;
@@ -344,6 +346,7 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
             );
             $children[] = $entity;
         }
+
         return $children;
     }
 

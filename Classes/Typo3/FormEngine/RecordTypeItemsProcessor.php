@@ -42,6 +42,7 @@ class RecordTypeItemsProcessor implements ItemsProcessorInterface
         if ($types === []) {
             return $items;
         }
+
         $selected = $this->listOf($context->row[$context->field] ?? '');
 
         $kept = new SelectItemCollection();

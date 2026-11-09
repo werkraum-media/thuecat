@@ -49,6 +49,7 @@ class ExtensionTest extends TestCase
         } else {
             $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = $this->cachingBackup;
         }
+
         parent::tearDown();
     }
 

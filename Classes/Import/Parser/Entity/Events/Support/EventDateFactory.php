@@ -91,6 +91,7 @@ final class EventDateFactory
         if ($intervals === []) {
             return [];
         }
+
         $excludedDates = $this->scheduleAdapter->toExcludedDates($schedule);
 
         $occurrences = [];
@@ -102,6 +103,7 @@ final class EventDateFactory
             if (in_array($start->format('Y-m-d'), $excludedDates, true)) {
                 continue;
             }
+
             $occurrences[] = new EventOccurrence(
                 $start->format('c'),
                 ($end ?? $start)->format('c'),

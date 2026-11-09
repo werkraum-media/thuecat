@@ -324,6 +324,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
         foreach ($rows as $row) {
             $this->assertSame('regular', $row['specification_type']);
         }
+
         $byDay = array_column($rows, null, 'day_of_week');
         $this->assertSame('09:30:00', $byDay['Wednesday']['opens']);
         $this->assertSame('2021-10-31', $byDay['Wednesday']['valid_through']);
@@ -349,6 +350,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
             $this->assertSame('18:00:00', $row['closes']);
             $this->assertSame('regular', $row['specification_type']);
         }
+
         $this->assertContains('Saturday', array_column($rows, 'day_of_week'));
     }
 

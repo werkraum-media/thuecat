@@ -310,6 +310,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
             if (array_key_exists('managed_by', $row)) {
                 $row['managed_by'] = is_numeric($row['managed_by']) ? (int)$row['managed_by'] : 0;
             }
+
             $result[] = $row;
         }
 

@@ -59,26 +59,33 @@ class TouristAttractionRepository extends AbstractThuecatObjectRepository
         if ($demand->getSearchword() !== '') {
             $constraints[] = $query->like('title', '%' . $demand->getSearchword() . '%');
         }
+
         if ($demand->getTowns() !== []) {
             $constraints[] = $this->matchesAnyTown($query, $demand->getTowns());
         }
+
         if ($demand->getCategories() !== []) {
             $constraints[] = $this->relatesToAnyOf($query, 'categories', $demand->getCategories());
         }
+
         // OR within keywords, AND against every other filter: one more entry in
         // $constraints is all that takes.
         if ($demand->getKeywords() !== []) {
             $constraints[] = $this->relatesToAnyOf($query, 'keywords', $demand->getKeywords());
         }
+
         if ($demand->getPetsAllowed()) {
             $constraints[] = $query->equals('petsAllowed', 'true');
         }
+
         if ($demand->getIsAccessibleForFree()) {
             $constraints[] = $query->equals('isAccessibleForFree', 'true');
         }
+
         if ($demand->getPublicAccess()) {
             $constraints[] = $query->equals('publicAccess', 'true');
         }
+
         if ($demand->getRecordTypes() !== []) {
             $constraints[] = $query->in('type', $demand->getRecordTypes());
         }

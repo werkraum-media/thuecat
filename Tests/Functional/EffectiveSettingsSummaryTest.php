@@ -75,6 +75,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         if (!is_array($confVars)) {
             $confVars = [];
         }
+
         $extensions = is_array($confVars['EXTENSIONS'] ?? null) ? $confVars['EXTENSIONS'] : [];
         $extensions['thuecat'] = $configuration;
         $confVars['EXTENSIONS'] = $extensions;
@@ -126,6 +127,7 @@ class EffectiveSettingsSummaryTest extends AbstractImportTestCase
                 $expected[] = $anchor->settingsPath($scope);
             }
         }
+
         $expected = array_merge($expected, [
             'readTimeout',
             'connectTimeout',

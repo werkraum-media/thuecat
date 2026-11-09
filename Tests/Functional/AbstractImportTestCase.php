@@ -139,10 +139,12 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
             // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
             $this->getContainer()->set(FileFolderAccess::class, new FileFolderAccessStub());
         }
+
         if ($this->stubMediaDownloader) {
             // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
             $this->getContainer()->set(MediaFileDownloader::class, new MediaFileDownloaderStub());
         }
+
         $this->seedVocabularyIndex();
         foreach ($this->getLogFiles() as $logFile) {
             file_put_contents($logFile, '');
@@ -176,6 +178,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         if ($this->expectErrors) {
             return;
         }
+
         foreach ($this->getLogFiles() as $file) {
             $this->assertSame('', file_get_contents($file), 'The TYPO3 log file "' . $file . '" contained content while expecting to be empty.');
         }

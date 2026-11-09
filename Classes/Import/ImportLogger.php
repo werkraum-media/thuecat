@@ -240,6 +240,7 @@ class ImportLogger
                 'context' => json_encode($rateLimit) ?: '{}',
             ]);
         }
+
         $this->requestLedger->reset();
     }
 
@@ -427,6 +428,7 @@ class ImportLogger
             foreach ($report['matched'] as $value => $title) {
                 $matchedByKind[$kind][$value] = $title;
             }
+
             foreach ($report['unmatched'] as $value) {
                 $unmatchedByKind[$kind][$value] = true;
             }
@@ -846,6 +848,7 @@ class ImportLogger
                 return $severity;
             }
         }
+
         return self::SEVERITY_DEBUG;
     }
 
@@ -890,6 +893,7 @@ class ImportLogger
                 if ($entry === null) {
                     continue;
                 }
+
                 $entry['import_log'] = $logKey;
                 $datamap['tx_thuecat_import_log_entry'][StringUtility::getUniqueId('NEW')] = $entry;
             }
@@ -962,6 +966,7 @@ class ImportLogger
             if ($resolvedUid <= 0) {
                 return null;
             }
+
             return [
                 'pid' => 0,
                 'type' => 'savingEntity',

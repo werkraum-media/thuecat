@@ -439,6 +439,7 @@ final class ResolverContext
 
             return;
         }
+
         $this->claimedKeywordByField[$key] = true;
         $this->collectedKeywords[] = $keyword;
     }
@@ -450,6 +451,7 @@ final class ResolverContext
         if (isset($this->claimedByField[$key])) {
             return;
         }
+
         $this->claimedByField[$key] = true;
         $this->collectedMedia[] = $media;
     }
@@ -467,6 +469,7 @@ final class ResolverContext
         if (($this->defaultStatus[$remoteId] ?? null) === self::STATUS_UPDATED) {
             return;
         }
+
         $this->defaultStatus[$remoteId] = self::STATUS_FOUND;
     }
 
@@ -501,6 +504,7 @@ final class ResolverContext
         if (($this->translationStatus[$remoteId][$sysLanguageUid] ?? null) === self::TRANSLATION_UPDATED) {
             return;
         }
+
         $this->translationStatus[$remoteId][$sysLanguageUid] = self::TRANSLATION_CREATED;
     }
 
@@ -546,11 +550,13 @@ final class ResolverContext
                 $this->remoteIdToKey[$remoteId] = (string)$substNEWwithIDs[$key];
             }
         }
+
         foreach ($this->categoryKeyByRemoteId as $remoteId => $key) {
             if (isset($substNEWwithIDs[$key])) {
                 $this->categoryKeyByRemoteId[$remoteId] = (string)$substNEWwithIDs[$key];
             }
         }
+
         foreach ($this->keywordKeyByRemoteId as $remoteId => $key) {
             if (isset($substNEWwithIDs[$key])) {
                 $this->keywordKeyByRemoteId[$remoteId] = (string)$substNEWwithIDs[$key];

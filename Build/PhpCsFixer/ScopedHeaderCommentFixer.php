@@ -141,6 +141,7 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
                 $this->removeComment($tokens, $index);
             }
         }
+
         $tokens->clearEmptyTokens();
 
         if ($isFixture) {
@@ -195,6 +196,7 @@ final class ScopedHeaderCommentFixer implements FixerInterface, WhitespacesAware
             if ($token->isGivenKind(self::DECLARATION_TOKENS)) {
                 break;
             }
+
             if ($token->isComment() && preg_match(self::LICENCE_COMMENT, $token->getContent()) === 1) {
                 $indices[] = $index;
             }

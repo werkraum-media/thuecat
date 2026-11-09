@@ -80,6 +80,7 @@ final readonly class EventRelationsToMmUpgradeWizard implements UpgradeWizardInt
                     if (in_array($eventUid, $related, true)) {
                         continue;
                     }
+
                     $related[] = $eventUid;
                     $mmConnection->insert($mmTable, [
                         'uid_local' => $uid,

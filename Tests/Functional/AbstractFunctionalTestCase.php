@@ -193,6 +193,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             if (!is_numeric($language)) {
                 continue;
             }
+
             $byLanguage[(int)$language] = $row;
         }
 

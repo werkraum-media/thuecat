@@ -177,6 +177,7 @@ class ImporterTest extends AbstractImportTestCase
             if (!is_string($row['remote_id'])) {
                 continue;
             }
+
             $towns[$row['remote_id']] = is_numeric($row['town']) ? (int)$row['town'] : 0;
         }
 
@@ -988,6 +989,7 @@ class ImporterTest extends AbstractImportTestCase
                 $titles[] = $row['title'];
             }
         }
+
         sort($titles);
 
         return $titles;

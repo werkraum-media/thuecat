@@ -46,6 +46,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
             if (!is_array($item)) {
                 continue;
             }
+
             $entity = new OfferEntity();
             /** @var array<string, mixed> $item A JSON-LD node is an object. */
             $entity->configure($item, $language);
@@ -107,6 +108,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
             if (!is_array($addressNode) || $addressNode === []) {
                 continue;
             }
+
             /** @var array<string, mixed> $addressNode JSON-LD nodes are string-keyed. */
             $child = new AddressEntity();
             $child->configure($addressNode, $language, $ordinal === 0 ? $geo : [], $remoteId, $ordinal);
@@ -145,11 +147,13 @@ abstract class AbstractPlaceEntity extends AbstractEntity
         if (!is_array($value)) {
             return;
         }
+
         $items = array_is_list($value) ? $value : [$value];
         foreach ($items as $item) {
             if (!is_array($item)) {
                 continue;
             }
+
             /** @var array<string, mixed> $item JSON-LD nodes are string-keyed. */
             $days = $this->extractDaysOfWeek($item['schema:dayOfWeek'] ?? null);
             foreach ($days === [] ? [''] : $days as $day) {
@@ -171,6 +175,7 @@ abstract class AbstractPlaceEntity extends AbstractEntity
         if (!is_array($value)) {
             return [];
         }
+
         $items = array_is_list($value) ? $value : [$value];
         $days = [];
         foreach ($items as $item) {
@@ -178,8 +183,10 @@ abstract class AbstractPlaceEntity extends AbstractEntity
             if ($raw === '') {
                 continue;
             }
+
             $days[] = $this->stripNamespacePrefix($raw);
         }
+
         return $days;
     }
 

@@ -76,6 +76,7 @@ final class EventScheduleAdapter
             if ($interval === null) {
                 continue;
             }
+
             $intervals[] = $interval;
         }
 
@@ -96,12 +97,14 @@ final class EventScheduleAdapter
             if ($value === null) {
                 continue;
             }
+
             $values = is_array($value) && array_is_list($value) ? $value : [$value];
             foreach ($values as $entry) {
                 $raw = $this->extractTypedValue($entry);
                 if ($raw === '') {
                     continue;
                 }
+
                 $excluded[$raw] = true;
             }
         }
@@ -141,6 +144,7 @@ final class EventScheduleAdapter
             if ($this->resolveFrequency($node) !== 'Monthly') {
                 continue;
             }
+
             $usable = $this->resolveWeekdays($node);
             foreach (array_slice($usable, 1) as $name) {
                 $dropped[$name] = true;
@@ -158,6 +162,7 @@ final class EventScheduleAdapter
         if ($schedule === null) {
             return [];
         }
+
         $items = is_array($schedule) && array_is_list($schedule) ? $schedule : [$schedule];
 
         $nodes = [];
@@ -167,6 +172,7 @@ final class EventScheduleAdapter
                 $nodes[] = $item;
             }
         }
+
         return $nodes;
     }
 
@@ -183,6 +189,7 @@ final class EventScheduleAdapter
         if ($value === null) {
             return [];
         }
+
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
 
         $names = [];
@@ -191,9 +198,11 @@ final class EventScheduleAdapter
             if ($raw === '') {
                 continue;
             }
+
             $colon = strrpos($raw, ':');
             $names[] = $colon === false ? $raw : substr($raw, $colon + 1);
         }
+
         return $names;
     }
 
@@ -234,6 +243,7 @@ final class EventScheduleAdapter
         if ($freq === 'Weekly') {
             $interval['weekdays'] = $this->resolveWeekdays($node);
         }
+
         if ($freq === 'Monthly') {
             // Already filtered to weekday names, so the first is usable — the
             // point of taking it here is that position no longer decides.
@@ -268,6 +278,7 @@ final class EventScheduleAdapter
         if ($end !== '') {
             return $end;
         }
+
         // FALLBACK: no per-occurrence end → mirror start. Change here if a
         // better source becomes available.
         return $start;
@@ -287,6 +298,7 @@ final class EventScheduleAdapter
         if ($freq === '') {
             return null;
         }
+
         return match ($freq) {
             'P1D' => 'Daily',
             'P1W' => 'Weekly',

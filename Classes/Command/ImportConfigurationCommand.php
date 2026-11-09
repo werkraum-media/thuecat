@@ -83,6 +83,7 @@ class ImportConfigurationCommand extends Command
         if (!$configuration instanceof ImportConfigurationInterface) {
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
+
         // Decoration, not input interactivity: it tracks whether a terminal is
         // attached, which is what makes per-item churn readable rather than a
         // flood in a cron or CI log.

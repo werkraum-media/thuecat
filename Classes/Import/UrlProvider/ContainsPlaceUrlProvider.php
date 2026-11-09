@@ -46,6 +46,7 @@ class ContainsPlaceUrlProvider implements UrlProvider
         if (method_exists($configuration, 'getContainsPlaceId') === false) {
             throw new InvalidArgumentException('Received incompatible import configuration.', 1629709276);
         }
+
         $containsPlaceId = $configuration->getContainsPlaceId();
         $instance = clone $this;
         $instance->containsPlaceId = is_string($containsPlaceId) ? $containsPlaceId : '';

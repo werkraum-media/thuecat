@@ -55,6 +55,7 @@ class MediaFileStaging
                 $storage->deleteFile($file);
                 continue;
             }
+
             $storage->moveFile($file, $target, $file->getName(), DuplicationBehavior::CANCEL);
         }
     }

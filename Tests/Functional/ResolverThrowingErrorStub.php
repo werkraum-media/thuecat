@@ -37,6 +37,7 @@ final class ResolverThrowingErrorStub extends Resolver
         if ($depth > 0) {
             throw new Error('Simulated programming defect while resolving a reference', 8130699012);
         }
+
         parent::rekeyRowsAndInjectPid($payload, $context, $depth);
     }
 }

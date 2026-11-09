@@ -198,6 +198,7 @@ class EventKeywordImportTest extends AbstractImportTestCase
             if (!is_numeric($uid)) {
                 continue;
             }
+
             $categoryQuery = $this->getConnectionPool()->getQueryBuilderForTable('sys_category');
             $categoryQuery->getRestrictions()->removeAll();
             $title = $categoryQuery->select('title')

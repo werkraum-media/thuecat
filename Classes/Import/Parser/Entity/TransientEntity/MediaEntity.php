@@ -163,6 +163,7 @@ class MediaEntity extends AbstractTransientEntity
         if (is_array($author) && isset($author['@id']) && is_scalar($author['@id'])) {
             return (string)$author['@id'];
         }
+
         return null;
     }
 
@@ -190,6 +191,7 @@ class MediaEntity extends AbstractTransientEntity
         if (!is_array($value)) {
             return '';
         }
+
         if (array_is_list($value)) {
             foreach ($value as $item) {
                 if (
@@ -201,8 +203,10 @@ class MediaEntity extends AbstractTransientEntity
                     return (string)$item['@value'];
                 }
             }
+
             return '';
         }
+
         if (
             ($value['@language'] ?? null) === $language
             && isset($value['@value'])
@@ -210,6 +214,7 @@ class MediaEntity extends AbstractTransientEntity
         ) {
             return (string)$value['@value'];
         }
+
         return '';
     }
 }

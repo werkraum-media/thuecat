@@ -188,6 +188,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
                     $sysLanguageUid
                 );
             }
+
             foreach (self::OTHER_DESCRIPTIONS as $field => $jsonldName) {
                 $this->recordTranslation(
                     $field,
@@ -242,6 +243,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
         if (!is_array($segments)) {
             return;
         }
+
         $segments = array_is_list($segments) ? $segments : [$segments];
 
         $ordinal = 0;
@@ -249,6 +251,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
             if (!is_array($segment) || $segment === []) {
                 continue;
             }
+
             /** @var array<string, mixed> $segment JSON-LD nodes are string-keyed. */
             $child = new TrailWayTypeEntity();
             $child->configure($segment, $language, $this->remote_id, $ordinal);
@@ -272,6 +275,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
         if (!is_array($conditions)) {
             return;
         }
+
         $conditions = array_is_list($conditions) ? $conditions : [$conditions];
 
         $ordinal = 0;
@@ -279,6 +283,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
             if (!is_array($condition) || $condition === []) {
                 continue;
             }
+
             /** @var array<string, mixed> $condition JSON-LD nodes are string-keyed. */
             $child = new TrailConditionEntity();
             $child->configure($condition, $language, $this->remote_id, $ordinal);
@@ -308,6 +313,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
             if (!is_array($locationNode) || $locationNode === []) {
                 continue;
             }
+
             /** @var array<string, mixed> $locationNode JSON-LD nodes are string-keyed. */
             $child = new TrailLocationEntity();
             $child->configure($locationNode, $language, $this->remote_id, $locationType);
@@ -398,11 +404,13 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
         if (!is_array($ratings)) {
             return;
         }
+
         foreach (self::RATINGS as $field => $jsonldName) {
             $rating = $ratings[$jsonldName] ?? null;
             if (!is_array($rating)) {
                 continue;
             }
+
             [$this->$field] = $this->quantitativeValue($rating, $language);
             // The scale travels with the value: a 1 means nothing without it.
             $this->{$field . '_min'} = $this->extractValue($rating['schema:minValue'] ?? null, $language);

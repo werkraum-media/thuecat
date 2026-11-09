@@ -99,6 +99,7 @@ class SitePageIds
             if ($new === []) {
                 break;
             }
+
             $pageIds = array_merge($pageIds, $new);
             $current = $new;
         }

@@ -97,6 +97,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
             $this->assertIsArray($context);
             $ordinals[] = $context['ordinal'] ?? null;
         }
+
         $this->assertSame([3, 4], $ordinals);
     }
 

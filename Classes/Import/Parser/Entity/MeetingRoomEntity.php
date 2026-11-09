@@ -101,6 +101,7 @@ class MeetingRoomEntity extends AbstractPlaceEntity
         foreach ($localisedFields as $field => $jsonldName) {
             $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
+
         foreach ($translationLanguages as $code => $sysLanguageUid) {
             foreach ($localisedFields as $field => $jsonldName) {
                 $this->recordTranslation($field, $this->extractValue($node[$jsonldName] ?? null, $code), $sysLanguageUid);
@@ -110,9 +111,11 @@ class MeetingRoomEntity extends AbstractPlaceEntity
         foreach (self::INTEGERS as $field => $property) {
             $this->$field = (int)$this->extractValue($node[$property] ?? null, $language);
         }
+
         foreach (self::DECIMALS as $field => $property) {
             $this->$field = $this->quantity($node, $property, $parserContext);
         }
+
         $this->facilities = $this->extractConcatenatedString($node['thuecat:meetingFacilitysRoom'] ?? null, $language);
         $this->amenity_features = implode(',', array_filter(array_map(
             fn (array $feature): string => $this->stripNamespacePrefix($this->extractValue($feature['thuecat:featureName'] ?? null, $language)),
@@ -175,6 +178,7 @@ class MeetingRoomEntity extends AbstractPlaceEntity
         if ($id === '') {
             return;
         }
+
         if (!str_contains($id, '/dms_')) {
             $this->reportUnmatched($parserContext, 'schema:accommodationFloorPlan', $id);
             return;

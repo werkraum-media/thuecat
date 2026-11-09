@@ -80,6 +80,7 @@ class TeaserCacheTest extends AbstractCachingTestCase
         foreach ($this->teaserIdentifiers() as $identifier) {
             $stored[] = $this->cachedContent(Extension::CACHE_TEASER, $identifier);
         }
+
         $combined = implode("\n", $stored);
 
         $this->assertStringContainsString('Stadtmuseum Erfurt', $combined);
@@ -137,6 +138,7 @@ class TeaserCacheTest extends AbstractCachingTestCase
         foreach ($afterSecondList as $identifier) {
             $links[] = $this->cachedContent(Extension::CACHE_TEASER, $identifier);
         }
+
         $combined = implode("\n", $links);
 
         $this->assertStringContainsString('/detail/', $combined, 'Teasers of the first list.');

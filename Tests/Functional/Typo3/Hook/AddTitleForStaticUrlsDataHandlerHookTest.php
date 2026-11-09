@@ -351,6 +351,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
             $this->assertSame('', $urls);
             return;
         }
+
         $this->assertIsArray($urls);
 
         $this->assertCount(count($titles), $urls);

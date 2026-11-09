@@ -54,6 +54,7 @@ class SyncChannel
             $changed = [...$changed, ...$this->idsIn($page, 'createdOrUpdated')];
             $removed = [...$removed, ...$this->idsIn($page, 'removed')];
         }
+
         $expired = [];
         foreach ($this->pages($listUrl . 'list-expired', $query) as $page) {
             $expired = [...$expired, ...$this->idsIn($page, 'expired')];

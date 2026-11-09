@@ -59,6 +59,7 @@ final readonly class RetryingClient implements ImportHttpClient
                     $this->tally?->recordAttempts($attempt);
                     return $response;
                 }
+
                 $lastFailure = null;
             } catch (ClientExceptionInterface $failure) {
                 $lastFailure = $failure;

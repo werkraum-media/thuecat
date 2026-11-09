@@ -115,6 +115,7 @@ class FetchData
             $from = $today->sub($interval);
             $from = 'from=' . urlencode($from->format('c')) . '&';
         }
+
         return $this->jsonLDFromUrl(
             $domain
                 . 'api/ext-sync/get-updated-nodes?showTotal=true&' . $from . 'syncScopeId='
@@ -168,6 +169,7 @@ class FetchData
         if ($apiKey !== null && $apiKey !== '' && $requestFactory instanceof RequestFactory) {
             $requestFactory = $requestFactory->withApiKey($apiKey);
         }
+
         $request = $requestFactory->createRequest('GET', $url);
         $response = $this->httpClient->sendRequest($request);
 

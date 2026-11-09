@@ -99,6 +99,7 @@ class ChainBuilder
         if ($candidates === []) {
             return null;
         }
+
         if (count($candidates) === 1) {
             return $candidates[0];
         }
@@ -132,6 +133,7 @@ class ChainBuilder
                     continue 2;
                 }
             }
+
             $reduced[] = $parent;
         }
 

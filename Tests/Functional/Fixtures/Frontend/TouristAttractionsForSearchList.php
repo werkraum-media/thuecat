@@ -17,6 +17,7 @@ for ($i = 1; $i <= 15; $i++) {
         'public_access' => 'false',
     ];
 }
+
 // Control records that must be filtered out.
 $attractions[] = [
     'uid' => '20',

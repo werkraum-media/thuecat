@@ -56,6 +56,7 @@ class AbstractActionController extends ActionController
             if (!$record instanceof Base) {
                 continue;
             }
+
             $items[] = $this->teaserRenderer->render(
                 $record,
                 $detailPageUid,

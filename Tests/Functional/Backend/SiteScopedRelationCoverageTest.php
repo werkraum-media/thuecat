@@ -152,6 +152,7 @@ class SiteScopedRelationCoverageTest extends AbstractBackendTestCase
             sort($columns);
             $scoped[$table] = $columns;
         }
+
         ksort($scoped);
 
         return $scoped;

@@ -203,15 +203,19 @@ class DataHandlerPayload
         if (($this->dataMap[$table] ?? []) === []) {
             unset($this->dataMap[$table]);
         }
+
         if (($this->transients[$table] ?? []) === []) {
             unset($this->transients[$table]);
         }
+
         if (($this->translations[$table] ?? []) === []) {
             unset($this->translations[$table]);
         }
+
         if (($this->categories[$table] ?? []) === []) {
             unset($this->categories[$table]);
         }
+
         if (($this->defaultLanguageKeys[$table] ?? []) === []) {
             unset($this->defaultLanguageKeys[$table]);
         }
@@ -340,6 +344,7 @@ class DataHandlerPayload
                 return;
             }
         }
+
         $existing[] = $entry;
         $this->cmdMap[$table][$key] = $existing;
     }
@@ -359,6 +364,7 @@ class DataHandlerPayload
         if (($this->translations[$table][$remoteId] ?? []) === []) {
             unset($this->translations[$table][$remoteId]);
         }
+
         if (($this->translations[$table] ?? []) === []) {
             unset($this->translations[$table]);
         }
@@ -385,6 +391,7 @@ class DataHandlerPayload
                 if (is_array($entry)) {
                     return $entry['id'] !== $reference;
                 }
+
                 return $entry !== $reference;
             }
         ));
@@ -398,6 +405,7 @@ class DataHandlerPayload
         if (($this->transients[$table][$remoteId] ?? []) === []) {
             unset($this->transients[$table][$remoteId]);
         }
+
         if (($this->transients[$table] ?? []) === []) {
             unset($this->transients[$table]);
         }
@@ -417,6 +425,7 @@ class DataHandlerPayload
                 if (!isset($this->dataMap[$table][$key], $other->dataMap[$table][$key])) {
                     continue;
                 }
+
                 $this->dataMap[$table][$key] = array_replace($this->dataMap[$table][$key], $other->dataMap[$table][$key]);
                 if (isset($other->defaultLanguageKeys[$table][$key])) {
                     $this->defaultLanguageKeys[$table][$key] = true;
@@ -440,6 +449,7 @@ class DataHandlerPayload
                 if (isset($this->dataMap[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->dataMap[$table][$remoteId] = $row;
                 if (isset($other->defaultLanguageKeys[$table][$remoteId])) {
                     $this->defaultLanguageKeys[$table][$remoteId] = true;
@@ -452,6 +462,7 @@ class DataHandlerPayload
                 if (isset($this->transients[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->transients[$table][$remoteId] = $buckets;
             }
         }
@@ -461,6 +472,7 @@ class DataHandlerPayload
                 if (isset($this->translations[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->translations[$table][$remoteId] = $perLanguage;
             }
         }
@@ -470,6 +482,7 @@ class DataHandlerPayload
                 if (isset($this->categories[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->categories[$table][$remoteId] = $categories;
             }
         }
@@ -479,6 +492,7 @@ class DataHandlerPayload
                 if (isset($this->inlineMedia[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->inlineMedia[$table][$remoteId] = $entries;
             }
         }
@@ -488,6 +502,7 @@ class DataHandlerPayload
                 if (isset($this->placeReferences[$table][$remoteId])) {
                     continue;
                 }
+
                 $this->placeReferences[$table][$remoteId] = $references;
             }
         }
@@ -528,9 +543,11 @@ class DataHandlerPayload
                 if (!isset($this->dataMap[$table][$key])) {
                     continue;
                 }
+
                 $result[$table][$key] = $this->dataMap[$table][$key];
             }
         }
+
         return $result;
     }
 

@@ -57,20 +57,24 @@ class AbstractImportTestCase extends TestCase
         if (!is_array($decoded)) {
             return null;
         }
+
         $graph = $decoded['@graph'] ?? [];
         if (!is_array($graph)) {
             return null;
         }
+
         foreach ($graph as $node) {
             if (!is_array($node)) {
                 continue;
             }
+
             $types = $node['@type'] ?? [];
             if (is_array($types) && in_array($nodeName, $types, true)) {
                 /** @var array<string, mixed> $node JSON objects decode to string-keyed arrays. */
                 return $node;
             }
         }
+
         return null;
     }
 

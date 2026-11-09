@@ -169,6 +169,7 @@ class Importer
                 $translationLanguages[$siteLanguage->getLocale()->getLanguageCode()] = $siteLanguage->getLanguageId();
             }
         }
+
         $this->reportEffectiveSettings($configuration, $site, $listener);
         // The sync host serves no record a visitor could open.
         $sourceDomain = $configuration->getType() === 'syncChannel' ? FetchData::RESOURCE_HOST : $apiDomain;
@@ -205,6 +206,7 @@ class Importer
                 $aborted = true;
                 break;
             }
+
             $urlNumber++;
             $this->phaseReached = ImportPhase::Fetch;
             $listener->progressed(new ImportProgress(
@@ -223,6 +225,7 @@ class Importer
                 $this->importLogger->recordException('fetchingError', $e, $url);
                 continue;
             }
+
             try {
                 $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
                 $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
@@ -230,6 +233,7 @@ class Importer
                 $this->importLogger->recordException('mappingError', $e, $url);
                 continue;
             }
+
             $accumulatedPayload->mergeFromOverlaying($resolved, $resolverContext->rerootedKeys);
         }
 
@@ -252,6 +256,7 @@ class Importer
                 $this->reapGoneEvents($urlProvider, $resolverContext, 0);
                 $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
             }
+
             $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
             // Nothing persisted; still report the types seen.
             $this->importLogger->recordMatchReports($matchReports);
@@ -299,6 +304,7 @@ class Importer
                 $aborted = true;
                 break;
             }
+
             if ($iterations >= $maxIterations) {
                 throw new RuntimeException(
                     'Importer loop exceeded ' . $maxIterations . ' iterations; translations bucket: '
@@ -306,6 +312,7 @@ class Importer
                     1777148664
                 );
             }
+
             $this->phaseReached = ImportPhase::Persist;
             $listener->progressed(new ImportProgress(
                 ImportPhase::Persist,
@@ -416,6 +423,7 @@ class Importer
                 }
             }
         }
+
         return $result;
     }
 
@@ -445,6 +453,7 @@ class Importer
         if (!$urlProvider instanceof SyncChannelUrlProvider) {
             return;
         }
+
         if ($this->syncWindow->holdsEvent($configuration->getStoragePid())) {
             return;
         }
@@ -472,6 +481,7 @@ class Importer
             if (!$provider instanceof UrlProvider) {
                 continue;
             }
+
             if ($provider->canProvideForConfiguration($configuration)) {
                 return $provider->createWithConfiguration($configuration);
             }
@@ -514,6 +524,7 @@ class Importer
                     $settings[$kind->storagePidSetting()->settingsPath($scope)] = $pair->storagePid > 0 ? $pair->storagePid : 'unset';
                 }
             }
+
             $settings += [
                 'readTimeout' => $this->settings->resolve(ImportSetting::ReadTimeout, 0),
                 'connectTimeout' => $this->settings->resolve(ImportSetting::ConnectTimeout, 0),

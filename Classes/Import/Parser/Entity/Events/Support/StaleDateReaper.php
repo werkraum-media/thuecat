@@ -114,6 +114,7 @@ class StaleDateReaper
                 $byUid[$uid] = $remoteId;
             }
         }
+
         return $byUid;
     }
 }

@@ -165,6 +165,7 @@ class MediaFileDownloader
                 if ($attempts > 1) {
                     $failureDetail = sprintf('gave up after %d attempts', $attempts);
                 }
+
                 return null;
             }
 

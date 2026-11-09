@@ -82,6 +82,7 @@ class AnchorScopeRegistry
             if (!is_a($id, TopLevelEntityInterface::class, true) || $id::TABLE === '') {
                 continue;
             }
+
             $claimed = $this->scopeByTable[$id::TABLE] ?? null;
             if ($claimed instanceof AnchorScope && $claimed->value !== $id::anchorScope()) {
                 // Service order would otherwise pick the table's tree.
@@ -93,6 +94,7 @@ class AnchorScopeRegistry
                     $id
                 ), 1790929291);
             }
+
             $this->scopeByTable[$id::TABLE] = new AnchorScope($id::anchorScope());
         }
 

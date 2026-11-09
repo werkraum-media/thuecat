@@ -126,6 +126,7 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
             if (!$entity instanceof EntityInterface) {
                 continue;
             }
+
             $entity->parse($node, $language, new ParserContext(0), []);
             $title = $entity->toArray()['title'];
 
@@ -171,6 +172,7 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
             if (!$candidate instanceof EntityInterface) {
                 continue;
             }
+
             foreach ($types as $type) {
                 if (in_array($type, $candidate->handlesTypes(), true)) {
                     $candidates[] = $candidate;
@@ -178,6 +180,7 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
                 }
             }
         }
+
         if ($candidates === []) {
             return null;
         }

@@ -201,6 +201,7 @@ class ImportLog extends Typo3AbstractEntity
                 $matched[$entry->getRemoteId()] = $this->categoryTitle($entry->getRecordUid());
             }
         }
+
         ksort($matched);
         return $matched;
     }
@@ -218,6 +219,7 @@ class ImportLog extends Typo3AbstractEntity
                 $unmatched[] = $entry->getRemoteId();
             }
         }
+
         sort($unmatched);
         return $unmatched;
     }
@@ -262,6 +264,7 @@ class ImportLog extends Typo3AbstractEntity
                 $resolved[] = $line;
                 continue;
             }
+
             $unresolved[] = $line;
         }
 

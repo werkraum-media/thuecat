@@ -65,6 +65,7 @@ class SysCategoryProvisioner
         if ($known !== null) {
             return $known;
         }
+
         if ($state->wasSkipped($stagingKey)) {
             return null;
         }
@@ -210,12 +211,14 @@ class SysCategoryProvisioner
             if (isset($seen[$identifier])) {
                 break;
             }
+
             $seen[$identifier] = true;
 
             $key = $state->keyFor($identifier);
             if ($key !== null) {
                 return $key;
             }
+
             if (!$state->wasSkipped($identifier)) {
                 break;
             }

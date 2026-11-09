@@ -65,6 +65,7 @@ class DeniedRequestLoggingClient implements ImportHttpClient
         if ($request->hasHeader('Authorization')) {
             return 'header';
         }
+
         parse_str($request->getUri()->getQuery(), $query);
 
         return isset($query['api_key']) ? 'query' : 'none';

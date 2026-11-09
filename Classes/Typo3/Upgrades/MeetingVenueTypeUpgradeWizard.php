@@ -158,6 +158,7 @@ class MeetingVenueTypeUpgradeWizard implements UpgradeWizardInterface
             if ($uid === 0 || $venueType === null) {
                 continue;
             }
+
             if (($venueTypes[$uid] ?? null) !== 'meeting_congress_hotel') {
                 $venueTypes[$uid] = $venueType;
             }

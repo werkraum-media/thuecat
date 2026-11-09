@@ -238,6 +238,7 @@ abstract class AbstractPlace extends Base
         if ($values === []) {
             return [];
         }
+
         return [
             'value' => $values[0],
             'unit' => $values[1] ?? '',

@@ -214,6 +214,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
                     '"' . $needle . '" is expected after "' . $previous . '".'
                 );
             }
+
             $previous = $needle;
             $previousPosition = $position;
         }

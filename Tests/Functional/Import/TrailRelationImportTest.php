@@ -111,6 +111,7 @@ class TrailRelationImportTest extends AbstractImportTestCase
         ] as $term) {
             $this->expectFetch($term . '.json');
         }
+
         $this->expectFetch('192875159827-xfqk.json');
     }
 

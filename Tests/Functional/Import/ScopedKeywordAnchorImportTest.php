@@ -143,6 +143,7 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         ] as $term) {
             $this->expectFetch($term . '.json');
         }
+
         $this->expectFetch('192875159827-xfqk.json');
     }
 
@@ -163,9 +164,11 @@ class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
             if (in_array($parent, [self::THUECAT_ANCHOR, self::TRAILS_ANCHOR, self::SHARED_TREE_ANCHOR], true)) {
                 return $parent;
             }
+
             if ($parent === 0) {
                 break;
             }
+
             $uid = $parent;
         }
 

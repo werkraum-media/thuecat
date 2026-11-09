@@ -172,6 +172,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         if ($languageId > 0) {
             $request = $request->withLanguageId($languageId);
         }
+
         if ($pluginArguments !== []) {
             $request = $request->withQueryParams([$pluginNamespace => $pluginArguments]);
         }
@@ -197,6 +198,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
                 $identifiers[$identifier] = true;
             }
         }
+
         $identifiers = array_keys($identifiers);
         sort($identifiers);
 
@@ -236,6 +238,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
                 $identifiers[] = $identifier;
             }
         }
+
         sort($identifiers);
 
         return $identifiers;

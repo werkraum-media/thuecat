@@ -44,8 +44,10 @@ class PersistedAliasListMapper extends PersistedAliasMapper
             if ($slug === null) {
                 return null;
             }
+
             $slugs[] = $slug;
         }
+
         sort($slugs);
 
         return implode(self::SLUG_DELIMITER, $slugs);
@@ -59,6 +61,7 @@ class PersistedAliasListMapper extends PersistedAliasMapper
             if ($uid === null) {
                 return null;
             }
+
             $uids[] = $uid;
         }
 

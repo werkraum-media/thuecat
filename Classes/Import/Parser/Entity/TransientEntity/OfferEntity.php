@@ -90,6 +90,7 @@ class OfferEntity extends AbstractTransientEntity
             if ($raw === '') {
                 continue;
             }
+
             $types[] = $this->stripNamespacePrefix($raw);
         }
 
@@ -116,6 +117,7 @@ class OfferEntity extends AbstractTransientEntity
             if (!is_array($item)) {
                 continue;
             }
+
             $prices[] = [
                 'title' => $this->extractValue($item['schema:name'] ?? null, $language),
                 'description' => $this->extractValue($item['schema:description'] ?? null, $language),

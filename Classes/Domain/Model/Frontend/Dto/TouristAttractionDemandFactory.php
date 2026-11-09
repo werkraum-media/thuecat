@@ -40,30 +40,37 @@ class TouristAttractionDemandFactory
             $demand->setTowns(GeneralUtility::intExplode(',', $settings['towns'], true));
             $locked[] = 'towns';
         }
+
         if (!empty($settings['categories']) && is_string($settings['categories'])) {
             $demand->setCategories(GeneralUtility::intExplode(',', $settings['categories'], true));
             $locked[] = 'categories';
         }
+
         if (!empty($settings['keywords']) && is_string($settings['keywords'])) {
             $demand->setKeywords(GeneralUtility::intExplode(',', $settings['keywords'], true));
             $locked[] = 'keywords';
         }
+
         if (!empty($settings['petsAllowed'])) {
             $demand->setPetsAllowed(true);
             $locked[] = 'petsAllowed';
         }
+
         if (!empty($settings['isAccessibleForFree'])) {
             $demand->setIsAccessibleForFree(true);
             $locked[] = 'isAccessibleForFree';
         }
+
         if (!empty($settings['publicAccess'])) {
             $demand->setPublicAccess(true);
             $locked[] = 'publicAccess';
         }
+
         if (!empty($settings['recordTypes']) && is_string($settings['recordTypes'])) {
             $demand->setRecordTypes(GeneralUtility::trimExplode(',', $settings['recordTypes'], true));
             $locked[] = 'recordTypes';
         }
+
         // Not locked: locked properties render as hidden form fields.
         if (is_string($settings['sortBy'] ?? null)) {
             $demand->setSortBy($settings['sortBy']);
@@ -98,21 +105,27 @@ class TouristAttractionDemandFactory
         if ($filter->isLocked('towns')) {
             $demand->setTowns($locked->getTowns());
         }
+
         if ($filter->isLocked('categories')) {
             $demand->setCategories($locked->getCategories());
         }
+
         if ($filter->isLocked('keywords')) {
             $demand->setKeywords($locked->getKeywords());
         }
+
         if ($filter->isLocked('petsAllowed')) {
             $demand->setPetsAllowed($locked->getPetsAllowed());
         }
+
         if ($filter->isLocked('isAccessibleForFree')) {
             $demand->setIsAccessibleForFree($locked->getIsAccessibleForFree());
         }
+
         if ($filter->isLocked('publicAccess')) {
             $demand->setPublicAccess($locked->getPublicAccess());
         }
+
         // Always the editor's, even when empty, so a request can never pick the order or the record types.
         $demand->setSortBy($locked->getSortBy());
         $demand->setRecordTypes($locked->getRecordTypes());

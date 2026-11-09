@@ -215,6 +215,7 @@ class EventWithoutDatesTest extends AbstractImportTestCase
             $this->assertIsString($entry['remote_id']);
             $remoteIds[] = $entry['remote_id'];
         }
+
         sort($remoteIds);
 
         return $remoteIds;

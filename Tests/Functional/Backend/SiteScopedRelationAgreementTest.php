@@ -125,6 +125,7 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
             if (!is_array($node) || !isset($node[$key])) {
                 return [];
             }
+
             $node = $node[$key];
         }
 
@@ -137,6 +138,7 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
                 $uids[] = (int)$value;
             }
         }
+
         sort($uids);
 
         return $uids;
@@ -170,6 +172,7 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
                 $uids[] = (int)$uid;
             }
         }
+
         sort($uids);
 
         return $uids;

@@ -59,6 +59,7 @@ class EffectiveSettingsInModuleTest extends AbstractImportTestCase
         foreach ($this->get(ImportLogRepository::class)->findAll() as $candidate) {
             $log = $candidate;
         }
+
         $this->assertInstanceOf(ImportLog::class, $log);
 
         return $log;

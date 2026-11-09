@@ -243,10 +243,12 @@ abstract class AbstractEntity implements EntityInterface
             if (is_array($item) && isset($item['@language']) && $item['@language'] !== $language) {
                 continue;
             }
+
             $raw = $this->extractValue($item, $language);
             if ($raw === '') {
                 continue;
             }
+
             $names[] = $this->stripNamespacePrefix($raw);
         }
 
@@ -305,6 +307,7 @@ abstract class AbstractEntity implements EntityInterface
         if ($value === '') {
             return;
         }
+
         $this->translations[$sysLanguageUid][$fieldName] = $value;
     }
 
@@ -327,6 +330,7 @@ abstract class AbstractEntity implements EntityInterface
             foreach ($this->splitMediaByShape($value) as $node) {
                 $inline[] = ['kind' => $kind, 'node' => $node];
             }
+
             foreach ($this->collectIds($this->bareReferencesOnly($value)) as $id) {
                 $entries[] = ['kind' => $kind, 'id' => $id];
             }
@@ -362,6 +366,7 @@ abstract class AbstractEntity implements EntityInterface
         foreach ($references as $id) {
             $entries[] = ['kind' => $kind, 'id' => $id];
         }
+
         $this->transients['media'] = $entries;
     }
 
@@ -381,6 +386,7 @@ abstract class AbstractEntity implements EntityInterface
         if (in_array($value, [null, '', []], true)) {
             return [];
         }
+
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
 
         $inline = [];
@@ -388,9 +394,11 @@ abstract class AbstractEntity implements EntityInterface
             if (!is_array($item) || $this->isBareReference($item)) {
                 continue;
             }
+
             /** @var array<string, mixed> $item */
             $inline[] = $item;
         }
+
         return $inline;
     }
 
@@ -413,6 +421,7 @@ abstract class AbstractEntity implements EntityInterface
         if (in_array($value, [null, '', []], true)) {
             return [];
         }
+
         $items = is_array($value) && array_is_list($value) ? $value : [$value];
 
         $references = [];
@@ -422,6 +431,7 @@ abstract class AbstractEntity implements EntityInterface
                 $references[] = $item;
             }
         }
+
         return $references;
     }
 
@@ -446,8 +456,10 @@ abstract class AbstractEntity implements EntityInterface
             if ($id === '') {
                 continue;
             }
+
             $ids[] = (string)$id;
         }
+
         return $ids;
     }
 

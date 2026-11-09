@@ -219,6 +219,7 @@ class TouristAttractionDemand
             if (in_array($value, ['', [], false], true)) {
                 continue;
             }
+
             $state[$name] = $value === true ? 1 : $value;
         }
 
@@ -239,6 +240,7 @@ class TouristAttractionDemand
             if ($name === 'searchword' || in_array($name, $this->lockedProperties, true)) {
                 continue;
             }
+
             $parameters[$name] = is_array($value) ? implode(',', $value) : $value;
         }
 

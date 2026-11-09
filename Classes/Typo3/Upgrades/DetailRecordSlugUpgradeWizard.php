@@ -91,9 +91,11 @@ final readonly class DetailRecordSlugUpgradeWizard implements UpgradeWizardInter
                 if (in_array('unique', $evalCodes, true)) {
                     $slug = $helper->buildSlugForUniqueInTable($slug, $state);
                 }
+
                 if (in_array('uniqueInSite', $evalCodes, true)) {
                     $slug = $helper->buildSlugForUniqueInSite($slug, $state);
                 }
+
                 if (in_array('uniqueInPid', $evalCodes, true)) {
                     $slug = $helper->buildSlugForUniqueInPid($slug, $state);
                 }
@@ -131,6 +133,7 @@ final readonly class DetailRecordSlugUpgradeWizard implements UpgradeWizardInter
             if (!$this->tcaSchemaFactory->has($table)) {
                 continue;
             }
+
             foreach ($this->tcaSchemaFactory->get($table)->getFieldsOfType(TableColumnType::SLUG) as $field) {
                 $fields[] = [$table, $field->getName(), $field->getConfiguration()];
             }

@@ -64,6 +64,7 @@ class LocalisedValueReader
             if (is_string($item)) {
                 return $item;
             }
+
             if (!is_array($item)) {
                 continue;
             }

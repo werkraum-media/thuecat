@@ -50,6 +50,7 @@ class SyncScopeUrlProvider implements UrlProvider
         if (method_exists($configuration, 'getSyncScopeId') === false) {
             throw new InvalidArgumentException('Received incompatible import configuration.', 1629709276);
         }
+
         $syncScopeId = $configuration->getSyncScopeId();
         $instance = clone $this;
         $instance->syncScopeId = is_string($syncScopeId) ? $syncScopeId : '';

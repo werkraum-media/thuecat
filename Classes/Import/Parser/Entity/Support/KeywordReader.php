@@ -46,11 +46,13 @@ class KeywordReader
             if (!$entry instanceof KeywordEntry) {
                 continue;
             }
+
             // Same term referenced twice would otherwise cost a duplicate fetch.
             $key = $entry->shape . '|' . $entry->value;
             if (isset($seen[$key])) {
                 continue;
             }
+
             $seen[$key] = true;
             $entries[] = $entry;
         }
@@ -78,6 +80,7 @@ class KeywordReader
         if (is_array($usageType)) {
             $usageType = $usageType[0] ?? null;
         }
+
         // A datatype such as xsd:string marks a plain literal, not a vocabulary.
         if (is_string($usageType) && $usageType !== '' && !str_starts_with($usageType, 'xsd:')) {
             return new KeywordEntry(KeywordEntry::SHAPE_ONTOLOGY, $literal, $usageType);

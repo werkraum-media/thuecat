@@ -59,6 +59,7 @@ final class ConsoleProgressRenderer implements ImportProgressListener
         foreach (array_keys($settings) as $name) {
             $width = max($width, strlen($name));
         }
+
         foreach ($settings as $name => $value) {
             $this->output->writeln(sprintf('  %-' . $width . 's  %s', $name, $value));
         }
@@ -76,6 +77,7 @@ final class ConsoleProgressRenderer implements ImportProgressListener
             if ($this->interactive && $this->output->isDebug()) {
                 $this->writeDetail($progress);
             }
+
             return;
         }
 
@@ -123,6 +125,7 @@ final class ConsoleProgressRenderer implements ImportProgressListener
         if (($now - $this->lastDetailAt) < self::DETAIL_INTERVAL_SECONDS) {
             return;
         }
+
         $this->lastDetailAt = $now;
 
         $this->output->writeln('  ' . $this->counterLabel($progress));

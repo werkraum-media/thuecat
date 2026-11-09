@@ -326,6 +326,7 @@ class OpeningHoursFormatterTest extends TestCase
         foreach ($ranges as $range) {
             $this->assertFalse($range->isRange());
         }
+
         $this->assertSame(['Monday', 'Wednesday', 'Friday'], array_map(static fn (DayRange $range): string => $range->getFirstDay(), $ranges));
     }
 

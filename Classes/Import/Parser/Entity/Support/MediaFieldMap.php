@@ -62,6 +62,7 @@ class MediaFieldMap
         foreach (self::OWNERS as $class) {
             $map[$class::TABLE] = $class::MEDIA_FIELDS;
         }
+
         $this->fieldsByTable = $map;
     }
 

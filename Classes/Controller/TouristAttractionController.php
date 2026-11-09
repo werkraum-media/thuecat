@@ -142,6 +142,7 @@ class TouristAttractionController extends AbstractActionController
         if (!$contentObject instanceof ContentObjectRenderer) {
             return 0;
         }
+
         $uid = $contentObject->data['uid'] ?? null;
 
         return is_scalar($uid) ? (int)$uid : 0;
@@ -268,6 +269,7 @@ class TouristAttractionController extends AbstractActionController
         if (!$this->arguments->hasArgument('demand')) {
             return;
         }
+
         $argument = $this->arguments->getArgument('demand');
         $configuration = $argument->getPropertyMappingConfiguration();
         $configuration->allowAllProperties();
@@ -276,6 +278,7 @@ class TouristAttractionController extends AbstractActionController
         if (!class_exists($dataType)) {
             return;
         }
+
         foreach (new ReflectionClass($dataType)->getProperties() as $property) {
             $type = $property->getType();
             if ($type instanceof ReflectionNamedType && $type->getName() === 'array') {
@@ -335,6 +338,7 @@ class TouristAttractionController extends AbstractActionController
         if ($listPluginOnSamePage instanceof SiblingListPluginContext) {
             $this->demandFactory->applyEditorFilter($demand, $listPluginOnSamePage->getEditorFilter());
         }
+
         return $listPluginOnSamePage;
     }
 

@@ -97,6 +97,7 @@ class CacheIdentifierFactory
         foreach ($demand->getFilterState() as $name => $value) {
             $canonical[$name] = $this->canonicaliseValue($value);
         }
+
         ksort($canonical);
 
         return hash('xxh128', json_encode($canonical, JSON_THROW_ON_ERROR));

@@ -64,6 +64,7 @@ class Parser
             if (!is_array($node)) {
                 continue;
             }
+
             /** @var array<string, mixed> $node A JSON-LD node is an object. */
             $this->parseNode($node, $parserContext);
         }
@@ -131,6 +132,7 @@ class Parser
             if (!$candidate instanceof EntityInterface) {
                 continue;
             }
+
             foreach ($types as $type) {
                 if (in_array($type, $candidate->handlesTypes(), true)) {
                     $candidates[] = $candidate;
@@ -138,6 +140,7 @@ class Parser
                 }
             }
         }
+
         if ($candidates === []) {
             return null;
         }

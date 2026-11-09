@@ -121,9 +121,11 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
         foreach ($localisedFields as $field => $jsonldName) {
             $this->$field = $this->extractValue($node[$jsonldName] ?? null, $language);
         }
+
         foreach ($concatenatedFields as $field => $jsonldName) {
             $this->$field = $this->extractConcatenatedString($node[$jsonldName] ?? null, $language);
         }
+
         $this->distance_to_public_transport = $this->buildDistanceToPublicTransport(
             $node['thuecat:distanceToPublicTransport'] ?? null,
             $language
@@ -135,13 +137,16 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
                 $value = $this->extractValue($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+
             if (!isset($this->translations[$sysLanguageUid])) {
                 continue;
             }
+
             foreach ($concatenatedFields as $field => $jsonldName) {
                 $value = $this->extractConcatenatedString($node[$jsonldName] ?? null, $code);
                 $this->recordTranslation($field, $value, $sysLanguageUid);
             }
+
             $distance = $this->buildDistanceToPublicTransport(
                 $node['thuecat:distanceToPublicTransport'] ?? null,
                 $code
@@ -186,6 +191,7 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
                     $this->reportUnmatched($parserContext, 'thuecat:numberOfParkingSpace', $vehicle);
                     continue;
                 }
+
                 $this->$field += $spaces;
             }
         }

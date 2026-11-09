@@ -300,11 +300,13 @@ class Resolver
         foreach ($context->collectedKeywords as $keyword) {
             $byRemoteId[$keyword->remoteId] = $keyword;
         }
+
         foreach ($context->collectedKeywords as $keyword) {
             $anchor = $this->keywordAnchor($context, $keyword->ownerTable);
             if (!$anchor->isConfigured()) {
                 continue;
             }
+
             $this->createKeywordAncestors($payload, $context, $sitePageIds, $keyword, $byRemoteId, [], $anchor);
         }
 
@@ -325,6 +327,7 @@ class Resolver
             if (!$anchor->isConfigured()) {
                 continue;
             }
+
             $categoryKey = $this->keywordCategoryKey($payload, $context, $sitePageIds, $keyword, $anchor);
             $payload->setRelationField(
                 $keyword->ownerTable,
@@ -338,6 +341,7 @@ class Resolver
         foreach ($context->collectedKeywords as $keyword) {
             $keywordFields[$keyword->targetField] = true;
         }
+
         $this->preserveEditorRelations($payload, array_keys($keywordFields));
 
         $this->preserveKeywordsBehindFailures($payload, $context);
@@ -381,6 +385,7 @@ class Resolver
                     if (isset($context->claimedPlaceMatch[$claim])) {
                         continue;
                     }
+
                     $context->claimedPlaceMatch[$claim] = true;
 
                     $place = $this->matchPlaceReference(
@@ -519,6 +524,7 @@ class Resolver
                 if ($value === '') {
                     continue;
                 }
+
                 $payload->setField(
                     AddressEntity::TABLE,
                     (string)$key,
@@ -535,11 +541,13 @@ class Resolver
                 if ($language === null) {
                     continue;
                 }
+
                 foreach (self::ADDRESS_VOCABULARY_FIELDS as $field) {
                     $value = (string)($fields[$field] ?? '');
                     if ($value === '') {
                         continue;
                     }
+
                     $payload->addTranslationField(
                         AddressEntity::TABLE,
                         (string)$remoteId,
@@ -636,6 +644,7 @@ class Resolver
         if (in_array($keyword->remoteId, $visited, true)) {
             return;
         }
+
         $visited[] = $keyword->remoteId;
 
         $parent = $keyword->parentRemoteId === null ? null : ($byRemoteId[$keyword->parentRemoteId] ?? null);
@@ -784,6 +793,7 @@ class Resolver
         if (in_array($uri, $visited, true) || count($visited) >= ResolverContext::MAX_KEYWORD_DEPTH) {
             return null;
         }
+
         $visited[] = $uri;
 
         $term = $this->fetchKeywordTerm($context, $uri, $technicalFailure);
@@ -1029,6 +1039,7 @@ class Resolver
             if (!$anchor->isConfigured()) {
                 continue;
             }
+
             $index ??= $this->vocabularyProvider->index($context->apiKey);
 
             foreach ($categoriesByOwner as $ownerRemoteId => $categories) {
@@ -1104,6 +1115,7 @@ class Resolver
                 if (isset($context->reportedBranches[$class])) {
                     return;
                 }
+
                 $context->reportedBranches[$class] = true;
                 $this->importLogger->recordDiscardedParents(
                     $class,
@@ -1378,6 +1390,7 @@ class Resolver
         if ($language === null) {
             return [];
         }
+
         $parentField = $language['parent'];
         $languageField = $language['languageField'];
 
@@ -1401,8 +1414,10 @@ class Resolver
             if (!is_numeric($sysLanguageUid) || !is_numeric($uid)) {
                 continue;
             }
+
             $result[(int)$sysLanguageUid] = (int)$uid;
         }
+
         return $result;
     }
 
@@ -1428,6 +1443,7 @@ class Resolver
                         $payload->dropRow($table, $remoteId);
                         continue;
                     }
+
                     // Lowered before the drain: its cap checks read this depth.
                     $context->depthByRemoteId[$remoteId] = 0;
                     $context->rerootedKeys[$table][$context->remoteIdToKey[$remoteId]] = true;
@@ -1671,9 +1687,11 @@ class Resolver
                                         $payload->removeTransient($ownerTable, $ownerRemoteId, 'media', $entry);
                                     }
                                 }
+
                                 $progress = true;
                                 continue;
                             }
+
                             $this->importMediaFiles(
                                 $payload,
                                 $context,
@@ -1858,6 +1876,7 @@ class Resolver
                                 if (($context->remoteIdToTable[$reference] ?? $foundTable) !== $foundTable) {
                                     $this->withdrawRelation($payload, $ownerTable, $ownerKey, $foundField, (string)$uid);
                                 }
+
                                 $payload->removeTransient($ownerTable, $ownerRemoteId, $bucket, $reference);
                                 $progress = true;
                                 continue;
@@ -1960,6 +1979,7 @@ class Resolver
             if ($node === null) {
                 continue;
             }
+
             foreach ($languages as $language) {
                 $name = $reader->read($node['schema:name'] ?? null, $language);
                 if ($name !== '') {
@@ -2139,6 +2159,7 @@ class Resolver
             if (!is_array($graph)) {
                 $graph = [];
             }
+
             if (in_array($bucket, self::ROOM_BUCKETS, true) && !$this->graphNamesMeetingRoom($graph, $reference)) {
                 return;
             }
@@ -2242,6 +2263,7 @@ class Resolver
                 // Upstream removed the media — drop the reference
                 continue;
             }
+
             $resolvedAuthor = null;
             $authorRef = MediaEntity::authorReference($mediaNode);
             if ($authorRef !== null) {
@@ -2383,6 +2405,7 @@ class Resolver
                 if (($context->assetGoneByUrl[$downloadUrl] ?? false) !== true) {
                     $context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $targetField] = true;
                 }
+
                 $this->importLogger->recordSkippedReference(
                     $ownerTable,
                     $ownerRemoteId,
@@ -2411,6 +2434,7 @@ class Resolver
                 if (!$assetIsGone) {
                     $context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $targetField] = true;
                 }
+
                 $reason = $this->downloadFailureReason($failureDetail);
                 $context->markReferenceFailed($downloadUrl, $reason);
                 $this->importLogger->recordSkippedReference(
@@ -2458,6 +2482,7 @@ class Resolver
                     $payload->clearInlineMedia($ownerTable, (string)$ownerRemoteId);
                 }
             }
+
             return;
         }
 
@@ -2536,6 +2561,7 @@ class Resolver
                     $columnValue = (string)($childRow[$config['column'] ?? ''] ?? '');
                     $inlineField = $config['fieldByValue'][$columnValue] ?? null;
                 }
+
                 if ($inlineField === null) {
                     continue;
                 }
@@ -2612,6 +2638,7 @@ class Resolver
                     if (isset($survivors[$remoteId])) {
                         continue;
                     }
+
                     $payload->addCmdMap($childTable, (string)$uid, 'delete', 1);
                 }
             }
@@ -2656,6 +2683,7 @@ class Resolver
             if (!is_numeric($uid) || !is_string($remoteId)) {
                 continue;
             }
+
             $children[(int)$uid] = $remoteId;
         }
 
@@ -2725,6 +2753,7 @@ class Resolver
                 $payload->removeTransient($ownerTable, $ownerRemoteId, 'accessibilitySpecification', $reference);
                 continue;
             }
+
             $entity = new AccessibilitySpecificationEntity();
             $entity->configure($node, $context->language);
 
@@ -2749,6 +2778,7 @@ class Resolver
                 if (!isset($existingTranslations[$sysLanguageUid])) {
                     continue;
                 }
+
                 $translatedEntity = new AccessibilitySpecificationEntity();
                 $translatedEntity->configure($node, $languageCode);
                 $payload->addTranslationField(
@@ -2783,6 +2813,7 @@ class Resolver
                     $context->channelResponseByReference[$reference] = null;
                 }
             }
+
             if ($context->channelResponseByReference[$reference] !== null) {
                 return $context->channelResponseByReference[$reference];
             }
@@ -2813,10 +2844,12 @@ class Resolver
             if (!is_array($node)) {
                 continue;
             }
+
             /** @var array<string, mixed> $node */
             if (($node['@id'] ?? null) === $expectedId) {
                 return $node;
             }
+
             $fallback ??= $node;
         }
 
@@ -2872,6 +2905,7 @@ class Resolver
             $byFile[(int)(is_numeric($row['uid_local']) ? $row['uid_local'] : 0)]
                 = (int)(is_numeric($row['uid']) ? $row['uid'] : 0);
         }
+
         return $byFile;
     }
 
@@ -2992,6 +3026,7 @@ class Resolver
         if (!$this->tcaSchemaFactory->has($table)) {
             return false;
         }
+
         return $this->tcaSchemaFactory->get($table)->hasField($field);
     }
 
@@ -3025,10 +3060,12 @@ class Resolver
         if (!$this->tcaSchemaFactory->has($table)) {
             return null;
         }
+
         $schema = $this->tcaSchemaFactory->get($table);
         if (!$schema->hasCapability(TcaSchemaCapability::Language)) {
             return null;
         }
+
         $capability = $schema->getCapability(TcaSchemaCapability::Language);
         return [
             'languageField' => $capability->getLanguageField()->getName(),

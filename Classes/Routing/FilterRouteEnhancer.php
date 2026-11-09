@@ -65,6 +65,7 @@ class FilterRouteEnhancer extends ExtbasePluginEnhancer
             if (!is_array($route) || !is_string($route['routePath'] ?? null)) {
                 continue;
             }
+
             foreach ($combinations as $combination) {
                 $variants[] = $this->variantFor($route, $filters, $combination);
             }
@@ -87,10 +88,12 @@ class FilterRouteEnhancer extends ExtbasePluginEnhancer
             if (($combination & (1 << $index)) === 0 || !is_array($filter) || !is_string($filter['name'] ?? null)) {
                 continue;
             }
+
             $name = $filter['name'];
             if (is_string($filter['label'] ?? null)) {
                 $segments[] = '{' . $filter['label'] . '}';
             }
+
             $segments[] = '{' . $name . '}';
             $arguments[$name] = is_string($filter['argument'] ?? null) ? $filter['argument'] : $name;
         }

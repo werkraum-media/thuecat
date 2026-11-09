@@ -153,6 +153,7 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
                 $identifiers[] = $identifier;
             }
         }
+
         foreach ($this->attractionUids() as $uid) {
             foreach ($backend->findIdentifiersByTag('tx_thuecat_tourist_attraction_' . $uid) as $identifier) {
                 if (is_string($identifier)) {
@@ -160,6 +161,7 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
                 }
             }
         }
+
         $identifiers = array_values(array_unique($identifiers));
         sort($identifiers);
 
@@ -188,6 +190,7 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
                 $timestamps[(int)$uid] = (int)$tstamp;
             }
         }
+
         ksort($timestamps);
 
         return $timestamps;

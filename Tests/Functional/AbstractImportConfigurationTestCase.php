@@ -106,6 +106,7 @@ abstract class AbstractImportConfigurationTestCase extends AbstractFunctionalTes
         if (!is_array($confVars)) {
             $confVars = [];
         }
+
         $extensions = is_array($confVars['EXTENSIONS'] ?? null) ? $confVars['EXTENSIONS'] : [];
         $extensions['thuecat'] = $configuration;
         $confVars['EXTENSIONS'] = $extensions;

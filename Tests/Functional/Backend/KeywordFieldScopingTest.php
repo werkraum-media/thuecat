@@ -80,6 +80,7 @@ class KeywordFieldScopingTest extends AbstractBackendTestCase
             if (!is_array($node) || !isset($node[$key])) {
                 return '';
             }
+
             $node = $node[$key];
         }
 

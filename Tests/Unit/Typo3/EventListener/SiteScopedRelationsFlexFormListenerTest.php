@@ -135,6 +135,7 @@ class SiteScopedRelationsFlexFormListenerTest extends TestCase
             if (!is_array($node) || !isset($node[$key])) {
                 return null;
             }
+
             $node = $node[$key];
         }
 

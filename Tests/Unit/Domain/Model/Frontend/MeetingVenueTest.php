@@ -125,15 +125,18 @@ class MeetingVenueTest extends TestCase
             $rooms[$uid]->_setProperty('uid', $uid);
             $rooms[$uid]->_setProperty('containedRooms', new ObjectStorage());
         }
+
         foreach ($containedRoomUids as $uid => $containedUids) {
             foreach ($containedUids as $containedUid) {
                 $rooms[$uid]->getContainedRooms()->attach($rooms[$containedUid]);
             }
         }
+
         $venueRooms = new ObjectStorage();
         foreach ($venueRoomUids as $uid) {
             $venueRooms->attach($rooms[$uid]);
         }
+
         $subject = new MeetingVenue();
         $subject->_setProperty('meetingRooms', $venueRooms);
 

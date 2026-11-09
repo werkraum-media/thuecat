@@ -84,6 +84,7 @@ class OrganisationReclassificationRepair
             if ($table === self::TABLE || !isset($containedInFields[$table]) || !ctype_digit($uid)) {
                 continue;
             }
+
             $written[$remoteId] = ['table' => $table, 'uid' => (int)$uid];
         }
 
@@ -177,6 +178,7 @@ class OrganisationReclassificationRepair
                 if (!is_numeric($row['uid'] ?? null)) {
                     continue;
                 }
+
                 $uid = (int)$row['uid'];
                 $data[$table][$uid]['contained_in_organisation'] = implode(',', array_diff(
                     $this->uidList($row['contained_in_organisation']),
@@ -231,6 +233,7 @@ class OrganisationReclassificationRepair
                 if (!is_numeric($uid)) {
                     continue;
                 }
+
                 $data[$table][(int)$uid]['managed_by'] = '0';
                 $dropped[] = $table . ':' . (int)$uid;
             }

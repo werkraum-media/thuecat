@@ -125,6 +125,7 @@ class VocabularyDistiller
                 $labels[VocabularyClass::UNTAGGED] = $entry;
                 continue;
             }
+
             if (!is_array($entry)) {
                 continue;
             }

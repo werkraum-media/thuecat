@@ -515,6 +515,7 @@ class KeywordImportTest extends AbstractImportTestCase
             if ((string)$row['remote_id'] === '') {
                 continue;
             }
+
             $checked++;
 
             $underKeywordAnchor = $this->isDescendantOf((int)$row['uid'], 200);
@@ -580,6 +581,7 @@ class KeywordImportTest extends AbstractImportTestCase
             if ($current === $ancestorUid) {
                 return true;
             }
+
             $current = $this->parentOf($current);
         }
 

@@ -211,6 +211,7 @@ class SearchMaskCacheTest extends AbstractCachingTestCase
                 $identifiers[] = $identifier;
             }
         }
+
         sort($identifiers);
 
         return $identifiers;

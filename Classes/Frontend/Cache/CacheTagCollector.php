@@ -50,6 +50,7 @@ class CacheTagCollector
             if (!$record instanceof DomainObjectInterface) {
                 continue;
             }
+
             $tags[$this->tableFor($record) . '_' . $record->getUid()] = true;
         }
 
@@ -79,11 +80,13 @@ class CacheTagCollector
         foreach ($tables as $table) {
             $tags[$table] = true;
         }
+
         foreach ($recordSets as $records) {
             foreach ($records as $record) {
                 if (!$record instanceof DomainObjectInterface) {
                     continue;
                 }
+
                 $tags[$this->tableFor($record)] = true;
             }
         }
