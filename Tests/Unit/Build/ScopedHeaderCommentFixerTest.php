@@ -94,6 +94,7 @@ class ScopedHeaderCommentFixerTest extends TestCase
     {
         $fixer = new ScopedHeaderCommentFixer('/project');
         $fixer->setWhitespacesConfig(new WhitespacesFixerConfig());
+
         $file = new SplFileInfo('/project/' . $relativePath);
         $this->assertTrue($fixer->supports($file), 'Precondition: the fixer handles ' . $relativePath);
 

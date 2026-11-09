@@ -94,6 +94,7 @@ class ReverseRelationElement extends AbstractFormElement
         $schema = $this->tcaSchemaFactory->get($table);
         $labelField = $schema->getRawConfiguration()['label'] ?? null;
         $labelField = is_string($labelField) ? $labelField : 'uid';
+
         $language = $this->editedRecordLanguage();
 
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);

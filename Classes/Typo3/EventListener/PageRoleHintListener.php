@@ -69,6 +69,7 @@ readonly class PageRoleHintListener
 
         $currentRole = $pageContext->pageRecord[self::FIELD] ?? '';
         $currentRole = is_string($currentRole) ? $currentRole : '';
+
         $mismatch = !in_array($currentRole, $recommendedRoles, true);
         $backendUser = $GLOBALS['BE_USER'] ?? null;
         $languageService = $this->languageServiceFactory->createFromUserPreferences(

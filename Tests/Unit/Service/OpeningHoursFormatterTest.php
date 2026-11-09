@@ -40,6 +40,7 @@ class OpeningHoursFormatterTest extends TestCase
         parent::setUp();
         $context = new Context();
         $context->setAspect('date', new DateTimeAspect(new DateTimeImmutable()));
+
         $this->subject = new OpeningHoursFormatter($context);
     }
 

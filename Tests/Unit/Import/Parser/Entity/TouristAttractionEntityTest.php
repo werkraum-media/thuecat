@@ -67,6 +67,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
+
         $result = $entity->toArray();
 
         $this->assertSame('https://thuecat.org/resources/333039283321-xxwg', $result['remote_id']);
@@ -128,6 +129,7 @@ class TouristAttractionEntityTest extends AbstractImportTestCase
 
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
+
         $result = $entity->toArray();
 
         // The legacy blob column is never written any more; the address is a

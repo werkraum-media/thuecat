@@ -41,6 +41,7 @@ final class SyncChannelUrlProviderTest extends TestCase
 
         $syncChannel = new ImportConfiguration();
         $syncChannel->_setProperty('type', 'syncChannel');
+
         $syncScope = new ImportConfiguration();
         $syncScope->_setProperty('type', 'syncScope');
 

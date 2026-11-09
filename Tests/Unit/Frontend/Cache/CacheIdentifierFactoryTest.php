@@ -67,6 +67,7 @@ class CacheIdentifierFactoryTest extends TestCase
     {
         $demand = $this->demand();
         $demand->setTowns([1]);
+
         $otherDemand = $this->demand();
         $otherDemand->setTowns([2]);
 
@@ -83,6 +84,7 @@ class CacheIdentifierFactoryTest extends TestCase
     {
         $demand = $this->demand();
         $demand->setTowns([1]);
+
         $otherDemand = $this->demand();
         $otherDemand->setTowns([2]);
 

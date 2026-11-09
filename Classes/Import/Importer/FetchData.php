@@ -106,6 +106,7 @@ class FetchData
         // Per-call: concurrent configurations may target different hosts.
         $domain = ($apiDomain === null || $apiDomain === '') ? self::DEFAULT_API_DOMAIN : $apiDomain;
         $domain = rtrim($domain, '/') . '/';
+
         $timezone = new DateTimeZone('Europe/Berlin');
         $from = '';
         if ($fetchLastXDays > 0) {

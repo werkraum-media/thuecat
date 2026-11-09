@@ -55,6 +55,7 @@ class ImportLogTest extends TestCase
     {
         $configuration = new ImportConfiguration();
         $configuration->_setProperty('uid', 10);
+
         $subject = new ImportLog($configuration);
 
         $this->assertSame(10, $subject->getConfigurationUid());

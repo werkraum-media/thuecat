@@ -99,6 +99,7 @@ class Parser
 
         $entity->resetPerRecordState();
         $entity->parse($node, $this->language, $parserContext, $this->translationLanguages);
+
         $this->dataHandlerPayload->addEntity($entity);
 
         // Inline side rows the parent manufactured (e.g. per-occurrence Date

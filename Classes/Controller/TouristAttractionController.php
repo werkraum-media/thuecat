@@ -241,6 +241,7 @@ class TouristAttractionController extends AbstractActionController
         $routing = $this->request->getAttribute('routing');
         $listArguments = $routing instanceof PageArguments ? $routing->get($listNamespace) : null;
         $listArguments = is_array($listArguments) ? $listArguments : [];
+
         $parsedBody = $this->request->getParsedBody();
         if ($this->request->getMethod() === 'POST' && is_array($parsedBody)) {
             $body = $parsedBody[$listNamespace] ?? [];

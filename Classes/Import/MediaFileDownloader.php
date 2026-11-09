@@ -217,6 +217,7 @@ class MediaFileDownloader
         // Stem for browsability only; upstream stems are generic, so the hash separates.
         $stem = (string)preg_replace('/[^A-Za-z0-9._-]+/', '-', pathinfo($path, PATHINFO_FILENAME));
         $stem = trim($stem, '-.');
+
         $hash = substr(hash('sha256', $downloadUrl), 0, 16);
 
         return ($stem === '' ? $hash : $stem . '_' . $hash) . '.' . $extension;

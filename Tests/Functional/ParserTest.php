@@ -36,6 +36,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         $this->assertArrayHasKey('tx_thuecat_organisation', $result);
@@ -57,6 +58,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -86,6 +88,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -124,6 +127,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $payload = $subject->getDataHandlerPayload();
 
         $data = $payload->getDataMap();
@@ -242,6 +246,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         $this->assertArrayHasKey('tx_thuecat_tourist_information', $result);
@@ -264,6 +269,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $payload = $subject->getDataHandlerPayload();
 
         $needle = 'REF:';
@@ -463,6 +469,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         foreach (array_keys($result) as $table) {
@@ -479,6 +486,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         // The trail's own inline children are expected; another record kind's
@@ -499,6 +507,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         $this->assertArrayNotHasKey('tx_thuecat_trail', $result);
@@ -549,6 +558,7 @@ final class ParserTest extends AbstractFunctionalTestCase
 
         $subject = $this->get(Parser::class);
         $subject->parse($graph, new ParserContext(0));
+
         $result = $subject->getDataHandlerPayload()->getDataMap();
 
         $this->assertSame($expectedType, $result['tx_thuecat_tourist_attraction'][$remoteId]['type'] ?? null);

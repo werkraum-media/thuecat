@@ -2091,6 +2091,7 @@ class Resolver
 
         $location = new LocationEntity();
         $location->configure($node, $context->language);
+
         $globalId = $location->isValid() ? $location->getGlobalId() : '';
         $context->locationGlobalIdByReference[$reference] = $globalId;
 

@@ -64,6 +64,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'de');
+
         $result = $entity->toArray();
 
         $this->assertSame('Beispielweg 5', $result['street'] ?? '');
@@ -90,6 +91,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'en');
+
         $result = $entity->toArray();
 
         $this->assertSame('Example Lane 5', $result['street'] ?? '');
@@ -125,6 +127,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure([], 'de', [], $parentRemoteId);
+
         $childRemoteId = (string)($entity->toArray()['remote_id'] ?? '');
 
         $this->assertNotSame($parentRemoteId, $childRemoteId);
@@ -140,6 +143,7 @@ class AddressEntityTest extends TestCase
     {
         $first = new AddressEntity();
         $first->configure([], 'de', [], 'https://thuecat.org/resources/x', 0);
+
         $second = new AddressEntity();
         $second->configure([], 'de', [], 'https://thuecat.org/resources/x', 1);
 
@@ -191,6 +195,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'de', $geo, 'https://thuecat.org/resources/333039283321-xxwg');
+
         $result = $entity->toArray();
 
         // Coordinates are their own columns, kept as delivered.
@@ -254,6 +259,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'de');
+
         $result = $entity->toArray();
 
         $this->assertSame('Deutschland', $result['country'] ?? '');
@@ -281,6 +287,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'de');
+
         $result = $entity->toArray();
 
         $this->assertSame('thuecat:Germany', $result['country'] ?? '');
@@ -306,6 +313,7 @@ class AddressEntityTest extends TestCase
     {
         $entity = new AddressEntity();
         $entity->configure(['schema:postalCode' => ['@language' => 'de', '@value' => '99084']], 'de');
+
         $result = $entity->toArray();
 
         $this->assertSame('', $result['country'] ?? '');
@@ -461,6 +469,7 @@ class AddressEntityTest extends TestCase
 
         $entity = new AddressEntity();
         $entity->configure($node, 'de', $geo_node, 'https://thuecat.org/resources/333039283321-xxwg');
+
         $result = $entity->toArray();
 
         // remote_id is a real column on the Address record; it must stay unprefixed

@@ -78,6 +78,7 @@ class VocabularyIndexCacheTest extends TestCase
         $cache = new VocabularyIndexCache($this->cache($entries));
 
         $cache->write($this->index(), 1000);
+
         $cached = $cache->read();
 
         $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
@@ -92,6 +93,7 @@ class VocabularyIndexCacheTest extends TestCase
         $cache = new VocabularyIndexCache($this->cache($entries));
 
         $cache->write($this->index(), 1000);
+
         $cached = $cache->read();
 
         $this->assertInstanceOf(CachedVocabularyIndex::class, $cached);
