@@ -27,14 +27,14 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
  * MergedByWeekday partial); raw tx_thuecat_opening_hours rows are never exposed
  * directly.
  */
-final class MergedByWeekday
+final readonly class MergedByWeekday
 {
     /**
      * @param list<MergedPeriod> $periods
      */
     public function __construct(
-        private readonly array $periods,
-        private readonly bool $openNow,
+        private array $periods,
+        private bool $openNow,
     ) {
     }
 

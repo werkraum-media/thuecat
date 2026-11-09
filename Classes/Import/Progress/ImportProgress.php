@@ -20,17 +20,17 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Progress;
 
-final class ImportProgress
+final readonly class ImportProgress
 {
     /**
      * @param int|null $total null where the size is not knowable in advance;
      *        renderers must show liveness rather than invent a percentage
      */
     public function __construct(
-        public readonly ImportPhase $phase,
-        public readonly string $label = '',
-        public readonly ?int $current = null,
-        public readonly ?int $total = null,
+        public ImportPhase $phase,
+        public string $label = '',
+        public ?int $current = null,
+        public ?int $total = null,
     ) {
     }
 

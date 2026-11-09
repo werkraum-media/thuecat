@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Import\Settings;
  * the names integrators already configured stay valid. Kinds reached only as
  * relations use the default scope.
  */
-final class AnchorScope
+final readonly class AnchorScope
 {
     public const DEFAULT = 'thuecat';
 
@@ -34,7 +34,7 @@ final class AnchorScope
      * @param non-empty-string $value
      */
     public function __construct(
-        public readonly string $value
+        public string $value
     ) {
     }
 

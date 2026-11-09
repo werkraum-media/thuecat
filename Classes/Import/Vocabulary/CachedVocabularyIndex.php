@@ -25,11 +25,11 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
  * current. Keeping the two together is what lets a caller use a stale index
  * deliberately when a refresh fails.
  */
-final class CachedVocabularyIndex
+final readonly class CachedVocabularyIndex
 {
     public function __construct(
-        public readonly VocabularyIndex $index,
-        public readonly int $fetchedAt
+        public VocabularyIndex $index,
+        public int $fetchedAt
     ) {
     }
 

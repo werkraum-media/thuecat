@@ -31,14 +31,14 @@ use Traversable;
  *
  * @implements IteratorAggregate<int, FilterOption>
  */
-final class FilterOptions implements IteratorAggregate, Countable
+final readonly class FilterOptions implements IteratorAggregate, Countable
 {
     /**
      * @param FilterOption[] $options
      */
     public function __construct(
-        private readonly string $name,
-        private readonly array $options,
+        private string $name,
+        private array $options,
     ) {
     }
 

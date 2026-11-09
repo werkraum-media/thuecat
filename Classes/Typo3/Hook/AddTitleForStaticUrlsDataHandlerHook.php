@@ -33,14 +33,14 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 /**
  * Will add a title for all url entries, based on the fetched name of the record within url.
  */
-final class AddTitleForStaticUrlsDataHandlerHook
+final readonly class AddTitleForStaticUrlsDataHandlerHook
 {
     public function __construct(
-        private readonly SiteFinder $siteFinder,
-        private readonly FetchData $fetchData,
+        private SiteFinder $siteFinder,
+        private FetchData $fetchData,
         // this finds and instantiates all Classes implementing the EntityInterface (which contains the service tag)
         #[AutowireLocator(services: 'import.entity')]
-        private readonly ServiceLocator $entities,
+        private ServiceLocator $entities,
     ) {
     }
 

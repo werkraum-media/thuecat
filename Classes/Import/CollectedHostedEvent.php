@@ -24,12 +24,12 @@ namespace WerkraumMedia\ThueCat\Import;
  * A stored event that a place names itself, held until the flush relates it. The place is identified by its
  * remote_id, because it may still carry a NEW key while the event already has its uid.
  */
-final class CollectedHostedEvent
+final readonly class CollectedHostedEvent
 {
     public function __construct(
-        public readonly string $placeRemoteId,
-        public readonly string $placeTable,
-        public readonly int $eventUid,
+        public string $placeRemoteId,
+        public string $placeTable,
+        public int $eventUid,
     ) {
     }
 }

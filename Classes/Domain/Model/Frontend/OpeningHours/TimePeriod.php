@@ -26,11 +26,11 @@ use DateTimeImmutable;
  * One open–close interval on a single weekday. A weekday may carry several.
  * Wall-clock only — the date part is irrelevant.
  */
-final class TimePeriod
+final readonly class TimePeriod
 {
     public function __construct(
-        private readonly DateTimeImmutable $opens,
-        private readonly DateTimeImmutable $closes,
+        private DateTimeImmutable $opens,
+        private DateTimeImmutable $closes,
     ) {
     }
 

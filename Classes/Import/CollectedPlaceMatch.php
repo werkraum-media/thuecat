@@ -21,13 +21,13 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 /** One event matched to one place, held until the flush relates it. */
-final class CollectedPlaceMatch
+final readonly class CollectedPlaceMatch
 {
     public function __construct(
-        public readonly string $eventRemoteId,
-        public readonly string $placeTable,
-        public readonly int $placeUid,
-        public readonly string $field,
+        public string $eventRemoteId,
+        public string $placeTable,
+        public int $placeUid,
+        public string $field,
     ) {
     }
 }

@@ -43,7 +43,7 @@ use WerkraumMedia\ThueCat\Import\EventPlaceMatcher;
  */
 #[UpgradeWizard('thuecat_eventRelationsToMm')]
 #[Autoconfigure(public: true)]
-final class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
+final readonly class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
 {
     private const FIELDS = [
         ['tx_thuecat_tourist_attraction', EventPlaceMatcher::FIELD_HOSTS],
@@ -53,8 +53,8 @@ final class EventRelationsToMmUpgradeWizard implements UpgradeWizardInterface, R
     ];
 
     public function __construct(
-        private readonly TcaSchemaFactory $tcaSchemaFactory,
-        private readonly ConnectionPool $connectionPool,
+        private TcaSchemaFactory $tcaSchemaFactory,
+        private ConnectionPool $connectionPool,
     ) {
     }
 

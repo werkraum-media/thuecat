@@ -31,16 +31,16 @@ use Psr\Http\Message\ResponseInterface;
  * so the decision is testable without a handler stack and each exhausted retry
  * can be reported with its attempt count.
  */
-final class RetryingClient implements ImportHttpClient
+final readonly class RetryingClient implements ImportHttpClient
 {
     // Internal, never sent upstream: how many attempts produced this response.
     public const ATTEMPTS_HEADER = 'X-Thuecat-Import-Attempts';
 
     public function __construct(
-        private readonly ClientInterface $client,
-        private readonly int $maxAttempts,
-        private readonly ?Closure $sleeper = null,
-        private readonly ?RetryTally $tally = null,
+        private ClientInterface $client,
+        private int $maxAttempts,
+        private ?Closure $sleeper = null,
+        private ?RetryTally $tally = null,
     ) {
     }
 

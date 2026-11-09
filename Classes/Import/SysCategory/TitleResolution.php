@@ -28,14 +28,14 @@ namespace WerkraumMedia\ThueCat\Import\SysCategory;
  * wholly from upstream needs no one's attention, while one the map supplied is
  * a title somebody maintains by hand.
  */
-final class TitleResolution
+final readonly class TitleResolution
 {
     /**
      * @param array<string, string> $titles language code => title
      */
     public function __construct(
-        public readonly array $titles,
-        public readonly bool $usedFallback
+        public array $titles,
+        public bool $usedFallback
     ) {
     }
 

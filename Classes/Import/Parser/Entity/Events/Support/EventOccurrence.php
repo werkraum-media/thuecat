@@ -25,12 +25,12 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support;
 // `canceled` only ever comes from a schedule: no cancellation key has been seen
 // on an event node. It is carried anyway so both paths produce one shape, which
 // is cheaper than a second type for one field.
-final class EventOccurrence
+final readonly class EventOccurrence
 {
     public function __construct(
-        public readonly string $start,
-        public readonly string $end,
-        public readonly bool $canceled = false,
+        public string $start,
+        public string $end,
+        public bool $canceled = false,
     ) {
     }
 }

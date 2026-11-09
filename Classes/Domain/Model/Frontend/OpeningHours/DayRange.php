@@ -25,11 +25,11 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
  * last day (e.g. Monday–Friday). A standalone day has firstDay === lastDay and
  * isRange() === false, so the template renders "Monday" instead of a span.
  */
-final class DayRange
+final readonly class DayRange
 {
     public function __construct(
-        private readonly string $firstDay,
-        private readonly string $lastDay,
+        private string $firstDay,
+        private string $lastDay,
     ) {
     }
 

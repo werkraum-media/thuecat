@@ -27,7 +27,7 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
  * self::UNTAGGED, because schema.org writes plain strings while ThueCat tags
  * every label; the reader decides what an untagged label is worth.
  */
-final class VocabularyClass
+final readonly class VocabularyClass
 {
     public const UNTAGGED = '';
 
@@ -36,9 +36,9 @@ final class VocabularyClass
      * @param array<string, string> $labels  language code => label
      */
     public function __construct(
-        public readonly string $id,
-        public readonly array $parents,
-        public readonly array $labels
+        public string $id,
+        public array $parents,
+        public array $labels
     ) {
     }
 

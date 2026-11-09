@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 /** One keyword claimed by one owner field, held until the flush relates it. */
-final class CollectedKeyword
+final readonly class CollectedKeyword
 {
     /**
      * @param array<string, string> $titles language code => title. Upstream
@@ -30,15 +30,15 @@ final class CollectedKeyword
      *                                      language's and discard the rest.
      */
     public function __construct(
-        public readonly string $ownerTable,
-        public readonly string $ownerKey,
-        public readonly string $targetField,
-        public readonly string $remoteId,
-        public readonly array $titles,
+        public string $ownerTable,
+        public string $ownerKey,
+        public string $targetField,
+        public string $remoteId,
+        public array $titles,
         // Null for a keyword that sits directly under the configured anchor.
-        public readonly ?string $parentRemoteId = null,
+        public ?string $parentRemoteId = null,
         // False for an ancestor: it becomes a category, never a relation.
-        public readonly bool $isCited = true,
+        public bool $isCited = true,
     ) {
     }
 

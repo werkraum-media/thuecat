@@ -29,16 +29,16 @@ use DateTimeImmutable;
  * whether to pad closed days. A period is "current" when today falls in its
  * window, otherwise "future" (past periods are dropped by the formatter).
  */
-final class Period implements PeriodInterface
+final readonly class Period implements PeriodInterface
 {
     /**
      * @param list<WeekDay> $weekDays
      */
     public function __construct(
-        private readonly ?DateTimeImmutable $validFrom,
-        private readonly ?DateTimeImmutable $validThrough,
-        private readonly array $weekDays,
-        private readonly bool $current,
+        private ?DateTimeImmutable $validFrom,
+        private ?DateTimeImmutable $validThrough,
+        private array $weekDays,
+        private bool $current,
     ) {
     }
 

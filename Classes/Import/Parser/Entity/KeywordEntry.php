@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 /** One `schema:keywords` entry, tagged with the shape it arrived in. */
-final class KeywordEntry
+final readonly class KeywordEntry
 {
     public const SHAPE_REFERENCE = 'reference';
 
@@ -30,11 +30,11 @@ final class KeywordEntry
     public const SHAPE_FREE_TEXT = 'freeText';
 
     public function __construct(
-        public readonly string $shape,
-        public readonly string $value,
+        public string $shape,
+        public string $value,
         // Set for ontology entries only: the fetched term may belong to several
         // enums, so only the usage site says which one applies here.
-        public readonly ?string $usageType = null,
+        public ?string $usageType = null,
     ) {
     }
 }

@@ -27,7 +27,7 @@ namespace WerkraumMedia\ThueCat\Import\SysCategory;
  * Identity is the source value, never the title, so a term keeps its record when
  * upstream renames it or when its title starts coming from another source.
  */
-final class SysCategoryTerm
+final readonly class SysCategoryTerm
 {
     /**
      * @param array<string, string> $titles      language code => title; the
@@ -37,9 +37,9 @@ final class SysCategoryTerm
      *                                           null to hang off the anchor
      */
     public function __construct(
-        public readonly string $sourceValue,
-        public readonly array $titles,
-        public readonly ?string $parentValue = null
+        public string $sourceValue,
+        public array $titles,
+        public ?string $parentValue = null
     ) {
     }
 

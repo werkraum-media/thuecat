@@ -27,12 +27,12 @@ namespace WerkraumMedia\ThueCat\Import\SysCategory;
  * Consumers pass their own anchor, which is what keeps their trees apart while
  * sharing the provisioning that builds them.
  */
-final class SysCategoryAnchor
+final readonly class SysCategoryAnchor
 {
     public function __construct(
-        public readonly int $parentUid,
-        public readonly int $storagePid,
-        public readonly string $identifierPrefix
+        public int $parentUid,
+        public int $storagePid,
+        public string $identifierPrefix
     ) {
     }
 

@@ -25,12 +25,12 @@ namespace WerkraumMedia\ThueCat\Import\Settings;
  * supplied them. 0 means unset; the scope is null when no scope in the chain
  * supplied either value, which switches the kind's mapping off.
  */
-final class AnchorPair
+final readonly class AnchorPair
 {
     public function __construct(
-        public readonly int $parent = 0,
-        public readonly int $storagePid = 0,
-        public readonly ?AnchorScope $scope = null,
+        public int $parent = 0,
+        public int $storagePid = 0,
+        public ?AnchorScope $scope = null,
     ) {
     }
 

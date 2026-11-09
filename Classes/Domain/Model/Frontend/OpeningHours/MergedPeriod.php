@@ -28,16 +28,16 @@ use DateTimeImmutable;
  * Period but carries WeekDayGroups instead of individual weekdays; closed days
  * produce no group.
  */
-final class MergedPeriod implements PeriodInterface
+final readonly class MergedPeriod implements PeriodInterface
 {
     /**
      * @param list<WeekDayGroup> $weekDayGroups
      */
     public function __construct(
-        private readonly ?DateTimeImmutable $validFrom,
-        private readonly ?DateTimeImmutable $validThrough,
-        private readonly array $weekDayGroups,
-        private readonly bool $current,
+        private ?DateTimeImmutable $validFrom,
+        private ?DateTimeImmutable $validThrough,
+        private array $weekDayGroups,
+        private bool $current,
     ) {
     }
 

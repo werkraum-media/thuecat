@@ -26,7 +26,7 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
  * days are in canonical order (Monday first, PublicHolidays last) but need not be
  * adjacent. PublicHolidays never shares a group with regular weekdays.
  */
-final class WeekDayGroup
+final readonly class WeekDayGroup
 {
     /**
      * @param list<string> $daysOfWeek
@@ -34,9 +34,9 @@ final class WeekDayGroup
      * @param list<TimePeriod> $timePeriods
      */
     public function __construct(
-        private readonly array $daysOfWeek,
-        private readonly array $dayRanges,
-        private readonly array $timePeriods,
+        private array $daysOfWeek,
+        private array $dayRanges,
+        private array $timePeriods,
     ) {
     }
 

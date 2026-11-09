@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
  * a declaration states which setting to resolve, and one build holds what it
  * resolved to.
  */
-final class FilterScope
+final readonly class FilterScope
 {
     /**
      * @param int[] $storagePageIds Empty means unrestricted storage.
@@ -41,11 +41,11 @@ final class FilterScope
      * @param int[] $sitePageIds Empty means unrestricted by site.
      */
     public function __construct(
-        private readonly string $recordTable,
-        private readonly array $storagePageIds,
-        private readonly ?EditorFilter $editorFilter,
-        private readonly array $anchors = [],
-        private readonly array $sitePageIds = [],
+        private string $recordTable,
+        private array $storagePageIds,
+        private ?EditorFilter $editorFilter,
+        private array $anchors = [],
+        private array $sitePageIds = [],
     ) {
     }
 

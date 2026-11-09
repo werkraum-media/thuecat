@@ -21,15 +21,15 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import;
 
 /** One image claimed by one owner field, held until the flush relates it. */
-final class CollectedMedia
+final readonly class CollectedMedia
 {
     public function __construct(
-        public readonly string $ownerTable,
-        public readonly string $ownerKey,
-        public readonly string $targetField,
-        public readonly int $fileUid,
-        public readonly string $title,
-        public readonly string $description,
+        public string $ownerTable,
+        public string $ownerKey,
+        public string $targetField,
+        public int $fileUid,
+        public string $title,
+        public string $description,
     ) {
     }
 }

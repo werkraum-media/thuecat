@@ -24,12 +24,12 @@ namespace WerkraumMedia\ThueCat\Import\Http;
  * Unresolved HTTP choices handed to the factory; 0 means "fall back a level".
  * ImportSettings turns these into the values the client actually carries.
  */
-final class ClientBudget
+final readonly class ClientBudget
 {
     public function __construct(
-        public readonly int $readTimeout = 0,
-        public readonly int $connectTimeout = 0,
-        public readonly int $maxAttempts = 0,
+        public int $readTimeout = 0,
+        public int $connectTimeout = 0,
+        public int $maxAttempts = 0,
     ) {
     }
 

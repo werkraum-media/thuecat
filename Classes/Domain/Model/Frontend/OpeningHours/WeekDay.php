@@ -25,14 +25,14 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\OpeningHours;
  * order. A day can hold several periods (08:00–12:00, 13:00–18:00).
  * An empty list means closed that day.
  */
-final class WeekDay
+final readonly class WeekDay
 {
     /**
      * @param list<TimePeriod> $timePeriods
      */
     public function __construct(
-        private readonly string $dayOfWeek,
-        private readonly array $timePeriods,
+        private string $dayOfWeek,
+        private array $timePeriods,
     ) {
     }
 

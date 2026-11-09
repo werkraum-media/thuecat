@@ -27,13 +27,13 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
  * `thuecat:BrassMusic` declares `schema:MusicEvent` as its parent and a climb
  * crosses the boundary without knowing it exists.
  */
-final class VocabularyIndex
+final readonly class VocabularyIndex
 {
     /**
      * @param array<string, VocabularyClass> $classes
      */
     public function __construct(
-        private readonly array $classes = []
+        private array $classes = []
     ) {
     }
 

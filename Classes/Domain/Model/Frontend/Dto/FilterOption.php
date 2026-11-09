@@ -24,15 +24,15 @@ namespace WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto;
  * One selectable value of a filter field: uid, title, and — for hierarchical
  * fields — the options below it.
  */
-final class FilterOption
+final readonly class FilterOption
 {
     /**
      * @param FilterOption[] $children
      */
     public function __construct(
-        private readonly int $uid,
-        private readonly string $title,
-        private readonly array $children = [],
+        private int $uid,
+        private string $title,
+        private array $children = [],
     ) {
     }
 

@@ -47,7 +47,7 @@ use WerkraumMedia\ThueCat\Domain\DetailRecordKind\DetailRecordKinds;
  */
 #[UpgradeWizard('thuecat_detailRecordSlugs')]
 #[Autoconfigure(public: true)]
-final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
+final readonly class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface, RepeatableInterface
 {
     /** Tables whose slugs are list filter segments. */
     private const FILTER_TABLES = [
@@ -56,9 +56,9 @@ final class DetailRecordSlugUpgradeWizard implements UpgradeWizardInterface, Rep
     ];
 
     public function __construct(
-        private readonly DetailRecordKinds $kinds,
-        private readonly TcaSchemaFactory $tcaSchemaFactory,
-        private readonly ConnectionPool $connectionPool,
+        private DetailRecordKinds $kinds,
+        private TcaSchemaFactory $tcaSchemaFactory,
+        private ConnectionPool $connectionPool,
     ) {
     }
 
