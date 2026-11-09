@@ -173,7 +173,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
 
     protected function assertPostConditions(): void
     {
-        if ($this->expectErrors === true) {
+        if ($this->expectErrors) {
             return;
         }
         foreach ($this->getLogFiles() as $file) {

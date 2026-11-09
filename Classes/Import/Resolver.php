@@ -2545,7 +2545,7 @@ class Resolver
                 $payload->setRelationField($parentTable, $parentKey, $inlineField, $childKey);
             }
 
-            if (($config['reapOrphans'] ?? false) === true) {
+            if ($config['reapOrphans'] ?? false) {
                 $this->reapOrphanedInlineChildren($payload, $childTable, $stagedByParent);
             }
         }

@@ -348,8 +348,7 @@ class TouristAttractionController extends AbstractActionController
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
         $centralPid = is_array($pidSettings) ? ($pidSettings['thuecat_attraction_search'] ?? null) : null;
-        $formTargetPid = $listPluginOnSamePage !== null ? $pageId : $centralPid;
-        return $formTargetPid;
+        return $listPluginOnSamePage !== null ? $pageId : $centralPid;
     }
 
     /**

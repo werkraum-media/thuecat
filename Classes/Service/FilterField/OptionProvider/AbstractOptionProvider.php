@@ -74,7 +74,7 @@ abstract class AbstractOptionProvider
         // parameter does not resolve inside a recursive term.
         if ($sitePageIds !== []) {
             $conditions[] = $prefix . 'pid IN (' . implode(',', array_map(
-                fn (mixed $pageId): int => $this->intValue($pageId),
+                $this->intValue(...),
                 $sitePageIds
             )) . ')';
         }

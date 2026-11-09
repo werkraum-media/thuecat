@@ -173,13 +173,6 @@ final class FetchDataTest extends AbstractImportTestCase
     #[Test]
     public function updatedNodesDoesNotLeakOverrideAcrossCalls(): void
     {
-        // Two consecutive calls on the same FetchData instance must each
-        // pick their own host. The previous implementation mutated an
-        // instance field on override; a second call without override would
-        // have stayed on cdb.int.thuecat.org instead of returning to the
-        // default. Stage cdb.int.thuecat.org once and cdb.thuecat.org once
-        // — if the override leaked, the default-host bag would stay empty
-        // and the int-host bag would receive both calls.
         $this->expectFetchForUrl(
             'https://cdb.int.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-int&showTotal=true',
             'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'

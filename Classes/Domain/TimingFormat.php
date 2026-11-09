@@ -25,8 +25,6 @@ class TimingFormat
 {
     /**
      * Returns timing in default format.
-     *
-     * @return string
      */
     public static function format(string $timing): string
     {

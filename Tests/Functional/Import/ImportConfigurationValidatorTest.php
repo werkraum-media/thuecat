@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\CategoryConfigurationException;
@@ -40,17 +41,17 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWhenNoCategoryConfigured(): void
     {
         $this->validate(10, 0, 0);
-        $this->addToAssertionCount(1);
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWhenCategoryAnchorsAreInSite(): void
     {
         $this->validate(10, 100, 20);
-        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -96,26 +97,26 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWhenNoKeywordConfigured(): void
     {
         $this->validate(10, 100, 20, 0, 0);
-        $this->addToAssertionCount(1);
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWhenKeywordAnchorsAreInSite(): void
     {
         $this->validate(10, 0, 0, 100, 20);
-        $this->addToAssertionCount(1);
     }
 
     // Both properties configured at once must not interfere: they share the
     // anchor rules but are validated separately.
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWhenCategoryAndKeywordAreBothConfigured(): void
     {
         $this->validate(10, 100, 20, 100, 20);
-        $this->addToAssertionCount(1);
     }
 
     // An unusable category must not be masked by a valid keyword configuration.
@@ -177,10 +178,10 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
 
     // Every scope is validated, not only the one the run will write.
     #[Test]
+    #[DoesNotPerformAssertions]
     public function validatesTheEventsScope(): void
     {
         $this->validate(10, 100, 20, 0, 0, 'events');
-        $this->addToAssertionCount(1);
     }
 
     #[Test]
@@ -241,12 +242,12 @@ class ImportConfigurationValidatorTest extends AbstractImportConfigurationTestCa
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function passesWithEveryScopeUnset(): void
     {
         $this->writeSiteSettings([], 'validator_scope', 1);
 
         $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
-        $this->addToAssertionCount(1);
     }
 
     /**

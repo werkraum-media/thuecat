@@ -154,7 +154,7 @@ class HierarchicalOptionProvider extends AbstractOptionProvider implements Filte
         $this->applyOptionScope($queryBuilder, $optionTable, $scope);
 
         return array_map(
-            fn (mixed $uid): int => $this->intValue($uid),
+            $this->intValue(...),
             $queryBuilder->executeQuery()->fetchFirstColumn()
         );
     }
@@ -197,7 +197,7 @@ class HierarchicalOptionProvider extends AbstractOptionProvider implements Filte
         ;
 
         return array_map(
-            fn (mixed $uid): int => $this->intValue($uid),
+            $this->intValue(...),
             $rows
         );
     }

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\BooleanOr\RepeatedOrEqualToInArrayRector;
 use Rector\CodeQuality\Rector\ClassMethod\LocallyCalledStaticMethodToNonStaticRector;
-use Rector\CodeQuality\Rector\FunctionLike\SimplifyUselessVariableRector;
-use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\CodeQuality\Rector\If_\ExplicitNullableObjectInstanceRector;
 use Rector\CodeQuality\Rector\LogicalAnd\LogicalToBooleanRector;
-use Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
@@ -17,9 +14,7 @@ use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\CodingStyle\Rector\String_\SimplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Cast\RecastingRemovalRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
-use Rector\Instanceof_\Rector\Ternary\FlipNegatedTernaryInstanceofRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php74\Rector\If_\IfToNullCoalescingAssignRector;
 use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
@@ -31,12 +26,9 @@ use Rector\PHPUnit\CodeQuality\Rector\Class_\YieldDataProviderRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
 use Rector\Privatization\Rector\ClassConst\PrivatizeFinalClassConstantRector;
-use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Closure\AddClosureVoidReturnTypeWhereNoReturnRector;
 use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
-use Rector\TypeDeclaration\Rector\FuncCall\AddArrayAnyAllClosureParamTypeRector;
-use Rector\TypeDeclaration\Rector\FunctionLike\AddParamTypeSplFixedArrayRector;
 use Rector\TypeDeclarationDocblocks\Rector\Class_\ClassMethodArrayDocblockParamFromLocalCallsRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromAssignsParamToParamReferenceRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromDimFetchAccessRector;
@@ -46,7 +38,6 @@ use Ssch\TYPO3Rector\Configuration\Typo3Option;
 use Ssch\TYPO3Rector\Set\Typo3SetList;
 use Ssch\TYPO3Rector\TYPO311\v0\DateTimeAspectInsteadOfGlobalsExecTimeRector;
 use Ssch\TYPO3Rector\TYPO312\v0\RemoveObsoleteAppearanceConfigRector;
-use Ssch\TYPO3Rector\TYPO314\v0\MigrateLabelReferenceToDomainSyntaxRector;
 
 // The level set up to v14, without the files that register rules rector deprecated:
 // v10/typo3-100, v10/typo3-104, v11/typo3-115, v13/strict-types and v14/strict-types.
@@ -129,9 +120,17 @@ return RectorConfig::configure()
         AddParamArrayDocblockFromAssignsParamToParamReferenceRector::class => [
             __DIR__ . '/Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php',
         ],
+        // Extbase types a property without @var after its same-named getter; an array getter blanks the string.
+        RemoveUselessVarTagRector::class => [
+            __DIR__ . '/Classes/Domain/Model',
+        ],
         // contradicts phpstan on format of dataMap
         ClassMethodArrayDocblockParamFromLocalCallsRector::class => [
             __DIR__ . '/Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php',
+        ],
+        // assertions are performed on teardown, rector just don't recognizes this
+        AddDoesNotPerformAssertionToNonAssertingTestRector::class => [
+            __DIR__ . '/Tests/Functional/Importer/FetchDataTest.php',
         ],
 
         // Disabled until enabled one by one; the count is the files each rule changed.
@@ -187,25 +186,5 @@ return RectorConfig::configure()
         IfToNullCoalescingAssignRector::class,
         // 3 files
         FunctionFirstClassCallableRector::class,
-        // 2 files
-        MigrateLabelReferenceToDomainSyntaxRector::class,
-        // 2 files
-        AddArrayAnyAllClosureParamTypeRector::class,
-        // 2 files
-        RenameMethodRector::class,
-        // 2 files
-        AddDoesNotPerformAssertionToNonAssertingTestRector::class,
-        // 2 files
-        FlipNegatedTernaryInstanceofRector::class,
-        // 2 files
-        RemoveUselessVarTagRector::class,
-        // 2 files
-        RemoveUselessReturnTagRector::class,
-        // 2 files
-        ArrowFunctionDelegatingCallToFirstClassCallableRector::class,
-        // 2 files
-        SimplifyBoolIdenticalTrueRector::class,
-        // 2 files
-        SimplifyUselessVariableRector::class,
     ])
 ;

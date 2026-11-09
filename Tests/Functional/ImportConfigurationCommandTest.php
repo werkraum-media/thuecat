@@ -219,7 +219,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('No configuration found for uid: 1');
+        $this->expectExceptionMessageIsOrContains('No configuration found for uid: 1');
         $this->expectExceptionCode(1693228522);
 
         $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
@@ -233,7 +233,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Not enough arguments (missing: "configuration")');
+        $this->expectExceptionMessageIsOrContains('Not enough arguments (missing: "configuration")');
         $this->expectExceptionCode(0);
 
         $tester->execute([], ['capture_stderr_separately' => true]);
@@ -247,7 +247,7 @@ final class ImportConfigurationCommandTest extends AbstractImportTestCase
         $tester = new CommandTester($subject);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('No numeric uid for configuration provided.');
+        $this->expectExceptionMessageIsOrContains('No numeric uid for configuration provided.');
         $this->expectExceptionCode(1643267138);
 
         $tester->execute(['configuration' => 'a'], ['capture_stderr_separately' => true]);

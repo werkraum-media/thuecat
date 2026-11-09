@@ -192,7 +192,7 @@ class FetchDataTest extends TestCase
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionCode(1622461820);
-        $this->expectExceptionMessage('Not found, given resource could not be found: "https://example.com/resources/018132452787-ngbe".');
+        $this->expectExceptionMessageIsOrContains('Not found, given resource could not be found: "https://example.com/resources/018132452787-ngbe".');
 
         $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
     }
@@ -221,7 +221,7 @@ class FetchDataTest extends TestCase
 
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionCode(1622461709);
-        $this->expectExceptionMessage('Unauthorized API request, ensure apiKey is properly configured.');
+        $this->expectExceptionMessageIsOrContains('Unauthorized API request, ensure apiKey is properly configured.');
 
         $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
     }
@@ -256,7 +256,7 @@ class FetchDataTest extends TestCase
         );
 
         $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('"https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event"');
+        $this->expectExceptionMessageIsOrContains('"https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event"');
 
         $subject->jsonLDFromUrl('https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event');
     }

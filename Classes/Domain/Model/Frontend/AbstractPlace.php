@@ -61,6 +61,8 @@ abstract class AbstractPlace extends Base
     protected ObjectStorage $editorialImages;
 
     /**
+     * The @var keeps Extbase from typing the column after the array getter.
+     *
      * @var string
      */
     protected string $sanitation = '';

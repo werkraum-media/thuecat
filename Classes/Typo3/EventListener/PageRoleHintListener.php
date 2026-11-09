@@ -80,7 +80,7 @@ readonly class PageRoleHintListener
         $view->assignMultiple([
             'state' => $mismatch ? ContextualFeedbackSeverity::WARNING : ContextualFeedbackSeverity::INFO,
             'currentRole' => $currentRole === ''
-                ? $languageService->sL('LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:pageRole.hint.current.none')
+                ? $languageService->sL('thuecat.messages:pageRole.hint.current.none')
                 : ($labels[$currentRole] ?? $currentRole),
             'recommendedRole' => $mismatch
                 ? implode(', ', array_map(static fn (string $role): string => $labels[$role] ?? $role, $recommendedRoles))

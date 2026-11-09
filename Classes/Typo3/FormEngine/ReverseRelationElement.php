@@ -73,7 +73,7 @@ class ReverseRelationElement extends AbstractFormElement
         );
         if ($items === []) {
             $items[] = '<li class="list-group-item">'
-                . htmlspecialchars($this->getLanguageService()->sL('LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:reverse_relation.empty'))
+                . htmlspecialchars($this->getLanguageService()->sL('thuecat.tca:reverse_relation.empty'))
                 . '</li>';
         }
 

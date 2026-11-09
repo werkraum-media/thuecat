@@ -162,9 +162,8 @@ class EventPlaceMatcher
         $value = trim($value);
 
         $value = (string)preg_replace('/(\w)strasse\b/', '$1str', $value);
-        $value = (string)preg_replace('/\bstrasse\b/', 'str', $value);
 
-        return $value;
+        return (string)preg_replace('/\bstrasse\b/', 'str', $value);
     }
 
     /**
