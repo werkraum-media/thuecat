@@ -34,8 +34,11 @@ class TouristInformationEntity extends AbstractPlaceEntity
     // Above the attraction's 20: TouristInformation nodes also carry
     // ttgds:PointOfInterest, which the attraction claims.
     protected int $priority = 25;
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
 
     /**

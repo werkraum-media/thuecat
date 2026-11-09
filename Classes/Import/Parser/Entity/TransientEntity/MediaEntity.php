@@ -36,11 +36,17 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity\TransientEntity;
 class MediaEntity extends AbstractTransientEntity
 {
     protected bool $mainImage = false;
+
     protected string $type = 'image';
+
     protected string $title = '';
+
     protected string $description = '';
+
     protected string $url = '';
+
     protected string $author = '';
+
     protected int $copyrightYear = 0;
 
     /** @var array{type: string, author: string} */

@@ -27,6 +27,7 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 abstract class AbstractEventsEntity extends AbstractEntity
 {
     protected string $source_name = '';
+
     protected string $source_url = '';
 
     protected int $thuecat_import_configuration = 0;

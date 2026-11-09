@@ -26,8 +26,11 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class OrganisationEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_organisation';
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
 
     /**

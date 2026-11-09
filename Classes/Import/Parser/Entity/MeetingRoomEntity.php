@@ -55,20 +55,35 @@ class MeetingRoomEntity extends AbstractPlaceEntity
     ];
 
     protected int $priority = 20;
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
+
     protected string $url = '';
+
     protected string $floor_size = '';
+
     protected string $room_height = '';
+
     protected int $capacity_banquet = 0;
+
     protected int $capacity_classroom = 0;
+
     protected int $capacity_theatre = 0;
+
     protected int $capacity_standing = 0;
+
     protected string $facilities = '';
+
     protected int $number_of_rooms = 0;
+
     protected string $amenity_features = '';
+
     protected string $tour_booking_page = '';
+
     protected string $bookable = '';
 
     /**

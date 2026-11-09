@@ -35,7 +35,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class EventDateSkippedTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
+
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
+
     protected string $fixturePath = 'api/resources';
 
     private const REMOTE_ID = 'https://thuecat.org/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-noenddate';

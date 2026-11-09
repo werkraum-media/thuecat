@@ -71,53 +71,89 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
     ];
 
     protected int $priority = 20;
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
 
     protected string $short_description = '';
+
     protected string $directions = '';
+
     protected string $getting_there = '';
+
     protected string $parking = '';
+
     protected string $public_transit = '';
+
     protected string $safety_guidelines = '';
+
     protected string $equipment = '';
+
     protected string $additional_information = '';
+
     protected string $tip = '';
 
     protected string $opening_status = '';
+
     protected int $season = 0;
 
     protected string $elevation_profile = '';
+
     protected string $elevation_profile_fall_back = '';
 
     protected string $route_line = '';
+
     protected string $gpx_url = '';
 
     protected string $distance = '';
+
     protected string $distance_unit = '';
+
     protected string $duration = '';
+
     protected string $duration_unit = '';
+
     protected string $exercise_type = '';
+
     protected string $min_altitude = '';
+
     protected string $max_altitude = '';
+
     protected string $ascent_elevation = '';
+
     protected string $descent_elevation = '';
 
     protected string $rating_landscape = '';
+
     protected string $rating_landscape_min = '';
+
     protected string $rating_landscape_max = '';
+
     protected string $rating_condition = '';
+
     protected string $rating_condition_min = '';
+
     protected string $rating_condition_max = '';
+
     protected string $rating_difficulty = '';
+
     protected string $rating_difficulty_min = '';
+
     protected string $rating_difficulty_max = '';
+
     protected string $rating_quality_of_experience = '';
+
     protected string $rating_quality_of_experience_min = '';
+
     protected string $rating_quality_of_experience_max = '';
+
     protected string $rating_technique = '';
+
     protected string $rating_technique_min = '';
+
     protected string $rating_technique_max = '';
 
     /**

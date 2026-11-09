@@ -30,10 +30,14 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class PlaceEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_place';
+
     // schema:Place sits on nearly every node, so every other entity must outrank this one.
     protected int $priority = 0;
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
 
     /**

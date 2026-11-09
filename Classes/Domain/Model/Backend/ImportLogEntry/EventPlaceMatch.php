@@ -29,9 +29,13 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 class EventPlaceMatch extends ImportLogEntry
 {
     public const OUTCOME_BY_REFERENCE = 'resolvedByReference';
+
     public const OUTCOME_BY_NAME_AND_POSTAL_CODE = 'resolvedByNameAndPostalCode';
+
     public const OUTCOME_AMBIGUOUS = 'ambiguous';
+
     public const OUTCOME_UNRESOLVED_REFERENCE = 'unresolvedReference';
+
     public const OUTCOME_UNMATCHED = 'unmatched';
 
     protected string $remoteId = '';

@@ -40,15 +40,25 @@ class AddressEntity extends AbstractEntity
     public const SEPARATOR = '::addr::';
 
     protected string $remote_id = '';
+
     protected string $street = '';
+
     protected string $zip = '';
+
     protected string $city = '';
+
     protected string $region = '';
+
     protected string $country = '';
+
     protected string $email = '';
+
     protected string $phone = '';
+
     protected string $fax = '';
+
     protected string $latitude = '';
+
     protected string $longitude = '';
 
     /**

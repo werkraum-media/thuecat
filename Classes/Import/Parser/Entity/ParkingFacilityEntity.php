@@ -44,19 +44,33 @@ class ParkingFacilityEntity extends AbstractPlaceEntity
 
     // OrganisationEntity would win the resolver tie-break if lower
     protected int $priority = 30;
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
+
     protected string $sanitation = '';
+
     protected string $other_service = '';
+
     protected string $traffic_infrastructure = '';
+
     protected string $payment_accepted = '';
+
     protected string $distance_to_public_transport = '';
+
     protected string $offers = '';
+
     protected int $spaces_car = 0;
+
     protected int $spaces_handicapped = 0;
+
     protected int $spaces_bus = 0;
+
     protected int $spaces_ev_charging = 0;
+
     protected int $spaces_motorcycle = 0;
 
     /**

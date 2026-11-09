@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 class SyncScopeUrlProvider implements UrlProvider
 {
     protected string $syncScopeId = '';
+
     protected string $apiKey = '';
 
     protected int $fetchLastXDays = 0;

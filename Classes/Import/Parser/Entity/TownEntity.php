@@ -25,8 +25,11 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class TownEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_town';
+
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
 
     /**

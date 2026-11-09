@@ -35,7 +35,9 @@ class OfferEntity extends AbstractTransientEntity
      * @var list<string>
      */
     protected array $types = [];
+
     protected string $title = '';
+
     protected string $description = '';
 
     /**

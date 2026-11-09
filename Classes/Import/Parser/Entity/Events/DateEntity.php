@@ -40,8 +40,11 @@ class DateEntity extends AbstractEntity
     public const TABLE = 'tx_events_domain_model_date';
 
     protected string $remote_id = '';
+
     protected string $start = '';
+
     protected string $end = '';
+
     protected string $canceled = 'no';
 
     /**

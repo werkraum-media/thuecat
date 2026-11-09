@@ -289,6 +289,7 @@ abstract class AbstractEntity implements EntityInterface
 
         $this->transients[$key] = $ids;
     }
+
     /**
      * Record a single translated field value into the entity's translations
      * bucket, keyed by sys_language_uid → field name.

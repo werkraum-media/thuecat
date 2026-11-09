@@ -35,15 +35,25 @@ class LocationEntity extends AbstractEntity
     protected const HASHED_FIELDS = ['name', 'street', 'zip', 'city', 'district', 'country'];
 
     protected string $remote_id = '';
+
     protected string $global_id = '';
+
     protected string $name = '';
+
     protected string $street = '';
+
     protected string $zip = '';
+
     protected string $city = '';
+
     protected string $district = '';
+
     protected string $country = '';
+
     protected string $phone = '';
+
     protected string $latitude = '';
+
     protected string $longitude = '';
 
     /**

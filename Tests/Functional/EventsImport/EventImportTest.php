@@ -37,7 +37,9 @@ class EventImportTest extends AbstractImportTestCase
     // not the legacy thuecat one. The Guzzle fixtures sit under
     // EventsImport/Fixtures/Guzzle/ keyed by host + path.
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
+
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
+
     protected string $fixturePath = 'api/resources';
 
     #[Test]

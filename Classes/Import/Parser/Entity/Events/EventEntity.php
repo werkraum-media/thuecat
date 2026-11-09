@@ -52,11 +52,17 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
     ];
 
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $details = '';
+
     protected string $web = '';
+
     protected string $ticket = '';
+
     protected string $location = '';
+
     protected string $organizer = '';
 
     /**

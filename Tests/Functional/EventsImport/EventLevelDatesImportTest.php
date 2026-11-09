@@ -32,10 +32,13 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class EventLevelDatesImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
+
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
+
     protected string $fixturePath = 'api/resources';
 
     private const TDM = 'https://thuecat.org/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-';
+
     private const MIXED = 'https://thuecat.org/resources/e_349b798696b77c81995d71a99b4460d1-kcev';
 
     protected function setUp(): void

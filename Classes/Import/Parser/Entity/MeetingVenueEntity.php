@@ -118,58 +118,111 @@ class MeetingVenueEntity extends TouristAttractionEntity
     ];
 
     protected int $priority = 30;
+
     protected string $type = 'meeting_venue';
+
     protected string $venue_type = '';
+
     protected string $meeting_facilities = '';
+
     protected string $gastro = '';
+
     protected string $serves_cuisine = '';
+
     protected string $entrance = '';
+
     protected string $guided_tour = '';
+
     protected string $monument = '';
+
     protected string $ensemble = '';
+
     protected string $exhibition_objects = '';
+
     protected string $sports_equipment = '';
+
     protected string $amenity_features = '';
+
     protected string $price_range = '';
+
     protected string $star_rating = '';
+
     protected string $smoking_allowed = '';
+
     protected string $is_ruin = '';
+
     protected string $open_air_museum = '';
+
     protected string $bookable = '';
+
     protected string $has_drive_through_service = '';
+
     protected string $beer_garden = '';
+
     protected string $catering = '';
+
     protected string $delivery_service = '';
+
     protected string $hot_cuisine_throughout = '';
+
     protected string $late_kitchen = '';
+
     protected string $self_service = '';
+
     protected string $take_away = '';
+
     protected string $accepts_reservations = '';
+
     protected int $maximum_attendee_capacity = 0;
+
     protected int $number_of_rooms = 0;
+
     protected int $single_rooms = 0;
+
     protected int $double_rooms = 0;
+
     protected int $twin_rooms = 0;
+
     protected int $suites = 0;
+
     protected int $seats_inside = 0;
+
     protected int $seats_outside = 0;
+
     protected int $distance_airport = 0;
+
     protected int $distance_city_center = 0;
+
     protected int $distance_fair = 0;
+
     protected int $distance_freeway = 0;
+
     protected int $distance_ice_station = 0;
+
     protected int $size_of_area = 0;
+
     protected string $checkin_time = '';
+
     protected string $checkout_time = '';
+
     protected string $has_map = '';
+
     protected string $tour_booking_page = '';
+
     protected string $identifier = '';
+
     protected string $same_as = '';
+
     protected string $subject_of = '';
+
     protected string $typical_age_range = '';
+
     protected string $end_of_construction = '';
+
     protected string $certifications = '';
+
     protected string $description_culture_portal = '';
+
     protected string $description_lodging_meeting = '';
 
     /**

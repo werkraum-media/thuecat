@@ -32,12 +32,17 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
 {
     private const TRAIL = 'https://thuecat.org/resources/e_106954656-oatour';
+
     private const ATTRACTION = 'https://thuecat.org/resources/attraction-sharing-trail-keyword';
+
     private const TOURIST_INFORMATION = 'https://thuecat.org/resources/tourist-information-with-trail-keyword';
+
     private const SHARED_KEYWORD = 'keyword:https://thuecat.org/resources/887654277691-eatw';
 
     private const THUECAT_ANCHOR = 1200;
+
     private const TRAILS_ANCHOR = 1300;
+
     private const SHARED_TREE_ANCHOR = 200;
 
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';

@@ -36,9 +36,13 @@ class TrailLocationEntity extends AbstractEntity
     public const TYPE_END = 'end';
 
     protected string $remote_id = '';
+
     protected string $location_type = self::TYPE_START;
+
     protected string $title = '';
+
     protected string $latitude = '';
+
     protected string $longitude = '';
 
     /**

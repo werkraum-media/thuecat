@@ -34,6 +34,7 @@ use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 class EventPlaceMatcher
 {
     public const FIELD_HOSTS = 'hosts_events';
+
     public const FIELD_MANAGES = 'manages_event';
 
     /**

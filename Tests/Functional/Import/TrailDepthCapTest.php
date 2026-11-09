@@ -32,7 +32,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class TrailDepthCapTest extends AbstractImportTestCase
 {
     private const TRAIL_ID = 'https://thuecat.org/resources/e_106954656-oatour';
+
     private const ATTRACTION_ID = 'https://thuecat.org/resources/347070073883-rqbn';
+
     private const ORGANISATION_ID = 'https://thuecat.org/resources/018132452787-ngbe';
 
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';

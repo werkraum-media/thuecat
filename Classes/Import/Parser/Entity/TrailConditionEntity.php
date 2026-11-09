@@ -32,10 +32,15 @@ class TrailConditionEntity extends AbstractEntity
     public const SEPARATOR = '::cond::';
 
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $description = '';
+
     protected ?string $valid_from = null;
+
     protected string $latitude = '';
+
     protected string $longitude = '';
 
     /**

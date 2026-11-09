@@ -34,6 +34,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class KeywordFolderVisibilityTest extends AbstractImportTestCase
 {
     private const TERM_REMOTE_ID = 'keyword:https://thuecat.org/resources/475728955106-qdcc';
+
     private const SET_REMOTE_ID = 'keyword:https://thuecat.org/resources/155933862969-mofh';
 
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';

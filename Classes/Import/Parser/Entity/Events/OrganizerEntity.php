@@ -40,12 +40,19 @@ class OrganizerEntity extends AbstractEntity
     protected const IDENTITY_FIELDS = ['name', 'street', 'zip', 'city', 'phone', 'email', 'web'];
 
     protected string $remote_id = '';
+
     protected string $name = '';
+
     protected string $street = '';
+
     protected string $zip = '';
+
     protected string $city = '';
+
     protected string $phone = '';
+
     protected string $email = '';
+
     protected string $web = '';
 
     /**

@@ -28,7 +28,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class EventDescriptionImportTest extends AbstractImportTestCase
 {
     protected string $fixtureGuzzleBase = __DIR__ . '/Fixtures/Guzzle';
+
     protected string $fixtureDomain = 'cdb.int.thuecat.org';
+
     protected string $fixturePath = 'api/resources';
 
     protected function setUp(): void

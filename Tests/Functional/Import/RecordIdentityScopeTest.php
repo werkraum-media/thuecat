@@ -31,6 +31,7 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 class RecordIdentityScopeTest extends AbstractImportTestCase
 {
     private const TOWN_REMOTE_ID = 'https://thuecat.org/resources/043064193523-jcyt';
+
     private const ORGANISATION_REMOTE_ID = 'https://thuecat.org/resources/018132452787-ngbe';
 
     #[Test]

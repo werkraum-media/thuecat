@@ -32,8 +32,11 @@ class TrailWayTypeEntity extends AbstractEntity
     public const SEPARATOR = '::wt::';
 
     protected string $remote_id = '';
+
     protected string $title = '';
+
     protected string $length = '';
+
     protected string $length_unit = '';
 
     /**

@@ -35,16 +35,23 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class OpeningHourSpecificationEntity extends AbstractEntity
 {
     public const TYPE_REGULAR = 'regular';
+
     public const TYPE_SPECIAL = 'special';
 
     public const TABLE = 'tx_thuecat_opening_hours';
 
     protected string $remote_id = '';
+
     protected string $specification_type = self::TYPE_REGULAR;
+
     protected string $day_of_week = '';
+
     protected string $opens = '';
+
     protected string $closes = '';
+
     protected ?string $valid_from = null;
+
     protected ?string $valid_through = null;
 
     /**

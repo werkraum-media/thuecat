@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
-use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
@@ -127,7 +126,5 @@ return RectorConfig::configure()
         NewMethodCallWithoutParenthesesRector::class,
         // 59 files
         AddTypeToConstRector::class,
-        // 46 files
-        NewlineBetweenClassLikeStmtsRector::class,
     ])
 ;

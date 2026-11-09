@@ -33,6 +33,7 @@ use WerkraumMedia\ThueCat\Import\ResolverContext;
 final class ResolverContextTest extends TestCase
 {
     private const REMOTE_A = 'https://thuecat.org/resources/aaaa';
+
     private const REMOTE_B = 'https://thuecat.org/resources/bbbb';
 
     #[Test]

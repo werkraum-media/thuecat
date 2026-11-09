@@ -38,12 +38,19 @@ use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 class ImportLogger
 {
     public const SEVERITY_DEBUG = 'debug';
+
     public const SEVERITY_INFO = 'info';
+
     public const SEVERITY_NOTICE = 'notice';
+
     public const SEVERITY_WARNING = 'warning';
+
     public const SEVERITY_ERROR = 'error';
+
     public const SEVERITY_CRITICAL = 'critical';
+
     public const SEVERITY_ALERT = 'alert';
+
     public const SEVERITY_EMERGENCY = 'emergency';
 
     /**
