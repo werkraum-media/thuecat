@@ -65,7 +65,7 @@ class SiblingListPluginLocator
     public function resolveForPage(ContentObjectRenderer $contentObject, int $pageId): ?SiblingListPluginContext
     {
         $quotedTypes = implode(',', array_map(
-            static fn (string $type): string => '\'' . $type . '\'',
+            static fn (string $type): string => "'" . $type . "'",
             $this->listContentTypes
         ));
 

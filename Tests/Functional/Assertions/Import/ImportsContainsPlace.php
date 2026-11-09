@@ -67,14 +67,14 @@ return [
             'pid' => '10',
             'sys_language_uid' => '1',
             'remote_id' => 'https://thuecat.org/resources/215230952334-yyno',
-            'title' => 'Merchants\' Bridge',
+            'title' => "Merchants' Bridge",
         ],
         7 => [
             'uid' => '8',
             'pid' => '10',
             'sys_language_uid' => '2',
             'remote_id' => 'https://thuecat.org/resources/215230952334-yyno',
-            'title' => 'Pont de l\'épicier',
+            'title' => "Pont de l'épicier",
         ],
     ],
     'tx_thuecat_organisation' => [

@@ -223,7 +223,7 @@ class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $secondUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus2-hubev');
-        $this->assertSame([$firstUid, $secondUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), 'The second configuration dropped the first one\'s relation.');
+        $this->assertSame([$firstUid, $secondUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), "The second configuration dropped the first one's relation.");
     }
 
     #[Test]

@@ -73,7 +73,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->assertCount(1, $culture, 'Kulturveranstaltung category created.');
 
         foreach ([$series[0], $culture[0]] as $category) {
-            $this->assertGreaterThan(0, $category['parent'], 'Created somewhere in the anchor\'s tree.');
+            $this->assertGreaterThan(0, $category['parent'], "Created somewhere in the anchor's tree.");
             $this->assertSame(20, $category['pid'], 'Created at categoryStoragePid.');
         }
         $this->assertSame('Veranstaltungsserie', $series[0]['title']);
@@ -136,7 +136,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
         $this->assertGreaterThan(0, $entry['record_uid'], 'Resolved category uid is stored.');
         $this->assertSame('Veranstaltungsserie', $this->categoryTitle($entry['record_uid']), 'record_uid points at the category created for this type.');
 
-        $this->assertArrayNotHasKey('thuecat:CultureEvent', $matchedByType, 'Upstream titled it without the map, so it needs nobody\'s attention.');
+        $this->assertArrayNotHasKey('thuecat:CultureEvent', $matchedByType, "Upstream titled it without the map, so it needs nobody's attention.");
 
         // Containment, not exact lists: the ignore list is intentionally sparse
         // and will grow, so pinning the full unmatched set would be brittle.
@@ -499,7 +499,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
             $all,
             fn (array $row): bool => $this->isInRootlineOf($row['uid'], 100)
         ));
-        $this->assertCount(1, $created, 'Exactly one category is created within the configured parent\'s tree.');
+        $this->assertCount(1, $created, "Exactly one category is created within the configured parent's tree.");
         $this->assertSame(20, $created[0]['pid']);
 
         $this->assertEventHasCategory((int)$created[0]['uid']);
@@ -619,7 +619,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        $this->assertSame(1, $this->countCategoryRelations(103), 'A category with no remote_id is outside the importer\'s reach.');
+        $this->assertSame(1, $this->countCategoryRelations(103), "A category with no remote_id is outside the importer's reach.");
     }
 
     // A root that never parsed submits no relation list, so nothing of its
@@ -639,7 +639,7 @@ class EventCategoryImportTest extends AbstractImportTestCase
 
         $this->assertSame(1, $this->countCategoryRelations(101), 'A failed fetch must not be read as an upstream removal.');
         $this->assertSame(1, $this->countCategoryRelations(102), 'Not even the relation a healthy run would have dropped.');
-        $this->assertSame(1, $this->countCategoryRelations(103), 'The editor\'s category is untouched either way.');
+        $this->assertSame(1, $this->countCategoryRelations(103), "The editor's category is untouched either way.");
     }
 
     #[Test]

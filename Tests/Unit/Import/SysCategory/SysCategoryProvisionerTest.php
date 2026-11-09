@@ -441,7 +441,7 @@ class SysCategoryProvisionerTest extends TestCase
 
         $this->assertIsString($key);
         $this->assertSame('Museum', $this->columnOf($payload, $key, 'title'));
-        $this->assertSame('20', $this->columnOf($payload, $key, 'pid'), 'Staged at the anchor\'s storage pid.');
+        $this->assertSame('20', $this->columnOf($payload, $key, 'pid'), "Staged at the anchor's storage pid.");
         $this->assertSame('100', $this->columnOf($payload, $key, 'parent'), 'Hangs off the anchor.');
     }
 

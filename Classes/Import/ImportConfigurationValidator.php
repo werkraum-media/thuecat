@@ -117,7 +117,7 @@ class ImportConfigurationValidator
         if (!in_array($storagePid, $sitePageIds, true)) {
             throw new CategoryConfigurationException(
                 CategoryAnchorSetting::CategoryStoragePid->settingsPath($scope) . ' ' . $storagePid
-                . ' is outside the storagePid\'s site.',
+                . " is outside the storagePid's site.",
                 1752570002
             );
         }
@@ -126,7 +126,7 @@ class ImportConfigurationValidator
         if (!in_array($parentPid, $sitePageIds, true)) {
             throw new CategoryConfigurationException(
                 CategoryAnchorSetting::CategoryParent->settingsPath($scope) . ' ' . $parentUid
-                . ' is outside the storagePid\'s site.',
+                . " is outside the storagePid's site.",
                 1752570003
             );
         }
@@ -162,7 +162,7 @@ class ImportConfigurationValidator
         if (!in_array($storagePid, $sitePageIds, true)) {
             throw new KeywordConfigurationException(
                 CategoryAnchorSetting::KeywordStoragePid->settingsPath($scope) . ' ' . $storagePid
-                . ' is outside the storagePid\'s site.',
+                . " is outside the storagePid's site.",
                 1786713821
             );
         }
@@ -171,7 +171,7 @@ class ImportConfigurationValidator
         if (!in_array($parentPid, $sitePageIds, true)) {
             throw new KeywordConfigurationException(
                 CategoryAnchorSetting::KeywordParent->settingsPath($scope) . ' ' . $parentUid
-                . ' is outside the storagePid\'s site.',
+                . " is outside the storagePid's site.",
                 1786713822
             );
         }

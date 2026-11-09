@@ -69,7 +69,7 @@ final class PluginSaveInvalidationTest extends AbstractCachingTestCase
 
         $this->saveRecord(10, ['pi_flexform' => self::BACKEND_ORDER_FLEXFORM], 'tt_content');
 
-        $this->assertSame(array_values(array_diff($both, $pluginTen)), $this->identifiersForRecords(Extension::CACHE_LIST, [1]), 'Only the saved plugin\'s list is discarded.');
+        $this->assertSame(array_values(array_diff($both, $pluginTen)), $this->identifiersForRecords(Extension::CACHE_LIST, [1]), "Only the saved plugin's list is discarded.");
     }
 
     #[Test]

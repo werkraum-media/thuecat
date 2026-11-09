@@ -8,7 +8,6 @@ use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
 use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
-use Rector\CodingStyle\Rector\String_\SimplifyQuoteEscapeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
@@ -152,7 +151,5 @@ return RectorConfig::configure()
         NewlineBeforeNewAssignSetRector::class,
         // 16 files
         ExplicitNullableObjectInstanceRector::class,
-        // 12 files
-        SimplifyQuoteEscapeRector::class,
     ])
 ;

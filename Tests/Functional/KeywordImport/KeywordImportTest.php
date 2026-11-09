@@ -186,7 +186,7 @@ class KeywordImportTest extends AbstractImportTestCase
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/CollisionWeingut');
 
         $this->assertCount(1, $enum, 'The usage-site enum becomes a category of its own.');
-        $this->assertSame('Ambiente', $enum[0]['title'], 'Titled from the enum\'s own upstream label, not the CURIE.');
+        $this->assertSame('Ambiente', $enum[0]['title'], "Titled from the enum's own upstream label, not the CURIE.");
         $this->assertSame(200, $enum[0]['parent'], 'The enum carries no term set, so the chain ends here and it sits on the anchor.');
 
         $this->assertCount(1, $term, 'The typed literal becomes a category.');
@@ -272,7 +272,7 @@ class KeywordImportTest extends AbstractImportTestCase
 
         $this->runImport();
 
-        $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204), 'A keyword with no remote_id is outside the importer\'s reach.');
+        $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204), "A keyword with no remote_id is outside the importer's reach.");
     }
 
     // Editors may still use a keyword the import stopped delivering.
@@ -437,7 +437,7 @@ class KeywordImportTest extends AbstractImportTestCase
         $this->assertSame($enum[0]['uid'], $term[0]['parent']);
         $this->assertSame([], $this->fetchCategoriesByRemoteId(
             'keyword:https://thuecat.org/ontology/thuecat/1.0/ConventionLocationTopics'
-        ), 'The term\'s other enum is never created.');
+        ), "The term's other enum is never created.");
     }
 
     #[Test]

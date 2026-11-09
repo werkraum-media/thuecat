@@ -61,10 +61,10 @@ class SiteScopedRelationsTcaListenerTest extends TestCase
     public function existingClauseIsKeptAndTheScopeClauseAppended(): void
     {
         $tca = $this->tcaWithColumns([
-            'town' => $this->selectColumn('tx_thuecat_town', 'AND {#tx_thuecat_town}.{#title} != \'\''),
+            'town' => $this->selectColumn('tx_thuecat_town', "AND {#tx_thuecat_town}.{#title} != ''"),
         ]);
 
-        $this->assertSame('AND {#tx_thuecat_town}.{#title} != \'\''
+        $this->assertSame("AND {#tx_thuecat_town}.{#title} != ''"
         . ' AND {#tx_thuecat_town}.{#pid} IN (###PAGE_TSCONFIG_IDLIST###)'
         . ' AND {#tx_thuecat_town}.{#sys_language_uid} IN (0, -1)', $this->clauseFor($this->process($tca), 'town'));
     }

@@ -58,11 +58,11 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
-        $this->assertCount(2, $towns, 'The second site creates its own town beside the first site\'s.');
+        $this->assertCount(2, $towns, "The second site creates its own town beside the first site's.");
 
         $foreign = $this->recordWithPid($towns, 4010);
-        $this->assertSame('Stale title of the first site', $foreign['title'], 'The first site\'s town must keep its stored title.');
-        $this->assertSame(4010, $foreign['pid'], 'The first site\'s town must keep its pid.');
+        $this->assertSame('Stale title of the first site', $foreign['title'], "The first site's town must keep its stored title.");
+        $this->assertSame(4010, $foreign['pid'], "The first site's town must keep its pid.");
     }
 
     #[Test]
@@ -127,7 +127,7 @@ class RecordIdentityScopeTest extends AbstractImportTestCase
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $importedTown = $this->recordWithPid($towns, 5010);
         $ownOrganisation = $this->recordWithPid($organisations, 5010);
-        $this->assertSame($ownOrganisation['uid'], $importedTown['managed_by'], 'The relation must point at the importing site\'s organisation, never the foreign one.');
+        $this->assertSame($ownOrganisation['uid'], $importedTown['managed_by'], "The relation must point at the importing site's organisation, never the foreign one.");
     }
 
     #[Test]
