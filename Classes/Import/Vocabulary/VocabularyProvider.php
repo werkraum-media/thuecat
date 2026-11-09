@@ -52,7 +52,7 @@ class VocabularyProvider
         $now ??= time();
         $stored = $this->cache->read();
 
-        if ($stored !== null && !$stored->isStale($now)) {
+        if ($stored instanceof CachedVocabularyIndex && !$stored->isStale($now)) {
             return $stored->index;
         }
 
@@ -91,7 +91,7 @@ class VocabularyProvider
         Throwable $failure,
         int $now
     ): VocabularyIndex {
-        if ($stored === null) {
+        if (!$stored instanceof CachedVocabularyIndex) {
             $this->logger->recordUnavailableVocabulary(
                 implode(', ', array_keys(self::VOCABULARY_URLS)),
                 $failure->getMessage()

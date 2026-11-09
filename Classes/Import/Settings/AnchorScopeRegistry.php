@@ -83,7 +83,7 @@ class AnchorScopeRegistry
                 continue;
             }
             $claimed = $this->scopeByTable[$id::TABLE] ?? null;
-            if ($claimed !== null && $claimed->value !== $id::anchorScope()) {
+            if ($claimed instanceof AnchorScope && $claimed->value !== $id::anchorScope()) {
                 // Service order would otherwise pick the table's tree.
                 throw new RuntimeException(sprintf(
                     'Table "%s" is claimed by the anchor scopes "%s" and "%s" (%s); one table files into one tree.',

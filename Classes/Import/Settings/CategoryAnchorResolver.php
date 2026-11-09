@@ -104,7 +104,7 @@ class CategoryAnchorResolver
     {
         $chain = [];
         foreach ([$this->scopes->forTable($table), AnchorScope::default()] as $scope) {
-            if ($scope !== null) {
+            if ($scope instanceof AnchorScope) {
                 $chain[$scope->value] ??= $scope;
             }
         }

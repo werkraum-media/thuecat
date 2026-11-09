@@ -78,13 +78,13 @@ class AnchorStartingPoints implements FormDataProviderInterface
     {
         return (string)preg_replace_callback(
             self::MARKER,
-            fn (array $match): string => $site === null
-                ? '0'
-                : (string)$this->anchorResolver->resolvePair(
+            fn (array $match): string => $site instanceof Site
+                ? (string)$this->anchorResolver->resolvePair(
                     $site,
                     $match[1],
                     $match[2] === 'category' ? AnchorKind::Category : AnchorKind::Keyword
-                )->parent,
+                )->parent
+                : '0',
             $startingPoints
         );
     }

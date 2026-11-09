@@ -123,7 +123,7 @@ final class AddTitleForStaticUrlsDataHandlerHook
             $node = is_array($graph[0] ?? null) ? $graph[0] : [];
 
             $entity = $this->resolveEntityClass($node['@type'] ?? []);
-            if ($entity === null) {
+            if (!$entity instanceof EntityInterface) {
                 continue;
             }
             $entity->parse($node, $language, new ParserContext(0), []);

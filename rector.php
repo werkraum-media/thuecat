@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\If_\ExplicitNullableObjectInstanceRector;
 use Rector\CodeQuality\Rector\LogicalAnd\LogicalToBooleanRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
@@ -58,8 +57,7 @@ return RectorConfig::configure()
     ->withSets([
         Typo3SetList::CODE_QUALITY,
         Typo3SetList::GENERAL,
-        // currently not working due to https://github.com/sabbelasichon/typo3-rector/pull/4955,
-        // @todo also runs into timeout. Have a look again after merge.
+        // @todo runs into timeout. Have a look again after merge.
         // Typo3LevelSetList::UP_TO_TYPO3_14,
         $typo3Sets . '/v10/tca-100.php',
         $typo3Sets . '/v10/tca-104.php',
@@ -149,7 +147,5 @@ return RectorConfig::configure()
         AddArrowFunctionReturnTypeRector::class,
         // 16 files
         NewlineBeforeNewAssignSetRector::class,
-        // 16 files
-        ExplicitNullableObjectInstanceRector::class,
     ])
 ;

@@ -28,9 +28,11 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\TableColumnType;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
@@ -785,7 +787,7 @@ class Resolver
         $visited[] = $uri;
 
         $term = $this->fetchKeywordTerm($context, $uri, $technicalFailure);
-        if ($term === null) {
+        if (!$term instanceof KeywordTermEntity) {
             if ($technicalFailure === true) {
                 $context->keywordFailureByField[
                     $ownerTable . '|' . $ownerKey . '|' . $targetField
@@ -1000,9 +1002,9 @@ class Resolver
         string $identifierPrefix
     ): SysCategoryAnchor {
         $memoKey = $ownerTable . '|' . $kind->name;
-        $context->anchorPairs[$memoKey] ??= $context->site === null
-            ? new AnchorPair()
-            : $this->anchorResolver->resolvePair($context->site, $ownerTable, $kind);
+        $context->anchorPairs[$memoKey] ??= $context->site instanceof Site
+            ? $this->anchorResolver->resolvePair($context->site, $ownerTable, $kind)
+            : new AnchorPair();
         $pair = $context->anchorPairs[$memoKey];
 
         return new SysCategoryAnchor($pair->parent, $pair->storagePid, $identifierPrefix);
@@ -1659,8 +1661,8 @@ class Resolver
                             // an asset, so the bucket is dropped rather than
                             // drained.
                             if ($context->skipMedia
-                                || $context->targetFolder === null
-                                || $context->stagingFolder === null
+                                || !$context->targetFolder instanceof Folder
+                                || !$context->stagingFolder instanceof Folder
                             ) {
                                 foreach ($references as $entry) {
                                     if (is_array($entry)) {
@@ -2191,7 +2193,7 @@ class Resolver
     ): void {
         $target = $context->targetFolder;
         $staging = $context->stagingFolder;
-        if ($target === null || $staging === null) {
+        if (!$target instanceof Folder || !$staging instanceof Folder) {
             throw new InvalidTransientReferenceException(
                 sprintf(
                     'Media bucket on %s[%s] cannot be drained without resolved '
@@ -2402,7 +2404,7 @@ class Resolver
                 $failureDetail,
                 $failureStatus,
             );
-            if ($file === null) {
+            if (!$file instanceof File) {
                 $assetIsGone = $this->meansAssetIsGone($failureStatus);
                 $context->assetGoneByUrl[$downloadUrl] = $assetIsGone;
                 if (!$assetIsGone) {
@@ -2460,7 +2462,7 @@ class Resolver
 
         $target = $context->targetFolder;
         $staging = $context->stagingFolder;
-        if ($target === null || $staging === null) {
+        if (!$target instanceof Folder || !$staging instanceof Folder) {
             return;
         }
 

@@ -331,7 +331,7 @@ class TouristAttractionController extends AbstractActionController
     {
         $listPluginOnSamePage = $this->siblingListPluginLocator->resolveForPage($contentObject, $pageId);
 
-        if ($listPluginOnSamePage !== null) {
+        if ($listPluginOnSamePage instanceof SiblingListPluginContext) {
             $this->demandFactory->applyEditorFilter($demand, $listPluginOnSamePage->getEditorFilter());
         }
         return $listPluginOnSamePage;
@@ -348,7 +348,7 @@ class TouristAttractionController extends AbstractActionController
         $pageSettings = $this->settings['page'] ?? [];
         $pidSettings = is_array($pageSettings) ? ($pageSettings['pid'] ?? []) : [];
         $centralPid = is_array($pidSettings) ? ($pidSettings['thuecat_attraction_search'] ?? null) : null;
-        return $listPluginOnSamePage !== null ? $pageId : $centralPid;
+        return $listPluginOnSamePage instanceof SiblingListPluginContext ? $pageId : $centralPid;
     }
 
     /**

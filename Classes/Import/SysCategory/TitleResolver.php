@@ -81,7 +81,7 @@ class TitleResolver
      */
     protected function fromUpstream(?VocabularyClass $class, string $language): ?string
     {
-        if ($class === null) {
+        if (!$class instanceof VocabularyClass) {
             return null;
         }
 

@@ -280,7 +280,7 @@ class OpeningHoursFormatter
 
     protected function windowContains(?DateTimeImmutable $from, ?DateTimeImmutable $through, DateTimeImmutable $today): bool
     {
-        return ($from === null || $from <= $today) && ($through === null || $through >= $today);
+        return (!$from instanceof DateTimeImmutable || $from <= $today) && (!$through instanceof DateTimeImmutable || $through >= $today);
     }
 
     /**

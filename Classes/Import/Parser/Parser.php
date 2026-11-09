@@ -93,7 +93,7 @@ class Parser
     public function parseNode(array $node, ParserContext $parserContext): void
     {
         $entity = $this->resolveEntityClass($node['@type'] ?? []);
-        if ($entity === null) {
+        if (!$entity instanceof EntityInterface) {
             return;
         }
 

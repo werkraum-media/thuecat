@@ -62,7 +62,7 @@ readonly class SyncWindow
         }
 
         $anchor = $this->importLogRepository->findLatestSuccessfulCreation($configurationUid);
-        if ($anchor === null) {
+        if (!$anchor instanceof DateTimeImmutable) {
             return $fullWindow;
         }
 

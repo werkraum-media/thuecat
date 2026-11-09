@@ -157,11 +157,11 @@ class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterfac
     {
         $children = $this->_dates;
 
-        if ($this->_location !== null) {
+        if ($this->_location instanceof LocationEntity) {
             $children[] = $this->_location;
         }
 
-        if ($this->_organizer !== null) {
+        if ($this->_organizer instanceof OrganizerEntity) {
             $children[] = $this->_organizer;
         }
 

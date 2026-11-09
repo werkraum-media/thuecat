@@ -43,7 +43,7 @@ class KeywordReader
         $seen = [];
         foreach ($items as $item) {
             $entry = $this->toEntry($item);
-            if ($entry === null) {
+            if (!$entry instanceof KeywordEntry) {
                 continue;
             }
             // Same term referenced twice would otherwise cost a duplicate fetch.

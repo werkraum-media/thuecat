@@ -136,7 +136,7 @@ class Importer
             throw $failure;
         } finally {
             $this->fetchData->resetRunConfiguration();
-            if ($stagingFolder !== null) {
+            if ($stagingFolder instanceof Folder) {
                 $this->mediaFileStaging->discard($stagingFolder);
             }
         }
@@ -391,7 +391,7 @@ class Importer
     protected function finishRun(?Folder $targetFolder, ?Folder $stagingFolder): string
     {
         // Null only without media: nothing was staged, nothing to promote.
-        if ($targetFolder !== null && $stagingFolder !== null) {
+        if ($targetFolder instanceof Folder && $stagingFolder instanceof Folder) {
             $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
         }
 

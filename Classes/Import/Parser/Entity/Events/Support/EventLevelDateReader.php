@@ -49,7 +49,7 @@ final class EventLevelDateReader
 
         // Both bounds or none: substituting the present one for the absent one
         // would invent an occurrence upstream never published.
-        if ($start === null || $end === null) {
+        if (!$start instanceof DateTimeImmutable || !$end instanceof DateTimeImmutable) {
             return null;
         }
 

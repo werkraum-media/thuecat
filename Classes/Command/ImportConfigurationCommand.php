@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Core\Bootstrap;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
@@ -79,7 +80,7 @@ class ImportConfigurationCommand extends Command
         }
 
         $configuration = $this->importConfigurationRepository->findOneByUid($configurationUid);
-        if ($configuration === null) {
+        if (!$configuration instanceof ImportConfigurationInterface) {
             throw new Exception('No configuration found for uid: ' . $configurationUid, 1693228522);
         }
         // Decoration, not input interactivity: it tracks whether a terminal is

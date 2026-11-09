@@ -89,7 +89,7 @@ final class RetryingClient implements ImportHttpClient
     {
         $seconds = 2 ** ($attempt - 1);
 
-        if ($this->sleeper !== null) {
+        if ($this->sleeper instanceof Closure) {
             ($this->sleeper)($seconds);
             return;
         }
