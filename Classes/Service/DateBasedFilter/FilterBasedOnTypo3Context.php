@@ -43,7 +43,7 @@ class FilterBasedOnTypo3Context implements DateBasedFilter
     ): array {
         $referenceDate = $this->context->getPropertyFromAspect('date', 'full', new DateTimeImmutable());
 
-        return array_filter($listToFilter, function ($elementToFilter) use ($referenceDate, $provideDate) {
+        return array_filter($listToFilter, function ($elementToFilter) use ($referenceDate, $provideDate): bool {
             $objectDate = $provideDate($elementToFilter);
             return $objectDate === null || $objectDate >= $referenceDate;
         });

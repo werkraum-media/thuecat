@@ -87,7 +87,7 @@ class GuzzleClientFaker
         self::$registered = true;
         self::reset();
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-        $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = function (callable $handler) {
+        $GLOBALS['TYPO3_CONF_VARS']['HTTP']['handler']['faker'] = function (callable $handler): callable {
             return self::wrappedHandler();
         };
     }
@@ -196,7 +196,7 @@ class GuzzleClientFaker
 
     private static function wrappedHandler(): callable
     {
-        return static function (RequestInterface $request, array $options) {
+        return static function (RequestInterface $request, array $options): FulfilledPromise {
             self::$lastRequest = $request;
             self::$requests[] = $request;
             $url = (string)$request->getUri();

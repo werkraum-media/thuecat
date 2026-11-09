@@ -207,7 +207,7 @@ abstract class AbstractPlace extends Base
     public function getParkingFacilitiesNearBySortedByAlphabet(): array
     {
         $facilities = $this->parkingFacilityNearBy->toArray();
-        usort($facilities, function (ParkingFacility $a, ParkingFacility $b) {
+        usort($facilities, function (ParkingFacility $a, ParkingFacility $b): int {
             return $a->getTitle() <=> $b->getTitle();
         });
 

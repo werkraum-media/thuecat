@@ -301,7 +301,7 @@ class ImportLog extends Typo3AbstractEntity
      */
     protected function getSavingEntries(): array
     {
-        return array_filter($this->logEntries->getArray(), function (ImportLogEntry $entry) {
+        return array_filter($this->logEntries->getArray(), function (ImportLogEntry $entry): bool {
             return $entry instanceof SavingEntity;
         });
     }

@@ -70,7 +70,7 @@ class Offer
 
     public function getType(): string
     {
-        $offerTypes = array_filter($this->types, function (string $type) {
+        $offerTypes = array_filter($this->types, function (string $type): bool {
             return str_contains($type, 'Offer');
         });
         // Ensure clean index

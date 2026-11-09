@@ -15,7 +15,6 @@ use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
-use Rector\TypeDeclaration\Rector\Closure\ClosureReturnTypeRector;
 use Rector\TypeDeclarationDocblocks\Rector\Class_\ClassMethodArrayDocblockParamFromLocalCallsRector;
 use Rector\TypeDeclarationDocblocks\Rector\ClassMethod\AddParamArrayDocblockFromAssignsParamToParamReferenceRector;
 use Ssch\TYPO3Rector\CodeQuality\General\RemoveTypo3VersionChecksRector;
@@ -139,7 +138,5 @@ return RectorConfig::configure()
         ClosureToArrowFunctionRector::class,
         // 20 files
         LogicalToBooleanRector::class,
-        // 18 files
-        ClosureReturnTypeRector::class,
     ])
 ;

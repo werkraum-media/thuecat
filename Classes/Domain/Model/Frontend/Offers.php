@@ -43,7 +43,7 @@ class Offers implements TypeInterface, Iterator, Countable
         $array = json_decode($serialized, true);
         if (is_array($array)) {
             $array = array_map([Offer::class, 'createFromArray'], $array);
-            usort($array, function (Offer $offerA, Offer $offerB) {
+            usort($array, function (Offer $offerA, Offer $offerB): int {
                 return $offerA->getType() <=> $offerB->getType();
             });
             $this->array = $array;
