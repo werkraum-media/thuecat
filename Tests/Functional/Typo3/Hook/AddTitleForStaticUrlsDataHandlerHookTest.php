@@ -51,7 +51,7 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         string $existingConfiguration,
         array $submittedValues,
     ): void {
-        (new PhpDataSet())->import([
+        new PhpDataSet()->import([
             'tx_thuecat_import_configuration' => [
                 [
                     'uid' => '1',

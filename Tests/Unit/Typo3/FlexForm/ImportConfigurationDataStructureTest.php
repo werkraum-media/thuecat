@@ -30,7 +30,7 @@ class ImportConfigurationDataStructureTest extends TestCase
     #[Test]
     public function syncChannelHasOnlyItsOwnFields(): void
     {
-        $dataStructure = (new ImportConfigurationDataStructure())->forType('syncChannel');
+        $dataStructure = new ImportConfigurationDataStructure()->forType('syncChannel');
         $this->assertIsArray($dataStructure);
 
         $fields = ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el');
@@ -42,7 +42,7 @@ class ImportConfigurationDataStructureTest extends TestCase
     #[Test]
     public function syncChannelRequiresChannelIdAndApiKey(): void
     {
-        $dataStructure = (new ImportConfigurationDataStructure())->forType('syncChannel');
+        $dataStructure = new ImportConfigurationDataStructure()->forType('syncChannel');
         $this->assertIsArray($dataStructure);
 
         $this->assertTrue(ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/syncChannelId/config/required'));
@@ -52,7 +52,7 @@ class ImportConfigurationDataStructureTest extends TestCase
     #[Test]
     public function syncScopeKeepsItsApiDomainDefault(): void
     {
-        $dataStructure = (new ImportConfigurationDataStructure())->forType('syncScope');
+        $dataStructure = new ImportConfigurationDataStructure()->forType('syncScope');
         $this->assertIsArray($dataStructure);
 
         $this->assertSame('https://cdb.thuecat.org', ArrayUtility::getValueByPath($dataStructure, 'sheets/sDEF/ROOT/el/apiDomain/config/default'));

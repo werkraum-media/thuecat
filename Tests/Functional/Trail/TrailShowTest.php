@@ -92,7 +92,7 @@ class TrailShowTest extends AbstractFrontendTestCase
     #[Test]
     public function withoutTrailParameterShowsNoDataLabel(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $result = $this->executeFrontendSubRequest($request);
 

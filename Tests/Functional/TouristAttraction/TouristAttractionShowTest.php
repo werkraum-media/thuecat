@@ -38,7 +38,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
         parent::setUp();
 
         $this->originalExecTime = is_int($GLOBALS['EXEC_TIME'] ?? null) ? $GLOBALS['EXEC_TIME'] : time();
-        $GLOBALS['EXEC_TIME'] = (new DateTimeImmutable('2026-10-15T12:00:00', new DateTimeZone('Europe/Berlin')))->getTimestamp();
+        $GLOBALS['EXEC_TIME'] = new DateTimeImmutable('2026-10-15T12:00:00', new DateTimeZone('Europe/Berlin'))->getTimestamp();
     }
 
     protected function tearDown(): void
@@ -562,7 +562,7 @@ class TouristAttractionShowTest extends AbstractFrontendTestCase
     #[Test]
     public function withoutAttractionParameterShowsNoDataLabel(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $result = $this->executeFrontendSubRequest($request);
 

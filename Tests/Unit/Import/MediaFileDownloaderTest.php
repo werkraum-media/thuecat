@@ -229,7 +229,7 @@ class MediaFileDownloaderTest extends TestCase
         $staging = $this->createStub(Folder::class);
         $staging->method('hasFile')->willReturn(false);
 
-        $file = (new MediaFileDownloader($client))->download(
+        $file = new MediaFileDownloader($client)->download(
             $target,
             $staging,
             'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
@@ -255,7 +255,7 @@ class MediaFileDownloaderTest extends TestCase
             }
         );
 
-        (new MediaFileDownloader($this->clientReturning(200, 'image-bytes')))->download(
+        new MediaFileDownloader($this->clientReturning(200, 'image-bytes'))->download(
             $target,
             $staging,
             $downloadUrl,
@@ -284,7 +284,7 @@ class MediaFileDownloaderTest extends TestCase
         $staging->method('hasFile')->willReturn(false);
         $staging->method('createFile')->willReturn($this->createStub(File::class));
 
-        (new MediaFileDownloader($client))->download(
+        new MediaFileDownloader($client)->download(
             $target,
             $staging,
             $downloadUrl,
@@ -331,7 +331,7 @@ class MediaFileDownloaderTest extends TestCase
             }
         );
 
-        $file = (new MediaFileDownloader($client))->download(
+        $file = new MediaFileDownloader($client)->download(
             $target,
             $staging,
             'http://img.oastatic.com/img/24836090/.jpg',
@@ -366,7 +366,7 @@ class MediaFileDownloaderTest extends TestCase
         $staging = $this->createStub(Folder::class);
         $staging->method('hasFile')->willReturn(false);
 
-        $this->assertNull((new MediaFileDownloader($client))->download(
+        $this->assertNull(new MediaFileDownloader($client)->download(
             $target,
             $staging,
             'http://img.oastatic.com/img/1/.jpg',
@@ -395,7 +395,7 @@ class MediaFileDownloaderTest extends TestCase
 
         $failureDetail = null;
 
-        return (new MediaFileDownloader($httpClient))->download(
+        return new MediaFileDownloader($httpClient)->download(
             $target,
             $staging,
             'https://cms.thuecat.org/o/adaptive-media/image/72444626/Preview-1280x0/image',

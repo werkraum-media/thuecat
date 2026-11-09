@@ -413,7 +413,7 @@ class SysCategoryProvisionerTest extends TestCase
         $repository->method('findUidsByRemoteId')->willReturn([77]);
         $repository->method('findParent')->willReturn(100);
 
-        (new SysCategoryProvisioner($repository))->provision(
+        new SysCategoryProvisioner($repository)->provision(
             $payload,
             new SysCategoryProvisioningState(),
             $this->types(),

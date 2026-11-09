@@ -39,7 +39,7 @@ class VocabularyDistillerTest extends TestCase
      */
     private function distill(array $nodes): array
     {
-        return (new VocabularyDistiller())->distill(['@graph' => $nodes]);
+        return new VocabularyDistiller()->distill(['@graph' => $nodes]);
     }
 
     /**
@@ -197,7 +197,7 @@ class VocabularyDistillerTest extends TestCase
     #[Test]
     public function acceptsADocumentWithoutAGraphWrapper(): void
     {
-        $classes = (new VocabularyDistiller())->distill([
+        $classes = new VocabularyDistiller()->distill([
             ['@id' => 'schema:Museum', '@type' => 'rdfs:Class', 'rdfs:label' => 'Museum'],
         ]);
 

@@ -29,7 +29,7 @@ class KeywordTermEntityTest extends AbstractImportTestCase
     #[Test]
     public function handlesTermAndTermSetTypes(): void
     {
-        $handled = (new KeywordTermEntity())->handlesTypes();
+        $handled = new KeywordTermEntity()->handlesTypes();
 
         $this->assertContains('schema:DefinedTerm', $handled);
         $this->assertContains('schema:DefinedTermSet', $handled);

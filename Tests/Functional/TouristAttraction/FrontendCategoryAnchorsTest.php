@@ -40,7 +40,7 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
     public function readsBothAnchorsFromTheSiteSettings(): void
     {
         $site = $this->get(SiteFinder::class)->getSiteByPageId(1);
-        $request = (new ServerRequest())->withAttribute('site', $site);
+        $request = new ServerRequest()->withAttribute('site', $site);
 
         $anchors = $this->get(FrontendCategoryAnchors::class);
 
@@ -90,6 +90,6 @@ class FrontendCategoryAnchorsTest extends AbstractFrontendTestCase
     {
         $site = new Site('anchors', 1, ['settings' => ['import' => $import]]);
 
-        return (new ServerRequest())->withAttribute('site', $site);
+        return new ServerRequest()->withAttribute('site', $site);
     }
 }

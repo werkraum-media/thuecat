@@ -40,7 +40,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function combinedPageRendersFormAndList(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
@@ -53,7 +53,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function searchPluginDoesNotRenderListAndListPluginDoesNotRenderForm(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -66,7 +66,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function getFilterByTownAndFreeNarrowsTheList(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
@@ -84,7 +84,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function formRepopulatesSubmittedFilterState(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
@@ -101,7 +101,7 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function paginationLinksCarryTheDemand(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
                 'towns' => [1],
@@ -121,10 +121,10 @@ class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function postRedirectsToCleanGetUrlWithDemand(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withMethod('POST')
-            ->withBody((new StreamFactory())->createStream(http_build_query([
+            ->withBody(new StreamFactory()->createStream(http_build_query([
                 'tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Erfurt Frei 01']],
             ])))
         ;

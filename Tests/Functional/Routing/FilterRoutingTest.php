@@ -169,7 +169,7 @@ class FilterRoutingTest extends AbstractFrontendTestCase
     {
         $request = $this->pageRequest(10)
             ->withMethod('POST')
-            ->withBody((new StreamFactory())->createStream(http_build_query([
+            ->withBody(new StreamFactory()->createStream(http_build_query([
                 'tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Domberg Erfurt', 'towns' => ['1']]],
             ])))
         ;

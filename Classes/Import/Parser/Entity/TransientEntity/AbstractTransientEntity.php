@@ -42,7 +42,7 @@ abstract class AbstractTransientEntity
      */
     protected function extractValue(mixed $value, string $language): string
     {
-        return (new LocalisedValueReader())->read($value, $language);
+        return new LocalisedValueReader()->read($value, $language);
     }
 
     /**

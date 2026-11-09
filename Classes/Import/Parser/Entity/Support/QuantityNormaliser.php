@@ -39,7 +39,7 @@ class QuantityNormaliser
     public function normalise(array $quantity): ?float
     {
         $factor = self::FACTORS[$this->unitOf($quantity)] ?? null;
-        $value = (new LocalisedValueReader())->read($quantity['schema:value'] ?? null, '');
+        $value = new LocalisedValueReader()->read($quantity['schema:value'] ?? null, '');
         if ($factor === null || !is_numeric($value)) {
             return null;
         }
@@ -53,6 +53,6 @@ class QuantityNormaliser
      */
     public function unitOf(array $quantity): string
     {
-        return (new LocalisedValueReader())->read($quantity['schema:unitCode'] ?? null, '');
+        return new LocalisedValueReader()->read($quantity['schema:unitCode'] ?? null, '');
     }
 }

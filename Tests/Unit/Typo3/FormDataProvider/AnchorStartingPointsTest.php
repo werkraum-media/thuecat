@@ -42,7 +42,7 @@ class AnchorStartingPointsTest extends TestCase
             ->willReturn(new AnchorPair(140, 360, new AnchorScope('trails')))
         ;
 
-        $result = (new AnchorStartingPoints($resolver))->addData(
+        $result = new AnchorStartingPoints($resolver)->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###')
         );
 
@@ -59,7 +59,7 @@ class AnchorStartingPointsTest extends TestCase
             ->willReturn(new AnchorPair(100, 320, new AnchorScope('thuecat')))
         ;
 
-        $result = (new AnchorStartingPoints($resolver))->addData(
+        $result = new AnchorStartingPoints($resolver)->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_tourist_attraction:category###')
         );
 
@@ -73,7 +73,7 @@ class AnchorStartingPointsTest extends TestCase
         $resolver = $this->createStub(CategoryAnchorResolver::class);
         $resolver->method('resolvePair')->willReturn(new AnchorPair());
 
-        $result = (new AnchorStartingPoints($resolver))->addData(
+        $result = new AnchorStartingPoints($resolver)->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###')
         );
 
@@ -86,7 +86,7 @@ class AnchorStartingPointsTest extends TestCase
         $resolver = $this->createMock(CategoryAnchorResolver::class);
         $resolver->expects($this->never())->method('resolvePair');
 
-        $result = (new AnchorStartingPoints($resolver))->addData(
+        $result = new AnchorStartingPoints($resolver)->addData(
             $this->formData('###THUECAT_ANCHOR:tx_thuecat_trail:keywords###', new NullSite())
         );
 
@@ -99,7 +99,7 @@ class AnchorStartingPointsTest extends TestCase
         $resolver = $this->createMock(CategoryAnchorResolver::class);
         $resolver->expects($this->never())->method('resolvePair');
 
-        $result = (new AnchorStartingPoints($resolver))->addData(
+        $result = new AnchorStartingPoints($resolver)->addData(
             $this->formData('###SITE:settings.import.thuecat.keywords.parent###')
         );
 
@@ -115,7 +115,7 @@ class AnchorStartingPointsTest extends TestCase
             'processedTca' => ['columns' => ['title' => ['config' => ['type' => 'input']]]],
         ];
 
-        $this->assertSame($input, (new AnchorStartingPoints($resolver))->addData($input));
+        $this->assertSame($input, new AnchorStartingPoints($resolver)->addData($input));
     }
 
     /**

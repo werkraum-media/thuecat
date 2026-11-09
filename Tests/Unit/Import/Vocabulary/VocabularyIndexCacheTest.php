@@ -118,7 +118,7 @@ class VocabularyIndexCacheTest extends TestCase
     {
         $entries = [];
 
-        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull(new VocabularyIndexCache($this->cache($entries))->read());
     }
 
     #[Test]
@@ -173,7 +173,7 @@ class VocabularyIndexCacheTest extends TestCase
             ],
         ];
 
-        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull(new VocabularyIndexCache($this->cache($entries))->read());
     }
 
     #[Test]
@@ -181,7 +181,7 @@ class VocabularyIndexCacheTest extends TestCase
     {
         $entries = ['index' => 'nonsense'];
 
-        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull(new VocabularyIndexCache($this->cache($entries))->read());
     }
 
     #[Test]
@@ -191,7 +191,7 @@ class VocabularyIndexCacheTest extends TestCase
             'index' => ['format' => VocabularyIndexCache::FORMAT, 'classes' => []],
         ];
 
-        $this->assertNull((new VocabularyIndexCache($this->cache($entries)))->read());
+        $this->assertNull(new VocabularyIndexCache($this->cache($entries))->read());
     }
 
     #[Test]

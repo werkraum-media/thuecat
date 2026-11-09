@@ -137,7 +137,7 @@ class AddressEntity extends AbstractEntity
     /** A namespaced member name the resolver can look a label up for. */
     protected function isCurie(string $value): bool
     {
-        return (new CurieExpander())->expand($value) !== null;
+        return new CurieExpander()->expand($value) !== null;
     }
 
     /** No-op: manufactured by the parent, never dispatched from a node. */

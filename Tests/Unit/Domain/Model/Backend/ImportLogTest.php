@@ -211,7 +211,7 @@ class ImportLogTest extends TestCase
 
     private function entryWithSeverity(string $severity, string $remoteId, string $message): ImportLogEntry
     {
-        $entry = (new ReflectionClass(ReferenceSkipped::class))->newInstanceWithoutConstructor();
+        $entry = new ReflectionClass(ReferenceSkipped::class)->newInstanceWithoutConstructor();
         $entry->_setProperty('severity', $severity);
         $entry->_setProperty('remoteId', $remoteId);
         $entry->_setProperty('message', $message);
@@ -222,7 +222,7 @@ class ImportLogTest extends TestCase
     private function savingEntry(string $table, bool $insertion): SavingEntity
     {
         // Bypass the entity-dependent constructor; set the DB-hydrated fields directly.
-        $entry = (new ReflectionClass(SavingEntity::class))->newInstanceWithoutConstructor();
+        $entry = new ReflectionClass(SavingEntity::class)->newInstanceWithoutConstructor();
         $entry->_setProperty('tableName', $table);
         $entry->_setProperty('insertion', $insertion ? 1 : 0);
 

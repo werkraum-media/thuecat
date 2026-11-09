@@ -41,7 +41,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function showsTheConfiguredRecordWithoutAQueryParameter(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -115,7 +115,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function withoutAConfiguredRecordAndWithoutAParameterNothingIsShown(): void
     {
-        $request = (new InternalRequest())->withPageId(11);
+        $request = new InternalRequest()->withPageId(11);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -145,7 +145,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function aHiddenConfiguredRecordShowsNoDataWithoutAQueryParameter(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -176,7 +176,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function aConfiguredRecordThatDoesNotExistShowsNoData(): void
     {
-        $request = (new InternalRequest())->withPageId(15);
+        $request = new InternalRequest()->withPageId(15);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -203,7 +203,7 @@ class TouristAttractionPreselectionTest extends AbstractFrontendTestCase
     #[Test]
     public function anUnresolvableConfiguredRecordEmitsNoKeywordsMetaTag(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

@@ -105,7 +105,7 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
     {
         $site = $this->get(SiteFinder::class)->getSiteByPageId(1);
 
-        return (new ServerRequest())->withAttribute('site', $site);
+        return new ServerRequest()->withAttribute('site', $site);
     }
 
     /**
@@ -128,7 +128,7 @@ class SearchFilterOptionsServiceTest extends AbstractFrontendTestCase
             ],
         ]);
 
-        return (new ServerRequest())->withAttribute('site', $site);
+        return new ServerRequest()->withAttribute('site', $site);
     }
 
     /**

@@ -39,7 +39,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function firstPageShowsOnlyConfiguredNumberOfItems(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -51,7 +51,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function secondPageShowsNextItems(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
         ;
@@ -67,7 +67,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersAPaginationLinkPerPage(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -78,7 +78,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function rendersPaginationSummaryWithItemsPerPageAndPageCount(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -91,7 +91,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function keywordSelectionIsCarriedIntoPaginationLinks(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
         ;
@@ -106,7 +106,7 @@ class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function keywordFilterStillAppliesOnTheSecondPage(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => [
                 'demand' => ['keywords' => ['501']],

@@ -169,7 +169,7 @@ abstract class AbstractEntity implements EntityInterface
     /** Stateless, so instantiated per call like the other Support collaborators. */
     protected function extractValue(mixed $value, string $language): string
     {
-        return (new LocalisedValueReader())->read($value, $language);
+        return new LocalisedValueReader()->read($value, $language);
     }
 
     /**
@@ -538,7 +538,7 @@ abstract class AbstractEntity implements EntityInterface
     {
         $references = [];
 
-        foreach ((new KeywordReader())->read($node) as $entry) {
+        foreach (new KeywordReader()->read($node) as $entry) {
             // Free text needs no fetch, but still rides the bucket: the
             // resolver never sees entity objects, only the payload.
             if ($entry->shape === KeywordEntry::SHAPE_FREE_TEXT) {
@@ -552,7 +552,7 @@ abstract class AbstractEntity implements EntityInterface
             }
 
             $uri = $entry->shape === KeywordEntry::SHAPE_ONTOLOGY
-                ? (new CurieExpander())->expand($entry->value)
+                ? new CurieExpander()->expand($entry->value)
                 : $entry->value;
             if ($uri === null) {
                 continue;

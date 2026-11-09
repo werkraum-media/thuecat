@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Schema\Struct\SelectItem;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use WerkraumMedia\ThueCat\Extension;
 
@@ -17,11 +18,7 @@ defined('TYPO3') || die();
     ExtensionManagementUtility::addTcaSelectItem(
         $tableName,
         'module',
-        [
-            'label' => $languagePath . '.module.thuecat',
-            'value' => 'thuecat',
-            'icon' => 'pages_module_thuecat',
-        ]
+        new SelectItem(type: 'select', label: $languagePath . '.module.thuecat', value: 'thuecat', icon: 'pages_module_thuecat')
     );
 
     // Each routed plugin adds its role item in its own pages_page_role_<plugin>.php, next to its route file.

@@ -34,7 +34,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listShowsAllAttractionsWithoutSearch(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -47,7 +47,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listWithEmptySearchWordReturnsAllAttractions(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => '']]])
         ;
@@ -62,7 +62,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listFiltersBySearchWord(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
         ;
@@ -77,7 +77,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listShowsEmptyMessageWhenSearchHasNoMatches(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'GibtEsNicht']]])
         ;
@@ -93,7 +93,7 @@ class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listFindsAllMatchesAcrossTitleSubstring(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Erfurt']]])
         ;

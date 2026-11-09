@@ -66,25 +66,25 @@ final class QuantityNormaliserTest extends TestCase
     #[DataProvider('knownUnits')]
     public function convertsKnownUnitToMetresOrSquareMetres(array $quantity, float $expected): void
     {
-        $this->assertSame($expected, (new QuantityNormaliser())->normalise($quantity));
+        $this->assertSame($expected, new QuantityNormaliser()->normalise($quantity));
     }
 
     #[Test]
     public function dropsValueOfUnknownUnit(): void
     {
-        $this->assertNull((new QuantityNormaliser())->normalise(self::UNKNOWN_UNIT));
+        $this->assertNull(new QuantityNormaliser()->normalise(self::UNKNOWN_UNIT));
     }
 
     #[Test]
     public function namesTheUnitOfAQuantity(): void
     {
-        $this->assertSame('test:UnknownUnit', (new QuantityNormaliser())->unitOf(self::UNKNOWN_UNIT));
+        $this->assertSame('test:UnknownUnit', new QuantityNormaliser()->unitOf(self::UNKNOWN_UNIT));
     }
 
     #[Test]
     public function dropsQuantityWithoutValue(): void
     {
-        $this->assertNull((new QuantityNormaliser())->normalise([
+        $this->assertNull(new QuantityNormaliser()->normalise([
             'schema:unitCode' => ['@type' => 'thuecat:Unit', '@value' => 'thuecat:KTM'],
         ]));
     }

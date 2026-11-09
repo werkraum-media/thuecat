@@ -60,7 +60,7 @@ class MeetingVenueTest extends TestCase
     #[Test]
     public function returnsNoEnumListMembersWhenNothingIsStored(): void
     {
-        $this->assertSame([], (new MeetingVenue())->getMeetingFacilityMembers());
+        $this->assertSame([], new MeetingVenue()->getMeetingFacilityMembers());
     }
 
     #[Test]

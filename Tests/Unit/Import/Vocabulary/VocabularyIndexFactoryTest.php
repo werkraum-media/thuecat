@@ -53,7 +53,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function mergesBothVocabulariesIntoOneIndex(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
+        $index = new VocabularyIndexFactory()->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
         $this->assertTrue($index->has('schema:Event'), 'schema.org class missing from merged index');
         $this->assertTrue($index->has('thuecat:BrassMusic'), 'ThueCat class missing from merged index');
@@ -62,7 +62,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function chainResolvesAcrossTheVocabularyBoundary(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
+        $index = new VocabularyIndexFactory()->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
         $this->assertSame(['schema:MusicEvent', 'schema:Event'], $index->ancestors('thuecat:BrassMusic'));
     }
@@ -70,7 +70,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function mergedVocabulariesLeaveNoDanglingReferences(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
+        $index = new VocabularyIndexFactory()->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
         $this->assertSame([], $index->danglingReferences());
     }
@@ -78,7 +78,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function oneVocabularyAloneLeavesTheOthersReferencesDangling(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([self::THUECAT]);
+        $index = new VocabularyIndexFactory()->fromDocuments([self::THUECAT]);
 
         $this->assertSame(['schema:MusicEvent'], $index->danglingReferences());
     }
@@ -86,7 +86,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function labelsSurviveTheMerge(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
+        $index = new VocabularyIndexFactory()->fromDocuments([self::SCHEMA_ORG, self::THUECAT]);
 
         $brassMusic = $index->get('thuecat:BrassMusic');
         $this->assertInstanceOf(VocabularyClass::class, $brassMusic);
@@ -108,7 +108,7 @@ class VocabularyIndexFactoryTest extends TestCase
             ],
         ]];
 
-        $index = (new VocabularyIndexFactory())->fromDocuments([$first, $second]);
+        $index = new VocabularyIndexFactory()->fromDocuments([$first, $second]);
         $museum = $index->get('schema:Museum');
 
         $this->assertInstanceOf(VocabularyClass::class, $museum);
@@ -118,7 +118,7 @@ class VocabularyIndexFactoryTest extends TestCase
     #[Test]
     public function noDocumentsYieldAnEmptyIndex(): void
     {
-        $index = (new VocabularyIndexFactory())->fromDocuments([]);
+        $index = new VocabularyIndexFactory()->fromDocuments([]);
 
         $this->assertFalse($index->has('schema:Museum'));
         $this->assertSame([], $index->danglingReferences());

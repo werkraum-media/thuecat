@@ -58,7 +58,7 @@ class KeywordFieldScopingTest extends AbstractBackendTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Frontend/TouristAttractionsForFilter.php');
 
-        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())->withAttribute(
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest()->withAttribute(
             'applicationType',
             SystemEnvironmentBuilder::REQUESTTYPE_BE
         );

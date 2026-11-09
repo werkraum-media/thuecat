@@ -34,7 +34,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormIsRenderedOnSearchPage(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $result = $this->executeFrontendSubRequest($request);
         $body = (string)$result->getBody();
@@ -47,7 +47,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormActionTargetsListPage(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -58,7 +58,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormDoesNotRenderResultList(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -69,7 +69,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormPrefillsValueFromUrl(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(12)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
         ;
@@ -82,7 +82,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormPrefillsValueFromQ(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(12)
             ->withQueryParams(['q' => 'Stadtmuseum'])
         ;
@@ -97,7 +97,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormOffersTheKeywordTreeGroupedByParent(): void
     {
-        $request = (new InternalRequest())->withPageId(12);
+        $request = new InternalRequest()->withPageId(12);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -113,7 +113,7 @@ class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormReflectsTheSelectedKeyword(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(12)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
         ;

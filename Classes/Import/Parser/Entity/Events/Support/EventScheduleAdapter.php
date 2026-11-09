@@ -324,6 +324,6 @@ final class EventScheduleAdapter
      */
     private function extractTypedValue(mixed $value): string
     {
-        return (new LocalisedValueReader())->read($value, '');
+        return new LocalisedValueReader()->read($value, '');
     }
 }

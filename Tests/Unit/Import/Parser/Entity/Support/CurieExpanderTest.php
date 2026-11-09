@@ -29,30 +29,30 @@ class CurieExpanderTest extends TestCase
     #[Test]
     public function expandsKnownPrefixToOntologyUri(): void
     {
-        $this->assertSame('https://thuecat.org/ontology/thuecat/1.0/Urban', (new CurieExpander())->expand('thuecat:Urban'));
+        $this->assertSame('https://thuecat.org/ontology/thuecat/1.0/Urban', new CurieExpander()->expand('thuecat:Urban'));
     }
 
     #[Test]
     public function returnsNullForUnknownPrefix(): void
     {
-        $this->assertNull((new CurieExpander())->expand('schema:Urban'));
+        $this->assertNull(new CurieExpander()->expand('schema:Urban'));
     }
 
     #[Test]
     public function returnsNullWhenNoPrefixPresent(): void
     {
-        $this->assertNull((new CurieExpander())->expand('Urban'));
+        $this->assertNull(new CurieExpander()->expand('Urban'));
     }
 
     #[Test]
     public function returnsNullWhenLocalPartEmpty(): void
     {
-        $this->assertNull((new CurieExpander())->expand('thuecat:'));
+        $this->assertNull(new CurieExpander()->expand('thuecat:'));
     }
 
     #[Test]
     public function expandsRegardlessOfLocalPartCasing(): void
     {
-        $this->assertSame('https://thuecat.org/ontology/thuecat/1.0/KeywordSportAndLeisure', (new CurieExpander())->expand('thuecat:KeywordSportAndLeisure'));
+        $this->assertSame('https://thuecat.org/ontology/thuecat/1.0/KeywordSportAndLeisure', new CurieExpander()->expand('thuecat:KeywordSportAndLeisure'));
     }
 }

@@ -85,7 +85,7 @@ class PageRoleHintTest extends AbstractBackendTestCase
 
     protected function pageModuleHeader(int $pageId): string
     {
-        $request = (new ServerRequest('https://example.com/typo3/module/web/layout'))
+        $request = new ServerRequest('https://example.com/typo3/module/web/layout')
             ->withQueryParams(['id' => $pageId])
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
             ->withAttribute('normalizedParams', NormalizedParams::createFromRequest(new ServerRequest()))

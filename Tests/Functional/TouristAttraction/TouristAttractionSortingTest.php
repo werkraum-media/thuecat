@@ -35,7 +35,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aListWithoutSortSettingIsOrderedByTitle(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(10));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(10));
 
         self::assertAppearInOrder($body, 'Alpha Museum', 'Beta Park', 'Gamma Garten');
     }
@@ -43,7 +43,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aListInBackendOrderIsOrderedBySorting(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(20));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(20));
 
         self::assertAppearInOrder($body, 'Beta Park', 'Gamma Garten', 'Alpha Museum');
     }
@@ -51,7 +51,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aFilteredListInBackendOrderIsOrderedBySorting(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(40));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(40));
 
         self::assertAppearInOrder($body, 'Beta Park', 'Gamma Garten', 'Alpha Museum');
     }
@@ -59,7 +59,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function anUnknownSortSettingFallsBackToTitle(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(30));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(30));
 
         self::assertAppearInOrder($body, 'Alpha Museum', 'Beta Park', 'Gamma Garten');
     }
@@ -67,7 +67,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aRequestCannotPickTheOrder(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['sortBy' => 'sorting']]])
         ;
@@ -80,7 +80,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function tiedSortingFallsBackToTitle(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(50));
 
         self::assertAppearInOrder($body, 'Eta Brücke', 'Theta Tor');
     }
@@ -88,9 +88,9 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function tiedSortingPutsEveryRecordOnExactlyOnePage(): void
     {
-        $first = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
+        $first = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(50));
         $second = $this->executeFrontendSubRequestAndReturnBody(
-            (new InternalRequest())
+            new InternalRequest()
                 ->withPageId(50)
                 ->withQueryParams(['tx_thuecat_touristattractionlist' => ['currentPage' => '2']])
         );
@@ -106,7 +106,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function paginationLinksCarryNoSortOrder(): void
     {
-        $body = $this->executeFrontendSubRequestAndReturnBody((new InternalRequest())->withPageId(50));
+        $body = $this->executeFrontendSubRequestAndReturnBody(new InternalRequest()->withPageId(50));
 
         $this->assertStringContainsString('tx_thuecat_touristattractionlist%5BcurrentPage%5D=2', $body);
         $this->assertStringNotContainsString('sortBy', $body);
@@ -115,10 +115,10 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function filterRedirectCarriesNoSortOrder(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(20)
             ->withMethod('POST')
-            ->withBody((new StreamFactory())->createStream(http_build_query([
+            ->withBody(new StreamFactory()->createStream(http_build_query([
                 'tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Park']],
             ])))
         ;

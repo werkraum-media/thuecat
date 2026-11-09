@@ -153,7 +153,7 @@ class ShowPageCacheTest extends AbstractCachingTestCase
 
         $this->saveRecord(1, ['capacity_theatre' => '310'], 'tx_thuecat_meeting_room');
 
-        $rooms = $this->renderedSection((new InternalRequest())->withPageId(16), 'venue', 'meetingRooms');
+        $rooms = $this->renderedSection(new InternalRequest()->withPageId(16), 'venue', 'meetingRooms');
         $this->assertStringContainsString('310', $rooms);
         $this->assertStringNotContainsString('200', $rooms);
     }

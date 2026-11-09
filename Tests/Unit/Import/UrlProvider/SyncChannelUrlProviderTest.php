@@ -70,7 +70,7 @@ final class SyncChannelUrlProviderTest extends TestCase
             'getSyncApiDomain' => 'https://widgets.thuecat.org',
         ]);
 
-        $subject = (new SyncChannelUrlProvider($syncChannel, $syncWindow))->createWithConfiguration($configuration);
+        $subject = new SyncChannelUrlProvider($syncChannel, $syncWindow)->createWithConfiguration($configuration);
 
         $this->assertSame(
             [

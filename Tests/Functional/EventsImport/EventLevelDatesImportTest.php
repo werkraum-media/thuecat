@@ -259,7 +259,7 @@ class EventLevelDatesImportTest extends AbstractImportTestCase
     {
         $this->assertIsInt($timestamp);
 
-        return (new DateTimeImmutable('@' . $timestamp))
+        return new DateTimeImmutable('@' . $timestamp)
             ->setTimezone(new DateTimeZone('Europe/Berlin'))
             ->format('c')
         ;

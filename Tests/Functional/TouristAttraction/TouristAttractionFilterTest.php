@@ -36,7 +36,7 @@ class TouristAttractionFilterTest extends AbstractFrontendTestCase
      */
     private function requestWithSearch(array $search): string
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $search]])
         ;

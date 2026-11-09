@@ -34,7 +34,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function showsOnlyEditorSelectedRecords(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -47,7 +47,7 @@ class TrailSelectedTest extends AbstractFrontendTestCase
     #[Test]
     public function preservesEditorPickedOrder(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

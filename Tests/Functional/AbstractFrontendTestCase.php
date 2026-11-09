@@ -66,7 +66,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
      */
     protected function pageRequest(int $pageId, int $languageId = 0): InternalRequest
     {
-        return (new InternalRequest($this->urlFor($pageId, $languageId)))->withPageId($pageId);
+        return new InternalRequest($this->urlFor($pageId, $languageId))->withPageId($pageId);
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
             http_build_query($queryParams + ['id' => $pageId])
         );
 
-        return (new InternalRequest($this->urlFor($pageId, $languageId)))
+        return new InternalRequest($this->urlFor($pageId, $languageId))
             ->withPageId($pageId)
             ->withQueryParams($queryParams + ['cHash' => $cHash])
         ;
@@ -117,7 +117,7 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
         // The root page has no slug of its own: `/en/` redirects to `/en`.
         $base = $this->languageBase($languageId);
 
-        return (new InternalRequest('http://localhost' . ($base === '' ? '/' : $base)))
+        return new InternalRequest('http://localhost' . ($base === '' ? '/' : $base))
             ->withQueryParameters([
                 'type' => 1533906435,
                 'tx_seo[sitemap]' => $sitemap,

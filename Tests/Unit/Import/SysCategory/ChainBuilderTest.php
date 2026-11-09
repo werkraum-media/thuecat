@@ -59,7 +59,7 @@ class ChainBuilderTest extends TestCase
      */
     private function build(array $parentsById, string $type, ?ParentStrategy $strategy = null): array
     {
-        return (new ChainBuilder())->build(
+        return new ChainBuilder()->build(
             $this->index($parentsById),
             $type,
             $strategy ?? $this->strategy()

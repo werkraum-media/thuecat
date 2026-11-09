@@ -94,7 +94,7 @@ class TouristAttractionTest extends TestCase
     #[Test]
     public function returnsNoAdditionalType(): void
     {
-        $this->assertSame('', (new TouristAttraction())->getAdditionalType());
+        $this->assertSame('', new TouristAttraction()->getAdditionalType());
     }
 
     #[Test]

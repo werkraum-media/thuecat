@@ -880,7 +880,7 @@ class Resolver
         array $visited,
         string $targetField = self::KEYWORD_FIELD
     ): ?string {
-        $uri = (new CurieExpander())->expand($usageType);
+        $uri = new CurieExpander()->expand($usageType);
         if ($uri === null) {
             $this->importLogger->recordSkippedReference(
                 'sys_category',

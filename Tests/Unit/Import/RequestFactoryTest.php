@@ -123,11 +123,11 @@ class RequestFactoryTest extends TestCase
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
 
-        $subject = (new RequestFactory(
+        $subject = new RequestFactory(
             $extensionConfiguration,
             new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class)),
             new UriFactory()
-        ))->withSyncHost('widgets.thuecat.org', 'test-sync-key');
+        )->withSyncHost('widgets.thuecat.org', 'test-sync-key');
 
         $request = $subject->createRequest('GET', 'https://widgets.thuecat.org/api/sync/test-channel/list-changed?since=2026-10-14T03%3A00%3A00%2B02%3A00');
 
@@ -142,11 +142,11 @@ class RequestFactoryTest extends TestCase
         $extensionConfiguration = $this->createStub(ExtensionConfiguration::class);
         $extensionConfiguration->method('get')->willReturn('some-api-key');
 
-        $subject = (new RequestFactory(
+        $subject = new RequestFactory(
             $extensionConfiguration,
             new Typo3RequestFactory($this->createStub(GuzzleClientFactory::class)),
             new UriFactory()
-        ))->withSyncHost('widgets.thuecat.org', 'test-sync-key');
+        )->withSyncHost('widgets.thuecat.org', 'test-sync-key');
 
         $request = $subject->createRequest('GET', $url);
 

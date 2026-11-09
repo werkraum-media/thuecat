@@ -125,7 +125,7 @@ class ImportWithoutChangesTest extends AbstractImportTestCase
 
     private function warmCaches(): void
     {
-        $this->executeFrontendSubRequest((new InternalRequest())->withPageId(30));
+        $this->executeFrontendSubRequest(new InternalRequest()->withPageId(30));
     }
 
     /**

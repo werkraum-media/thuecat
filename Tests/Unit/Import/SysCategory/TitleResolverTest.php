@@ -55,7 +55,7 @@ class TitleResolverTest extends TestCase
         ?VocabularyClass $class,
         array $languages = ['de', 'en']
     ): TitleResolution {
-        return (new TitleResolver())->resolve(
+        return new TitleResolver()->resolve(
             $sourceValue,
             $class,
             $languages,

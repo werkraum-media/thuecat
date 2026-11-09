@@ -83,7 +83,7 @@ class RecordTypeItemsProcessorTest extends TestCase
         );
 
         $values = [];
-        foreach ((new RecordTypeItemsProcessor())->processItems($items, $context) as $item) {
+        foreach (new RecordTypeItemsProcessor()->processItems($items, $context) as $item) {
             $values[] = $item->getValue();
         }
 

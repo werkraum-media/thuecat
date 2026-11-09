@@ -97,7 +97,7 @@ class SiteScopedRelationAgreementTest extends AbstractBackendTestCase
      */
     private function backendRequest(): ServerRequest
     {
-        return (new ServerRequest())
+        return new ServerRequest()
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
             ->withAttribute('normalizedParams', NormalizedParams::createFromRequest(new ServerRequest()))
         ;

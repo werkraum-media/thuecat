@@ -151,6 +151,6 @@ class KeywordReaderTest extends TestCase
      */
     private function read(array $node): array
     {
-        return (new KeywordReader())->read($node);
+        return new KeywordReader()->read($node);
     }
 }

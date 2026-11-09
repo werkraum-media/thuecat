@@ -276,7 +276,7 @@ class TouristAttractionController extends AbstractActionController
         if (!class_exists($dataType)) {
             return;
         }
-        foreach ((new ReflectionClass($dataType))->getProperties() as $property) {
+        foreach (new ReflectionClass($dataType)->getProperties() as $property) {
             $type = $property->getType();
             if ($type instanceof ReflectionNamedType && $type->getName() === 'array') {
                 $configuration->forProperty($property->getName())

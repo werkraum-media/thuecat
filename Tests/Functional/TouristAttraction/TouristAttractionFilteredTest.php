@@ -48,7 +48,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
     #[Test]
     public function showsOnlyAttractionsOfPresetTown(): void
     {
-        $request = (new InternalRequest())->withPageId(10);
+        $request = new InternalRequest()->withPageId(10);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -62,7 +62,7 @@ class TouristAttractionFilteredTest extends AbstractFrontendTestCase
     public function visitorCannotWidenPastTheLockedTown(): void
     {
         // Editor locked town 1; a tampered URL asking for town 2 must be ignored.
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['towns' => [2]]]])
         ;

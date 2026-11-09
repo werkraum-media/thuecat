@@ -168,7 +168,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         string $pluginNamespace = 'tx_thuecat_touristattractionlist',
         int $languageId = 0
     ): ResponseInterface {
-        $request = (new InternalRequest())->withPageId($pageId);
+        $request = new InternalRequest()->withPageId($pageId);
         if ($languageId > 0) {
             $request = $request->withLanguageId($languageId);
         }

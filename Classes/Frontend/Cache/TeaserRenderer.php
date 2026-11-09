@@ -132,7 +132,7 @@ class TeaserRenderer
         while (
             is_string($parent)
             && is_subclass_of($parent, Base::class)
-            && !(new ReflectionClass($parent))->isAbstract()
+            && !new ReflectionClass($parent)->isAbstract()
             && $this->dataMapper->getDataMap($parent)->getTableName() === $table
         ) {
             $className = $parent;

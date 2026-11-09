@@ -106,7 +106,7 @@ class SiblingListPluginLocatorTest extends AbstractFrontendTestCase
 
     private function render(int $pageId, int $language = 0): string
     {
-        $request = (new InternalRequest())->withPageId($pageId);
+        $request = new InternalRequest()->withPageId($pageId);
         if ($language > 0) {
             $request = $request->withLanguageId($language);
         }

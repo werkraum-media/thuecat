@@ -58,7 +58,7 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
     protected function compileEditForm(string $table, int $uid): array
     {
         // Rendered elements resolve record icons through the request's normalizedParams.
-        $GLOBALS['TYPO3_REQUEST'] = (new ServerRequest())
+        $GLOBALS['TYPO3_REQUEST'] = new ServerRequest()
             ->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE)
             ->withAttribute('normalizedParams', NormalizedParams::createFromRequest(new ServerRequest()))
         ;

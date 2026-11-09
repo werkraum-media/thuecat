@@ -48,7 +48,7 @@ class RequestLedger
         $this->rateLimited[] = [
             'url' => RedactedUrl::of($request->getUri()),
             'host' => $request->getUri()->getHost(),
-            'time' => (new DateTimeImmutable())->format(DATE_ATOM),
+            'time' => new DateTimeImmutable()->format(DATE_ATOM),
             'ordinal' => $this->requests,
         ];
     }

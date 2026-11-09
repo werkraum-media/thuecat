@@ -6,7 +6,6 @@ use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
-use Rector\Php84\Rector\MethodCall\NewMethodCallWithoutParenthesesRector;
 use Rector\PHPUnit\CodeQuality\Rector\Class_\AddSeeTestAnnotationRector;
 use Rector\PHPUnit\PHPUnit60\Rector\ClassMethod\AddDoesNotPerformAssertionToNonAssertingTestRector;
 use Rector\Privatization\Rector\Class_\FinalizeTestCaseClassRector;
@@ -121,7 +120,5 @@ return RectorConfig::configure()
         FinalizeTestCaseClassRector::class,
         // 110 files
         NewlineAfterStatementRector::class,
-        // 62 files
-        NewMethodCallWithoutParenthesesRector::class,
     ])
 ;

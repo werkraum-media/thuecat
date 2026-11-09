@@ -38,7 +38,7 @@ final class DeniedRequestLoggingClientTest extends TestCase
     public static function deniedRequests(): iterable
     {
         $inQuery = new Request('https://cdb.thuecat.org/assets/test.jpg?v=2&api_key=test-secret-key', 'GET');
-        $inHeader = (new Request('https://widgets.thuecat.org/api/sync/test-channel/list-changed', 'GET'))
+        $inHeader = new Request('https://widgets.thuecat.org/api/sync/test-channel/list-changed', 'GET')
             ->withHeader('Authorization', 'APIKEY test-secret-key')
         ;
         $without = new Request('https://cdb.thuecat.org/assets/test.jpg', 'GET');
@@ -56,7 +56,7 @@ final class DeniedRequestLoggingClientTest extends TestCase
     {
         $logger = new CapturingLogger();
 
-        (new DeniedRequestLoggingClient($this->clientAnswering($status), $logger))->sendRequest($request);
+        new DeniedRequestLoggingClient($this->clientAnswering($status), $logger)->sendRequest($request);
 
         $this->assertCount(1, $logger->records);
         $this->assertSame(LogLevel::WARNING, $logger->records[0]['level']);
@@ -69,7 +69,7 @@ final class DeniedRequestLoggingClientTest extends TestCase
     {
         $logger = new CapturingLogger();
 
-        (new DeniedRequestLoggingClient($this->clientAnswering($status), $logger))->sendRequest($request);
+        new DeniedRequestLoggingClient($this->clientAnswering($status), $logger)->sendRequest($request);
 
         $this->assertNotSame([], $logger->records);
         $this->assertStringNotContainsString('test-secret-key', (string)json_encode($logger->records));
@@ -91,7 +91,7 @@ final class DeniedRequestLoggingClientTest extends TestCase
     {
         $logger = new CapturingLogger();
 
-        (new DeniedRequestLoggingClient($this->clientAnswering($status), $logger))
+        new DeniedRequestLoggingClient($this->clientAnswering($status), $logger)
             ->sendRequest(new Request('https://cdb.thuecat.org/assets/test.jpg?api_key=test-secret-key', 'GET'))
         ;
 
@@ -105,7 +105,7 @@ final class DeniedRequestLoggingClientTest extends TestCase
         $client = $this->createStub(ImportHttpClient::class);
         $client->method('sendRequest')->willReturn($response);
 
-        $this->assertSame($response, (new DeniedRequestLoggingClient($client, new CapturingLogger()))
+        $this->assertSame($response, new DeniedRequestLoggingClient($client, new CapturingLogger())
             ->sendRequest(new Request('https://cdb.thuecat.org/assets/test.jpg', 'GET')));
     }
 

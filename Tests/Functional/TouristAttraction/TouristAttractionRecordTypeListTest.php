@@ -64,7 +64,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function requestParametersCannotWidenTheTickedTypes(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(20)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'attraction,meeting_venue']]])
         ;
@@ -78,7 +78,7 @@ class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function requestParametersCannotNarrowAnUntickedList(): void
     {
-        $request = (new InternalRequest())
+        $request = new InternalRequest()
             ->withPageId(10)
             ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'meeting_venue']]])
         ;

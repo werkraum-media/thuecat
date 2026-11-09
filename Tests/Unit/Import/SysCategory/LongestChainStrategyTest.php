@@ -51,7 +51,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Top' => [],
         ]);
 
-        $this->assertSame('schema:Deep', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Shallow', 'schema:Deep']));
+        $this->assertSame('schema:Deep', new LongestChainStrategy()->choose($index, 'thuecat:X', ['schema:Shallow', 'schema:Deep']));
     }
 
     #[Test]
@@ -63,7 +63,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Shallow' => [],
         ]);
 
-        $this->assertSame('schema:Deep', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:Deep', 'schema:Shallow']));
+        $this->assertSame('schema:Deep', new LongestChainStrategy()->choose($index, 'thuecat:X', ['schema:Deep', 'schema:Shallow']));
     }
 
     #[Test]
@@ -74,7 +74,7 @@ class LongestChainStrategyTest extends TestCase
             'schema:Second' => [],
         ]);
 
-        $this->assertSame('schema:First', (new LongestChainStrategy())->choose($index, 'thuecat:X', ['schema:First', 'schema:Second']));
+        $this->assertSame('schema:First', new LongestChainStrategy()->choose($index, 'thuecat:X', ['schema:First', 'schema:Second']));
     }
 
     #[Test]
@@ -93,6 +93,6 @@ class LongestChainStrategyTest extends TestCase
     #[Test]
     public function namesItselfForTheImportReport(): void
     {
-        $this->assertSame('longestChain', (new LongestChainStrategy())->name());
+        $this->assertSame('longestChain', new LongestChainStrategy()->name());
     }
 }
