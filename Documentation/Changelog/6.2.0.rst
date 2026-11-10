@@ -59,6 +59,8 @@ Fixes
 
 * **[BUGFIX] Make nearby parking facilities a site-scoped select field**
 
+* **[BUGFIX] Import a root's relations after a reference sighting**
+
 Deprecation
 -----------
 
