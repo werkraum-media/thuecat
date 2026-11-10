@@ -85,6 +85,18 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   the code.
 - Run an unskipped test before analysing it. Empirical failure beats reading the diff.
 
+### Coverage and mutation score
+
+- New and changed code reaches **100% coverage and 100% MSI**, counted over the unit and functional
+  suites together, with **no skipped mutants**. A score without coverage says nothing, so uncovered
+  lines count as escaped.
+- Report both numbers for the new code when a change is done.
+- Infection reads `infection.json5` and mutates only the lines changed against `main`
+  (`--git-diff-lines --with-uncovered --min-msi=100 --min-covered-msi=100`). A skip means the
+  covering tests outran the timeout; it is not a pass.
+- `ProtectedVisibility` is off: non-final classes expose `protected` by design.
+- The legacy code is below the bar. Do not lower the bar for new code to match it.
+
 ### Frontend tests in a non-default language
 
 Three things must be right at once; missing one fails in a way that points at the wrong layer.

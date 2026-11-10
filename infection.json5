@@ -1,0 +1,22 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "Classes"
+        ]
+    },
+    "tmpDir": "var/infection/tmp",
+    "logs": {
+        "text": "var/infection/infection.log",
+        "html": "var/infection/infection.html",
+        "summary": "var/infection/summary.log",
+        "json": "var/infection/infection.json"
+    },
+    "timeout": 30,
+    "ignoreMsiWithNoMutations": true,
+    "mutators": {
+        "@default": true,
+        // Non-final classes expose protected members for extension by design, so narrowing one to private is never detectable.
+        "ProtectedVisibility": false
+    }
+}

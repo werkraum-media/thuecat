@@ -57,6 +57,21 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
 
     protected array $testExtensionsToLoad = self::TEST_EXTENSIONS;
 
+    /**
+     * Parallel runners (infection, paratest) set TEST_TOKEN per process. The
+     * framework keys the instance and its sqlite database on the class alone,
+     * so two processes running the same class would share and wipe one instance.
+     */
+    protected static function getInstanceIdentifier(): string
+    {
+        $token = getenv('TEST_TOKEN');
+        if (!is_string($token) || $token === '') {
+            return parent::getInstanceIdentifier();
+        }
+
+        return substr(sha1(static::class . '-' . $token), 0, 7);
+    }
+
     protected function countRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);
