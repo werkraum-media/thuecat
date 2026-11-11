@@ -59,6 +59,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(StoragePidConfigurationException::class);
         $this->expectExceptionCode(1752570000);
+        $this->expectExceptionMessage('The configured storagePid 500 does not belong to any site.');
         $this->validate(500, 0, 0);
     }
 
@@ -67,6 +68,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570001);
+        $this->expectExceptionMessage('Category mapping needs both import.thuecat.category.parent and import.thuecat.category.storagePid; got parent=100, storage=0.');
         $this->validate(10, 100, 0);
     }
 
@@ -75,6 +77,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570001);
+        $this->expectExceptionMessage('Category mapping needs both import.thuecat.category.parent and import.thuecat.category.storagePid; got parent=0, storage=20.');
         $this->validate(10, 0, 20);
     }
 
@@ -83,6 +86,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570002);
+        $this->expectExceptionMessage("import.thuecat.category.storagePid 91 is outside the storagePid's site.");
         // parent 100 is in-site, but categoryStoragePid 91 is on the other site.
         $this->validate(10, 100, 91);
     }
@@ -92,6 +96,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570003);
+        $this->expectExceptionMessage("import.thuecat.category.parent 900 is outside the storagePid's site.");
         // storage 20 is in-site, but parent 900 lives on the other site.
         $this->validate(10, 900, 20);
     }
@@ -125,6 +130,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570001);
+        $this->expectExceptionMessage('Category mapping needs both import.thuecat.category.parent and import.thuecat.category.storagePid; got parent=100, storage=0.');
         $this->validate(10, 100, 0, 100, 20);
     }
 
@@ -133,6 +139,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(KeywordConfigurationException::class);
         $this->expectExceptionCode(1786713820);
+        $this->expectExceptionMessage('Keyword mapping needs both import.thuecat.keywords.parent and import.thuecat.keywords.storagePid; got parent=100, storage=0.');
         $this->validate(10, 0, 0, 100, 0);
     }
 
@@ -141,6 +148,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(KeywordConfigurationException::class);
         $this->expectExceptionCode(1786713820);
+        $this->expectExceptionMessage('Keyword mapping needs both import.thuecat.keywords.parent and import.thuecat.keywords.storagePid; got parent=0, storage=20.');
         $this->validate(10, 0, 0, 0, 20);
     }
 
@@ -149,6 +157,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(KeywordConfigurationException::class);
         $this->expectExceptionCode(1786713821);
+        $this->expectExceptionMessage("import.thuecat.keywords.storagePid 91 is outside the storagePid's site.");
         $this->validate(10, 0, 0, 100, 91);
     }
 
@@ -157,6 +166,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(KeywordConfigurationException::class);
         $this->expectExceptionCode(1786713822);
+        $this->expectExceptionMessage("import.thuecat.keywords.parent 900 is outside the storagePid's site.");
         $this->validate(10, 0, 0, 900, 20);
     }
 
@@ -173,6 +183,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
 
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570002);
+        $this->expectExceptionMessage("import.thuecat.category.storagePid 91 is outside the storagePid's site.");
         $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
     }
 
@@ -189,6 +200,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
     {
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570003);
+        $this->expectExceptionMessage("import.events.category.parent 900 is outside the storagePid's site.");
         $this->validate(10, 900, 20, 0, 0, 'events');
     }
 
@@ -209,8 +221,10 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
             $this->fail('An incomplete trails pair must fail validation.');
         } catch (KeywordConfigurationException $exception) {
             $this->assertSame(1786713820, $exception->getCode());
-            $this->assertStringContainsString('import.trails.keywords.parent', $exception->getMessage());
-            $this->assertStringContainsString('import.trails.keywords.storagePid', $exception->getMessage());
+            $this->assertSame(
+                'Keyword mapping needs both import.trails.keywords.parent and import.trails.keywords.storagePid; got parent=100, storage=0.',
+                $exception->getMessage()
+            );
         }
     }
 
@@ -223,6 +237,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
 
         $this->expectException(KeywordConfigurationException::class);
         $this->expectExceptionCode(1786713822);
+        $this->expectExceptionMessage("import.trails.keywords.parent 900 is outside the storagePid's site.");
         $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
     }
 
@@ -238,6 +253,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
 
         $this->expectException(CategoryConfigurationException::class);
         $this->expectExceptionCode(1752570001);
+        $this->expectExceptionMessage('Category mapping needs both import.events.category.parent and import.events.category.storagePid; got parent=100, storage=0.');
         $this->get(ImportConfigurationValidator::class)->validate($this->configuration(10));
     }
 
