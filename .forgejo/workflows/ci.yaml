@@ -1,5 +1,8 @@
 name: 'CI'
 
+# A pull request gets the QA, the tests and the mutation gate for its changes.
+# A merge to main gets only the full mutation run, which repeats the whole
+# suite for coverage and checks the totals against the baseline.
 'on':
   push:
     branches:
@@ -8,6 +11,7 @@ name: 'CI'
 
 jobs:
   base-qa:
+    if: "github.event_name == 'pull_request'"
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
@@ -19,21 +23,37 @@ jobs:
       - uses: 'actions/local/setup-composer-cache@v1'
 
       - name: 'Validate composer.json'
-        run: 'composer validate'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Validate composer.json'
+          composer validate
 
       - name: 'Validate TYPO3 language files'
-        run: "xmllint --schema xliff-core-1.2-strict.xsd --noout $(find Resources -name '*.xlf')"
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Validate TYPO3 language files'
+          xmllint --schema xliff-core-1.2-strict.xsd --noout $(find Resources -name '*.xlf')
 
       - name: 'Install dependencies'
-        run: 'composer install --no-progress --no-interaction --no-ansi'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Install dependencies'
+          composer install --no-progress --no-interaction --no-ansi
 
       - name: 'Validate PHPUnit configuration file'
-        run: 'xmllint --schema vendor/phpunit/phpunit/phpunit.xsd --noout phpunit.xml.dist'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Validate PHPUnit configuration file'
+          xmllint --schema vendor/phpunit/phpunit/phpunit.xsd --noout phpunit.xml.dist
 
       - name: 'Coding Guideline'
-        run: './vendor/bin/php-cs-fixer fix --dry-run --diff'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Coding Guideline'
+          ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
   advanced-qa:
+    if: "github.event_name == 'pull_request'"
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php${{ matrix.php-version }}-node24'
@@ -49,7 +69,56 @@ jobs:
     steps:
       - uses: 'actions/checkout@v6'
 
-      - uses: './.forgejo/local-actions/advanced-qa'
+      - uses: './.forgejo/local-actions/setup'
         with:
           php-version: '${{ matrix.php-version }}'
           typo3-version: '${{ matrix.typo3-version }}'
+
+      - uses: './.forgejo/local-actions/advanced-qa'
+
+  mutation-gate:
+    if: "github.event_name == 'pull_request'"
+    runs-on: 'typo3'
+    container:
+      image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
+    needs:
+      - 'base-qa'
+    steps:
+      # The gate diffs against origin/main.
+      - uses: 'actions/checkout@v6'
+        with:
+          fetch-depth: 0
+
+      - uses: './.forgejo/local-actions/setup'
+        with:
+          php-version: '84'
+          typo3-version: '^14.3'
+
+      - uses: './.forgejo/local-actions/coverage'
+
+      - name: 'Mutation gate for the changed lines'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Mutation gate for the changed lines'
+          Build/Scripts/infection.sh
+
+  mutation-full:
+    if: "github.event_name == 'push'"
+    runs-on: 'typo3'
+    container:
+      image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
+    steps:
+      - uses: 'actions/checkout@v6'
+
+      - uses: './.forgejo/local-actions/setup'
+        with:
+          php-version: '84'
+          typo3-version: '^14.3'
+
+      - uses: './.forgejo/local-actions/coverage'
+
+      - name: 'Full mutation run and baseline check'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Full mutation run and baseline check'
+          Build/Scripts/infection.sh --full

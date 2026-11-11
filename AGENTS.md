@@ -93,9 +93,16 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   suites together, with **no skipped mutants**. A score without coverage says nothing, so uncovered
   lines count as escaped.
 - Report both numbers for the new code when a change is done.
-- Infection reads `infection.json5` and mutates only the lines changed against `main`
-  (`--git-diff-lines --with-uncovered --min-msi=100 --min-covered-msi=100`). A skip means the
-  covering tests outran the timeout; it is not a pass.
+- `Build/Scripts/infection.sh` runs Infection on `infection.json5` over the coverage of all suites in
+  `.coverage/` (`coverage-xml/`, `junit.xml`); produce that with one PHPUnit run of every suite first.
+  Without `--full` it is the gate: only lines changed against `origin/main` (`INFECTION_BASE`),
+  uncovered code counted, 100% MSI, a 600 s per-mutant timeout, and any skipped mutant fails it. A
+  skip means the covering tests outran the timeout; it is not a pass.
+- `--full` mutates everything with the configured timeout and no threshold. Over the whole package
+  (no further options) it ends with `Build/Scripts/check-quality-baseline.php`, which fails when line
+  coverage or MSI fall below the baseline.
+- CI runs the gate on every pull request and the full run with the baseline check after a merge to
+  `main`.
 - `ProtectedVisibility` is off: non-final classes expose `protected` by design.
 - The whole package is held at its recorded baseline (`Build/quality-baseline.json`): no change may lower the total
   line coverage or the total MSI. Legacy code below 100% is tolerated, never imitated. Raise the baseline when a

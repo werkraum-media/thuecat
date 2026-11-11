@@ -1,39 +1,26 @@
-inputs:
-  php-version:
-    required: true
-  typo3-version:
-    required: true
-
 runs:
   using: 'composite'
   steps:
-    - name: 'Coverage drivers'
-      run: 'php -v && (php -m | grep -i -E "xdebug|pcov" || echo "no coverage driver") && php -r "echo \"xdebug.mode=\", ini_get(\"xdebug.mode\"), PHP_EOL;"'
-
-    - name: 'Provide site locales'
-      run: 'apt-get update && apt-get install -y --no-install-recommends locales && localedef -i de_DE -f UTF-8 de_DE.UTF-8 && localedef -i en_GB -f UTF-8 en_GB.UTF-8'
-
     - name: 'PHP lint'
-      run: "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -d display_errors=stderr -d log_errors=0 -l > /dev/null && echo \"$(find *.php Classes Configuration Tests -name '*.php' | wc -l) files without syntax errors\""
-
-    - name: 'Get Composer Cache Directory'
-      id: 'composer-cache-dir'
-      run: 'echo "dir=$(composer config cache-files-dir)" >> $FORGEJO_OUTPUT'
-    - name: 'Configure composer cache'
-      uses: 'actions/cache@v5'
-      with:
-        path: '${{ steps.composer-cache-dir.outputs.dir }}'
-        key: "composer-${{ hashFiles('${{ env.FORGEJO_WORKSPACE }}/composer.*') }}-${{ inputs.php-version }}-${{ inputs.typo3-version }}"
-        restore-keys: 'composer'
-
-    - name: 'Install dependencies with expected TYPO3 version'
-      run: 'composer require --no-interaction --prefer-dist --no-progress "typo3/cms-core:${{ inputs.typo3-version }}" "typo3/cms-extbase:${{ inputs.typo3-version }}" "typo3/cms-filelist:${{ inputs.typo3-version }}" "typo3/cms-filemetadata:${{ inputs.typo3-version }}" "typo3/cms-fluid:${{ inputs.typo3-version }}" "typo3/cms-frontend:${{ inputs.typo3-version }}" "typo3/cms-install:${{ inputs.typo3-version }}"'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'PHP lint'
+        find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -d display_errors=stderr -d log_errors=0 -l > /dev/null && echo "$(find *.php Classes Configuration Tests -name '*.php' | wc -l) files without syntax errors"
 
     - name: 'Rector'
-      run: './vendor/bin/rector process --dry-run'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'Rector'
+        ./vendor/bin/rector process --dry-run
 
     - name: 'Code Quality (by PHPStan)'
-      run: './vendor/bin/phpstan analyse'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'Code Quality (by PHPStan)'
+        ./vendor/bin/phpstan analyse
 
     - name: 'PHPUnit Tests'
-      run: 'XDEBUG_MODE=off ./vendor/bin/paratest --runner=WrapperRunner --display-all-issues'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'PHPUnit Tests'
+        XDEBUG_MODE=off ./vendor/bin/paratest --runner=WrapperRunner --display-all-issues

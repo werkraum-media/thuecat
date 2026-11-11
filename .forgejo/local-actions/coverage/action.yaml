@@ -1,0 +1,10 @@
+runs:
+  using: 'composite'
+  steps:
+    # All suites in one run: Infection reads this report, and a per-suite one
+    # counts mutants as escaped that the other suite kills.
+    - name: 'PHPUnit Tests with coverage'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'PHPUnit Tests with coverage'
+        XDEBUG_MODE=coverage ./vendor/bin/paratest --runner=WrapperRunner --coverage-text --coverage-xml .coverage/coverage-xml --log-junit .coverage/junit.xml

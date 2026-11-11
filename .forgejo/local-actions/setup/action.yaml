@@ -1,0 +1,33 @@
+inputs:
+  php-version:
+    required: true
+  typo3-version:
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Provide site locales'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'Provide site locales'
+        apt-get update && apt-get install -y --no-install-recommends locales && localedef -i de_DE -f UTF-8 de_DE.UTF-8 && localedef -i en_GB -f UTF-8 en_GB.UTF-8
+
+    - name: 'Get Composer Cache Directory'
+      id: 'composer-cache-dir'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'Get Composer Cache Directory'
+        echo "dir=$(composer config cache-files-dir)" >> $FORGEJO_OUTPUT
+    - name: 'Configure composer cache'
+      uses: 'actions/cache@v5'
+      with:
+        path: '${{ steps.composer-cache-dir.outputs.dir }}'
+        key: "composer-${{ hashFiles('${{ env.FORGEJO_WORKSPACE }}/composer.*') }}-${{ inputs.php-version }}-${{ inputs.typo3-version }}"
+        restore-keys: 'composer'
+
+    - name: 'Install dependencies with expected TYPO3 version'
+      run: |
+        trap 'echo' EXIT
+        printf '\n### %s\n' 'Install dependencies with expected TYPO3 version'
+        composer require --no-interaction --prefer-dist --no-progress "typo3/cms-core:${{ inputs.typo3-version }}" "typo3/cms-extbase:${{ inputs.typo3-version }}" "typo3/cms-filelist:${{ inputs.typo3-version }}" "typo3/cms-filemetadata:${{ inputs.typo3-version }}" "typo3/cms-fluid:${{ inputs.typo3-version }}" "typo3/cms-frontend:${{ inputs.typo3-version }}" "typo3/cms-install:${{ inputs.typo3-version }}"
