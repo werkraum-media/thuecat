@@ -265,10 +265,10 @@ final class ResolverContext
     public array $claimedPlaceMatch = [];
 
     /**
-     * "<table>|<key>|<field>|<remoteId>" — one relation per keyword per field,
-     * first claim winning.
+     * "<table>|<key>|<field>|<remoteId>" => position in $collectedKeywords —
+     * one relation per keyword per field, first claim winning.
      *
-     * @var array<string, true>
+     * @var array<string, int>
      */
     public array $claimedKeywordByField = [];
 
@@ -420,27 +420,18 @@ final class ResolverContext
             $keyword->targetField,
             $keyword->remoteId,
         ]);
-        if (isset($this->claimedKeywordByField[$key])) {
+        $index = $this->claimedKeywordByField[$key] ?? null;
+        if ($index !== null) {
             // A record may cite a node already collected as an ancestor of
             // another of its keywords; the citation must win.
-            if ($keyword->isCited) {
-                foreach ($this->collectedKeywords as $index => $collected) {
-                    if ($collected->remoteId === $keyword->remoteId
-                        && $collected->ownerTable === $keyword->ownerTable
-                        && $collected->ownerKey === $keyword->ownerKey
-                        && $collected->targetField === $keyword->targetField
-                        && !$collected->isCited
-                    ) {
-                        $this->collectedKeywords[$index] = $keyword;
-                        break;
-                    }
-                }
+            if ($keyword->isCited && !$this->collectedKeywords[$index]->isCited) {
+                $this->collectedKeywords[$index] = $keyword;
             }
 
             return;
         }
 
-        $this->claimedKeywordByField[$key] = true;
+        $this->claimedKeywordByField[$key] = count($this->collectedKeywords);
         $this->collectedKeywords[] = $keyword;
     }
 

@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use WerkraumMedia\ThueCat\Import\CollectedKeyword;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\ResolverContext;
 
@@ -207,5 +208,37 @@ final class ResolverContextTest extends TestCase
 
         $this->assertNull($context->getReferenceFailureReason(self::REMOTE_A), 'An unmarked URL has no reason. Callers distinguish "never failed" from '
         . '"failed with empty reason" on this.');
+    }
+
+    /**
+     * Only the ancestor of the cited node is upgraded: B matches the citation
+     * in every field but the remote id.
+     */
+    #[Test]
+    public function citedKeywordReplacesItsAncestorCollectedForTheSameField(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+        $ancestorB = new CollectedKeyword('tx_thuecat_tourist_attraction', '1', 'keywords', self::REMOTE_B, [], null, false);
+        $ancestorA = new CollectedKeyword('tx_thuecat_tourist_attraction', '1', 'keywords', self::REMOTE_A, [], null, false);
+        $citedA = new CollectedKeyword('tx_thuecat_tourist_attraction', '1', 'keywords', self::REMOTE_A, []);
+
+        $context->collectKeyword($ancestorB);
+        $context->collectKeyword($ancestorA);
+        $context->collectKeyword($citedA);
+
+        $this->assertSame([$ancestorB, $citedA], $context->collectedKeywords);
+    }
+
+    #[Test]
+    public function laterCitationOfTheSameKeywordLeavesTheFirstInPlace(): void
+    {
+        $context = new ResolverContext(10, new ParserContext(0));
+        $first = new CollectedKeyword('tx_thuecat_tourist_attraction', '1', 'keywords', self::REMOTE_A, ['de' => 'Erste']);
+        $second = new CollectedKeyword('tx_thuecat_tourist_attraction', '1', 'keywords', self::REMOTE_A, ['de' => 'Zweite']);
+
+        $context->collectKeyword($first);
+        $context->collectKeyword($second);
+
+        $this->assertSame([$first], $context->collectedKeywords);
     }
 }
