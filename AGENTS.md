@@ -101,8 +101,8 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 - `--full` mutates everything with the configured timeout and no threshold. Over the whole package
   (no further options) it ends with `Build/Scripts/check-quality-baseline.php`, which fails when line
   coverage or MSI fall below the baseline.
-- CI runs the gate on every pull request and the full run with the baseline check after a merge to
-  `main`.
+- CI checks every pull request's line coverage against the baseline and runs the gate. The full run,
+  and with it the MSI baseline, is run locally: the CI runner is too small for it.
 - `ProtectedVisibility` is off: non-final classes expose `protected` by design.
 - The whole package is held at its recorded baseline (`Build/quality-baseline.json`): no change may lower the total
   line coverage or the total MSI. Legacy code below 100% is tolerated, never imitated. Raise the baseline when a

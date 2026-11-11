@@ -1,6 +1,5 @@
 name: 'CI'
 
-# The full mutation run after a merge lives in mutation-full.yaml.
 'on':
   pull_request:
 
@@ -91,6 +90,12 @@ jobs:
           typo3-version: '^14.3'
 
       - uses: './.forgejo/local-actions/coverage'
+
+      - name: 'Line coverage against the baseline'
+        run: |
+          trap 'echo' EXIT
+          printf '\n### %s\n' 'Line coverage against the baseline'
+          php Build/Scripts/check-quality-baseline.php
 
       - name: 'Mutation gate for the changed lines'
         run: |
