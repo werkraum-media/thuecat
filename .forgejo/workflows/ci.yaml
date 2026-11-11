@@ -67,9 +67,13 @@ jobs:
           php-version: '${{ matrix.php-version }}'
           typo3-version: '${{ matrix.typo3-version }}'
 
+      # PHP 8.4 runs the tests in tests-and-mutation, with coverage.
       - uses: './.forgejo/local-actions/advanced-qa'
+        with:
+          run-tests: "${{ matrix.php-version != '84' }}"
 
-  mutation-gate:
+  tests-and-mutation:
+    name: 'Tests and mutation gate on PHP 8.4'
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'

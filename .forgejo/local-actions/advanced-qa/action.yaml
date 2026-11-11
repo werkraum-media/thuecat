@@ -1,3 +1,7 @@
+inputs:
+  run-tests:
+    required: true
+
 runs:
   using: 'composite'
   steps:
@@ -20,6 +24,7 @@ runs:
         ./vendor/bin/phpstan analyse
 
     - name: 'PHPUnit Tests'
+      if: "inputs.run-tests == 'true'"
       run: |
         trap 'echo' EXIT
         printf '\n### %s\n' 'PHPUnit Tests'
