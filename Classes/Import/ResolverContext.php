@@ -230,7 +230,7 @@ final class ResolverContext
      * Run-scoped for the same reason as media: the flush after the last root
      * needs every owner's complete set to decide what to reap.
      *
-     * @var list<CollectedKeyword>
+     * @var array<int, CollectedKeyword>
      */
     public array $collectedKeywords = [];
 
