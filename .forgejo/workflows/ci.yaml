@@ -78,7 +78,7 @@ jobs:
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
     needs:
-      - 'advanced-qa'
+      - 'base-qa'
     steps:
       # The gate diffs against origin/main.
       - uses: 'actions/checkout@v6'
