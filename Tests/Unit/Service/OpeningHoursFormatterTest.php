@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Unit\Service;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Context\Context;
@@ -185,6 +186,53 @@ final class OpeningHoursFormatterTest extends TestCase
         ], $now);
 
         $this->assertFalse($result->isOpenNow());
+    }
+
+    /**
+     * @return iterable<string, array{string, bool}>
+     */
+    public static function minutesAroundASpan(): iterable
+    {
+        yield 'a minute before opening' => ['10:29', false];
+        yield 'the opening minute' => ['10:30', true];
+        yield 'the last minute before closing' => ['17:44', true];
+        yield 'the closing minute' => ['17:45', false];
+    }
+
+    #[Test]
+    #[DataProvider('minutesAroundASpan')]
+    public function reportsOpenNowFromTheOpeningMinuteUntilBeforeTheClosingMinute(string $time, bool $expected): void
+    {
+        $result = $this->subject->buildPerDayTable([
+            $this->specification('regular', 'Monday', '10:30', '17:45'),
+        ], new DateTimeImmutable('2026-06-15 ' . $time));
+
+        $this->assertSame($expected, $result->isOpenNow());
+    }
+
+    #[Test]
+    public function skipsASpanWithoutClosingTimeButKeepsTheFollowingOnes(): void
+    {
+        $result = $this->subject->buildPerDayTable([
+            $this->specification('regular', 'Monday', '08:00', null),
+            $this->specification('regular', 'Monday', '13:00', '18:00'),
+        ], new DateTimeImmutable('2026-06-15 11:00'));
+
+        $this->assertFalse($result->isOpenNow());
+        $timePeriods = $result->getPeriods()[0]->getWeekDays()[0]->getTimePeriods();
+        $this->assertCount(1, $timePeriods);
+        $this->assertSame('13:00', $timePeriods[0]->getOpens()->format('H:i'));
+    }
+
+    #[Test]
+    public function reportsOpenNowFromACurrentPeriodListedAfterAFutureOne(): void
+    {
+        $result = $this->subject->buildPerDayTable([
+            $this->specification('regular', 'Monday', '08:00', '18:00', '2026-11-02', '2027-03-25'),
+            $this->specification('regular', 'Monday', '08:00', '18:00'),
+        ], new DateTimeImmutable('2026-06-15 11:00'));
+
+        $this->assertTrue($result->isOpenNow());
     }
 
     #[Test]
@@ -359,7 +407,7 @@ final class OpeningHoursFormatterTest extends TestCase
         string $type,
         string $dayOfWeek,
         string $opens,
-        string $closes,
+        ?string $closes,
         ?string $validFrom = null,
         ?string $validThrough = null,
     ): OpeningHourSpecification {
@@ -367,7 +415,7 @@ final class OpeningHoursFormatterTest extends TestCase
         $specification->_setProperty('specificationType', $type);
         $specification->_setProperty('dayOfWeek', $dayOfWeek);
         $specification->_setProperty('opens', new DateTimeImmutable('1970-01-01 ' . $opens));
-        $specification->_setProperty('closes', new DateTimeImmutable('1970-01-01 ' . $closes));
+        $specification->_setProperty('closes', $closes === null ? null : new DateTimeImmutable('1970-01-01 ' . $closes));
         $specification->_setProperty('validFrom', $validFrom === null ? null : new DateTimeImmutable($validFrom));
         $specification->_setProperty('validThrough', $validThrough === null ? null : new DateTimeImmutable($validThrough));
 

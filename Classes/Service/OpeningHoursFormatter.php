@@ -320,10 +320,10 @@ class OpeningHoursFormatter
 
     protected function timeWithin(TimePeriod $timePeriod, DateTimeImmutable $now): bool
     {
-        $minutes = static fn (DateTimeImmutable $time): int => (int)$time->format('H') * 60 + (int)$time->format('i');
-        $nowMinutes = (int)$now->format('H') * 60 + (int)$now->format('i');
+        // Zero-padded H:i strings order like the times they spell.
+        $time = $now->format('H:i');
 
-        return $nowMinutes >= $minutes($timePeriod->getOpens()) && $nowMinutes < $minutes($timePeriod->getCloses());
+        return $time >= $timePeriod->getOpens()->format('H:i') && $time < $timePeriod->getCloses()->format('H:i');
     }
 
     // The date aspect, so a preview or a test can set the date the output is built for.
