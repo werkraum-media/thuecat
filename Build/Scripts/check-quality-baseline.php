@@ -37,8 +37,14 @@ if (!is_file($root . '/.coverage/coverage-xml/index.xml') || !$coverage->load($r
 
 $xpath = new DOMXPath($coverage);
 $xpath->registerNamespace('c', 'https://schema.phpunit.de/coverage/1.0');
+$lineCoverage = $xpath->evaluate('string(/c:phpunit/c:project/c:directory/c:totals/c:lines/@percent)');
+if (!is_numeric($lineCoverage)) {
+    fwrite(STDERR, 'The coverage report carries no line total.' . PHP_EOL);
+    exit(1);
+}
+
 $actual = [
-    'lineCoverage' => (float)$xpath->evaluate('string(/c:phpunit/c:project/c:directory/c:totals/c:lines/@percent)'),
+    'lineCoverage' => (float)$lineCoverage,
 ];
 
 $infectionLog = $argv[1] ?? null;
@@ -49,6 +55,7 @@ if (is_string($infectionLog)) {
         fwrite(STDERR, $infectionLog . ' carries no stats.msi.' . PHP_EOL);
         exit(1);
     }
+
     $actual['msi'] = (float)$msi;
 }
 
