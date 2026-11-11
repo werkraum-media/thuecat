@@ -84,6 +84,8 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 - An assertion can record a bug as expected output. Check the fixture's source before suspecting
   the code.
 - Run an unskipped test before analysing it. Empirical failure beats reading the diff.
+- Expect an exception message with `expectExceptionMessageIsOrContains()`, never `expectExceptionMessage()`; Rector
+  rewrites the latter and fails CI.
 
 ### Coverage and mutation score
 
@@ -95,7 +97,11 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   (`--git-diff-lines --with-uncovered --min-msi=100 --min-covered-msi=100`). A skip means the
   covering tests outran the timeout; it is not a pass.
 - `ProtectedVisibility` is off: non-final classes expose `protected` by design.
-- The legacy code is below the bar. Do not lower the bar for new code to match it.
+- The whole package is held at its recorded baseline (`Build/quality-baseline.json`): no change may lower the total
+  line coverage or the total MSI. Legacy code below 100% is tolerated, never imitated. Raise the baseline when a
+  change lifts the totals.
+- Skipped mutants come from slow tests, not from missing ones. Infection skips by the run time of the whole
+  covering test class. Make the tests faster; never raise the timeout or add tests only to get under it.
 
 ### Frontend tests in a non-default language
 

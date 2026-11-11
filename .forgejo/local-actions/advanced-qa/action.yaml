@@ -7,6 +7,9 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Coverage drivers'
+      run: 'php -v && (php -m | grep -i -E "xdebug|pcov" || echo "no coverage driver") && php -r "echo \"xdebug.mode=\", ini_get(\"xdebug.mode\"), PHP_EOL;"'
+
     - name: 'Provide site locales'
       run: 'apt-get update && apt-get install -y --no-install-recommends locales && localedef -i de_DE -f UTF-8 de_DE.UTF-8 && localedef -i en_GB -f UTF-8 en_GB.UTF-8'
 
