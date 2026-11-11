@@ -103,6 +103,9 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   coverage or MSI fall below the baseline.
 - CI checks every pull request's line coverage against the baseline and runs the gate. The full run,
   and with it the MSI baseline, is run locally: the CI runner is too small for it.
+- A change is not closed before a full run over the whole package has passed. In a planned change it
+  is one of the last tasks of the QA group. Only the maintainer can waive it, and only on explicit
+  request; never skip it unasked.
 - `ProtectedVisibility` is off: non-final classes expose `protected` by design.
 - The whole package is held at its recorded baseline (`Build/quality-baseline.json`): no change may lower the total
   line coverage or the total MSI. Legacy code below 100% is tolerated, never imitated. Raise the baseline when a
