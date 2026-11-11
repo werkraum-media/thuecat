@@ -7,4 +7,4 @@ runs:
       run: |
         trap 'echo' EXIT
         printf '\n### %s\n' 'PHPUnit Tests with coverage'
-        XDEBUG_MODE=coverage ./vendor/bin/paratest --runner=WrapperRunner --display-all-issues --coverage-text --coverage-xml .coverage/coverage-xml --log-junit .coverage/junit.xml
+        XDEBUG_MODE=coverage ./vendor/bin/paratest --runner=WrapperRunner --display-all-issues --coverage-text --only-summary-for-coverage-text --coverage-xml .coverage/coverage-xml --log-junit .coverage/junit.xml
