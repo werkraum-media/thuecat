@@ -1,17 +1,11 @@
 name: 'CI'
 
-# A pull request gets the QA, the tests and the mutation gate for its changes.
-# A merge to main gets only the full mutation run, which repeats the whole
-# suite for coverage and checks the totals against the baseline.
+# The full mutation run after a merge lives in mutation-full.yaml.
 'on':
-  push:
-    branches:
-      - 'main'
   pull_request:
 
 jobs:
   base-qa:
-    if: "github.event_name == 'pull_request'"
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
@@ -53,7 +47,6 @@ jobs:
           ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
   advanced-qa:
-    if: "github.event_name == 'pull_request'"
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php${{ matrix.php-version }}-node24'
@@ -77,12 +70,11 @@ jobs:
       - uses: './.forgejo/local-actions/advanced-qa'
 
   mutation-gate:
-    if: "github.event_name == 'pull_request'"
     runs-on: 'typo3'
     container:
       image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
     needs:
-      - 'base-qa'
+      - 'advanced-qa'
     steps:
       # The gate diffs against origin/main.
       - uses: 'actions/checkout@v6'
@@ -101,24 +93,3 @@ jobs:
           trap 'echo' EXIT
           printf '\n### %s\n' 'Mutation gate for the changed lines'
           Build/Scripts/infection.sh
-
-  mutation-full:
-    if: "github.event_name == 'push'"
-    runs-on: 'typo3'
-    container:
-      image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
-    steps:
-      - uses: 'actions/checkout@v6'
-
-      - uses: './.forgejo/local-actions/setup'
-        with:
-          php-version: '84'
-          typo3-version: '^14.3'
-
-      - uses: './.forgejo/local-actions/coverage'
-
-      - name: 'Full mutation run and baseline check'
-        run: |
-          trap 'echo' EXIT
-          printf '\n### %s\n' 'Full mutation run and baseline check'
-          Build/Scripts/infection.sh --full
