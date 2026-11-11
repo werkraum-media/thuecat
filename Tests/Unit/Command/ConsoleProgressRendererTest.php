@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Command;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -48,8 +49,12 @@ final class ConsoleProgressRendererTest extends TestCase
         $this->assertSame(1, substr_count($display, 'Resolving references and media'));
     }
 
+    /**
+     * The gap between items is what identifies a slow request; the first item
+     * has no predecessor to measure against.
+     */
     #[Test]
-    public function debugVerbosityNamesEachItem(): void
+    public function debugVerbosityPrintsOneTimedLinePerItem(): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_DEBUG);
         $subject = new ConsoleProgressRenderer($output, true);
@@ -57,25 +62,35 @@ final class ConsoleProgressRendererTest extends TestCase
         $subject->progressed(new ImportProgress(ImportPhase::Fetch, 'first', 1, 2));
         $subject->progressed(new ImportProgress(ImportPhase::Fetch, 'second', 2, 2));
 
-        $display = $output->fetch();
-
-        $this->assertStringContainsString('fetching 2/2 second', $display);
-        $this->assertStringContainsString('first', $display, 'The announcing item is named too.');
+        $this->assertMatchesRegularExpression(
+            '/\AFetching configured URLs \(1\/2\)\n  \[ 0\.00s\] fetching 1\/2 first\n  \[ 0\.\d{2}s\] fetching 2\/2 second\n\z/',
+            $output->fetch()
+        );
     }
 
     /**
-     * The gap between items is what identifies a slow request.
+     * @return iterable<string, array{ImportPhase, string}>
      */
+    public static function phaseNouns(): iterable
+    {
+        yield 'fetch' => [ImportPhase::Fetch, 'fetching'];
+        yield 'resolve' => [ImportPhase::Resolve, 'resolving'];
+        yield 'persist' => [ImportPhase::Persist, 'persisting'];
+        yield 'log' => [ImportPhase::Log, 'logging'];
+        yield 'finish' => [ImportPhase::Finish, 'finishing'];
+    }
+
     #[Test]
-    public function debugVerbosityTimesEachItem(): void
+    #[DataProvider('phaseNouns')]
+    public function everyDetailLineNamesItsPhase(ImportPhase $phase, string $noun): void
     {
         $output = new BufferedOutput(OutputInterface::VERBOSITY_DEBUG);
         $subject = new ConsoleProgressRenderer($output, true);
 
-        $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-1'));
-        $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-2'));
+        $subject->progressed(new ImportProgress($phase, 'item-1'));
+        $subject->progressed(new ImportProgress($phase, 'item-2'));
 
-        $this->assertMatchesRegularExpression('/\[\s*\d+\.\d{2}s\] resolving ref-2/', $output->fetch());
+        $this->assertStringContainsString('s] ' . $noun . ' item-2' . PHP_EOL, $output->fetch());
     }
 
     /**
@@ -108,10 +123,11 @@ final class ConsoleProgressRendererTest extends TestCase
         $subject->progressed(new ImportProgress(ImportPhase::Fetch, 'first', 1, 2));
         $subject->progressed(new ImportProgress(ImportPhase::Fetch, 'second', 2, 2));
 
-        $display = $output->fetch();
-
-        $this->assertStringNotContainsString('second', $display, 'Item labels are debug-only.');
-        $this->assertStringContainsString('fetching 2/2', $display, 'The position still shows.');
+        $this->assertSame(
+            'Fetching configured URLs (1/2)' . PHP_EOL . '  fetching 2/2' . PHP_EOL,
+            $output->fetch(),
+            'Item labels are debug-only; the position still shows.'
+        );
     }
 
     #[Test]
@@ -144,17 +160,5 @@ final class ConsoleProgressRendererTest extends TestCase
         $lines = array_filter(explode(PHP_EOL, $output->fetch()));
 
         $this->assertLessThan(10, count($lines), 'A tight loop yields the headline plus at most a couple of throttled lines.');
-    }
-
-    #[Test]
-    public function everyDetailLineNamesItsPhase(): void
-    {
-        $output = new BufferedOutput(OutputInterface::VERBOSITY_DEBUG);
-        $subject = new ConsoleProgressRenderer($output, true);
-
-        $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-1'));
-        $subject->progressed(new ImportProgress(ImportPhase::Resolve, 'ref-2'));
-
-        $this->assertStringContainsString('resolving ref-2', $output->fetch());
     }
 }

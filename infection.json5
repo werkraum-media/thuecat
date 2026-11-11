@@ -17,6 +17,12 @@
     "mutators": {
         "@default": true,
         // Non-final classes expose protected members for extension by design, so narrowing one to private is never detectable.
-        "ProtectedVisibility": false
+        "ProtectedVisibility": false,
+        "LessThan": {
+            // < and <= differ only at exactly 0.2 s between two microtime() calls, which no test can produce.
+            "ignore": [
+                "WerkraumMedia\\ThueCat\\Command\\ConsoleProgressRenderer::writeDetail"
+            ]
+        }
     }
 }
