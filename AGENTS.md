@@ -100,7 +100,7 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   skip means the covering tests outran the timeout; it is not a pass.
 - `--full` mutates everything with the configured timeout and no threshold. Over the whole package
   (no further options) it ends with `Build/Scripts/check-quality-baseline.php`, which fails when line
-  coverage or MSI fall below the baseline.
+  coverage or MSI fall below the baseline or the number of uncovered lines rises above it.
 - CI checks every pull request's line coverage against the baseline and runs the gate. The full run,
   and with it the MSI baseline, is run locally: the CI runner is too small for it.
 - A change is not closed before a full run over the whole package has passed. In a planned change it
@@ -108,8 +108,8 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
   request; never skip it unasked.
 - `ProtectedVisibility` is off: non-final classes expose `protected` by design.
 - The whole package is held at its recorded baseline (`Build/quality-baseline.json`): no change may lower the total
-  line coverage or the total MSI. Legacy code below 100% is tolerated, never imitated. Raise the baseline when a
-  change lifts the totals.
+  line coverage or the total MSI, or add uncovered lines. Legacy code below 100% is tolerated, never imitated. Update
+  the baseline when a change improves a value.
 - Skipped mutants come from slow tests, not from missing ones. Infection skips by the run time of the whole
   covering test class. Make the tests faster; never raise the timeout or add tests only to get under it.
 

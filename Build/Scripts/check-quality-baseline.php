@@ -37,14 +37,18 @@ if (!is_file($root . '/.coverage/coverage-xml/index.xml') || !$coverage->load($r
 
 $xpath = new DOMXPath($coverage);
 $xpath->registerNamespace('c', 'https://schema.phpunit.de/coverage/1.0');
-$lineCoverage = $xpath->evaluate('string(/c:phpunit/c:project/c:directory/c:totals/c:lines/@percent)');
-if (!is_numeric($lineCoverage)) {
+$lines = '/c:phpunit/c:project/c:directory/c:totals/c:lines/';
+$lineCoverage = $xpath->evaluate('string(' . $lines . '@percent)');
+$executable = $xpath->evaluate('string(' . $lines . '@executable)');
+$executed = $xpath->evaluate('string(' . $lines . '@executed)');
+if (!is_numeric($lineCoverage) || !is_numeric($executable) || !is_numeric($executed)) {
     fwrite(STDERR, 'The coverage report carries no line total.' . PHP_EOL);
     exit(1);
 }
 
 $actual = [
     'lineCoverage' => (float)$lineCoverage,
+    'uncoveredLines' => (int)$executable - (int)$executed,
 ];
 
 $infectionLog = $argv[1] ?? null;
@@ -67,12 +71,21 @@ foreach ($actual as $name => $value) {
         exit(1);
     }
 
-    printf('%-12s %6.2f%%  baseline %6.2f%%' . PHP_EOL, $name, $value, $expected);
-    if ($value < $expected) {
+    if (is_int($value)) {
+        printf('%-14s %6d   baseline %6d' . PHP_EOL, $name, $value, $expected);
+        $worse = $value > $expected;
+        $better = $value < $expected;
+    } else {
+        printf('%-14s %6.2f%%  baseline %6.2f%%' . PHP_EOL, $name, $value, $expected);
+        $worse = $value < $expected;
+        $better = $value > $expected;
+    }
+
+    if ($worse) {
         $failed = true;
-        echo '  below the baseline' . PHP_EOL;
-    } elseif ($value > $expected) {
-        echo '  above the baseline: raise it in Build/quality-baseline.json' . PHP_EOL;
+        echo '  worse than the baseline' . PHP_EOL;
+    } elseif ($better) {
+        echo '  better than the baseline: update it in Build/quality-baseline.json' . PHP_EOL;
     }
 }
 

@@ -229,7 +229,8 @@ It needs a coverage driver such as Xdebug.
        --coverage-xml .coverage/coverage-xml --log-junit .coverage/junit.xml
    php Build/Scripts/check-quality-baseline.php
 
-The script compares the total line coverage with :file:`Build/quality-baseline.json`.
+The script compares the total line coverage and the number of uncovered lines with
+:file:`Build/quality-baseline.json`.
 
 .. _developers-quality-assurance-infection:
 
@@ -266,6 +267,7 @@ longer timeout.
 The quality baseline
 ====================
 
-:file:`Build/quality-baseline.json` records the package's total line coverage and MSI. No change may
-lower either. No tool writes the file: when the check reports a total above the baseline, the
-change raises the value by hand.
+:file:`Build/quality-baseline.json` records the package's total line coverage, its number of uncovered
+lines and its MSI. No change may lower the line coverage or the MSI, or add uncovered lines. No tool
+writes the file: when the check reports a value better than the baseline, the change updates it by
+hand.
