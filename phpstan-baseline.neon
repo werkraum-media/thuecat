@@ -321,7 +321,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 2
 			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
@@ -333,7 +333,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''caching'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 2
 			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-

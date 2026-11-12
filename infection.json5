@@ -18,6 +18,12 @@
         "@default": true,
         // Non-final classes expose protected members for extension by design, so narrowing one to private is never detectable.
         "ProtectedVisibility": false,
+        "PublicVisibility": {
+            // Extbase resolves actions with method_exists() and calls them from inside the controller, so a protected action behaves the same.
+            "ignoreSourceCodeByRegex": [
+                "public function \\w+Action\\(.*"
+            ]
+        },
         "LessThan": {
             // < and <= differ only at exactly 0.2 s between two microtime() calls, which no test can produce.
             "ignore": [

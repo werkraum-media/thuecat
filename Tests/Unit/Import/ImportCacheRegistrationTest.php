@@ -30,24 +30,19 @@ use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
 final class ImportCacheRegistrationTest extends TestCase
 {
-    /** @var mixed */
-    private $cachingBackup;
+    private mixed $confVarsBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
         // The suite runs with backupGlobals="false", so restore this by hand.
-        $this->cachingBackup = $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] ?? null;
-        unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']);
+        $this->confVarsBackup = $GLOBALS['TYPO3_CONF_VARS'] ?? null;
+        $GLOBALS['TYPO3_CONF_VARS'] = [];
     }
 
     protected function tearDown(): void
     {
-        if ($this->cachingBackup === null) {
-            unset($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']);
-        } else {
-            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching'] = $this->cachingBackup;
-        }
+        $GLOBALS['TYPO3_CONF_VARS'] = $this->confVarsBackup;
 
         parent::tearDown();
     }
@@ -97,6 +92,32 @@ final class ImportCacheRegistrationTest extends TestCase
         $this->assertIsArray($configuration);
         $this->assertSame(Typo3DatabaseBackend::class, $configuration['backend']);
         $this->assertSame(ImportSetting::FetchCacheLifetime->default(), $configuration['options']['defaultLifetime'] ?? null);
+    }
+
+    #[Test]
+    public function keepsAnIntegratorsOwnOptionsForTheFetchDataCache(): void
+    {
+        $GLOBALS['TYPO3_CONF_VARS'] = [
+            'SYS' => [
+                'caching' => [
+                    'cacheConfigurations' => [
+                        'thuecat_fetchdata' => [
+                            'options' => [
+                                'defaultLifetime' => 60,
+                                'compression' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        ImportCacheRegistration::register();
+
+        $this->assertSame(
+            ['defaultLifetime' => 60, 'compression' => true],
+            $this->cacheConfiguration('thuecat_fetchdata')['options'] ?? null
+        );
     }
 
     #[Test]
