@@ -80,7 +80,7 @@ deptrac:
     - name: Service
       collectors:
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\(Extension|Domain\\TimingFormat|Domain\\Model\\TrailSeason)$#'
+          value: '#^WerkraumMedia\\ThueCat\\(Domain\\TimingFormat|Domain\\Model\\TrailSeason)$#'
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\(Domain\\DetailRecordKind|Pagination|Typo3Wrapper)\\#'
         - type: classNameRegex

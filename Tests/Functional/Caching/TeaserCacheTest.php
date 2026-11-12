@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -65,7 +65,7 @@ final class TeaserCacheTest extends AbstractCachingTestCase
         $this->assertSame([], $cold, 'Cache starts cold.');
         $this->assertCount(2, $this->teaserIdentifiers(), 'Both attractions of the list must leave a teaser entry.');
         $this->assertCachedEntriesHaveContent(
-            Extension::CACHE_TEASER,
+            FrontendCacheRegistration::TEASER,
             'tx_thuecat_tourist_attraction_10'
         );
     }
@@ -78,7 +78,7 @@ final class TeaserCacheTest extends AbstractCachingTestCase
 
         $stored = [];
         foreach ($this->teaserIdentifiers() as $identifier) {
-            $stored[] = $this->cachedContent(Extension::CACHE_TEASER, $identifier);
+            $stored[] = $this->cachedContent(FrontendCacheRegistration::TEASER, $identifier);
         }
 
         $combined = implode("\n", $stored);
@@ -95,7 +95,7 @@ final class TeaserCacheTest extends AbstractCachingTestCase
         $body = (string)$this->request(10)->getBody();
 
         foreach ($this->teaserIdentifiers() as $identifier) {
-            $stored = trim($this->cachedContent(Extension::CACHE_TEASER, $identifier));
+            $stored = trim($this->cachedContent(FrontendCacheRegistration::TEASER, $identifier));
             $this->assertNotSame('', $stored, 'Entry holds nothing but whitespace.');
             $this->assertStringContainsString($stored, $body, 'The rendered list must contain the stored teaser verbatim.');
         }
@@ -136,7 +136,7 @@ final class TeaserCacheTest extends AbstractCachingTestCase
         // attraction differ, and each links its own page.
         $links = [];
         foreach ($afterSecondList as $identifier) {
-            $links[] = $this->cachedContent(Extension::CACHE_TEASER, $identifier);
+            $links[] = $this->cachedContent(FrontendCacheRegistration::TEASER, $identifier);
         }
 
         $combined = implode("\n", $links);
@@ -187,7 +187,7 @@ final class TeaserCacheTest extends AbstractCachingTestCase
      */
     private function storedTeasers(): array
     {
-        return $this->storedContent(Extension::CACHE_TEASER, $this->teaserIdentifiers());
+        return $this->storedContent(FrontendCacheRegistration::TEASER, $this->teaserIdentifiers());
     }
 
     /**
@@ -195,6 +195,6 @@ final class TeaserCacheTest extends AbstractCachingTestCase
      */
     private function teaserIdentifiers(): array
     {
-        return $this->identifiersForRecords(Extension::CACHE_TEASER, [10, 11, 12]);
+        return $this->identifiersForRecords(FrontendCacheRegistration::TEASER, [10, 11, 12]);
     }
 }

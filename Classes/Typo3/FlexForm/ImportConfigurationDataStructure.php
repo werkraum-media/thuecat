@@ -20,14 +20,12 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Typo3\FlexForm;
 
-use WerkraumMedia\ThueCat\Extension;
-
 // Composes the import-configuration FlexForm data structures in PHP so the
 // fields shared across the types (storagePid, category anchors, file
 // folder, api key) are defined once. XML has no include mechanism.
 class ImportConfigurationDataStructure
 {
-    protected const LLL = 'LLL:EXT:' . Extension::EXTENSION_KEY . '/Resources/Private/Language/locallang_flexform.xlf:';
+    protected const LLL = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_flexform.xlf:';
 
     // Optional ints on every type; empty falls back to extension config.
     // Timeouts and attempts are deliberately absent: extension config only.

@@ -6,7 +6,6 @@ declare(strict_types=1);
  * This file is part of the TYPO3 CMS extension "thuecat".
  *
  * Copyright (C) werkraum-media <https://werkraum-media.de/>
- * Copyright (C) 2021 Daniel Siepmann <coding@daniel-siepmann.de>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -19,17 +18,17 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-namespace WerkraumMedia\ThueCat\Tests\Unit;
+namespace WerkraumMedia\ThueCat\Tests\Unit\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend;
 use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Import\ImportCacheRegistration;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
 
-final class ExtensionTest extends TestCase
+final class ImportCacheRegistrationTest extends TestCase
 {
     /** @var mixed */
     private $cachingBackup;
@@ -64,15 +63,9 @@ final class ExtensionTest extends TestCase
     }
 
     #[Test]
-    public function returnsLanguagePath(): void
-    {
-        $this->assertSame('LLL:EXT:thuecat/Resources/Private/Language/', Extension::getLanguagePath());
-    }
-
-    #[Test]
     public function registersVocabularyCacheOutlivingItsOwnStalenessWindow(): void
     {
-        Extension::registerExtLocalconfConfigConfig();
+        ImportCacheRegistration::register();
 
         $configuration = $this->cacheConfiguration('thuecat_vocabulary');
 
@@ -88,24 +81,16 @@ final class ExtensionTest extends TestCase
     #[Test]
     public function registersImportCachesInSystemGroup(): void
     {
-        Extension::registerExtLocalconfConfigConfig();
+        ImportCacheRegistration::register();
 
         $this->assertSame(['system'], $this->cacheConfiguration('thuecat_vocabulary')['groups'] ?? null);
         $this->assertSame(['system'], $this->cacheConfiguration('thuecat_fetchdata')['groups'] ?? null);
     }
 
     #[Test]
-    public function registersFrontendCachesInPagesGroup(): void
-    {
-        Extension::registerExtLocalconfConfigConfig();
-
-        $this->assertSame(['pages'], $this->cacheConfiguration(Extension::CACHE_TEASER)['groups'] ?? null);
-    }
-
-    #[Test]
     public function registersFetchDataCacheAlongsideTheVocabularyCache(): void
     {
-        Extension::registerExtLocalconfConfigConfig();
+        ImportCacheRegistration::register();
 
         $configuration = $this->cacheConfiguration('thuecat_fetchdata');
 
@@ -121,7 +106,7 @@ final class ExtensionTest extends TestCase
             'backend' => SimpleFileBackend::class,
         ];
 
-        Extension::registerExtLocalconfConfigConfig();
+        ImportCacheRegistration::register();
 
         $configuration = $this->cacheConfiguration('thuecat_vocabulary');
 

@@ -1,8 +1,7 @@
+
 deptrac:
   skip_violations:
     WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog:
       - WerkraumMedia\ThueCat\Import\Repositories\SysCategoryRepository
-    WerkraumMedia\ThueCat\Extension:
-      - WerkraumMedia\ThueCat\Import\Settings\ImportSetting
     WerkraumMedia\ThueCat\Import\Settings\AnchorScopeRegistry:
       - WerkraumMedia\ThueCat\Import\Parser\Entity\TopLevelEntityInterface

@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
-
 defined('TYPO3') || die();
 
 return (static function (string $extensionKey, string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
     $booleanItems = [
         ['label' => '', 'value' => ''],
-        ['label' => Extension::getLanguagePath() . 'locallang_tca.xlf:tx_thuecat_tourist_attraction.boolean.true', 'value' => 'true'],
-        ['label' => Extension::getLanguagePath() . 'locallang_tca.xlf:tx_thuecat_tourist_attraction.boolean.false', 'value' => 'false'],
+        ['label' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.boolean.true', 'value' => 'true'],
+        ['label' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.boolean.false', 'value' => 'false'],
     ];
     $integer = static fn (string $field): array => [
         'label' => $languagePath . '.' . $field,
@@ -129,7 +127,7 @@ return (static function (string $extensionKey, string $tableName): array {
                     'default' => '0',
                     'items' => [
                         [
-                            'label' => Extension::getLanguagePath() . 'locallang_tca.xlf:tx_thuecat_tourist_attraction.managed_by.unkown',
+                            'label' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.managed_by.unkown',
                             'value' => 0,
                         ],
                     ],
@@ -183,10 +181,10 @@ return (static function (string $extensionKey, string $tableName): array {
                 'showitem' => '--palette--;;language, disable, title, description, main_image, media_files, floor_plan,
                 floor_size, room_height, capacity_banquet, capacity_classroom, capacity_theatre, capacity_standing,
                 facilities, number_of_rooms, amenity_features, bookable, url, tour_booking_page, remote_id, tstamp,
-                --div--;' . Extension::getLanguagePath() . 'locallang_tca.xlf:tx_thuecat_tourist_attraction.tab.relations,
+                --div--;LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_tourist_attraction.tab.relations,
                 managed_by, contained_rooms,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:categories, categories, keywords',
+                --div--;core.form.tabs:categories, categories, keywords',
             ],
         ],
     ];
-})(Extension::EXTENSION_KEY, 'tx_thuecat_meeting_room');
+})('thuecat', 'tx_thuecat_meeting_room');

@@ -22,7 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -141,7 +141,7 @@ final class ListCacheTest extends AbstractCachingTestCase
         $this->requestWithDemand(['searchword' => 'Nichts trifft zu']);
 
         $entries = $this->cacheIdentifiersTaggedWith(
-            Extension::CACHE_LIST,
+            FrontendCacheRegistration::LIST,
             'tx_thuecat_tourist_attraction'
         );
 
@@ -168,7 +168,7 @@ final class ListCacheTest extends AbstractCachingTestCase
      */
     private function storedLists(): array
     {
-        return $this->storedContent(Extension::CACHE_LIST, $this->listIdentifiers());
+        return $this->storedContent(FrontendCacheRegistration::LIST, $this->listIdentifiers());
     }
 
     /**
@@ -176,6 +176,6 @@ final class ListCacheTest extends AbstractCachingTestCase
      */
     private function listIdentifiers(): array
     {
-        return $this->identifiersForRecords(Extension::CACHE_LIST, range(1, 25));
+        return $this->identifiersForRecords(FrontendCacheRegistration::LIST, range(1, 25));
     }
 }

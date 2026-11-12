@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -47,7 +47,7 @@ final class TrailTeaserCacheTest extends AbstractCachingTestCase
 
         $this->assertSame([], $cold, 'Cache starts cold.');
         $this->assertCount(2, $this->trailTeaserIdentifiers(), 'Both trails of the list must leave a teaser entry.');
-        $this->assertCachedEntriesHaveContent(Extension::CACHE_TEASER, 'tx_thuecat_trail_10');
+        $this->assertCachedEntriesHaveContent(FrontendCacheRegistration::TEASER, 'tx_thuecat_trail_10');
     }
 
     #[Test]
@@ -55,21 +55,21 @@ final class TrailTeaserCacheTest extends AbstractCachingTestCase
     {
         $this->request(10);
 
-        $identifiers = $this->cacheIdentifiersTaggedWith(Extension::CACHE_TEASER, 'tx_thuecat_trail_10');
+        $identifiers = $this->cacheIdentifiersTaggedWith(FrontendCacheRegistration::TEASER, 'tx_thuecat_trail_10');
         $this->assertCount(1, $identifiers, 'Trail 10 must leave exactly one entry.');
 
-        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(Extension::CACHE_TEASER, $identifiers[0]));
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(FrontendCacheRegistration::TEASER, $identifiers[0]));
     }
 
     #[Test]
     public function aSecondRequestReusesTheStoredTeasers(): void
     {
         $this->request(10);
-        $stored = $this->storedContent(Extension::CACHE_TEASER, $this->trailTeaserIdentifiers());
+        $stored = $this->storedContent(FrontendCacheRegistration::TEASER, $this->trailTeaserIdentifiers());
 
         $this->request(10);
 
-        $this->assertSame($stored, $this->storedContent(Extension::CACHE_TEASER, $this->trailTeaserIdentifiers()), 'A second request must serve the stored entries rather than replace them.');
+        $this->assertSame($stored, $this->storedContent(FrontendCacheRegistration::TEASER, $this->trailTeaserIdentifiers()), 'A second request must serve the stored entries rather than replace them.');
     }
 
     /**
@@ -83,9 +83,9 @@ final class TrailTeaserCacheTest extends AbstractCachingTestCase
         $this->request(10);
         $this->request(13, [], 'tx_thuecat_touristattractionlistselected');
 
-        $trail = $this->cacheIdentifiersTaggedWith(Extension::CACHE_TEASER, 'tx_thuecat_trail_10');
+        $trail = $this->cacheIdentifiersTaggedWith(FrontendCacheRegistration::TEASER, 'tx_thuecat_trail_10');
         $attraction = $this->cacheIdentifiersTaggedWith(
-            Extension::CACHE_TEASER,
+            FrontendCacheRegistration::TEASER,
             'tx_thuecat_tourist_attraction_10'
         );
 
@@ -93,8 +93,8 @@ final class TrailTeaserCacheTest extends AbstractCachingTestCase
         $this->assertCount(1, $attraction);
         $this->assertNotSame($trail[0], $attraction[0], 'One uid, two tables, two entries.');
 
-        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(Extension::CACHE_TEASER, $trail[0]));
-        $this->assertStringContainsString('Stadtmuseum Erfurt', $this->cachedContent(Extension::CACHE_TEASER, $attraction[0]));
+        $this->assertStringContainsString('Goethe-Erlebnisweg', $this->cachedContent(FrontendCacheRegistration::TEASER, $trail[0]));
+        $this->assertStringContainsString('Stadtmuseum Erfurt', $this->cachedContent(FrontendCacheRegistration::TEASER, $attraction[0]));
     }
 
     /**
@@ -103,7 +103,7 @@ final class TrailTeaserCacheTest extends AbstractCachingTestCase
     private function trailTeaserIdentifiers(): array
     {
         return $this->identifiersForRecords(
-            Extension::CACHE_TEASER,
+            FrontendCacheRegistration::TEASER,
             [10, 11],
             'tx_thuecat_trail'
         );

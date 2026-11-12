@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -82,7 +82,7 @@ final class TrailTeaserInvalidationTest extends AbstractCachingTestCase
         $this->request(13, [], 'tx_thuecat_touristattractionlistselected');
 
         $before = $this->cacheIdentifiersTaggedWith(
-            Extension::CACHE_TEASER,
+            FrontendCacheRegistration::TEASER,
             'tx_thuecat_tourist_attraction_10'
         );
         $this->assertCount(1, $before, 'The attraction teaser must be stored before saving.');
@@ -90,7 +90,7 @@ final class TrailTeaserInvalidationTest extends AbstractCachingTestCase
         $this->saveRecord(10, ['title' => 'Goethe-Erlebnisweg, neu benannt'], 'tx_thuecat_trail');
 
         $this->assertSame($before, $this->cacheIdentifiersTaggedWith(
-            Extension::CACHE_TEASER,
+            FrontendCacheRegistration::TEASER,
             'tx_thuecat_tourist_attraction_10'
         ), 'Saving a trail must not touch an attraction of the same uid.');
     }
@@ -103,7 +103,7 @@ final class TrailTeaserInvalidationTest extends AbstractCachingTestCase
         $byUid = [];
         foreach ([10, 11] as $uid) {
             $identifiers = $this->cacheIdentifiersTaggedWith(
-                Extension::CACHE_TEASER,
+                FrontendCacheRegistration::TEASER,
                 'tx_thuecat_trail_' . $uid
             );
             if ($identifiers !== []) {

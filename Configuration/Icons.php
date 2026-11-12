@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Extension;
 
 return (static function (): array {
     $iconFiles = GeneralUtility::getFilesInDir(
         GeneralUtility::getFileAbsFileName(
-            Extension::getIconPath()
+            'EXT:thuecat/Resources/Public/Icons/'
         )
     );
 
@@ -22,7 +21,7 @@ return (static function (): array {
         $identifier = str_replace('.svg', '', $iconFile);
         $icons[$identifier] = [
             'provider' => SvgIconProvider::class,
-            'source' => Extension::getIconPath() . $iconFile,
+            'source' => 'EXT:thuecat/Resources/Public/Icons/' . $iconFile,
         ];
     }
 

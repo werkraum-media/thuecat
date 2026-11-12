@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TrailLocationEntity;
 
 defined('TYPO3') || die();
 
 return (static function (string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
 
     return [
         'ctrl' => [

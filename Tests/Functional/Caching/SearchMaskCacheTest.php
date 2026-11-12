@@ -23,7 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -123,7 +123,7 @@ final class SearchMaskCacheTest extends AbstractCachingTestCase
         $this->requestMask(20, [], 2);
 
         $this->assertCount(1, $this->allMaskIdentifiers(), 'The mask is stored.');
-        $this->assertCount(1, $this->cacheIdentifiersTaggedWith(Extension::CACHE_SEARCH_MASK, 'tx_thuecat_town'), 'With no option to tag, the table itself is the tag.');
+        $this->assertCount(1, $this->cacheIdentifiersTaggedWith(FrontendCacheRegistration::SEARCH_MASK, 'tx_thuecat_town'), 'With no option to tag, the table itself is the tag.');
     }
 
     /** Option lists are DB-backed, so a renamed town must not survive. */
@@ -175,7 +175,7 @@ final class SearchMaskCacheTest extends AbstractCachingTestCase
      */
     private function storedMasks(): array
     {
-        return $this->storedContent(Extension::CACHE_SEARCH_MASK, $this->maskIdentifiers());
+        return $this->storedContent(FrontendCacheRegistration::SEARCH_MASK, $this->maskIdentifiers());
     }
 
     /**
@@ -186,7 +186,7 @@ final class SearchMaskCacheTest extends AbstractCachingTestCase
     private function maskIdentifiers(): array
     {
         return $this->cacheIdentifiersTaggedWith(
-            Extension::CACHE_SEARCH_MASK,
+            FrontendCacheRegistration::SEARCH_MASK,
             'tx_thuecat_town'
         );
     }

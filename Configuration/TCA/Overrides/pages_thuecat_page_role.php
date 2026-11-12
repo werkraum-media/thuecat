@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Schema\Struct\SelectItem;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') || die();
 
@@ -12,18 +11,18 @@ defined('TYPO3') || die();
     ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'tx_thuecat_page_role',
-        new SelectItem(type: 'select', label: Extension::getLanguagePath() . 'locallang_tca.xlf:pages.tx_thuecat_page_role.touristattractionlist', value: 'thuecat_touristattractionlist')
+        new SelectItem(type: 'select', label: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:pages.tx_thuecat_page_role.touristattractionlist', value: 'thuecat_touristattractionlist')
     );
 
     ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'tx_thuecat_page_role',
-        new SelectItem(type: 'select', label: Extension::getLanguagePath() . 'locallang_tca.xlf:pages.tx_thuecat_page_role.touristattractionshow', value: 'thuecat_touristattractionshow')
+        new SelectItem(type: 'select', label: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:pages.tx_thuecat_page_role.touristattractionshow', value: 'thuecat_touristattractionshow')
     );
 
     ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'tx_thuecat_page_role',
-        new SelectItem(type: 'select', label: Extension::getLanguagePath() . 'locallang_tca.xlf:pages.tx_thuecat_page_role.trailshow', value: 'thuecat_trailshow')
+        new SelectItem(type: 'select', label: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:pages.tx_thuecat_page_role.trailshow', value: 'thuecat_trailshow')
     );
 })();

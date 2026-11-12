@@ -24,7 +24,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Throwable;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 
 /**
@@ -38,6 +37,8 @@ use WerkraumMedia\ThueCat\Typo3Wrapper\TranslationService;
 #[Autoconfigure(public: true)]
 class FileFolderAccess
 {
+    protected const EXTENSION_NAME = 'Thuecat';
+
     protected const PROBE_PREFIX = '.thuecat-write-probe-';
 
     public function __construct(
@@ -50,7 +51,7 @@ class FileFolderAccess
     {
         if ($folderIdentifier === '') {
             throw new FileFolderAccessException(
-                $this->translation->translate('import.fileFolder.missing', Extension::EXTENSION_NAME),
+                $this->translation->translate('import.fileFolder.missing', self::EXTENSION_NAME),
                 1748520001
             );
         }
@@ -78,7 +79,7 @@ class FileFolderAccess
             throw new FileFolderAccessException(
                 $this->translation->translate(
                     'import.fileFolder.notWritable',
-                    Extension::EXTENSION_NAME,
+                    self::EXTENSION_NAME,
                     [$folderIdentifier, $e->getMessage()]
                 ),
                 1748520003,
@@ -95,7 +96,7 @@ class FileFolderAccess
             throw new FileFolderAccessException(
                 $this->translation->translate(
                     'import.fileFolder.unresolvable',
-                    Extension::EXTENSION_NAME,
+                    self::EXTENSION_NAME,
                     [$folderIdentifier, $e->getMessage()]
                 ),
                 1748520002,

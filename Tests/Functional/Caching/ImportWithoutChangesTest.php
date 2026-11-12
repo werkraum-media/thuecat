@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -134,8 +134,8 @@ final class ImportWithoutChangesTest extends AbstractImportTestCase
     private function storedEntries(): array
     {
         return [
-            'teaser' => $this->identifiers(Extension::CACHE_TEASER),
-            'list' => $this->identifiers(Extension::CACHE_LIST),
+            'teaser' => $this->identifiers(FrontendCacheRegistration::TEASER),
+            'list' => $this->identifiers(FrontendCacheRegistration::LIST),
         ];
     }
 

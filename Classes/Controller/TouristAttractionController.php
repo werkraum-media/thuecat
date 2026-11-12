@@ -39,9 +39,9 @@ use WerkraumMedia\ThueCat\Domain\Model\Frontend\TouristAttraction;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Town;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TouristAttractionRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Frontend\TownRepository;
-use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheTagCollector;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Frontend\Cache\TeaserRenderer;
 use WerkraumMedia\ThueCat\Frontend\MetaInformation\MetaInformationService;
 use WerkraumMedia\ThueCat\Pagination\PaginationFactory;
@@ -95,7 +95,7 @@ class TouristAttractionController extends AbstractActionController
 
         $this->redirectPostToGet($demand);
 
-        $cache = $this->cacheManager->getCache(Extension::CACHE_LIST);
+        $cache = $this->cacheManager->getCache(FrontendCacheRegistration::LIST);
         $identifier = $this->cacheIdentifierFactory->forList(
             $this->pluginUid(),
             $demand,
@@ -193,7 +193,7 @@ class TouristAttractionController extends AbstractActionController
         $routing = $this->request->getAttribute('routing');
         $pageId = $routing instanceof PageArguments ? $routing->getPageId() : 0;
 
-        $cache = $this->cacheManager->getCache(Extension::CACHE_SEARCH_MASK);
+        $cache = $this->cacheManager->getCache(FrontendCacheRegistration::SEARCH_MASK);
         // Keyed on the demand as sent: the sibling lookup below mutates it, and
         // resolving that sibling is the work a hit skips.
         $identifier = $this->cacheIdentifierFactory->forSearchMask(

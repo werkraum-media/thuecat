@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 
 defined('TYPO3') || die();
 
 return (static function (string $extensionKey, string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
     // Booleans keep "not delivered" apart from "no".
     $booleanItems = [
         ['label' => '', 'value' => ''],
@@ -30,7 +29,7 @@ return (static function (string $extensionKey, string $tableName): array {
         'ctrl' => [
             'label' => 'title',
             'type' => 'type',
-            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => 'EXT:thuecat/Resources/Public/Icons/' . $tableName . '.svg',
             'sortby' => 'sorting',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -1018,4 +1017,4 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
         ],
     ];
-})(Extension::EXTENSION_KEY, 'tx_thuecat_tourist_attraction');
+})('thuecat', 'tx_thuecat_tourist_attraction');

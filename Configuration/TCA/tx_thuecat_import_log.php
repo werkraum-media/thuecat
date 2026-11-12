@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
-
 defined('TYPO3') || die();
 
 return (static function (string $extensionKey, string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
 
     return [
         'ctrl' => [
             'label' => 'crdate',
             'label_alt' => 'configuration',
             'label_alt_force' => true,
-            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => 'EXT:thuecat/Resources/Public/Icons/' . $tableName . '.svg',
             'default_sortby' => 'crdate desc',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -63,4 +61,4 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
         ],
     ];
-})(Extension::EXTENSION_KEY, 'tx_thuecat_import_log');
+})('thuecat', 'tx_thuecat_import_log');

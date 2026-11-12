@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
-
 defined('TYPO3') || die();
 
 return (static function (string $extensionKey, string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
-    $flexFormConfigurationPath = 'FILE:EXT:' . Extension::EXTENSION_KEY . '/Configuration/FlexForm/';
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
+    $flexFormConfigurationPath = 'FILE:EXT:thuecat/Configuration/FlexForm/';
 
     return [
         'ctrl' => [
             'label' => 'type',
             'label_alt' => 'remote_id, table_name, record_uid',
             'label_alt_force' => true,
-            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => 'EXT:thuecat/Resources/Public/Icons/' . $tableName . '.svg',
             'type' => 'type',
             'default_sortby' => 'crdate',
             'tstamp' => 'tstamp',
@@ -331,4 +329,4 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
         ],
     ];
-})(Extension::EXTENSION_KEY, 'tx_thuecat_import_log_entry');
+})('thuecat', 'tx_thuecat_import_log_entry');

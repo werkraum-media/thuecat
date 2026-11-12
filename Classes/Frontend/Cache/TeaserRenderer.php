@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Base;
-use WerkraumMedia\ThueCat\Extension;
 
 /**
  * Renders one list item and keeps the result.
@@ -60,7 +59,7 @@ class TeaserRenderer
         array $viewPaths,
         ServerRequestInterface $request
     ): string {
-        $cache = $this->cacheManager->getCache(Extension::CACHE_TEASER);
+        $cache = $this->cacheManager->getCache(FrontendCacheRegistration::TEASER);
         $table = $this->tableFor($record);
         $uid = $record->getUid() ?? 0;
 

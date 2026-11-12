@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -61,15 +61,15 @@ final class PluginSaveInvalidationTest extends AbstractCachingTestCase
     public function savingAPluginDiscardsItsListsAndKeepsOthers(): void
     {
         $this->request(10);
-        $pluginTen = $this->identifiersForRecords(Extension::CACHE_LIST, [1]);
+        $pluginTen = $this->identifiersForRecords(FrontendCacheRegistration::LIST, [1]);
         $this->request(20);
-        $both = $this->identifiersForRecords(Extension::CACHE_LIST, [1]);
+        $both = $this->identifiersForRecords(FrontendCacheRegistration::LIST, [1]);
         $this->assertCount(1, $pluginTen, 'Plugin 10 stored its list.');
         $this->assertCount(2, $both, 'Plugin 20 stored its list.');
 
         $this->saveRecord(10, ['pi_flexform' => self::BACKEND_ORDER_FLEXFORM], 'tt_content');
 
-        $this->assertSame(array_values(array_diff($both, $pluginTen)), $this->identifiersForRecords(Extension::CACHE_LIST, [1]), "Only the saved plugin's list is discarded.");
+        $this->assertSame(array_values(array_diff($both, $pluginTen)), $this->identifiersForRecords(FrontendCacheRegistration::LIST, [1]), "Only the saved plugin's list is discarded.");
     }
 
     #[Test]

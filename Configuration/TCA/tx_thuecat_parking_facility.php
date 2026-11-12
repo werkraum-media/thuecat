@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-use WerkraumMedia\ThueCat\Extension;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\OpeningHourSpecificationEntity;
 
 defined('TYPO3') || die();
 
 return (static function (string $extensionKey, string $tableName): array {
-    $languagePath = Extension::getLanguagePath() . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
 
     return [
         'ctrl' => [
             'label' => 'title',
-            'iconfile' => Extension::getIconPath() . $tableName . '.svg',
+            'iconfile' => 'EXT:thuecat/Resources/Public/Icons/' . $tableName . '.svg',
             'default_sortby' => 'title',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -326,4 +325,4 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
         ],
     ];
-})(Extension::EXTENSION_KEY, 'tx_thuecat_parking_facility');
+})('thuecat', 'tx_thuecat_parking_facility');

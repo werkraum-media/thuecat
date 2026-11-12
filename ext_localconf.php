@@ -9,7 +9,8 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use WerkraumMedia\ThueCat\Controller\TouristAttractionController;
 use WerkraumMedia\ThueCat\Controller\TrailController;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
+use WerkraumMedia\ThueCat\Import\ImportCacheRegistration;
 use WerkraumMedia\ThueCat\Routing\FilterRouteEnhancer;
 use WerkraumMedia\ThueCat\Routing\PersistedAliasListMapper;
 use WerkraumMedia\ThueCat\Typo3\FormDataProvider\AnchorStartingPoints;
@@ -18,7 +19,8 @@ use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
 defined('TYPO3') || die();
 
-Extension::registerExtLocalconfConfigConfig();
+ImportCacheRegistration::register();
+FrontendCacheRegistration::register();
 
 (static function (string $extensionKey): void {
     ExtensionManagementUtility::addTypoScriptSetup(
@@ -91,4 +93,4 @@ Extension::registerExtLocalconfConfigConfig();
             'before' => [TcaSelectTreeItems::class, TcaCategory::class],
         ];
     }
-})(Extension::EXTENSION_KEY);
+})('thuecat');

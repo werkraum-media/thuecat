@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Schema\Struct\SelectItem;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use WerkraumMedia\ThueCat\Extension;
 
 defined('TYPO3') || die();
 
 (static function (string $extensionKey, string $tableName): void {
-    $languagePath = Extension::getLanguagePath()
-        . 'locallang_tca.xlf:' . $tableName;
+    $languagePath = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:' . $tableName;
 
     // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
     $GLOBALS['TCA'][$tableName]['ctrl']['typeicon_classes']['contains-thuecat'] = 'pages_module_thuecat';
@@ -45,6 +43,6 @@ defined('TYPO3') || die();
         'after:module'
     );
 })(
-    Extension::EXTENSION_KEY,
+    'thuecat',
     'pages'
 );

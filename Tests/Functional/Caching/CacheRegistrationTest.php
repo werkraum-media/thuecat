@@ -25,7 +25,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -44,9 +44,9 @@ final class CacheRegistrationTest extends AbstractCachingTestCase
      */
     public static function cacheIdentifiers(): Iterator
     {
-        yield 'teaser' => [Extension::CACHE_TEASER];
-        yield 'list' => [Extension::CACHE_LIST];
-        yield 'search mask' => [Extension::CACHE_SEARCH_MASK];
+        yield 'teaser' => [FrontendCacheRegistration::TEASER];
+        yield 'list' => [FrontendCacheRegistration::LIST];
+        yield 'search mask' => [FrontendCacheRegistration::SEARCH_MASK];
     }
 
     #[Test]

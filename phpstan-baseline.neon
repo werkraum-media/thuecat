@@ -189,26 +189,50 @@ parameters:
 		-
 			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: Classes/Extension.php
+			count: 2
+			path: Classes/Frontend/Cache/FrontendCacheRegistration.php
 
 		-
 			message: '#^Cannot access offset ''cacheConfigurations'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: Classes/Extension.php
+			count: 2
+			path: Classes/Frontend/Cache/FrontendCacheRegistration.php
 
 		-
 			message: '#^Cannot access offset ''caching'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: Classes/Extension.php
+			count: 2
+			path: Classes/Frontend/Cache/FrontendCacheRegistration.php
 
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: Classes/Extension.php
+			count: 2
+			path: Classes/Frontend/Cache/FrontendCacheRegistration.php
+
+		-
+			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: Classes/Import/ImportCacheRegistration.php
+
+		-
+			message: '#^Cannot access offset ''cacheConfigurations'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: Classes/Import/ImportCacheRegistration.php
+
+		-
+			message: '#^Cannot access offset ''caching'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: Classes/Import/ImportCacheRegistration.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: Classes/Import/ImportCacheRegistration.php
 
 		-
 			message: '#^Cannot cast mixed to string\.$#'
@@ -298,37 +322,37 @@ parameters:
 			message: '#^Cannot access offset ''SYS'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Cannot access offset ''cacheConfigurations'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Cannot access offset ''caching'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Cannot access offset ''defaultLifetime'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Cannot access offset ''thuecat_vocabulary'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Cannot access offset string on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: Tests/Unit/ExtensionTest.php
+			path: Tests/Unit/Import/ImportCacheRegistrationTest.php
 
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'

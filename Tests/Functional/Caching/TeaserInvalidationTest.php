@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Extension;
+use WerkraumMedia\ThueCat\Frontend\Cache\FrontendCacheRegistration;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractCachingTestCase;
 
 /**
@@ -116,7 +116,7 @@ final class TeaserInvalidationTest extends AbstractCachingTestCase
      */
     private function teaserIdentifiersFor(int $attractionUid): array
     {
-        return $this->identifiersForRecords(Extension::CACHE_TEASER, [$attractionUid]);
+        return $this->identifiersForRecords(FrontendCacheRegistration::TEASER, [$attractionUid]);
     }
 
     /**
