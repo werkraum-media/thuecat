@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -46,6 +47,29 @@ final class FileFolderAccessTest extends AbstractFunctionalTestCase
         $this->expectExceptionCode(1748520002);
 
         $this->createSubject()->assertWritable('999:/does-not-exist/');
+    }
+
+    #[Test]
+    public function throwsWhenFolderIsNotWritable(): void
+    {
+        $basePath = $this->instancePath . '/fileadmin-thuecat';
+        GeneralUtility::mkdir_deep($basePath);
+        $storageRepository = $this->get(StorageRepository::class);
+        $storageUid = $storageRepository->createLocalStorage(
+            'ThueCat test storage',
+            $basePath,
+            'absolute'
+        );
+        $this->get(ConnectionPool::class)
+            ->getConnectionForTable('sys_file_storage')
+            ->update('sys_file_storage', ['is_writable' => 0], ['uid' => $storageUid])
+        ;
+        $storageRepository->flush();
+
+        $this->expectException(FileFolderAccessException::class);
+        $this->expectExceptionCode(1748520003);
+
+        $this->createSubject()->assertWritable($storageUid . ':/');
     }
 
     #[Test]
