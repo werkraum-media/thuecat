@@ -1,0 +1,137 @@
+imports:
+  - deptrac.baseline.yaml
+
+deptrac:
+  paths:
+    - ./Classes
+
+  analyser:
+    types:
+      - class
+      - use
+
+  layers:
+    - name: ImportCommand
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Command\\#'
+
+    - name: ImportEngine
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Import\\(?!Settings\\(Anchor|CategoryAnchor))#'
+
+    # TYPO3 glue around the ImportConfiguration record: its FlexForm, form data and DataHandler hook.
+    - name: ImportIntegration
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\(FlexForm|FormDataProvider|Hook)\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\ImportConfigurationFlexFormListener$#'
+
+    - name: ImportModel
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\(AbstractEntity$|Import)#'
+
+    - name: ImportRepository
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Repository\\Backend\\Import#'
+
+    - name: FrontendDelivery
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Controller\\(?!Backend\\)#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\(Frontend|Routing|ViewHelpers)\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Service\\(FrontendCategoryAnchors|SearchFilterOptionsService|SiblingListPluginContext|SiblingListPluginLocator)$#'
+
+    - name: FrontendRepository
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Repository\\Frontend\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Service\\(FilterField\\|DateBasedFilter($|\\))#'
+
+    - name: FrontendModel
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Model\\Frontend\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Service\\OpeningHoursFormatter$#'
+
+    - name: BackendModule
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Controller\\Backend\\#'
+
+    - name: BackendForms
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\FormEngine\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\(SiteScopedRelations|PageRoleHint)#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Service\\SiteScopedSelectFields$#'
+
+    # Side-effect-free helpers and shared vocabulary; open to every layer, so it may depend on none.
+    - name: Service
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\(Extension|Domain\\TimingFormat|Domain\\Model\\TrailSeason)$#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\(Domain\\DetailRecordKind|Pagination|Typo3Wrapper)\\#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Service\\SitePageIds$#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Import\\Settings\\(Anchor|CategoryAnchor)#'
+
+    # Upgrade wizards change persisted data and are run by the install tool, never by our code.
+    - name: System
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\#'
+
+    # EXT:events, outside the analysed paths; only its use from thuecat is checked.
+    - name: Events
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\Events\\#'
+
+    # Mapped in Configuration/Extbase/Persistence/Classes.php, used by no class.
+    - name: Legacy
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\(MeetingRoom|Organisation|ParkingFacility|TouristInformation|Town|Trail)$#'
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Domain\\Repository\\Backend\\(Organisation|ParkingFacility|Town)Repository$#'
+
+  ruleset:
+    ImportCommand: [ImportEngine, ImportModel, ImportRepository, Service]
+    ImportEngine: [ImportModel, ImportRepository, Service, Events]
+    ImportIntegration: [ImportEngine, ImportModel, Service]
+    ImportRepository: [ImportModel, Service]
+    ImportModel: [Service]
+    FrontendDelivery: [FrontendRepository, FrontendModel, Service]
+    FrontendRepository: [FrontendModel, Service]
+    FrontendModel: [Service, Events]
+    BackendModule: [ImportModel, ImportRepository, Service]
+    BackendForms: [Service]
+    Service: []
+    System:
+      - ImportCommand
+      - ImportEngine
+      - ImportIntegration
+      - ImportModel
+      - ImportRepository
+      - FrontendDelivery
+      - FrontendRepository
+      - FrontendModel
+      - BackendModule
+      - BackendForms
+      - Service
+      - Events
+      - Legacy
+    Legacy: [ImportModel, Service]

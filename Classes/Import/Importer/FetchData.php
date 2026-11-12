@@ -28,6 +28,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface as CacheFrontendInterface;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
@@ -40,7 +41,7 @@ class FetchData
     // Reuse rather than re-defaulting elsewhere; the fallback lives here.
     public const DEFAULT_API_DOMAIN = 'https://cdb.thuecat.org';
 
-    public const DEFAULT_SYNC_API_DOMAIN = 'https://widgets.thuecat.org';
+    public const DEFAULT_SYNC_API_DOMAIN = ImportConfiguration::SYNC_API_DOMAIN;
 
     // The host every @id URI references, whichever host served the data.
     public const RESOURCE_HOST = 'https://thuecat.org';

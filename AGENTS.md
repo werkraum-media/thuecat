@@ -137,6 +137,13 @@ Assertions: translated labels differ. The empty-state message is "Keine Daten vo
 German and "No data to show." in English — asserting the German string in an English request
 passes on an empty page.
 
+## Quality assurance page
+
+`Documentation/Developers/QualityAssurance.rst` mirrors the QA setup and must stay true. A change to
+a tool, its configuration, a `Build/` script, the CI workflow or a baseline's handling updates the
+page in the same change. The Deptrac section mirrors `deptrac.yaml`: a layer, a collector's reach or
+a rule that changes there changes in the table and the guarantees below it too.
+
 ## Static analysis
 
 The PHPStan baseline is generated, never hand-edited: use the `--generate-baseline` command.

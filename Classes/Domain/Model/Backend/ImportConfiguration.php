@@ -28,10 +28,11 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
-use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 
 class ImportConfiguration extends AbstractEntity implements ImportConfigurationInterface
 {
+    public const SYNC_API_DOMAIN = 'https://widgets.thuecat.org';
+
     protected string $title = '';
 
     protected string $type = '';
@@ -172,7 +173,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
      */
     public function getSyncApiDomain(): string
     {
-        return FetchData::DEFAULT_SYNC_API_DOMAIN;
+        return self::SYNC_API_DOMAIN;
     }
 
     public function getFetchLastXDays(): int

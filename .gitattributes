@@ -6,6 +6,9 @@
 .claude export-ignore
 AGENTS.md export-ignore
 CLAUDE.md export-ignore
+deptrac.baseline.yaml export-ignore
+deptrac.yaml export-ignore
+infection.json5 export-ignore
 Documentation export-ignore
 Makefile export-ignore
 phpstan-baseline.neon export-ignore
