@@ -394,6 +394,8 @@ final class ResolverContext
         public readonly ?string $channelRecordUrlPrefix = null,
         // Bare hosts whose media downloads carry the API key.
         public readonly array $mediaKeyedHosts = [],
+        // Null outside the Importer: no row is stamped.
+        public readonly ?ImportOrigin $origin = null,
     ) {
     }
 

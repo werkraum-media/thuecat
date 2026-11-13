@@ -159,6 +159,32 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
 
+    #[Test]
+    public function createdEventCarriesTheChannelAsOrigin(): void
+    {
+        $this->expectChannelServingOneEvent();
+
+        $this->importConfiguration(1);
+
+        $this->assertOrigin('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1', 1, 'Sync Channel', 'test-channel');
+    }
+
+    #[Test]
+    public function createdEventOfAStaticConfigurationCarriesNoSyncId(): void
+    {
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/test-event-keyword-1',
+            'widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-keyword-1.json'
+        );
+        $this->expectFetchForUrl('https://thuecat.org/resources/916373333853-mknj', 'thuecat.org/resources/916373333853-mknj.json');
+        $this->expectFetchForUrl('https://thuecat.org/resources/192875159827-xfqk', 'thuecat.org/resources/192875159827-xfqk.json');
+        $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
+
+        $this->importConfiguration(2);
+
+        $this->assertOrigin('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-keyword-1', 2, 'Static', '');
+    }
+
     // The keyword and the term set it belongs to.
     protected function expectKeywordOutsideTheChannel(): void
     {

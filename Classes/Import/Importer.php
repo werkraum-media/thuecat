@@ -193,6 +193,7 @@ class Importer
                 ? SyncChannel::recordUrlPrefix($configuration->getSyncApiDomain(), $configuration->getSyncChannelId())
                 : null,
             $this->mediaKeyedHosts($configuration),
+            $configuration instanceof ImportConfiguration ? ImportOrigin::fromConfiguration($configuration) : null,
         );
         $accumulatedPayload = new DataHandlerPayload();
         $urls = $urlProvider->getUrls($apiDomain);

@@ -27,9 +27,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 // Reads the compiled TCA, so overrides of other extensions and packages are part of the outcome.
 final class ImportTabTest extends AbstractFunctionalTestCase
 {
-    private const IMPORT_TAB = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:import.tab';
+    private const string IMPORT_TAB = 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:import.tab';
 
-    private const ORIGIN_PALETTE = ['import_origin' => ['origin_configuration_uid', 'origin_configuration_title', '--linebreak--', 'origin_sync_id']];
+    private const array ORIGIN_PALETTE = ['import_origin' => ['origin_configuration_uid', 'origin_configuration_title', '--linebreak--', 'origin_sync_id']];
 
     /**
      * @return iterable<string, array{string, array<string, list<string>>}>
@@ -93,6 +93,7 @@ final class ImportTabTest extends AbstractFunctionalTestCase
                     $tab = $parts[1] ?? '';
                     continue;
                 }
+
                 if ($tab === self::IMPORT_TAB) {
                     $tabItems[] = $parts[0] === '--palette--' ? $parts[2] ?? '' : $parts[0];
                 }
@@ -158,6 +159,7 @@ final class ImportTabTest extends AbstractFunctionalTestCase
                             $fieldsByTab[$tab][] = $field;
                         }
                     }
+
                     continue;
                 }
 

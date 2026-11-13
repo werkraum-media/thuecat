@@ -196,6 +196,25 @@ class Resolver
     ];
 
     /**
+     * Tables whose standalone rows carry the origin of the import that first wrote them. A row stored inline under a
+     * parent (see INLINE_CHILD_PARENTS) belongs to that parent and carries none. A new standalone record kind joins
+     * this list, or its rows silently go without an origin.
+     */
+    protected const ORIGIN_TABLES = [
+        'tx_thuecat_tourist_attraction',
+        'tx_thuecat_trail',
+        'tx_thuecat_organisation',
+        'tx_thuecat_town',
+        'tx_thuecat_tourist_information',
+        'tx_thuecat_place',
+        'tx_thuecat_meeting_room',
+        'tx_thuecat_parking_facility',
+        'tx_events_domain_model_event',
+        'tx_events_domain_model_organizer',
+        'tx_events_domain_model_location',
+    ];
+
+    /**
      * Buckets naming any contained place, of which only meeting rooms are related. The reference carries no type,
      * so other places are discarded after the fetch, unreported: they relate from their own containedInPlace.
      */
@@ -1464,6 +1483,12 @@ class Resolver
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
                 $payload->setField($table, $newKey, 'pid', $context->storagePid);
+                if ($context->origin instanceof ImportOrigin && str_starts_with($newKey, 'NEW') && $this->carriesOrigin($table, $remoteId)) {
+                    foreach ($context->origin->toFields() as $field => $value) {
+                        $payload->setField($table, $newKey, $field, $value);
+                    }
+                }
+
                 $context->remoteIdToKey[$remoteId] = $newKey;
                 $context->remoteIdToTable[$remoteId] = $table;
                 $context->depthByRemoteId[$remoteId] ??= $depth;
@@ -1475,6 +1500,17 @@ class Resolver
         $this->wireInlineChildrenToParents($payload, $context);
         $this->wireChildrenOntoParentFields($payload, $context);
         $this->importInlineMedia($payload, $context);
+    }
+
+    protected function carriesOrigin(string $table, string $remoteId): bool
+    {
+        if (!in_array($table, self::ORIGIN_TABLES, true)) {
+            return false;
+        }
+
+        $separator = self::INLINE_CHILD_PARENTS[$table]['separator'] ?? null;
+
+        return $separator === null || !str_contains($remoteId, $separator);
     }
 
     /**

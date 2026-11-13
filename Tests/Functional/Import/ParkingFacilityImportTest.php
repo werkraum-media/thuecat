@@ -104,6 +104,18 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function venueParkingFacilityCarriesNoOriginOfItsOwn(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
+        $this->expectFetch('160874095809-phhn.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertOrigin(self::VENUE_TABLE, self::MULTI_PURPOSE_HALL, 1, 'Venue with one parking facility', '');
+        $this->assertOrigin(self::TABLE, self::MULTI_PURPOSE_HALL . '::parking::0', 0, '', '');
+    }
+
+    #[Test]
     public function venueParkingFacilityKeepsItsDescription(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');

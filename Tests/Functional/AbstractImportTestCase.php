@@ -369,6 +369,19 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         ;
     }
 
+    protected function assertOrigin(string $table, string $remoteId, int $configurationUid, string $configurationTitle, string $syncId): void
+    {
+        $this->assertSame(
+            [
+                'origin_configuration_uid' => $configurationUid,
+                'origin_configuration_title' => $configurationTitle,
+                'origin_sync_id' => $syncId,
+            ],
+            $this->fetchColumnsByRemoteId($table, $remoteId, ['origin_configuration_uid', 'origin_configuration_title', 'origin_sync_id']),
+            $table . ' ' . $remoteId
+        );
+    }
+
     protected function assertSingleUnmatchedValue(string $table, string $remoteId, string $property, string $value): void
     {
         $entries = $this->getLogEntriesOfType('valueUnmatched');

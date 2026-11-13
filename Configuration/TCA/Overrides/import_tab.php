@@ -125,6 +125,7 @@ defined('TYPO3') || die();
             $column['l10n_mode'] = 'exclude';
             $columns[$field] = $column;
         }
+
         $tableTca['columns'] = $columns;
 
         $isImportField = static fn (string $item): bool => in_array(trim(explode(';', $item)[0]), $importFields, true);
@@ -149,12 +150,14 @@ defined('TYPO3') || die();
             $palette['showitem'] = implode(', ', $items);
             $palettes[$paletteName] = $palette;
         }
+
         foreach ($importPalettes as $paletteName => $fields) {
             $palettes[$paletteName] = [
                 'label' => $languagePath . str_replace('import_', 'import.palette.', $paletteName),
                 'showitem' => implode(', ', $fields),
             ];
         }
+
         $tableTca['palettes'] = $palettes;
 
         $types = is_array($tableTca['types'] ?? null) ? $tableTca['types'] : [];
@@ -169,16 +172,20 @@ defined('TYPO3') || die();
                 if ($item === '' || $isImportField($item)) {
                     continue;
                 }
+
                 if ($parts[0] === '--palette--' && in_array($parts[2] ?? '', $emptiedPalettes, true)) {
                     continue;
                 }
+
                 // A tab left without fields would show up empty.
-                if ($parts[0] === '--div--' && $items !== [] && str_starts_with((string)end($items), '--div--')) {
+                if ($parts[0] === '--div--' && $items !== [] && str_starts_with(end($items), '--div--')) {
                     array_pop($items);
                 }
+
                 $items[] = $item;
             }
-            if ($items !== [] && str_starts_with((string)end($items), '--div--')) {
+
+            if ($items !== [] && str_starts_with(end($items), '--div--')) {
                 array_pop($items);
             }
 
@@ -187,6 +194,7 @@ defined('TYPO3') || die();
                 if (!str_starts_with($item, '--div--')) {
                     continue;
                 }
+
                 foreach ($trailingTabs as $trailingTab) {
                     if (str_contains($item, $trailingTab)) {
                         $position = $index;
@@ -202,6 +210,7 @@ defined('TYPO3') || die();
             $typeConfiguration['showitem'] = implode(', ', $items);
             $types[$type] = $typeConfiguration;
         }
+
         $tableTca['types'] = $types;
 
         $tca[$table] = $tableTca;

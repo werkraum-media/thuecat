@@ -852,6 +852,20 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importConfiguration(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
+        $syncScopeId = 'dd4615dc-58a6-4648-a7ce-4950293a06db';
+        $this->assertOrigin('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/835224016581-dara', 1, 'Sync Scope ID', $syncScopeId);
+        $this->assertOrigin('tx_thuecat_organisation', 'https://thuecat.org/resources/018132452787-ngbe', 1, 'Sync Scope ID', $syncScopeId);
+        $this->assertOrigin('tx_thuecat_parking_facility', 'https://thuecat.org/resources/396420044896-drzt', 1, 'Sync Scope ID', $syncScopeId);
+
+        $translations = $this->fetchTranslationsByParentRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/835224016581-dara');
+        $this->assertCount(2, $translations);
+        foreach ($translations as $languageUid => $translation) {
+            $this->assertSame(
+                [1, 'Sync Scope ID', $syncScopeId],
+                [$translation['origin_configuration_uid'] ?? null, $translation['origin_configuration_title'] ?? null, $translation['origin_sync_id'] ?? null],
+                'language ' . $languageUid
+            );
+        }
     }
 
     #[Test]
