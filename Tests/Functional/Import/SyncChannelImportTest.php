@@ -166,7 +166,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 
         $this->importConfiguration(1);
 
-        $this->assertOrigin('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1', 1, 'Sync Channel', 'test-channel');
+        $this->assertOrigin('tx_events_domain_model_event', self::EVENT, 1, 'Sync Channel', 'test-channel');
     }
 
     #[Test]
@@ -183,6 +183,45 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->importConfiguration(2);
 
         $this->assertOrigin('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-keyword-1', 2, 'Static', '');
+    }
+
+    #[Test]
+    public function eventWithAnOriginKeepsItWhileTakingTheChannelsData(): void
+    {
+        $this->importChannelServingOneEventOver('SyncChannelEventOfAnotherOrigin.csv');
+
+        $this->assertOrigin('tx_events_domain_model_event', self::EVENT, 3, 'Static with API domain', '');
+        $this->assertSame(
+            ['title' => 'Test-Veranstaltung mit privatem Bild'],
+            $this->fetchColumnsByRemoteId('tx_events_domain_model_event', self::EVENT, ['title'])
+        );
+    }
+
+    #[Test]
+    public function eventWithAnOriginNamesTheChannelAsLastImport(): void
+    {
+        $this->importChannelServingOneEventOver('SyncChannelEventOfAnotherOrigin.csv');
+
+        $this->assertSame(
+            ['thuecat_import_configuration' => 1],
+            $this->fetchColumnsByRemoteId('tx_events_domain_model_event', self::EVENT, ['thuecat_import_configuration'])
+        );
+    }
+
+    #[Test]
+    public function eventWithoutAnOriginGetsTheChannelAsOrigin(): void
+    {
+        $this->importChannelServingOneEventOver('SyncChannelEventWithoutOrigin.csv');
+
+        $this->assertOrigin('tx_events_domain_model_event', self::EVENT, 1, 'Sync Channel', 'test-channel');
+    }
+
+    #[Test]
+    public function eventKeepsTheOriginTitleAndSyncIdItWasCreatedWith(): void
+    {
+        $this->importChannelServingOneEventOver('SyncChannelEventOfRenamedOrigin.csv');
+
+        $this->assertOrigin('tx_events_domain_model_event', self::EVENT, 1, 'Former channel title', 'former-channel');
     }
 
     // The keyword and the term set it belongs to.

@@ -1,0 +1,3 @@
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","title","remote_id","thuecat_import_configuration","origin_configuration_uid","origin_configuration_title","origin_sync_id"
+,2,10,0,0,"Event imported before the channel","https://thuecat.org/resources/test-event-1",3,3,"Static with API domain",""

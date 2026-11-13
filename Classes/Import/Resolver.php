@@ -1483,7 +1483,10 @@ class Resolver
 
                 $payload->rekeyRow($table, $remoteId, $newKey);
                 $payload->setField($table, $newKey, 'pid', $context->storagePid);
-                if ($context->origin instanceof ImportOrigin && str_starts_with($newKey, 'NEW') && $this->carriesOrigin($table, $remoteId)) {
+                if ($context->origin instanceof ImportOrigin
+                    && $this->carriesOrigin($table, $remoteId)
+                    && (str_starts_with($newKey, 'NEW') || !$this->hasStoredOrigin($table, (int)$newKey))
+                ) {
                     foreach ($context->origin->toFields() as $field => $value) {
                         $payload->setField($table, $newKey, $field, $value);
                     }
@@ -1511,6 +1514,32 @@ class Resolver
         $separator = self::INLINE_CHILD_PARENTS[$table]['separator'] ?? null;
 
         return $separator === null || !str_contains($remoteId, $separator);
+    }
+
+    /**
+     * The origin is written once: a stored configuration uid of 0 marks a row no import has stamped yet. The uid
+     * alone decides, as the three fields are only ever written together and an empty sync ID is a stamped value.
+     */
+    protected function hasStoredOrigin(string $table, int $uid): bool
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        // Scoped as the record lookup, so a hidden record keeps its origin too.
+        $queryBuilder->getRestrictions()
+            ->removeAll()
+            ->add(new DeletedRestriction())
+        ;
+
+        $originUid = $queryBuilder->select('origin_configuration_uid')
+            ->from($table)
+            ->where($queryBuilder->expr()->eq(
+                'uid',
+                $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)
+            ))
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($originUid) && (int)$originUid > 0;
     }
 
     /**

@@ -1,0 +1,3 @@
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","hidden","title","remote_id","origin_configuration_uid","origin_configuration_title","origin_sync_id"
+,2,10,0,0,1,"Hidden event imported before the rename","https://thuecat.org/resources/test-event-1",1,"Former channel title","former-channel"

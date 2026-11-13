@@ -45,6 +45,9 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
 
     public const PLACE_FIXTURE = 'widgets.thuecat.org/api/sync/test-channel/jsonld/' . self::PLACE_ID . '.json';
 
+    /** The event expectChannelServingOneEvent() serves. */
+    public const EVENT = 'https://thuecat.org/resources/test-event-1';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +63,17 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
     protected function expectChannelServingOneEvent(): void
     {
         $this->expectChannelServing('list-changed.json', 'test-event-1');
+    }
+
+    /**
+     * @param string $seedFixture CSV file under Fixtures/Import holding the rows that exist before the run.
+     */
+    protected function importChannelServingOneEventOver(string $seedFixture): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/' . $seedFixture);
+        $this->expectChannelServingOneEvent();
+
+        $this->importConfiguration(1);
     }
 
     /**
