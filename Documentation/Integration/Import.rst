@@ -88,6 +88,71 @@ The API key is never part of the report — not its value, not a masked renderin
    usually means the value was written for a different site than the one owning the storage page, or
    under a different scope's name.
 
+.. _import-record-origin:
+
+Origin of an imported record
+============================
+
+All import configurations write into the same tables. A record therefore remembers the import
+configuration that created it, to tell apart records of, for example, a sync channel and a static
+configuration. Three fields hold that origin:
+
+:sql:`origin_configuration_uid`
+   The uid of the import configuration.
+
+:sql:`origin_configuration_title`
+   Its title at the time of the import. It is a copy, so it survives a renamed or deleted
+   configuration.
+
+:sql:`origin_sync_id`
+   The sync scope ID of a ``syncScope`` configuration, the sync channel ID of a ``syncChannel``
+   configuration, and empty for every other type.
+
+.. _import-record-origin-records:
+
+Records carrying an origin
+--------------------------
+
+Every standalone record the import writes carries an origin, whether the configuration names it as
+a root or the import reaches it through a reference: rows of :sql:`tx_thuecat_tourist_attraction`,
+:sql:`tx_thuecat_trail`, :sql:`tx_thuecat_organisation`, :sql:`tx_thuecat_town`,
+:sql:`tx_thuecat_tourist_information`, :sql:`tx_thuecat_place`, :sql:`tx_thuecat_meeting_room`,
+:sql:`tx_thuecat_parking_facility`, :sql:`tx_events_domain_model_event`,
+:sql:`tx_events_domain_model_organizer` and :sql:`tx_events_domain_model_location`.
+
+Inline children carry none, as they belong to their parent: addresses, opening hours, event dates,
+the way types, conditions and locations of trails, and parking facilities stored inside an
+attraction. A translation carries the origin of its default-language record.
+
+Records written by the destination.data import of EXT:events carry no origin.
+
+.. _import-record-origin-write-once:
+
+Written once
+------------
+
+The import writes the origin only to a record that has none yet, and then writes all three fields
+together. A record that has an origin keeps it: a different configuration importing the record
+later updates its data, never its origin.
+
+Records that existed before the origin fields were introduced have none. The first import that
+touches such a record stamps it with its own configuration, which is not necessarily the one that
+created it originally.
+
+Events also keep :guilabel:`Last imported by import configuration`, which every import overwrites.
+It names the configuration that imported the event last, while the origin names the one that created
+it.
+
+.. _import-record-origin-backend:
+
+In the backend
+--------------
+
+The origin fields are shown on the :guilabel:`Import` tab of each record, together with the fields
+identifying the record upstream: the remote ID, on events and locations the global ID, and on
+events the source name and URL and both import configuration fields. All fields on the tab are
+read-only and are not translated.
+
 
 
 .. _import-without-media:
