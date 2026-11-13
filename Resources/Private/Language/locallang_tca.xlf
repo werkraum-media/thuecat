@@ -1267,6 +1267,39 @@
             <trans-unit id="tx_thuecat_meeting_room.tstamp" xml:space="preserve">
                 <source>Last imported</source>
             </trans-unit>
+            <trans-unit id="import.tab" xml:space="preserve">
+                <source>Import</source>
+            </trans-unit>
+            <trans-unit id="import.palette.identity" xml:space="preserve">
+                <source>Identity</source>
+            </trans-unit>
+            <trans-unit id="import.palette.source" xml:space="preserve">
+                <source>Source</source>
+            </trans-unit>
+            <trans-unit id="import.palette.origin" xml:space="preserve">
+                <source>Origin</source>
+            </trans-unit>
+            <trans-unit id="import.origin_configuration_uid" xml:space="preserve">
+                <source>Created by import configuration (UID)</source>
+            </trans-unit>
+            <trans-unit id="import.origin_configuration_title" xml:space="preserve">
+                <source>Created by import configuration (title)</source>
+            </trans-unit>
+            <trans-unit id="import.origin_sync_id" xml:space="preserve">
+                <source>Created by sync scope or sync channel (ID)</source>
+            </trans-unit>
+            <trans-unit id="tx_events_domain_model_event.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
+            <trans-unit id="tx_events_domain_model_event.thuecat_import_configuration" xml:space="preserve">
+                <source>Last imported by import configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_events_domain_model_event.thuecat_import_configuration.description" xml:space="preserve">
+                <source>Every import overwrites this field, so it names the configuration that imported the event last. The configuration that created the event is kept in the fields below.</source>
+            </trans-unit>
+            <trans-unit id="tx_events_domain_model_organizer.remote_id" xml:space="preserve">
+                <source>Remote ID</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

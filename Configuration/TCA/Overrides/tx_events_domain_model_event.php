@@ -4,53 +4,7 @@ declare(strict_types=1);
 
 defined('TYPO3') || die();
 
-// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-$GLOBALS['TCA']['tx_events_domain_model_event']['columns']['remote_id'] = [
-    'label' => 'Remote ID',
-    'config' => [
-        'type' => 'input',
-        'readOnly' => true,
-        'searchable' => false,
-    ],
-];
 // Upstream publishes as many images as an editor added; a cap would drop the
 // surplus silently on import. Unset, DataHandler falls back to 99999.
-// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
+// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
 unset($GLOBALS['TCA']['tx_events_domain_model_event']['columns']['images']['config']['maxitems']);
-
-// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-$GLOBALS['TCA']['tx_events_domain_model_event']['columns']['thuecat_import_configuration'] = [
-    'exclude' => true,
-    'label' => 'ThueCat Import Configuration',
-    'config' => [
-        'type' => 'select',
-        'renderType' => 'selectSingle',
-        'foreign_table' => 'tx_thuecat_import_configuration',
-        'items' => [
-            [
-                'value' => '0',
-                'label' => 0,
-            ],
-        ],
-        'readOnly' => true,
-    ],
-];
-// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-$GLOBALS['TCA']['tx_events_domain_model_event']['palettes']['source']['showitem'] = 'source_name, source_url, --linebreak--,import_configuration,thuecat_import_configuration';
-// @phpstan-ignore offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-$GLOBALS['TCA']['tx_events_domain_model_event']['palettes']['remote_identifier'] = [
-
-    'label' => 'Remote Identifier',
-    'showitem' => 'global_id, remote_id',
-];
-
-// @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-$showitem = $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] ?? '';
-if (is_string($showitem)) {
-    // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-    $GLOBALS['TCA']['tx_events_domain_model_event']['types'][1]['showitem'] = str_replace(
-        'global_id',
-        '--palette--;;remote_identifier',
-        $showitem
-    );
-}
