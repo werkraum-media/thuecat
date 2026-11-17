@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CoordinateNormaliser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
 /**
@@ -95,8 +96,9 @@ class TrailConditionEntity extends AbstractEntity
             return;
         }
 
-        $latitude = $this->extractValue($geoNode['schema:latitude'] ?? null, $language);
-        $longitude = $this->extractValue($geoNode['schema:longitude'] ?? null, $language);
+        $normaliser = new CoordinateNormaliser();
+        $latitude = $normaliser->normalise($this->extractValue($geoNode['schema:latitude'] ?? null, $language));
+        $longitude = $normaliser->normalise($this->extractValue($geoNode['schema:longitude'] ?? null, $language));
 
         if ($latitude === '' || $longitude === '') {
             return;

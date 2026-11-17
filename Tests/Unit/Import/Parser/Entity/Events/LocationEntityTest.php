@@ -113,6 +113,24 @@ final class LocationEntityTest extends TestCase
         $this->assertTrue($entity->isValid());
     }
 
+    #[Test]
+    public function keepsTheCoordinateFormatOfExtEvents(): void
+    {
+        $entity = new LocationEntity();
+        $entity->configure([
+            'schema:name' => ['@language' => 'de', '@value' => 'Messe Erfurt'],
+            'schema:geo' => [
+                'schema:latitude' => ['@type' => 'schema:Float', '@value' => '5.097E1'],
+                'schema:longitude' => ['@type' => 'schema:Number', '@value' => '11.0298392'],
+            ],
+        ], 'de');
+
+        $result = $entity->toArray();
+
+        $this->assertSame('50.970000', $result['latitude'] ?? null);
+        $this->assertSame('11.029839', $result['longitude'] ?? null);
+    }
+
     /** @param array<string, mixed> $country */
     private function globalIdForCountry(array $country): string
     {

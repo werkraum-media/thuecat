@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
+use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CoordinateNormaliser;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\CurieExpander;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 
@@ -153,15 +154,16 @@ class AddressEntity extends AbstractEntity
     }
 
     /**
-     * Kept as strings so the value reaches the column exactly as delivered.
-     * A partial pair is dropped — half a coordinate places nothing.
+     * Kept as strings: a decimal column rounds on write. A partial pair is
+     * dropped — half a coordinate places nothing.
      *
      * @param array<string, mixed> $geoNode
      */
     protected function extractGeo(array $geoNode, string $language): void
     {
-        $latitude = $this->extractValue($geoNode['schema:latitude'] ?? null, $language);
-        $longitude = $this->extractValue($geoNode['schema:longitude'] ?? null, $language);
+        $normaliser = new CoordinateNormaliser();
+        $latitude = $normaliser->normalise($this->extractValue($geoNode['schema:latitude'] ?? null, $language));
+        $longitude = $normaliser->normalise($this->extractValue($geoNode['schema:longitude'] ?? null, $language));
 
         if ($latitude === '' || $longitude === '') {
             return;

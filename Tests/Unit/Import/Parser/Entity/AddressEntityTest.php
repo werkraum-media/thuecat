@@ -321,6 +321,26 @@ final class AddressEntityTest extends TestCase
     }
 
     #[Test]
+    public function writesCoordinatesAsPlainDecimalsOfAtMostSevenDecimals(): void
+    {
+        $entity = new AddressEntity();
+        $entity->configure(
+            [],
+            'de',
+            [
+                'schema:latitude' => ['@type' => 'schema:Number', '@value' => '50.819143747641841044655229327227'],
+                'schema:longitude' => ['@type' => 'schema:Float', '@value' => '9.879951999999999E0'],
+            ],
+            'https://thuecat.org/resources/333039283321-xxwg'
+        );
+
+        $result = $entity->toArray();
+
+        $this->assertSame('50.8191437', $result['latitude'] ?? null);
+        $this->assertSame('9.879952', $result['longitude'] ?? null);
+    }
+
+    #[Test]
     public function dropsPartialCoordinatePair(): void
     {
         $entity = new AddressEntity();

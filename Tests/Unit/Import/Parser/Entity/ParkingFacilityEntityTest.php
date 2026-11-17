@@ -129,7 +129,7 @@ final class ParkingFacilityEntityTest extends AbstractImportTestCase
         $this->assertSame('99084', $address['zip']);
         $this->assertSame('Erfurt', $address['city']);
         $this->assertSame('+49 361 5640', $address['phone']);
-        $this->assertSame('50.977648905044', $address['latitude']);
+        $this->assertSame('50.9776489', $address['latitude']);
     }
 
     #[Test]

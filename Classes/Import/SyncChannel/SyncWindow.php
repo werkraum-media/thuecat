@@ -75,13 +75,7 @@ readonly class SyncWindow
      */
     public function holdsRecord(int $storagePid): bool
     {
-        foreach (RecordTables::STANDALONE as $table) {
-            if ($this->tableHoldsRecord($table, $storagePid)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any(RecordTables::STANDALONE, fn (string $table): bool => $this->tableHoldsRecord($table, $storagePid));
     }
 
     protected function tableHoldsRecord(string $table, int $storagePid): bool
