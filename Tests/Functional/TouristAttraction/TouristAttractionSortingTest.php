@@ -67,10 +67,7 @@ final class TouristAttractionSortingTest extends AbstractFrontendTestCase
     #[Test]
     public function aRequestCannotPickTheOrder(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['sortBy' => 'sorting']]])
-        ;
+        $request = $this->listDemandRequest(10, ['sortBy' => 'sorting']);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

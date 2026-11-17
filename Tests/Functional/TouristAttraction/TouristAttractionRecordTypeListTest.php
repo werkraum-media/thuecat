@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFrontendTestCase;
 
 /**
@@ -64,10 +63,7 @@ final class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function requestParametersCannotWidenTheTickedTypes(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(20)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'attraction,meeting_venue']]])
-        ;
+        $request = $this->listDemandRequest(20, ['recordTypes' => 'attraction,meeting_venue']);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -78,10 +74,7 @@ final class TouristAttractionRecordTypeListTest extends AbstractFrontendTestCase
     #[Test]
     public function requestParametersCannotNarrowAnUntickedList(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['recordTypes' => 'meeting_venue']]])
-        ;
+        $request = $this->listDemandRequest(10, ['recordTypes' => 'meeting_venue']);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

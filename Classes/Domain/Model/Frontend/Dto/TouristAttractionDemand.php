@@ -61,6 +61,13 @@ class TouristAttractionDemand
     protected array $recordTypes = [];
 
     /**
+     * Origin titles of the attractions; empty means every origin, including none.
+     *
+     * @var list<string>
+     */
+    protected array $origins = [];
+
+    /**
      * Properties the editor fixed; they apply without being part of URLs.
      *
      * @var list<string>
@@ -179,6 +186,22 @@ class TouristAttractionDemand
     public function setRecordTypes(array $recordTypes): void
     {
         $this->recordTypes = $recordTypes;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getOrigins(): array
+    {
+        return $this->origins;
+    }
+
+    /**
+     * @param list<string> $origins
+     */
+    public function setOrigins(array $origins): void
+    {
+        $this->origins = $origins;
     }
 
     /**

@@ -47,10 +47,7 @@ final class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listWithEmptySearchWordReturnsAllAttractions(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => '']]])
-        ;
+        $request = $this->listDemandRequest(10, ['searchword' => '']);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -62,10 +59,7 @@ final class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listFiltersBySearchWord(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
-        ;
+        $request = $this->listDemandRequest(10, ['searchword' => 'Stadtmuseum']);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -77,10 +71,7 @@ final class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listShowsEmptyMessageWhenSearchHasNoMatches(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'GibtEsNicht']]])
-        ;
+        $request = $this->listDemandRequest(10, ['searchword' => 'GibtEsNicht']);
 
         $result = $this->executeFrontendSubRequest($request);
 
@@ -93,10 +84,7 @@ final class TouristAttractionListTest extends AbstractFrontendTestCase
     #[Test]
     public function listFindsAllMatchesAcrossTitleSubstring(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Erfurt']]])
-        ;
+        $request = $this->listDemandRequest(10, ['searchword' => 'Erfurt']);
 
         $result = $this->executeFrontendSubRequest($request);
 

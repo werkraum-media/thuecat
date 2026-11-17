@@ -66,13 +66,10 @@ final class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function getFilterByTownAndFreeNarrowsTheList(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
-                'towns' => [1],
-                'isAccessibleForFree' => '1',
-            ]]])
-        ;
+        $request = $this->listDemandRequest(10, [
+            'towns' => [1],
+            'isAccessibleForFree' => '1',
+        ]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -84,13 +81,10 @@ final class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function formRepopulatesSubmittedFilterState(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
-                'towns' => [1],
-                'isAccessibleForFree' => '1',
-            ]]])
-        ;
+        $request = $this->listDemandRequest(10, [
+            'towns' => [1],
+            'isAccessibleForFree' => '1',
+        ]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -101,13 +95,10 @@ final class TouristAttractionSearchListTest extends AbstractFrontendTestCase
     #[Test]
     public function paginationLinksCarryTheDemand(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => [
-                'towns' => [1],
-                'isAccessibleForFree' => '1',
-            ]]])
-        ;
+        $request = $this->listDemandRequest(10, [
+            'towns' => [1],
+            'isAccessibleForFree' => '1',
+        ]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

@@ -70,6 +70,17 @@ abstract class AbstractFrontendTestCase extends AbstractFunctionalTestCase
     }
 
     /**
+     * @param array<string, mixed> $demand
+     */
+    protected function listDemandRequest(int $pageId, array $demand): InternalRequest
+    {
+        return new InternalRequest()
+            ->withPageId($pageId)
+            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $demand]])
+        ;
+    }
+
+    /**
      * A detail request for one record, carrying a valid cHash.
      *
      * The record argument is cacheable, so a request without a cHash 404s; a

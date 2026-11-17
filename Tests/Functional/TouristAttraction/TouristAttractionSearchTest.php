@@ -69,10 +69,7 @@ final class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormPrefillsValueFromUrl(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(12)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['searchword' => 'Stadtmuseum']]])
-        ;
+        $request = $this->listDemandRequest(12, ['searchword' => 'Stadtmuseum']);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 
@@ -113,10 +110,7 @@ final class TouristAttractionSearchTest extends AbstractFrontendTestCase
     #[Test]
     public function searchFormReflectsTheSelectedKeyword(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(12)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
-        ;
+        $request = $this->listDemandRequest(12, ['keywords' => ['501']]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

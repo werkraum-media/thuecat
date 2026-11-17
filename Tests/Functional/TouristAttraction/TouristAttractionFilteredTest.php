@@ -62,10 +62,7 @@ final class TouristAttractionFilteredTest extends AbstractFrontendTestCase
     public function visitorCannotWidenPastTheLockedTown(): void
     {
         // Editor locked town 1; a tampered URL asking for town 2 must be ignored.
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['towns' => [2]]]])
-        ;
+        $request = $this->listDemandRequest(10, ['towns' => [2]]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

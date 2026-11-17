@@ -24,6 +24,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemand;
+use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\TouristAttractionDemandFactory;
 use WerkraumMedia\ThueCat\Frontend\Cache\CacheIdentifierFactory;
 
 /**
@@ -77,6 +78,16 @@ final class CacheIdentifierFactoryTest extends TestCase
         $this->assertNotSame($base, $this->subject->forList(12, $otherDemand, 1, 0), 'Demand.');
         $this->assertNotSame($base, $this->subject->forList(12, $demand, 2, 0), 'Pagination page.');
         $this->assertNotSame($base, $this->subject->forList(12, $demand, 1, 1), 'Language.');
+    }
+
+    #[Test]
+    public function listsLimitedToDifferentOriginsDoNotShareAnIdentifier(): void
+    {
+        $demandFactory = new TouristAttractionDemandFactory();
+        $weimar = $demandFactory->fromSettings(['origins' => 'Weimar POIs'])->getDemand();
+        $erfurt = $demandFactory->fromSettings(['origins' => 'Erfurt POIs'])->getDemand();
+
+        $this->assertNotSame($this->subject->forList(12, $weimar, 1, 0), $this->subject->forList(12, $erfurt, 1, 0));
     }
 
     #[Test]

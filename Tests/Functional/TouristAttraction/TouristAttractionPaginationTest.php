@@ -91,10 +91,7 @@ final class TouristAttractionPaginationTest extends AbstractFrontendTestCase
     #[Test]
     public function keywordSelectionIsCarriedIntoPaginationLinks(): void
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => ['keywords' => ['501']]]])
-        ;
+        $request = $this->listDemandRequest(10, ['keywords' => ['501']]);
 
         $body = $this->executeFrontendSubRequestAndReturnBody($request);
 

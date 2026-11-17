@@ -71,6 +71,11 @@ class TouristAttractionDemandFactory
             $locked[] = 'recordTypes';
         }
 
+        if (!empty($settings['origins']) && is_string($settings['origins'])) {
+            $demand->setOrigins(GeneralUtility::trimExplode(',', $settings['origins'], true));
+            $locked[] = 'origins';
+        }
+
         // Not locked: locked properties render as hidden form fields.
         if (is_string($settings['sortBy'] ?? null)) {
             $demand->setSortBy($settings['sortBy']);
@@ -126,9 +131,10 @@ class TouristAttractionDemandFactory
             $demand->setPublicAccess($locked->getPublicAccess());
         }
 
-        // Always the editor's, even when empty, so a request can never pick the order or the record types.
+        // Always the editor's, even when empty, so a request can never pick the order, the record types or the origins.
         $demand->setSortBy($locked->getSortBy());
         $demand->setRecordTypes($locked->getRecordTypes());
+        $demand->setOrigins($locked->getOrigins());
         $demand->lockProperties(array_values($filter->getLockedProperties()));
 
         return $demand;

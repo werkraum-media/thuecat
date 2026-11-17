@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\TouristAttraction;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterOption;
 use WerkraumMedia\ThueCat\Domain\Model\Frontend\Dto\FilterScope;
 use WerkraumMedia\ThueCat\Service\FilterField\OptionProvider\CommaColumnOptionProvider;
@@ -40,10 +39,7 @@ final class TouristAttractionSeveralTownsTest extends AbstractFrontendTestCase
      */
     private function requestWithSearch(array $search): string
     {
-        $request = new InternalRequest()
-            ->withPageId(10)
-            ->withQueryParams(['tx_thuecat_touristattractionlist' => ['demand' => $search]])
-        ;
+        $request = $this->listDemandRequest(10, $search);
 
         return $this->executeFrontendSubRequestAndReturnBody($request);
     }

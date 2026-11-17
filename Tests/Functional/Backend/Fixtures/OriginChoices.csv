@@ -1,0 +1,7 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","remote_id","title","origin_configuration_title","deleted"
+,1,10,"test:attraction-weimar","Museum Weimar","Weimar POIs",0
+,2,10,"test:attraction-weimar-other","Theater Weimar","Weimar POIs",0
+,3,10,"test:attraction-erfurt","Museum Erfurt","Erfurt POIs",0
+,4,10,"test:attraction-without-origin","Museum ohne Herkunft","",0
+,5,10,"test:attraction-gotha","Museum Gotha","Gotha POIs",1

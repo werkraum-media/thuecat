@@ -193,6 +193,39 @@ final class TouristAttractionDemandFactoryTest extends TestCase
     }
 
     #[Test]
+    public function originsSettingParsesCsvAndLocksOrigins(): void
+    {
+        $filter = $this->subject->fromSettings(['origins' => 'Weimar POIs, Erfurt POIs']);
+
+        $this->assertSame(['Weimar POIs', 'Erfurt POIs'], $filter->getDemand()->getOrigins());
+        $this->assertTrue($filter->isLocked('origins'));
+    }
+
+    #[Test]
+    public function applyForcesTheEditorsOriginsOverVisitorInput(): void
+    {
+        $filter = $this->subject->fromSettings(['origins' => 'Weimar POIs']);
+        $demand = new TouristAttractionDemand();
+        $demand->setOrigins(['Weimar POIs', 'Erfurt POIs']);
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        $this->assertSame(['Weimar POIs'], $demand->getOrigins());
+    }
+
+    #[Test]
+    public function applyForcesEmptyOriginsOverVisitorInput(): void
+    {
+        $filter = $this->subject->fromSettings([]);
+        $demand = new TouristAttractionDemand();
+        $demand->setOrigins(['Weimar POIs']);
+
+        $this->subject->applyEditorFilter($demand, $filter);
+
+        $this->assertSame([], $demand->getOrigins());
+    }
+
+    #[Test]
     public function applyLeavesUnlockedPropertyUntouched(): void
     {
         // Only towns locked; the visitor's searchword must survive.
