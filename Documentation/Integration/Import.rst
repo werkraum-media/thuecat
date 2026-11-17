@@ -153,6 +153,13 @@ identifying the record upstream: the remote ID, on events and locations the glob
 events the source name and URL and both import configuration fields. All fields on the tab are
 read-only and are not translated.
 
+.. _import-record-origin-frontend:
+
+In the frontend
+---------------
+
+Attraction lists can be limited to chosen origins, see :ref:`frontend-output-plugin-settings-origins`.
+
 
 
 .. _import-without-media:

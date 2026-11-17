@@ -153,6 +153,38 @@ reload the form; ``RecordTypeItemsProcessor`` reads them from the field named by
          parameters:
            typesField: 'settings.recordTypes'
 
+.. _frontend-output-plugin-settings-origins:
+
+Origins
+=======
+
+:typoscript:`settings.origins`
+   Attraction lists only: the origins to list, by the title of the import configuration that created
+   the attractions, see :ref:`import-record-origin`. Several origins can be ticked; none ticked lists
+   every attraction, including those without an origin. A request can neither widen nor narrow it,
+   and a search form on the same page searches within it.
+
+The choices are the titles stored on the attractions, not the current titles of the import
+configurations: only a stored title matches the records. After a configuration is renamed, its old
+title is offered as long as attractions carry it, and the new one once an attraction carries it.
+Two configurations sharing a title cannot be told apart, and a title containing a comma cannot be
+selected reliably.
+
+Offer the field as checkboxes. The items processor ``OriginChoicesItemsProcessor`` lists the stored
+titles of the table it is given:
+
+.. code-block:: yaml
+   :caption: EXT:myextension/ContentBlocks/ContentElements/attraction-list-filtered/config.yaml
+
+   - identifier: 'settings.origins'
+     type: 'Select'
+     renderType: 'selectCheckBox'
+     itemsProcessors:
+       100:
+         class: 'WerkraumMedia\ThueCat\Typo3\FormEngine\OriginChoicesItemsProcessor'
+         parameters:
+           table: 'tx_thuecat_tourist_attraction'
+
 .. _frontend-output-plugin-settings-presets:
 
 Presets

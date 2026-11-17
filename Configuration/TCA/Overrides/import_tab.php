@@ -112,10 +112,10 @@ defined('TYPO3') || die();
         ];
         $importFields = array_values(array_diff(array_merge(...array_values($importPalettes)), ['--linebreak--']));
 
-        // A table defining origin columns of its own (the events tables) keeps them.
+        // EXT:events defines the origin columns of its own tables.
         $columns = array_replace(
-            $originColumns,
             is_array($tableTca['columns'] ?? null) ? $tableTca['columns'] : [],
+            str_starts_with($table, 'tx_thuecat_') ? $originColumns : [],
             $addedColumnsByTable[$table] ?? []
         );
         foreach ($importFields as $field) {
