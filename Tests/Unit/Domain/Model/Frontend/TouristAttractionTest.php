@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Domain\Model\Frontend;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -62,33 +63,44 @@ final class TouristAttractionTest extends TestCase
         return $facility;
     }
 
-    #[Test]
-    public function returnsDistanceToPublicTransportArrayWithoutTypes(): void
+    /**
+     * @return iterable<string, array{string, list<array{value: string, unit: string, types: list<string>}>}>
+     */
+    public static function storedDistancesToPublicTransport(): iterable
     {
-        $subject = new TouristAttraction();
-        $subject->_setProperty('distanceToPublicTransport', '300:MTR');
-
-        $this->assertSame([
-            'value' => '300',
-            'unit' => 'MTR',
-            'types' => [],
-        ], $subject->getDistanceToPublicTransport());
+        yield 'two distances' => [
+            '[{"value":"240","unit":"MTR","types":["RegionalBus"]},{"value":"1200","unit":"MTR","types":["Train","CityBus"]}]',
+            [
+                ['value' => '240', 'unit' => 'MTR', 'types' => ['RegionalBus']],
+                ['value' => '1200', 'unit' => 'MTR', 'types' => ['Train', 'CityBus']],
+            ],
+        ];
+        yield 'former format with types' => [
+            '300:MTR:Streetcar:CityBus',
+            [['value' => '300', 'unit' => 'MTR', 'types' => ['Streetcar', 'CityBus']]],
+        ];
+        yield 'former format without types' => [
+            '300:MTR',
+            [['value' => '300', 'unit' => 'MTR', 'types' => []]],
+        ];
+        yield 'former format of a value only' => [
+            '300',
+            [['value' => '300', 'unit' => '', 'types' => []]],
+        ];
+        yield 'no distance' => ['', []];
     }
 
+    /**
+     * @param list<array{value: string, unit: string, types: list<string>}> $expected
+     */
     #[Test]
-    public function returnsDistanceToPublicTransportArrayWithTwoTypes(): void
+    #[DataProvider('storedDistancesToPublicTransport')]
+    public function returnsEveryDistanceToPublicTransport(string $stored, array $expected): void
     {
         $subject = new TouristAttraction();
-        $subject->_setProperty('distanceToPublicTransport', '300:MTR:Streetcar:CityBus');
+        $subject->_setProperty('distanceToPublicTransport', $stored);
 
-        $this->assertSame([
-            'value' => '300',
-            'unit' => 'MTR',
-            'types' => [
-                'Streetcar',
-                'CityBus',
-            ],
-        ], $subject->getDistanceToPublicTransport());
+        $this->assertSame($expected, $subject->getDistanceToPublicTransport());
     }
 
     #[Test]

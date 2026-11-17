@@ -79,6 +79,22 @@ class AbstractImportTestCase extends TestCase
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    protected static function distanceNode(string $value, string $means): array
+    {
+        $node = [
+            'schema:unitCode' => ['@type' => 'thuecat:Unit', '@value' => 'thuecat:MTR'],
+            'thuecat:meansOfTransport' => ['@type' => 'thuecat:MeansOfTransport', '@value' => $means],
+        ];
+        if ($value !== '') {
+            $node['schema:value'] = ['@type' => 'schema:Number', '@value' => $value];
+        }
+
+        return $node;
+    }
+
+    /**
      * Decode a JSON blob produced by an entity's toArray() value. Keeps phpstan
      * happy at call sites by narrowing the mixed array-offset access to a real
      * array.

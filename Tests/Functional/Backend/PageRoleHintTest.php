@@ -94,14 +94,12 @@ final class PageRoleHintTest extends AbstractBackendTestCase
         ;
         $backendUser = $GLOBALS['BE_USER'];
         $this->assertInstanceOf(BackendUserAuthentication::class, $backendUser);
-        $request = $request->withAttribute(
-            'pageContext',
-            $this->get(PageContextFactory::class)->createFromRequest($request, $pageId, $backendUser)
-        );
+        $pageContext = $this->get(PageContextFactory::class)->createFromRequest($request, $pageId, $backendUser);
+        $request = $request->withAttribute('pageContext', $pageContext);
         $GLOBALS['TYPO3_REQUEST'] = $request;
 
         $event = $this->get(EventDispatcherInterface::class)->dispatch(
-            new ModifyPageLayoutContentEvent($request, $this->get(ModuleTemplateFactory::class)->create($request))
+            new ModifyPageLayoutContentEvent($request, $this->get(ModuleTemplateFactory::class)->create($request), $pageContext)
         );
         $this->assertInstanceOf(ModifyPageLayoutContentEvent::class, $event);
 

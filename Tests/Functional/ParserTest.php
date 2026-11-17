@@ -175,7 +175,7 @@ final class ParserTest extends AbstractFunctionalTestCase
         $this->assertSame('false', $row['is_accessible_for_free']);
         $this->assertSame('true', $row['public_access']);
         $this->assertSame('German,English,French', $row['available_languages']);
-        $this->assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame('[{"value":"200","unit":"MTR","types":["CityBus"]}]', $row['distance_to_public_transport']);
 
         // Resolver-owned columns stay off the row entirely. Same contract as
         // the Organisation/Town tests, plus the attraction-specific ones.

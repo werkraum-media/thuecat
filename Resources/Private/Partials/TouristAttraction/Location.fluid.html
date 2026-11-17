@@ -11,13 +11,15 @@
             </f:if>
             <f:if condition="{attraction.distanceToPublicTransport}">
                 <dt><f:translate key="content.distanceToPublicTransport" extensionName="thuecat" /></dt>
-                <dd>
-                    {attraction.distanceToPublicTransport.value}
-                    <f:translate key="content.unit.{attraction.distanceToPublicTransport.unit}" extensionName="thuecat" default="{attraction.distanceToPublicTransport.unit}" />
-                    <f:for each="{attraction.distanceToPublicTransport.types}" as="type">
-                        <span class="type">{type -> f:format.htmlspecialchars()}</span>
-                    </f:for>
-                </dd>
+                <f:for each="{attraction.distanceToPublicTransport}" as="distance">
+                    <dd>
+                        {distance.value}
+                        <f:translate key="content.unit.{distance.unit}" extensionName="thuecat" default="{distance.unit}" />
+                        <f:for each="{distance.types}" as="type">
+                            <span class="type">{type -> f:format.htmlspecialchars()}</span>
+                        </f:for>
+                    </dd>
+                </f:for>
             </f:if>
         </dl>
     </section>

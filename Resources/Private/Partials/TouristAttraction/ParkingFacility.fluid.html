@@ -32,13 +32,15 @@
         <f:render partial="TouristAttraction/Venue/Fact/Members" arguments="{label: 'content.payment', prefix: 'content.paymentAccepted', members: parkingFacility.paymentAccepted}" />
         <f:if condition="{parkingFacility.distanceToPublicTransport}">
             <dt><f:translate key="content.distanceToPublicTransport" extensionName="thuecat" /></dt>
-            <dd>
-                {parkingFacility.distanceToPublicTransport.value}
-                <f:translate key="content.unit.{parkingFacility.distanceToPublicTransport.unit}" extensionName="thuecat" default="{parkingFacility.distanceToPublicTransport.unit}" />
-                <f:for each="{parkingFacility.distanceToPublicTransport.types}" as="type">
-                    <span class="type">{type -> f:format.htmlspecialchars()}</span>
-                </f:for>
-            </dd>
+            <f:for each="{parkingFacility.distanceToPublicTransport}" as="distance">
+                <dd>
+                    {distance.value}
+                    <f:translate key="content.unit.{distance.unit}" extensionName="thuecat" default="{distance.unit}" />
+                    <f:for each="{distance.types}" as="type">
+                        <span class="type">{type -> f:format.htmlspecialchars()}</span>
+                    </f:for>
+                </dd>
+            </f:for>
         </f:if>
         <f:if condition="{parkingFacility.towns -> f:count()}">
             <dt><f:translate key="content.town" extensionName="thuecat" /></dt>

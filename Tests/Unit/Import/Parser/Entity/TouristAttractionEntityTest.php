@@ -217,20 +217,52 @@ final class TouristAttractionEntityTest extends AbstractImportTestCase
         $this->assertSame('false', $row['is_accessible_for_free']);
         $this->assertSame('true', $row['public_access']);
         $this->assertSame('German,English,French', $row['available_languages']);
-        $this->assertSame('200:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame([['value' => '200', 'unit' => 'MTR', 'types' => ['CityBus']]], $this->decodeJson($row['distance_to_public_transport']));
     }
 
     #[Test]
-    public function distanceToPublicTransportJoinsMultipleMeansOfTransport(): void
+    public function distanceToPublicTransportKeepsMultipleMeansOfTransport(): void
     {
-        // Dom fixture carries two means (Streetcar + CityBus) as a list; the
-        // result is a single colon-joined string.
         $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
         $this->assertNotNull($node);
         $entity = new TouristAttractionEntity();
         $entity->parse($node, 'de', new ParserContext(0));
 
-        $this->assertSame('350:MTR:Streetcar:CityBus', $entity->toArray()['distance_to_public_transport']);
+        $this->assertSame(
+            [['value' => '350', 'unit' => 'MTR', 'types' => ['Streetcar', 'CityBus']]],
+            $this->decodeJson($entity->toArray()['distance_to_public_transport'])
+        );
+    }
+
+    #[Test]
+    public function distanceToPublicTransportKeepsEveryDistanceOfAList(): void
+    {
+        $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
+        $this->assertNotNull($node);
+        $node['thuecat:distanceToPublicTransport'] = [
+            self::distanceNode('240', 'thuecat:RegionalBus'),
+            self::distanceNode('', 'thuecat:CityBus'),
+            self::distanceNode('1200', 'thuecat:Train'),
+        ];
+        $entity = new TouristAttractionEntity();
+        $entity->parse($node, 'de', new ParserContext(0));
+
+        $this->assertSame([
+            ['value' => '240', 'unit' => 'MTR', 'types' => ['RegionalBus']],
+            ['value' => '1200', 'unit' => 'MTR', 'types' => ['Train']],
+        ], $this->decodeJson($entity->toArray()['distance_to_public_transport']));
+    }
+
+    #[Test]
+    public function distanceToPublicTransportStaysEmptyWithoutAValue(): void
+    {
+        $node = $this->nodeFromFixture('835224016581-dara.json', 'schema:TouristAttraction');
+        $this->assertNotNull($node);
+        $node['thuecat:distanceToPublicTransport'] = [self::distanceNode('', 'thuecat:CityBus')];
+        $entity = new TouristAttractionEntity();
+        $entity->parse($node, 'de', new ParserContext(0));
+
+        $this->assertArrayNotHasKey('distance_to_public_transport', $entity->toArray());
     }
 
     #[Test]

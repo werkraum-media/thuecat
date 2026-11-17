@@ -61,25 +61,34 @@ abstract class AbstractPlaceEntity extends AbstractEntity
     }
 
     /**
-     * Flatten thuecat:distanceToPublicTransport into "value:unit[:mean1:mean2]".
+     * JSON, as the means are translated labels that may hold any separator.
      */
-    protected function buildDistanceToPublicTransport(mixed $node, string $language): string
+    protected function buildDistanceToPublicTransport(mixed $value, string $language): string
     {
-        if (!is_array($node)) {
+        if (!is_array($value)) {
             return '';
         }
 
-        $distance = $this->extractValue($node['schema:value'] ?? null, $language);
-        if ($distance === '') {
+        $distances = [];
+        foreach (array_is_list($value) ? $value : [$value] as $node) {
+            /** @var array<string, mixed> $node A JSON-LD node is an object. */
+            $distance = $this->extractValue($node['schema:value'] ?? null, $language);
+            if ($distance === '') {
+                continue;
+            }
+
+            $distances[] = [
+                'value' => $distance,
+                'unit' => $this->extractConcatenatedString($node['schema:unitCode'] ?? null, $language),
+                'types' => $this->extractConcatenatedMembers($node['thuecat:meansOfTransport'] ?? null, $language),
+            ];
+        }
+
+        if ($distances === []) {
             return '';
         }
 
-        $unit = $this->extractConcatenatedString($node['schema:unitCode'] ?? null, $language);
-        $means = $this->extractConcatenatedMembers($node['thuecat:meansOfTransport'] ?? null, $language);
-
-        $parts = array_merge([$distance, $unit], $means);
-
-        return implode(':', array_filter($parts, static fn ($part): bool => $part !== ''));
+        return json_encode($distances) ?: '';
     }
 
     /**

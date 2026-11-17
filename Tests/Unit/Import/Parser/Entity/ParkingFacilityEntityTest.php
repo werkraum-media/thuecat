@@ -60,7 +60,25 @@ final class ParkingFacilityEntityTest extends AbstractImportTestCase
         $this->assertSame('ZeroSanitation', $row['sanitation']);
         $this->assertSame('ZeroOtherServiceEnumMem', $row['other_service']);
         $this->assertSame('ElectricVehicleCarChargingStationEnumMem', $row['traffic_infrastructure']);
-        $this->assertSame('240:MTR:CityBus', $row['distance_to_public_transport']);
+        $this->assertSame([['value' => '240', 'unit' => 'MTR', 'types' => ['CityBus']]], $this->decodeJson($row['distance_to_public_transport']));
+    }
+
+    #[Test]
+    public function distanceToPublicTransportKeepsEveryDistanceOfAList(): void
+    {
+        $node = $this->nodeFromFixture('396420044896-drzt.json', 'schema:ParkingFacility');
+        $this->assertNotNull($node);
+        $node['thuecat:distanceToPublicTransport'] = [
+            self::distanceNode('30', 'thuecat:RegionalBus'),
+            self::distanceNode('650', 'thuecat:TrainStation'),
+        ];
+        $entity = new ParkingFacilityEntity();
+        $entity->parse($node, 'de', new ParserContext(0));
+
+        $this->assertSame([
+            ['value' => '30', 'unit' => 'MTR', 'types' => ['RegionalBus']],
+            ['value' => '650', 'unit' => 'MTR', 'types' => ['TrainStation']],
+        ], $this->decodeJson($entity->toArray()['distance_to_public_transport']));
     }
 
     #[Test]

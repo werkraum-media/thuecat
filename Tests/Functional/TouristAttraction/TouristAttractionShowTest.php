@@ -155,8 +155,8 @@ final class TouristAttractionShowTest extends AbstractFrontendTestCase
         $location = $this->renderedSection($this->attractionShowRequest('27'), 'attraction', 'location');
 
         $this->assertStringContainsString('https://example.com/vollstaendiges-museum', $location);
-        $this->assertStringContainsString('200', $location);
-        $this->assertStringContainsString('CityBus', $location);
+        $this->assertMatchesRegularExpression('#<dd>\s*200\s*Meter\s*<span class="type">CityBus</span>\s*</dd>#', $location);
+        $this->assertMatchesRegularExpression('#<dd>\s*1200\s*Meter\s*<span class="type">Train</span>\s*</dd>#', $location);
     }
 
     #[Test]
@@ -200,8 +200,7 @@ final class TouristAttractionShowTest extends AbstractFrontendTestCase
         $this->assertStringContainsString('kostenfreies WLAN', $parking);
         $this->assertStringContainsString('Fahrradständer', $parking);
         $this->assertStringContainsString('Barzahlung', $parking);
-        $this->assertStringContainsString('150', $parking);
-        $this->assertStringContainsString('Tram', $parking);
+        $this->assertMatchesRegularExpression('#<dd>\s*150\s*Meter\s*<span class="type">Tram</span>\s*</dd>#', $parking);
         $this->assertStringContainsString('Tagesticket', $parking);
         $this->assertStringContainsString('12,00', $parking);
     }

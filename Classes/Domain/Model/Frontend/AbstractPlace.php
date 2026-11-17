@@ -232,18 +232,29 @@ abstract class AbstractPlace extends Base
         return GeneralUtility::trimExplode(',', $this->paymentAccepted, true);
     }
 
+    /**
+     * A record not re-imported since distances became a list still holds one as "value:unit[:type…]".
+     *
+     * @return list<array{value: string, unit: string, types: list<string>}>
+     */
     public function getDistanceToPublicTransport(): array
     {
+        $distances = json_decode($this->distanceToPublicTransport, true);
+        if (is_array($distances)) {
+            /** @var list<array{value: string, unit: string, types: list<string>}> $distances */
+            return $distances;
+        }
+
         $values = GeneralUtility::trimExplode(':', $this->distanceToPublicTransport, true, 3);
         if ($values === []) {
             return [];
         }
 
-        return [
+        return [[
             'value' => $values[0],
             'unit' => $values[1] ?? '',
             'types' => GeneralUtility::trimExplode(':', $values[2] ?? '', true),
-        ];
+        ]];
     }
 
     public function getAccessibilitySpecification(): ?AccessiblitySpecification
