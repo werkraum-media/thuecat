@@ -72,6 +72,19 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return substr(sha1(static::class . '-' . $token), 0, 7);
     }
 
+    /**
+     * @return array<array-key, mixed>
+     */
+    protected function getTcaOfTable(string $table): array
+    {
+        $tca = $GLOBALS['TCA'] ?? null;
+        $this->assertIsArray($tca);
+        $tableTca = $tca[$table] ?? null;
+        $this->assertIsArray($tableTca, $table);
+
+        return $tableTca;
+    }
+
     protected function countRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);

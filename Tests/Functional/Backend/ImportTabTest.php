@@ -71,10 +71,7 @@ final class ImportTabTest extends AbstractFunctionalTestCase
     #[DataProvider('tables')]
     public function importTabHoldsOnePalettePerKindOfField(string $table, array $importPalettes): void
     {
-        $tca = $GLOBALS['TCA'] ?? null;
-        $this->assertIsArray($tca);
-        $tableTca = $tca[$table] ?? null;
-        $this->assertIsArray($tableTca);
+        $tableTca = $this->getTcaOfTable($table);
         $types = $tableTca['types'] ?? null;
         $this->assertIsArray($types);
         $palettes = $tableTca['palettes'] ?? null;
@@ -125,10 +122,7 @@ final class ImportTabTest extends AbstractFunctionalTestCase
     {
         $importFields = array_values(array_diff(array_merge(...array_values($importPalettes)), ['--linebreak--']));
 
-        $tca = $GLOBALS['TCA'] ?? null;
-        $this->assertIsArray($tca);
-        $tableTca = $tca[$table] ?? null;
-        $this->assertIsArray($tableTca);
+        $tableTca = $this->getTcaOfTable($table);
         $types = $tableTca['types'] ?? null;
         $this->assertIsArray($types);
         $palettes = $tableTca['palettes'] ?? [];
@@ -185,11 +179,7 @@ final class ImportTabTest extends AbstractFunctionalTestCase
     {
         $importFields = array_values(array_diff(array_merge(...array_values($importPalettes)), ['--linebreak--']));
 
-        $tca = $GLOBALS['TCA'] ?? null;
-        $this->assertIsArray($tca);
-        $tableTca = $tca[$table] ?? null;
-        $this->assertIsArray($tableTca);
-        $columns = $tableTca['columns'] ?? null;
+        $columns = $this->getTcaOfTable($table)['columns'] ?? null;
         $this->assertIsArray($columns);
 
         foreach ($importFields as $field) {
@@ -202,14 +192,38 @@ final class ImportTabTest extends AbstractFunctionalTestCase
         }
     }
 
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function eventsTables(): iterable
+    {
+        foreach (['tx_events_domain_model_event', 'tx_events_domain_model_organizer', 'tx_events_domain_model_location'] as $table) {
+            yield $table => [$table];
+        }
+    }
+
+    #[Test]
+    #[DataProvider('eventsTables')]
+    public function originColumnsOfEventsTablesKeepTheirEventsDefinition(string $table): void
+    {
+        $columns = $this->getTcaOfTable($table)['columns'] ?? null;
+        $this->assertIsArray($columns);
+
+        foreach (['origin_configuration_uid', 'origin_configuration_title', 'origin_sync_id'] as $field) {
+            $column = $columns[$field] ?? null;
+            $this->assertIsArray($column, $table . '.' . $field);
+            $this->assertSame(
+                'LLL:EXT:events/Resources/Private/Language/locallang_db.xlf:origin.' . $field,
+                $column['label'] ?? null,
+                $table . '.' . $field
+            );
+        }
+    }
+
     #[Test]
     public function theLastImportingConfigurationOfAnEventIsDescribed(): void
     {
-        $tca = $GLOBALS['TCA'] ?? null;
-        $this->assertIsArray($tca);
-        $tableTca = $tca['tx_events_domain_model_event'] ?? null;
-        $this->assertIsArray($tableTca);
-        $columns = $tableTca['columns'] ?? null;
+        $columns = $this->getTcaOfTable('tx_events_domain_model_event')['columns'] ?? null;
         $this->assertIsArray($columns);
         $column = $columns['thuecat_import_configuration'] ?? null;
         $this->assertIsArray($column);
