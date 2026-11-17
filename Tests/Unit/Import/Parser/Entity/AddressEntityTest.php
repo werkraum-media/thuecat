@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Parser\Entity;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\AddressEntity;
@@ -354,6 +355,34 @@ final class AddressEntityTest extends TestCase
 
         $this->assertArrayNotHasKey('latitude', $result);
         $this->assertArrayNotHasKey('longitude', $result);
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function emailAddresses(): iterable
+    {
+        yield 'trailing dot' => ['kundenservice@contipark.de.', 'kundenservice@contipark.de'];
+        yield 'valid' => ['info@example.org', 'info@example.org'];
+    }
+
+    #[Test]
+    #[DataProvider('emailAddresses')]
+    public function stripsTrailingDotsFromEmail(string $delivered, string $expected): void
+    {
+        $node = [
+            'schema:email' => [
+                ['@language' => 'de', '@value' => $delivered],
+                ['@language' => 'en', '@value' => $delivered],
+            ],
+        ];
+
+        $entity = new AddressEntity();
+        $entity->configure($node, 'de', [], 'https://thuecat.org/resources/043064193523-jkgh');
+        $entity->configureTranslation($node, 'en', 1);
+
+        $this->assertSame($expected, $entity->toArray()['email'] ?? null);
+        $this->assertSame([1 => ['email' => $expected]], $entity->getTranslations());
     }
 
     #[Test]

@@ -77,7 +77,7 @@ class AddressEntity extends AbstractEntity
         $this->city = $this->extractValue($node['schema:addressLocality'] ?? null, $language);
         $this->region = $this->extractValue($node['schema:addressRegion'] ?? null, $language);
         $this->country = $this->extractValue($node['schema:addressCountry'] ?? null, $language);
-        $this->email = $this->extractValue($node['schema:email'] ?? null, $language);
+        $this->email = $this->extractEmail($node['schema:email'] ?? null, $language);
         $this->phone = $this->extractValue($node['schema:telephone'] ?? null, $language);
         $this->fax = $this->extractValue($node['schema:faxNumber'] ?? null, $language);
         if ($geo_node !== []) {
@@ -105,7 +105,7 @@ class AddressEntity extends AbstractEntity
 
         foreach ($fields as $field => $jsonldName) {
             $source = $node[$jsonldName] ?? null;
-            $value = $this->extractValue($source, $language);
+            $value = $field === 'email' ? $this->extractEmail($source, $language) : $this->extractValue($source, $language);
             // An untagged literal reads the same in every language, so recording
             // it would claim a translation the source never delivered. An
             // untagged CURIE is a reference: the resolver reads its label per
@@ -117,6 +117,12 @@ class AddressEntity extends AbstractEntity
 
             $this->recordTranslation($field, $value, $sysLanguageUid);
         }
+    }
+
+    /** A trailing dot makes DataHandler's email evaluation reject the address. */
+    protected function extractEmail(mixed $value, string $language): string
+    {
+        return rtrim($this->extractValue($value, $language), '.');
     }
 
     /**
