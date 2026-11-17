@@ -171,6 +171,20 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function urlIsStoredWhateverItsLength(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
+        $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
+        $this->expectFetchForUrl(self::GALERIE, 'thuecat.org/resources/meeting-room-with-long-url.json');
+
+        $this->importConfiguration(1);
+
+        $url = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE)['url'];
+        $this->assertIsString($url);
+        $this->assertSame(600, strlen($url));
+    }
+
+    #[Test]
     public function reimportCreatesNoAdditionalRoom(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');

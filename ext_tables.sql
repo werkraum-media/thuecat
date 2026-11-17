@@ -40,6 +40,7 @@ CREATE TABLE tx_thuecat_tourist_attraction (
 
 -- Room equipment lists exceed the varchar(255) TCA derives for an input column (413 characters observed).
 CREATE TABLE tx_thuecat_meeting_room (
+    url text,
     facilities text,
     amenity_features text,
 );

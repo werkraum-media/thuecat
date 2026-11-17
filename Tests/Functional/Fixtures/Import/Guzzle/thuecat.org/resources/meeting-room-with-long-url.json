@@ -1,0 +1,45 @@
+{
+    "@context": {
+        "schema": "http://schema.org/",
+        "thuecat": "https://thuecat.org/ontology/thuecat/1.0/",
+        "ttgds": "https://thuecat.org/ontology/ttgds/1.0/",
+        "dcterms": "http://purl.org/dc/terms/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "@graph": [
+        {
+            "@id": "https://thuecat.org/resources/019950652406-nywx",
+            "@type": [
+                "schema:Thing",
+                "schema:Place",
+                "schema:MeetingRoom",
+                "schema:Accommodation",
+                "schema:Room",
+                "thuecat:MajorEventRoom",
+                "ttgds:Accommodation"
+            ],
+            "schema:name": [
+                {
+                    "@language": "de",
+                    "@value": "Galerie"
+                },
+                {
+                    "@language": "en",
+                    "@value": "Gallery"
+                },
+                {
+                    "@language": "pl",
+                    "@value": "Galeria"
+                },
+                {
+                    "@language": "fr",
+                    "@value": "Galerie"
+                }
+            ],
+            "schema:url": {
+                "@type": "schema:URL",
+                "@value": "https://example.com/test-room?utm_term=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+        }
+    ]
+}
