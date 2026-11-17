@@ -56,19 +56,20 @@ Overview
      - a failing test
    * - Line coverage
      - :file:`Build/quality-baseline.json`
-     - yes
+     - no
      - a total below the baseline
    * - Infection, gate
      - :file:`infection.json5`, :file:`Build/Scripts/infection.sh`
-     - yes
+     - no
      - a changed line below 100 % MSI, uncovered or with a skipped mutant
    * - Infection, full run
      - same, plus :file:`Build/quality-baseline.json`
      - no
      - a total MSI or line coverage below the baseline
 
-A change is ready for review when every tool passes locally. The full mutation run and Deptrac are
-not part of the pull request pipeline and are the author's to run.
+A change is ready for review when every tool passes locally. Coverage, mutation testing and Deptrac
+are not part of the pull request pipeline and are the author's to run: the CI runner is too small to
+deliver reliable results for them.
 
 .. _developers-quality-assurance-validation:
 

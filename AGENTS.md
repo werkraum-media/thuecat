@@ -101,8 +101,8 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 - `--full` mutates everything with the configured timeout and no threshold. Over the whole package
   (no further options) it ends with `Build/Scripts/check-quality-baseline.php`, which fails when line
   coverage or MSI fall below the baseline or the number of uncovered lines rises above it.
-- CI checks every pull request's line coverage against the baseline and runs the gate. The full run,
-  and with it the MSI baseline, is run locally: the CI runner is too small for it.
+- Coverage, the gate and the full run are run locally, never in CI: the CI runner is too small to deliver
+  reliable results for them.
 - A change is not closed before a full run over the whole package has passed. In a planned change it
   is one of the last tasks of the QA group. Only the maintainer can waive it, and only on explicit
   request; never skip it unasked.

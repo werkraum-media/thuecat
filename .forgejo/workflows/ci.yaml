@@ -66,39 +66,4 @@ jobs:
           php-version: '${{ matrix.php-version }}'
           typo3-version: '${{ matrix.typo3-version }}'
 
-      # PHP 8.4 runs the tests in tests-and-mutation, with coverage.
       - uses: './.forgejo/local-actions/advanced-qa'
-        with:
-          run-tests: "${{ matrix.php-version != '84' }}"
-
-  tests-and-mutation:
-    name: 'Tests and mutation gate on PHP 8.4'
-    runs-on: 'typo3'
-    container:
-      image: 'forgejo.werkraum-media.de/global/typo3-ci:php84-node24'
-    needs:
-      - 'base-qa'
-    steps:
-      # The gate diffs against origin/main.
-      - uses: 'actions/checkout@v6'
-        with:
-          fetch-depth: 0
-
-      - uses: './.forgejo/local-actions/setup'
-        with:
-          php-version: '84'
-          typo3-version: '^14.3'
-
-      - uses: './.forgejo/local-actions/coverage'
-
-      - name: 'Line coverage against the baseline'
-        run: |
-          trap 'echo' EXIT
-          printf '\n### %s\n' 'Line coverage against the baseline'
-          php Build/Scripts/check-quality-baseline.php
-
-      - name: 'Mutation gate for the changed lines'
-        run: |
-          trap 'echo' EXIT
-          printf '\n### %s\n' 'Mutation gate for the changed lines'
-          Build/Scripts/infection.sh
