@@ -445,7 +445,7 @@ class Importer
     }
 
     /**
-     * Site-wide identity updates an event where it already lives, so a run can
+     * Site-wide identity updates a record where it already lives, so a run can
      * succeed and still leave its own folder empty. An empty folder also
      * restarts the five-year window on every run.
      */
@@ -455,7 +455,7 @@ class Importer
             return;
         }
 
-        if ($this->syncWindow->holdsEvent($configuration->getStoragePid())) {
+        if ($this->syncWindow->holdsRecord($configuration->getStoragePid())) {
             return;
         }
 

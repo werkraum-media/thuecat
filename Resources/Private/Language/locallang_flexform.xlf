@@ -75,7 +75,7 @@
                 <source>Channel ID</source>
             </trans-unit>
             <trans-unit id="importConfiguration.syncChannel.syncChannelId.description" xml:space="preserve">
-                <source>Imports the events of this channel. Events the channel lists as removed or expired are deleted in the whole site, whichever import configuration or storage folder holds them.</source>
+                <source>Imports the events, places or trails of this channel. Records the channel lists as removed or expired are deleted in the whole site, whichever import configuration or storage folder holds them.</source>
             </trans-unit>
             <trans-unit id="importConfiguration.syncChannel.apiKey" xml:space="preserve">
                 <source>API Key</source>

@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
+use WerkraumMedia\ThueCat\Import\RecordTables;
 
 /**
  * Computes the `since` that both lists of a sync channel run are requested with.
@@ -40,8 +41,6 @@ use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 #[Autoconfigure(public: true)]
 readonly class SyncWindow
 {
-    protected const EVENT_TABLE = 'tx_events_domain_model_event';
-
     public function __construct(
         protected ImportLogRepository $importLogRepository,
         protected ConnectionPool $connectionPool,
@@ -57,7 +56,7 @@ readonly class SyncWindow
         // The API does not say how far `removed` reaches back.
         $fullWindow = $now->modify('-5 years');
 
-        if (!$this->holdsEvent($storagePid)) {
+        if (!$this->holdsRecord($storagePid)) {
             return $fullWindow;
         }
 
@@ -74,21 +73,32 @@ readonly class SyncWindow
      * Also what the empty-folder warning asks, so the warning and the
      * five-year window agree on what empty means.
      */
-    public function holdsEvent(int $storagePid): bool
+    public function holdsRecord(int $storagePid): bool
+    {
+        foreach (RecordTables::STANDALONE as $table) {
+            if ($this->tableHoldsRecord($table, $storagePid)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function tableHoldsRecord(string $table, int $storagePid): bool
     {
         $languageField = $this->tcaSchemaFactory
-            ->get(self::EVENT_TABLE)
+            ->get($table)
             ->getCapability(TcaSchemaCapability::Language)
             ->getLanguageField()
             ->getName()
         ;
 
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::EVENT_TABLE);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
 
         $count = $queryBuilder
             ->count('uid')
-            ->from(self::EVENT_TABLE)
+            ->from($table)
             ->where(
                 $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($storagePid, Connection::PARAM_INT)),
                 $queryBuilder->expr()->eq($languageField, $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))

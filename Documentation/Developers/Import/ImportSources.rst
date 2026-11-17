@@ -27,7 +27,8 @@ The existing types
 
 ``syncChannel``
    A channel of the sync API. The run reads the channel's change and expiry lists and imports each
-   listed event from the channel, then deletes the events listed as removed or expired. Unlike the
+   listed record from the channel, then deletes the records listed as removed or expired, from every
+   record table of the site (:php:`WerkraumMedia\ThueCat\Import\RecordTables`). Unlike the
    other types, it also changes how references are fetched and which hosts receive the key. See
    :ref:`sync-channel`.
 

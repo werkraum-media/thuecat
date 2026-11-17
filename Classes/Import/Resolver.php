@@ -197,21 +197,13 @@ class Resolver
 
     /**
      * Tables whose standalone rows carry the origin of the import that first wrote them. A row stored inline under a
-     * parent (see INLINE_CHILD_PARENTS) belongs to that parent and carries none. A new standalone record kind joins
-     * this list, or its rows silently go without an origin.
+     * parent (see INLINE_CHILD_PARENTS) belongs to that parent and carries none. Organizers and locations are the
+     * events extension's copies of an organisation or place: they carry an origin, but are no record table of their own.
      */
     protected const ORIGIN_TABLES = [
-        'tx_thuecat_tourist_attraction',
-        'tx_thuecat_trail',
-        'tx_thuecat_organisation',
-        'tx_thuecat_town',
-        'tx_thuecat_tourist_information',
-        'tx_thuecat_place',
-        'tx_thuecat_meeting_room',
-        'tx_thuecat_parking_facility',
-        'tx_events_domain_model_event',
-        'tx_events_domain_model_organizer',
-        'tx_events_domain_model_location',
+        ...RecordTables::STANDALONE,
+        OrganizerEntity::TABLE,
+        LocationEntity::TABLE,
     ];
 
     /**

@@ -42,8 +42,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function removedEventIsDeleted(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -53,8 +52,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function removedEventIsDeletedWhenTheRunImportsEventsAsWell(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed-with-import.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed-removed-with-import.json');
         $this->expectChannelRecords('test-event-1');
 
         $this->importConfiguration(1);
@@ -66,8 +64,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function expiredEventIsDeleted(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -77,8 +74,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function removedEventInAnotherFolderOfTheSiteIsDeleted(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -88,8 +84,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function removedEventOfAnotherSiteIsKept(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -99,8 +94,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function unknownRemovedIdDeletesNothingAndLogsNothing(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -108,11 +102,30 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
         $this->assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
     }
 
+    // One run for every record kind: Infection skips the reaper's mutants once this class outruns the mutant timeout.
+    #[Test]
+    public function removedRecordsOfEveryTableAreDeletedWithTheirChildrenWithinTheSite(): void
+    {
+        $this->expectChannelLists('list-changed-removed-records.json');
+
+        $this->importConfiguration(1);
+
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-removed'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', 'https://thuecat.org/resources/test-parking-removed'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-place-removed-twice'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_place', 'https://thuecat.org/resources/test-place-removed-twice'));
+        $this->assertSame(22, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-removed-other-site'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_trail_way_type'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_trail_location'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_trail_condition'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_address'));
+        $this->assertSame(0, $this->countRows('tx_thuecat_opening_hours'));
+    }
+
     #[Test]
     public function deletedEventTakesItsTranslationDatesAndFileReferencesWithIt(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 
@@ -125,8 +138,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     public function abortedRunDeletesNothing(): void
     {
         $this->expectErrors = true;
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed-with-import.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed-removed-with-import.json');
         $this->workaroundExtbaseConfiguration();
         $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
         $this->assertNotNull($configuration);
@@ -157,8 +169,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(SyncChannelReaper::class, new SyncChannelReaperFailingStub());
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
         $this->importConfiguration(1);
 

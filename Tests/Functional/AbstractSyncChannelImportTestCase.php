@@ -81,9 +81,18 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
      */
     protected function expectChannelServing(string $changedList, string ...$eventIds): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/' . $changedList);
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists($changedList);
         $this->expectChannelRecords(...$eventIds);
+    }
+
+    /**
+     * @param string $changedList File name of the change list of the window the base fixes.
+     * @param string $expiredList File name of the expiry list of that window.
+     */
+    protected function expectChannelLists(string $changedList, string $expiredList = 'list-expired.json'): void
+    {
+        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/' . $changedList);
+        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/' . $expiredList);
     }
 
     /**

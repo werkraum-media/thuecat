@@ -739,7 +739,7 @@ class ImportLogger
         $this->stage([
             'type' => 'storageFolderEmpty',
             'severity' => self::SEVERITY_WARNING,
-            'message' => sprintf('Storage folder %d holds no event after the import.', $storagePid),
+            'message' => sprintf('Storage folder %d holds no record after the import.', $storagePid),
             'context' => json_encode(['storagePid' => $storagePid]) ?: '{}',
         ]);
     }

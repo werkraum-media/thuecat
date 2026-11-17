@@ -33,8 +33,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 /**
- * Configuration 4 imports into folder 50, which starts empty. The event it
- * lists already lives in folder 10 of the same site.
+ * Configuration 4 imports into folder 50, which starts empty. The event the
+ * channel lists already lives in folder 10 of the same site; the trail and
+ * the tourist attraction live nowhere yet.
  */
 final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
 {
@@ -60,7 +61,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function runWhoseEventsAllMatchElsewhereWarnsOfTheEmptyFolder(): void
     {
-        $this->expectEventMatchingElsewhere();
+        $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
         $this->importConfiguration(4);
 
@@ -80,9 +81,31 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
+    public function runStoringTrailsInItsFolderDoesNotWarn(): void
+    {
+        $this->expectFiveYearRunServing('list-changed-trail.json', 'test-trail-1');
+
+        $this->importConfiguration(4);
+
+        $this->assertSame(50, $this->fetchRowByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-1')['pid']);
+        $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
+    }
+
+    #[Test]
+    public function runStoringTouristAttractionsInItsFolderDoesNotWarn(): void
+    {
+        $this->expectFiveYearRunServing('list-changed-attraction.json', 'test-attraction-1');
+
+        $this->importConfiguration(4);
+
+        $this->assertSame(50, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-attraction-1')['pid']);
+        $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
+    }
+
+    #[Test]
     public function emptyFolderWarningKeepsTheRunAsAnchor(): void
     {
-        $this->expectEventMatchingElsewhere();
+        $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
         $this->importConfiguration(4);
 
@@ -98,7 +121,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function emptyFolderWarningIsListedInTheImportModule(): void
     {
-        $this->expectEventMatchingElsewhere();
+        $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
         $this->importConfiguration(4);
 
@@ -118,13 +141,16 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
         }
 
         $this->assertCount(1, $found);
-        $this->assertSame(['Storage folder 50 holds no event after the import.'], $log->getGroupedNotices()['storageFolderEmpty'] ?? []);
+        $this->assertSame(['Storage folder 50 holds no record after the import.'], $log->getGroupedNotices()['storageFolderEmpty'] ?? []);
     }
 
-    protected function expectEventMatchingElsewhere(): void
+    /**
+     * @param string $changedList File name of the change list, which must list exactly $ids.
+     */
+    protected function expectFiveYearRunServing(string $changedList, string ...$ids): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED_FIVE_YEARS, 'widgets.thuecat.org/api/sync/test-channel/list-changed.json');
+        $this->expectFetchForUrl(self::LIST_CHANGED_FIVE_YEARS, 'widgets.thuecat.org/api/sync/test-channel/' . $changedList);
         $this->expectFetchForUrl(self::LIST_EXPIRED_FIVE_YEARS, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
-        $this->expectChannelRecords('test-event-1');
+        $this->expectChannelRecords(...$ids);
     }
 }

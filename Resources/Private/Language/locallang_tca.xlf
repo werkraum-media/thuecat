@@ -910,7 +910,7 @@
                 <source>Contains Place</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_import_configuration.type.syncChannel" xml:space="preserve">
-                <source>Sync API channel (events)</source>
+                <source>Sync API channel</source>
             </trans-unit>
             <trans-unit id="tx_thuecat_import_configuration.configuration" xml:space="preserve">
                 <source>Configuration</source>

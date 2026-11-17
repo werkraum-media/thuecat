@@ -1,0 +1,78 @@
+{
+ "@id": "https://thuecat.org/resources/test-trail-1",
+ "@type": [
+  "schema:Thing",
+  "schema:Place",
+  "thuecat:Trail",
+  "ttgds:Trail"
+ ],
+ "schema:name": {
+  "@language": "de",
+  "@value": "Test-Weg"
+ },
+ "thuecat:startLocation": {
+  "@id": "genid-test-trail-1-start",
+  "@type": [
+   "schema:Thing",
+   "schema:Place"
+  ],
+  "rdfs:label": {
+   "@language": "de",
+   "@value": "Test-Start"
+  }
+ },
+ "thuecat:endLocation": {
+  "@id": "genid-test-trail-1-end",
+  "@type": [
+   "schema:Thing",
+   "schema:Place"
+  ],
+  "rdfs:label": {
+   "@language": "de",
+   "@value": "Test-Ziel"
+  }
+ },
+ "schema:wayType": {
+  "@id": "genid-test-trail-1-way-type",
+  "@type": [
+   "thuecat:WayType"
+  ],
+  "thuecat:wayTypeLegend": {
+   "@id": "genid-test-trail-1-way-type-segment",
+   "@type": [
+    "thuecat:WayTypeSummary"
+   ],
+   "thuecat:wayTypeTitle": {
+    "@language": "de",
+    "@value": "Asphalt"
+   },
+   "thuecat:wayTypeLength": {
+    "@id": "genid-test-trail-1-way-type-length",
+    "@type": [
+     "schema:Thing",
+     "schema:QuantitativeValue"
+    ],
+    "schema:unitCode": {
+     "@type": "thuecat:Unit",
+     "@value": "thuecat:MTR"
+    },
+    "schema:value": {
+     "@type": "schema:Float",
+     "@value": "1000"
+    }
+   }
+  }
+ },
+ "thuecat:trailCurrentConditions": {
+  "@id": "genid-test-trail-1-condition",
+  "@type": [
+   "schema:Thing",
+   "schema:PropertyValue",
+   "thuecat:TrailCurrentConditions"
+  ],
+  "rdfs:label": {
+   "@language": "de",
+   "@value": "Test-Sperrung"
+  }
+ }
+}

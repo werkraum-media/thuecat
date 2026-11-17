@@ -103,7 +103,7 @@ Entry types
        request is not retried.
    * - ``storageFolderEmpty``
      - warning
-     - A ``syncChannel`` run left its storage folder without events, see
+     - A ``syncChannel`` run left its storage folder without records, see
        :ref:`sync-channel-empty-folder`.
 
 What the log does not cover:

@@ -52,7 +52,10 @@ final class SyncWindowTest extends AbstractFunctionalTestCase
         yield "another configuration's log is ignored" => [6, 10, '2026-10-11 03:00'];
         yield 'content but no qualifying log' => [8, 10, self::FIVE_YEARS_BEFORE_NOW];
         yield 'an empty storage folder' => [1, 11, self::FIVE_YEARS_BEFORE_NOW];
-        yield 'a storage folder holding only deleted events' => [1, 12, self::FIVE_YEARS_BEFORE_NOW];
+        yield 'a storage folder holding only deleted events and trails' => [1, 12, self::FIVE_YEARS_BEFORE_NOW];
+        yield 'a storage folder holding only trails' => [1, 13, '2026-10-14 03:00'];
+        yield 'a storage folder holding only parking facilities' => [1, 14, '2026-10-14 03:00'];
+        yield 'a storage folder holding only a translation' => [1, 15, self::FIVE_YEARS_BEFORE_NOW];
     }
 
     #[Test]

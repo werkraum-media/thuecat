@@ -33,8 +33,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function rateLimitedRootIsRecordedAndTheRunContinues(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-with-unserved.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed-with-unserved.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-unserved', 429);
         $this->expectChannelRecords('test-event-1');
 
@@ -83,8 +82,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function twoRateLimitsInOneRunCarryDistinctOrdinals(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-media-outside-channel.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed-media-outside-channel.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-media-2a', 429);
         $this->expectFailureForUrl(self::RECORD . 'test-event-media-2b', 429);
 
@@ -105,8 +103,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function rateLimitedRequestIsSentOnce(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-1', 429);
 
         $this->importConfiguration(1);

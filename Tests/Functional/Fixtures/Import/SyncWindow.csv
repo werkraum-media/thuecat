@@ -3,11 +3,25 @@
 ,1,0,"Root",1
 ,10,1,"Events",254
 ,11,1,"Empty",254
-,12,1,"Deleted events only",254
+,12,1,"Deleted events and trails only",254
+,13,1,"Trails only",254
+,14,1,"Parking facilities only",254
+,15,1,"Translation only",254
 "tx_events_domain_model_event"
 ,"uid","pid","sys_language_uid","l10n_parent","deleted","title"
 ,1,10,0,0,0,"Event"
 ,2,12,0,0,1,"Deleted event"
+"tx_thuecat_trail"
+,"uid","pid","sys_language_uid","l18n_parent","deleted","title"
+,1,12,0,0,1,"Deleted trail"
+,2,13,0,0,0,"Trail"
+"tx_thuecat_parking_facility"
+,"uid","pid","sys_language_uid","l18n_parent","deleted","title"
+,1,14,0,0,0,"Parking facility"
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","deleted","title"
+,1,15,0,0,1,"Deleted attraction"
+,2,15,1,1,0,"Translation of the deleted attraction"
 "tx_thuecat_import_log"
 ,"uid","pid","configuration","crdate"
 ,1,0,1,1791766800

@@ -223,9 +223,10 @@ Synchronization area
 Contains Place
     Expects an ID that identifies a place and will import all objects that declare a relation to it.
 
-Sync API channel (events)
-   Imports the events of one channel of the ThueCat sync API, private images included, and deletes
-   the site's events the channel lists as removed or expired. See :ref:`sync-channel`.
+Sync API channel
+   Imports the events, places or trails of one channel of the ThueCat sync API, private images
+   included, and deletes the site's records the channel lists as removed or expired. See
+   :ref:`sync-channel`.
 
 .. warning::
 

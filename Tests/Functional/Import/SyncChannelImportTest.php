@@ -54,6 +54,29 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
+    public function channelOfTrailsImportsTheTrailWithItsChildRecords(): void
+    {
+        $this->expectChannelServing('list-changed-trail.json', 'test-trail-1');
+
+        $this->importConfiguration(1);
+
+        $this->assertSame('Test-Weg', $this->fetchRowByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-1')['title']);
+        $this->assertSame(['Test-Start', 'Test-Ziel'], array_column($this->fetchChildren('tx_thuecat_trail_location'), 'title'));
+        $this->assertSame(['Asphalt'], array_column($this->fetchChildren('tx_thuecat_trail_way_type'), 'title'));
+        $this->assertSame(['Test-Sperrung'], array_column($this->fetchChildren('tx_thuecat_trail_condition'), 'title'));
+    }
+
+    #[Test]
+    public function channelOfPlacesImportsTheTouristAttraction(): void
+    {
+        $this->expectChannelServing('list-changed-attraction.json', 'test-attraction-1');
+
+        $this->importConfiguration(1);
+
+        $this->assertSame('Test-Sehenswürdigkeit', $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-attraction-1')['title']);
+    }
+
+    #[Test]
     public function asksTheChannelWithTheSyncKeyAsHeaderOnly(): void
     {
         $this->expectChannelServingOneEvent();
@@ -69,8 +92,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     #[Test]
     public function unservedListedEventIsAFetchingErrorAndTheNextIsImported(): void
     {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-with-unserved.json');
-        $this->expectFetchForUrl(self::LIST_EXPIRED, 'widgets.thuecat.org/api/sync/test-channel/list-expired.json');
+        $this->expectChannelLists('list-changed-with-unserved.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-unserved', 200);
         $this->expectChannelRecords('test-event-1');
 
