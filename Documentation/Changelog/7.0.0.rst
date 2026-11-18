@@ -1,0 +1,73 @@
+.. include:: ../Includes.txt
+.. _changelog-7-0-0:
+
+=====
+7.0.0
+=====
+
+.. contents:: On this page
+   :local:
+   :depth: 1
+
+Breaking
+--------
+
+* **[!!!][TASK] Remove the Extension class**
+
+* **[BUGFIX] Import every distance to public transport**
+
+Important
+---------
+
+* **[TASK] Apply InjectMethodToConstructorInjectionRector and fix findings**
+
+* **[FEATURE] Show import fields on a dedicated Import tab**
+
+* **[TASK] Require events 7.1, which defines the origin columns**
+
+* **[BUGFIX] Store meeting rooms with URLs of any length**
+
+Features
+--------
+
+* **[FEATURE] Stamp the creating import configuration on imported records**
+
+* **[FEATURE] Stamp records that have no origin yet on their next import**
+
+* **[FEATURE] Limit attraction lists to import origins**
+
+* **[FEATURE] Import places and trails through sync channels**
+
+Fixes
+-----
+
+* **[BUGFIX] Store imported coordinates as plain decimals**
+
+* **[BUGFIX] Strip trailing dots from imported e-mail addresses**
+
+Deprecation
+-----------
+
+Nothing
+
+Upgrade
+-------
+
+#. Require :composer:`werkraummedia/events` in version ``^7.1``.
+#. Run the database analyser and add the column :sql:`url` to :sql:`tx_thuecat_meeting_room`, and the
+   columns :sql:`origin_configuration_uid`, :sql:`origin_configuration_title` and :sql:`origin_sync_id` to
+   the record tables of thuecat, see :ref:`import-record-origin`.
+#. Run the import configurations of each site. They store every distance to public transport,
+   coordinates as plain decimals and e-mail addresses without trailing dots.
+#. Code using :php:`WerkraumMedia\ThueCat\Extension` uses the extension key ``thuecat`` and
+   ``EXT:thuecat/`` paths as literals instead, and registers caches through
+   :php:`ImportCacheRegistration` or :php:`FrontendCacheRegistration`.
+#. Controllers extending :php:`AbstractActionController`, :php:`TouristAttractionController` or
+   :php:`TrailController` receive :php:`TeaserRenderer` and :php:`MetaInformationService` through the
+   constructor, as its first arguments. The methods :php:`injectTeaserRenderer()` and
+   :php:`injectMetaInformationService()` are removed.
+#. Classes overriding :php:`Price::createFromArray()` or :php:`ImportConfigurationRepository::findOneByUid()`
+   declare the return types :php:`self` and :php:`?ImportConfigurationInterface`.
+#. :php:`getDistanceToPublicTransport()` returns a list of distances instead of a single one. Templates
+   overriding :file:`Partials/TouristAttraction/Location` or :file:`Partials/TouristAttraction/ParkingFacility`
+   iterate over it.

@@ -5,7 +5,7 @@
     "license": "GPL-2.0-or-later",
     "homepage": "https://forgejo.werkraum-media.de/typo3/thuecat",
     "support": {
-        "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/5.0/en-us/",
+        "docs": "https://docs.typo3.org/p/werkraummedia/thuecat/main/en-us/",
         "source": "https://forgejo.werkraum-media.de/typo3/thuecat"
     },
     "authors": [
@@ -92,7 +92,7 @@
         ]
     },
     "extra": {
-        "branch-alias": {"dev-main": "6.x-dev"},
+        "branch-alias": {"dev-main": "7.x-dev"},
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
             "extension-key": "thuecat",
