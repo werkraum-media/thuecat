@@ -1,0 +1,46 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","managed_by","operated_by","contained_in_organisation","town","contained_in_place","categories","parking_facilities_inline"
+,100,10,0,0,"https://thuecat.org/resources/attraction-100","Attraction with relations",100,101,0,100,2,1,1
+,101,10,0,0,"https://thuecat.org/resources/attraction-101","Attraction in a linked town",0,0,0,101,0,0,0
+,102,10,0,0,"https://thuecat.org/resources/attraction-102","Attraction in a translated organisation",0,0,105,0,0,0,0
+"tx_thuecat_trail"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","managed_by"
+,100,10,0,0,"https://thuecat.org/resources/trail-100","Kept trail",101
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,100,10,0,0,"https://thuecat.org/resources/organisation-100","Used by attraction 100 only"
+,101,10,0,0,"https://thuecat.org/resources/organisation-101","Shared with the kept trail"
+,102,10,0,0,"https://thuecat.org/resources/organisation-102","Manages the town only attraction 100 used"
+,103,10,0,0,"https://thuecat.org/resources/organisation-103","Referenced by nobody"
+,105,10,0,0,"https://thuecat.org/resources/organisation-105","Translated, used by attraction 102 only"
+,106,10,1,105,"https://thuecat.org/resources/organisation-105","Translated, used by attraction 102 only (en)"
+"tx_thuecat_town"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","managed_by"
+,100,10,0,0,"https://thuecat.org/resources/town-100","Used by attraction 100 only",102
+,101,10,0,0,"https://thuecat.org/resources/town-101","Linked from a content element",0
+"tx_thuecat_parking_facility"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","parentid","parenttable"
+,100,10,0,0,"https://thuecat.org/resources/parking-facility-100","Inline parking facility of attraction 100",100,"tx_thuecat_tourist_attraction"
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","organizer","location"
+,100,10,0,0,"https://thuecat.org/resources/event-100","Event with organizer and location",100,100
+"tx_events_domain_model_organizer"
+,"uid","pid","sys_language_uid","l10n_parent","name"
+,100,10,0,0,"Organizer of event 100 only"
+"tx_events_domain_model_location"
+,"uid","pid","sys_language_uid","l10n_parent","name"
+,100,10,0,0,"Location of event 100 only"
+"sys_category"
+,"uid","pid","title"
+,100,1,"Category of attraction 100"
+"sys_category_record_mm"
+,"uid_local","uid_foreign","tablenames","fieldname","sorting_foreign"
+,100,100,"tx_thuecat_tourist_attraction","categories",1
+"tt_content"
+,"uid","pid","CType","bodytext"
+,1,1,"text","<p><a href=""t3://record?identifier=thuecat_town&amp;uid=101"">Town</a></p>"
+"sys_refindex"
+,"hash","tablename","recuid","field","softref_key","softref_id","sorting","workspace","ref_table","ref_uid"
+,"00000000000000000000000000000001","tx_thuecat_trail",100,"managed_by","","",0,0,"tx_thuecat_organisation",101
+,"00000000000000000000000000000002","tt_content",1,"bodytext","typolink_tag","00000000000000000000000000000002",0,0,"tx_thuecat_town",101
+,"00000000000000000000000000000003","tx_thuecat_organisation",106,"l10n_parent","","",0,0,"tx_thuecat_organisation",105

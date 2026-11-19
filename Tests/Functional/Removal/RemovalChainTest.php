@@ -65,9 +65,7 @@ final class RemovalChainTest extends AbstractRemovalTestCase
     #[Test]
     public function aRootQueuesTheNextRootAndIsRemoved(): void
     {
-        $job = $this->queueJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 10));
-
-        $this->get(RemoveRootHandler::class)(new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 1));
+        $job = $this->removeRoot('tx_thuecat_tourist_attraction', 1);
 
         $this->assertEquals([new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 2)], $this->queuedMessages());
         $this->assertTrue($this->isDeleted('tx_thuecat_tourist_attraction', 1));
@@ -78,9 +76,7 @@ final class RemovalChainTest extends AbstractRemovalTestCase
     #[Test]
     public function theLastRootQueuesTheFinish(): void
     {
-        $job = $this->queueJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 10));
-
-        $this->get(RemoveRootHandler::class)(new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 2));
+        $job = $this->removeRoot('tx_thuecat_tourist_attraction', 2);
 
         $this->assertEquals([new RemovalFinished($job)], $this->queuedMessages());
     }

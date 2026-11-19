@@ -22,7 +22,10 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Core\Database\Connection;
+use WerkraumMedia\ThueCat\Removal\Handler\RemoveRootHandler;
+use WerkraumMedia\ThueCat\Removal\Message\RemoveRoot;
 use WerkraumMedia\ThueCat\Removal\RemovalJobs;
+use WerkraumMedia\ThueCat\Removal\Scope;
 use WerkraumMedia\ThueCat\Removal\Selection;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
@@ -34,6 +37,19 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
     protected function queueJob(Selection $selection, int $backendUser = 1): int
     {
         return $this->get(RemovalJobs::class)->queue($selection, false, false, $backendUser);
+    }
+
+    /**
+     * Handles the root's message of a job removing its kind from folder 10.
+     *
+     * @return int the job's uid
+     */
+    protected function removeRoot(string $table, int $uid): int
+    {
+        $job = $this->queueJob(Selection::ofKind($table, Scope::Folder, 10));
+        $this->get(RemoveRootHandler::class)(new RemoveRoot($job, $table, $uid));
+
+        return $job;
     }
 
     /**

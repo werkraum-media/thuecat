@@ -21,7 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Removal;
 
 /**
- * What removing one root did: the root removed, skipped because it was already gone, or refused with errors.
+ * What removing one root did: the root removed, skipped because it was already gone, or refused with errors;
+ * and how many of the relations it left unused went with it.
  */
 final readonly class RootOutcome
 {
@@ -32,6 +33,7 @@ final readonly class RootOutcome
         public bool $removed,
         public bool $skipped,
         public array $errors = [],
+        public int $removedRelations = 0,
     ) {
     }
 }

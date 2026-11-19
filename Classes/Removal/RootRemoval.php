@@ -29,7 +29,8 @@ use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Removes one root, with the rights of the user who started the job.
+ * Removes one root and the relations it leaves unused, each by its own DataHandler run, with the rights of the
+ * user who started the job.
  *
  * Public, so functional tests can put a failing removal in its place.
  */
@@ -38,38 +39,86 @@ class RootRemoval
 {
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
+        protected readonly RelationUsage $relationUsage,
     ) {
     }
 
     public function remove(RemovalJob $job, RootRecord $root): RootOutcome
     {
-        if (!$this->exists($root)) {
+        if (!$this->exists($root->table, $root->uid)) {
             return new RootOutcome(false, true);
         }
 
-        // Translations, inline children and file references follow the root.
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->start([], [$root->table => [$root->uid => ['delete' => 1]]], $this->backendUserOf($job));
-        $dataHandler->process_cmdmap();
+        $backendUser = $this->backendUserOf($job);
+        $candidates = $this->relationUsage->candidatesOf($root->table, $root->uid);
 
-        /** @var list<string> $errors */
-        $errors = $dataHandler->errorLog;
+        // Translations, inline children and file references follow the root.
+        $errors = $this->delete($root->table, $root->uid, $backendUser);
         if ($errors !== []) {
             return new RootOutcome(false, false, $errors);
         }
 
-        return new RootOutcome(true, false);
+        $relations = $this->removeUnused($candidates, $backendUser);
+
+        return new RootOutcome(true, false, $relations->errors, $relations->removed);
     }
 
-    protected function exists(RootRecord $root): bool
+    /**
+     * A removed relation's own relations are judged next; a removed record is no candidate any more, so the walk ends.
+     *
+     * @param list<RelationRecord> $candidates
+     */
+    protected function removeUnused(array $candidates, BackendUserAuthentication $backendUser): RelationsOutcome
     {
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($root->table);
+        $removed = 0;
+        $errors = [];
+        foreach ($candidates as $candidate) {
+            if (!$this->exists($candidate->table, $candidate->uid) || !$this->relationUsage->isUnused($candidate)) {
+                continue;
+            }
+
+            $further = $this->relationUsage->candidatesOf($candidate->table, $candidate->uid);
+            $deleteErrors = $this->delete($candidate->table, $candidate->uid, $backendUser);
+            if ($deleteErrors !== []) {
+                foreach ($deleteErrors as $error) {
+                    $errors[] = $candidate->table . ':' . $candidate->uid . ' ' . $error;
+                }
+
+                continue;
+            }
+
+            $furtherOutcome = $this->removeUnused($further, $backendUser);
+            $removed += 1 + $furtherOutcome->removed;
+            $errors = [...$errors, ...$furtherOutcome->errors];
+        }
+
+        return new RelationsOutcome($removed, $errors);
+    }
+
+    /**
+     * @return list<string> the errors DataHandler logged
+     */
+    protected function delete(string $table, int $uid, BackendUserAuthentication $backendUser): array
+    {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->start([], [$table => [$uid => ['delete' => 1]]], $backendUser);
+        $dataHandler->process_cmdmap();
+
+        /** @var list<string> $errors */
+        $errors = $dataHandler->errorLog;
+
+        return $errors;
+    }
+
+    protected function exists(string $table, int $uid): bool
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
 
         $count = $queryBuilder
             ->count('uid')
-            ->from($root->table)
-            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($root->uid, Connection::PARAM_INT)))
+            ->from($table)
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
             ->executeQuery()
             ->fetchOne()
         ;

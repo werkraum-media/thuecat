@@ -62,7 +62,7 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 | `AbstractCachingTestCase` | frontend | a storing `pages` cache backend, DataHandler save and delete helpers |
 | `AbstractSyncChannelImportTestCase` | import | the `syncChannel` fixture with a fixed window, list and record URLs, channel staging |
 | `AbstractImportConfigurationTestCase` | functional | extension configuration backup, site settings writer |
-| `AbstractRemovalTestCase` | backend | job queueing, the queued messages, the job record, a record's deleted flag |
+| `AbstractRemovalTestCase` | backend | job queueing, a root's removal, the queued messages, the job record, a record's deleted flag |
 
 - Extend the narrowest base whose setup and helpers the test uses. A test that runs no import
   does not extend the import base.
