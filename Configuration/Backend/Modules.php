@@ -35,6 +35,13 @@ return [
             '_default' => [
                 'target' => RemovalController::class . '::indexAction',
             ],
+            'confirm' => [
+                'target' => RemovalController::class . '::confirmAction',
+            ],
+            'start' => [
+                'target' => RemovalController::class . '::startAction',
+                'methods' => ['POST'],
+            ],
         ],
     ],
 ];

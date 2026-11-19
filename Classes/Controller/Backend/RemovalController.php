@@ -22,16 +22,26 @@ namespace WerkraumMedia\ThueCat\Controller\Backend;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Backend\Attribute\AsController;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
+use WerkraumMedia\ThueCat\Removal\RemovalJobs;
+use WerkraumMedia\ThueCat\Removal\RemovalSelection;
 use WerkraumMedia\ThueCat\Removal\RootOverview;
 use WerkraumMedia\ThueCat\Removal\RootTables;
+use WerkraumMedia\ThueCat\Removal\Selection;
 
 #[AsController]
 class RemovalController
@@ -44,6 +54,11 @@ class RemovalController
         protected readonly SiteFinder $siteFinder,
         protected readonly TcaSchemaFactory $tcaSchemaFactory,
         protected readonly LanguageServiceFactory $languageServiceFactory,
+        protected readonly UriBuilder $uriBuilder,
+        protected readonly RemovalSelection $removalSelection,
+        protected readonly RemovalJobs $removalJobs,
+        protected readonly MessageBusInterface $messageBus,
+        protected readonly FlashMessageService $flashMessageService,
     ) {
     }
 
@@ -54,6 +69,7 @@ class RemovalController
             if ($siteIdentifier === '') {
                 $sites[] = [
                     'title' => $this->getLanguageService()->sL(self::LABELS . 'site.outside'),
+                    'rootPageId' => 0,
                     'pages' => $pages,
                     'origins' => [],
                 ];
@@ -62,24 +78,114 @@ class RemovalController
 
             $rootPageId = $this->siteFinder->getSiteByIdentifier($siteIdentifier)->getRootPageId();
             $sites[] = [
-                'title' => BackendUtility::getRecordTitle('pages', BackendUtility::getRecord('pages', $rootPageId) ?? []),
+                'title' => $this->pageTitle($rootPageId),
+                'rootPageId' => $rootPageId,
                 'pages' => $pages,
                 'origins' => $this->rootOverview->originsOfSite($rootPageId),
             ];
         }
 
-        $kinds = [];
-        foreach (RootTables::ALL as $table) {
-            $kinds[] = $this->getLanguageService()->sL($this->tcaSchemaFactory->get($table)->getTitle());
+        $view = $this->moduleTemplateFactory->create($request);
+        $view->assignMultiple([
+            'sites' => $sites,
+            'kinds' => $this->kinds(),
+        ]);
+
+        return $view->renderResponse('Backend/Removal/Index');
+    }
+
+    public function confirmAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $selection = $this->selectionFrom($request->getQueryParams());
+        if (!$selection instanceof Selection) {
+            return $this->redirectToIndex();
+        }
+
+        $kinds = array_column($this->kinds(), 'label', 'table');
+        $originTitle = '';
+        if ($selection->originConfigurationUid > 0) {
+            foreach ($this->rootOverview->originsOfSite($selection->scopePage) as $origin) {
+                if ($origin->configurationUid === $selection->originConfigurationUid) {
+                    $originTitle = $origin->title;
+                }
+            }
         }
 
         $view = $this->moduleTemplateFactory->create($request);
         $view->assignMultiple([
-            'sites' => $sites,
-            'kinds' => $kinds,
+            'selection' => $selection,
+            'parameters' => $selection->toParameters(),
+            'kind' => $kinds[$selection->rootTable] ?? '',
+            'pageTitle' => $this->pageTitle($selection->scopePage),
+            'originTitle' => $originTitle,
+            'roots' => $this->removalSelection->count($selection),
         ]);
 
-        return $view->renderResponse('Backend/Removal/Index');
+        return $view->renderResponse('Backend/Removal/Confirm');
+    }
+
+    public function startAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $body = $request->getParsedBody();
+        $body = is_array($body) ? $body : [];
+
+        $selection = $this->selectionFrom($body);
+        if (!$selection instanceof Selection) {
+            return $this->redirectToIndex();
+        }
+
+        $jobUid = $this->removalJobs->queue(
+            $selection,
+            !empty($body['removeFiles']),
+            !empty($body['updateReferenceIndex']),
+            (int)$this->getBackendUser()->getUserId()
+        );
+        $this->messageBus->dispatch(new RemovalStarted($jobUid));
+
+        $this->flashMessageService->getMessageQueueByIdentifier()->enqueue(new FlashMessage(
+            $this->getLanguageService()->sL(self::LABELS . 'queued.text'),
+            $this->getLanguageService()->sL(self::LABELS . 'queued.title'),
+            ContextualFeedbackSeverity::OK,
+            true
+        ));
+
+        return $this->redirectToIndex();
+    }
+
+    /**
+     * @param array<mixed> $parameters
+     */
+    protected function selectionFrom(array $parameters): ?Selection
+    {
+        $selection = $parameters['selection'] ?? null;
+
+        return is_array($selection) ? Selection::fromParameters($selection) : null;
+    }
+
+    protected function redirectToIndex(): ResponseInterface
+    {
+        return new RedirectResponse((string)$this->uriBuilder->buildUriFromRoute('thuecat_removal'), 303);
+    }
+
+    /**
+     * @return list<array{table: string, label: string}>
+     */
+    protected function kinds(): array
+    {
+        $kinds = [];
+        foreach (RootTables::ALL as $table) {
+            $kinds[] = [
+                'table' => $table,
+                'label' => $this->getLanguageService()->sL($this->tcaSchemaFactory->get($table)->getTitle()),
+            ];
+        }
+
+        return $kinds;
+    }
+
+    protected function pageTitle(int $pageUid): string
+    {
+        return BackendUtility::getRecordTitle('pages', BackendUtility::getRecord('pages', $pageUid) ?? []);
     }
 
     protected function getBackendUser(): BackendUserAuthentication

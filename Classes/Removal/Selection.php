@@ -50,6 +50,42 @@ final readonly class Selection
     }
 
     /**
+     * @param array<mixed> $parameters as built by toParameters()
+     */
+    public static function fromParameters(array $parameters): ?self
+    {
+        $page = $parameters['page'] ?? null;
+        if (!is_numeric($page)) {
+            return null;
+        }
+
+        if (array_key_exists('origin', $parameters)) {
+            $origin = $parameters['origin'];
+            return is_numeric($origin) && (int)$origin > 0 ? self::ofOrigin((int)$page, (int)$origin) : null;
+        }
+
+        $table = $parameters['table'] ?? null;
+        $scope = Scope::tryFrom(is_string($parameters['scope'] ?? null) ? $parameters['scope'] : '');
+        if (!in_array($table, RootTables::ALL, true) || $scope === null) {
+            return null;
+        }
+
+        return self::ofKind($table, $scope, (int)$page);
+    }
+
+    /**
+     * @return array<string, string|int>
+     */
+    public function toParameters(): array
+    {
+        if ($this->originConfigurationUid > 0) {
+            return ['origin' => $this->originConfigurationUid, 'page' => $this->scopePage];
+        }
+
+        return ['table' => $this->rootTable, 'scope' => $this->scope->value, 'page' => $this->scopePage];
+    }
+
+    /**
      * @return list<string>
      */
     public function rootTables(): array

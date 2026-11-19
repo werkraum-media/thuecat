@@ -93,4 +93,7 @@ FrontendCacheRegistration::register();
             'before' => [TcaSelectTreeItems::class, TcaCategory::class],
         ];
     }
+
+    // Queued, never run in the request: a consumer on the command line works through the roots.
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']['routing']['WerkraumMedia\\ThueCat\\Removal\\Message\\*'] = 'doctrine';
 })('thuecat');

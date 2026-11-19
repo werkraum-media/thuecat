@@ -36,6 +36,57 @@
             <trans-unit id="origin.roots" resname="origin.roots">
                 <source>Roots</source>
             </trans-unit>
+            <trans-unit id="action.instance" resname="action.instance">
+                <source>Remove all %s of the instance</source>
+            </trans-unit>
+            <trans-unit id="action.site" resname="action.site">
+                <source>Remove from site</source>
+            </trans-unit>
+            <trans-unit id="action.folder" resname="action.folder">
+                <source>Remove from this folder</source>
+            </trans-unit>
+            <trans-unit id="action.origin" resname="action.origin">
+                <source>Revert this import</source>
+            </trans-unit>
+            <trans-unit id="confirm.headline" resname="confirm.headline">
+                <source>Confirm removal</source>
+            </trans-unit>
+            <trans-unit id="confirm.scope.folder" resname="confirm.scope.folder">
+                <source>%1$s of folder %2$s [%3$d]</source>
+            </trans-unit>
+            <trans-unit id="confirm.scope.site" resname="confirm.scope.site">
+                <source>%1$s of site %2$s</source>
+            </trans-unit>
+            <trans-unit id="confirm.scope.instance" resname="confirm.scope.instance">
+                <source>%s of the whole instance</source>
+            </trans-unit>
+            <trans-unit id="confirm.scope.origin" resname="confirm.scope.origin">
+                <source>Every POI, place, trail and event of import %1$s [%2$d] in site %3$s</source>
+            </trans-unit>
+            <trans-unit id="confirm.roots" resname="confirm.roots">
+                <source>This removes %d roots</source>
+            </trans-unit>
+            <trans-unit id="confirm.roots.text" resname="confirm.roots.text">
+                <source>Translations, inline children and file references go with each root, and relations nothing else uses are removed too. This cannot be undone.</source>
+            </trans-unit>
+            <trans-unit id="confirm.removeFiles" resname="confirm.removeFiles">
+                <source>Also delete files nothing uses any longer</source>
+            </trans-unit>
+            <trans-unit id="confirm.updateReferenceIndex" resname="confirm.updateReferenceIndex">
+                <source>Update the reference index first</source>
+            </trans-unit>
+            <trans-unit id="confirm.start" resname="confirm.start">
+                <source>Queue removal</source>
+            </trans-unit>
+            <trans-unit id="confirm.cancel" resname="confirm.cancel">
+                <source>Cancel</source>
+            </trans-unit>
+            <trans-unit id="queued.title" resname="queued.title">
+                <source>Removal queued</source>
+            </trans-unit>
+            <trans-unit id="queued.text" resname="queued.text">
+                <source>The removal runs in the background, one root after the other.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -1,0 +1,42 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+    {f:layout(name: 'Module')}
+
+    <f:section name="Content">
+        <h1>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.headline')}</h1>
+
+        <p class="lead">
+            <f:if condition="{selection.originConfigurationUid}">
+                <f:then>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.scope.origin', arguments: {0: originTitle, 1: selection.originConfigurationUid, 2: pageTitle})}</f:then>
+                <f:else if="{selection.scope.value} == 'folder'">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.scope.folder', arguments: {0: kind, 1: pageTitle, 2: selection.scopePage})}</f:else>
+                <f:else if="{selection.scope.value} == 'site'">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.scope.site', arguments: {0: kind, 1: pageTitle})}</f:else>
+                <f:else>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.scope.instance', arguments: {0: kind})}</f:else>
+            </f:if>
+        </p>
+
+        <f:be.infobox title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.roots', arguments: {0: roots})}" state="2">
+            {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.roots.text')}
+        </f:be.infobox>
+
+        <form method="post" action="{f:be.uri(route: 'thuecat_removal.start')}">
+            <f:for each="{parameters}" key="name" as="value">
+                <input type="hidden" name="selection[{name}]" value="{value}" />
+            </f:for>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="removeFiles" value="1" id="removeFiles" />
+                <label class="form-check-label" for="removeFiles">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.removeFiles')}</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="updateReferenceIndex" value="1" id="updateReferenceIndex" checked="checked" />
+                <label class="form-check-label" for="updateReferenceIndex">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.updateReferenceIndex')}</label>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-danger">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.start')}</button>
+                <a class="btn btn-default" href="{f:be.uri(route: 'thuecat_removal')}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:confirm.cancel')}</a>
+            </div>
+        </form>
+    </f:section>
+</html>

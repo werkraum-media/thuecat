@@ -1,4 +1,5 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
     {f:layout(name: 'Module')}
@@ -8,6 +9,13 @@
 
         <f:if condition="{sites}">
             <f:then>
+                <p>
+                    <f:for each="{kinds}" as="kind">
+                        <a class="btn btn-danger" href="{f:be.uri(route: 'thuecat_removal.confirm', parameters: {selection: {table: kind.table, scope: 'instance', page: 0}})}">
+                            <core:icon identifier="actions-delete" /> {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:action.instance', arguments: {0: kind.label})}
+                        </a>
+                    </f:for>
+                </p>
                 <f:for each="{sites}" as="site">
                     {f:render(section: 'Site', arguments: {site: site, kinds: kinds})}
                 </f:for>
@@ -32,7 +40,15 @@
                     <tr>
                         <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:page')}</th>
                         <f:for each="{kinds}" as="kind">
-                            <th class="text-end">{kind}</th>
+                            <th class="text-end">
+                                {kind.label}
+                                <f:if condition="{site.rootPageId}">
+                                    <br />
+                                    <a class="btn btn-danger btn-sm" href="{f:be.uri(route: 'thuecat_removal.confirm', parameters: {selection: {table: kind.table, scope: 'site', page: site.rootPageId}})}">
+                                        <core:icon identifier="actions-delete" /> {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:action.site')}
+                                    </a>
+                                </f:if>
+                            </th>
                         </f:for>
                     </tr>
                 </thead>
@@ -40,8 +56,17 @@
                     <f:for each="{site.pages}" as="page">
                         <tr>
                             <td>{page.title} <span class="text-body-secondary">[{page.uid}]</span></td>
-                            <f:for each="{page.counts}" as="count">
-                                <td class="text-end">{count}</td>
+                            <f:for each="{kinds}" as="kind">
+                                <td class="text-end">
+                                    <f:variable name="count" value="{page.counts.{kind.table}}" />
+                                    <f:if condition="{count}">
+                                        <f:then>
+                                            <a class="btn btn-danger btn-sm" href="{f:be.uri(route: 'thuecat_removal.confirm', parameters: {selection: {table: kind.table, scope: 'folder', page: page.uid}})}"
+                                                title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:action.folder')}"><core:icon identifier="actions-delete" /> {count}</a>
+                                        </f:then>
+                                        <f:else>0</f:else>
+                                    </f:if>
+                                </td>
                             </f:for>
                         </tr>
                     </f:for>
@@ -57,6 +82,7 @@
                         <tr>
                             <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:origin')}</th>
                             <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:origin.roots')}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,6 +90,11 @@
                             <tr>
                                 <td>{origin.title} <span class="text-body-secondary">[{origin.configurationUid}]</span></td>
                                 <td class="text-end">{origin.count}</td>
+                                <td class="text-end">
+                                    <a class="btn btn-danger btn-sm" href="{f:be.uri(route: 'thuecat_removal.confirm', parameters: {selection: {origin: origin.configurationUid, page: site.rootPageId}})}">
+                                        <core:icon identifier="actions-delete" /> {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:action.origin')}
+                                    </a>
+                                </td>
                             </tr>
                         </f:for>
                     </tbody>
