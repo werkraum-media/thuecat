@@ -87,6 +87,81 @@
             <trans-unit id="queued.text" resname="queued.text">
                 <source>The removal runs in the background, one root after the other.</source>
             </trans-unit>
+            <trans-unit id="jobs.finished" resname="jobs.finished">
+                <source>Finished removal jobs</source>
+            </trans-unit>
+            <trans-unit id="jobs.finished.empty" resname="jobs.finished.empty">
+                <source>No removal job has finished yet.</source>
+            </trans-unit>
+            <trans-unit id="jobs.open" resname="jobs.open">
+                <source>Queued and running removal jobs</source>
+            </trans-unit>
+            <trans-unit id="jobs.open.empty" resname="jobs.open.empty">
+                <source>No removal job is queued or running.</source>
+            </trans-unit>
+            <trans-unit id="job.selection" resname="job.selection">
+                <source>Selection</source>
+            </trans-unit>
+            <trans-unit id="job.scope.origin" resname="job.scope.origin">
+                <source>Every POI, place, trail and event of import [%1$d] in site %2$s</source>
+            </trans-unit>
+            <trans-unit id="job.status" resname="job.status">
+                <source>Status</source>
+            </trans-unit>
+            <trans-unit id="job.status.queued" resname="job.status.queued">
+                <source>queued</source>
+            </trans-unit>
+            <trans-unit id="job.status.running" resname="job.status.running">
+                <source>running</source>
+            </trans-unit>
+            <trans-unit id="job.status.done" resname="job.status.done">
+                <source>done</source>
+            </trans-unit>
+            <trans-unit id="job.user" resname="job.user">
+                <source>Started by</source>
+            </trans-unit>
+            <trans-unit id="job.removedRoots" resname="job.removedRoots">
+                <source>Removed roots</source>
+            </trans-unit>
+            <trans-unit id="job.skippedRoots" resname="job.skippedRoots">
+                <source>Skipped roots</source>
+            </trans-unit>
+            <trans-unit id="job.removedRelations" resname="job.removedRelations">
+                <source>Removed relations</source>
+            </trans-unit>
+            <trans-unit id="job.removedFiles" resname="job.removedFiles">
+                <source>Removed files</source>
+            </trans-unit>
+            <trans-unit id="job.errors" resname="job.errors">
+                <source>Errors</source>
+            </trans-unit>
+            <trans-unit id="job.errorLog" resname="job.errorLog">
+                <source>Error log</source>
+            </trans-unit>
+            <trans-unit id="job.status.stalled" resname="job.status.stalled">
+                <source>stalled</source>
+            </trans-unit>
+            <trans-unit id="stalled.title" resname="stalled.title">
+                <source>%d removal jobs are not taken further</source>
+            </trans-unit>
+            <trans-unit id="stalled.text" resname="stalled.text">
+                <source>Each of them has been queued, or running without progress, for more than five minutes. Removal jobs do not run in the backend: a scheduler task of type "messenger:consume" with the receiver "doctrine" runs every minute and works through the queue one root after the other. While that task does not run, no job moves, and nothing has been removed yet for a queued job.</source>
+            </trans-unit>
+            <trans-unit id="stalled.causes" resname="stalled.causes">
+                <source>Usual causes: the task was never created on this instance, it is disabled, cron does not start the scheduler, or a killed run of the task is still marked as running in the scheduler module, which blocks every later run until it is stopped there.</source>
+            </trans-unit>
+            <trans-unit id="stalled.link" resname="stalled.link">
+                <source>How to set up the message worker task</source>
+            </trans-unit>
+            <trans-unit id="cleanup.title" resname="cleanup.title">
+                <source>Old removal jobs are kept</source>
+            </trans-unit>
+            <trans-unit id="cleanup.text" resname="cleanup.text">
+                <source>The oldest finished job is more than ten days old. Finished jobs stay in the database until a table garbage collection task of the scheduler removes them, together with old import logs and soft-deleted records.</source>
+            </trans-unit>
+            <trans-unit id="cleanup.link" resname="cleanup.link">
+                <source>Recommended cleanup tasks</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -1,0 +1,6 @@
+"tx_thuecat_removal_job"
+,"uid","crdate","progressed_at","backend_user","status","root_table","scope","scope_page","origin_configuration_uid","remove_files","update_reference_index","removed_roots","skipped_roots","removed_relations","removed_files","errors","error_log"
+,1,1795080000,1795080000,1,"done","tx_thuecat_tourist_attraction","folder",10,0,1,1,12,0,3,20,0,
+,2,1795080000,1795080000,1,"done","","site",1,32,0,0,4,1,0,0,1,"tx_thuecat_place:1 Attempt to delete record without delete-permissions"
+,3,1795085900,1795085900,1,"queued","tx_thuecat_trail","instance",0,0,0,0,0,0,0,0,0,
+,4,1795085000,1795085900,1,"running","tx_events_domain_model_event","site",1,0,0,1,7,0,0,0,0,

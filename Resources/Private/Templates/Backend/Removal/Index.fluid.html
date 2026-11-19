@@ -7,6 +7,8 @@
     <f:section name="Content">
         <h1>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:headline')}</h1>
 
+        {f:render(section: 'Jobs', arguments: _all)}
+
         <f:if condition="{sites}">
             <f:then>
                 <p>
@@ -29,6 +31,103 @@
                 </f:be.infobox>
             </f:else>
         </f:if>
+    </f:section>
+
+    <f:section name="Jobs">
+        <div class="panel-group mb-4">
+            <div class="panel panel-default" id="removal-jobs-finished">
+                <h2 class="panel-heading" role="tab">
+                    <div class="panel-heading-row">
+                        <button class="panel-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#removal-jobs-finished-body" aria-expanded="false" aria-controls="removal-jobs-finished-body">
+                            <div class="panel-title">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:jobs.finished')}</div>
+                            <span class="badge badge-default">{finishedJobs -> f:count()}</span>
+                            <span class="caret"></span>
+                        </button>
+                    </div>
+                </h2>
+                <div class="panel-collapse collapse" id="removal-jobs-finished-body" role="tabpanel">
+                    <div class="panel-body">
+                        <f:if condition="{cleanupDue}">
+                            <f:be.infobox title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:cleanup.title')}" state="-1">
+                                <p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:cleanup.text')}</p>
+                                <a href="https://docs.typo3.org/p/werkraummedia/thuecat/main/en-us/Integration/Maintenance.html#maintenance-cleanup-tasks" target="_blank" rel="noreferrer">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:cleanup.link')}</a>
+                            </f:be.infobox>
+                        </f:if>
+                        <f:if condition="{finishedJobs}">
+                            <f:then>{f:render(section: 'JobTable', arguments: {jobs: finishedJobs, showStatus: 0})}</f:then>
+                            <f:else><p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:jobs.finished.empty')}</p></f:else>
+                        </f:if>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" id="removal-jobs-open">
+                <h2 class="panel-heading" role="tab">
+                    <div class="panel-heading-row">
+                        <button class="panel-button" type="button" data-bs-toggle="collapse" data-bs-target="#removal-jobs-open-body" aria-expanded="true" aria-controls="removal-jobs-open-body">
+                            <div class="panel-title">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:jobs.open')}</div>
+                            <span class="badge badge-default">{openJobs -> f:count()}</span>
+                            <span class="caret"></span>
+                        </button>
+                    </div>
+                </h2>
+                <div class="panel-collapse collapse show" id="removal-jobs-open-body" role="tabpanel">
+                    <div class="panel-body">
+                        <f:if condition="{stalledJobs} > 2">
+                            <f:be.infobox title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:stalled.title', arguments: {0: stalledJobs})}" state="2">
+                                <p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:stalled.text')}</p>
+                                <p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:stalled.causes')}</p>
+                                <a href="https://docs.typo3.org/p/werkraummedia/thuecat/main/en-us/Integration/RemovalModule.html#removal-module-worker" target="_blank" rel="noreferrer">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:stalled.link')}</a>
+                            </f:be.infobox>
+                        </f:if>
+                        <f:if condition="{openJobs}">
+                            <f:then>{f:render(section: 'JobTable', arguments: {jobs: openJobs, showStatus: 1})}</f:then>
+                            <f:else><p>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:jobs.open.empty')}</p></f:else>
+                        </f:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </f:section>
+
+    <f:section name="JobTable">
+        <div class="table-fit">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.selection')}</th>
+                        <f:if condition="{showStatus}"><th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.status')}</th></f:if>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.user')}</th>
+                        <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.removedRoots')}</th>
+                        <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.skippedRoots')}</th>
+                        <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.removedRelations')}</th>
+                        <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.removedFiles')}</th>
+                        <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.errors')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.errorLog')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <f:for each="{jobs}" as="job">
+                        <tr data-job="{job.state.job.uid}">
+                            <td>{job.selection}</td>
+                            <f:if condition="{showStatus}">
+                                <td>
+                                    {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.status.{job.state.status}')}
+                                    <f:if condition="{job.state.stalled}"><span class="badge badge-warning">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:job.status.stalled')}</span></f:if>
+                                </td>
+                            </f:if>
+                            <td>{job.user}</td>
+                            <td class="text-end">{job.state.removedRoots}</td>
+                            <td class="text-end">{job.state.skippedRoots}</td>
+                            <td class="text-end">{job.state.removedRelations}</td>
+                            <td class="text-end">{job.state.removedFiles}</td>
+                            <td class="text-end">{job.state.errors}</td>
+                            <td><f:if condition="{job.state.errorLog}"><pre class="mb-0">{job.state.errorLog}</pre></f:if></td>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </div>
     </f:section>
 
     <f:section name="Site">

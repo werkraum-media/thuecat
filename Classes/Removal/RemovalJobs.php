@@ -35,6 +35,16 @@ class RemovalJobs
 {
     protected const TABLE = 'tx_thuecat_removal_job';
 
+    /**
+     * The consumer runs every minute; a job left alone for this long has no consumer taking it further.
+     */
+    protected const STALLED_AFTER_SECONDS = 300;
+
+    /**
+     * The garbage collection the documentation recommends keeps finished jobs for this long.
+     */
+    protected const CLEANUP_AFTER_SECONDS = 864000;
+
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly ClockInterface $clock,
@@ -71,18 +81,51 @@ class RemovalJobs
             return null;
         }
 
-        $scope = Scope::from(is_string($row['scope']) ? $row['scope'] : '');
-        $scopePage = $this->intOf($row['scope_page']);
-        $origin = $this->intOf($row['origin_configuration_uid']);
+        return $this->jobOf($row);
+    }
 
-        return new RemovalJob(
-            $uid,
-            $origin > 0
-                ? Selection::ofOrigin($scopePage, $origin)
-                : Selection::ofKind(is_string($row['root_table']) ? $row['root_table'] : '', $scope, $scopePage),
-            (bool)$this->intOf($row['remove_files']),
-            (bool)$this->intOf($row['update_reference_index']),
-            $this->intOf($row['backend_user'])
+    public function overview(): RemovalJobOverview
+    {
+        $rows = $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->select(['*'], self::TABLE, [], [], ['uid' => 'DESC'])
+            ->fetchAllAssociative()
+        ;
+        $now = $this->clock->now()->getTimestamp();
+
+        $finished = [];
+        $open = [];
+        $stalledJobs = 0;
+        $oldestFinished = $now;
+        foreach ($rows as $row) {
+            $status = is_string($row['status']) ? $row['status'] : '';
+            $stalled = $status !== 'done'
+                && $this->intOf($row['progressed_at']) < $now - self::STALLED_AFTER_SECONDS;
+            $state = new RemovalJobState(
+                $this->jobOf($row),
+                $status,
+                $this->intOf($row['removed_roots']),
+                $this->intOf($row['skipped_roots']),
+                $this->intOf($row['removed_relations']),
+                $this->intOf($row['removed_files']),
+                $this->intOf($row['errors']),
+                is_string($row['error_log']) ? $row['error_log'] : '',
+                $stalled
+            );
+            if ($status === 'done') {
+                $finished[] = $state;
+                $oldestFinished = min($oldestFinished, $this->intOf($row['crdate']));
+                continue;
+            }
+
+            $open[] = $state;
+            $stalledJobs += (int)$stalled;
+        }
+
+        return new RemovalJobOverview(
+            $finished,
+            $open,
+            $stalledJobs,
+            $oldestFinished < $now - self::CLEANUP_AFTER_SECONDS
         );
     }
 
@@ -141,6 +184,26 @@ class RemovalJobs
             self::TABLE,
             [...$values, 'progressed_at' => $this->clock->now()->getTimestamp()],
             ['uid' => $uid]
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    protected function jobOf(array $row): RemovalJob
+    {
+        $scope = Scope::from(is_string($row['scope']) ? $row['scope'] : '');
+        $scopePage = $this->intOf($row['scope_page']);
+        $origin = $this->intOf($row['origin_configuration_uid']);
+
+        return new RemovalJob(
+            $this->intOf($row['uid']),
+            $origin > 0
+                ? Selection::ofOrigin($scopePage, $origin)
+                : Selection::ofKind(is_string($row['root_table']) ? $row['root_table'] : '', $scope, $scopePage),
+            (bool)$this->intOf($row['remove_files']),
+            (bool)$this->intOf($row['update_reference_index']),
+            $this->intOf($row['backend_user'])
         );
     }
 

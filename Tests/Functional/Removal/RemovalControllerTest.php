@@ -20,19 +20,36 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use WerkraumMedia\ThueCat\Controller\Backend\RemovalController;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
+use WerkraumMedia\ThueCat\Removal\RemovalJobs;
+use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 final class RemovalControllerTest extends AbstractRemovalTestCase
 {
+    private const int NOW = 1795086000;
+
+    /**
+     * Within one table row.
+     */
+    private const string ROW = '(?:(?!</tr>).)*';
+
+    private const string WORKER_DOCUMENTATION
+        = 'https://docs.typo3.org/p/werkraummedia/thuecat/main/en-us/Integration/RemovalModule.html#removal-module-worker';
+
+    private const string CLEANUP_DOCUMENTATION
+        = 'https://docs.typo3.org/p/werkraummedia/thuecat/main/en-us/Integration/Maintenance.html#maintenance-cleanup-tasks';
+
     private ServerRequest $request;
 
     protected function setUp(): void
@@ -48,6 +65,11 @@ final class RemovalControllerTest extends AbstractRemovalTestCase
             ->withAttribute('module', $this->get(ModuleProvider::class)->getModule('thuecat_removal', $backendUser))
         ;
         $GLOBALS['TYPO3_REQUEST'] = $this->request;
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(RemovalJobs::class, new RemovalJobs(
+            $this->get(ConnectionPool::class),
+            new FixedClock(new DateTimeImmutable('@' . self::NOW)),
+        ));
     }
 
     #[Test]
@@ -75,6 +97,113 @@ final class RemovalControllerTest extends AbstractRemovalTestCase
         $html = (string)$this->get(RemovalController::class)->indexAction($this->request)->getBody();
 
         $this->assertStringContainsString('No page holds POIs, places, trails or events.', $html);
+    }
+
+    #[Test]
+    public function indexListsFinishedJobsWithTheirResultsBeforeTheOtherJobsWithTheirStatus(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Roots.csv');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Jobs.csv');
+
+        $html = (string)$this->get(RemovalController::class)->indexAction($this->request)->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '#id="removal-jobs-finished".*<tr data-job="2">.*<tr data-job="1">.*'
+            . 'id="removal-jobs-open".*<tr data-job="4">.*<tr data-job="3">#s',
+            $html
+        );
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="1">' . self::ROW . 'Tourist Attraction of folder Folder A \[10\]' . self::ROW . 'admin'
+            . self::ROW . '>12<' . self::ROW . '>0<' . self::ROW . '>3<' . self::ROW . '>20<' . self::ROW . '>0<#s',
+            $html
+        );
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="2">' . self::ROW . '\[32\] in site Example site' . self::ROW . 'admin'
+            . self::ROW . '>4<' . self::ROW . '>1<' . self::ROW . '>0<' . self::ROW . '>0<' . self::ROW . '>1<'
+            . self::ROW . 'tx_thuecat_place:1 Attempt to delete record without delete-permissions#s',
+            $html
+        );
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="4">' . self::ROW . 'Event of site Example site' . self::ROW . 'running' . self::ROW . 'admin'
+            . self::ROW . '>7<#s',
+            $html
+        );
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="3">' . self::ROW . 'Trail of the whole instance' . self::ROW . 'queued' . self::ROW . 'admin#s',
+            $html
+        );
+    }
+
+    /**
+     * @return iterable<string, array{string, int, bool}>
+     */
+    public static function stalledJobs(): iterable
+    {
+        yield 'queued longer than five minutes' => ['queued', self::NOW - 301, true];
+        yield 'queued for five minutes' => ['queued', self::NOW - 300, false];
+        yield 'running without progress for longer than five minutes' => ['running', self::NOW - 301, true];
+        yield 'running with progress within five minutes' => ['running', self::NOW - 300, false];
+        yield 'done long ago' => ['done', self::NOW - 3600, false];
+    }
+
+    #[DataProvider('stalledJobs')]
+    #[Test]
+    public function indexMarksAJobNobodyTakesFurtherAsStalled(string $status, int $progressedAt, bool $stalled): void
+    {
+        $this->insertJob($status, self::NOW - 3600, $progressedAt);
+
+        $html = (string)$this->get(RemovalController::class)->indexAction($this->request)->getBody();
+
+        $this->assertSame($stalled, (bool)preg_match('#<tr data-job="1">' . self::ROW . '>stalled<#s', $html));
+    }
+
+    /**
+     * @return iterable<string, array{int, bool}>
+     */
+    public static function stalledJobCounts(): iterable
+    {
+        yield 'three stalled jobs' => [3, true];
+        yield 'two stalled jobs' => [2, false];
+    }
+
+    #[DataProvider('stalledJobCounts')]
+    #[Test]
+    public function indexPointsAtTheWorkerTaskWhenMoreThanTwoJobsStall(int $stalledJobs, bool $notice): void
+    {
+        for ($job = 0; $job < $stalledJobs; $job++) {
+            $this->insertJob('queued', self::NOW - 3600, self::NOW - 3600);
+        }
+
+        $this->insertJob('running', self::NOW - 3600, self::NOW);
+
+        $html = (string)$this->get(RemovalController::class)->indexAction($this->request)->getBody();
+
+        $this->assertSame($notice, str_contains($html, self::WORKER_DOCUMENTATION));
+    }
+
+    /**
+     * @return iterable<string, array{string, int, bool}>
+     */
+    public static function oldestJobs(): iterable
+    {
+        yield 'a finished job older than ten days' => ['done', self::NOW - 864001, true];
+        yield 'a finished job ten days old' => ['done', self::NOW - 864000, false];
+        yield 'a queued job older than ten days' => ['queued', self::NOW - 864001, false];
+    }
+
+    #[DataProvider('oldestJobs')]
+    #[Test]
+    public function indexPointsAtTheCleanupTasksWhenTheOldestFinishedJobIsOlderThanTenDays(
+        string $status,
+        int $createdAt,
+        bool $notice,
+    ): void {
+        $this->insertJob($status, $createdAt, $createdAt);
+        $this->insertJob('done', self::NOW - 3600, self::NOW - 3600);
+
+        $html = (string)$this->get(RemovalController::class)->indexAction($this->request)->getBody();
+
+        $this->assertSame($notice, str_contains($html, self::CLEANUP_DOCUMENTATION));
     }
 
     /**

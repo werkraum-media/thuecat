@@ -46,6 +46,24 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
     }
 
     /**
+     * A job removing the trails of the instance, at the given state.
+     */
+    protected function insertJob(string $status, int $createdAt, int $progressedAt): int
+    {
+        $connection = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_removal_job');
+        $connection->insert('tx_thuecat_removal_job', [
+            'crdate' => $createdAt,
+            'progressed_at' => $progressedAt,
+            'backend_user' => 1,
+            'status' => $status,
+            'root_table' => 'tx_thuecat_trail',
+            'scope' => 'instance',
+        ]);
+
+        return (int)$connection->lastInsertId();
+    }
+
+    /**
      * Queues a job and handles its first message.
      *
      * @return int the job's uid

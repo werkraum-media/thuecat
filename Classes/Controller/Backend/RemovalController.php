@@ -38,9 +38,11 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\RemovalJobs;
+use WerkraumMedia\ThueCat\Removal\RemovalJobState;
 use WerkraumMedia\ThueCat\Removal\RemovalSelection;
 use WerkraumMedia\ThueCat\Removal\RootOverview;
 use WerkraumMedia\ThueCat\Removal\RootTables;
+use WerkraumMedia\ThueCat\Removal\Scope;
 use WerkraumMedia\ThueCat\Removal\Selection;
 
 #[AsController]
@@ -85,10 +87,16 @@ class RemovalController
             ];
         }
 
+        $overview = $this->removalJobs->overview();
+
         $view = $this->moduleTemplateFactory->create($request);
         $view->assignMultiple([
             'sites' => $sites,
             'kinds' => $this->kinds(),
+            'finishedJobs' => $this->listed($overview->finished),
+            'openJobs' => $this->listed($overview->open),
+            'stalledJobs' => $overview->stalledJobs,
+            'cleanupDue' => $overview->cleanupDue,
         ]);
 
         return $view->renderResponse('Backend/Removal/Index');
@@ -181,6 +189,55 @@ class RemovalController
         }
 
         return $kinds;
+    }
+
+    /**
+     * @param list<RemovalJobState> $states
+     *
+     * @return list<array{state: RemovalJobState, selection: string, user: string}>
+     */
+    protected function listed(array $states): array
+    {
+        $jobs = [];
+        foreach ($states as $state) {
+            $user = BackendUtility::getRecord('be_users', $state->job->backendUser)['username'] ?? '';
+            $jobs[] = [
+                'state' => $state,
+                'selection' => $this->describe($state->job->selection),
+                'user' => is_string($user) ? $user : '',
+            ];
+        }
+
+        return $jobs;
+    }
+
+    protected function describe(Selection $selection): string
+    {
+        $languageService = $this->getLanguageService();
+        if ($selection->originConfigurationUid > 0) {
+            return sprintf(
+                $languageService->sL(self::LABELS . 'job.scope.origin'),
+                $selection->originConfigurationUid,
+                $this->pageTitle($selection->scopePage)
+            );
+        }
+
+        $kind = $languageService->sL($this->tcaSchemaFactory->get($selection->rootTable)->getTitle());
+
+        return match ($selection->scope) {
+            Scope::Folder => sprintf(
+                $languageService->sL(self::LABELS . 'confirm.scope.folder'),
+                $kind,
+                $this->pageTitle($selection->scopePage),
+                $selection->scopePage
+            ),
+            Scope::Site => sprintf(
+                $languageService->sL(self::LABELS . 'confirm.scope.site'),
+                $kind,
+                $this->pageTitle($selection->scopePage)
+            ),
+            Scope::Instance => sprintf($languageService->sL(self::LABELS . 'confirm.scope.instance'), $kind),
+        };
     }
 
     protected function pageTitle(int $pageUid): string
