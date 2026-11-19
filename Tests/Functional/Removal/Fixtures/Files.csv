@@ -1,0 +1,45 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","main_image","media_files","contained_in_tourist_information"
+,103,10,1,100,"https://thuecat.org/resources/attraction-100","Attraction with relations (en)",1,0,0
+,104,10,0,0,"https://thuecat.org/resources/attraction-104","Attraction of a refused image",1,0,0
+,105,10,0,0,"https://thuecat.org/resources/attraction-105","Attraction in a tourist information",0,0,100
+"tx_thuecat_tourist_information"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","main_image"
+,100,10,0,0,"https://thuecat.org/resources/tourist-information-100","Used by attraction 105 only",1
+"tx_thuecat_opening_hours"
+,"uid","pid","parentid","parenttable"
+,100,10,100,"tx_thuecat_tourist_attraction"
+"sys_file"
+,"uid","pid","storage","identifier","name","type","mime_type","extension"
+,1,0,1,"/removal/only-root.jpg","only-root.jpg",2,"image/jpeg","jpg"
+,2,0,1,"/removal/shared.jpg","shared.jpg",2,"image/jpeg","jpg"
+,3,0,1,"/removal/translation.jpg","translation.jpg",2,"image/jpeg","jpg"
+,4,0,1,"/removal/inline-child.jpg","inline-child.jpg",2,"image/jpeg","jpg"
+,5,0,1,"/removal/refused.jpg","refused.jpg",2,"image/jpeg","jpg"
+,6,0,1,"/removal/event.jpg","event.jpg",2,"image/jpeg","jpg"
+,7,0,1,"/removal/relation.jpg","relation.jpg",2,"image/jpeg","jpg"
+"sys_file_metadata"
+,"uid","pid","file","sys_language_uid","l10n_parent"
+,1,0,1,0,0
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname","sys_language_uid","l10n_parent"
+,1,10,1,100,"tx_thuecat_tourist_attraction","main_image",0,0
+,2,10,2,100,"tx_thuecat_tourist_attraction","media_files",0,0
+,3,10,2,100,"tx_thuecat_trail","main_image",0,0
+,4,10,3,103,"tx_thuecat_tourist_attraction","main_image",1,1
+,5,10,4,100,"tx_thuecat_parking_facility","main_image",0,0
+,6,10,5,104,"tx_thuecat_tourist_attraction","main_image",0,0
+,7,10,6,100,"tx_events_domain_model_event","images",0,0
+,8,10,1,100,"tx_thuecat_tourist_attraction","media_files",0,0
+,9,10,7,100,"tx_thuecat_tourist_information","main_image",0,0
+,10,10,7,105,"tx_thuecat_tourist_attraction","main_image",0,0
+"be_groups"
+,"uid","pid","title","tables_select","tables_modify"
+,2,0,"Editors without file permissions","tx_thuecat_tourist_attraction,sys_file_reference","tx_thuecat_tourist_attraction,sys_file_reference"
+"be_users"
+,"uid","pid","username","admin","usergroup","db_mountpoints","workspace_perms"
+,3,0,"editor-without-files",0,"2","1",1
+"sys_refindex"
+,"hash","tablename","recuid","field","softref_key","softref_id","sorting","workspace","ref_table","ref_uid"
+,"00000000000000000000000000000101","sys_file_reference",3,"uid_local","","",0,0,"sys_file",2
+,"00000000000000000000000000000102","sys_file_metadata",1,"file","","",0,0,"sys_file",1

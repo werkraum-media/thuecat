@@ -40,6 +40,8 @@ class RootRemoval
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly RelationUsage $relationUsage,
+        protected readonly FileUsage $fileUsage,
+        protected readonly FileRemoval $fileRemoval,
     ) {
     }
 
@@ -51,6 +53,7 @@ class RootRemoval
 
         $backendUser = $this->backendUserOf($job);
         $candidates = $this->relationUsage->candidatesOf($root->table, $root->uid);
+        $fileCandidates = $job->removeFiles ? $this->fileUsage->candidatesOf($root->table, $root->uid) : [];
 
         // Translations, inline children and file references follow the root.
         $errors = $this->delete($root->table, $root->uid, $backendUser);
@@ -58,9 +61,40 @@ class RootRemoval
             return new RootOutcome(false, false, $errors);
         }
 
-        $relations = $this->removeUnused($candidates, $backendUser);
+        $relations = $this->removeUnused($candidates, $backendUser, $job->removeFiles);
+        $files = $this->removeUnusedFiles(
+            array_keys(array_flip([...$fileCandidates, ...$relations->fileCandidates])),
+            $backendUser
+        );
 
-        return new RootOutcome(true, false, $relations->errors, $relations->removed);
+        return new RootOutcome(true, false, [...$relations->errors, ...$files->errors], $relations->removed, $files->removed);
+    }
+
+    /**
+     * Judged after the relations are gone, so their file references no longer count.
+     *
+     * @param list<int> $candidates
+     */
+    protected function removeUnusedFiles(array $candidates, BackendUserAuthentication $backendUser): RemovalTally
+    {
+        $removed = 0;
+        $errors = [];
+        foreach ($candidates as $candidate) {
+            if (!$this->fileUsage->isUnused($candidate)) {
+                continue;
+            }
+
+            $deleteErrors = $this->fileRemoval->remove($candidate, $backendUser);
+            if ($deleteErrors !== []) {
+                $errors = [...$errors, ...$deleteErrors];
+
+                continue;
+            }
+
+            ++$removed;
+        }
+
+        return new RemovalTally($removed, $errors);
     }
 
     /**
@@ -68,16 +102,18 @@ class RootRemoval
      *
      * @param list<RelationRecord> $candidates
      */
-    protected function removeUnused(array $candidates, BackendUserAuthentication $backendUser): RelationsOutcome
+    protected function removeUnused(array $candidates, BackendUserAuthentication $backendUser, bool $withFiles): RemovalTally
     {
         $removed = 0;
         $errors = [];
+        $fileCandidates = [];
         foreach ($candidates as $candidate) {
             if (!$this->exists($candidate->table, $candidate->uid) || !$this->relationUsage->isUnused($candidate)) {
                 continue;
             }
 
             $further = $this->relationUsage->candidatesOf($candidate->table, $candidate->uid);
+            $files = $withFiles ? $this->fileUsage->candidatesOf($candidate->table, $candidate->uid) : [];
             $deleteErrors = $this->delete($candidate->table, $candidate->uid, $backendUser);
             if ($deleteErrors !== []) {
                 foreach ($deleteErrors as $error) {
@@ -87,12 +123,13 @@ class RootRemoval
                 continue;
             }
 
-            $furtherOutcome = $this->removeUnused($further, $backendUser);
+            $furtherOutcome = $this->removeUnused($further, $backendUser, $withFiles);
             $removed += 1 + $furtherOutcome->removed;
             $errors = [...$errors, ...$furtherOutcome->errors];
+            $fileCandidates = [...$fileCandidates, ...$files, ...$furtherOutcome->fileCandidates];
         }
 
-        return new RelationsOutcome($removed, $errors);
+        return new RemovalTally($removed, $errors, $fileCandidates);
     }
 
     /**

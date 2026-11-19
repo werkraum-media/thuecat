@@ -34,9 +34,9 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
  */
 abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
 {
-    protected function queueJob(Selection $selection, int $backendUser = 1): int
+    protected function queueJob(Selection $selection, int $backendUser = 1, bool $removeFiles = false): int
     {
-        return $this->get(RemovalJobs::class)->queue($selection, false, false, $backendUser);
+        return $this->get(RemovalJobs::class)->queue($selection, $removeFiles, false, $backendUser);
     }
 
     /**
@@ -44,9 +44,9 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
      *
      * @return int the job's uid
      */
-    protected function removeRoot(string $table, int $uid): int
+    protected function removeRoot(string $table, int $uid, bool $removeFiles = false, int $backendUser = 1): int
     {
-        $job = $this->queueJob(Selection::ofKind($table, Scope::Folder, 10));
+        $job = $this->queueJob(Selection::ofKind($table, Scope::Folder, 10), $backendUser, $removeFiles);
         $this->get(RemoveRootHandler::class)(new RemoveRoot($job, $table, $uid));
 
         return $job;

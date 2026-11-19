@@ -20,14 +20,20 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Removal;
 
-final readonly class RelationsOutcome
+/**
+ * How many relations or files went, the errors of those that could not, and the files the removed relations
+ * referenced, still to be judged.
+ */
+final readonly class RemovalTally
 {
     /**
      * @param list<string> $errors
+     * @param list<int> $fileCandidates
      */
     public function __construct(
         public int $removed,
         public array $errors,
+        public array $fileCandidates = [],
     ) {
     }
 }

@@ -110,6 +110,7 @@ class RemovalJobs
             ->set('removed_roots', 'removed_roots + ' . (int)$outcome->removed, false)
             ->set('skipped_roots', 'skipped_roots + ' . (int)$outcome->skipped, false)
             ->set('removed_relations', 'removed_relations + ' . $outcome->removedRelations, false)
+            ->set('removed_files', 'removed_files + ' . $outcome->removedFiles, false)
             ->set('errors', 'errors + ' . count($outcome->errors), false)
         ;
         if ($outcome->errors !== []) {
