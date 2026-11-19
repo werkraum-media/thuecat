@@ -100,6 +100,15 @@ final class RemovalSelectionTest extends AbstractFunctionalTestCase
         $this->assertSame($expected, $walked);
     }
 
+    #[Test]
+    public function aRootOfAnotherTableHasNoNextRootInTheSelection(): void
+    {
+        $this->assertNull($this->get(RemovalSelection::class)->next(
+            Selection::ofKind('tx_thuecat_trail', Scope::Instance),
+            new RootRecord('tx_thuecat_place', 1)
+        ));
+    }
+
     /**
      * @param list<array{string, int}> $expected
      */

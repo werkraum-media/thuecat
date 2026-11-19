@@ -93,20 +93,17 @@ class RootRemoval
                 continue;
             }
 
-            $deleteErrors = $this->fileRemoval->remove($candidate, $backendUser);
-            if ($deleteErrors !== []) {
-                foreach ($deleteErrors as $error) {
-                    $backendUser->writelog(
-                        SystemLogType::ERROR,
-                        SystemLogGeneralAction::UNDEFINED,
-                        SystemLogErrorClassification::SYSTEM_ERROR,
-                        null,
-                        'Removal job %d: %s',
-                        [$job->uid, $error]
-                    );
-                }
-
-                $errors = [...$errors, ...$deleteErrors];
+            $error = $this->fileRemoval->remove($candidate, $backendUser);
+            if (is_string($error)) {
+                $backendUser->writelog(
+                    SystemLogType::ERROR,
+                    SystemLogGeneralAction::UNDEFINED,
+                    SystemLogErrorClassification::SYSTEM_ERROR,
+                    null,
+                    'Removal job %d: %s',
+                    [$job->uid, $error]
+                );
+                $errors[] = $error;
 
                 continue;
             }

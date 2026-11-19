@@ -41,18 +41,18 @@ class FileRemoval
     }
 
     /**
-     * @return list<string> why the file could not be deleted
+     * @return ?string why the file could not be deleted
      */
-    public function remove(int $fileUid, BackendUserAuthentication $backendUser): array
+    public function remove(int $fileUid, BackendUserAuthentication $backendUser): ?string
     {
         try {
             $file = $this->resourceFactory->getFileObject($fileUid);
             $this->storageOf($file->getStorage(), $backendUser)->deleteFile($file);
         } catch (Exception $exception) {
-            return ['sys_file:' . $fileUid . ' ' . $exception->getMessage()];
+            return 'sys_file:' . $fileUid . ' ' . $exception->getMessage();
         }
 
-        return [];
+        return null;
     }
 
     /**

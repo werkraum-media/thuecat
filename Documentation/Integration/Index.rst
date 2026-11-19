@@ -32,9 +32,14 @@ Information about how to install and use the extension within a TYPO3 instance.
 
       How to get data into the instance via import configuration and scheduled tasks.
 
+   .. card:: :ref:`removal-module`
+
+      How to remove imported data of a folder, a site or an import, and the message worker it needs.
+
    .. card:: :ref:`maintenance`
 
-      What an update needs beyond Composer, such as filling the slugs of existing records.
+      What an update needs beyond Composer, such as filling the slugs of existing records, and the
+      recommended cleanup tasks.
 
 .. toctree::
    :hidden:
@@ -45,4 +50,5 @@ Information about how to install and use the extension within a TYPO3 instance.
    Import
    SyncChannel
    FrontendOutput/Index
+   RemovalModule
    Maintenance

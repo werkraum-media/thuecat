@@ -123,7 +123,7 @@ final class RemovalChainTest extends AbstractRemovalTestCase
         $this->assertEquals(1, $this->jobRow($job)['errors']);
         $errorLog = $this->jobRow($job)['error_log'];
         $this->assertIsString($errorLog);
-        $this->assertStringContainsString('tx_thuecat_tourist_attraction:4', $errorLog);
+        $this->assertStringStartsWith('tx_thuecat_tourist_attraction:4 ', $errorLog);
         $this->assertEquals(
             [new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 2), new RemovalFinished($job)],
             $this->queuedMessages()

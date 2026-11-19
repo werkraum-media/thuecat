@@ -38,7 +38,7 @@ final class FileRemovalTest extends AbstractRemovalTestCase
         // Storage 1 of the fixture's sys_file rows; it has no _recycler_ folder, so a deleted file is gone.
         $this->assertSame(1, $this->get(StorageRepository::class)->createLocalStorage('fileadmin', 'fileadmin/', 'relative'));
         GeneralUtility::mkdir_deep($this->instancePath . '/fileadmin/removal');
-        foreach (['only-root', 'shared', 'translation', 'inline-child', 'refused', 'event', 'relation'] as $name) {
+        foreach (['only-root', 'shared', 'translation', 'translation-media', 'inline-child', 'refused', 'event', 'relation'] as $name) {
             file_put_contents($this->instancePath . '/fileadmin/removal/' . $name . '.jpg', $name);
         }
     }
@@ -60,11 +60,12 @@ final class FileRemovalTest extends AbstractRemovalTestCase
     }
 
     #[Test]
-    public function anImageOfTheRootsTranslationIsDeleted(): void
+    public function everyImageOfTheRootsTranslationIsDeleted(): void
     {
         $this->removeRoot('tx_thuecat_tourist_attraction', 100, true);
 
         $this->assertFileDoesNotExist($this->instancePath . '/fileadmin/removal/translation.jpg');
+        $this->assertFileDoesNotExist($this->instancePath . '/fileadmin/removal/translation-media.jpg');
     }
 
     #[Test]
@@ -109,7 +110,7 @@ final class FileRemovalTest extends AbstractRemovalTestCase
     {
         $job = $this->removeRoot('tx_thuecat_tourist_attraction', 100, true);
 
-        $this->assertEquals(3, $this->jobRow($job)['removed_files']);
+        $this->assertEquals(4, $this->jobRow($job)['removed_files']);
         $this->assertEquals(0, $this->jobRow($job)['errors']);
     }
 

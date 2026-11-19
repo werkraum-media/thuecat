@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use WerkraumMedia\ThueCat\Controller\Backend\RemovalController;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\RemovalJobs;
@@ -89,6 +90,7 @@ final class RemovalControllerTest extends AbstractRemovalTestCase
         $this->assertStringContainsString('Erfurt', $html);
         $this->assertStringContainsString('Weimar', $html);
         $this->assertStringNotContainsString('Folder without roots', $html);
+        $this->assertSame(8, substr_count($html, 'selection%5Bscope%5D=site'), 'Two sites with four kinds each');
     }
 
     #[Test]
@@ -301,6 +303,8 @@ final class RemovalControllerTest extends AbstractRemovalTestCase
         );
 
         $this->assertSame(303, $response->getStatusCode());
+        $flashMessages = $this->get(FlashMessageService::class)->getMessageQueueByIdentifier()->getAllMessages();
+        $this->assertSame('Removal queued', $flashMessages[0]->getTitle());
         $jobs = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_removal_job')
             ->select(['*'], 'tx_thuecat_removal_job')
             ->fetchAllAssociative()

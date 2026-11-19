@@ -24,6 +24,12 @@
                 "public function \\w+Action\\(.*"
             ]
         },
+        "IncrementInteger": {
+            // A last full update recorded at second 1 instead of 0 of the epoch is just as old: the update runs either way.
+            "ignore": [
+                "WerkraumMedia\\ThueCat\\Removal\\ReferenceIndexUpdate::updateUnlessRecent"
+            ]
+        },
         "LessThan": {
             // < and <= differ only at exactly 0.2 s between two microtime() calls, which no test can produce.
             "ignore": [

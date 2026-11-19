@@ -107,6 +107,21 @@ final class RelationRemovalTest extends AbstractRemovalTestCase
     }
 
     #[Test]
+    public function aRefusedRelationIsKeptAndLoggedOnTheJob(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Editor.csv');
+
+        $job = $this->removeRoot('tx_thuecat_tourist_attraction', 102, false, 2);
+
+        $this->assertTrue($this->isDeleted('tx_thuecat_tourist_attraction', 102));
+        $this->assertFalse($this->isDeleted('tx_thuecat_organisation', 105));
+        $this->assertEquals(0, $this->jobRow($job)['removed_relations']);
+        $errorLog = $this->jobRow($job)['error_log'];
+        $this->assertIsString($errorLog);
+        $this->assertMatchesRegularExpression('/^tx_thuecat_tourist_attraction:102 tx_thuecat_organisation:105 \S/', $errorLog);
+    }
+
+    #[Test]
     public function theJobCountsTheRemovedRelations(): void
     {
         $job = $this->removeRoot('tx_thuecat_tourist_attraction', 100);

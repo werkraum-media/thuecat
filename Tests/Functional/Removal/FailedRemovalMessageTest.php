@@ -162,6 +162,15 @@ final class FailedRemovalMessageTest extends AbstractRemovalTestCase
     }
 
     #[Test]
+    public function failuresOfAnUnknownJobAreIgnored(): void
+    {
+        $this->announceFailure(new RemoveRoot($this->job + 1, 'tx_thuecat_tourist_attraction', 1));
+
+        $this->assertSame([], $this->queuedMessages());
+        $this->assertSame([], $this->systemLogErrors(1));
+    }
+
+    #[Test]
     public function failuresOfOtherMessagesAreIgnored(): void
     {
         $this->announceFailure(new stdClass());

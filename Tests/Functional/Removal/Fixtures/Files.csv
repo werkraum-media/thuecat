@@ -1,6 +1,6 @@
 "tx_thuecat_tourist_attraction"
 ,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","main_image","media_files","contained_in_tourist_information"
-,103,10,1,100,"https://thuecat.org/resources/attraction-100","Attraction with relations (en)",1,0,0
+,103,10,1,100,"https://thuecat.org/resources/attraction-100","Attraction with relations (en)",1,1,0
 ,104,10,0,0,"https://thuecat.org/resources/attraction-104","Attraction of a refused image",1,0,0
 ,105,10,0,0,"https://thuecat.org/resources/attraction-105","Attraction in a tourist information",0,0,100
 "tx_thuecat_tourist_information"
@@ -18,6 +18,7 @@
 ,5,0,1,"/removal/refused.jpg","refused.jpg",2,"image/jpeg","jpg"
 ,6,0,1,"/removal/event.jpg","event.jpg",2,"image/jpeg","jpg"
 ,7,0,1,"/removal/relation.jpg","relation.jpg",2,"image/jpeg","jpg"
+,8,0,1,"/removal/translation-media.jpg","translation-media.jpg",2,"image/jpeg","jpg"
 "sys_file_metadata"
 ,"uid","pid","file","sys_language_uid","l10n_parent"
 ,1,0,1,0,0
@@ -33,6 +34,7 @@
 ,8,10,1,100,"tx_thuecat_tourist_attraction","media_files",0,0
 ,9,10,7,100,"tx_thuecat_tourist_information","main_image",0,0
 ,10,10,7,105,"tx_thuecat_tourist_attraction","main_image",0,0
+,11,10,8,103,"tx_thuecat_tourist_attraction","media_files",1,0
 "be_groups"
 ,"uid","pid","title","tables_select","tables_modify"
 ,2,0,"Editors without file permissions","tx_thuecat_tourist_attraction,sys_file_reference","tx_thuecat_tourist_attraction,sys_file_reference"

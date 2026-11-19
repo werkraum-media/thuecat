@@ -9,7 +9,7 @@ defined('TYPO3') || die();
 // The scheduler is optional.
 // @phpstan-ignore offsetAccess.nonOffsetAccessible
 if (isset($GLOBALS['TCA']['tx_scheduler_task'])) {
-    foreach (['tx_thuecat_import_log', 'tx_thuecat_import_log_entry'] as $tableName) {
+    foreach (['tx_thuecat_import_log', 'tx_thuecat_import_log_entry', 'tx_thuecat_removal_job'] as $tableName) {
         // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible
         $GLOBALS['TCA']['tx_scheduler_task']['types'][TableGarbageCollectionTask::class]['taskOptions']['tables'][$tableName] = [
             'dateField' => 'crdate',

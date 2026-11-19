@@ -170,10 +170,6 @@ class RootOverview
      */
     protected function readablePages(BackendUserAuthentication $user, array $pageUids): array
     {
-        if ($pageUids === []) {
-            return [];
-        }
-
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
         $rows = $queryBuilder
