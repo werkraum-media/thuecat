@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -31,9 +30,8 @@ use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use WerkraumMedia\ThueCat\Controller\Backend\RemovalController;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
-use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
-final class RemovalControllerTest extends AbstractBackendTestCase
+final class RemovalControllerTest extends AbstractRemovalTestCase
 {
     private ServerRequest $request;
 
@@ -180,16 +178,9 @@ final class RemovalControllerTest extends AbstractBackendTestCase
         ;
         $this->assertCount(1, $jobs);
         $this->assertEquals($expectedJob, array_intersect_key($jobs[0], $expectedJob));
-        $messages = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
-            ->select(['body'], 'sys_messenger_messages', ['queue_name' => 'default'])
-            ->fetchAllAssociative()
-        ;
-        $this->assertCount(1, $messages);
-        $body = $messages[0]['body'];
-        $this->assertIsString($body);
-        $message = new PhpSerializer()->decode(['body' => $body])->getMessage();
-        $this->assertInstanceOf(RemovalStarted::class, $message);
-        $this->assertEquals($jobs[0]['uid'], $message->jobUid);
+        $jobUid = $jobs[0]['uid'];
+        $this->assertIsNumeric($jobUid);
+        $this->assertEquals([new RemovalStarted((int)$jobUid)], $this->queuedMessages());
         $this->assertSame(5, $this->countRows('tx_thuecat_tourist_attraction'));
     }
 
@@ -221,9 +212,6 @@ final class RemovalControllerTest extends AbstractBackendTestCase
         $this->assertSame(303, $confirm->getStatusCode());
         $this->assertSame(303, $start->getStatusCode());
         $this->assertSame(0, $this->countRows('tx_thuecat_removal_job'));
-        $this->assertSame(
-            0,
-            $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->count('*', 'sys_messenger_messages', [])
-        );
+        $this->assertSame([], $this->queuedMessages());
     }
 }

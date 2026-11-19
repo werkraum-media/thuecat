@@ -66,7 +66,7 @@ final readonly class Selection
 
         $table = $parameters['table'] ?? null;
         $scope = Scope::tryFrom(is_string($parameters['scope'] ?? null) ? $parameters['scope'] : '');
-        if (!in_array($table, RootTables::ALL, true) || $scope === null) {
+        if (!in_array($table, RootTables::ALL, true) || !$scope instanceof Scope) {
             return null;
         }
 

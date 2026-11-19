@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Removal\RemovalSelection;
+use WerkraumMedia\ThueCat\Removal\RootRecord;
 use WerkraumMedia\ThueCat\Removal\Scope;
 use WerkraumMedia\ThueCat\Removal\Selection;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
@@ -91,7 +92,7 @@ final class RemovalSelectionTest extends AbstractFunctionalTestCase
 
         $walked = [];
         $root = $subject->first($selection);
-        while ($root !== null) {
+        while ($root instanceof RootRecord) {
             $walked[] = [$root->table, $root->uid];
             $root = $subject->next($selection, $root);
         }

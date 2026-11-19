@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Removal;
 
 use Psr\Clock\ClockInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
@@ -58,5 +59,91 @@ class RemovalJobs
         ]);
 
         return (int)$connection->lastInsertId();
+    }
+
+    public function find(int $uid): ?RemovalJob
+    {
+        $row = $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->select(['*'], self::TABLE, ['uid' => $uid])
+            ->fetchAssociative()
+        ;
+        if ($row === false) {
+            return null;
+        }
+
+        $scope = Scope::from(is_string($row['scope']) ? $row['scope'] : '');
+        $scopePage = $this->intOf($row['scope_page']);
+        $origin = $this->intOf($row['origin_configuration_uid']);
+
+        return new RemovalJob(
+            $uid,
+            $origin > 0
+                ? Selection::ofOrigin($scopePage, $origin)
+                : Selection::ofKind(is_string($row['root_table']) ? $row['root_table'] : '', $scope, $scopePage),
+            (bool)$this->intOf($row['remove_files']),
+            (bool)$this->intOf($row['update_reference_index']),
+            $this->intOf($row['backend_user'])
+        );
+    }
+
+    public function markRunning(int $uid): void
+    {
+        $this->update($uid, ['status' => 'running']);
+    }
+
+    public function markDone(int $uid): void
+    {
+        $this->update($uid, ['status' => 'done']);
+    }
+
+    /**
+     * Adds to the totals in the database, so the count stays right however the roots of a job are spread over
+     * workers and redeliveries.
+     */
+    public function record(int $uid, RootRecord $root, RootOutcome $outcome): void
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+        $queryBuilder
+            ->update(self::TABLE)
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+            ->set('progressed_at', $this->clock->now()->getTimestamp())
+            ->set('removed_roots', 'removed_roots + ' . (int)$outcome->removed, false)
+            ->set('skipped_roots', 'skipped_roots + ' . (int)$outcome->skipped, false)
+            ->set('errors', 'errors + ' . count($outcome->errors), false)
+        ;
+        if ($outcome->errors !== []) {
+            $lines = '';
+            foreach ($outcome->errors as $error) {
+                $lines .= $root->table . ':' . $root->uid . ' ' . $error . "\n";
+            }
+
+            $queryBuilder->set(
+                'error_log',
+                $queryBuilder->expr()->concat(
+                    'COALESCE(error_log, ' . $queryBuilder->quote('') . ')',
+                    $queryBuilder->createNamedParameter($lines)
+                ),
+                false
+            );
+        }
+
+        $queryBuilder->executeStatement();
+    }
+
+    /**
+     * @param array<string, string> $values
+     */
+    protected function update(int $uid, array $values): void
+    {
+        $this->connectionPool->getConnectionForTable(self::TABLE)->update(
+            self::TABLE,
+            [...$values, 'progressed_at' => $this->clock->now()->getTimestamp()],
+            ['uid' => $uid]
+        );
+    }
+
+    protected function intOf(mixed $value): int
+    {
+        return is_numeric($value) ? (int)$value : 0;
     }
 }

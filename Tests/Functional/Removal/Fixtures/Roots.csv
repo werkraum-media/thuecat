@@ -1,7 +1,7 @@
 "pages"
 ,"uid","pid","title","doktype","perms_everybody"
 ,1,0,"Example site",1,1
-,10,1,"Folder A",254,1
+,10,1,"Folder A",254,31
 ,11,1,"Folder B",254,0
 ,12,1,"Folder without roots",254,1
 ,4000,0,"First site",1,1

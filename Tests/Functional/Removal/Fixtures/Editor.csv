@@ -1,3 +1,6 @@
+"be_groups"
+,"uid","pid","title","tables_select","tables_modify"
+,1,0,"Editors","tx_thuecat_tourist_attraction,tx_thuecat_place,tx_thuecat_trail,tx_events_domain_model_event","tx_thuecat_tourist_attraction,tx_thuecat_place,tx_thuecat_trail,tx_events_domain_model_event"
 "be_users"
-,"uid","pid","username","admin","db_mountpoints","workspace_perms"
-,2,0,"editor",0,"1",1
+,"uid","pid","username","admin","usergroup","db_mountpoints","workspace_perms"
+,2,0,"editor",0,"1","1",1
