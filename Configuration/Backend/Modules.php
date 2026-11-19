@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
+use WerkraumMedia\ThueCat\Controller\Backend\RemovalController;
 
 return [
     'thuecat_thuecat' => [
@@ -20,6 +21,19 @@ return [
         'controllerActions' => [
             ImportController::class => [
                 'index',
+            ],
+        ],
+    ],
+    // No iconIdentifier: the client delivers the module icons.
+    'thuecat_removal' => [
+        'parent' => 'thuecat_thuecat',
+        'position' => ['after' => 'thuecat_imports'],
+        'access' => 'user',
+        'path' => '/module/thuecat/removal',
+        'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf',
+        'routes' => [
+            '_default' => [
+                'target' => RemovalController::class . '::indexAction',
             ],
         ],
     ],

@@ -67,6 +67,12 @@ deptrac:
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\Controller\\Backend\\#'
 
+    # Removal of imported records by the backend module and its queued messages; independent of the import.
+    - name: Removal
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Removal\\#'
+
     - name: BackendForms
       collectors:
         - type: classNameRegex
@@ -117,7 +123,8 @@ deptrac:
     FrontendDelivery: [FrontendRepository, FrontendModel, Service]
     FrontendRepository: [FrontendModel, Service]
     FrontendModel: [Service, Events]
-    BackendModule: [ImportModel, ImportRepository, Service]
+    BackendModule: [ImportModel, ImportRepository, Removal, Service]
+    Removal: [Service]
     BackendForms: [Service]
     Service: []
     System:
@@ -130,6 +137,7 @@ deptrac:
       - FrontendRepository
       - FrontendModel
       - BackendModule
+      - Removal
       - BackendForms
       - Service
       - Events

@@ -1,0 +1,74 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+    {f:layout(name: 'Module')}
+
+    <f:section name="Content">
+        <h1>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:headline')}</h1>
+
+        <f:if condition="{sites}">
+            <f:then>
+                <f:for each="{sites}" as="site">
+                    {f:render(section: 'Site', arguments: {site: site, kinds: kinds})}
+                </f:for>
+            </f:then>
+            <f:else>
+                <f:be.infobox
+                    title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:empty.title')}"
+                    state="-1"
+                >
+                    {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:empty.text')}
+                </f:be.infobox>
+            </f:else>
+        </f:if>
+    </f:section>
+
+    <f:section name="Site">
+        <h2>{site.title}</h2>
+
+        <div class="table-fit">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:page')}</th>
+                        <f:for each="{kinds}" as="kind">
+                            <th class="text-end">{kind}</th>
+                        </f:for>
+                    </tr>
+                </thead>
+                <tbody>
+                    <f:for each="{site.pages}" as="page">
+                        <tr>
+                            <td>{page.title} <span class="text-body-secondary">[{page.uid}]</span></td>
+                            <f:for each="{page.counts}" as="count">
+                                <td class="text-end">{count}</td>
+                            </f:for>
+                        </tr>
+                    </f:for>
+                </tbody>
+            </table>
+        </div>
+
+        <f:if condition="{site.origins}">
+            <h3>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:origins')}</h3>
+            <div class="table-fit">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:origin')}</th>
+                            <th class="text-end">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_removal.xlf:origin.roots')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <f:for each="{site.origins}" as="origin">
+                            <tr>
+                                <td>{origin.title} <span class="text-body-secondary">[{origin.configurationUid}]</span></td>
+                                <td class="text-end">{origin.count}</td>
+                            </tr>
+                        </f:for>
+                    </tbody>
+                </table>
+            </div>
+        </f:if>
+    </f:section>
+</html>

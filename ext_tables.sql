@@ -81,3 +81,26 @@ CREATE TABLE tx_thuecat_address (
     longitude varchar(32) DEFAULT '' NOT NULL,
 );
 
+
+-- A queued removal of imported roots; written by the removal module and its message handlers, not edited in forms
+CREATE TABLE tx_thuecat_removal_job (
+    uid int(10) unsigned NOT NULL auto_increment,
+    crdate int(10) unsigned DEFAULT '0' NOT NULL,
+    progressed_at int(10) unsigned DEFAULT '0' NOT NULL,
+    backend_user int(10) unsigned DEFAULT '0' NOT NULL,
+    status varchar(16) DEFAULT '' NOT NULL,
+    root_table varchar(255) DEFAULT '' NOT NULL,
+    scope varchar(16) DEFAULT '' NOT NULL,
+    scope_page int(10) unsigned DEFAULT '0' NOT NULL,
+    origin_configuration_uid int(10) unsigned DEFAULT '0' NOT NULL,
+    remove_files tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    update_reference_index tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    removed_roots int(10) unsigned DEFAULT '0' NOT NULL,
+    skipped_roots int(10) unsigned DEFAULT '0' NOT NULL,
+    removed_relations int(10) unsigned DEFAULT '0' NOT NULL,
+    removed_files int(10) unsigned DEFAULT '0' NOT NULL,
+    errors int(10) unsigned DEFAULT '0' NOT NULL,
+    error_log mediumtext,
+
+    PRIMARY KEY (uid)
+);

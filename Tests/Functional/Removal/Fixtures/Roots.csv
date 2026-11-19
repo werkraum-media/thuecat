@@ -1,0 +1,35 @@
+"pages"
+,"uid","pid","title","doktype","perms_everybody"
+,1,0,"Example site",1,1
+,10,1,"Folder A",254,1
+,11,1,"Folder B",254,0
+,12,1,"Folder without roots",254,1
+,4000,0,"First site",1,1
+,4010,4000,"Folder C",254,1
+,9000,0,"Outside any site",1,1
+,9010,9000,"Folder D",254,1
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","deleted","remote_id","title","origin_configuration_uid","origin_configuration_title"
+,1,10,0,0,0,"https://thuecat.org/resources/attraction-1","Attraction 1",32,"Erfurt"
+,2,10,0,0,0,"","Attraction without remote ID",0,""
+,3,10,1,1,0,"https://thuecat.org/resources/attraction-1","Attraction 1 (en)",32,"Erfurt"
+,4,11,0,0,0,"https://thuecat.org/resources/attraction-4","Attraction 4",0,""
+,5,4010,0,0,0,"https://thuecat.org/resources/attraction-5","Attraction 5",32,"Erfurt"
+,6,10,0,0,1,"https://thuecat.org/resources/attraction-6","Deleted attraction",32,"Erfurt"
+"tx_thuecat_place"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","origin_configuration_uid","origin_configuration_title"
+,1,11,0,0,"https://thuecat.org/resources/place-1","Place 1",32,"Erfurt"
+,2,10,0,0,"https://thuecat.org/resources/place-2","Place 2",7,"Weimar"
+"tx_thuecat_trail"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","origin_configuration_uid","origin_configuration_title"
+,1,4010,0,0,"https://thuecat.org/resources/trail-1","Trail 1",32,"Erfurt"
+,2,10,0,0,"","Trail without remote ID",0,""
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title","origin_configuration_uid","origin_configuration_title"
+,1,10,0,0,"https://thuecat.org/resources/event-1","Event 1",32,"Erfurt"
+,2,11,0,0,"https://thuecat.org/resources/event-2","Event 2",7,"Weimar"
+,3,10,1,1,"https://thuecat.org/resources/event-1","Event 1 (en)",32,"Erfurt"
+,4,9010,0,0,"","Event outside any site",0,""
+"tx_thuecat_organisation"
+,"uid","pid","sys_language_uid","l10n_parent","remote_id","title"
+,1,12,0,0,"https://thuecat.org/resources/organisation-1","Organisation 1"

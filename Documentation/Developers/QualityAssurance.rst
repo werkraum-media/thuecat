@@ -158,7 +158,9 @@ divided into layers, and the rules say which layer may use which.
    * - FrontendModel
      - Events
    * - BackendModule
-     - ImportModel, ImportRepository
+     - ImportModel, ImportRepository, Removal
+   * - Removal
+     - –
    * - BackendForms
      - –
    * - Service
@@ -172,6 +174,8 @@ use System. What these rules ensure:
 *  A model never uses a repository.
 *  Import and frontend never use each other.
 *  The backend sees the import's data, never the import itself.
+*  Removal deletes imported records without the import's code, so removing data never depends on
+   how it was imported.
 *  Service holds helpers without side effects and the vocabulary several features share. It may
    depend on nothing in the package, which is what lets every feature use it instead of keeping a
    copy.
