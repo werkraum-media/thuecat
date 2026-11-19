@@ -44,9 +44,7 @@ final class RemovalChainTest extends AbstractRemovalTestCase
     #[Test]
     public function theStartSetsTheJobRunningAndQueuesTheFirstRoot(): void
     {
-        $job = $this->queueJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 10));
-
-        $this->get(RemovalStartedHandler::class)(new RemovalStarted($job));
+        $job = $this->startJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 10));
 
         $this->assertSame('running', $this->jobRow($job)['status']);
         $this->assertEquals([new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 1)], $this->queuedMessages());
@@ -55,9 +53,7 @@ final class RemovalChainTest extends AbstractRemovalTestCase
     #[Test]
     public function theStartOfAnEmptySelectionQueuesTheFinish(): void
     {
-        $job = $this->queueJob(Selection::ofKind('tx_events_domain_model_event', Scope::Folder, 4010));
-
-        $this->get(RemovalStartedHandler::class)(new RemovalStarted($job));
+        $job = $this->startJob(Selection::ofKind('tx_events_domain_model_event', Scope::Folder, 4010));
 
         $this->assertEquals([new RemovalFinished($job)], $this->queuedMessages());
     }

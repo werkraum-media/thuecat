@@ -21,13 +21,14 @@ deptrac:
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\Import\\(?!Settings\\(Anchor|CategoryAnchor))#'
 
-    # TYPO3 glue around the ImportConfiguration record: its FlexForm, form data and DataHandler hook.
+    # TYPO3 glue around the ImportConfiguration record: its FlexForm, form data and DataHandler hook, and its logs
+    # kept out of the reference index.
     - name: ImportIntegration
       collectors:
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\Typo3\\(FlexForm|FormDataProvider|Hook)\\#'
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\ImportConfigurationFlexFormListener$#'
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\(ImportConfigurationFlexFormListener|ImportLogReferenceIndexListener)$#'
 
     - name: ImportModel
       collectors:

@@ -22,7 +22,9 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Core\Database\Connection;
+use WerkraumMedia\ThueCat\Removal\Handler\RemovalStartedHandler;
 use WerkraumMedia\ThueCat\Removal\Handler\RemoveRootHandler;
+use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\Message\RemoveRoot;
 use WerkraumMedia\ThueCat\Removal\RemovalJobs;
 use WerkraumMedia\ThueCat\Removal\Scope;
@@ -34,9 +36,26 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
  */
 abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
 {
-    protected function queueJob(Selection $selection, int $backendUser = 1, bool $removeFiles = false): int
+    protected function queueJob(
+        Selection $selection,
+        int $backendUser = 1,
+        bool $removeFiles = false,
+        bool $updateReferenceIndex = false,
+    ): int {
+        return $this->get(RemovalJobs::class)->queue($selection, $removeFiles, $updateReferenceIndex, $backendUser);
+    }
+
+    /**
+     * Queues a job and handles its first message.
+     *
+     * @return int the job's uid
+     */
+    protected function startJob(Selection $selection, bool $updateReferenceIndex = false): int
     {
-        return $this->get(RemovalJobs::class)->queue($selection, $removeFiles, false, $backendUser);
+        $job = $this->queueJob($selection, 1, false, $updateReferenceIndex);
+        $this->get(RemovalStartedHandler::class)(new RemovalStarted($job));
+
+        return $job;
     }
 
     /**
@@ -84,6 +103,16 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
         $this->assertIsArray($row);
 
         return $row;
+    }
+
+    protected function referenceExists(string $table, int $uid, string $refTable, int $refUid): bool
+    {
+        return $this->getConnectionPool()->getConnectionForTable('sys_refindex')->count('*', 'sys_refindex', [
+            'tablename' => $table,
+            'recuid' => $uid,
+            'ref_table' => $refTable,
+            'ref_uid' => $refUid,
+        ]) > 0;
     }
 
     /**

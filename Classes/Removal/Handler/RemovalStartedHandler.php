@@ -25,6 +25,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalFinished;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\Message\RemoveRoot;
+use WerkraumMedia\ThueCat\Removal\ReferenceIndexUpdate;
 use WerkraumMedia\ThueCat\Removal\RemovalJob;
 use WerkraumMedia\ThueCat\Removal\RemovalJobs;
 use WerkraumMedia\ThueCat\Removal\RemovalSelection;
@@ -37,6 +38,7 @@ final readonly class RemovalStartedHandler
         private RemovalJobs $removalJobs,
         private RemovalSelection $removalSelection,
         private MessageBusInterface $messageBus,
+        private ReferenceIndexUpdate $referenceIndexUpdate,
     ) {
     }
 
@@ -48,6 +50,10 @@ final readonly class RemovalStartedHandler
         }
 
         $this->removalJobs->markRunning($job->uid);
+        if ($job->updateReferenceIndex) {
+            $this->referenceIndexUpdate->updateUnlessRecent();
+        }
+
         $first = $this->removalSelection->first($job->selection);
         $this->messageBus->dispatch(
             $first instanceof RootRecord ? new RemoveRoot($job->uid, $first->table, $first->uid) : new RemovalFinished($job->uid)
