@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\SysLog\Action as SystemLogGeneralAction;
+use TYPO3\CMS\Core\SysLog\Error as SystemLogErrorClassification;
+use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -42,6 +45,7 @@ class RootRemoval
         protected readonly RelationUsage $relationUsage,
         protected readonly FileUsage $fileUsage,
         protected readonly FileRemoval $fileRemoval,
+        protected readonly JobBackendUser $jobBackendUser,
     ) {
     }
 
@@ -51,7 +55,7 @@ class RootRemoval
             return new RootOutcome(false, true);
         }
 
-        $backendUser = $this->backendUserOf($job);
+        $backendUser = $this->jobBackendUser->of($job);
         $candidates = $this->relationUsage->candidatesOf($root->table, $root->uid);
         $fileCandidates = $job->removeFiles ? $this->fileUsage->candidatesOf($root->table, $root->uid) : [];
 
@@ -64,19 +68,24 @@ class RootRemoval
         $relations = $this->removeUnused($candidates, $backendUser, $job->removeFiles);
         $files = $this->removeUnusedFiles(
             array_keys(array_flip([...$fileCandidates, ...$relations->fileCandidates])),
-            $backendUser
+            $backendUser,
+            $job
         );
 
         return new RootOutcome(true, false, [...$relations->errors, ...$files->errors], $relations->removed, $files->removed);
     }
 
     /**
-     * Judged after the relations are gone, so their file references no longer count.
+     * Judged after the relations are gone, so their file references no longer count. FAL logs no refusal itself,
+     * unlike DataHandler, so the job writes it to the system log.
      *
      * @param list<int> $candidates
      */
-    protected function removeUnusedFiles(array $candidates, BackendUserAuthentication $backendUser): RemovalTally
-    {
+    protected function removeUnusedFiles(
+        array $candidates,
+        BackendUserAuthentication $backendUser,
+        RemovalJob $job,
+    ): RemovalTally {
         $removed = 0;
         $errors = [];
         foreach ($candidates as $candidate) {
@@ -86,6 +95,17 @@ class RootRemoval
 
             $deleteErrors = $this->fileRemoval->remove($candidate, $backendUser);
             if ($deleteErrors !== []) {
+                foreach ($deleteErrors as $error) {
+                    $backendUser->writelog(
+                        SystemLogType::ERROR,
+                        SystemLogGeneralAction::UNDEFINED,
+                        SystemLogErrorClassification::SYSTEM_ERROR,
+                        null,
+                        'Removal job %d: %s',
+                        [$job->uid, $error]
+                    );
+                }
+
                 $errors = [...$errors, ...$deleteErrors];
 
                 continue;
@@ -161,17 +181,5 @@ class RootRemoval
         ;
 
         return is_numeric($count) && (int)$count > 0;
-    }
-
-    /**
-     * The worker runs as _cli_, an admin; the job's own user brings back the group's permissions.
-     */
-    protected function backendUserOf(RemovalJob $job): BackendUserAuthentication
-    {
-        $backendUser = GeneralUtility::makeInstance(BackendUserAuthentication::class);
-        $backendUser->setBeUserByUid($job->backendUser);
-        $backendUser->fetchGroupData();
-
-        return $backendUser;
     }
 }

@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Removal\Message;
 
-final readonly class RemovalStarted
+final readonly class RemovalStarted implements RemovalMessage
 {
     public function __construct(
         public int $jobUid,

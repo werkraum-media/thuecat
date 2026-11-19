@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
+use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class FileRemovalTest extends AbstractRemovalTestCase
@@ -129,5 +130,17 @@ final class FileRemovalTest extends AbstractRemovalTestCase
         $errorLog = $this->jobRow($job)['error_log'];
         $this->assertIsString($errorLog);
         $this->assertStringContainsString('sys_file:5', $errorLog);
+    }
+
+    #[Test]
+    public function aRefusedFileDeletionIsLoggedInTheSystemLogUnderTheJobsUser(): void
+    {
+        $job = $this->removeRoot('tx_thuecat_tourist_attraction', 104, true, 3);
+
+        $errors = $this->systemLogErrors(3);
+        $this->assertCount(1, $errors);
+        $this->assertSame(SystemLogType::ERROR, $errors[0]['type']);
+        $this->assertStringContainsString('Removal job ' . $job . ':', $errors[0]['details']);
+        $this->assertStringContainsString('sys_file:5', $errors[0]['details']);
     }
 }

@@ -176,6 +176,28 @@ class RemovalJobs
     }
 
     /**
+     * Leaves the progress timestamp alone: a job failing again and again still shows as stalled.
+     */
+    public function recordFailure(int $uid, string $error): void
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+        $queryBuilder
+            ->update(self::TABLE)
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+            ->set('errors', 'errors + 1', false)
+            ->set(
+                'error_log',
+                $queryBuilder->expr()->concat(
+                    'COALESCE(error_log, ' . $queryBuilder->quote('') . ')',
+                    $queryBuilder->createNamedParameter($error . "\n")
+                ),
+                false
+            )
+            ->executeStatement()
+        ;
+    }
+
+    /**
      * @param array<string, string> $values
      */
     protected function update(int $uid, array $values): void

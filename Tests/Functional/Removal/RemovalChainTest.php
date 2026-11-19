@@ -131,6 +131,19 @@ final class RemovalChainTest extends AbstractRemovalTestCase
     }
 
     #[Test]
+    public function aRefusedRootLeavesOnlyDataHandlersEntryInTheSystemLog(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Editor.csv');
+        $job = $this->queueJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 11), 2);
+
+        $this->get(RemoveRootHandler::class)(new RemoveRoot($job, 'tx_thuecat_tourist_attraction', 4));
+
+        $errors = $this->systemLogErrors(2);
+        $this->assertCount(1, $errors);
+        $this->assertStringNotContainsString('Removal job', $errors[0]['details']);
+    }
+
+    #[Test]
     public function theFinishSetsTheJobDone(): void
     {
         $job = $this->queueJob(Selection::ofKind('tx_thuecat_tourist_attraction', Scope::Folder, 10));
