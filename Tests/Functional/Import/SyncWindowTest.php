@@ -26,7 +26,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
@@ -44,13 +43,10 @@ final class SyncWindowTest extends AbstractFunctionalTestCase
      */
     public static function windows(): iterable
     {
-        yield 'the last run succeeded' => [1, 10, '2026-10-14 03:00'];
-        yield 'a runAborted run does not move the anchor' => [2, 10, '2026-10-14 03:00'];
-        yield 'a runFailed run does not move the anchor' => [3, 10, '2026-10-14 03:00'];
-        yield 'a fetchingError run does not move the anchor' => [4, 10, '2026-10-14 03:00'];
-        yield 'a skipped reference and a mapping error do not disqualify a run' => [5, 10, '2026-10-14 03:00'];
-        yield "another configuration's log is ignored" => [6, 10, '2026-10-11 03:00'];
-        yield 'content but no qualifying log' => [8, 10, self::FIVE_YEARS_BEFORE_NOW];
+        yield 'the last successful run, with every import log deleted' => [1, 10, '2026-10-14 03:00'];
+        yield 'a later failed job does not move the anchor' => [2, 10, '2026-10-14 03:00'];
+        yield "another configuration's last successful run is ignored" => [6, 10, '2026-10-11 03:00'];
+        yield 'content and an import log but no last successful run' => [8, 10, self::FIVE_YEARS_BEFORE_NOW];
         yield 'an empty storage folder' => [1, 11, self::FIVE_YEARS_BEFORE_NOW];
         yield 'a storage folder holding only deleted events and trails' => [1, 12, self::FIVE_YEARS_BEFORE_NOW];
         yield 'a storage folder holding only trails' => [1, 13, '2026-10-14 03:00'];
@@ -65,7 +61,6 @@ final class SyncWindowTest extends AbstractFunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/SyncWindow.csv');
         $zone = new DateTimeZone('Europe/Berlin');
         $subject = new SyncWindow(
-            $this->get(ImportLogRepository::class),
             $this->get(ConnectionPool::class),
             $this->get(TcaSchemaFactory::class),
             new FixedClock(new DateTimeImmutable(self::NOW, $zone)),

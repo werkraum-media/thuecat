@@ -29,7 +29,6 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\RecordTables;
 
 /**
@@ -42,7 +41,6 @@ use WerkraumMedia\ThueCat\Import\RecordTables;
 readonly class SyncWindow
 {
     public function __construct(
-        protected ImportLogRepository $importLogRepository,
         protected ConnectionPool $connectionPool,
         protected TcaSchemaFactory $tcaSchemaFactory,
         protected ClockInterface $clock,
@@ -60,13 +58,31 @@ readonly class SyncWindow
             return $fullWindow;
         }
 
-        $anchor = $this->importLogRepository->findLatestSuccessfulCreation($configurationUid);
-        if (!$anchor instanceof DateTimeImmutable) {
+        $lastSuccessfulRun = $this->lastSuccessfulRun($configurationUid);
+        if ($lastSuccessfulRun === 0) {
             return $fullWindow;
         }
 
         // The overlap absorbs clock skew and changes indexed after the run started.
-        return $anchor->setTimezone($now->getTimezone())->modify('-1 day');
+        return new DateTimeImmutable('@' . $lastSuccessfulRun)->setTimezone($now->getTimezone())->modify('-1 day');
+    }
+
+    protected function lastSuccessfulRun(int $configurationUid): int
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_configuration');
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+
+        $lastSuccessfulRun = $queryBuilder
+            ->select('last_successful_run')
+            ->from('tx_thuecat_import_configuration')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($configurationUid, Connection::PARAM_INT))
+            )
+            ->executeQuery()
+            ->fetchOne()
+        ;
+
+        return is_numeric($lastSuccessfulRun) ? (int)$lastSuccessfulRun : 0;
     }
 
     /**

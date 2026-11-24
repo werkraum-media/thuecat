@@ -51,7 +51,6 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
         // An empty folder starts a window five years before now.
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(SyncWindow::class, new SyncWindow(
-            $this->get(ImportLogRepository::class),
             $this->get(ConnectionPool::class),
             $this->get(TcaSchemaFactory::class),
             new FixedClock(new DateTimeImmutable('2026-10-19 12:00', new DateTimeZone('Europe/Berlin'))),

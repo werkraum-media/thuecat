@@ -975,6 +975,48 @@
             <trans-unit id="tx_thuecat_import_configuration.fetch_cache_lifetime.description" xml:space="preserve">
                 <source>How long fetched API responses stay reusable by a later run. Leave empty to use the extension configuration.</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.palette.schedule" xml:space="preserve">
+                <source>Schedule</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval" xml:space="preserve">
+                <source>Interval (seconds)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval.description" xml:space="preserve">
+                <source>Time between two scheduled imports. 0 imports only when started manually.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval.hourly" xml:space="preserve">
+                <source>Hourly</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval.sixHourly" xml:space="preserve">
+                <source>Every 6 hours</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval.daily" xml:space="preserve">
+                <source>Daily</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.schedule_interval.weekly" xml:space="preserve">
+                <source>Weekly</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.next_run" xml:space="preserve">
+                <source>Next run</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.next_run.description" xml:space="preserve">
+                <source>When the next scheduled import starts. Set it to choose the first start; each import moves it on by the interval.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.last_run" xml:space="preserve">
+                <source>Last run</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.last_successful_run" xml:space="preserve">
+                <source>Last successful run</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.last_successful_run.description" xml:space="preserve">
+                <source>A sync channel fetches the changes since one day before this time.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.skip_media" xml:space="preserve">
+                <source>Skip media</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.skip_media.description" xml:space="preserve">
+                <source>Scheduled imports fetch no images or other media, and keep the media already imported.</source>
+            </trans-unit>
 
             <trans-unit id="tx_thuecat_import_configuration_url" xml:space="preserve">
                 <source>Import URL</source>

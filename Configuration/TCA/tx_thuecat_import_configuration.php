@@ -173,6 +173,57 @@ return (static function (string $extensionKey, string $tableName): array {
                     'range' => ['lower' => 0],
                 ],
             ],
+            // 0 is "manual only". Any value is accepted, so intervals migrated from scheduler tasks fit.
+            'schedule_interval' => [
+                'label' => $languagePath . '.schedule_interval',
+                'description' => $languagePath . '.schedule_interval.description',
+                'config' => [
+                    'type' => 'number',
+                    'range' => ['lower' => 0],
+                    'default' => 0,
+                    'valuePicker' => [
+                        'items' => [
+                            ['label' => $languagePath . '.schedule_interval.hourly', 'value' => 3600],
+                            ['label' => $languagePath . '.schedule_interval.sixHourly', 'value' => 21600],
+                            ['label' => $languagePath . '.schedule_interval.daily', 'value' => 86400],
+                            ['label' => $languagePath . '.schedule_interval.weekly', 'value' => 604800],
+                        ],
+                    ],
+                ],
+            ],
+            'next_run' => [
+                'label' => $languagePath . '.next_run',
+                'description' => $languagePath . '.next_run.description',
+                'config' => [
+                    'type' => 'datetime',
+                    'format' => 'datetime',
+                ],
+            ],
+            'last_run' => [
+                'label' => $languagePath . '.last_run',
+                'config' => [
+                    'type' => 'datetime',
+                    'format' => 'datetime',
+                    'readOnly' => true,
+                ],
+            ],
+            'last_successful_run' => [
+                'label' => $languagePath . '.last_successful_run',
+                'description' => $languagePath . '.last_successful_run.description',
+                'config' => [
+                    'type' => 'datetime',
+                    'format' => 'datetime',
+                    'readOnly' => true,
+                ],
+            ],
+            'skip_media' => [
+                'label' => $languagePath . '.skip_media',
+                'description' => $languagePath . '.skip_media.description',
+                'config' => [
+                    'type' => 'check',
+                    'renderType' => 'checkboxToggle',
+                ],
+            ],
             'tstamp' => [
                 'config' => [
                     'type' => 'datetime',
@@ -196,17 +247,17 @@ return (static function (string $extensionKey, string $tableName): array {
                 'showitem' => 'title, type',
             ],
             'static' => [
-                'showitem' => 'title, type, storage_pid, file_folder, api_key, urls, --palette--;;tunables',
+                'showitem' => 'title, type, storage_pid, file_folder, api_key, urls, --palette--;;schedule, skip_media, --palette--;;tunables',
             ],
             'syncScope' => [
-                'showitem' => 'title, type, storage_pid, file_folder, sync_scope_id, api_key, fetch_last_x_days, --palette--;;tunables',
+                'showitem' => 'title, type, storage_pid, file_folder, sync_scope_id, api_key, fetch_last_x_days, --palette--;;schedule, skip_media, --palette--;;tunables',
             ],
             'containsPlace' => [
-                'showitem' => 'title, type, storage_pid, file_folder, contains_place_id, api_key, --palette--;;tunables',
+                'showitem' => 'title, type, storage_pid, file_folder, contains_place_id, api_key, --palette--;;schedule, skip_media, --palette--;;tunables',
             ],
             // No fetch_last_x_days: the window follows the last successful run.
             'syncChannel' => [
-                'showitem' => 'title, type, storage_pid, file_folder, sync_channel_id, api_key, --palette--;;tunables',
+                'showitem' => 'title, type, storage_pid, file_folder, sync_channel_id, api_key, --palette--;;schedule, skip_media, --palette--;;tunables',
                 'columnsOverrides' => [
                     'api_key' => [
                         'label' => $languagePath . '.api_key.syncChannel',
@@ -217,6 +268,10 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
         ],
         'palettes' => [
+            'schedule' => [
+                'label' => $languagePath . '.palette.schedule',
+                'showitem' => 'schedule_interval, next_run, --linebreak--, last_run, last_successful_run',
+            ],
             'tunables' => [
                 'label' => $languagePath . '.palette.tunables',
                 'showitem' => 'message_budget, fetch_cache_lifetime',

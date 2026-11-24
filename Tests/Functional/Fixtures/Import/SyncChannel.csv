@@ -9,10 +9,10 @@
 ,100,20,0,"Events"
 ,200,30,0,"Keywords"
 "tx_thuecat_import_configuration"
-,"uid","pid","title","type","storage_pid","file_folder","api_key","sync_channel_id"
-,1,0,"Sync Channel","syncChannel",10,"1:/thuecat/","test-sync-key","test-channel"
-,2,0,"Static","static",10,"","",""
-,3,0,"Static with media key","static",10,"1:/thuecat/","test-static-key",""
+,"uid","pid","title","type","storage_pid","file_folder","api_key","sync_channel_id","last_successful_run"
+,1,0,"Sync Channel","syncChannel",10,"1:/thuecat/","test-sync-key","test-channel",1792026000
+,2,0,"Static","static",10,"","","",0
+,3,0,"Static with media key","static",10,"1:/thuecat/","test-static-key","",0
 "tx_thuecat_import_configuration_url"
 ,"uid","pid","configuration","sorting","title","url"
 ,201,0,2,1,"","https://thuecat.org/resources/test-event-keyword-1"
