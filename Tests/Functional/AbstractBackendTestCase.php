@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\Form\NodeFactory;
@@ -100,6 +101,26 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
         ])->render();
 
         return is_string($result['html'] ?? null) ? $result['html'] : '';
+    }
+
+    /**
+     * @return list<object> in the order they were queued
+     */
+    protected function queuedMessages(): array
+    {
+        $rows = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
+            ->select(['body'], 'sys_messenger_messages', ['queue_name' => 'default'], [], ['id' => 'ASC'])
+            ->fetchAllAssociative()
+        ;
+
+        $messages = [];
+        foreach ($rows as $row) {
+            $body = $row['body'];
+            $this->assertIsString($body);
+            $messages[] = new PhpSerializer()->decode(['body' => $body])->getMessage();
+        }
+
+        return $messages;
     }
 
     protected function tearDown(): void

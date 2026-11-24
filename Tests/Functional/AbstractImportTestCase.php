@@ -27,6 +27,10 @@ use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\Importer;
+use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
+use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
@@ -326,6 +330,58 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         $configuration = $this->fetchImportConfiguration($uid);
 
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
+    }
+
+    /**
+     * Queues a manual job and handles its starting message, taken off the transport first as the consumer takes it.
+     *
+     * @return int the job's uid
+     */
+    protected function startJob(int $configurationUid, bool $skipMedia = false, bool $bypassCache = false): int
+    {
+        $job = $this->get(ImportJobs::class)->queue($configurationUid, ImportTrigger::Manual, $skipMedia, $bypassCache, 1);
+        $this->assertIsInt($job);
+        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->workaroundExtbaseConfiguration();
+        $this->get(ImportStartedHandler::class)(new ImportStarted($job));
+
+        return $job;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function jobRow(int $uid): array
+    {
+        $row = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
+            ->select(['*'], 'tx_thuecat_import_job', ['uid' => $uid])
+            ->fetchAssociative()
+        ;
+        $this->assertIsArray($row);
+
+        return $row;
+    }
+
+    /**
+     * @return list<array{uid: int, target: string, action: string, state: string}> in their position's order
+     */
+    protected function jobItems(int $job): array
+    {
+        $rows = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job_item')
+            ->select(['uid', 'target', 'action', 'state'], 'tx_thuecat_import_job_item', ['job' => $job], [], ['position' => 'ASC'])
+            ->fetchAllAssociative()
+        ;
+
+        $items = [];
+        foreach ($rows as $row) {
+            $this->assertIsInt($row['uid']);
+            $this->assertIsString($row['target']);
+            $this->assertIsString($row['action']);
+            $this->assertIsString($row['state']);
+            $items[] = ['uid' => $row['uid'], 'target' => $row['target'], 'action' => $row['action'], 'state' => $row['state']];
+        }
+
+        return $items;
     }
 
     /**

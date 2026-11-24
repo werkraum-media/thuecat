@@ -22,8 +22,6 @@ namespace WerkraumMedia\ThueCat\Import;
 
 use Psr\Http\Client\ClientExceptionInterface;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Throwable;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Resource\Folder;
@@ -41,16 +39,14 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
-use WerkraumMedia\ThueCat\Import\Settings\AnchorKind;
-use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorResolver;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
-use WerkraumMedia\ThueCat\Import\UrlProvider\InvalidUrlProviderException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
+use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 use WerkraumMedia\ThueCat\Service\SitePageIds;
@@ -70,14 +66,13 @@ class Importer
         protected readonly ImportLogger $importLogger,
         protected readonly ImportConfigurationValidator $configurationValidator,
         protected readonly ImportSettings $settings,
-        protected readonly CategoryAnchorResolver $anchorResolver,
+        protected readonly EffectiveSettingsReport $effectiveSettingsReport,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
         protected readonly SyncChannelReaper $syncChannelReaper,
         protected readonly SyncWindow $syncWindow,
         protected readonly OrganisationReclassificationRepair $organisationReclassificationRepair,
-        #[AutowireLocator(services: 'import.url.provider')]
-        protected readonly ServiceLocator $urlProviders
+        protected readonly UrlProviders $urlProviders
     ) {
     }
 
@@ -152,10 +147,7 @@ class Importer
     ): string {
         $listener ??= new NullProgressListener();
         $deadline ??= new RunDeadline(0);
-        $urlProvider = $this->getProviderForConfiguration($configuration);
-        if (!$urlProvider instanceof UrlProvider) {
-            throw new InvalidUrlProviderException('No URL Provider available for given configuration.', 1629296635);
-        }
+        $urlProvider = $this->urlProviders->forConfiguration($configuration);
 
         $apiKey = $configuration->getApiKey();
         $translationLanguages = [];
@@ -459,67 +451,17 @@ class Importer
         $this->importLogger->recordStorageFolderEmpty($configuration->getStoragePid());
     }
 
-    protected function getProviderForConfiguration(ImportConfigurationInterface $configuration): ?UrlProvider
-    {
-        foreach ($this->urlProviders as $provider) {
-            if (!$provider instanceof UrlProvider) {
-                continue;
-            }
-
-            if ($provider->canProvideForConfiguration($configuration)) {
-                return $provider->createWithConfiguration($configuration);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * What actually governs this run, assembled once before the first fetch.
-     * The values come from three levels (import configuration, site settings,
-     * extension configuration), so a run that behaves unexpectedly can be
-     * explained without tracing the chain by hand.
-     *
-     * There is deliberately no apiKey entry: excluding it by construction
-     * leaves no masking step to forget and no rendering path that could leak
-     * it. Reporting is wrapped because it is diagnostics, not a gate — a
-     * failure here must not abort an otherwise healthy run.
-     *
-     * Anchors are listed for every scope, because which kinds a run writes is
-     * known only once it has fetched.
-     */
     protected function reportEffectiveSettings(
         ImportConfigurationInterface $configuration,
         Site $site,
         ImportProgressListener $listener
     ): void {
+        $settings = $this->effectiveSettingsReport->record($configuration, $site);
+        if ($settings === []) {
+            return;
+        }
+
         try {
-            $settings = [
-                'storagePid' => $configuration->getStoragePid(),
-                'fileFolder' => $configuration->getFileFolder(),
-            ];
-            // What each scope supplies itself; which one a record falls back
-            // to is decided per record and has no single value to report.
-            foreach ($this->anchorResolver->scopes() as $scope) {
-                foreach (AnchorKind::cases() as $kind) {
-                    $pair = $this->anchorResolver->resolveInScope($site, $scope, $kind);
-                    $settings[$kind->parentSetting()->settingsPath($scope)] = $pair->parent > 0 ? $pair->parent : 'unset';
-                    $settings[$kind->storagePidSetting()->settingsPath($scope)] = $pair->storagePid > 0 ? $pair->storagePid : 'unset';
-                }
-            }
-
-            $settings += [
-                'readTimeout' => $this->settings->resolve(ImportSetting::ReadTimeout, 0),
-                'connectTimeout' => $this->settings->resolve(ImportSetting::ConnectTimeout, 0),
-                'maxAttempts' => $this->settings->resolve(ImportSetting::MaxAttempts, 0),
-                'runBudget' => $this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()),
-                'fetchCacheLifetime' => $this->settings->resolve(
-                    ImportSetting::FetchCacheLifetime,
-                    $configuration->getFetchCacheLifetime()
-                ),
-            ];
-
-            $this->importLogger->recordEffectiveSettings($settings);
             $listener->settingsResolved($settings);
         } catch (Throwable) {
             // Diagnostics must never cost a run.

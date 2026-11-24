@@ -26,7 +26,6 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Log\LogDataTrait;
 use WerkraumMedia\ThueCat\Removal\Handler\RemovalStartedHandler;
@@ -122,26 +121,6 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
             'doctrine',
             new HandlerFailedException($envelope, [new RuntimeException('Database gone [test]', 1795092847)])
         ));
-    }
-
-    /**
-     * @return list<object> in the order they were queued
-     */
-    protected function queuedMessages(): array
-    {
-        $rows = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
-            ->select(['body'], 'sys_messenger_messages', ['queue_name' => 'default'], [], ['id' => 'ASC'])
-            ->fetchAllAssociative()
-        ;
-
-        $messages = [];
-        foreach ($rows as $row) {
-            $body = $row['body'];
-            $this->assertIsString($body);
-            $messages[] = new PhpSerializer()->decode(['body' => $body])->getMessage();
-        }
-
-        return $messages;
     }
 
     /**

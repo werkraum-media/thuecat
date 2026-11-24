@@ -96,4 +96,5 @@ FrontendCacheRegistration::register();
 
     // Queued, never run in the request: a consumer on the command line works through the roots.
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']['routing']['WerkraumMedia\\ThueCat\\Removal\\Message\\*'] = 'doctrine';
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['messenger']['routing']['WerkraumMedia\\ThueCat\\Import\\Job\\Message\\*'] = 'doctrine';
 })('thuecat');

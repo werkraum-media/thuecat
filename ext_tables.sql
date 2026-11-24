@@ -94,3 +94,39 @@ CREATE TABLE tx_thuecat_removal_job (
 
     PRIMARY KEY (uid)
 );
+
+CREATE TABLE tx_thuecat_import_job (
+    uid int(10) unsigned NOT NULL auto_increment,
+    crdate int(10) unsigned DEFAULT '0' NOT NULL,
+    progressed_at int(10) unsigned DEFAULT '0' NOT NULL,
+    configuration int(10) unsigned DEFAULT '0' NOT NULL,
+    job_trigger varchar(16) DEFAULT '' NOT NULL,
+    backend_user int(10) unsigned DEFAULT '0' NOT NULL,
+    skip_media tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    bypass_cache tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    status varchar(16) DEFAULT '' NOT NULL,
+    started_at int(10) unsigned DEFAULT '0' NOT NULL,
+    ended_at int(10) unsigned DEFAULT '0' NOT NULL,
+    done_items int(10) unsigned DEFAULT '0' NOT NULL,
+    failed_items int(10) unsigned DEFAULT '0' NOT NULL,
+    skipped_items int(10) unsigned DEFAULT '0' NOT NULL,
+    import_log int(10) unsigned DEFAULT '0' NOT NULL,
+
+    PRIMARY KEY (uid),
+    KEY configuration (configuration, status)
+);
+
+CREATE TABLE tx_thuecat_import_job_item (
+    uid int(10) unsigned NOT NULL auto_increment,
+    job int(10) unsigned DEFAULT '0' NOT NULL,
+    target varchar(2048) DEFAULT '' NOT NULL,
+    action varchar(16) DEFAULT '' NOT NULL,
+    position int(10) unsigned DEFAULT '0' NOT NULL,
+    state varchar(16) DEFAULT '' NOT NULL,
+    attempts int(10) unsigned DEFAULT '0' NOT NULL,
+    successor_sent tinyint(1) unsigned DEFAULT '0' NOT NULL,
+    duration int(10) unsigned DEFAULT '0' NOT NULL,
+
+    PRIMARY KEY (uid),
+    KEY job (job, state, position)
+);

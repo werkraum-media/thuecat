@@ -865,6 +865,25 @@ class ImportLogger
      */
     public function writeLog(int|null $configurationUid, array $payload, array $substNEWwithIDs): void
     {
+        $this->persistLog((int)$configurationUid, $payload, $substNEWwithIDs, false);
+    }
+
+    /**
+     * Writes the log of a job, which exists from the job's start on even while it holds only the effective settings.
+     *
+     * @return int the log's uid
+     */
+    public function openLog(int $configurationUid): int
+    {
+        return $this->persistLog($configurationUid, [], [], true);
+    }
+
+    /**
+     * @param array<string, array<int|string, array<string, mixed>>> $payload
+     * @param array<string, int|string> $substNEWwithIDs
+     */
+    protected function persistLog(int $configurationUid, array $payload, array $substNEWwithIDs, bool $withoutEntries): int
+    {
         $this->recordRecoveredRetries();
         $this->recordRateLimits();
         $logKey = StringUtility::getUniqueId('NEW');
@@ -872,7 +891,7 @@ class ImportLogger
             'tx_thuecat_import_log' => [
                 $logKey => [
                     'pid' => 0,
-                    'configuration' => (int)$configurationUid,
+                    'configuration' => $configurationUid,
                 ],
             ],
             'tx_thuecat_import_log_entry' => [],
@@ -906,13 +925,14 @@ class ImportLogger
 
         $this->pendingEntries = [];
 
-        if ($datamap['tx_thuecat_import_log_entry'] === []) {
-            return;
+        if ($datamap['tx_thuecat_import_log_entry'] === [] && !$withoutEntries) {
+            return 0;
         }
 
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
         $dataHandler->start($datamap, []);
         $dataHandler->process_datamap();
+        return $dataHandler->substNEWwithIDs[$logKey] ?? 0;
     }
 
     /**

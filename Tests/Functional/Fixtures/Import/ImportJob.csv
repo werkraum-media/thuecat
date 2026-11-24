@@ -1,0 +1,14 @@
+"pages"
+,"uid","pid","title","doktype"
+,1,0,"Root",1
+,10,1,"Storage",254
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","storage_pid"
+,1,0,"Static","static",10
+,2,0,"Static without URLs","static",10
+"tx_thuecat_import_configuration_url"
+,"uid","pid","configuration","title","url","sorting"
+,1,0,1,"First","https://thuecat.org/resources/test-trail-1",1
+,2,0,1,"Second","https://thuecat.org/resources/test-trail-2",2
+,3,0,1,"First again","https://thuecat.org/resources/test-trail-1",3
+,4,0,1,"Third","https://thuecat.org/resources/test-trail-3",4
