@@ -35,49 +35,26 @@ return [
             'disable' => '0',
             'title' => 'Event media leak',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="importTarget">
-                                <value index="vDEF">events</value>
-                            </field>
-                            <field index="fileFolder">
-                                <value index="vDEF">1:/thuecat/</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="evt-mixed-media">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_mixed_media-tdm</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-no-media">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_no_media-tdm</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '10',
+            'file_folder' => '1:/thuecat/',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_mixed_media-tdm',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_no_media-tdm',
         ],
     ],
 ];

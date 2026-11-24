@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 
@@ -105,9 +104,7 @@ final class ImportProgressTest extends AbstractImportTestCase
 
     private function importWithListener(int $uid): RecordingProgressListener
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $configuration = $this->fetchImportConfiguration($uid);
 
         $listener = new RecordingProgressListener();
         $this->get(Importer::class)->importConfiguration($configuration, $listener);

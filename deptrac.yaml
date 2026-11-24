@@ -26,9 +26,9 @@ deptrac:
     - name: ImportIntegration
       collectors:
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\Typo3\\(FlexForm|FormDataProvider|Hook)\\#'
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\(FormDataProvider|Hook)\\#'
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\(ImportConfigurationFlexFormListener|ImportLogReferenceIndexListener)$#'
+          value: '#^WerkraumMedia\\ThueCat\\Typo3\\EventListener\\ImportLogReferenceIndexListener$#'
 
     - name: ImportModel
       collectors:

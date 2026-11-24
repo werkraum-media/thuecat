@@ -25,17 +25,12 @@ use Codappix\Typo3PhpDatasets\PhpDataSet;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 use WerkraumMedia\ThueCat\Typo3\Hook\AddTitleForStaticUrlsDataHandlerHook;
 
 #[CoversClass(AddTitleForStaticUrlsDataHandlerHook::class)]
 final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestCase
 {
-    //    use TestingFramework;
-
     protected string $fixtureGuzzleBase = __DIR__ . '/../../Fixtures/AddTitleForStaticUrlsDataHandlerHook/Guzzle/';
 
     protected function setUp(): void
@@ -45,149 +40,68 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         $this->importPHPDataSet(__DIR__ . '/../../Fixtures/Import/BasicPages.php');
     }
 
+    /**
+     * @param array<int, array<string, string>> $submittedUrls keyed by URL record uid
+     */
     #[Test]
     #[DataProvider('possibleUpdatesForTitle')]
-    public function changesTitleFromRemote(
-        string $existingConfiguration,
-        array $submittedValues,
-    ): void {
+    public function changesTitleFromRemote(string $existingTitle, array $submittedUrls): void
+    {
         new PhpDataSet()->import([
             'tx_thuecat_import_configuration' => [
                 [
-                    'uid' => '1',
-                    'pid' => '10',
+                    'uid' => 1,
+                    'pid' => 10,
                     'title' => 'Existing Configuration',
                     'type' => 'static',
-                    'configuration' => $existingConfiguration,
+                    'urls' => 2,
                 ],
+            ],
+            'tx_thuecat_import_configuration_url' => [
+                ['uid' => 1, 'pid' => 10, 'configuration' => 1, 'sorting' => 1, 'title' => $existingTitle, 'url' => 'https://example.com/one'],
+                ['uid' => 2, 'pid' => 10, 'configuration' => 1, 'sorting' => 2, 'title' => $existingTitle, 'url' => 'https://example.com/two'],
             ],
         ]);
 
         $this->expectFetch('r_22033250-oapoi.json');
         $this->expectFetch('809459960188-epwb.json');
 
-        $errorLog = $this->executeDataHandler($this->createDataMap($submittedValues));
+        $this->processDataMap([
+            'tx_thuecat_import_configuration' => [
+                1 => ['title' => 'Test', 'type' => 'static', 'urls' => '1,2'],
+            ],
+            'tx_thuecat_import_configuration_url' => $submittedUrls,
+        ]);
 
-        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
-
-        $this->assertUrlTitles(
-            'Titel Eins',
-            'Titel Zwei',
-        );
+        $this->assertCSVDataSet(__DIR__ . '/Assertions/UrlTitlesFromRemote.csv');
     }
 
+    /**
+     * @return iterable<string, array{existingTitle: string, submittedUrls: array<int, array<string, string>>}>
+     */
     public static function possibleUpdatesForTitle(): iterable
     {
         yield 'when no titles are provided within TYPO3' => [
-            'existingConfiguration' => self::createFlexForm('
-                <field index="67a1b62355ad6737507957">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF"></value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com</value>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-                <field index="67a1bb94b4f41262966709">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF"></value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-            '),
-            'submittedValues' => [
-                '67a1b62355ad6737507957' => [
-                    'url' => 'https://thuecat.org/resources/r_22033250-oapoi',
-                ],
-                '67a1bb94b4f41262966709' => [
-                    'url' => 'https://thuecat.org/resources/809459960188-epwb',
-                ],
+            'existingTitle' => '',
+            'submittedUrls' => [
+                1 => ['url' => 'https://thuecat.org/resources/r_22033250-oapoi'],
+                2 => ['url' => 'https://thuecat.org/resources/809459960188-epwb'],
             ],
         ];
 
         yield 'when titles already existed' => [
-            'existingConfiguration' => self::createFlexForm('
-                <field index="67a1b62355ad6737507957">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF">Existing Titel Eins</value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com</value>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-                <field index="67a1bb94b4f41262966709">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF">Existing Titel Zwei</value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-            '),
-            'submittedValues' => [
-                '67a1b62355ad6737507957' => [
-                    'url' => 'https://thuecat.org/resources/r_22033250-oapoi',
-                ],
-                '67a1bb94b4f41262966709' => [
-                    'url' => 'https://thuecat.org/resources/809459960188-epwb',
-                ],
+            'existingTitle' => 'Existing Titel',
+            'submittedUrls' => [
+                1 => ['url' => 'https://thuecat.org/resources/r_22033250-oapoi'],
+                2 => ['url' => 'https://thuecat.org/resources/809459960188-epwb'],
             ],
         ];
 
         yield 'when titles were submitted as well' => [
-            'existingConfiguration' => self::createFlexForm('
-                <field index="67a1b62355ad6737507957">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF">Existing Titel Eins</value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com</value>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-                <field index="67a1bb94b4f41262966709">
-                    <value index="url">
-                        <el>
-                            <field index="title">
-                                <value index="vDEF">Existing Titel Zwei</value>
-                            </field>
-                            <field index="url">
-                                <value index="vDEF">https://example.com>
-                            </field>
-                        </el>
-                    </value>
-                </field>
-            '),
-            'submittedValues' => [
-                '67a1b62355ad6737507957' => [
-                    'title' => 'New Titel Eins',
-                    'url' => 'https://thuecat.org/resources/r_22033250-oapoi',
-                ],
-                '67a1bb94b4f41262966709' => [
-                    'title' => 'New Titel Zwei',
-                    'url' => 'https://thuecat.org/resources/809459960188-epwb',
-                ],
+            'existingTitle' => 'Existing Titel',
+            'submittedUrls' => [
+                1 => ['title' => 'New Titel Eins', 'url' => 'https://thuecat.org/resources/r_22033250-oapoi'],
+                2 => ['title' => 'New Titel Zwei', 'url' => 'https://thuecat.org/resources/809459960188-epwb'],
             ],
         ];
     }
@@ -198,172 +112,43 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
         $this->expectFetch('r_22033250-oapoi.json');
         $this->expectFetch('809459960188-epwb.json');
 
-        $dataMap = $this->createDataMap([
-            '67a1b62355ad6737507957' => [
-                'url' => 'https://thuecat.org/resources/r_22033250-oapoi',
-            ],
-            '67a1bb94b4f41262966709' => [
-                'url' => 'https://thuecat.org/resources/809459960188-epwb',
-            ],
-        ], 'NEW67a1e37c5cc8c460046430');
-        ArrayUtility::mergeRecursiveWithOverrule(
-            $dataMap,
-            [
-                'tx_thuecat_import_configuration' => [
-                    'NEW67a1e37c5cc8c460046430' => [
-                        'title' => 'test new',
-                        'type' => 'static',
-                        'pid' => '10',
-                    ],
+        $this->processDataMap([
+            'tx_thuecat_import_configuration' => [
+                'NEW67a1e37c5cc8c460046430' => [
+                    'title' => 'test new',
+                    'type' => 'static',
+                    'pid' => '10',
+                    'urls' => 'NEW67a1b62355ad6737507957,NEW67a1bb94b4f41262966709',
                 ],
-            ]
-        );
+            ],
+            'tx_thuecat_import_configuration_url' => [
+                'NEW67a1b62355ad6737507957' => [
+                    'pid' => '10',
+                    'url' => 'https://thuecat.org/resources/r_22033250-oapoi',
+                ],
+                'NEW67a1bb94b4f41262966709' => [
+                    'pid' => '10',
+                    'url' => 'https://thuecat.org/resources/809459960188-epwb',
+                ],
+            ],
+        ]);
 
-        $errorLog = $this->executeDataHandler($dataMap);
-
-        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
-
-        $this->assertUrlTitles(
-            'Titel Eins',
-            'Titel Zwei',
-        );
+        $this->assertCSVDataSet(__DIR__ . '/Assertions/UrlTitlesFromRemote.csv');
     }
 
     #[Test]
     public function doesNothingIfNewRecordDoesNotContainUrls(): void
     {
-        $dataMap = $this->createDataMap([], 'NEW67a1e37c5cc8c460046430');
-        ArrayUtility::mergeRecursiveWithOverrule(
-            $dataMap,
-            [
-                'tx_thuecat_import_configuration' => [
-                    'NEW67a1e37c5cc8c460046430' => [
-                        'title' => 'test new',
-                        'type' => 'static',
-                        'pid' => '10',
-                    ],
-                ],
-            ]
-        );
-
-        $errorLog = $this->executeDataHandler($dataMap);
-
-        $this->assertCount(0, $errorLog, 'Got unexpected errors from DataHandler: ' . implode(', ', $errorLog));
-
-        $this->assertUrlTitles();
-    }
-
-    /**
-     * @param mixed[] $dataMap
-     *
-     * @return string[]
-     */
-    private function executeDataHandler(array $dataMap): array
-    {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start($dataMap, []);
-        $dataHandler->process_datamap();
-
-        return $dataHandler->errorLog;
-    }
-
-    private static function createFlexForm(string $part): string
-    {
-        return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    ' . $part . '
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ';
-    }
-
-    /**
-     * @return array<string, non-empty-array<int|string, array<string, array<string, array<string, array<string, array<string, array<string, mixed>>>>>|string>>>
-     */
-    private function createDataMap(array $urls, string|int $id = 1): array
-    {
-        $finalUrls = [];
-        /**
-         * @var array<string, mixed> $urlConfiguration
-         */
-        foreach ($urls as $identifier => $urlConfiguration) {
-            $finalUrls[$identifier] =  [
-                'url' => [
-                    'el' => [
-                        'title' => [
-                            'vDEF' => $urlConfiguration['title'] ?? '',
-                        ],
-                        'url' => [
-                            'vDEF' => $urlConfiguration['url'],
-                        ],
-                    ],
-                ],
-                '_ACTION' => '',
-            ];
-        }
-
-        return [
+        $this->processDataMap([
             'tx_thuecat_import_configuration' => [
-                $id => [
-                    'title' => 'Test',
+                'NEW67a1e37c5cc8c460046430' => [
+                    'title' => 'test new',
                     'type' => 'static',
-                    'configuration' => [
-                        'data' => [
-                            'sDEF' => [
-                                'lDEF' => [
-                                    'storagePid' => [
-                                        'vDEF' => '641',
-                                    ],
-                                    'urls' => [
-                                        'el' => $finalUrls,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
+                    'pid' => '10',
                 ],
             ],
-        ];
-    }
+        ]);
 
-    private function assertUrlTitles(string ... $titles): void
-    {
-        /** @var array<int, array<mixed>> $configurations */
-        $configurations = $this->getAllRecords('tx_thuecat_import_configuration', true);
-        $configuration = GeneralUtility::xml2array($configurations[1]['configuration']);
-        $this->assertIsArray($configuration);
-
-        $urls = ArrayUtility::getValueByPath($configuration, 'data/sDEF/lDEF/urls/el');
-        if ($titles === []) {
-            $this->assertSame('', $urls);
-            return;
-        }
-
-        $this->assertIsArray($urls);
-
-        $this->assertCount(count($titles), $urls);
-        $position = 0;
-        foreach ($urls as $url) {
-            $this->assertSame(
-                $titles[$position++],
-                // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-                $url['url']['el']['title']['vDEF'],
-                // @phpstan-ignore offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible, offsetAccess.nonOffsetAccessible (we put up with TCA Array for now)
-                'Title for URL ' . $url['url']['el']['url']['vDEF'] . ' was not as expected.'
-            );
-        }
+        $this->assertSame(0, $this->countRows('tx_thuecat_import_configuration_url'));
     }
 }

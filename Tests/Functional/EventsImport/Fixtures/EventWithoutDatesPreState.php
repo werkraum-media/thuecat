@@ -36,65 +36,41 @@ return [
             'disable' => '0',
             'title' => 'Dateless event import',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="importTarget">
-                                <value index="vDEF">events</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="evt-nosched">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-nosched</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-unusable">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-unusable</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-excepted">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-excepted</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-past">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-past</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>',
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-nosched',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-unusable',
+        ],
+        [
+            'uid' => '103',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '3',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-excepted',
+        ],
+        [
+            'uid' => '104',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '4',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_7cbe5bb1-past',
         ],
     ],
 ];

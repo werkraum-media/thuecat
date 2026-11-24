@@ -915,6 +915,79 @@
             <trans-unit id="tx_thuecat_import_configuration.configuration" xml:space="preserve">
                 <source>Configuration</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.storage_pid" xml:space="preserve">
+                <source>Storage folder</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.file_folder" xml:space="preserve">
+                <source>Target folder for imported files</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.file_folder.description" xml:space="preserve">
+                <source>Imported images and other media files are stored in this folder.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.api_key" xml:space="preserve">
+                <source>API Key (optional)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.api_key.description" xml:space="preserve">
+                <source>Overrides the global ThueCat API key from the extension configuration. Leave empty to use the global key.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.api_key.syncChannel" xml:space="preserve">
+                <source>API Key</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.api_key.syncChannel.description" xml:space="preserve">
+                <source>The key ThueCat issued for this channel. It is also used to download media files.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.urls" xml:space="preserve">
+                <source>URLs</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.sync_scope_id" xml:space="preserve">
+                <source>syncScopeId</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.fetch_last_x_days" xml:space="preserve">
+                <source>Fetch last X Days of Changes</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.fetch_last_x_days.description" xml:space="preserve">
+                <source>If the jobs runs every 5 days, set the X to 6 here to be safe. Don't let it go on for too long.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.contains_place_id" xml:space="preserve">
+                <source>Contains Place ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.contains_place_id.description" xml:space="preserve">
+                <source>Only ID, not full URL e.g. 043064193523-jcyt</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.sync_channel_id" xml:space="preserve">
+                <source>Channel ID</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.sync_channel_id.description" xml:space="preserve">
+                <source>Imports the events, places or trails of this channel. Records the channel lists as removed or expired are deleted in the whole site, whichever import configuration or storage folder holds them.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.palette.tunables" xml:space="preserve">
+                <source>Limits</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.message_budget" xml:space="preserve">
+                <source>Message budget (seconds)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.message_budget.description" xml:space="preserve">
+                <source>Time one item of an import may take before it is aborted and retried. Leave empty to use the extension configuration.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.fetch_cache_lifetime" xml:space="preserve">
+                <source>Fetch cache lifetime (seconds)</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration.fetch_cache_lifetime.description" xml:space="preserve">
+                <source>How long fetched API responses stay reusable by a later run. Leave empty to use the extension configuration.</source>
+            </trans-unit>
+
+            <trans-unit id="tx_thuecat_import_configuration_url" xml:space="preserve">
+                <source>Import URL</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration_url.title" xml:space="preserve">
+                <source>Title</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration_url.title.description" xml:space="preserve">
+                <source>Will be auto updated on save, based on given URL.</source>
+            </trans-unit>
+            <trans-unit id="tx_thuecat_import_configuration_url.url" xml:space="preserve">
+                <source>URL</source>
+            </trans-unit>
 
             <trans-unit id="tx_thuecat_import_log" xml:space="preserve">
                 <source>Import Log</source>

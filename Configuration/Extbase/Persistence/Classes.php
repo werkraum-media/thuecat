@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationUrl;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\CategoriesFieldMissing;
@@ -75,6 +76,9 @@ return [
     ],
     ImportConfiguration::class => [
         'tableName' => 'tx_thuecat_import_configuration',
+    ],
+    ImportConfigurationUrl::class => [
+        'tableName' => 'tx_thuecat_import_configuration_url',
     ],
     ImportLog::class => [
         'tableName' => 'tx_thuecat_import_log',

@@ -158,7 +158,6 @@ class Importer
         }
 
         $apiKey = $configuration->getApiKey();
-        $apiDomain = $configuration->getApiDomain();
         $translationLanguages = [];
         $defaultLanguage = 'de'; // fallback
         $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
@@ -171,9 +170,7 @@ class Importer
         }
 
         $this->reportEffectiveSettings($configuration, $site, $listener);
-        // The sync host serves no record a visitor could open.
-        $sourceDomain = $configuration->getType() === 'syncChannel' ? FetchData::RESOURCE_HOST : $apiDomain;
-        $parserContext = new ParserContext((int)$configuration->getUid(), $sourceDomain);
+        $parserContext = new ParserContext((int)$configuration->getUid());
         $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
             $parserContext,
@@ -192,11 +189,11 @@ class Importer
             $configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel'
                 ? SyncChannel::recordUrlPrefix($configuration->getSyncApiDomain(), $configuration->getSyncChannelId())
                 : null,
-            $this->mediaKeyedHosts($configuration),
+            [parse_url(FetchData::ASSET_HOST, PHP_URL_HOST)],
             $configuration instanceof ImportConfiguration ? ImportOrigin::fromConfiguration($configuration) : null,
         );
         $accumulatedPayload = new DataHandlerPayload();
-        $urls = $urlProvider->getUrls($apiDomain);
+        $urls = $urlProvider->getUrls();
         $urlCount = count($urls);
         $urlNumber = 0;
         $aborted = false;
@@ -462,20 +459,6 @@ class Importer
         $this->importLogger->recordStorageFolderEmpty($configuration->getStoragePid());
     }
 
-    /**
-     * A sync key opens the asset host and nothing else; the other types keep
-     * the key on their API domain's host.
-     *
-     * @return list<string>
-     */
-    protected function mediaKeyedHosts(ImportConfigurationInterface $configuration): array
-    {
-        $domain = $configuration->getType() === 'syncChannel' ? FetchData::ASSET_HOST : $configuration->getApiDomain();
-        $host = parse_url($domain, PHP_URL_HOST) ?: $domain;
-
-        return $host === '' ? [] : [$host];
-    }
-
     protected function getProviderForConfiguration(ImportConfigurationInterface $configuration): ?UrlProvider
     {
         foreach ($this->urlProviders as $provider) {
@@ -514,7 +497,6 @@ class Importer
             $settings = [
                 'storagePid' => $configuration->getStoragePid(),
                 'fileFolder' => $configuration->getFileFolder(),
-                'apiDomain' => $configuration->getApiDomain(),
             ];
             // What each scope supplies itself; which one a record falls back
             // to is decided per record and has no single value to report.

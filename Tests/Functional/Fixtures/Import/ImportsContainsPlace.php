@@ -33,21 +33,8 @@ return [
             'disable' => '0',
             'title' => 'Contains Place',
             'type' => 'containsPlace',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="containsPlaceId">
-                                <value index="vDEF">043064193523-contains</value>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>',
+            'storage_pid' => '10',
+            'contains_place_id' => '043064193523-contains',
         ],
     ],
 ];

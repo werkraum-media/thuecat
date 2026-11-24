@@ -58,6 +58,7 @@
         "typo3/cms-filemetadata": "^14.3",
         "typo3/cms-frontend": "^14.3",
         "typo3/cms-install": "^14.3",
+        "typo3/cms-scheduler": "^14.3",
         "typo3/cms-seo": "^14.3",
         "werkraummedia/events": "^7.1"
     },
@@ -72,7 +73,6 @@
         "saschaegerer/phpstan-typo3": "^3.0",
         "ssch/typo3-rector": "^3.16",
         "staabm/phpstan-todo-by": "^0.3.3",
-        "typo3/cms-scheduler": "^14.3",
         "typo3/testing-framework": "^9.4"
     },
     "config": {

@@ -121,7 +121,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
 
         $this->importConfiguration(1);
 
-        $expected = ['storagePid', 'fileFolder', 'apiDomain'];
+        $expected = ['storagePid', 'fileFolder'];
         foreach ($this->scopes() as $scope) {
             foreach (CategoryAnchorSetting::cases() as $anchor) {
                 $expected[] = $anchor->settingsPath($scope);

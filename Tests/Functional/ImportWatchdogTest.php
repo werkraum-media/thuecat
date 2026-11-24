@@ -22,8 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 
@@ -109,7 +107,7 @@ final class ImportWatchdogTest extends AbstractImportTestCase
 
         try {
             $this->get(Importer::class)->importConfiguration(
-                $this->configuration(1),
+                $this->fetchImportConfiguration(1),
                 null,
                 new DeadlineThrowingOnCheck(2)
             );
@@ -148,18 +146,9 @@ final class ImportWatchdogTest extends AbstractImportTestCase
     private function runWithDeadline(int $uid, RunDeadline $deadline): string
     {
         return $this->get(Importer::class)->importConfiguration(
-            $this->configuration($uid),
+            $this->fetchImportConfiguration($uid),
             null,
             $deadline
         );
-    }
-
-    private function configuration(int $uid): ImportConfigurationInterface
-    {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-
-        return $configuration;
     }
 }

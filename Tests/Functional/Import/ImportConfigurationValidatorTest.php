@@ -331,11 +331,6 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
                 return '';
             }
 
-            public function getApiDomain(): string
-            {
-                return '';
-            }
-
             public function getUid(): int
             {
                 return 1;

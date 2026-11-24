@@ -33,40 +33,25 @@ return [
             'disable' => '0',
             'title' => 'Same attraction twice',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<T3FlexForms>
-    <data>
-        <sheet index="sDEF">
-            <language index="lDEF">
-                <field index="storagePid">
-                    <value index="vDEF">10</value>
-                </field>
-                <field index="urls">
-                    <el index="el">
-                        <field index="69eafde91e333263046182">
-                            <value index="url">
-                                <el>
-                                    <field index="url">
-                                        <value index="vDEF">https://thuecat.org/resources/attraction-duplicate-first</value>
-                                    </field>
-                                </el>
-                            </value>
-                        </field>
-                        <field index="69eb076056d09902142246">
-                            <value index="url">
-                                <el>
-                                    <field index="url">
-                                        <value index="vDEF">https://thuecat.org/resources/attraction-duplicate-second</value>
-                                    </field>
-                                </el>
-                            </value>
-                        </field>
-                    </el>
-                </field>
-            </language>
-        </sheet>
-    </data>
-</T3FlexForms>',
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-duplicate-first',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-duplicate-second',
         ],
     ],
 ];

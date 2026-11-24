@@ -54,10 +54,10 @@ class ContainsPlaceUrlProvider implements UrlProvider
         return $instance;
     }
 
-    public function getUrls(?string $apiDomain = null): array
+    public function getUrls(): array
     {
         $response = $this->fetchData->jsonLDFromUrl(
-            $this->fetchData->getFullResourceUrl($this->containsPlaceId, $apiDomain)
+            $this->fetchData->getFullResourceUrl($this->containsPlaceId)
         );
         $containsPlace = $response['@graph'][0]['schema:containsPlace'] ?? [];
         $resources = is_array($containsPlace) ? array_values($containsPlace) : [];

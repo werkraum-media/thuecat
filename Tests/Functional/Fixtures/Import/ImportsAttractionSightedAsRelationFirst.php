@@ -43,48 +43,25 @@ return [
             'disable' => '0',
             'title' => 'Attraction sighted as relation before its own root',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="categoryStoragePid">
-                                <value index="vDEF">20</value>
-                            </field>
-                            <field index="categoryParent">
-                                <value index="vDEF">100</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="referencing-root">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-referencing-later-root</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="sighted-as-relation-first">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-sighted-as-relation-first</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>',
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-referencing-later-root',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-sighted-as-relation-first',
         ],
     ],
 ];

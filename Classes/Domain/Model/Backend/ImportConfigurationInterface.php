@@ -70,14 +70,6 @@ interface ImportConfigurationInterface
      */
     public function getFileFolder(): string;
 
-    /**
-     * Host the importer fetches resources from for this configuration.
-     * Implementations must never return an empty string — when no override is
-     * configured they fall back to FetchData::DEFAULT_API_DOMAIN so callers
-     * can rely on always having a usable URL prefix.
-     */
-    public function getApiDomain(): string;
-
     public function getUid(): ?int;
 
     public function getFetchLastXDays(): int;

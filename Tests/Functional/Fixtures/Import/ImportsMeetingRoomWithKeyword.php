@@ -4,45 +4,12 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-$configuration = static function (int $storagePid, string ...$urls): string {
-    $elements = '';
-    foreach ($urls as $index => $url) {
-        $elements .= '
-                                    <field index="url' . $index . '">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/' . $url . '</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>';
-    }
-
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">' . $storagePid . '</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">' . $elements . '
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>';
-};
-
 $configurations = [
     1 => ['Venue with one room', ['059632237210-rbpe']],
 ];
 
 $rows = [];
+$urlRows = [];
 foreach ($configurations as $uid => $definition) {
     $rows[] = [
         'uid' => (string)$uid,
@@ -50,8 +17,17 @@ foreach ($configurations as $uid => $definition) {
         'disable' => '0',
         'title' => $definition[0],
         'type' => 'static',
-        'configuration' => $configuration(10, ...$definition[1]),
+        'storage_pid' => '10',
     ];
+    foreach ($definition[1] as $position => $url) {
+        $urlRows[] = [
+            'uid' => (string)($uid * 100 + $position + 1),
+            'pid' => '0',
+            'configuration' => (string)$uid,
+            'sorting' => (string)($position + 1),
+            'url' => 'https://thuecat.org/resources/' . $url,
+        ];
+    }
 }
 
 // The keywords site anchors keywords (200) apart from categories (100).
@@ -67,4 +43,5 @@ return [
         ['uid' => '200', 'pid' => '30', 'parent' => '0', 'title' => 'Keywords'],
     ],
     'tx_thuecat_import_configuration' => $rows,
+    'tx_thuecat_import_configuration_url' => $urlRows,
 ];

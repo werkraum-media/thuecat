@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Site\SiteFinder;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
@@ -35,6 +34,8 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
  */
 final readonly class AddTitleForStaticUrlsDataHandlerHook
 {
+    private const string TABLE = 'tx_thuecat_import_configuration_url';
+
     public function __construct(
         private SiteFinder $siteFinder,
         private FetchData $fetchData,
@@ -52,20 +53,31 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
         string $table,
         string|int $id,
     ): void {
-        if ($this->shouldSkip($table, $incomingFieldArray)) {
+        if ($table !== self::TABLE) {
             return;
         }
 
-        $urls = ArrayUtility::getValueByPath($incomingFieldArray, 'configuration/data/sDEF/lDEF/urls/el');
-        if (is_array($urls) === false || $urls === []) {
+        $url = $incomingFieldArray['url'] ?? null;
+        if (!is_string($url) || $url === '') {
             return;
         }
 
-        $this->addTitles(
-            $incomingFieldArray,
-            $urls,
-            $this->determineLanguage($id, $incomingFieldArray)
-        );
+        $language = $this->determineLanguage($id, $incomingFieldArray);
+        if ($language === '') {
+            return;
+        }
+
+        $graphData = $this->fetchData->jsonLDFromUrl($url);
+        $graph = is_array($graphData['@graph'] ?? null) ? $graphData['@graph'] : [];
+        $node = is_array($graph[0] ?? null) ? $graph[0] : [];
+
+        $entity = $this->resolveEntityClass($node['@type'] ?? []);
+        if (!$entity instanceof EntityInterface) {
+            return;
+        }
+
+        $entity->parse($node, $language, new ParserContext(0), []);
+        $incomingFieldArray['title'] = $entity->toArray()['title'];
     }
 
     /**
@@ -75,7 +87,7 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
     {
         $pid = $incomingFieldArray['pid'] ?? '';
         if ($pid === '' && is_int($id)) {
-            $record = BackendUtility::getRecord('tx_thuecat_import_configuration', $id, 'pid');
+            $record = BackendUtility::getRecord(self::TABLE, $id, 'pid');
             $pid = is_array($record) ? ($record['pid'] ?? '') : '';
         }
 
@@ -93,63 +105,6 @@ final readonly class AddTitleForStaticUrlsDataHandlerHook
             ->getLocale()
             ->getLanguageCode()
         ;
-    }
-
-    /**
-     * @param array<string, mixed> $incomingFieldArray
-     */
-    private function addTitles(array &$incomingFieldArray, array $urls, string $language): void
-    {
-        if ($language === '') {
-            return;
-        }
-
-        foreach ($urls as $identifier => $values) {
-            if (!is_array($values)) {
-                continue;
-            }
-
-            if (ArrayUtility::isValidPath($values, 'url/el/url/vDEF') === false) {
-                continue;
-            }
-
-            $url = ArrayUtility::getValueByPath($values, 'url/el/url/vDEF');
-            if (is_string($url) === false) {
-                continue;
-            }
-
-            $graphData = $this->fetchData->jsonLDFromUrl($url);
-            $graph = is_array($graphData['@graph'] ?? null) ? $graphData['@graph'] : [];
-            $node = is_array($graph[0] ?? null) ? $graph[0] : [];
-
-            $entity = $this->resolveEntityClass($node['@type'] ?? []);
-            if (!$entity instanceof EntityInterface) {
-                continue;
-            }
-
-            $entity->parse($node, $language, new ParserContext(0), []);
-            $title = $entity->toArray()['title'];
-
-            /** @var array<mixed> $configuration */
-            $configuration = is_array($incomingFieldArray['configuration']) ? $incomingFieldArray['configuration'] : [];
-            $configuration = ArrayUtility::setValueByPath(
-                $configuration,
-                'data/sDEF/lDEF/urls/el/' . $identifier . '/url/el/title/vDEF',
-                $title
-            );
-            $incomingFieldArray['configuration'] = $configuration;
-        }
-    }
-
-    /**
-     * @param array<string, mixed> $incomingFieldArray
-     */
-    private function shouldSkip(string $table, array $incomingFieldArray): bool
-    {
-        return $table !== 'tx_thuecat_import_configuration'
-            || ($incomingFieldArray['type'] ?? '') !== 'static'
-            || ($incomingFieldArray['configuration'] ?? []) === []
-            || ArrayUtility::isValidPath($incomingFieldArray, 'configuration/data/sDEF/lDEF/urls/el') === false;
     }
 
     /**

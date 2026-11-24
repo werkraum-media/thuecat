@@ -33,33 +33,7 @@ return [
             'disable' => '0',
             'title' => 'Trail With Stored Children',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">11</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="602a89e212237114263881">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/e_52469786-oatour</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '11',
         ],
     ],
     'tx_thuecat_trail' => [
@@ -110,6 +84,16 @@ return [
             'parenttable' => 'tx_thuecat_trail',
             'remote_id' => 'https://thuecat.org/resources/e_52469786-oatour::wt::4',
             'title' => 'Straße',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/e_52469786-oatour',
         ],
     ],
 ];

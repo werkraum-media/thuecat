@@ -1,30 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:getEntries\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:getSyncScopeId\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
-			message: '#^Method WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportConfiguration\:\:getUrls\(\) should return array\<string\> but returns list\<mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Classes/Domain/Model/Backend/ImportConfiguration.php
-
-		-
 			message: '#^Parameter \#1 \$value of method TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage\<WerkraumMedia\\ThueCat\\Domain\\Model\\Backend\\ImportLog\>\:\:offsetExists\(\) expects string, int\<\-1, max\> given\.$#'
 			identifier: argument.type
 			count: 1
@@ -305,18 +281,6 @@ parameters:
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: Classes/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHook.php
-
-		-
-			message: '#^Binary operation "\." between ''Title for URL '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
-
-		-
-			message: '#^Parameter \#1 \$string of static method TYPO3\\CMS\\Core\\Utility\\GeneralUtility\:\:xml2array\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Tests/Functional/Typo3/Hook/AddTitleForStaticUrlsDataHandlerHookTest.php
 
 		-
 			message: '#^Cannot access offset ''SYS'' on mixed\.$#'

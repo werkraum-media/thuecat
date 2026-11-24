@@ -5,40 +5,6 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 // Order matters: the venue is staged as a reference at depth 1 before its own root turn.
-$configuration = static function (string ...$urls): string {
-    $elements = '';
-    foreach ($urls as $index => $url) {
-        $elements .= '
-                                    <field index="url' . $index . '">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/' . $url . '</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>';
-    }
-
-    return '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">' . $elements . '
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>';
-};
-
 $configurations = [
     1 => ['Attraction, then the venue containing it', ['attraction-in-meeting-venue', '669150457039-gamn']],
     2 => ['Attraction, then the operated venue containing it', ['attraction-in-operated-meeting-venue', '117034427781-ndta']],
@@ -49,6 +15,7 @@ $configurations = [
 ];
 
 $rows = [];
+$urlRows = [];
 foreach ($configurations as $uid => $definition) {
     $rows[] = [
         'uid' => (string)$uid,
@@ -56,8 +23,17 @@ foreach ($configurations as $uid => $definition) {
         'disable' => '0',
         'title' => $definition[0],
         'type' => 'static',
-        'configuration' => $configuration(...$definition[1]),
+        'storage_pid' => '10',
     ];
+    foreach ($definition[1] as $position => $url) {
+        $urlRows[] = [
+            'uid' => (string)($uid * 100 + $position + 1),
+            'pid' => '0',
+            'configuration' => (string)$uid,
+            'sorting' => (string)($position + 1),
+            'url' => 'https://thuecat.org/resources/' . $url,
+        ];
+    }
 }
 
 return [
@@ -91,4 +67,5 @@ return [
         ],
     ],
     'tx_thuecat_import_configuration' => $rows,
+    'tx_thuecat_import_configuration_url' => $urlRows,
 ];

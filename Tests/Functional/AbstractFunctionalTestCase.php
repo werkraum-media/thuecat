@@ -21,11 +21,18 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Codappix\Typo3PhpDatasets\TestingFramework;
+use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 
 /**
  * The environment every thuecat functional test shares: the extensions
@@ -44,6 +51,7 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         'filelist',
         'filemetadata',
         'install',
+        'scheduler',
         'seo',
     ];
 
@@ -422,5 +430,58 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
             ->executeQuery()
             ->fetchAllAssociative()
         ;
+    }
+
+    /**
+     * Extbase repositories need a request to read their configuration from; tests have none.
+     */
+    protected function workaroundExtbaseConfiguration(): void
+    {
+        $fakeRequest = new ServerRequest();
+        $fakeRequest = $fakeRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
+
+        $this->get(ConfigurationManagerInterface::class)
+            ->setRequest($fakeRequest)
+        ;
+    }
+
+    protected function fetchImportConfiguration(int $uid): ImportConfiguration
+    {
+        $this->workaroundExtbaseConfiguration();
+        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
+        $this->assertInstanceOf(ImportConfiguration::class, $configuration, 'Fixture configuration uid=' . $uid . ' not found');
+
+        return $configuration;
+    }
+
+    /**
+     * @param array<string, array<int|string, array<string, mixed>>> $dataMap
+     */
+    protected function processDataMap(array $dataMap, string $operation = 'process the data map'): void
+    {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start($dataMap, []);
+        $dataHandler->process_datamap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, $operation);
+    }
+
+    /**
+     * @param array<string, array<int|string, array<string, mixed>>> $cmdMap
+     */
+    protected function processCmdMap(array $cmdMap, string $operation = 'process the command map'): void
+    {
+        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+        $dataHandler->bypassAccessCheckForRecords = true;
+        $dataHandler->start([], $cmdMap);
+        $dataHandler->process_cmdmap();
+
+        $this->assertDataHandlerSucceeded($dataHandler, $operation);
+    }
+
+    protected function assertDataHandlerSucceeded(DataHandler $dataHandler, string $operation): void
+    {
+        $this->assertSame([], $dataHandler->errorLog, 'DataHandler must ' . $operation . ' cleanly: ' . implode(', ', $dataHandler->errorLog));
     }
 }

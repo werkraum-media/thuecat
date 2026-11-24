@@ -77,8 +77,7 @@ final class SyncChannelUrlProviderTest extends TestCase
                 'https://widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-1',
                 'https://widgets.thuecat.org/api/sync/test-channel/jsonld/test-event-2',
             ],
-            // The importer passes the stored apiDomain, which a type switch may have left behind.
-            $subject->getUrls('https://cdb.thuecat.org')
+            $subject->getUrls()
         );
     }
 }

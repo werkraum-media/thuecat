@@ -67,10 +67,7 @@ class SyncChannelUrlProvider implements UrlProvider
         return $instance;
     }
 
-    /**
-     * @param string|null $apiDomain Ignored: the sync host is fixed, and a stored apiDomain may be left over from another type.
-     */
-    public function getUrls(?string $apiDomain = null): array
+    public function getUrls(): array
     {
         $lists = $this->syncChannel->read(
             $this->syncHost,

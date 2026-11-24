@@ -4,33 +4,6 @@ declare(strict_types=1);
 
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
-$configuration = static fn (string $url): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="venue">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">' . $url . '</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>';
-
 return [
     'pages' => [
         [
@@ -87,7 +60,7 @@ return [
             'disable' => '0',
             'title' => 'Museum hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/117034427781-ndta'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '2',
@@ -95,7 +68,7 @@ return [
             'disable' => '0',
             'title' => 'Riding hall hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/700475118524-zdca'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '3',
@@ -103,7 +76,33 @@ return [
             'disable' => '0',
             'title' => 'Cultural estate hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/332021174274-eyhf'),
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/117034427781-ndta',
+        ],
+        [
+            'uid' => '201',
+            'pid' => '0',
+            'configuration' => '2',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/700475118524-zdca',
+        ],
+        [
+            'uid' => '301',
+            'pid' => '0',
+            'configuration' => '3',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/332021174274-eyhf',
         ],
     ],
 ];

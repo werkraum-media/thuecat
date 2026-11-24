@@ -33,24 +33,9 @@ return [
             'disable' => '0',
             'title' => 'Sync Scope ID',
             'type' => 'syncScope',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="syncScopeId">
-                                <value index="vDEF">dd4615dc-58a6-4648-a7ce-4950293a06db</value>
-                            </field>
-                            <field index="fetchLastXDays">
-                                <value index="vDEF">0</value>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>',
+            'storage_pid' => '10',
+            'sync_scope_id' => 'dd4615dc-58a6-4648-a7ce-4950293a06db',
+            'fetch_last_x_days' => '0',
         ],
     ],
     'tx_thuecat_town' => [

@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -116,9 +115,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
 
     private function runImport(): void
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        $this->assertNotNull($configuration, 'Import configuration not found in pre-state.');
+        $configuration = $this->fetchImportConfiguration(1);
         $this->get(Importer::class)->importConfiguration($configuration);
     }
 

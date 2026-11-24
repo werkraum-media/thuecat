@@ -23,12 +23,8 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
-use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
@@ -304,19 +300,6 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         return self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log';
     }
 
-    /**
-     * Workaround ConfigurationManager requiring request
-     */
-    protected function workaroundExtbaseConfiguration(): void
-    {
-        $fakeRequest = new ServerRequest();
-        $fakeRequest = $fakeRequest->withAttribute('applicationType', SystemEnvironmentBuilder::REQUESTTYPE_BE);
-
-        $this->get(ConfigurationManagerInterface::class)
-            ->setRequest($fakeRequest)
-        ;
-    }
-
     protected function importConfiguration(int $uid): void
     {
         $this->importConfigurationReturningSeverity($uid);
@@ -324,9 +307,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
 
     protected function importConfigurationReturningSeverity(int $uid): string
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $configuration = $this->fetchImportConfiguration($uid);
 
         return $this->get(Importer::class)->importConfiguration($configuration);
     }
@@ -334,9 +315,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     /** The programmatic half of the bypass: no console command involved. */
     protected function importConfigurationBypassingCache(int $uid): string
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $configuration = $this->fetchImportConfiguration($uid);
 
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
     }
@@ -344,9 +323,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     /** The programmatic half of --no_media: no console command involved. */
     protected function importConfigurationSkippingMedia(int $uid): string
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid($uid);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=' . $uid . ' not found');
+        $configuration = $this->fetchImportConfiguration($uid);
 
         return $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
     }

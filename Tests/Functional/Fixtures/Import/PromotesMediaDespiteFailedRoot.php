@@ -35,46 +35,26 @@ return [
             'disable' => '0',
             'title' => 'Failed root and healthy root',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="fileFolder">
-                                <value index="vDEF">1:/thuecat/</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="602a89f54d694654233086">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-with-unmappable-relation</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="602a89f5e6c52907080672">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-under-healthy-root</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '10',
+            'file_folder' => '1:/thuecat/',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-with-unmappable-relation',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-under-healthy-root',
         ],
     ],
 ];

@@ -51,7 +51,6 @@ class ParserContext
 
     public function __construct(
         public readonly int $importConfigurationUid,
-        public readonly string $apiDomain = '',
     ) {
     }
 }

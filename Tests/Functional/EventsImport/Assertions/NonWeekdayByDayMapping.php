@@ -26,7 +26,7 @@ declare(strict_types=1);
 return [
     'event' => [
         'source_name' => 'thuecat',
-        'source_url' => 'https://cdb.thuecat.org',
+        'source_url' => 'https://thuecat.org',
         'remote_id' => 'https://thuecat.org/resources/e_7cbe5bb1-160b-4916-802c-c64dd2f1bf9e-tdm',
         'title' => 'Test-Altstadtführung',
         'web' => 'www.erfurt-tourismus.de',

@@ -139,7 +139,7 @@ final class FetchDataTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function updatedNodesUsesDefaultApiDomainWhenNoOverrideGiven(): void
+    public function updatedNodesAsksTheAssetHost(): void
     {
         $this->expectFetchForUrl(
             'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
@@ -148,55 +148,6 @@ final class FetchDataTest extends AbstractImportTestCase
 
         $subject = $this->get(FetchData::class);
         $subject->updatedNodes('scope-1');
-
-        $lastRequest = GuzzleClientFaker::getLastRequest();
-        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertSame('cdb.thuecat.org', $lastRequest->getUri()->getHost());
-    }
-
-    #[Test]
-    public function updatedNodesHonoursPerCallApiDomainOverride(): void
-    {
-        $this->expectFetchForUrl(
-            'https://cdb.int.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
-            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
-        );
-
-        $subject = $this->get(FetchData::class);
-        $subject->updatedNodes('scope-1', null, 'https://cdb.int.thuecat.org');
-
-        $lastRequest = GuzzleClientFaker::getLastRequest();
-        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertSame('cdb.int.thuecat.org', $lastRequest->getUri()->getHost());
-    }
-
-    #[Test]
-    public function updatedNodesDoesNotLeakOverrideAcrossCalls(): void
-    {
-        $this->expectFetchForUrl(
-            'https://cdb.int.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-int&showTotal=true',
-            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
-        );
-        $this->expectFetchForUrl(
-            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-default&showTotal=true',
-            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
-        );
-
-        $subject = $this->get(FetchData::class);
-        $subject->updatedNodes('scope-int', null, 'https://cdb.int.thuecat.org');
-        $subject->updatedNodes('scope-default');
-    }
-
-    #[Test]
-    public function updatedNodesFallsBackToDefaultWhenOverrideIsBlank(): void
-    {
-        $this->expectFetchForUrl(
-            'https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=scope-1&showTotal=true',
-            'cdb.thuecat.org/api/ext-sync/get-updated-nodes/dd4615dc-58a6-4648-a7ce-4950293a06db.json'
-        );
-
-        $subject = $this->get(FetchData::class);
-        $subject->updatedNodes('scope-1', null, '');
 
         $lastRequest = GuzzleClientFaker::getLastRequest();
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);

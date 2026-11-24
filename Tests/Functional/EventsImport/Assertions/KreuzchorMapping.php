@@ -27,7 +27,7 @@ declare(strict_types=1);
 return [
     'event' => [
         'source_name' => 'thuecat',
-        'source_url' => 'https://cdb.thuecat.org',
+        'source_url' => 'https://thuecat.org',
         'remote_id' => 'https://int.thuecat.org/resources/e_19542-hubev',
         'title' => 'Konzert des Dresdner Kreuzchores',
         'details' => '<p>Der Dresdner Kreuzchor ist einer der ältesten und berühmtesten Knabenchöre der Welt.</p>',

@@ -24,8 +24,6 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
 
 /**
@@ -72,12 +70,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         array $values,
         string $table = 'tx_thuecat_tourist_attraction'
     ): void {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start([$table => [$uid => $values]], []);
-        $dataHandler->process_datamap();
-
-        $this->assertDataHandlerSucceeded($dataHandler, 'save');
+        $this->processDataMap([$table => [$uid => $values]], 'save');
     }
 
     /**
@@ -90,12 +83,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         array $values,
         string $table = 'tx_thuecat_tourist_attraction'
     ): void {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start([$table => ['NEW1' => ['pid' => (string)$pid] + $values]], []);
-        $dataHandler->process_datamap();
-
-        $this->assertDataHandlerSucceeded($dataHandler, 'create');
+        $this->processDataMap([$table => ['NEW1' => ['pid' => (string)$pid] + $values]], 'create');
     }
 
     /**
@@ -106,12 +94,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         int $uid,
         string $table = 'tx_thuecat_tourist_attraction'
     ): void {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start([], [$table => [$uid => ['delete' => 1]]]);
-        $dataHandler->process_cmdmap();
-
-        $this->assertDataHandlerSucceeded($dataHandler, 'delete');
+        $this->processCmdMap([$table => [$uid => ['delete' => 1]]], 'delete');
     }
 
     /**
@@ -123,12 +106,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         int $target,
         string $table = 'tx_thuecat_tourist_attraction'
     ): void {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start([], [$table => [$uid => ['move' => $target]]]);
-        $dataHandler->process_cmdmap();
-
-        $this->assertDataHandlerSucceeded($dataHandler, 'move');
+        $this->processCmdMap([$table => [$uid => ['move' => $target]]], 'move');
     }
 
     /** Undelete is a cmdmap command; writing the delete field would not restore. */
@@ -136,17 +114,7 @@ abstract class AbstractCachingTestCase extends AbstractFrontendTestCase
         int $uid,
         string $table = 'tx_thuecat_tourist_attraction'
     ): void {
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        $dataHandler->bypassAccessCheckForRecords = true;
-        $dataHandler->start([], [$table => [$uid => ['undelete' => 1]]]);
-        $dataHandler->process_cmdmap();
-
-        $this->assertDataHandlerSucceeded($dataHandler, 'undelete');
-    }
-
-    protected function assertDataHandlerSucceeded(DataHandler $dataHandler, string $operation): void
-    {
-        $this->assertSame([], $dataHandler->errorLog, 'DataHandler must ' . $operation . ' cleanly: ' . implode(', ', $dataHandler->errorLog));
+        $this->processCmdMap([$table => [$uid => ['undelete' => 1]]], 'undelete');
     }
 
     /** Call from tests that save records. */

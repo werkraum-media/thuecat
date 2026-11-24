@@ -23,7 +23,9 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\UrlProvider;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationUrl;
 use WerkraumMedia\ThueCat\Import\UrlProvider\StaticUrlProvider;
 
 final class StaticUrlProviderTest extends TestCase
@@ -43,8 +45,14 @@ final class StaticUrlProviderTest extends TestCase
     #[Test]
     public function returnsConcreteProviderForConfiguration(): void
     {
+        $url = new ImportConfigurationUrl();
+        $url->_setProperty('url', 'https://example.com');
+
+        $urls = new ObjectStorage();
+        $urls->attach($url);
+
         $configuration = new ImportConfiguration();
-        $configuration->_setProperty('urls', ['https://example.com']);
+        $configuration->_setProperty('urls', $urls);
 
         $subject = new StaticUrlProvider();
 
@@ -55,8 +63,14 @@ final class StaticUrlProviderTest extends TestCase
     #[Test]
     public function concreteProviderReturnsUrls(): void
     {
+        $url = new ImportConfigurationUrl();
+        $url->_setProperty('url', 'https://example.com');
+
+        $urls = new ObjectStorage();
+        $urls->attach($url);
+
         $configuration = new ImportConfiguration();
-        $configuration->_setProperty('urls', ['https://example.com']);
+        $configuration->_setProperty('urls', $urls);
 
         $subject = new StaticUrlProvider();
 

@@ -49,7 +49,7 @@ final class SyncScopeUrlProviderTest extends TestCase
     public function returnsConcreteProviderForConfiguration(): void
     {
         $configuration = new ImportConfiguration();
-        $configuration->_setProperty('syncScopeId', 10);
+        $configuration->_setProperty('syncScopeId', '10');
 
         $fetchData = $this->createStub(FetchData::class);
         $fetchData->method('updatedNodes')->willReturn([
@@ -74,7 +74,7 @@ final class SyncScopeUrlProviderTest extends TestCase
     public function concreteProviderReturnsUrls(): void
     {
         $configuration = new ImportConfiguration();
-        $configuration->_setProperty('syncScopeId', 10);
+        $configuration->_setProperty('syncScopeId', '10');
 
         $fetchData = $this->createStub(FetchData::class);
         $fetchData->method('getFullResourceUrl')->willReturnOnConsecutiveCalls(

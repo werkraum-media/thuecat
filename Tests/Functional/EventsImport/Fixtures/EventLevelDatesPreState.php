@@ -36,75 +36,49 @@ return [
             'disable' => '0',
             'title' => 'Event level dates import',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="importTarget">
-                                <value index="vDEF">events</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="evt-eventlevel">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-tdm</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-notimes">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-notimes</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-timedisagree">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-timedisagree</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-dateonly">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-dateonly</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="evt-mixed">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://cdb.int.thuecat.org/api/resources/e_349b798696b77c81995d71a99b4460d1-kcev</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>',
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-tdm',
+        ],
+        [
+            'uid' => '102',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-notimes',
+        ],
+        [
+            'uid' => '103',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '3',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-timedisagree',
+        ],
+        [
+            'uid' => '104',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '4',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_19c21523-343f-4b72-b13c-756ac4bde8c5-dateonly',
+        ],
+        [
+            'uid' => '105',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '5',
+            'title' => '',
+            'url' => 'https://cdb.int.thuecat.org/api/resources/e_349b798696b77c81995d71a99b4460d1-kcev',
         ],
     ],
 ];

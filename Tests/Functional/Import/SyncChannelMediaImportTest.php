@@ -93,7 +93,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
-    public function runOfAnotherTypeKeysTheHostOfItsApiDomain(): void
+    public function runOfAnotherTypeKeysTheAssetHost(): void
     {
         $this->expectFetchForUrl(
             'https://thuecat.org/resources/test-event-1',

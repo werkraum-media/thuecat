@@ -56,33 +56,7 @@ return [
             'disable' => '0',
             'title' => 'Trail as root',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">1110</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="url0">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/e_106954656-oatour</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '1110',
         ],
         [
             'uid' => '2',
@@ -92,43 +66,7 @@ return [
             'disable' => '0',
             'title' => 'Attraction and trail sharing a keyword',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">1110</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="url0">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/attraction-sharing-trail-keyword</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="url1">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/e_106954656-oatour</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '1110',
         ],
         [
             'uid' => '3',
@@ -138,43 +76,7 @@ return [
             'disable' => '0',
             'title' => 'Trail run reaching a tourist information',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">1110</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="url0">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/e_106954656-oatour</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                    <field index="url1">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/tourist-information-with-trail-keyword</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '1110',
         ],
         [
             'uid' => '4',
@@ -184,33 +86,57 @@ return [
             'disable' => '0',
             'title' => 'Attraction reaching a trail as a relation',
             'type' => 'static',
-            'configuration' => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">1110</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="url0">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">https://thuecat.org/resources/347070073883-rqbn</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>
-        ',
+            'storage_pid' => '1110',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/e_106954656-oatour',
+        ],
+        [
+            'uid' => '201',
+            'pid' => '0',
+            'configuration' => '2',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/attraction-sharing-trail-keyword',
+        ],
+        [
+            'uid' => '202',
+            'pid' => '0',
+            'configuration' => '2',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/e_106954656-oatour',
+        ],
+        [
+            'uid' => '301',
+            'pid' => '0',
+            'configuration' => '3',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/e_106954656-oatour',
+        ],
+        [
+            'uid' => '302',
+            'pid' => '0',
+            'configuration' => '3',
+            'sorting' => '2',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/tourist-information-with-trail-keyword',
+        ],
+        [
+            'uid' => '401',
+            'pid' => '0',
+            'configuration' => '4',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/347070073883-rqbn',
         ],
     ],
 ];

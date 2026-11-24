@@ -55,7 +55,7 @@ Every functional test extends one of these bases, never core's `FunctionalTestCa
 
 | Base | Extends | Provides |
 |---|---|---|
-| `AbstractFunctionalTestCase` | core | the extensions thuecat needs to boot, the codappix data set trait, record read helpers (`countRows`, `fetchUidByRemoteId`, `fetchRowByRemoteId`, …) |
+| `AbstractFunctionalTestCase` | core | the extensions thuecat needs to boot, the codappix data set trait, record read helpers (`countRows`, `fetchUidByRemoteId`, `fetchRowByRemoteId`, …), `fetchImportConfiguration`, DataHandler runners (`processDataMap`, `processCmdMap`) |
 | `AbstractBackendTestCase` | functional | backend user, `LANG`, the `Fixtures/Import/Sites` site configurations |
 | `AbstractImportTestCase` | backend | Guzzle faker, file access and media stubs, vocabulary seed, error log writer, empty-log assertion, fetch and import helpers |
 | `AbstractFrontendTestCase` | functional | the `Fixtures/Frontend/Sites` site configurations, data set, root page TypoScript, request helpers |

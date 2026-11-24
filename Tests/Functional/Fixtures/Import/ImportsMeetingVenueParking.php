@@ -5,33 +5,6 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 // Inside the attraction_categories site, so the categories of the venue types get their anchor.
-$configuration = static fn (string $url): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="venue">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">' . $url . '</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>';
-
 return [
     'pages' => [
         [
@@ -69,7 +42,7 @@ return [
             'disable' => '0',
             'title' => 'Venue with one parking facility',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/160874095809-phhn'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '2',
@@ -77,7 +50,7 @@ return [
             'disable' => '0',
             'title' => 'Venue with a described parking facility',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/332021174274-eyhf'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '3',
@@ -85,7 +58,7 @@ return [
             'disable' => '0',
             'title' => 'Venue with a translated parking facility',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/117034427781-ndta'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '4',
@@ -93,7 +66,7 @@ return [
             'disable' => '0',
             'title' => 'Venue with two parking facilities',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/e_ttg00020050000287335-tomas'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '5',
@@ -101,7 +74,49 @@ return [
             'disable' => '0',
             'title' => 'Parking facility',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/109087118959-gwhg'),
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/160874095809-phhn',
+        ],
+        [
+            'uid' => '201',
+            'pid' => '0',
+            'configuration' => '2',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/332021174274-eyhf',
+        ],
+        [
+            'uid' => '301',
+            'pid' => '0',
+            'configuration' => '3',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/117034427781-ndta',
+        ],
+        [
+            'uid' => '401',
+            'pid' => '0',
+            'configuration' => '4',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/e_ttg00020050000287335-tomas',
+        ],
+        [
+            'uid' => '501',
+            'pid' => '0',
+            'configuration' => '5',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/109087118959-gwhg',
         ],
     ],
 ];

@@ -22,10 +22,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Model\Backend;
 
 use DateTimeImmutable;
-use Exception;
-use RuntimeException;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -37,19 +33,35 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     protected string $type = '';
 
-    protected string $configuration = '';
-
     protected ?DateTimeImmutable $tstamp = null;
+
+    protected int $storagePid = 0;
+
+    protected string $fileFolder = '';
+
+    protected string $apiKey = '';
+
+    protected string $syncScopeId = '';
+
+    protected int $fetchLastXDays = 1;
+
+    protected string $containsPlaceId = '';
+
+    protected string $syncChannelId = '';
+
+    protected int $messageBudget = 0;
+
+    protected int $fetchCacheLifetime = 0;
+
+    /**
+     * @var ObjectStorage<ImportConfigurationUrl>
+     */
+    protected ObjectStorage $urls;
 
     /**
      * @var ObjectStorage<ImportLog>
      */
     protected ObjectStorage $logs;
-
-    /**
-     * @var string[]|null
-     */
-    protected ?array $urls = null;
 
     /**
      * @var string[]
@@ -58,6 +70,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function __construct()
     {
+        $this->urls = new ObjectStorage();
         $this->logs = new ObjectStorage();
     }
 
@@ -98,36 +111,22 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getStoragePid(): int
     {
-        $storagePid = $this->getConfigurationValueFromFlexForm('storagePid');
-
-        if (is_numeric($storagePid) && $storagePid > 0) {
-            return (int)$storagePid;
-        }
-
-        return 0;
+        return $this->storagePid;
     }
 
     public function getFileFolder(): string
     {
-        $fileFolder = $this->getConfigurationValueFromFlexForm('fileFolder');
-        return is_string($fileFolder) ? $fileFolder : '';
+        return $this->fileFolder;
     }
 
     public function getUrls(): array
     {
-        if ($this->urls !== null) {
-            return $this->urls;
+        $urls = [];
+        foreach ($this->urls as $url) {
+            $urls[] = $url->getUrl();
         }
 
-        if ($this->configuration === '') {
-            return [];
-        }
-
-        $entries = array_map(fn (array $urlEntry): mixed => ArrayUtility::getValueByPath($urlEntry, 'url/el/url/vDEF'), $this->getEntries());
-
-        $entries = array_filter($entries);
-
-        return array_values($entries);
+        return $urls;
     }
 
     /**
@@ -140,37 +139,19 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getApiKey(): string
     {
-        $apiKey = $this->getConfigurationValueFromFlexForm('apiKey');
-        return is_string($apiKey) ? $apiKey : '';
+        return $this->apiKey;
     }
 
     public function getSyncScopeId(): string
     {
-        return $this->getConfigurationValueFromFlexForm('syncScopeId');
-    }
-
-    public function getApiDomain(): string
-    {
-        // Returns the user's explicit choice or '' when blank/missing. The
-        // default (FetchData::DEFAULT_API_DOMAIN) is applied downstream by
-        // FetchData itself — keeping this method honest lets
-        // FetchData::getFullResourceUrl() distinguish "no override → use
-        // canonical resource host" from "explicit override → co-locate
-        // resource fetches at that host".
-        $apiDomain = $this->getConfigurationValueFromFlexForm('apiDomain');
-        return is_string($apiDomain) ? $apiDomain : '';
+        return $this->syncScopeId;
     }
 
     public function getSyncChannelId(): string
     {
-        $syncChannelId = $this->getConfigurationValueFromFlexForm('syncChannelId');
-        return is_string($syncChannelId) ? $syncChannelId : '';
+        return $this->syncChannelId;
     }
 
-    /**
-     * Fixed host: a stored apiDomain is ignored, as switching a new record's
-     * type keeps the value the previous type's form prefilled.
-     */
     public function getSyncApiDomain(): string
     {
         return self::SYNC_API_DOMAIN;
@@ -178,89 +159,21 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
 
     public function getFetchLastXDays(): int
     {
-        $value = $this->getConfigurationValueFromFlexForm('fetchLastXDays');
-        if (!is_scalar($value) || $value === '') {
-            return 1;
-        }
-
-        return (int)$value;
+        return $this->fetchLastXDays;
     }
 
     public function getRunBudget(): int
     {
-        return $this->getPositiveIntFromFlexForm('runBudget');
+        return $this->messageBudget;
     }
 
     public function getFetchCacheLifetime(): int
     {
-        return $this->getPositiveIntFromFlexForm('fetchCacheLifetime');
+        return $this->fetchCacheLifetime;
     }
 
     public function getContainsPlaceId(): string
     {
-        $containsPlaceId = $this->getConfigurationValueFromFlexForm('containsPlaceId');
-        if (!is_string($containsPlaceId)) {
-            throw new Exception('Could not fetch containsPlaceId.', 1671027015);
-        }
-
-        return $containsPlaceId;
-    }
-
-    protected function getPositiveIntFromFlexForm(string $fieldName): int
-    {
-        $value = $this->getConfigurationValueFromFlexForm($fieldName);
-
-        if (!is_numeric($value) || $value <= 0) {
-            return 0;
-        }
-
-        return (int)$value;
-    }
-
-    protected function getEntries(): array
-    {
-        $configurationAsArray = $this->getConfigurationAsArray();
-
-        if (ArrayUtility::isValidPath($configurationAsArray, 'data/sDEF/lDEF/urls/el') === false) {
-            return [];
-        }
-
-        return ArrayUtility::getValueByPath(
-            $configurationAsArray,
-            'data/sDEF/lDEF/urls/el'
-        );
-    }
-
-    protected function getConfigurationAsArray(): array
-    {
-        $asArray = GeneralUtility::xml2array($this->configuration);
-
-        if (is_array($asArray) === false) {
-            throw new RuntimeException('Could not parse the configuration: ' . $asArray, 1729148214);
-        }
-
-        return $asArray;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getConfigurationValueFromFlexForm(string $fieldName)
-    {
-        if ($this->configuration === '') {
-            return '';
-        }
-
-        $configurationAsArray = $this->getConfigurationAsArray();
-        $arrayPath = 'data/sDEF/lDEF/' . $fieldName . '/vDEF';
-
-        if (ArrayUtility::isValidPath($configurationAsArray, $arrayPath) === false) {
-            return '';
-        }
-
-        return ArrayUtility::getValueByPath(
-            $configurationAsArray,
-            $arrayPath
-        );
+        return $this->containsPlaceId;
     }
 }

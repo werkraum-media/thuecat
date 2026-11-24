@@ -35,7 +35,7 @@ abstract class AbstractEventsEntity extends AbstractEntity
     public function parse(array $node, string $language, ParserContext $parserContext, array $translationLanguages = []): void
     {
         $this->source_name = 'thuecat';  // intentionally hardcoded, to distinguish from destionation.one direct import via ext:events
-        $this->source_url = $parserContext->apiDomain !== '' ? $parserContext->apiDomain : FetchData::DEFAULT_API_DOMAIN;
+        $this->source_url = FetchData::RESOURCE_HOST;
 
         $this->thuecat_import_configuration = $parserContext->importConfigurationUid;
     }

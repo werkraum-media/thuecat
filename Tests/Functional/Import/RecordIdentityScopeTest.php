@@ -102,7 +102,10 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesPreState.php');
         // Point configuration 2 into the first site, so both configurations
         // write into site 4000 through different storage folders.
-        $this->moveConfigurationStorage(2, 4020);
+        $this->getConnectionPool()
+            ->getConnectionForTable('tx_thuecat_import_configuration')
+            ->update('tx_thuecat_import_configuration', ['storage_pid' => 4020], ['uid' => 2])
+        ;
         $this->expectTownFetches();
 
         $this->importConfiguration(1);
@@ -235,36 +238,6 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
                 'title' => $title,
             ])
         ;
-    }
-
-    private function moveConfigurationStorage(int $uid, int $storagePid): void
-    {
-        $connection = $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_configuration')
-        ;
-        $configuration = $connection->select(
-            ['configuration'],
-            'tx_thuecat_import_configuration',
-            ['uid' => $uid]
-        )->fetchAssociative();
-        $this->assertIsArray($configuration, 'Fixture configuration uid=' . $uid . ' not found');
-
-        $flexForm = is_string($configuration['configuration'] ?? null)
-            ? $configuration['configuration']
-            : '';
-        $replaced = preg_replace(
-            '#(<field index="storagePid">\s*<value index="vDEF">)\d+(</value>)#',
-            '${1}' . $storagePid . '${2}',
-            $flexForm
-        );
-        $this->assertIsString($replaced);
-        $this->assertNotSame($flexForm, $replaced, 'storagePid was not rewritten in the flexform');
-
-        $connection->update(
-            'tx_thuecat_import_configuration',
-            ['configuration' => $replaced],
-            ['uid' => $uid]
-        );
     }
 
     /**

@@ -60,11 +60,11 @@ class SyncScopeUrlProvider implements UrlProvider
         return $instance;
     }
 
-    public function getUrls(?string $apiDomain = null): array
+    public function getUrls(): array
     {
-        $response = $this->fetchData->updatedNodes($this->syncScopeId, $this->apiKey, $apiDomain, $this->fetchLastXDays);
+        $response = $this->fetchData->updatedNodes($this->syncScopeId, $this->apiKey, $this->fetchLastXDays);
         $resourceIds = array_values($response['data']['createdOrUpdated'] ?? []);
 
-        return array_map(fn (string $id): string => $this->fetchData->getFullResourceUrl($id, $apiDomain), $resourceIds);
+        return array_map($this->fetchData->getFullResourceUrl(...), $resourceIds);
     }
 }

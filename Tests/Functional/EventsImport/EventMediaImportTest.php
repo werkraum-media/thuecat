@@ -23,7 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -667,17 +666,13 @@ final class EventMediaImportTest extends AbstractImportTestCase
 
     private function runImportSkippingMedia(): void
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=1 not found');
+        $configuration = $this->fetchImportConfiguration(1);
         $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
     }
 
     private function runImportReturningSeverity(): string
     {
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        $this->assertNotNull($configuration, 'Fixture configuration uid=1 not found');
+        $configuration = $this->fetchImportConfiguration(1);
         return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

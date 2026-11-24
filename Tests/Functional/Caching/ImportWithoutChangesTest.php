@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Caching;
 
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\TestingFramework\Core\Functional\Framework\Frontend\InternalRequest;
@@ -53,7 +54,19 @@ final class ImportWithoutChangesTest extends AbstractImportTestCase
 
     protected array $configurationToUseInTestInstance = [
         ...AbstractImportTestCase::CONFIGURATION,
-        ...AbstractCachingTestCase::CONFIGURATION,
+        'SYS' => [
+            'caching' => [
+                'cacheConfigurations' => [
+                    ...AbstractCachingTestCase::CONFIGURATION['SYS']['caching']['cacheConfigurations'],
+                    // A ReflectionService of a discarded container is destructed by the garbage collector inside
+                    // the frontend's TypoScript serialize call and writes a corrupt class schema entry (#110909).
+                    // A transient backend is never serialized.
+                    'extbase' => [
+                        'backend' => TransientMemoryBackend::class,
+                    ],
+                ],
+            ],
+        ],
     ];
 
     protected function setUp(): void

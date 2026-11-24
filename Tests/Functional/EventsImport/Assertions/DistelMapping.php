@@ -31,7 +31,7 @@ declare(strict_types=1);
 return [
     'event' => [
         'source_name' => 'thuecat',
-        'source_url' => 'https://cdb.thuecat.org',
+        'source_url' => 'https://thuecat.org',
         'remote_id' => 'https://int.thuecat.org/resources/e_100771372-hubev',
         'title' => 'Distel-Comedy. Große Stand-up-Comedy-Show',
         'details' => '<p>Am 28. Juni findet ein CSD-Special statt.</p>',

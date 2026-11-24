@@ -38,15 +38,12 @@ use WerkraumMedia\ThueCat\Import\RequestFactory;
 
 class FetchData
 {
-    // Reuse rather than re-defaulting elsewhere; the fallback lives here.
-    public const DEFAULT_API_DOMAIN = 'https://cdb.thuecat.org';
-
     public const DEFAULT_SYNC_API_DOMAIN = ImportConfiguration::SYNC_API_DOMAIN;
 
     // The host every @id URI references, whichever host served the data.
     public const RESOURCE_HOST = 'https://thuecat.org';
 
-    // Serves media; original assets need a key.
+    // Serves media, whose original assets need a key, and the syncScope change lists.
     public const ASSET_HOST = 'https://cdb.thuecat.org';
 
     protected string $urlPrefix = self::RESOURCE_HOST;
@@ -102,12 +99,8 @@ class FetchData
         $this->syncRunRequestFactory = null;
     }
 
-    public function updatedNodes(string $scopeId, ?string $apiKey = null, ?string $apiDomain = null, int $fetchLastXDays = 0): array
+    public function updatedNodes(string $scopeId, ?string $apiKey = null, int $fetchLastXDays = 0): array
     {
-        // Per-call: concurrent configurations may target different hosts.
-        $domain = ($apiDomain === null || $apiDomain === '') ? self::DEFAULT_API_DOMAIN : $apiDomain;
-        $domain = rtrim($domain, '/') . '/';
-
         $timezone = new DateTimeZone('Europe/Berlin');
         $from = '';
         if ($fetchLastXDays > 0) {
@@ -118,19 +111,16 @@ class FetchData
         }
 
         return $this->jsonLDFromUrl(
-            $domain
-                . 'api/ext-sync/get-updated-nodes?showTotal=true&' . $from . 'syncScopeId='
+            self::ASSET_HOST
+                . '/api/ext-sync/get-updated-nodes?showTotal=true&' . $from . 'syncScopeId='
                 . urlencode($scopeId),
             $apiKey
         );
     }
 
-    // $apiDomain keeps resource fetches on the host the run is already talking
-    // to; without it the canonical host that @id URIs reference applies.
-    public function getFullResourceUrl(string $id, ?string $apiDomain = null): string
+    public function getFullResourceUrl(string $id): string
     {
-        $host = ($apiDomain === null || $apiDomain === '') ? $this->urlPrefix : $apiDomain;
-        return rtrim($host, '/') . '/resources/' . ltrim($id, '/');
+        return $this->urlPrefix . '/resources/' . ltrim($id, '/');
     }
 
     public function jsonLDFromUrl(string $url, ?string $apiKey = null): array

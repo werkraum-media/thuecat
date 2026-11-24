@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
@@ -139,9 +138,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectErrors = true;
         $this->expectChannelLists('list-changed-removed-with-import.json');
-        $this->workaroundExtbaseConfiguration();
-        $configuration = $this->get(ImportConfigurationRepository::class)->findOneByUid(1);
-        $this->assertNotNull($configuration);
+        $configuration = $this->fetchImportConfiguration(1);
 
         $this->get(Importer::class)->importConfiguration($configuration, null, new RunDeadline(10, microtime(true) - 20.0));
 

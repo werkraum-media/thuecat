@@ -5,33 +5,6 @@ declare(strict_types=1);
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 
 // Inside the attraction_categories site, so the categories of the venue types get their anchor.
-$configuration = static fn (string $url): string => '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-            <T3FlexForms>
-                <data>
-                    <sheet index="sDEF">
-                        <language index="lDEF">
-                            <field index="storagePid">
-                                <value index="vDEF">10</value>
-                            </field>
-                            <field index="urls">
-                                <el index="el">
-                                    <field index="venue">
-                                        <value index="url">
-                                            <el>
-                                                <field index="url">
-                                                    <value index="vDEF">' . $url . '</value>
-                                                </field>
-                                            </el>
-                                        </value>
-                                        <value index="_TOGGLE">0</value>
-                                    </field>
-                                </el>
-                            </field>
-                        </language>
-                    </sheet>
-                </data>
-            </T3FlexForms>';
-
 return [
     'pages' => [
         [
@@ -69,7 +42,7 @@ return [
             'disable' => '0',
             'title' => 'Conference hotel',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/669150457039-gamn'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '2',
@@ -77,7 +50,7 @@ return [
             'disable' => '0',
             'title' => 'Convention center',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/766768028887-ohje'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '3',
@@ -85,7 +58,7 @@ return [
             'disable' => '0',
             'title' => 'Meeting location',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/059632237210-rbpe'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '4',
@@ -93,7 +66,7 @@ return [
             'disable' => '0',
             'title' => 'Hotel with gastronomy',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/554408963544-zftr'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '5',
@@ -101,7 +74,7 @@ return [
             'disable' => '0',
             'title' => 'Museum hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/117034427781-ndta'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '6',
@@ -109,7 +82,7 @@ return [
             'disable' => '0',
             'title' => 'Memorial hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/838757899629-mqjw'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '7',
@@ -117,7 +90,7 @@ return [
             'disable' => '0',
             'title' => 'Villa hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/447107981156-qmxj'),
+            'storage_pid' => '10',
         ],
         [
             'uid' => '8',
@@ -125,7 +98,73 @@ return [
             'disable' => '0',
             'title' => 'Park hosting meetings',
             'type' => 'static',
-            'configuration' => $configuration('https://thuecat.org/resources/r_22033376-oapoi'),
+            'storage_pid' => '10',
+        ],
+    ],
+    'tx_thuecat_import_configuration_url' => [
+        [
+            'uid' => '101',
+            'pid' => '0',
+            'configuration' => '1',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/669150457039-gamn',
+        ],
+        [
+            'uid' => '201',
+            'pid' => '0',
+            'configuration' => '2',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/766768028887-ohje',
+        ],
+        [
+            'uid' => '301',
+            'pid' => '0',
+            'configuration' => '3',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/059632237210-rbpe',
+        ],
+        [
+            'uid' => '401',
+            'pid' => '0',
+            'configuration' => '4',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/554408963544-zftr',
+        ],
+        [
+            'uid' => '501',
+            'pid' => '0',
+            'configuration' => '5',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/117034427781-ndta',
+        ],
+        [
+            'uid' => '601',
+            'pid' => '0',
+            'configuration' => '6',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/838757899629-mqjw',
+        ],
+        [
+            'uid' => '701',
+            'pid' => '0',
+            'configuration' => '7',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/447107981156-qmxj',
+        ],
+        [
+            'uid' => '801',
+            'pid' => '0',
+            'configuration' => '8',
+            'sorting' => '1',
+            'title' => '',
+            'url' => 'https://thuecat.org/resources/r_22033376-oapoi',
         ],
     ],
 ];
