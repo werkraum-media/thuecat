@@ -24,12 +24,8 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
- * A record already visited in a run is related, not fetched again. The fetch cache
- * would hide a repeat, so the run bypasses it; the faker then fails any second
- * request on its own.
- *
- * Two guards hold this, `isUpdated()` and the `remoteIdToKey` map; the test fails
- * only when both do, which is the contract rather than either mechanism.
+ * A root that a later item of the job references is related by the uid its own item stored. The fetch cache serves
+ * the reference, and the reference sighting stores no second record.
  */
 final class VisitOnceTest extends AbstractImportTestCase
 {
@@ -40,7 +36,7 @@ final class VisitOnceTest extends AbstractImportTestCase
     protected string $fixtureGuzzleBase = __DIR__ . '/../Fixtures/Import/Guzzle';
 
     #[Test]
-    public function aReferenceToARootAlreadyVisitedIsRelatedWithoutFetchingIt(): void
+    public function aReferenceToARootOfAnEarlierItemIsRelatedByItsStoredUid(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailThenAttractionInIt.php');
         $this->expectFetch('e_106954656-oatour.json');
@@ -61,10 +57,11 @@ final class VisitOnceTest extends AbstractImportTestCase
             'thuecat.org/resources/attraction-in-trail-with-relations.json'
         );
 
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL_ID);
         $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
+        $this->assertSame(1, $this->countRowsMatching('tx_thuecat_trail', ['sys_language_uid' => 0]));
         $this->assertSame((string)$trailUid, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION_ID)['contained_in_trail'] ?? null, 'The attraction relates the trail stored by the earlier root.');
     }
 }

@@ -75,12 +75,8 @@ final class ImportStartedTest extends AbstractImportTestCase
 
         $log = $this->jobRow($job)['import_log'];
         $this->assertIsInt($log);
-        $entries = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_log_entry')
-            ->select(['type'], 'tx_thuecat_import_log_entry', ['import_log' => $log], [], ['uid' => 'ASC'])
-            ->fetchFirstColumn()
-        ;
-        $this->assertSame(['effectiveSettings'], $entries);
-        $this->assertSame(1, $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_log')->count('*', 'tx_thuecat_import_log', ['uid' => $log, 'configuration' => 1]));
+        $this->assertSame(['effectiveSettings'], $this->fetchColumnMatching('tx_thuecat_import_log_entry', 'type', ['import_log' => $log]));
+        $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_log', ['uid' => $log, 'configuration' => 1]));
     }
 
     #[Test]

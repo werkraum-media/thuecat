@@ -22,7 +22,7 @@
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "Second parse should be dropped"
+                    "@value": "Second parse"
                 }
             ]
         }

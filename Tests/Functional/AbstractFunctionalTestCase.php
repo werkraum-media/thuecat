@@ -93,6 +93,27 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         return $tableTca;
     }
 
+    /**
+     * @param array<string, int|string> $criteria
+     */
+    protected function countRowsMatching(string $table, array $criteria): int
+    {
+        return $this->getConnectionPool()->getConnectionForTable($table)->count('*', $table, $criteria);
+    }
+
+    /**
+     * @param array<string, int|string> $criteria
+     *
+     * @return list<mixed> in the order of the rows' uids
+     */
+    protected function fetchColumnMatching(string $table, string $column, array $criteria): array
+    {
+        return $this->getConnectionPool()->getConnectionForTable($table)
+            ->select([$column], $table, $criteria, [], ['uid' => 'ASC'])
+            ->fetchFirstColumn()
+        ;
+    }
+
     protected function countRows(string $table): int
     {
         $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable($table);

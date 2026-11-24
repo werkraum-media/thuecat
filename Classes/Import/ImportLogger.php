@@ -326,49 +326,6 @@ class ImportLogger
     }
 
     /**
-     * @todo Remove with OrganisationReclassificationRepair.
-     *
-     * @param list<string> $moved
-     * @param list<string> $droppedManagedBy
-     * @param list<int> $droppedManagedEvents
-     */
-    public function recordOrganisationRepair(
-        string $remoteId,
-        int $organisationUid,
-        string $table,
-        int $uid,
-        array $moved,
-        array $droppedManagedBy,
-        array $droppedManagedEvents
-    ): void {
-        $this->stage([
-            'type' => 'recordReclassification',
-            'severity' => self::SEVERITY_WARNING,
-            'kind' => RecordReclassification::KIND_REPAIRED,
-            'remote_id' => $remoteId,
-            'table_name' => $table,
-            'record_uid' => $uid,
-            'message' => sprintf(
-                'Organisation %d replaced by %s %d; %d relations moved, %d dropped.',
-                $organisationUid,
-                $table,
-                $uid,
-                count($moved),
-                count($droppedManagedBy) + count($droppedManagedEvents)
-            ),
-            'context' => json_encode([
-                'previousTable' => 'tx_thuecat_organisation',
-                'previousUid' => $organisationUid,
-                'table' => $table,
-                'uid' => $uid,
-                'moved' => $moved,
-                'droppedManagedBy' => $droppedManagedBy,
-                'droppedManagedEvents' => $droppedManagedEvents,
-            ]) ?: '{}',
-        ]);
-    }
-
-    /**
      * A reference whose record imported into a table the bucket cannot relate
      * to. Upstream mixes kinds in one property (a POI under a key that maps to
      * towns, say), so this is data drift rather than a fault: the record is
@@ -869,6 +826,17 @@ class ImportLogger
     }
 
     /**
+     * Adds the staged entries to a log that exists already, the one of the job.
+     *
+     * @param array<string, array<int|string, array<string, mixed>>> $payload
+     * @param array<string, int|string> $substNEWwithIDs
+     */
+    public function writeLogInto(int $importLog, array $payload, array $substNEWwithIDs): void
+    {
+        $this->persistLog(0, $payload, $substNEWwithIDs, false, $importLog);
+    }
+
+    /**
      * Writes the log of a job, which exists from the job's start on even while it holds only the effective settings.
      *
      * @return int the log's uid
@@ -882,20 +850,26 @@ class ImportLogger
      * @param array<string, array<int|string, array<string, mixed>>> $payload
      * @param array<string, int|string> $substNEWwithIDs
      */
-    protected function persistLog(int $configurationUid, array $payload, array $substNEWwithIDs, bool $withoutEntries): int
-    {
+    protected function persistLog(
+        int $configurationUid,
+        array $payload,
+        array $substNEWwithIDs,
+        bool $withoutEntries,
+        int $importLog = 0
+    ): int {
         $this->recordRecoveredRetries();
         $this->recordRateLimits();
-        $logKey = StringUtility::getUniqueId('NEW');
+        $logKey = $importLog > 0 ? (string)$importLog : StringUtility::getUniqueId('NEW');
         $datamap = [
-            'tx_thuecat_import_log' => [
-                $logKey => [
-                    'pid' => 0,
-                    'configuration' => $configurationUid,
-                ],
-            ],
+            'tx_thuecat_import_log' => [],
             'tx_thuecat_import_log_entry' => [],
         ];
+        if ($importLog === 0) {
+            $datamap['tx_thuecat_import_log'][$logKey] = [
+                'pid' => 0,
+                'configuration' => $configurationUid,
+            ];
+        }
 
         // First entry of the run, so the log opens with what drove it.
         if ($this->effectiveSettings !== null) {

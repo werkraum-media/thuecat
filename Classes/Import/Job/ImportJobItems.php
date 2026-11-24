@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Job;
 
 use Doctrine\DBAL\ParameterType;
+use Psr\Clock\ClockInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -39,6 +40,7 @@ class ImportJobItems
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
+        protected readonly ClockInterface $clock,
     ) {
     }
 
@@ -70,9 +72,35 @@ class ImportJobItems
     }
 
     /**
-     * The message of the first pending item, or the job's finishing message when none is pending.
+     * Starts the item's clock.
      */
-    public function nextMessage(int $job): ImportMessage
+    public function begin(int $uid): ?ImportJobItem
+    {
+        $row = $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->select(['uid', 'target', 'position'], self::TABLE, ['uid' => $uid])
+            ->fetchAssociative()
+        ;
+        if ($row === false || !is_numeric($row['uid']) || !is_string($row['target']) || !is_numeric($row['position'])) {
+            return null;
+        }
+
+        return new ImportJobItem((int)$row['uid'], $row['target'], (int)$row['position'], $this->clock->now()->getTimestamp());
+    }
+
+    public function markDone(ImportJobItem $item): void
+    {
+        $this->connectionPool->getConnectionForTable(self::TABLE)->update(
+            self::TABLE,
+            ['state' => 'done', 'duration' => $this->clock->now()->getTimestamp() - $item->startedAt],
+            ['uid' => $item->uid]
+        );
+    }
+
+    /**
+     * The message of the first pending item after the given position, or the job's finishing message when none is
+     * pending. An item waiting for its retry before that position gets its message from the retry instead.
+     */
+    public function nextMessage(int $job, int $afterPosition = -1): ImportMessage
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
         $item = $queryBuilder
@@ -80,7 +108,8 @@ class ImportJobItems
             ->from(self::TABLE)
             ->where(
                 $queryBuilder->expr()->eq('job', $queryBuilder->createNamedParameter($job, Connection::PARAM_INT)),
-                $queryBuilder->expr()->eq('state', $queryBuilder->createNamedParameter('pending'))
+                $queryBuilder->expr()->eq('state', $queryBuilder->createNamedParameter('pending')),
+                $queryBuilder->expr()->gt('position', $queryBuilder->createNamedParameter($afterPosition, Connection::PARAM_INT))
             )
             ->orderBy('position')
             ->setMaxResults(1)

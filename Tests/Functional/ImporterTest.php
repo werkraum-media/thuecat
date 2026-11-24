@@ -278,20 +278,14 @@ final class ImporterTest extends AbstractImportTestCase
     }
 
     /**
-     * Visit-once contract: two attraction roots in one configuration both
-     * reference the same managedBy organization. The org URL is staged
-     * exactly once. Under the URL-keyed faker, a re-fetch surfaces as an
-     * "unexpected request" error (the bag for that URL is empty on the
-     * second attempt) — which is the only way the resolve-once short-circuit
-     * (ResolverContext::isUpdated) is exercised by the suite.
+     * Two attraction roots reference the same managedBy organisation. The
+     * second root fetches it again and the fetch cache serves it, so the
+     * org URL is staged exactly once.
      */
     #[Test]
     public function importsTwoAttractionsSharingOrgFetchesOrgOnce(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
-        // Three URLs in total; the org appears exactly once. If isUpdated
-        // ever regresses, the second managedBy resolution will trip the
-        // empty-bag error for the org URL.
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('018132452787-ngbe.json');
         $this->expectFetch('attraction-with-slogan-array.json');
@@ -305,9 +299,7 @@ final class ImporterTest extends AbstractImportTestCase
      * Regression test for the production defect: two roots referenced one
      * dead resource and BOTH roots were discarded, twice over.
      *
-     * The 404 is staged exactly once. A second fetch of a URL already known
-     * to be missing would drain the faker's bag and fail the test — which is
-     * what proves the dedup suppresses re-fetching across roots.
+     * A failed fetch is remembered per root only, so each root asks once.
      */
     #[Test]
     public function importsTwoAttractionsWhenSharedOrgIsMissing(): void
@@ -316,8 +308,9 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('attraction-with-slogan-array.json');
         $this->expectNotFound('018132452787-ngbe');
+        $this->expectNotFound('018132452787-ngbe');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTwoAttractionsSharingMissingOrg.php');
     }
@@ -405,6 +398,8 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTwoAttractionsSharingOrg.php');
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('attraction-with-slogan-array.json');
+        // A failed fetch is remembered per root only, so each root asks once.
+        $this->expectNotFound('018132452787-ngbe');
         $this->expectNotFound('018132452787-ngbe');
 
         $this->importConfiguration(1);
@@ -413,22 +408,12 @@ final class ImporterTest extends AbstractImportTestCase
     }
 
     /**
-     * Re-staging short-circuit: two URLs in one configuration return JSON
-     * payloads that share a remote_id but carry different scalar fields.
-     * URL 1 stages the row; URL 2's parse hits the resolver's rekey pass
-     * where ResolverContext::isUpdated drops it (Resolver.php line 211).
-     * If isUpdated regresses to a no-op, URL 2's row reuses the same NEW…
-     * key (line 220) and overwrites URL 1's title in the dataMap before
-     * DataHandler runs — the DB ends up with "Second parse should be
-     * dropped" and the assertion fails.
-     *
-     * This is what `importsTwoAttractionsSharingOrgFetchesOrgOnce` cannot
-     * verify: that test's visit-once guarantee is supplied by the
-     * remoteIdToKey payload cache (Resolver.php line 440), which fires
-     * before isUpdated has a chance to.
+     * Two URLs in one configuration return the same remote_id with different
+     * scalar fields. Each root is persisted on its own, so the second updates
+     * the record the first stored.
      */
     #[Test]
-    public function importsSameAttractionTwiceKeepsFirstParse(): void
+    public function importsSameAttractionTwiceKeepsLastParse(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSameAttractionTwice.php');
         $this->expectFetch('attraction-duplicate-first.json');

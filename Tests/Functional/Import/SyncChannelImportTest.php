@@ -152,14 +152,16 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
 
+    // A channel's answer is remembered per root only; the fetch cache serves the carried URL to the second.
     #[Test]
-    public function referenceSharedByTwoEventsIsAskedOfTheChannelOnce(): void
+    public function referenceSharedByTwoEventsIsAskedOfTheChannelByEach(): void
     {
         $this->expectChannelServing('list-changed-media-outside-channel.json', 'test-event-media-2a', 'test-event-media-2b');
         $this->expectFailureForUrl(self::RECORD . 'test-media-2', 200);
+        $this->expectFailureForUrl(self::RECORD . 'test-media-2', 200);
         $this->expectFetchForUrl('https://thuecat.org/resources/test-media-2', 'thuecat.org/resources/test-media-2.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2a'));
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-media-2b'));

@@ -24,8 +24,8 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
- * A venue reached first as an earlier root's reference and then as a root of its own is resolved as a root. Each
- * venue is fetched once: the run's fetch cache serves its root turn.
+ * A venue reached first as an earlier root's reference and then as a root of its own is resolved as a root. The fetch
+ * cache serves every later fetch of it.
  */
 final class RootAfterReferenceImportTest extends AbstractImportTestCase
 {
@@ -46,7 +46,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue.json');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
@@ -108,19 +108,20 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
 
-    // The fetch cache would hide a repeat, so the run bypasses it: once as a reference, once as a root.
+    // The later item reaches the venue as a reference, which neither clears nor adds its rooms.
     #[Test]
-    public function rerootedVenueReferencedAgainIsNotFetchedAgain(): void
+    public function venueReferencedByALaterItemKeepsItsRoomsAndIsRelatedByItsUid(): void
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsReferenceThenMeetingVenue.php');
         $this->expectFetch('attraction-in-meeting-venue.json');
-        $this->expectFetchForUrl(self::MEETING_VENUE_WITH_ROOMS, 'thuecat.org/resources/meeting-venue-with-rooms.json');
         $this->expectMeetingVenueWithRooms();
         $this->expectFetch('attraction-also-in-meeting-venue.json');
 
-        $this->importConfigurationBypassingCache(5);
+        $this->importJob(5);
 
-        $this->assertSame((string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS), $this->fetchRowByRemoteId(self::TABLE, self::RESOURCES . 'attraction-also-in-meeting-venue')['contained_in_attraction']);
+        $venue = $this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS);
+        $this->assertSame((string)$venue, $this->fetchRowByRemoteId(self::TABLE, self::RESOURCES . 'attraction-also-in-meeting-venue')['contained_in_attraction']);
+        $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
 
     #[Test]

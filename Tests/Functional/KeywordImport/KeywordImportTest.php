@@ -452,9 +452,9 @@ final class KeywordImportTest extends AbstractImportTestCase
         }
     }
 
-    // resolve() runs once per root, so dedup state that lived in a local would
-    // let the second root stage a duplicate of the shared term. Queueing one
-    // fetch per URL also asserts the second root reuses the cached response.
+    // Each root is persisted on its own, so the second must find the term the
+    // first stored. Queueing one fetch per URL also asserts the second root
+    // reuses the cached response.
     #[Test]
     public function aTermSharedByTwoRootsYieldsOneCategory(): void
     {
@@ -464,7 +464,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->expectFetch('475728955106-qdcc.json');
         $this->expectFetch('155933862969-mofh.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'), 'The shared term must yield exactly one category.');
         $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh'), 'Its set must not be duplicated either.');

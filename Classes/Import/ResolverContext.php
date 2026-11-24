@@ -70,8 +70,7 @@ final class ResolverContext
     /**
      * remote_id → current outer key for the in-flight import.
      *
-     * Lifetime spans every Resolver round for a single
-     * Importer::importConfiguration call. Values evolve:
+     * Lifetime spans every Resolver round of one root. Values evolve:
      *   - first sighting of a new remote_id: NEW… placeholder
      *   - after DataHandler runs: promoted to the assigned uid (string)
      *   - pre-existing rows: the uid string from the first sighting
@@ -105,9 +104,8 @@ final class ResolverContext
 
     /**
      * Category staging key (see SysCategoryAnchor::stagingKey()) → staged key
-     * (existing uid or NEW placeholder). Lives on
-     * the context because resolve() runs once per root but a category recurs
-     * across roots, and NEW rows aren't in the DB until the run flushes — without
+     * (existing uid or NEW placeholder). A category recurs within one root,
+     * and a NEW row isn't in the DB until the persist loop has run — without
      * this the second sighting would stage a duplicate.
      *
      * @var array<string, string>
@@ -119,7 +117,7 @@ final class ResolverContext
      * field in the schema. The Resolver flags them here instead of writing a
      * relation to a nonexistent column; the Importer reads them after resolve()
      * to log one notice per table. A set (table => true) so repeated sightings
-     * across owners/roots collapse to a single entry.
+     * across owners collapse to a single entry.
      *
      * @var array<string, true>
      */
@@ -127,7 +125,7 @@ final class ResolverContext
 
     /**
      * Source value => whether the fallback map was consulted for its title.
-     * Run-scoped: the report is written once, after the last root.
+     * Per root: the report is written once, after the root's persist loop.
      *
      * @var array<string, bool>
      */
@@ -185,18 +183,9 @@ final class ResolverContext
     public array $depthByRemoteId = [];
 
     /**
-     * table → key → true for records staged as a fetched reference and then resolved as a root of the same run.
-     * Their root row arrives under a key the accumulated payload already holds, so the merge overlays it instead
-     * of keeping the earlier row.
-     *
-     * @var array<string, array<string, true>>
-     */
-    public array $rerootedKeys = [];
-
-    /**
      * remote_id → self::STATUS_*. Default-language status map; lifetime
-     * equals one Importer::importConfiguration call across every root and
-     * every resolver round. See the STATUS_* constants for state semantics.
+     * spans every resolver round of one root. See the STATUS_* constants for
+     * state semantics.
      *
      * @var array<string, self::STATUS_*>
      */
@@ -212,45 +201,45 @@ final class ResolverContext
     public array $translationStatus = [];
 
     /**
-     * URL → failure reason. Suppresses re-fetching across roots, not logging.
+     * URL → failure reason. Suppresses re-fetching within one root, not logging; the next root asks again.
      *
      * @var array<string, string>
      */
     public array $failedReferenceUrls = [];
 
     /**
-     * Run-scoped, not per payload: payloads merge first-wins, which would drop
-     * a second root's claim on an owner already collected.
+     * On the context, not per payload: the flush after the persist loop needs
+     * every owner's complete set of the root.
      *
      * @var list<CollectedMedia>
      */
     public array $collectedMedia = [];
 
     /**
-     * Run-scoped for the same reason as media: the flush after the last root
-     * needs every owner's complete set to decide what to reap.
+     * For the same reason as media: the flush needs every owner's complete set
+     * to decide what to reap.
      *
      * @var array<int, CollectedKeyword>
      */
     public array $collectedKeywords = [];
 
     /**
-     * Run-scoped: the event uids these carry are placeholders until the
-     * persist loop has promoted them, so the flush happens after it.
+     * The event uids these carry are placeholders until the persist loop has
+     * promoted them, so the flush happens after it.
      *
      * @var list<CollectedPlaceMatch>
      */
     public array $collectedPlaceMatches = [];
 
     /**
-     * Run-scoped: the places these name are placeholders until the persist loop has promoted them.
+     * The places these name are placeholders until the persist loop has promoted them.
      *
      * @var list<CollectedHostedEvent>
      */
     public array $collectedHostedEvents = [];
 
     /**
-     * Run-wide, so a person or audience named by several places is fetched once.
+     * So a person or audience named several times in one root is fetched once.
      *
      * @var array<string, array<string, mixed>> reference URL => fetched node
      */
@@ -273,7 +262,7 @@ final class ResolverContext
     public array $claimedKeywordByField = [];
 
     /**
-     * Keyword staging key → staged key, so a keyword recurring across roots
+     * Keyword staging key → staged key, so a keyword recurring within one root
      * yields one row per tree. Separate from the category map: the two trees must never
      * hand each other a key.
      *
@@ -282,16 +271,16 @@ final class ResolverContext
     public array $keywordKeyByRemoteId = [];
 
     /**
-     * Keyword term URI → the fetch outcome: one request per term per run. Many
+     * Keyword term URI → the fetch outcome: one request per term per root. Many
      * keywords share an ancestor, and the fetch cache cannot absorb the repeats
-     * when a run bypasses it.
+     * when a job bypasses it.
      *
      * @var array<string, array{term: ?KeywordTermEntity, technicalFailure: bool}>
      */
     public array $keywordTermByUri = [];
 
     /**
-     * Download URL → sys_file uid: one fetch per asset per run.
+     * Download URL → sys_file uid: one fetch per asset per root.
      *
      * @var array<string, int>
      */
@@ -513,7 +502,7 @@ final class ResolverContext
 
     /**
      * The category map without its tree qualifier, for readers that know a
-     * term by remote_id alone. Where one run staged a term in two trees, the
+     * term by remote_id alone. Where one root staged a term in two trees, the
      * later one wins.
      *
      * @return array<string, string>
@@ -531,7 +520,7 @@ final class ResolverContext
 
     /**
      * Rewrite NEW… placeholders to the uids DataHandler assigned in the
-     * previous round, across every run-scoped key map. A map left out here
+     * previous round, across every key map of the root. A map left out here
      * carries its placeholder into the next round and stages a duplicate row.
      *
      * @param array<string, int|string> $substNEWwithIDs

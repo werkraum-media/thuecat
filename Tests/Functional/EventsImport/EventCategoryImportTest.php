@@ -91,14 +91,13 @@ final class EventCategoryImportTest extends AbstractImportTestCase
     #[Test]
     public function sharesOneCategoryAcrossEventsFromDifferentRootUrls(): void
     {
-        // Two roots, both mapping to Kulturveranstaltung. resolve() runs once per
-        // URL, so this pins the run-scoped dedup (categoryKeyByRemoteId on the
-        // context) — the shared category must be created exactly once.
+        // Two roots, both mapping to Kulturveranstaltung. Each root is persisted on
+        // its own, so the second must find the category the first stored.
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportTwoRootsPreState.php');
         $this->expectFetch('e_19542-hubev.json');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $culture = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertCount(1, $culture, 'Shared category is created once across both roots.');

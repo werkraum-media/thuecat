@@ -39,7 +39,7 @@ return [
             'type' => 'savingEntity',
             'severity' => 'info',
             'table_name' => 'tx_thuecat_tourist_attraction',
-            'record_uid' => '2',
+            'record_uid' => '3',
         ],
         3 => [
             'uid' => '4',

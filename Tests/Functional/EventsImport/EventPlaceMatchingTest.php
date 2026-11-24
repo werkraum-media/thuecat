@@ -80,6 +80,18 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->assertSame([], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 2), 'The postal code alone related the event to the wrong place.');
     }
 
+    // The fixture's place stands for one an earlier job stored: the event's item finds it in the database.
+    #[Test]
+    public function inlineVenueMatchesAPlaceAPreviousJobStored(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventInlineVenueMatchPreState.php');
+        $this->expectFetch('e_bauhaus-hubev.json');
+
+        $this->importJob(1);
+
+        $this->assertSame([$this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
+    }
+
     #[Test]
     public function inlineVenueMatchesARecordOfThePlaceTable(): void
     {

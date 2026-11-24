@@ -18,10 +18,8 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-// every URL's parsed payload before running any DataHandler pass, so iter 0
-// creates BOTH default-language rows (uids 1, 2), then iter 1 localizes
-// both via cmdMap (uids 3, 4). The naive "single attraction fully done
-// before the next" ordering does not happen.
+// Each root is stored with its translation before the next root starts,
+// so the uids alternate: a default-language row, then its translation.
 return [
     'tx_thuecat_tourist_attraction' => [
         0 => [
@@ -37,16 +35,6 @@ return [
         1 => [
             'uid' => '2',
             'pid' => '10',
-            'sys_language_uid' => '0',
-            'l18n_parent' => '0',
-            'l10n_source' => '0',
-            'remote_id' => 'https://thuecat.org/resources/attraction-with-slogan-array',
-            'title' => 'Attraktion mit slogan array',
-            'slogan' => 'Highlight,InsiderTip,Unique',
-        ],
-        2 => [
-            'uid' => '3',
-            'pid' => '10',
             'sys_language_uid' => '1',
             'l18n_parent' => '1',
             'l10n_source' => '1',
@@ -54,12 +42,22 @@ return [
             'title' => 'Attraction with single slogan',
             'slogan' => 'InsiderTip',
         ],
+        2 => [
+            'uid' => '3',
+            'pid' => '10',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            'l10n_source' => '0',
+            'remote_id' => 'https://thuecat.org/resources/attraction-with-slogan-array',
+            'title' => 'Attraktion mit slogan array',
+            'slogan' => 'Highlight,InsiderTip,Unique',
+        ],
         3 => [
             'uid' => '4',
             'pid' => '10',
             'sys_language_uid' => '1',
-            'l18n_parent' => '2',
-            'l10n_source' => '2',
+            'l18n_parent' => '3',
+            'l10n_source' => '3',
             'remote_id' => 'https://thuecat.org/resources/attraction-with-slogan-array',
             'title' => 'Attraction with slogan array',
             'slogan' => 'Highlight,InsiderTip,Unique',

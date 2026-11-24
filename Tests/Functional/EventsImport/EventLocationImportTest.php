@@ -247,7 +247,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_locref2-hubev.json');
         $this->expectFetchAt('thuecat.org', 'resources', '900000000002-locr.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(2, $this->countRows('tx_events_domain_model_event'));
         $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));

@@ -293,9 +293,9 @@ class Resolver
     }
 
     /**
-     * Runs after the last root: a keyword shared across roots must not be
-     * staged by one and reaped by the next. Parents are created before their
-     * children so the tree exists top-down.
+     * Runs after the root is resolved: a keyword staged by one owner must not
+     * be reaped by another. Parents are created before their children so the
+     * tree exists top-down.
      */
     public function flushCollectedKeywords(DataHandlerPayload $payload, ResolverContext $context): void
     {
@@ -1450,14 +1450,8 @@ class Resolver
                 $remoteId = $outerKey;
 
                 if ($context->isUpdated($remoteId)) {
-                    if (!$this->isRerootable($table, $remoteId, $context, $depth)) {
-                        $payload->dropRow($table, $remoteId);
-                        continue;
-                    }
-
-                    // Lowered before the drain: its cap checks read this depth.
-                    $context->depthByRemoteId[$remoteId] = 0;
-                    $context->rerootedKeys[$table][$context->remoteIdToKey[$remoteId]] = true;
+                    $payload->dropRow($table, $remoteId);
+                    continue;
                 }
 
                 $existingKey = $context->remoteIdToKey[$remoteId] ?? null;
@@ -1580,18 +1574,6 @@ class Resolver
         }
 
         return null;
-    }
-
-    /**
-     * A root staged earlier as a fetched reference lost the references its depth capped. Resolving it again as a
-     * root restores them; one already resolved as a root, or claimed by another table, stays done.
-     */
-    protected function isRerootable(string $table, string $remoteId, ResolverContext $context, int $depth): bool
-    {
-        return $depth === 0
-            && ($context->depthByRemoteId[$remoteId] ?? 0) > 0
-            && ($context->remoteIdToTable[$remoteId] ?? null) === $table
-            && isset($context->remoteIdToKey[$remoteId]);
     }
 
     protected function isAlreadyRekeyed(string $outerKey): bool
@@ -2130,7 +2112,7 @@ class Resolver
     }
 
     /**
-     * Fetches the place once per run. A failure drops only the location, like
+     * Fetches the place once per root. A failure drops only the location, like
      * any other reference.
      *
      * @return string global_id of the location row, empty if there is none
@@ -2369,8 +2351,8 @@ class Resolver
     }
 
     /**
-     * Runs after the last root: an asset shared across roots must not be
-     * reaped by one and recreated by the next. Entries keep collection order;
+     * Runs after the root is resolved: an asset shared by two owners must not
+     * be reaped by one and recreated by the other. Entries keep collection order;
      * schema:position is not consulted.
      */
     public function flushCollectedMedia(DataHandlerPayload $payload, ResolverContext $context): void

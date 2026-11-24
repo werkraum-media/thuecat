@@ -27,7 +27,7 @@ return [
             'l18n_parent' => '0',
             'l10n_source' => '0',
             'remote_id' => 'https://thuecat.org/resources/attraction-duplicate',
-            'title' => 'First parse wins',
+            'title' => 'Second parse',
         ],
     ],
 ];

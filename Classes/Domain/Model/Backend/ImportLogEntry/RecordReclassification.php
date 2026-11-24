@@ -31,8 +31,6 @@ class RecordReclassification extends ImportLogEntry
 {
     public const KIND_TABLE_MISMATCH = 'tableMismatch';
 
-    public const KIND_REPAIRED = 'repaired';
-
     protected string $remoteId = '';
 
     protected string $kind = '';

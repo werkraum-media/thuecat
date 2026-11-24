@@ -32,7 +32,6 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
-use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
@@ -71,7 +70,6 @@ class Importer
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
         protected readonly SyncChannelReaper $syncChannelReaper,
         protected readonly SyncWindow $syncWindow,
-        protected readonly OrganisationReclassificationRepair $organisationReclassificationRepair,
         protected readonly UrlProviders $urlProviders
     ) {
     }
@@ -90,9 +88,7 @@ class Importer
         bool $skipMedia = false
     ): string {
         $listener ??= new NullProgressListener();
-        $deadline ??= new RunDeadline(
-            $this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget())
-        );
+        $deadline ??= $this->deadlineFor($configuration);
 
         // Pre-flight: abort on a misconfiguration before touching the API.
         $this->configurationValidator->validate($configuration);
@@ -112,13 +108,7 @@ class Importer
             $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
         }
 
-        $this->fetchData->configureForRun(
-            $bypassCache,
-            $this->settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
-        );
-        if ($configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel') {
-            $this->fetchData->authenticateRunAgainstSyncHost($configuration->getSyncApiDomain(), $configuration->getApiKey());
-        }
+        $this->configureFetching($configuration, $bypassCache);
 
         try {
             return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $deadline, $skipMedia);
@@ -137,22 +127,151 @@ class Importer
         }
     }
 
+    /**
+     * Imports one root on DataHandler runs that cover only it and what it references.
+     */
+    public function importRoot(
+        ImportConfigurationInterface $configuration,
+        string $url,
+        bool $bypassCache,
+        bool $skipMedia
+    ): RootOutcome {
+        $this->configurationValidator->validate($configuration);
+        $targetFolder = null;
+        $stagingFolder = null;
+        if ($skipMedia === false) {
+            $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
+            $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
+        }
+
+        $this->configureFetching($configuration, $bypassCache);
+
+        try {
+            $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+            $outcome = $this->persistRoot(
+                $configuration,
+                $url,
+                $site,
+                $this->sitePageIds->forRootPage($site->getRootPageId()),
+                $targetFolder,
+                $stagingFolder,
+                new NullProgressListener(),
+                $this->deadlineFor($configuration),
+                $skipMedia
+            );
+            $this->finishRun($targetFolder, $stagingFolder);
+
+            return $outcome;
+        } finally {
+            $this->fetchData->resetRunConfiguration();
+            if ($stagingFolder instanceof Folder) {
+                $this->mediaFileStaging->discard($stagingFolder);
+            }
+        }
+    }
+
+    protected function deadlineFor(ImportConfigurationInterface $configuration): RunDeadline
+    {
+        return new RunDeadline($this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()));
+    }
+
+    protected function configureFetching(ImportConfigurationInterface $configuration, bool $bypassCache): void
+    {
+        $this->fetchData->configureForRun(
+            $bypassCache,
+            $this->settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
+        );
+        if ($configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel') {
+            $this->fetchData->authenticateRunAgainstSyncHost($configuration->getSyncApiDomain(), $configuration->getApiKey());
+        }
+    }
+
     protected function runImport(
         ImportConfigurationInterface $configuration,
         ?Folder $targetFolder,
         ?Folder $stagingFolder,
-        ?ImportProgressListener $listener = null,
-        ?RunDeadline $deadline = null,
-        bool $skipMedia = false
+        ImportProgressListener $listener,
+        RunDeadline $deadline,
+        bool $skipMedia
     ): string {
-        $listener ??= new NullProgressListener();
-        $deadline ??= new RunDeadline(0);
         $urlProvider = $this->urlProviders->forConfiguration($configuration);
+        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+        $this->reportEffectiveSettings($configuration, $site, $listener);
+        // Once per run: the record lookup consults this per record and per
+        // relation, so deriving it there would rewalk the page tree for
+        // every one of them.
+        $sitePageIds = $this->sitePageIds->forRootPage($site->getRootPageId());
 
-        $apiKey = $configuration->getApiKey();
+        $loggerPayload = [];
+        $substNEWwithIDs = [];
+        $iterations = 0;
+        $aborted = false;
+        $urls = $urlProvider->getUrls();
+        $urlCount = count($urls);
+        $urlNumber = 0;
+        foreach ($urls as $url) {
+            if ($deadline->isExpired()) {
+                $this->recordAbort($deadline, ImportPhase::Fetch);
+                $aborted = true;
+                break;
+            }
+
+            $urlNumber++;
+            $listener->progressed(new ImportProgress(ImportPhase::Fetch, $url, $urlNumber, $urlCount));
+            $outcome = $this->persistRoot(
+                $configuration,
+                $url,
+                $site,
+                $sitePageIds,
+                $targetFolder,
+                $stagingFolder,
+                $listener,
+                $deadline,
+                $skipMedia
+            );
+            foreach ($outcome->loggerPayload as $table => $rows) {
+                $loggerPayload[$table] = ($loggerPayload[$table] ?? []) + $rows;
+            }
+
+            $substNEWwithIDs += $outcome->substNEWwithIDs;
+            $iterations = max($iterations, $outcome->iterations);
+            if ($outcome->aborted) {
+                $aborted = true;
+                break;
+            }
+        }
+
+        if (!$aborted) {
+            $this->reapGoneEvents($urlProvider, $sitePageIds, $iterations);
+            $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
+        }
+
+        $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
+        $this->importLogger->writeLog($configuration->getUid(), $loggerPayload, $substNEWwithIDs);
+        $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
+
+        return $this->finishRun($targetFolder, $stagingFolder);
+    }
+
+    /**
+     * Fetches, resolves and persists one root with its translations, relations and files. Every map lives on a
+     * resolver context of this root alone; what an earlier root stored is found in the database.
+     *
+     * @param list<int> $sitePageIds
+     */
+    protected function persistRoot(
+        ImportConfigurationInterface $configuration,
+        string $url,
+        Site $site,
+        array $sitePageIds,
+        ?Folder $targetFolder,
+        ?Folder $stagingFolder,
+        ImportProgressListener $listener,
+        RunDeadline $deadline,
+        bool $skipMedia
+    ): RootOutcome {
         $translationLanguages = [];
         $defaultLanguage = 'de'; // fallback
-        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
         foreach ($site->getLanguages() as $siteLanguage) {
             if ($siteLanguage->getLanguageId() === 0) {
                 $defaultLanguage = $siteLanguage->getLocale()->getLanguageCode();
@@ -161,7 +280,6 @@ class Importer
             }
         }
 
-        $this->reportEffectiveSettings($configuration, $site, $listener);
         $parserContext = new ParserContext((int)$configuration->getUid());
         $resolverContext = new ResolverContext(
             $configuration->getStoragePid(),
@@ -173,10 +291,7 @@ class Importer
             $stagingFolder,
             $listener,
             $skipMedia,
-            // Once per run: the record lookup consults this per record and per
-            // relation, so deriving it there would rewalk the page tree for
-            // every one of them.
-            $this->sitePageIds->forRootPage($site->getRootPageId()),
+            $sitePageIds,
             $site,
             $configuration instanceof ImportConfiguration && $configuration->getType() === 'syncChannel'
                 ? SyncChannel::recordUrlPrefix($configuration->getSyncApiDomain(), $configuration->getSyncChannelId())
@@ -184,83 +299,39 @@ class Importer
             [parse_url(FetchData::ASSET_HOST, PHP_URL_HOST)],
             $configuration instanceof ImportConfiguration ? ImportOrigin::fromConfiguration($configuration) : null,
         );
-        $accumulatedPayload = new DataHandlerPayload();
-        $urls = $urlProvider->getUrls();
-        $urlCount = count($urls);
-        $urlNumber = 0;
-        $aborted = false;
-        foreach ($urls as $url) {
-            // Between roots: whatever is accumulated so far still gets written.
-            if ($deadline->isExpired()) {
-                $this->recordAbort($deadline, ImportPhase::Fetch);
-                $aborted = true;
-                break;
-            }
 
-            $urlNumber++;
-            $this->phaseReached = ImportPhase::Fetch;
-            $listener->progressed(new ImportProgress(
-                ImportPhase::Fetch,
-                $url,
-                $urlNumber,
-                $urlCount
-            ));
-            // Per-URL try/catch so a single broken root doesn't abort the
-            // run. The exception is staged into the import log and the
-            // loop moves on; the run finishes with severity 'error' so the
-            // command surfaces a non-zero exit code.
-            try {
-                $inputData = $this->fetchDataFromApi($url, $apiKey);
-            } catch (InvalidResponseException | ClientExceptionInterface $e) {
-                $this->importLogger->recordException('fetchingError', $e, $url);
-                continue;
-            }
+        $this->phaseReached = ImportPhase::Fetch;
+        // A broken root is logged and costs only itself.
+        try {
+            $inputData = $this->fetchDataFromApi($url, $configuration->getApiKey());
+        } catch (InvalidResponseException | ClientExceptionInterface $e) {
+            $this->importLogger->recordException('fetchingError', $e, $url);
+            return new RootOutcome();
+        }
 
-            try {
-                $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
-                $resolved = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
-            } catch (Throwable $e) {
-                $this->importLogger->recordException('mappingError', $e, $url);
-                continue;
-            }
-
-            $accumulatedPayload->mergeFromOverlaying($resolved, $resolverContext->rerootedKeys);
+        try {
+            $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
+            $payload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
+        } catch (Throwable $e) {
+            $this->importLogger->recordException('mappingError', $e, $url);
+            return new RootOutcome();
         }
 
         // Not during resolution: only now is the produced-set complete.
-        $this->resolver->flushCollectedMedia($accumulatedPayload, $resolverContext);
-        $this->resolver->flushCollectedKeywords($accumulatedPayload, $resolverContext);
+        $this->resolver->flushCollectedMedia($payload, $resolverContext);
+        $this->resolver->flushCollectedKeywords($payload, $resolverContext);
 
         // Snapshot before the loop drains the datamap. Translation rows added
         // by the resolver are excluded so the logger reports only the
         // default-language records the user expects to see counted.
-        $loggerPayload = $accumulatedPayload->getDefaultLanguageDataMap();
+        $loggerPayload = $payload->getDefaultLanguageDataMap();
 
         // Snapshot before the loop drains it; recorded after the loop so matched
         // entries can carry the uids promoted once persisting has run.
-        $matchReports = $accumulatedPayload->getMatchReports();
-
-        if ($accumulatedPayload->getDataMap() === [] && $accumulatedPayload->getCmdMap() === []) {
-            // A window may hold removals only.
-            if (!$aborted) {
-                $this->reapGoneEvents($urlProvider, $resolverContext, 0);
-                $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
-            }
-
-            $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
-            // Nothing persisted; still report the types seen.
-            $this->importLogger->recordMatchReports($matchReports);
-            $this->importLogger->writeLog(
-                $configuration->getUid(),
-                $loggerPayload,
-                []
-            );
-            $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
-
-            return $this->finishRun($targetFolder, $stagingFolder);
-        }
+        $matchReports = $payload->getMatchReports();
 
         $iterations = 0;
+        $aborted = false;
         // DataHandler's cmdMap is keyed [table][uid][command] = value, so
         // two localize commands on the same uid (one per target language)
         // collapse to a single entry — only the last survives. Each
@@ -286,10 +357,10 @@ class Importer
         // translationStatus — re-resolving a drained payload short-circuits
         // instead of re-querying or re-fetching.
         $substNEWwithIDs = [];
-        while ($accumulatedPayload->getDataMap() !== [] || $accumulatedPayload->getCmdMap() !== []) {
+        while ($payload->getDataMap() !== [] || $payload->getCmdMap() !== []) {
             $this->phaseReached = ImportPhase::Persist;
             // Between passes: a pass under way is never interrupted mid-write.
-            if (!$aborted && $deadline->isExpired()) {
+            if ($deadline->isExpired()) {
                 $this->recordAbort($deadline, ImportPhase::Persist);
                 $aborted = true;
                 break;
@@ -298,22 +369,21 @@ class Importer
             if ($iterations >= $maxIterations) {
                 throw new RuntimeException(
                     'Importer loop exceeded ' . $maxIterations . ' iterations; translations bucket: '
-                    . json_encode($accumulatedPayload->getTranslations()),
+                    . json_encode($payload->getTranslations()),
                     1777148664
                 );
             }
 
-            $this->phaseReached = ImportPhase::Persist;
             $listener->progressed(new ImportProgress(
                 ImportPhase::Persist,
                 'Writing records',
                 $iterations + 1,
                 $maxIterations
             ));
-            $cmd = $this->fanOutCmdMap($accumulatedPayload->getCmdMap());
+            $cmd = $this->fanOutCmdMap($payload->getCmdMap());
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
             // Logging stays on: DataHandler fills errorLog only while it logs.
-            $dataHandler->start($accumulatedPayload->getDataMap(), $cmd);
+            $dataHandler->start($payload->getDataMap(), $cmd);
             $dataHandler->process_datamap();
             $dataHandler->process_cmdmap();
             // DataHandler accumulates user/system errors into errorLog when
@@ -326,36 +396,28 @@ class Importer
             /** @var array<string, int|string> $passSubst */
             $passSubst = $dataHandler->substNEWwithIDs;
             $substNEWwithIDs += $passSubst;
-            $accumulatedPayload->clearDataMap();
-            $accumulatedPayload->clearCmdMap();
+            $payload->clearDataMap();
+            $payload->clearCmdMap();
             // Rewrite NEW… entries in the resolver's remote_id→key map to
             // the uids DataHandler just assigned, so the next round wires
             // FKs against real uids instead of stale placeholders.
             $resolverContext->promoteNewKeys($passSubst);
-            $this->resolver->resolve($accumulatedPayload, $resolverContext);
+            $this->resolver->resolve($payload, $resolverContext);
             $iterations++;
         }
 
         // Only now do the events have uids the places can point at. Staged as
         // ordinary update rows, so a final pass writes them.
-        $this->eventPlaceMatcher->flush($accumulatedPayload, $resolverContext);
-        if ($accumulatedPayload->getDataMap() !== []) {
+        $this->eventPlaceMatcher->flush($payload, $resolverContext);
+        if ($payload->getDataMap() !== []) {
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-            $dataHandler->start($accumulatedPayload->getDataMap(), []);
+            $dataHandler->start($payload->getDataMap(), []);
             $dataHandler->process_datamap();
             /** @var list<string> $matchErrorLog */
             $matchErrorLog = $dataHandler->errorLog;
             $this->importLogger->recordDataHandlerErrors($matchErrorLog, $iterations);
-            $accumulatedPayload->clearDataMap();
+            $payload->clearDataMap();
         }
-
-        if (!$aborted) {
-            $this->reapGoneEvents($urlProvider, $resolverContext, $iterations);
-            $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
-            $this->organisationReclassificationRepair->repair($resolverContext, $iterations);
-        }
-
-        $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
 
         // The category map now holds real uids, so matched entries can point at them.
         $this->importLogger->recordMatchReports($matchReports, $resolverContext->categoryKeyByIdentifier());
@@ -370,15 +432,8 @@ class Importer
         $this->importLogger->recordUnresolvableEventDates($parserContext->unresolvableEventDates);
         $this->importLogger->recordEventsWithoutDates($parserContext->eventsWithoutDates);
         $this->importLogger->recordUnmatchedValues($parserContext->unmatchedValues);
-        $this->importLogger->writeLog(
-            $configuration->getUid(),
-            $loggerPayload,
-            $substNEWwithIDs
-        );
 
-        $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
-
-        return $this->finishRun($targetFolder, $stagingFolder);
+        return new RootOutcome($loggerPayload, $substNEWwithIDs, $iterations, $aborted);
     }
 
     /**
@@ -421,14 +476,17 @@ class Importer
      * Only a run that saw both lists and was not cut short gets here, so a
      * partial view of the channel never deletes anything.
      */
-    protected function reapGoneEvents(UrlProvider $urlProvider, ResolverContext $resolverContext, int $iteration): void
+    /**
+     * @param list<int> $sitePageIds
+     */
+    protected function reapGoneEvents(UrlProvider $urlProvider, array $sitePageIds, int $iteration): void
     {
         if (!$urlProvider instanceof SyncChannelUrlProvider) {
             return;
         }
 
         $this->importLogger->recordDataHandlerErrors(
-            $this->syncChannelReaper->delete($urlProvider->getRemoteIdsToDelete(), $resolverContext->sitePageIds),
+            $this->syncChannelReaper->delete($urlProvider->getRemoteIdsToDelete(), $sitePageIds),
             $iteration
         );
     }

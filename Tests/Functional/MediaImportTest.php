@@ -229,6 +229,24 @@ final class MediaImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function trailItemStoresItsFilesWhenItsMessageEnds(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        $this->expectFetch('e_39285647-oatour.json');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+        $job = $this->startJob(1);
+
+        $this->handleImportRoot($job, $this->jobItems($job)[0]['uid']);
+
+        foreach ([0, 1, 2] as $language) {
+            $this->assertSame(['logo', 'media_files', 'media_files'], $this->fetchReferenceFields($language));
+        }
+
+        $this->assertSame(2, $this->countRows('sys_file'));
+    }
+
+    #[Test]
     public function trailWithoutImagesImports(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithoutMedia.php');

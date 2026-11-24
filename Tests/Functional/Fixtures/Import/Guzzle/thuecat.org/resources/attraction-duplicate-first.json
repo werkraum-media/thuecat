@@ -22,7 +22,7 @@
             "schema:name": [
                 {
                     "@language": "de",
-                    "@value": "First parse wins"
+                    "@value": "First parse"
                 }
             ]
         }
