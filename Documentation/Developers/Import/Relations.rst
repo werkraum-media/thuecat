@@ -303,6 +303,3 @@ Each of the two fields is an MM relation with a table of its own per place table
 Matching only ever adds. A run does not see every event, so it reads what the place already lists
 from the MM table, appends the new event and writes the whole list back through the DataHandler.
 Relations made by earlier runs and by other import configurations stay.
-
-The upgrade wizard ``thuecat_eventRelationsToMm`` moves relations that an older version stored as
-comma-separated uids into the MM tables, keeping their order.

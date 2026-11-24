@@ -4,9 +4,6 @@ CREATE TABLE tx_thuecat_import_log_entry (
 );
 
 
--- hosts_events / manages_event: MM relations, so core derives an int count column. Kept as text
--- until thuecat_eventRelationsToMm has run everywhere, so the schema update cannot turn the stored
--- uid lists into int before the wizard reads them.
 CREATE TABLE tx_thuecat_tourist_attraction (
     type varchar(255) DEFAULT 'attraction' NOT NULL,
     meeting_facilities text,
@@ -19,7 +16,6 @@ CREATE TABLE tx_thuecat_tourist_attraction (
     exhibition_objects text,
     sports_equipment text,
     amenity_features text,
-    hosts_events text,
     url text,
     slogan text,
     start_of_construction text,
@@ -48,19 +44,13 @@ CREATE TABLE tx_thuecat_meeting_room (
 -- manages_* / tourist_information: reverse views of type none, which core gives no column. Kept with
 -- the definition their former inline fields had, as the form reads every shown field from the row.
 CREATE TABLE tx_thuecat_organisation (
-    manages_event text,
     manages_towns int(10) unsigned DEFAULT '0' NOT NULL,
     manages_tourist_information int(10) unsigned DEFAULT '0' NOT NULL,
     manages_tourist_attraction int(10) unsigned DEFAULT '0' NOT NULL,
 );
 
 CREATE TABLE tx_thuecat_town (
-    hosts_events text,
     tourist_information int(10) unsigned DEFAULT '0' NOT NULL,
-);
-
-CREATE TABLE tx_thuecat_tourist_information (
-    hosts_events text,
 );
 
 CREATE TABLE tx_thuecat_parking_facility (
