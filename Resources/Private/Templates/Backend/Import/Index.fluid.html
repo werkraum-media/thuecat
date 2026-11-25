@@ -1,226 +1,163 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
     {f:layout(name: 'Module')}
 
     <f:section name="Content">
-        <h1>{f:translate(id: 'module.imports.headline')}</h1>
+        <h1>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:headline')}</h1>
 
-        <f:flashMessages />
-
-        <f:if condition="{imports.paginatedItems}">
+        <f:if condition="{sites}">
             <f:then>
-                {f:render(section: 'Imports', arguments: {imports: imports})}
+                <f:for each="{sites}" as="site">
+                    {f:render(section: 'Site', arguments: {site: site})}
+                </f:for>
             </f:then>
             <f:else>
                 <f:be.infobox
-                    title="{f:translate(id: 'module.imports.missing.title')}"
-                    state="1"
+                    title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:empty.title')}"
+                    state="-1"
                 >
-                    {f:translate(id: 'module.imports.missing.text')}
+                    {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:empty.text')}
                 </f:be.infobox>
             </f:else>
         </f:if>
     </f:section>
 
-    <f:section name="Imports">
-        {f:render(section: 'Pagination', arguments: {imports: imports})}
+    <f:section name="Site">
+        <section data-site="{site.identifier}">
+        <h2>{site.title}</h2>
 
-        <f:for each="{imports.paginatedItems}" as="import">
-            {f:render(section: 'Import', arguments: {import: import})}
-        </f:for>
-
-        {f:render(section: 'Pagination', arguments: {imports: imports})}
-    </f:section>
-
-    <f:section name="Pagination">
-        <f:if condition="{imports.pagination.lastPageNumber} > 1">
-            <nav class="pagination-wrap">
-                <ul class="pagination">
-                    <f:if condition="{imports.pagination.hasLessPages}">
-                        <li class="page-item">
-                            <f:link.action
-                                class="page-link"
-                                action="index"
-                                arguments="{currentPage: 1}"
-                            >1</f:link.action>
-                        </li>
-                        <li class="page-item"><span class="page-link">...</span></li>
-                    </f:if>
-                    <f:if condition="{imports.pagination.previousPageNumber}">
-                        <f:then>
-                            <li class="page-item">
-                                <f:link.action
-                                        class="page-link"
-                                        action="index"
-                                        arguments="{currentPage: imports.pagination.previousPageNumber}"
-                                ><span aria-hidden="true">&laquo;</span></f:link.action>
-                            </li>
-                        </f:then>
-                        <f:else>
-                            <li class="page-item disabled">
-                                <span class="page-link" aria-label="Vorherige Seite"><span aria-hidden="true">&laquo;</span></span>
-                            </li>
-                        </f:else>
-                    </f:if>
-                    <f:for each="{imports.pagination.allPageNumbers}" as="pageNumber">
-                        <li class="page-item {f:if(condition: '{pageNumber} == {imports.paginator.currentPageNumber}', then: 'active')}">
-                            <f:link.action
-                                class="page-link"
-                                action="index"
-                                arguments="{currentPage: pageNumber}"
-                            >{pageNumber}</f:link.action>
-                        </li>
-                    </f:for>
-                    <f:if condition="{imports.pagination.nextPageNumber}">
-                        <f:then>
-                            <li class="page-item">
-                                <f:link.action
-                                        class="page-link"
-                                        action="index"
-                                        arguments="{currentPage: imports.pagination.nextPageNumber}"
-                                ><span aria-hidden="true">&raquo;</span></f:link.action>
-                            </li>
-                        </f:then>
-                        <f:else>
-                            <li class="page-item disabled">
-                                <span class="page-link"><span aria-hidden="true">&raquo;</span></span>
-                            </li>
-                        </f:else>
-                    </f:if>
-                    <f:if condition="{imports.pagination.hasMorePages}">
-                        <li class="page-item"><span class="page-link">...</span></li>
-                        <li class="page-item">
-                            <f:link.action
-                                    class="page-link"
-                                    action="index"
-                                    arguments="{currentPage: imports.pagination.paginator.numberOfPages}"
-                            >{imports.pagination.paginator.numberOfPages}</f:link.action>
-                        </li>
-                    </f:if>
-                </ul>
-            </nav>
-        </f:if>
-    </f:section>
-
-    <f:section name="Import">
         <div class="panel panel-default table-fit">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>{f:translate(id: 'module.imports.th.created')}</th>
-                        <th>{f:translate(id: 'module.imports.th.configuration')}</th>
-                        <th>{f:translate(id: 'module.imports.th.summary')}</th>
-                        <th>{f:translate(id: 'module.imports.th.information')}</th>
-                        <th>{f:translate(id: 'module.imports.th.errors')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.title')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.type')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.storage')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.schedule')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.nextRun')}</th>
+                        <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.lastRun')}</th>
+                        <th colspan="2">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job')}</th>
                     </tr>
                 </thead>
                 <tbody>
-        <tr class="{f:if(condition: import.errors, then: 'danger')}">
-            <td>{import.created -> f:format.date(format: 'd.m.Y H:i:s')}</td>
-            <td>
-                <f:if condition="{import.configuration}">
-                    <f:then>
-                        {import.configuration.title} [{import.configuration.uid}]
-                    </f:then>
-                    <f:else>
-                        {f:translate(id: 'module.imports.configuration.notAvailable')}
-                    </f:else>
-                </f:if>
-                <f:if condition="{import.effectiveSettings}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.effectiveSettings')}</summary>
-                        <dl>
-                            <f:for each="{import.effectiveSettings}" key="name" as="value">
-                                <dt>{name}</dt>
-                                <dd>{value}</dd>
-                            </f:for>
-                        </dl>
-                    </details>
-                </f:if>
-            </td>
-            <td>
-                total: {import.countOfSavingEntries}<br />
-                <f:for each="{import.summaryOfEntries}" key="tableName" as="amount">
-                {f:translate(id: 'module.imports.summary.tableName.{tableName}')} {amount.total}
-                ({f:translate(id: 'module.imports.summary.inserted', arguments: {0: amount.inserted})},
-                {f:translate(id: 'module.imports.summary.updated', arguments: {0: amount.updated})})<br>
-            </f:for>
-
-            </td>
-            <td>
-                <f:if condition="{import.matchedCategories}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.matchedTypes')} [{import.matchedCategories -> f:count()}]</summary>
-                        <ul>
-                            <f:for each="{import.matchedCategories}" key="type" as="title">
-                                <li>{type} &rarr; {title}</li>
-                            </f:for>
-                        </ul>
-                    </details>
-                </f:if>
-                <f:if condition="{import.unmatchedCategories}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.unmatchedTypes')} [{import.unmatchedCategories -> f:count()}]</summary>
-                        <ul>
-                            <f:for each="{import.unmatchedCategories}" as="type">
-                                <li>{type}</li>
-                            </f:for>
-                        </ul>
-                    </details>
-                </f:if>
-
-            </td>
-            <td>
-                <f:if condition="{import.listOfErrors}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.listOfErrors')} [{import.listOfErrors -> f:count()}]</summary>
-                        <ul>
-                <f:for each="{import.listOfErrors}" as="error">
-                    <li>{error}</li>
-                </f:for>
-                        </ul>
-                    </details>
-                </f:if>
-
-                <f:if condition="{import.eventPlaceMatches}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.eventPlaceMatches')} [{import.eventPlaceMatches -> f:count()}]</summary>
-                        <ul>
-                            <f:for each="{import.eventPlaceMatches}" as="match">
-                                <li>{match}</li>
-                            </f:for>
-                        </ul>
-                    </details>
-                </f:if>
-
-                <f:if condition="{import.unrelatableReferences}">
-                    <details>
-                        <summary>{f:translate(id: 'module.imports.summary.unrelatableReferences')} [{import.unrelatableReferences -> f:count()}]</summary>
-                        <ul>
-                            <f:for each="{import.unrelatableReferences}" as="reference">
-                                <li>{reference}</li>
-                            </f:for>
-                        </ul>
-                    </details>
-                </f:if>
-
-                <f:if condition="{import.groupedNotices}">
-                    <f:for each="{import.groupedNotices}" key="type" as="messages">
-                        <details>
-                            <summary>{f:translate(id: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_import_log_entry.type.{type}', default: '{type}')} [{messages -> f:count()}]</summary>
-                            <ul>
-                                <f:for each="{messages}" as="message">
-                                    <li>{message}</li>
-                                </f:for>
-                            </ul>
-                        </details>
+                    <f:for each="{site.configurations}" as="configuration">
+                        <tr data-configuration="{configuration.row.uid}">
+                            <td>{configuration.row.title}</td>
+                            <td>{configuration.type}</td>
+                            <td>{configuration.row.storageTitle} [{configuration.row.storagePid}]</td>
+                            <td>{configuration.schedule}</td>
+                            <td>{f:render(section: 'Time', arguments: {timestamp: configuration.row.nextRun})}</td>
+                            <td>{f:render(section: 'Time', arguments: {timestamp: configuration.row.lastRun})}</td>
+                            <td colspan="2">
+                                <f:if condition="{configuration.row.openJobUid}">
+                                    <f:then>{f:render(section: 'Stop', arguments: {row: configuration.row})}</f:then>
+                                    <f:else>{f:render(section: 'Start', arguments: {row: configuration.row})}</f:else>
+                                </f:if>
+                            </td>
+                        </tr>
+                        <f:if condition="{configuration.jobs}">
+                            <tr data-jobs="{configuration.row.uid}">
+                                <td colspan="8">
+                                    <details>
+                                        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:jobs.summary', arguments: {0: '{configuration.jobs -> f:count()}'})}</summary>
+                                        <table class="table table-sm mb-0">
+                                            {f:render(section: 'Jobs', arguments: {jobs: configuration.jobs})}
+                                        </table>
+                                    </details>
+                                </td>
+                            </tr>
+                        </f:if>
                     </f:for>
-                </f:if>
-            </td>
-        </tr>
                 </tbody>
             </table>
         </div>
+        </section>
+    </f:section>
+
+    <f:section name="Start">
+        <form method="post" action="{f:be.uri(route: 'thuecat_imports.start')}" class="d-flex flex-wrap align-items-center gap-2">
+            <input type="hidden" name="configuration" value="{row.uid}" />
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="skipMedia" value="1" id="skipMedia-{row.uid}" {f:if(condition: row.skipMedia, then: 'checked="checked"')} />
+                <label class="form-check-label" for="skipMedia-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.skipMedia')}</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="bypassCache" value="1" id="bypassCache-{row.uid}" />
+                <label class="form-check-label" for="bypassCache-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.bypassCache')}</label>
+            </div>
+            <button type="submit" class="btn btn-sm btn-default">
+                <core:icon identifier="actions-play" size="small" />
+                {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.submit')}
+            </button>
+        </form>
+    </f:section>
+
+    <f:section name="Stop">
+        <span class="badge badge-info">{row.openJobStatus}</span>
+        <f:if condition="{row.openJobStatus} != 'stopping'">
+            <form method="post" action="{f:be.uri(route: 'thuecat_imports.stop')}" class="d-inline">
+                <input type="hidden" name="job" value="{row.openJobUid}" />
+                <button
+                    type="submit"
+                    class="btn btn-sm btn-default t3js-modal-trigger"
+                    data-severity="warning"
+                    data-title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.title')}"
+                    data-content="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.text')}"
+                    data-button-close-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.cancel')}"
+                    data-button-ok-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.submit')}"
+                >
+                    <core:icon identifier="actions-stop" size="small" />
+                    {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.submit')}
+                </button>
+            </form>
+        </f:if>
+    </f:section>
+
+    <f:section name="Jobs">
+        <thead>
+        <tr>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.status')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.trigger')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.user')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.started')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.ended')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.done')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.failed')}</th>
+            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.skipped')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{jobs}" as="job">
+            <tr data-job="{job.row.uid}">
+                <td>{job.row.status}</td>
+                <td>{job.trigger}</td>
+                <td>{job.user}</td>
+                <td>{f:render(section: 'Time', arguments: {timestamp: job.row.startedAt})}</td>
+                <td>{f:render(section: 'Time', arguments: {timestamp: job.row.endedAt})}</td>
+                <td>{job.row.doneItems}</td>
+                <td>{job.row.failedItems}</td>
+                <td>{job.row.skippedItems}</td>
+            </tr>
+            <f:if condition="{job.log}">
+                <tr data-job-log="{job.row.uid}">
+                    <td colspan="8">
+                        <details>
+                            <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log')}</summary>
+                            <f:render partial="Backend/ImportLog" arguments="{log: job.log}" />
+                        </details>
+                    </td>
+                </tr>
+            </f:if>
+        </f:for>
+        </tbody>
+    </f:section>
+
+    <f:section name="Time">
+        <f:if condition="{timestamp}">
+            <f:then>{timestamp -> f:format.date(format: 'd.m.Y H:i')}</f:then>
+            <f:else>&ndash;</f:else>
+        </f:if>
     </f:section>
 </html>

@@ -1,0 +1,89 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<f:if condition="{log.effectiveSettings}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.effectiveSettings')}</summary>
+        <dl>
+            <f:for each="{log.effectiveSettings}" key="name" as="value">
+                <dt>{name}</dt>
+                <dd>{value}</dd>
+            </f:for>
+        </dl>
+    </details>
+</f:if>
+
+<p>
+    total: {log.countOfSavingEntries}<br />
+    <f:for each="{log.summaryOfEntries}" key="tableName" as="amount">
+        {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.tableName.{tableName}')} {amount.total}
+        ({f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.inserted', arguments: {0: amount.inserted})},
+        {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.updated', arguments: {0: amount.updated})})<br />
+    </f:for>
+</p>
+
+<f:if condition="{log.matchedCategories}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.matchedTypes')} [{log.matchedCategories -> f:count()}]</summary>
+        <ul>
+            <f:for each="{log.matchedCategories}" key="type" as="title">
+                <li>{type} &rarr; {title}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:if>
+<f:if condition="{log.unmatchedCategories}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.unmatchedTypes')} [{log.unmatchedCategories -> f:count()}]</summary>
+        <ul>
+            <f:for each="{log.unmatchedCategories}" as="type">
+                <li>{type}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:if>
+
+<f:if condition="{log.listOfErrors}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.listOfErrors')} [{log.listOfErrors -> f:count()}]</summary>
+        <ul>
+            <f:for each="{log.listOfErrors}" as="error">
+                <li>{error}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:if>
+
+<f:if condition="{log.eventPlaceMatches}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.eventPlaceMatches')} [{log.eventPlaceMatches -> f:count()}]</summary>
+        <ul>
+            <f:for each="{log.eventPlaceMatches}" as="match">
+                <li>{match}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:if>
+
+<f:if condition="{log.unrelatableReferences}">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang.xlf:module.imports.summary.unrelatableReferences')} [{log.unrelatableReferences -> f:count()}]</summary>
+        <ul>
+            <f:for each="{log.unrelatableReferences}" as="reference">
+                <li>{reference}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:if>
+
+<f:for each="{log.groupedNotices}" key="type" as="messages">
+    <details>
+        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_tca.xlf:tx_thuecat_import_log_entry.type.{type}', default: '{type}')} [{messages -> f:count()}]</summary>
+        <ul>
+            <f:for each="{messages}" as="message">
+                <li>{message}</li>
+            </f:for>
+        </ul>
+    </details>
+</f:for>
+</html>

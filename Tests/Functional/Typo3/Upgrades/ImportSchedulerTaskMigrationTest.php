@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Typo3\Upgrades;
 
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Output\BufferedOutput;
+use TYPO3\CMS\Scheduler\Task\TableGarbageCollectionTask;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 use WerkraumMedia\ThueCat\Typo3\Upgrades\ImportSchedulerTaskMigration;
 
@@ -138,7 +139,7 @@ final class ImportSchedulerTaskMigrationTest extends AbstractFunctionalTestCase
     {
         $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')->insert('tx_scheduler_task', [
             'pid' => 0,
-            'tasktype' => 'TYPO3\\CMS\\Scheduler\\Task\\TableGarbageCollectionTask',
+            'tasktype' => TableGarbageCollectionTask::class,
             'parameters' => [],
         ]);
 

@@ -12,6 +12,126 @@
             <trans-unit id="mlang_labels_tabdescr" resname="mlang_labels_tabdescr">
                 <source>Provides detailed overview of errors during imports, as well as how many records of each type were imported.</source>
             </trans-unit>
+            <trans-unit id="headline" resname="headline">
+                <source>ThueCat imports</source>
+            </trans-unit>
+            <trans-unit id="site.outside" resname="site.outside">
+                <source>Configurations outside any site</source>
+            </trans-unit>
+            <trans-unit id="empty.title" resname="empty.title">
+                <source>No import configurations</source>
+            </trans-unit>
+            <trans-unit id="empty.text" resname="empty.text">
+                <source>There is no import configuration whose storage folder you may read.</source>
+            </trans-unit>
+            <trans-unit id="th.title" resname="th.title">
+                <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="th.type" resname="th.type">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="th.storage" resname="th.storage">
+                <source>Storage folder</source>
+            </trans-unit>
+            <trans-unit id="th.schedule" resname="th.schedule">
+                <source>Schedule</source>
+            </trans-unit>
+            <trans-unit id="th.nextRun" resname="th.nextRun">
+                <source>Next run</source>
+            </trans-unit>
+            <trans-unit id="th.lastRun" resname="th.lastRun">
+                <source>Last run</source>
+            </trans-unit>
+            <trans-unit id="th.job" resname="th.job">
+                <source>Open job</source>
+            </trans-unit>
+            <trans-unit id="schedule.manual" resname="schedule.manual">
+                <source>Manual only</source>
+            </trans-unit>
+            <trans-unit id="schedule.minutes" resname="schedule.minutes">
+                <source>Every %d minutes</source>
+            </trans-unit>
+            <trans-unit id="th.job.status" resname="th.job.status">
+                <source>Status</source>
+            </trans-unit>
+            <trans-unit id="th.job.trigger" resname="th.job.trigger">
+                <source>Trigger</source>
+            </trans-unit>
+            <trans-unit id="th.job.user" resname="th.job.user">
+                <source>Started by</source>
+            </trans-unit>
+            <trans-unit id="th.job.started" resname="th.job.started">
+                <source>Started</source>
+            </trans-unit>
+            <trans-unit id="th.job.ended" resname="th.job.ended">
+                <source>Ended</source>
+            </trans-unit>
+            <trans-unit id="th.job.done" resname="th.job.done">
+                <source>Done</source>
+            </trans-unit>
+            <trans-unit id="th.job.failed" resname="th.job.failed">
+                <source>Failed</source>
+            </trans-unit>
+            <trans-unit id="th.job.skipped" resname="th.job.skipped">
+                <source>Skipped</source>
+            </trans-unit>
+            <trans-unit id="job.trigger.manual" resname="job.trigger.manual">
+                <source>Manual</source>
+            </trans-unit>
+            <trans-unit id="job.trigger.schedule" resname="job.trigger.schedule">
+                <source>Scheduled</source>
+            </trans-unit>
+            <trans-unit id="jobs.summary" resname="jobs.summary">
+                <source>Recent jobs (%d)</source>
+            </trans-unit>
+            <trans-unit id="job.log" resname="job.log">
+                <source>Log</source>
+            </trans-unit>
+            <trans-unit id="start.skipMedia" resname="start.skipMedia">
+                <source>Skip media</source>
+            </trans-unit>
+            <trans-unit id="start.bypassCache" resname="start.bypassCache">
+                <source>Bypass cache</source>
+            </trans-unit>
+            <trans-unit id="start.submit" resname="start.submit">
+                <source>Start</source>
+            </trans-unit>
+            <trans-unit id="start.queued.title" resname="start.queued.title">
+                <source>Import queued</source>
+            </trans-unit>
+            <trans-unit id="start.queued.text" resname="start.queued.text">
+                <source>The import runs in the background. Its progress is shown beneath the configuration.</source>
+            </trans-unit>
+            <trans-unit id="start.refused.title" resname="start.refused.title">
+                <source>Import not started</source>
+            </trans-unit>
+            <trans-unit id="start.refused.text" resname="start.refused.text">
+                <source>The configuration already has an open job, or you may not start it.</source>
+            </trans-unit>
+            <trans-unit id="stop.submit" resname="stop.submit">
+                <source>Stop</source>
+            </trans-unit>
+            <trans-unit id="stop.confirm.title" resname="stop.confirm.title">
+                <source>Stop the import?</source>
+            </trans-unit>
+            <trans-unit id="stop.confirm.text" resname="stop.confirm.text">
+                <source>The item being imported is finished; all remaining items are skipped.</source>
+            </trans-unit>
+            <trans-unit id="stop.confirm.cancel" resname="stop.confirm.cancel">
+                <source>Cancel</source>
+            </trans-unit>
+            <trans-unit id="stop.stopping.title" resname="stop.stopping.title">
+                <source>Import stopping</source>
+            </trans-unit>
+            <trans-unit id="stop.stopping.text" resname="stop.stopping.text">
+                <source>The job stops once its current item is done.</source>
+            </trans-unit>
+            <trans-unit id="stop.refused.title" resname="stop.refused.title">
+                <source>Import not stopped</source>
+            </trans-unit>
+            <trans-unit id="stop.refused.text" resname="stop.refused.text">
+                <source>The job is no longer running, or you may not stop it.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

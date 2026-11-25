@@ -305,14 +305,7 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
             ->executeQuery()
             ->fetchFirstColumn()
         ;
-
-        foreach ($serializedTasks as $serializedTask) {
-            if (is_string($serializedTask) && str_contains($serializedTask, self::COMMAND)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($serializedTasks, fn ($serializedTask): bool => is_string($serializedTask) && str_contains($serializedTask, self::COMMAND));
     }
 
     /**

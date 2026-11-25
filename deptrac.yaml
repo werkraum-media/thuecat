@@ -19,7 +19,13 @@ deptrac:
     - name: ImportEngine
       collectors:
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\Import\\(?!Settings\\(Anchor|CategoryAnchor))#'
+          value: '#^WerkraumMedia\\ThueCat\\Import\\(?!Settings\\(Anchor|CategoryAnchor)|Job\\(Message\\|ImportJob|ImportTrigger$))#'
+
+    # The jobs' records and messages: queueing and stopping a job without the import's code.
+    - name: ImportJob
+      collectors:
+        - type: classNameRegex
+          value: '#^WerkraumMedia\\ThueCat\\Import\\Job\\(Message\\|ImportJob|ImportTrigger$)#'
 
     # TYPO3 glue around the ImportConfiguration record: its FlexForm, form data and DataHandler hook, and its logs
     # kept out of the reference index.
@@ -117,20 +123,22 @@ deptrac:
 
   ruleset:
     ImportCommand: [ImportEngine, ImportModel, ImportRepository, Service]
-    ImportEngine: [ImportModel, ImportRepository, Service, Events]
+    ImportEngine: [ImportJob, ImportModel, ImportRepository, Service, Events]
+    ImportJob: [Service]
     ImportIntegration: [ImportEngine, ImportModel, Service]
     ImportRepository: [ImportModel, Service]
     ImportModel: [Service]
     FrontendDelivery: [FrontendRepository, FrontendModel, Service]
     FrontendRepository: [FrontendModel, Service]
     FrontendModel: [Service, Events]
-    BackendModule: [ImportModel, ImportRepository, Removal, Service]
+    BackendModule: [ImportJob, ImportModel, ImportRepository, Removal, Service]
     Removal: [Service]
     BackendForms: [Service]
     Service: []
     System:
       - ImportCommand
       - ImportEngine
+      - ImportJob
       - ImportIntegration
       - ImportModel
       - ImportRepository

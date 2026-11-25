@@ -16,11 +16,19 @@ return [
         'parent' => 'thuecat_thuecat',
         'access' => 'user',
         'iconIdentifier' => 'thuecat_module_imports',
+        'path' => '/module/thuecat/imports',
         'labels' => 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf',
-        'extensionName' => 'Thuecat',
-        'controllerActions' => [
-            ImportController::class => [
-                'index',
+        'routes' => [
+            '_default' => [
+                'target' => ImportController::class . '::indexAction',
+            ],
+            'start' => [
+                'target' => ImportController::class . '::startAction',
+                'methods' => ['POST'],
+            ],
+            'stop' => [
+                'target' => ImportController::class . '::stopAction',
+                'methods' => ['POST'],
             ],
         ],
     ],

@@ -144,7 +144,9 @@ divided into layers, and the rules say which layer may use which.
    * - ImportCommand
      - ImportEngine, ImportModel, ImportRepository
    * - ImportEngine
-     - ImportModel, ImportRepository, Events
+     - ImportJob, ImportModel, ImportRepository, Events
+   * - ImportJob
+     - –
    * - ImportIntegration
      - ImportEngine, ImportModel
    * - ImportRepository
@@ -158,7 +160,7 @@ divided into layers, and the rules say which layer may use which.
    * - FrontendModel
      - Events
    * - BackendModule
-     - ImportModel, ImportRepository, Removal
+     - ImportJob, ImportModel, ImportRepository, Removal
    * - Removal
      - –
    * - BackendForms
@@ -173,7 +175,8 @@ use System. What these rules ensure:
 
 *  A model never uses a repository.
 *  Import and frontend never use each other.
-*  The backend sees the import's data, never the import itself.
+*  The backend sees the import's data, never the import itself. It queues and stops jobs through
+   ImportJob, which holds the jobs' records and messages without the import's code.
 *  Removal deletes imported records without the import's code, so removing data never depends on
    how it was imported.
 *  Service holds helpers without side effects and the vocabulary several features share. It may
