@@ -20,12 +20,14 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Reconciliation;
 
+use Doctrine\DBAL\ArrayParameterType;
 use ReflectionProperty;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\TableColumnType;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
+use TYPO3\CMS\Core\Schema\Field\FieldTranslationBehaviour;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use WerkraumMedia\ThueCat\Import\CollectedMedia;
@@ -93,6 +95,32 @@ final readonly class RootReconciliation
         }
 
         return $deletions;
+    }
+
+    /**
+     * The translated values upstream withdrew, as a DataHandler datamap of translation rows. They are read before the
+     * persist loop: a value equal to the stored default is a copy localize made, and the loop overwrites the default.
+     *
+     * @return array<string, array<int, array<string, string|int|float>>>
+     */
+    public function withdrawnTranslations(DataHandlerPayload $payload, ResolverContext $context): array
+    {
+        $dataMap = [];
+        foreach ($payload->getRoots() as $table => $roots) {
+            foreach ($roots as $remoteId => $root) {
+                $uid = $context->remoteIdToKey[$remoteId] ?? '';
+                // A new root has no stored translations.
+                if (!is_numeric($uid)) {
+                    continue;
+                }
+
+                foreach ($this->withdrawnTranslationsOf($context, $table, $remoteId, (int)$uid, $root['entity'], $root['translated']) as $translationUid => $fields) {
+                    $dataMap[$table][$translationUid] = $fields;
+                }
+            }
+        }
+
+        return $dataMap;
     }
 
     /**
@@ -178,6 +206,78 @@ final readonly class RootReconciliation
     }
 
     /**
+     * A language without a value of its own shows the default one, so only a value differing from the stored default
+     * was supplied by the language.
+     *
+     * @param class-string<EntityInterface> $entity
+     * @param array<int, list<string>> $translated
+     *
+     * @return array<int, array<string, string|int|float>>
+     */
+    private function withdrawnTranslationsOf(
+        ResolverContext $context,
+        string $table,
+        string $remoteId,
+        int $uid,
+        string $entity,
+        array $translated,
+    ): array {
+        if ($context->translationLanguages === []) {
+            return [];
+        }
+
+        $schema = $this->tcaSchemaFactory->get($table);
+        $fields = array_values(array_filter(
+            array_keys($entity::RECONCILED_FIELDS, FieldMechanism::Scalar, true),
+            static fn (string $field): bool => $schema->getField($field)->getTranslationBehaviour() !== FieldTranslationBehaviour::Excluded
+        ));
+        $languageCapability = $schema->getCapability(TcaSchemaCapability::Language);
+        $languageField = $languageCapability->getLanguageField()->getName();
+        $parentField = $languageCapability->getTranslationOriginPointerField()->getName();
+
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+        $queryBuilder->select('uid', $languageField, ...$fields)
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq($parentField, $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->in(
+                    $languageField,
+                    $queryBuilder->createNamedParameter(array_values($context->translationLanguages), ArrayParameterType::INTEGER)
+                ),
+            )
+        ;
+        $translations = $queryBuilder->executeQuery()->fetchAllAssociative();
+        if ($translations === []) {
+            return [];
+        }
+
+        $default = $this->connectionPool->getConnectionForTable($table)
+            ->select($fields, $table, ['uid' => $uid])
+            ->fetchAssociative() ?: [];
+        $withdrawn = [];
+        foreach ($translations as $translation) {
+            /** @var array<string, string|int|float|null> $translation */
+            $supplied = $translated[(int)$translation[$languageField]] ?? [];
+            foreach (array_diff($fields, $supplied) as $field) {
+                $value = $translation[$field];
+                if ($this->isEmpty($value) || $value === ($default[$field] ?? null)) {
+                    continue;
+                }
+
+                /** @var string|int|float $value */
+                $this->importLogger->recordRemovedUpstream($table, $remoteId, $field, $value);
+
+                /** @var string|int|float $empty */
+                $empty = new ReflectionProperty($entity, $field)->getDefaultValue();
+                $withdrawn[(int)$translation['uid']][$field] = $empty;
+            }
+        }
+
+        return $withdrawn;
+    }
+
+    /**
      * Child nodes ride inside the root's own node, so a child the parsed root no longer carries is one upstream
      * dropped. A child without a remote_id is an editor's and stays. Translations go with their default-language row.
      *
@@ -234,6 +334,7 @@ final readonly class RootReconciliation
         if ($context->skipMedia || isset($context->mediaFailureByField[$table . '|' . $uid . '|' . $field])) {
             return false;
         }
+
         return array_all($context->collectedMedia, fn (CollectedMedia $media): bool => !($media->ownerTable === $table && $media->ownerKey === (string)$uid && $media->targetField === $field));
     }
 

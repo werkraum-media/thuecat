@@ -467,4 +467,33 @@ final class TrailImportTest extends AbstractImportTestCase
     {
         return $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
     }
+
+    #[Test]
+    public function anEnglishDescriptionUpstreamWithdrewIsEmptied(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/StoredTranslationsOfTrail.csv');
+        $this->expectFetchForUrl(self::REMOTE_ID, 'thuecat.org/resources/trail-without-english-description-or-french-title.json');
+
+        $this->importJob(1);
+
+        $this->assertSame('', $this->fetchTranslationsByParentRemoteId('tx_thuecat_trail', self::REMOTE_ID)[1]['description']);
+        $this->assertSame(
+            ['{"field":"description","value":"Stored English description"}'],
+            $this->removedUpstreamContexts()
+        );
+    }
+
+    // Localize copied the default title, which has changed since: a stale copy is still no value of its own.
+    #[Test]
+    public function aFrenchTitleUpstreamNeverSuppliedStaysAsItWas(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/StoredTranslationsOfTrail.csv');
+        $this->expectFetchForUrl(self::REMOTE_ID, 'thuecat.org/resources/trail-without-english-description-or-french-title.json');
+
+        $this->importJob(1);
+
+        $this->assertSame('Radtour "Nessetal-Radweg" - Von Erfurt nach Eisenach', $this->fetchTranslationsByParentRemoteId('tx_thuecat_trail', self::REMOTE_ID)[2]['title']);
+    }
 }

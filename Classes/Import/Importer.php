@@ -285,10 +285,12 @@ class Importer
         $this->resolver->flushCollectedMedia($payload, $resolverContext);
         $this->resolver->flushCollectedKeywords($payload, $resolverContext);
 
+        $withdrawnTranslations = $this->rootReconciliation->withdrawnTranslations($payload, $resolverContext);
         $childDeletions = $this->rootReconciliation->unsuppliedChildDeletions($payload, $resolverContext);
-        if ($childDeletions !== []) {
+        if ($withdrawnTranslations !== [] || $childDeletions !== []) {
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-            $dataHandler->start([], $childDeletions);
+            $dataHandler->start($withdrawnTranslations, $childDeletions);
+            $dataHandler->process_datamap();
             $dataHandler->process_cmdmap();
             /** @var list<string> $childErrorLog */
             $childErrorLog = $dataHandler->errorLog;

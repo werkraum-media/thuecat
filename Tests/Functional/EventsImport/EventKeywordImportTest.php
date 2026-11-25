@@ -123,7 +123,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
 
         $this->assertSame(
             ['{"field":"keywords_relation","value":"keyword:https:\\/\\/thuecat.org\\/resources\\/475728955106-qdcc"}'],
-            array_column($this->getLogEntriesOfType('removedUpstream'), 'context')
+            $this->removedUpstreamContexts()
         );
     }
 

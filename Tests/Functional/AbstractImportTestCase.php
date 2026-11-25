@@ -540,6 +540,14 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     }
 
     /**
+     * @return list<mixed> the field and value of each removal, in log order
+     */
+    protected function removedUpstreamContexts(): array
+    {
+        return array_column($this->getLogEntriesOfType('removedUpstream'), 'context');
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     protected function getLogEntriesOfType(string $type): array

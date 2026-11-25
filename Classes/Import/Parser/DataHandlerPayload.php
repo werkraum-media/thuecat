@@ -120,7 +120,7 @@ class DataHandlerPayload
      * Rows of reconciled kinds parsed into this payload, with the columns each supplied. Only a root's own payload
      * holds them: a fetched reference is parsed into a payload of its own, and merging leaves them behind.
      *
-     * @var array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>}>>
+     * @var array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>, translated: array<int, list<string>>}>>
      */
     protected array $roots = [];
 
@@ -136,7 +136,12 @@ class DataHandlerPayload
         $this->defaultLanguageKeys[$table][$remoteId] = true;
 
         if ($entity::RECONCILED_FIELDS !== []) {
-            $this->roots[$table][$remoteId] = ['entity' => $entity::class, 'supplied' => array_keys($row), 'children' => []];
+            $this->roots[$table][$remoteId] = [
+                'entity' => $entity::class,
+                'supplied' => array_keys($row),
+                'children' => [],
+                'translated' => array_map(array_keys(...), $entity->getTranslations()),
+            ];
         }
 
         $entityTransients = $entity->getTransients();
@@ -528,7 +533,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>}>>
+     * @return array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>, translated: array<int, list<string>>}>>
      */
     public function getRoots(): array
     {

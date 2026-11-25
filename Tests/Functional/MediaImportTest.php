@@ -332,7 +332,7 @@ final class MediaImportTest extends AbstractImportTestCase
                 '{"field":"media_files","value":"\/thuecat\/stored.jpg"}',
                 '{"field":"logo","value":"\/thuecat\/stored.jpg"}',
             ],
-            array_column($this->getLogEntriesOfType('removedUpstream'), 'context')
+            $this->removedUpstreamContexts()
         );
     }
 
