@@ -72,19 +72,45 @@ class ImportJobItems
     }
 
     /**
-     * Starts the item's clock.
+     * Starts the item's clock and counts the attempt. A redelivered message finds its item no longer pending.
      */
     public function begin(int $uid): ?ImportJobItem
     {
-        $row = $this->connectionPool->getConnectionForTable(self::TABLE)
-            ->select(['uid', 'target', 'position'], self::TABLE, ['uid' => $uid])
+        $connection = $this->connectionPool->getConnectionForTable(self::TABLE);
+        $row = $connection
+            ->select(['uid', 'target', 'position'], self::TABLE, ['uid' => $uid, 'state' => 'pending'])
             ->fetchAssociative()
         ;
         if ($row === false || !is_numeric($row['uid']) || !is_string($row['target']) || !is_numeric($row['position'])) {
             return null;
         }
 
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+        $queryBuilder
+            ->update(self::TABLE)
+            ->set('attempts', $queryBuilder->quoteIdentifier('attempts') . ' + 1', false)
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)))
+            ->executeStatement()
+        ;
+
         return new ImportJobItem((int)$row['uid'], $row['target'], (int)$row['position'], $this->clock->now()->getTimestamp());
+    }
+
+    /**
+     * True only for the first attempt that asks, so a retried item never sends a second successor.
+     */
+    public function claimSuccessor(ImportJobItem $item): bool
+    {
+        return $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->update(self::TABLE, ['successor_sent' => 1], ['uid' => $item->uid, 'successor_sent' => 0]) > 0
+        ;
+    }
+
+    public function hasPending(int $job): bool
+    {
+        return $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->count('uid', self::TABLE, ['job' => $job, 'state' => 'pending']) > 0
+        ;
     }
 
     public function markDone(ImportJobItem $item): void

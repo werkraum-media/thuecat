@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Job\Handler;
 
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
@@ -38,6 +40,8 @@ use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
 #[AsMessageHandler]
 final readonly class ImportFinishedHandler
 {
+    private const int WAIT_MILLISECONDS = 60000;
+
     public function __construct(
         private ImportJobs $importJobs,
         private ImportJobItems $importJobItems,
@@ -45,6 +49,7 @@ final readonly class ImportFinishedHandler
         private SyncWindow $syncWindow,
         private ImportLogger $importLogger,
         private ConnectionPool $connectionPool,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
@@ -52,6 +57,12 @@ final readonly class ImportFinishedHandler
     {
         $job = $this->importJobs->find($message->jobUid);
         if (!$job instanceof ImportJob) {
+            return;
+        }
+
+        // An item awaiting its retry still decides the job's outcome.
+        if ($this->importJobItems->hasPending($job->uid)) {
+            $this->messageBus->dispatch($message, [new DelayStamp(self::WAIT_MILLISECONDS)]);
             return;
         }
 

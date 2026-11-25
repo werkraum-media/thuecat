@@ -22,18 +22,16 @@ namespace WerkraumMedia\ThueCat\Removal;
 
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
-use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\SysLog\Action as SystemLogGeneralAction;
 use TYPO3\CMS\Core\SysLog\Error as SystemLogErrorClassification;
 use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalMessage;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\Message\RemoveRoot;
+use WerkraumMedia\ThueCat\Service\WaitingMessages;
 
 /**
  * Logs a failed removal message on its job and in the system log. Core configures no retry, so the worker drops
@@ -49,7 +47,7 @@ final readonly class FailedMessageListener
         private RemovalJobs $removalJobs,
         private JobBackendUser $jobBackendUser,
         private MessageBusInterface $messageBus,
-        private ConnectionPool $connectionPool,
+        private WaitingMessages $waitingMessages,
     ) {
     }
 
@@ -79,7 +77,7 @@ final readonly class FailedMessageListener
             [$job->uid, $failure]
         );
 
-        if (!$this->hasWaitingMessage($job->uid)) {
+        if (!$this->waitingMessages->exists(static fn (object $waiting): bool => $waiting instanceof RemovalMessage && $waiting->jobUid === $job->uid)) {
             $this->messageBus->dispatch($message, [new DelayStamp(self::RETRY_DELAY_MILLISECONDS)]);
         }
     }
@@ -91,35 +89,5 @@ final readonly class FailedMessageListener
             $message instanceof RemoveRoot => 'Root ' . $message->table . ':' . $message->uid,
             default => 'Finish',
         };
-    }
-
-    /**
-     * The failed message itself is still stored while it is handled, but already marked as delivered.
-     */
-    private function hasWaitingMessage(int $jobUid): bool
-    {
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_messenger_messages');
-        $bodies = $queryBuilder
-            ->select('body')
-            ->from('sys_messenger_messages')
-            ->where($queryBuilder->expr()->isNull('delivered_at'))
-            ->executeQuery()
-            ->fetchFirstColumn()
-        ;
-
-        $serializer = new PhpSerializer();
-        foreach ($bodies as $body) {
-            try {
-                $waiting = $serializer->decode(['body' => is_string($body) ? $body : ''])->getMessage();
-            } catch (MessageDecodingFailedException) {
-                continue;
-            }
-
-            if ($waiting instanceof RemovalMessage && $waiting->jobUid === $jobUid) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

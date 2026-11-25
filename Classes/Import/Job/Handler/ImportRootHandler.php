@@ -26,6 +26,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\Job\ImportConfigurationGoneException;
 use WerkraumMedia\ThueCat\Import\Job\ImportJob;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItem;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
@@ -49,19 +50,29 @@ final readonly class ImportRootHandler
     {
         // The consumer is long-lived and the logger shared: entries of an earlier message must not reach this log.
         $this->importLogger->reset();
-        $item = $this->importJobItems->begin($message->itemUid);
         $job = $this->importJobs->find($message->jobUid);
-        if (!$item instanceof ImportJobItem || !$job instanceof ImportJob) {
+        if (!$job instanceof ImportJob) {
             return;
         }
 
-        $configuration = $this->configurationRepository->findOneByUid($job->configurationUid);
-        if (!$configuration instanceof ImportConfiguration) {
+        $item = $this->importJobItems->begin($message->itemUid);
+        if (!$item instanceof ImportJobItem) {
             return;
         }
 
         // Sent first, so a failure of this item does not end the chain.
-        $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid, $item->position));
+        if ($this->importJobItems->claimSuccessor($item)) {
+            $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid, $item->position));
+        }
+
+        $configuration = $this->configurationRepository->findOneByUid($job->configurationUid);
+        if (!$configuration instanceof ImportConfiguration) {
+            throw new ImportConfigurationGoneException(
+                sprintf('Configuration %d of import job %d is gone.', $job->configurationUid, $job->uid),
+                1795584926
+            );
+        }
+
         $outcome = $this->importer->importRoot($configuration, $item->target, $job->bypassCache, $job->skipMedia);
         $this->importLogger->writeLogInto($job->importLog, $outcome->loggerPayload, $outcome->substNEWwithIDs);
         $this->importJobItems->markDone($item);
