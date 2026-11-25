@@ -1,0 +1,32 @@
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","schedule_interval","next_run","skip_media","last_run","last_successful_run"
+,1,0,"Interval without media","static",0,0,0,0,0
+,2,0,"Cron","static",0,0,0,0,0
+,3,0,"Fresh","static",0,0,0,0,0
+,4,0,"Several tasks","static",0,0,0,0,0
+,5,0,"Disabled task","static",0,0,0,0,0
+,6,0,"Logs only","syncChannel",0,0,0,0,0
+,7,0,"Run already recorded","syncChannel",0,0,0,1790000000,1790000000
+"tx_scheduler_task"
+,"uid","pid","tasktype","description","parameters","execution_details","nextexecution","disable","deleted"
+,1,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""1""},""options"":{""fresh"":false,""no_media"":true},""optionValues"":{""fresh"":false,""no_media"":true}}","{""start"":1795000000,""end"":0,""interval"":86400,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,0,0
+,2,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""2""},""options"":{""fresh"":false,""no_media"":false},""optionValues"":{""fresh"":false,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":0,""multiple"":false,""cronCmd"":""0 3 * * 1"",""isNewSingleExecution"":false}",1795755600,0,0
+,3,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""3""},""options"":{""fresh"":true,""no_media"":false},""optionValues"":{""fresh"":true,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":3600,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,0,0
+,4,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""4""},""options"":{""fresh"":false,""no_media"":false},""optionValues"":{""fresh"":false,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":86400,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,0,0
+,5,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""4""},""options"":{""fresh"":false,""no_media"":true},""optionValues"":{""fresh"":false,""no_media"":true}}","{""start"":1795000000,""end"":0,""interval"":3600,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795759200,0,0
+,6,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""4""},""options"":{""fresh"":false,""no_media"":false},""optionValues"":{""fresh"":false,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":60,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,1,0
+,7,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""5""},""options"":{""fresh"":false,""no_media"":false},""optionValues"":{""fresh"":false,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":86400,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,1,0
+,8,0,"cache:flush","","{}","{""start"":1795000000,""end"":0,""interval"":86400,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,0,0
+,9,0,"thuecat:importviaconfiguration","","{""commandIdentifier"":""thuecat:importviaconfiguration"",""arguments"":{""configuration"":""6""},""options"":{""fresh"":false,""no_media"":false},""optionValues"":{""fresh"":false,""no_media"":false}}","{""start"":1795000000,""end"":0,""interval"":3600,""multiple"":false,""cronCmd"":"""",""isNewSingleExecution"":false}",1795755600,0,1
+"tx_thuecat_import_log"
+,"uid","pid","configuration","crdate"
+,1,0,6,1795000000
+,2,0,6,1795100000
+,3,0,6,1795050000
+,4,0,6,1795080000
+,5,0,7,1795200000
+"tx_thuecat_import_log_entry"
+,"uid","pid","import_log","type","severity","remote_id","message"
+,1,0,2,"fetchingError","error","https://thuecat.org/resources/test-trail-1","Not found [test]"
+,2,0,3,"runFailed","error","","Run failed [test]"
+,3,0,4,"runAborted","error","","Run aborted [test]"

@@ -34,7 +34,8 @@
             // The test database stores an empty or numeric string in an integer column as the integer a cast gives,
             // only MySQL in strict mode rejects the empty one; and the driver already hands the uid over as an integer.
             "ignore": [
-                "WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\ImportConfigurationFlexFormMigration"
+                "WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\ImportConfigurationFlexFormMigration",
+                "WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\ImportSchedulerTaskMigration"
             ]
         },
         "LessThan": {
