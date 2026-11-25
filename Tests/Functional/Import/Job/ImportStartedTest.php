@@ -23,7 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
-use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
@@ -101,11 +100,9 @@ final class ImportStartedTest extends AbstractImportTestCase
     #[Test]
     public function jobOfADeletedConfigurationFails(): void
     {
-        $job = $this->get(ImportJobs::class)->queue(1, ImportTrigger::Manual, false, false, 1);
+        $job = $this->get(ImportJobs::class)->queueManual(1, false, false, 1);
         $this->assertIsInt($job);
-        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')
-            ->update('tx_thuecat_import_configuration', ['deleted' => 1], ['uid' => 1])
-        ;
+        $this->updateImportConfiguration(1, ['deleted' => 1]);
         $this->takeQueuedMessages();
         $this->workaroundExtbaseConfiguration();
 

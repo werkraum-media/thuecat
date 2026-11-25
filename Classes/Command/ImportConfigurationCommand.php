@@ -26,7 +26,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TYPO3\CMS\Core\Core\Bootstrap;
@@ -52,20 +51,6 @@ class ImportConfigurationCommand extends Command
             InputArgument::REQUIRED,
             'The UID of the import configuration to use'
         );
-
-        $this->addOption(
-            'fresh',
-            null,
-            InputOption::VALUE_NONE,
-            'Ignore cached API responses and fetch every resource from the API'
-        );
-
-        $this->addOption(
-            'no_media',
-            null,
-            InputOption::VALUE_NONE,
-            'Import without media: no media resource is fetched, downloaded or related'
-        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -89,9 +74,7 @@ class ImportConfigurationCommand extends Command
         // flood in a cron or CI log.
         $severity = $this->importer->importConfiguration(
             $configuration,
-            new ConsoleProgressRenderer($output, $output->isDecorated()),
-            $input->getOption('fresh') === true,
-            $input->getOption('no_media') === true
+            new ConsoleProgressRenderer($output, $output->isDecorated())
         );
         $io = new SymfonyStyle($input, $output);
 

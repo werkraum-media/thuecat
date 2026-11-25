@@ -74,9 +74,7 @@ class Importer
      */
     public function importConfiguration(
         ImportConfigurationInterface $configuration,
-        ?ImportProgressListener $listener = null,
-        bool $bypassCache = false,
-        bool $skipMedia = false
+        ?ImportProgressListener $listener = null
     ): string {
         $listener ??= new NullProgressListener();
         $this->deadline->reset();
@@ -89,20 +87,13 @@ class Importer
         // API. Media is downloaded into staging and only promoted into the
         // target on a clean run; the staging folder is always discarded in
         // the finally, so a failed run leaves no orphaned files behind.
-        //
-        // Skipped entirely without media: nothing gets downloaded, so neither
-        // folder is needed and a run stays possible on an unwritable one.
-        $targetFolder = null;
-        $stagingFolder = null;
-        if ($skipMedia === false) {
-            $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
-            $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
-        }
+        $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
+        $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
 
-        $this->configureFetching($configuration, $bypassCache);
+        $this->configureFetching($configuration, false);
 
         try {
-            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $skipMedia);
+            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener);
         } catch (Throwable $failure) {
             // Rethrown after logging: the caller still sees the failure, but the
             // run no longer disappears without a trace.
@@ -112,9 +103,7 @@ class Importer
             throw $failure;
         } finally {
             $this->fetchData->resetRunConfiguration();
-            if ($stagingFolder instanceof Folder) {
-                $this->mediaFileStaging->discard($stagingFolder);
-            }
+            $this->mediaFileStaging->discard($stagingFolder);
         }
     }
 
@@ -182,10 +171,9 @@ class Importer
 
     protected function runImport(
         ImportConfigurationInterface $configuration,
-        ?Folder $targetFolder,
-        ?Folder $stagingFolder,
-        ImportProgressListener $listener,
-        bool $skipMedia
+        Folder $targetFolder,
+        Folder $stagingFolder,
+        ImportProgressListener $listener
     ): string {
         $urlProvider = $this->urlProviders->forConfiguration($configuration);
         $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
@@ -211,7 +199,7 @@ class Importer
                 $targetFolder,
                 $stagingFolder,
                 $listener,
-                $skipMedia
+                false
             );
             foreach ($outcome->loggerPayload as $table => $rows) {
                 $loggerPayload[$table] = ($loggerPayload[$table] ?? []) + $rows;
@@ -408,12 +396,9 @@ class Importer
      * Promote staged media unconditionally: a staged file downloaded successfully,
      * so a failure elsewhere in the run says nothing about it.
      */
-    protected function finishRun(?Folder $targetFolder, ?Folder $stagingFolder): string
+    protected function finishRun(Folder $targetFolder, Folder $stagingFolder): string
     {
-        // Null only without media: nothing was staged, nothing to promote.
-        if ($targetFolder instanceof Folder && $stagingFolder instanceof Folder) {
-            $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
-        }
+        $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
 
         return $this->importLogger->getMaxSeverity();
     }

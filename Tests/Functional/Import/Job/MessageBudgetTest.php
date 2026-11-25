@@ -50,7 +50,7 @@ final class MessageBudgetTest extends AbstractImportTestCase
         $this->assertSame('Message budget of 300s exhausted after 300s while fetch.', $abort->getMessage());
         $this->assertSame(1795587176, $abort->getCode());
         $this->assertSame(0, $this->countRows('tx_thuecat_trail'));
-        $this->assertSame('pending', $this->jobItems($job)[0]['state']);
+        $this->assertSame('pending', $this->jobItemStates($job)[0]);
     }
 
     #[Test]
@@ -64,7 +64,7 @@ final class MessageBudgetTest extends AbstractImportTestCase
 
         $this->handleImportRoot($job, $this->jobItems($job)[0]['uid']);
 
-        $this->assertSame('done', $this->jobItems($job)[0]['state']);
+        $this->assertSame('done', $this->jobItemStates($job)[0]);
         $this->assertSame([], $this->getLogEntriesOfType('runAborted'));
     }
 
@@ -73,9 +73,7 @@ final class MessageBudgetTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../../Fixtures/Import/ImportsTrailWithRelations.php');
         $this->expectFetchForUrl(self::TRAIL, 'thuecat.org/resources/trail-with-content-responsible.json');
-        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')
-            ->update('tx_thuecat_import_configuration', ['message_budget' => 60], ['uid' => 1])
-        ;
+        $this->updateImportConfiguration(1, ['message_budget' => 60]);
         $this->clockMessageDeadline(0, 0, 60);
         $job = $this->startJob(1);
 

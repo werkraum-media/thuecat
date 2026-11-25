@@ -94,7 +94,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         // serve it from cache and fetch nothing.
         $this->expectFetchForUrl(self::TRAIL_ID, 'thuecat.org/resources/trail-with-content-responsible.json');
         $this->expectFetch('018132452787-ngbe.json');
-        $this->importConfigurationBypassingCache(2);
+        $this->importJob(2, bypassCache: true);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION_ID);
         $this->assertGreaterThan(0, $organisationUid, 'The organisation must now be imported.');
@@ -121,7 +121,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         );
         $this->expectFetchForUrl(self::TRAIL_ID, 'thuecat.org/resources/e_106954656-oatour.json');
         $this->expectKeywordFetches();
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
 
         $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'managed_by must survive the trail being re-imported as a reference.');
     }
@@ -143,7 +143,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         );
         $this->expectFetchForUrl(self::TRAIL_ID, 'thuecat.org/resources/e_106954656-oatour.json');
         $this->expectKeywordFetches();
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
 
         $this->assertSame(6, $this->countKeywordRelations($trailUid), 'Keywords must neither be cleared nor duplicated by the re-entry.');
     }

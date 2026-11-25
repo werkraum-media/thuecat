@@ -817,7 +817,7 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithMixedGallery.php');
         $this->expectFetch('attraction-with-mixed-gallery.json');
 
-        $this->importConfigurationSkippingMedia(1);
+        $this->importJob(1, skipMedia: true);
 
         $this->assertSame([], $this->fetchReferenceFields(), 'No media may be related.');
         $this->assertSame(0, $this->countRows('sys_file'), 'No media may be downloaded.');
@@ -836,7 +836,7 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-mixed-gallery.json');
         GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat/thuecat', true);
 
-        $this->importConfigurationSkippingMedia(1);
+        $this->importJob(1, skipMedia: true);
 
         $this->assertSame(['Attraction with mixed gallery'], $this->fetchAttractionTitles(), 'The record must import even with the configured folder gone.');
     }

@@ -63,8 +63,18 @@ final readonly class ImportStartedHandler
     public function __invoke(ImportStarted $message): void
     {
         $job = $this->importJobs->find($message->jobUid);
+        if (!$job instanceof ImportJob) {
+            return;
+        }
+
+        // Stopped while still queued. A job stopped after its start has its start time.
+        if ($job->status === 'stopping' && $job->startedAt === 0) {
+            $this->importJobs->abandonPendingItems($job->uid);
+            return;
+        }
+
         // A redelivered start finds its job running already.
-        if (!$job instanceof ImportJob || $job->status !== 'queued') {
+        if ($job->status !== 'queued') {
             return;
         }
 

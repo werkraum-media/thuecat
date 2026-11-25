@@ -63,6 +63,15 @@ final readonly class DeleteRootHandler
             return;
         }
 
+        // Only a pending item gives up the rest: a retry of an item the stop skipped would finish the job twice.
+        if ($job->status === 'stopping') {
+            if ($this->importJobItems->findPending($message->itemUid) instanceof ImportJobItem) {
+                $this->importJobs->abandonPendingItems($job->uid);
+            }
+
+            return;
+        }
+
         $item = $this->importJobItems->begin($message->itemUid);
         if (!$item instanceof ImportJobItem) {
             return;

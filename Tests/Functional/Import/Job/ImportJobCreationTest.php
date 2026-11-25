@@ -23,7 +23,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
-use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 
@@ -39,7 +38,7 @@ final class ImportJobCreationTest extends AbstractBackendTestCase
     #[Test]
     public function queuedJobWaitsForItsStartingMessage(): void
     {
-        $job = $this->get(ImportJobs::class)->queue(1, ImportTrigger::Manual, true, true, 1);
+        $job = $this->get(ImportJobs::class)->queueManual(1, true, true, 1);
 
         $this->assertIsInt($job);
         $row = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
@@ -57,6 +56,36 @@ final class ImportJobCreationTest extends AbstractBackendTestCase
         $this->assertEquals([new ImportStarted($job)], $this->queuedMessages());
         $this->assertSame(0, $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job_item')->count('*', 'tx_thuecat_import_job_item', []));
         $this->assertSame(0, $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_log')->count('*', 'tx_thuecat_import_log', []));
+    }
+
+    /**
+     * @return iterable<string, array{int}>
+     */
+    public static function skipMediaSettings(): iterable
+    {
+        yield 'media imported' => [0];
+        yield 'media skipped' => [1];
+    }
+
+    #[Test]
+    #[DataProvider('skipMediaSettings')]
+    public function scheduledJobTakesSkipMediaFromItsConfigurationAndNeverBypassesTheCache(int $skipMedia): void
+    {
+        $this->updateImportConfiguration(1, ['skip_media' => $skipMedia]);
+
+        $job = $this->get(ImportJobs::class)->queueScheduled(1);
+
+        $this->assertIsInt($job);
+        $row = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
+            ->select(['job_trigger', 'backend_user', 'skip_media', 'bypass_cache'], 'tx_thuecat_import_job', ['uid' => $job])
+            ->fetchAssociative()
+        ;
+        $this->assertSame([
+            'job_trigger' => 'schedule',
+            'backend_user' => 0,
+            'skip_media' => $skipMedia,
+            'bypass_cache' => 0,
+        ], $row);
     }
 
     /**
@@ -80,7 +109,7 @@ final class ImportJobCreationTest extends AbstractBackendTestCase
             ->insert('tx_thuecat_import_job', ['configuration' => 1, 'status' => $status])
         ;
 
-        $job = $this->get(ImportJobs::class)->queue(1, ImportTrigger::Schedule, false, false);
+        $job = $this->get(ImportJobs::class)->queueScheduled(1);
 
         $this->assertSame($queued, is_int($job));
         $this->assertSame($queued ? 2 : 1, $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')->count('*', 'tx_thuecat_import_job', []));

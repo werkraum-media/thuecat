@@ -138,7 +138,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
 
         $this->handleDeleteRoot($job, $this->jobItems($job)[1]['uid']);
 
-        $this->assertSame('done', $this->jobItems($job)[1]['state']);
+        $this->assertSame('done', $this->jobItemStates($job)[1]);
         $this->assertEquals([new ImportFinished($job)], $this->queuedMessages());
     }
 

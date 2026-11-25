@@ -63,7 +63,7 @@ final class ImportChainTest extends AbstractImportTestCase
         $this->handleImportRoot(1, 3);
 
         $this->assertSame([], $this->queuedMessages());
-        $this->assertSame('done', $this->jobItems(1)[2]['state']);
+        $this->assertSame('done', $this->jobItemStates(1)[2]);
     }
 
     #[Test]
@@ -72,7 +72,7 @@ final class ImportChainTest extends AbstractImportTestCase
         $this->handleDeleteRoot(1, 3);
 
         $this->assertSame([], $this->queuedMessages());
-        $this->assertSame('done', $this->jobItems(1)[2]['state']);
+        $this->assertSame('done', $this->jobItemStates(1)[2]);
     }
 
     #[Test]

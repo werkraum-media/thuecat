@@ -124,7 +124,7 @@ final class FailedImportMessageTest extends AbstractImportTestCase
 
         $this->assertEquals([new ImportRoot(1, 1)], $this->queuedMessages());
         $this->assertSame(60000, $this->queuedMessageDelay());
-        $this->assertSame('pending', $this->jobItems(1)[0]['state']);
+        $this->assertSame('pending', $this->jobItemStates(1)[0]);
     }
 
     #[Test]
@@ -141,7 +141,7 @@ final class FailedImportMessageTest extends AbstractImportTestCase
         $this->failMessage(new ImportRoot(1, 2));
 
         $this->assertSame([], $this->queuedMessages());
-        $this->assertSame(['pending', 'failed', 'pending'], array_column($this->jobItems(1), 'state'));
+        $this->assertSame(['pending', 'failed', 'pending'], $this->jobItemStates(1));
         $this->assertSame([self::THIRD_ATTEMPT], $this->fetchColumnMatching('tx_thuecat_import_log_entry', 'remote_id', ['import_log' => 1, 'type' => 'itemDropped']));
     }
 

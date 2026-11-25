@@ -24,7 +24,9 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
+use WerkraumMedia\ThueCat\Service\WaitingMessages;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
@@ -46,6 +48,8 @@ final class ImportFinishedTest extends AbstractImportTestCase
             $this->get(ConnectionPool::class),
             new FixedClock(new DateTimeImmutable('@' . self::ENDED)),
             $this->get(MessageBusInterface::class),
+            $this->get(ImportJobItems::class),
+            new WaitingMessages($this->get(ConnectionPool::class)),
         ));
     }
 

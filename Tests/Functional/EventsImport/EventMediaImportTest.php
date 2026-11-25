@@ -299,12 +299,28 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPartialDownloadFailurePreState.php');
         $this->expectFetch('e_mixed_media-tdm.json');
 
-        $this->runImportSkippingMedia();
+        $this->importJob(1, skipMedia: true);
 
         $this->assertSame([
             ['uid' => 1, 'deleted' => 0],
             ['uid' => 2, 'deleted' => 0],
         ], $this->fetchReferenceState(), 'Media was never retrieved, so nothing may be concluded about it.');
+    }
+
+    // Only the root is staged: a media fetch or download trips the faker.
+    #[Test]
+    public function scheduledJobOfAConfigurationSkippingMediaKeepsStoredImages(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPartialDownloadFailurePreState.php');
+        $this->updateImportConfiguration(1, ['skip_media' => 1]);
+        $this->expectFetch('e_mixed_media-tdm.json');
+
+        $this->importScheduledJob(1);
+
+        $this->assertSame([
+            ['uid' => 1, 'deleted' => 0],
+            ['uid' => 2, 'deleted' => 0],
+        ], $this->fetchReferenceState());
     }
 
     /** The success is what makes the owner reach the flush at all. */
@@ -639,12 +655,6 @@ final class EventMediaImportTest extends AbstractImportTestCase
     private function runImport(): void
     {
         $this->runImportReturningSeverity();
-    }
-
-    private function runImportSkippingMedia(): void
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration, null, false, true);
     }
 
     private function runImportReturningSeverity(): string

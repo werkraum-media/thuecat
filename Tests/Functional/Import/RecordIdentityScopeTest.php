@@ -102,10 +102,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesPreState.php');
         // Point configuration 2 into the first site, so both configurations
         // write into site 4000 through different storage folders.
-        $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_configuration')
-            ->update('tx_thuecat_import_configuration', ['storage_pid' => 4020], ['uid' => 2])
-        ;
+        $this->updateImportConfiguration(2, ['storage_pid' => 4020]);
         $this->expectTownFetches();
 
         $this->importConfiguration(1);

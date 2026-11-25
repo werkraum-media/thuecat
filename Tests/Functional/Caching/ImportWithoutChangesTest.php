@@ -133,7 +133,7 @@ final class ImportWithoutChangesTest extends AbstractImportTestCase
         );
         // Bypassing the fetch cache: a cached response would stand in for the
         // staged one, and the record would never change.
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
     }
 
     private function warmCaches(): void

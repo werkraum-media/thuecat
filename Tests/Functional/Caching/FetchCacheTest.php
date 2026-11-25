@@ -100,10 +100,23 @@ final class FetchCacheTest extends AbstractImportTestCase
         // Staged twice: the bypassing run must go to the API despite the entry.
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1);
+        $this->importJob(1, bypassCache: true);
 
-        $this->assertSame(2, GuzzleClientFaker::countConsumed(), 'The bypassing run went to the API despite a warm cache.');
+        $this->assertSame(2, GuzzleClientFaker::countConsumed(), 'The bypassing job went to the API despite a warm cache.');
+    }
+
+    #[Test]
+    public function aScheduledJobServesTheResponseFromTheCache(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
+        $this->expectFetch('018132452787-ngbe.json');
+
+        $this->importJob(1, bypassCache: true);
+        // Nothing staged: an HTTP request here has no response to consume.
+        $this->importScheduledJob(1);
+
+        $this->assertSame(1, GuzzleClientFaker::countConsumed(), 'The bypass of the earlier job must not carry over.');
     }
 
     #[Test]
@@ -112,7 +125,7 @@ final class FetchCacheTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
 
         $this->assertPHPDataSet(__DIR__ . '/../Assertions/Import/ImportsFreshOrganization.php');
     }

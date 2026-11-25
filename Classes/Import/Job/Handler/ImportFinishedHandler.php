@@ -62,6 +62,11 @@ final readonly class ImportFinishedHandler
             return;
         }
 
+        // The stop gave up an item awaiting its retry.
+        if ($job->status === 'stopping') {
+            $this->importJobItems->skipPending($job->uid);
+        }
+
         // An item awaiting its retry still decides the job's outcome.
         if ($this->importJobItems->hasPending($job->uid)) {
             $this->messageBus->dispatch($message, [new DelayStamp(self::WAIT_MILLISECONDS)]);
@@ -113,6 +118,11 @@ final readonly class ImportFinishedHandler
 
     private function recordRun(ImportJob $job, bool $successful): void
     {
+        // A job stopped while queued never ran.
+        if ($job->startedAt === 0) {
+            return;
+        }
+
         $runs = ['last_run' => $job->startedAt];
         if ($successful) {
             $runs['last_successful_run'] = $job->startedAt;

@@ -101,7 +101,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'https://thuecat.org/resources/e_52469786-oatour',
             'thuecat.org/resources/trail-without-seasons.json'
         );
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
 
         $this->assertSame(0, $this->fetchTrailSeason());
     }
@@ -128,7 +128,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'https://thuecat.org/resources/e_52469786-oatour',
             'thuecat.org/resources/trail-without-short-description.json'
         );
-        $this->importConfigurationBypassingCache(1);
+        $this->importJob(1, bypassCache: true);
 
         $this->assertSame('', $this->fetchTrail()['short_description']);
     }

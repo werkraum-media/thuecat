@@ -33,7 +33,6 @@ use WerkraumMedia\ThueCat\Import\Job\Handler\ImportFinishedHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportRootHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
-use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
 use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
@@ -337,22 +336,6 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         return $this->get(Importer::class)->importConfiguration($configuration);
     }
 
-    /** The programmatic half of the bypass: no console command involved. */
-    protected function importConfigurationBypassingCache(int $uid): string
-    {
-        $configuration = $this->fetchImportConfiguration($uid);
-
-        return $this->get(Importer::class)->importConfiguration($configuration, null, true);
-    }
-
-    /** The programmatic half of --no_media: no console command involved. */
-    protected function importConfigurationSkippingMedia(int $uid): string
-    {
-        $configuration = $this->fetchImportConfiguration($uid);
-
-        return $this->get(Importer::class)->importConfiguration($configuration, null, false, true);
-    }
-
     /**
      * Queues a manual job and handles its starting message, taken off the transport first as the consumer takes it.
      *
@@ -360,7 +343,21 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
      */
     protected function startJob(int $configurationUid, bool $skipMedia = false, bool $bypassCache = false): int
     {
-        $job = $this->get(ImportJobs::class)->queue($configurationUid, ImportTrigger::Manual, $skipMedia, $bypassCache, 1);
+        $job = $this->get(ImportJobs::class)->queueManual($configurationUid, $skipMedia, $bypassCache, 1);
+
+        return $this->handleImportStarted($job);
+    }
+
+    /**
+     * @return int the job's uid
+     */
+    protected function startScheduledJob(int $configurationUid): int
+    {
+        return $this->handleImportStarted($this->get(ImportJobs::class)->queueScheduled($configurationUid));
+    }
+
+    protected function handleImportStarted(?int $job): int
+    {
         $this->assertIsInt($job);
         $this->takeQueuedMessages();
         $this->workaroundExtbaseConfiguration();
@@ -370,13 +367,25 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     }
 
     /**
-     * Starts a job, handles each of its items in turn and finishes it, as the consumer would.
+     * Starts a manual job, handles each of its items in turn and finishes it, as the consumer would.
      *
      * @return int the job's uid
      */
-    protected function importJob(int $configurationUid): int
+    protected function importJob(int $configurationUid, bool $skipMedia = false, bool $bypassCache = false): int
     {
-        $job = $this->startJob($configurationUid);
+        return $this->completeJob($this->startJob($configurationUid, $skipMedia, $bypassCache));
+    }
+
+    /**
+     * @return int the job's uid
+     */
+    protected function importScheduledJob(int $configurationUid): int
+    {
+        return $this->completeJob($this->startScheduledJob($configurationUid));
+    }
+
+    protected function completeJob(int $job): int
+    {
         foreach ($this->jobItems($job) as $item) {
             $item['action'] === 'delete'
                 ? $this->handleDeleteRoot($job, $item['uid'])
@@ -497,6 +506,14 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
             ->select([$column], 'tx_thuecat_import_configuration', ['uid' => $uid])
             ->fetchOne()
         ;
+    }
+
+    /**
+     * @return list<string> in their position's order
+     */
+    protected function jobItemStates(int $job): array
+    {
+        return array_column($this->jobItems($job), 'state');
     }
 
     /**

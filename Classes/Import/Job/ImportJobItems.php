@@ -131,6 +131,11 @@ class ImportJobItems
         ;
     }
 
+    public function skipPending(int $job): void
+    {
+        $this->connectionPool->getConnectionForTable(self::TABLE)->update(self::TABLE, ['state' => 'skipped'], ['job' => $job, 'state' => 'pending']);
+    }
+
     public function markFailed(ImportJobItem $item): void
     {
         $this->connectionPool->getConnectionForTable(self::TABLE)->update(self::TABLE, ['state' => 'failed'], ['uid' => $item->uid]);

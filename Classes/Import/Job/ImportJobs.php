@@ -26,7 +26,11 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
+use WerkraumMedia\ThueCat\Service\WaitingMessages;
 
 #[Autoconfigure(public: true)]
 class ImportJobs
@@ -39,18 +43,38 @@ class ImportJobs
         protected readonly ConnectionPool $connectionPool,
         protected readonly ClockInterface $clock,
         protected readonly MessageBusInterface $messageBus,
+        protected readonly ImportJobItems $importJobItems,
+        protected readonly WaitingMessages $waitingMessages,
     ) {
     }
 
     /**
      * @return int|null the job's uid, or null while the configuration has an open job
      */
-    public function queue(
+    public function queueManual(int $configurationUid, bool $skipMedia, bool $bypassCache, int $backendUser): ?int
+    {
+        return $this->queue($configurationUid, ImportTrigger::Manual, $skipMedia, $bypassCache, $backendUser);
+    }
+
+    /**
+     * @return int|null the job's uid, or null while the configuration has an open job
+     */
+    public function queueScheduled(int $configurationUid): ?int
+    {
+        $skipMedia = $this->connectionPool->getConnectionForTable('tx_thuecat_import_configuration')
+            ->select(['skip_media'], 'tx_thuecat_import_configuration', ['uid' => $configurationUid])
+            ->fetchOne()
+        ;
+
+        return $this->queue($configurationUid, ImportTrigger::Schedule, (bool)$this->intOf($skipMedia), false, 0);
+    }
+
+    protected function queue(
         int $configurationUid,
         ImportTrigger $trigger,
         bool $skipMedia,
         bool $bypassCache,
-        int $backendUser = 0,
+        int $backendUser,
     ): ?int {
         if ($this->hasOpenJob($configurationUid)) {
             return null;
@@ -137,6 +161,38 @@ class ImportJobs
     }
 
     /**
+     * The item being handled finishes. The job's next message gives up the rest, or the stop itself does when no
+     * message of the job is waiting.
+     */
+    public function stop(int $uid): void
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+        $stopping = $queryBuilder
+            ->update(self::TABLE)
+            ->set('status', 'stopping')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->in('status', $queryBuilder->createNamedParameter(['queued', 'running'], ArrayParameterType::STRING))
+            )
+            ->executeStatement()
+        ;
+        if ($stopping === 0 || $this->waitingMessages->exists(fn (object $message): bool => $this->isMessageOf($message, $uid))) {
+            return;
+        }
+
+        $this->abandonPendingItems($uid);
+    }
+
+    /**
+     * Skips what a stopping job has left and sends its finishing message.
+     */
+    public function abandonPendingItems(int $uid): void
+    {
+        $this->importJobItems->skipPending($uid);
+        $this->messageBus->dispatch(new ImportFinished($uid));
+    }
+
+    /**
      * @return list<int>
      */
     public function openJobUids(): array
@@ -172,6 +228,15 @@ class ImportJobs
         ;
 
         return is_numeric($count) && (int)$count > 0;
+    }
+
+    protected function isMessageOf(object $message, int $uid): bool
+    {
+        return ($message instanceof ImportStarted
+            || $message instanceof ImportRoot
+            || $message instanceof DeleteRoot
+            || $message instanceof ImportFinished
+        ) && $message->jobUid === $uid;
     }
 
     protected function intOf(mixed $value): int
