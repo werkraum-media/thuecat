@@ -186,9 +186,6 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
     #[Test]
     public function allDroppedParkingFacilitiesAreDeleted(): void
     {
-        $this->markTestSkipped('Inline reaping never clears an empty set; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithTwoParkingFacilities.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-parking-facilities.json');

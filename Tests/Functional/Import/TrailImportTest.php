@@ -368,6 +368,59 @@ final class TrailImportTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function aDroppedWayTypeSegmentIsLoggedWithItsRemoteId(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/e_52469786-oatour',
+            'thuecat.org/resources/trail-with-fewer-way-types.json'
+        );
+
+        $this->importConfiguration(1);
+
+        $this->assertSame(
+            [
+                ['tx_thuecat_trail', self::REMOTE_ID, '{"field":"way_types","value":"https:\\/\\/thuecat.org\\/resources\\/e_52469786-oatour::wt::3"}'],
+                ['tx_thuecat_trail', self::REMOTE_ID, '{"field":"way_types","value":"https:\\/\\/thuecat.org\\/resources\\/e_52469786-oatour::wt::4"}'],
+            ],
+            array_map(
+                static fn (array $entry): array => [$entry['table_name'], $entry['remote_id'], $entry['context']],
+                $this->getLogEntriesOfType('removedUpstream')
+            )
+        );
+    }
+
+    #[Test]
+    public function upstreamDroppingEveryWayTypeSegmentRemovesAllRows(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/e_52469786-oatour',
+            'thuecat.org/resources/trail-without-way-types.json'
+        );
+
+        $this->importConfiguration(1);
+
+        $this->assertSame([], $this->fetchChildren('tx_thuecat_trail_way_type'));
+        $this->assertSame(5, $this->countDeletedRows('tx_thuecat_trail_way_type'));
+    }
+
+    #[Test]
+    public function aWayTypeSegmentAnEditorCreatedIsKept(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/EditorWayTypeOnStoredTrail.csv');
+        $this->expectFetchForUrl(
+            'https://thuecat.org/resources/e_52469786-oatour',
+            'thuecat.org/resources/trail-with-fewer-way-types.json'
+        );
+
+        $this->importConfiguration(1);
+
+        $this->assertContains('Editor segment', array_column($this->fetchChildren('tx_thuecat_trail_way_type'), 'title'));
+    }
+
+    #[Test]
     public function aFailedRunLeavesChildrenInPlace(): void
     {
         $this->expectErrors = true;

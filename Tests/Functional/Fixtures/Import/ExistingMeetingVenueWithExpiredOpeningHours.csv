@@ -1,0 +1,8 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","sys_language_uid","l18n_parent","remote_id","title","type","venue_type","opening_hours_inline"
+,1,10,0,0,"https://thuecat.org/resources/e_ttg00020050000287335-tomas","Hotel Kaiserin Augusta","meeting_venue","meeting_congress_hotel",3
+"tx_thuecat_opening_hours"
+,"uid","pid","parentid","parenttable","specification_type","day_of_week","opens","closes","valid_from","valid_through","remote_id"
+,1,10,1,"tx_thuecat_tourist_attraction","regular","Monday","10:00:00","18:00:00","2026-01-01","2027-12-31","https://thuecat.org/resources/e_ttg00020050000287335-tomas::oh::regular::Monday::10:00:00::2026-01-01::2027-12-31"
+,2,10,1,"tx_thuecat_tourist_attraction","regular","Tuesday","10:00:00","18:00:00","2026-01-01","2027-12-31","https://thuecat.org/resources/e_ttg00020050000287335-tomas::oh::regular::Tuesday::10:00:00::2026-01-01::2027-12-31"
+,3,10,1,"tx_thuecat_tourist_attraction","regular","Wednesday","10:00:00","18:00:00","2026-01-01","2026-10-31","https://thuecat.org/resources/e_ttg00020050000287335-tomas::oh::regular::Wednesday::10:00:00::2026-01-01::2026-10-31"

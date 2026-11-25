@@ -1,0 +1,15 @@
+"tx_events_domain_model_event"
+,"uid","pid","sys_language_uid","remote_id","title","keywords_relation","categories"
+,1,10,0,"https://cdb.int.thuecat.org/api/resources/e_19542-keywords","Stored event",2,2
+"sys_category"
+,"uid","pid","parent","remote_id","title"
+,150,20,100,"","Editor category"
+,151,20,100,"type:thuecat:StaleType","Stale type"
+,201,30,200,"keyword:https://thuecat.org/resources/475728955106-qdcc","Stored Erfurt"
+,202,30,200,"","Editor keyword"
+"sys_category_record_mm"
+,"uid_local","uid_foreign","tablenames","fieldname","sorting_foreign"
+,150,1,"tx_events_domain_model_event","categories",1
+,151,1,"tx_events_domain_model_event","categories",2
+,201,1,"tx_events_domain_model_event","keywords_relation",1
+,202,1,"tx_events_domain_model_event","keywords_relation",2

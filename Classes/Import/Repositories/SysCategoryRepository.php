@@ -148,6 +148,36 @@ class SysCategoryRepository
     }
 
     /**
+     * Remote IDs of the related categories the import created, the counterpart of findRelatedUidsWithoutRemoteId().
+     *
+     * @return list<string>
+     */
+    public function findRelatedRemoteIds(string $ownerTable, int $ownerUid, string $ownerField): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_category_record_mm');
+        $rows = $queryBuilder->select('c.remote_id')
+            ->from('sys_category_record_mm', 'mm')
+            ->join(
+                'mm',
+                'sys_category',
+                'c',
+                $queryBuilder->expr()->eq('c.uid', $queryBuilder->quoteIdentifier('mm.uid_local'))
+            )
+            ->where(
+                $queryBuilder->expr()->eq('mm.tablenames', $queryBuilder->createNamedParameter($ownerTable)),
+                $queryBuilder->expr()->eq('mm.fieldname', $queryBuilder->createNamedParameter($ownerField)),
+                $queryBuilder->expr()->eq('mm.uid_foreign', $queryBuilder->createNamedParameter($ownerUid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->neq('c.remote_id', $queryBuilder->createNamedParameter(''))
+            )
+            ->orderBy('mm.sorting_foreign')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        return array_values(array_filter($rows, is_string(...)));
+    }
+
+    /**
      * Default-language uids with the given remote_id on any of the pages.
      *
      * @param list<int> $pageIds

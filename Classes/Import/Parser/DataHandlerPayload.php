@@ -120,7 +120,7 @@ class DataHandlerPayload
      * Rows of reconciled kinds parsed into this payload, with the columns each supplied. Only a root's own payload
      * holds them: a fetched reference is parsed into a payload of its own, and merging leaves them behind.
      *
-     * @var array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>}>>
+     * @var array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>}>>
      */
     protected array $roots = [];
 
@@ -136,7 +136,7 @@ class DataHandlerPayload
         $this->defaultLanguageKeys[$table][$remoteId] = true;
 
         if ($entity::RECONCILED_FIELDS !== []) {
-            $this->roots[$table][$remoteId] = ['entity' => $entity::class, 'supplied' => array_keys($row)];
+            $this->roots[$table][$remoteId] = ['entity' => $entity::class, 'supplied' => array_keys($row), 'children' => []];
         }
 
         $entityTransients = $entity->getTransients();
@@ -292,6 +292,23 @@ class DataHandlerPayload
         foreach ($fields as $field) {
             $this->roots[$table][$remoteId]['supplied'][] = $field;
         }
+    }
+
+    /**
+     * Keeps an inline child of a root from being deleted: upstream still supplies it.
+     */
+    public function claimChild(string $table, string $remoteId, string $childRemoteId): void
+    {
+        if (!isset($this->roots[$table][$remoteId])) {
+            return;
+        }
+
+        $this->roots[$table][$remoteId]['children'][$childRemoteId] = true;
+    }
+
+    public function isRoot(string $table, string $remoteId): bool
+    {
+        return isset($this->roots[$table][$remoteId]);
     }
 
     protected function claimOnRow(string $table, string $key, string $field): void
@@ -511,7 +528,7 @@ class DataHandlerPayload
     }
 
     /**
-     * @return array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>}>>
+     * @return array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>, children: array<string, true>}>>
      */
     public function getRoots(): array
     {

@@ -92,6 +92,93 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->assertNotSame([], $this->relatedKeywordTitles($this->eventUid()), 'Relations are written alongside it.');
     }
 
+    #[Test]
+    public function eventSupplyingNoKeywordLosesItsImportedKeywordsAndKeepsItsCategories(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
+        $this->expectFetchForUrl(
+            'https://cdb.int.thuecat.org/api/resources/e_19542-keywords',
+            'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
+        );
+
+        $this->runImport();
+
+        $this->assertSame(['Editor keyword'], $this->relatedKeywordTitles(1));
+        $this->assertSame(['Editor category', 'Kulturveranstaltung'], $this->relatedTitles(1, 'categories'));
+        $this->assertSame(1, $this->countRowsMatching('sys_category', ['uid' => 201, 'deleted' => 0]));
+    }
+
+    #[Test]
+    public function aKeywordRelationUpstreamDroppedIsLogged(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
+        $this->expectFetchForUrl(
+            'https://cdb.int.thuecat.org/api/resources/e_19542-keywords',
+            'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
+        );
+
+        $this->runImport();
+
+        $this->assertSame(
+            ['{"field":"keywords_relation","value":"keyword:https:\\/\\/thuecat.org\\/resources\\/475728955106-qdcc"}'],
+            array_column($this->getLogEntriesOfType('removedUpstream'), 'context')
+        );
+    }
+
+    // Without an anchor the import cannot tell what upstream supplies.
+    #[Test]
+    public function anUnconfiguredKeywordAnchorKeepsTheStoredKeywords(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordAnchorUnconfiguredPreState.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
+        $this->expectFetchForUrl(
+            'https://cdb.int.thuecat.org/api/resources/e_19542-keywords',
+            'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
+        );
+
+        $this->runImport();
+
+        $this->assertSame(['Editor keyword', 'Stored Erfurt'], $this->relatedKeywordTitles(1));
+    }
+
+    #[Test]
+    public function anEditorsCategorySurvivesAChangedUpstreamSet(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
+        $this->expectKeywordFetches();
+
+        $this->runImport();
+
+        $this->assertSame(['Editor category', 'Kulturveranstaltung'], $this->relatedTitles(1, 'categories'));
+    }
+
+    #[Test]
+    public function aKeywordThatFailedToResolveKeepsItsStoredRelation(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
+        $this->expectFetch('e_19542-keywords.json');
+        // One per attempt: maxAttempts defaults to 3.
+        $this->expectFailureForUrl('https://thuecat.org/resources/475728955106-qdcc', 503);
+        $this->expectFailureForUrl('https://thuecat.org/resources/475728955106-qdcc', 503);
+        $this->expectFailureForUrl('https://thuecat.org/resources/475728955106-qdcc', 503);
+        $this->expectFetchForUrl(
+            'https://thuecat.org/ontology/thuecat/1.0/CollisionWeingut',
+            'thuecat.org/ontology/thuecat/1.0/CollisionWeingut.json'
+        );
+        $this->expectFetchForUrl(
+            'https://thuecat.org/ontology/thuecat/1.0/Ambiance',
+            'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
+        );
+
+        $this->runImport();
+
+        $this->assertContains('Stored Erfurt', $this->relatedKeywordTitles(1));
+    }
+
     private function expectKeywordFetches(): void
     {
         $this->expectFetch('e_19542-keywords.json');

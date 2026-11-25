@@ -168,22 +168,18 @@ class Resolver
         'tx_thuecat_address' => [
             'separator' => AddressEntity::SEPARATOR,
             'field' => 'address_inline',
-            'reapOrphans' => true,
         ],
         'tx_thuecat_parking_facility' => [
             'separator' => ParkingFacilityEntity::INLINE_SEPARATOR,
             'field' => 'parking_facilities_inline',
-            'reapOrphans' => true,
         ],
         'tx_thuecat_trail_way_type' => [
             'separator' => TrailWayTypeEntity::SEPARATOR,
             'field' => 'way_types',
-            'reapOrphans' => true,
         ],
         'tx_thuecat_trail_condition' => [
             'separator' => TrailConditionEntity::SEPARATOR,
             'field' => 'conditions',
-            'reapOrphans' => true,
         ],
         'tx_thuecat_trail_location' => [
             'separator' => TrailLocationEntity::SEPARATOR,
@@ -192,7 +188,6 @@ class Resolver
                 TrailLocationEntity::TYPE_START => 'start_location',
                 TrailLocationEntity::TYPE_END => 'end_location',
             ],
-            'reapOrphans' => true,
         ],
     ];
 
@@ -2631,13 +2626,15 @@ class Resolver
                     continue;
                 }
 
-                $stagedByParent[$parentTable][$parentKey][$childRemoteId] = true;
                 $payload->setRelationField($parentTable, $parentKey, $inlineField, $childKey);
+                $payload->claimChild($parentTable, $parentRemoteId, $childRemoteId);
+                // A root's children are judged once all of it is persisted, by RootReconciliation.
+                if (!$payload->isRoot($parentTable, $parentRemoteId)) {
+                    $stagedByParent[$parentTable][$parentKey][$childRemoteId] = true;
+                }
             }
 
-            if ($config['reapOrphans'] ?? false) {
-                $this->reapOrphanedInlineChildren($payload, $childTable, $stagedByParent);
-            }
+            $this->reapOrphanedInlineChildren($payload, $childTable, $stagedByParent);
         }
     }
 

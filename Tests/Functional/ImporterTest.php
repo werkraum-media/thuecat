@@ -542,15 +542,9 @@ final class ImporterTest extends AbstractImportTestCase
         $this->assertSame(0, $this->countRows('tx_thuecat_address'));
     }
 
-    /**
-     * Skipped, not deleted: the behaviour is specced and the gap is real.
-     */
     #[Test]
     public function reapsAddressDroppedUpstreamForOrganisation(): void
     {
-        $this->markTestSkipped('Inline reaping never sees a parent that staged no child; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
         $this->expectFetch('900000000013-orgnoaddr.json');
 

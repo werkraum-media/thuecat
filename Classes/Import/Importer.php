@@ -285,6 +285,16 @@ class Importer
         $this->resolver->flushCollectedMedia($payload, $resolverContext);
         $this->resolver->flushCollectedKeywords($payload, $resolverContext);
 
+        $childDeletions = $this->rootReconciliation->unsuppliedChildDeletions($payload, $resolverContext);
+        if ($childDeletions !== []) {
+            $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+            $dataHandler->start([], $childDeletions);
+            $dataHandler->process_cmdmap();
+            /** @var list<string> $childErrorLog */
+            $childErrorLog = $dataHandler->errorLog;
+            $this->importLogger->recordDataHandlerErrors($childErrorLog, 0);
+        }
+
         // Snapshot before the loop drains the datamap. Translation rows added
         // by the resolver are excluded so the logger reports only the
         // default-language records the user expects to see counted.
