@@ -1,0 +1,17 @@
+{
+  "@graph": [
+    {
+      "@id" : "https://thuecat.org/resources/test-unknown-kind",
+      "@type": [
+        "schema:Thing",
+        "schema:Product"
+      ],
+      "schema:name": [
+        {
+          "@language": "de",
+          "@value": "Unbekannte Art"
+        }
+      ]
+    }
+  ]
+}

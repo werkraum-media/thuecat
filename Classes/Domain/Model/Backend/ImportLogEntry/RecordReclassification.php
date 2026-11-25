@@ -24,7 +24,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
 
 /**
  * A record met under another table than the one it is written to. remoteId
- * names the record, tableName and recordUid the row it was written to; the
+ * names the record, the columns table_name and record_uid the row it was written to; the
  * table and uid it was known under are in the context.
  */
 class RecordReclassification extends ImportLogEntry
@@ -32,12 +32,6 @@ class RecordReclassification extends ImportLogEntry
     public const KIND_TABLE_MISMATCH = 'tableMismatch';
 
     protected string $remoteId = '';
-
-    protected string $kind = '';
-
-    protected string $tableName = '';
-
-    protected int $recordUid = 0;
 
     public function getType(): string
     {
@@ -47,20 +41,5 @@ class RecordReclassification extends ImportLogEntry
     public function getRemoteId(): string
     {
         return $this->remoteId;
-    }
-
-    public function getKind(): string
-    {
-        return $this->kind;
-    }
-
-    public function getTableName(): string
-    {
-        return $this->tableName;
-    }
-
-    public function getRecordUid(): int
-    {
-        return $this->recordUid;
     }
 }

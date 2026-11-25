@@ -22,6 +22,9 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\ImportConfigurationGoneException;
 use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
@@ -138,8 +141,22 @@ final class FailedImportMessageTest extends AbstractImportTestCase
         $this->failMessage(new ImportRoot(1, 2));
 
         $this->assertSame([], $this->queuedMessages());
-        $this->assertSame('failed', $this->jobItems(1)[1]['state']);
+        $this->assertSame(['pending', 'failed', 'pending'], array_column($this->jobItems(1), 'state'));
         $this->assertSame([self::THIRD_ATTEMPT], $this->fetchColumnMatching('tx_thuecat_import_log_entry', 'remote_id', ['import_log' => 1, 'type' => 'itemDropped']));
+    }
+
+    // The module reads entries through their classes; an entry type without one is invisible there.
+    #[Test]
+    public function failureAndDropOfAnItemReachTheImportModule(): void
+    {
+        $this->failMessage(new ImportRoot(1, 2));
+
+        $log = $this->get(ImportLogRepository::class)->findByUid(1);
+        $this->assertInstanceOf(ImportLog::class, $log);
+        $this->assertSame(
+            ['itemFailed', 'itemDropped'],
+            array_map(static fn (ImportLogEntry $entry): string => $entry->getType(), $log->getEntries()->toArray())
+        );
     }
 
     #[Test]

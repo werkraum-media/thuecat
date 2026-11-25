@@ -47,6 +47,8 @@ final class MessageBudgetTest extends AbstractImportTestCase
 
         $this->assertSame(ImportPhase::Fetch, $abort->phase);
         $this->assertSame(300, $abort->budgetSeconds);
+        $this->assertSame('Message budget of 300s exhausted after 300s while fetch.', $abort->getMessage());
+        $this->assertSame(1795587176, $abort->getCode());
         $this->assertSame(0, $this->countRows('tx_thuecat_trail'));
         $this->assertSame('pending', $this->jobItems($job)[0]['state']);
     }

@@ -24,14 +24,7 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class ImportConfigurationUrl extends AbstractEntity
 {
-    protected string $title = '';
-
     protected string $url = '';
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
 
     public function getUrl(): string
     {

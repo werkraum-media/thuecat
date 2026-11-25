@@ -1,3 +1,4 @@
 "tx_thuecat_import_configuration"
 "","uid","pid","disable","deleted","title","type","configuration"
 "",6,0,0,0,"Unknown key","syncChannel","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""storagePid""><value index=""vDEF"">15</value></field><field index=""syncChannelId""><value index=""vDEF"">test-unknown</value></field><field index=""unknownSetting""><value index=""vDEF"">7</value></field></language></sheet></data></T3FlexForms>"
+"",7,0,0,0,"Known keys","syncChannel","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""storagePid""><value index=""vDEF"">16</value></field><field index=""syncChannelId""><value index=""vDEF"">test-known</value></field></language></sheet></data></T3FlexForms>"

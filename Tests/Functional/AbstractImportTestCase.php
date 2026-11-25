@@ -249,6 +249,18 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     }
 
     /**
+     * The trail fixture with its import configuration and both image downloads; the logo reuses one image's URL, so a
+     * single file backs two fields.
+     */
+    protected function seedAndExpectTrailWithMedia(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        $this->expectFetch('e_39285647-oatour.json');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+    }
+
+    /**
      * @return list<string> in upstream order
      */
     protected function meetingVenueRoomRemoteIds(): array

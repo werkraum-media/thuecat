@@ -124,6 +124,8 @@ class Importer
     public function importRoot(
         ImportConfigurationInterface $configuration,
         string $url,
+        int $jobUid,
+        int $itemUid,
         bool $bypassCache,
         bool $skipMedia
     ): RootOutcome {
@@ -132,7 +134,7 @@ class Importer
         $stagingFolder = null;
         if ($skipMedia === false) {
             $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
-            $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
+            $stagingFolder = $this->mediaFileStaging->createForItem($targetFolder, $jobUid, $itemUid);
         }
 
         $this->configureFetching($configuration, $bypassCache);
@@ -140,7 +142,8 @@ class Importer
         $this->deadline->start($this->settings->resolve(ImportSetting::MessageBudget, $configuration->getMessageBudget()));
         try {
             $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
-            $outcome = $this->persistRoot(
+
+            return $this->persistRoot(
                 $configuration,
                 $url,
                 $site,
@@ -150,9 +153,6 @@ class Importer
                 new NullProgressListener(),
                 $skipMedia
             );
-            $this->finishRun($targetFolder, $stagingFolder);
-
-            return $outcome;
         } catch (MessageBudgetExhaustedException $exception) {
             // Thrown on, so the abort fails the message and counts as an attempt.
             $this->importLogger->recordRunAborted($exception, $url);
@@ -161,7 +161,9 @@ class Importer
         } finally {
             $this->deadline->stop();
             $this->fetchData->resetRunConfiguration();
+            // A staged file downloaded completely, however the item ends.
             if ($stagingFolder instanceof Folder) {
+                $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
                 $this->mediaFileStaging->discard($stagingFolder);
             }
         }

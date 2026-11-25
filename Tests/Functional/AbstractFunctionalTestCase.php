@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -78,6 +79,41 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
         }
 
         return substr(sha1(static::class . '-' . $token), 0, 7);
+    }
+
+    /**
+     * The database resets between tests, the storage's files do not: a leftover file would be reused instead of
+     * downloaded.
+     */
+    protected function tearDown(): void
+    {
+        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat', true);
+
+        parent::tearDown();
+    }
+
+    /**
+     * A local storage holding the `thuecat` folder that file folder `1:/thuecat/` names, created as the first
+     * storage. DataHandler refuses references into the fallback storage.
+     *
+     * @return string the absolute path of the `thuecat` folder
+     */
+    protected function createFileStorage(): string
+    {
+        $basePath = $this->instancePath . '/fileadmin-thuecat';
+        GeneralUtility::mkdir_deep($basePath);
+        $storageUid = $this->get(StorageRepository::class)->createLocalStorage('ThueCat test storage', $basePath, 'absolute');
+        $this->get(StorageRepository::class)->getStorageObject($storageUid)->createFolder('thuecat');
+
+        return $basePath . '/thuecat';
+    }
+
+    /**
+     * @return list<string> absolute paths of the import staging folders directly under $folder
+     */
+    protected function stagingFoldersIn(string $folder): array
+    {
+        return glob($folder . '/_thuecat_import_*') ?: [];
     }
 
     /**

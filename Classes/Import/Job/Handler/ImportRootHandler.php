@@ -76,7 +76,7 @@ final readonly class ImportRootHandler
             );
         }
 
-        $outcome = $this->importer->importRoot($configuration, $item->target, $job->bypassCache, $job->skipMedia);
+        $outcome = $this->importer->importRoot($configuration, $item->target, $job->uid, $item->uid, $job->bypassCache, $job->skipMedia);
         $this->importLogger->writeLogInto($job->importLog, $outcome->loggerPayload, $outcome->substNEWwithIDs);
         $this->importJobItems->markDone($item);
     }

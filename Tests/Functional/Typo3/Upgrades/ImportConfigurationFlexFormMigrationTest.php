@@ -22,6 +22,8 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Typo3\Upgrades;
 
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Output\BufferedOutput;
+use TYPO3\CMS\Core\Service\UpgradeWizardsService;
+use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractFunctionalTestCase;
 use WerkraumMedia\ThueCat\Typo3\Upgrades\ImportConfigurationFlexFormMigration;
 
@@ -94,6 +96,34 @@ final class ImportConfigurationFlexFormMigrationTest extends AbstractFunctionalT
             'Import configuration 6: unknown setting "unknownSetting", its settings were not migrated.',
             $this->output->fetch(),
         );
+    }
+
+    #[Test]
+    public function migratesTheConfigurationsFollowingOneWithAnUnknownKey(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/ImportConfigurationFlexFormWithUnknownKey.csv');
+
+        $this->wizard->executeUpdate();
+
+        $this->assertSame(['test-known'], $this->fetchColumnMatching('tx_thuecat_import_configuration', 'sync_channel_id', ['uid' => 7]));
+    }
+
+    #[Test]
+    public function isOfferedOnceTheDatabaseSchemaIsUpdated(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Upgrades/ImportConfigurationFlexForms.csv');
+
+        $information = $this->get(UpgradeWizardsService::class)->getWizardInformationByIdentifier('thuecat_importConfigurationFlexFormMigration');
+
+        $this->assertSame('ThueCat: Move import configuration settings out of the FlexForm', $information['title']);
+        $this->assertSame(
+            'Writes the settings of every import configuration, hidden and deleted ones included, to their own fields and '
+            . 'its URLs to URL records. A configuration holding a setting this wizard does not know is reported and left '
+            . 'as it is.',
+            $information['explanation']
+        );
+        $this->assertTrue($information['shouldRenderWizard']);
+        $this->assertSame([DatabaseUpdatedPrerequisite::class], $this->wizard->getPrerequisites());
     }
 
     #[Test]

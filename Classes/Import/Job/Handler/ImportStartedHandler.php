@@ -26,6 +26,8 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
 use WerkraumMedia\ThueCat\Import\EffectiveSettingsReport;
+use WerkraumMedia\ThueCat\Import\FileFolderAccess;
+use WerkraumMedia\ThueCat\Import\FileFolderAccessException;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\ImportJob;
@@ -33,6 +35,7 @@ use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\UnreadableSyncListException;
@@ -53,6 +56,7 @@ final readonly class ImportStartedHandler
         private EffectiveSettingsReport $effectiveSettingsReport,
         private ImportLogger $importLogger,
         private MessageBusInterface $messageBus,
+        private FileFolderAccess $fileFolderAccess,
     ) {
     }
 
@@ -80,6 +84,17 @@ final readonly class ImportStartedHandler
         $importLog = $this->importLogger->openLog($job->configurationUid);
         $this->importJobs->markRunning($job->uid, $importLog);
 
+        // Every item would fail on it.
+        if (!$job->skipMedia) {
+            try {
+                $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
+            } catch (FileFolderAccessException $e) {
+                $this->importLogger->recordRunFailed($e, ImportPhase::Fetch);
+                $this->failAtStart($job, $importLog);
+                return;
+            }
+        }
+
         $this->fetchData->configureForRun(
             $job->bypassCache,
             $this->settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime())
@@ -96,9 +111,7 @@ final readonly class ImportStartedHandler
         } catch (UnreadableSyncListException $e) {
             // Without both lists the job knows neither what changed nor what to delete.
             $this->importLogger->recordException('fetchingError', $e->failure, $e->url);
-            $this->importLogger->writeLogInto($importLog, [], []);
-            $this->importJobs->markFailed($job->uid);
-            $this->messageBus->dispatch(new ImportFinished($job->uid));
+            $this->failAtStart($job, $importLog);
             return;
         } finally {
             $this->fetchData->resetRunConfiguration();
@@ -106,5 +119,12 @@ final readonly class ImportStartedHandler
 
         $this->importJobItems->store($job->uid, $targets['import'], $targets['delete']);
         $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid));
+    }
+
+    private function failAtStart(ImportJob $job, int $importLog): void
+    {
+        $this->importLogger->writeLogInto($importLog, [], []);
+        $this->importJobs->markFailed($job->uid);
+        $this->messageBus->dispatch(new ImportFinished($job->uid));
     }
 }

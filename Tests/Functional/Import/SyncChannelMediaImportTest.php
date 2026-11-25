@@ -22,8 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\RequestInterface;
-use TYPO3\CMS\Core\Resource\StorageRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
@@ -37,25 +35,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
     {
         parent::setUp();
 
-        $basePath = $this->instancePath . '/fileadmin-thuecat';
-        GeneralUtility::mkdir_deep($basePath);
-        $storageUid = $this->get(StorageRepository::class)->createLocalStorage(
-            'ThueCat test storage',
-            $basePath,
-            'absolute'
-        );
-        $this->get(StorageRepository::class)
-            ->getStorageObject($storageUid)
-            ->createFolder('thuecat')
-        ;
-    }
-
-    // The fileadmin path survives the database reset; a leftover file would skip the download.
-    protected function tearDown(): void
-    {
-        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat', true);
-
-        parent::tearDown();
+        $this->createFileStorage();
     }
 
     #[Test]

@@ -21,8 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Resource\StorageRepository;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -46,28 +44,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
     {
         parent::setUp();
 
-        $basePath = $this->instancePath . '/fileadmin-thuecat';
-        GeneralUtility::mkdir_deep($basePath);
-        $storageUid = $this->get(StorageRepository::class)->createLocalStorage(
-            'ThueCat test storage',
-            $basePath,
-            'absolute'
-        );
-        $this->get(StorageRepository::class)
-            ->getStorageObject($storageUid)
-            ->createFolder('thuecat')
-        ;
-    }
-
-    /**
-     * The DB resets between test methods, the fileadmin path does not. A
-     * leftover file makes download() short-circuit on hasFile().
-     */
-    protected function tearDown(): void
-    {
-        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat', true);
-
-        parent::tearDown();
+        $this->createFileStorage();
     }
 
     #[Test]

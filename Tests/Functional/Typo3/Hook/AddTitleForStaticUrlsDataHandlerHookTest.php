@@ -151,4 +151,23 @@ final class AddTitleForStaticUrlsDataHandlerHookTest extends AbstractImportTestC
 
         $this->assertSame(0, $this->countRows('tx_thuecat_import_configuration_url'));
     }
+
+    #[Test]
+    public function keepsTheTitleOfAResourceOfAKindNotImported(): void
+    {
+        new PhpDataSet()->import([
+            'tx_thuecat_import_configuration_url' => [
+                ['uid' => 1, 'pid' => 10, 'configuration' => 1, 'title' => 'Own title', 'url' => 'https://thuecat.org/resources/r_22033250-oapoi'],
+            ],
+        ]);
+        $this->expectFetch('test-unknown-kind.json');
+
+        $this->processDataMap([
+            'tx_thuecat_import_configuration_url' => [
+                1 => ['url' => 'https://thuecat.org/resources/test-unknown-kind'],
+            ],
+        ]);
+
+        $this->assertSame(['Own title'], $this->fetchColumnMatching('tx_thuecat_import_configuration_url', 'title', ['uid' => 1]));
+    }
 }

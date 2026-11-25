@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
@@ -97,5 +99,21 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
             'table' => 'tx_thuecat_tourist_attraction',
             'uid' => $hotelUid,
         ], json_decode($entries[0]['context'], true));
+    }
+
+    #[Test]
+    public function tableMismatchIsListedInTheImportModule(): void
+    {
+        $this->expectFetch('hotel-kind-changed.json');
+
+        $this->importConfiguration(1);
+
+        $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
+        $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
+        $this->assertInstanceOf(ImportLog::class, $log);
+        $this->assertSame(
+            [self::HOTEL . ': Known as tx_thuecat_organisation 7, written as tx_thuecat_tourist_attraction ' . $hotelUid . '.'],
+            $log->getGroupedNotices()['recordReclassification'] ?? []
+        );
     }
 }

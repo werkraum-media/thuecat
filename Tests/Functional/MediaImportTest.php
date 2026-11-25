@@ -21,8 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 
 /**
  * Exercises the real media import — download → sys_file → sys_file_reference.
@@ -39,32 +39,7 @@ final class MediaImportTest extends AbstractImportTestCase
     {
         parent::setUp();
 
-        // The fixture configures fileFolder "1:/thuecat/"; create that storage
-        // and folder so the import resolves it and DataHandler accepts
-        // references into it
-        $basePath = $this->instancePath . '/fileadmin-thuecat';
-        GeneralUtility::mkdir_deep($basePath);
-        $storageUid = $this->get(StorageRepository::class)->createLocalStorage(
-            'ThueCat test storage',
-            $basePath,
-            'absolute'
-        );
-        $this->get(StorageRepository::class)
-            ->getStorageObject($storageUid)
-            ->createFolder('thuecat')
-        ;
-    }
-
-    /**
-     * The DB resets between test methods, the fileadmin path does not. A leftover
-     * file makes download() short-circuit on hasFile(), so a later test staging a
-     * fetch would silently never perform it.
-     */
-    protected function tearDown(): void
-    {
-        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat', true);
-
-        parent::tearDown();
+        $this->createFileStorage();
     }
 
     #[Test]
@@ -113,11 +88,7 @@ final class MediaImportTest extends AbstractImportTestCase
     #[Test]
     public function relatesTrailLogoSeparatelyFromItsImages(): void
     {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
-        $this->expectFetch('e_39285647-oatour.json');
-        // The logo reuses one image's URL, so a single file backs two fields.
-        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
-        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->seedAndExpectTrailWithMedia();
 
         $this->importConfiguration(1);
 
@@ -213,10 +184,7 @@ final class MediaImportTest extends AbstractImportTestCase
     #[Test]
     public function relatesTrailMediaOncePerLanguage(): void
     {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
-        $this->expectFetch('e_39285647-oatour.json');
-        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
-        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->seedAndExpectTrailWithMedia();
 
         $this->importConfiguration(1);
 
@@ -231,10 +199,7 @@ final class MediaImportTest extends AbstractImportTestCase
     #[Test]
     public function trailItemStoresItsFilesWhenItsMessageEnds(): void
     {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
-        $this->expectFetch('e_39285647-oatour.json');
-        $this->expectFetchForUrl('http://img.oastatic.com/img/22046887/.jpg', 'cms.thuecat.org/image.jpg');
-        $this->expectFetchForUrl('http://img.oastatic.com/img/39286664/.jpg', 'cms.thuecat.org/image.jpg');
+        $this->seedAndExpectTrailWithMedia();
         $job = $this->startJob(1);
 
         $this->handleImportRoot($job, $this->jobItems($job)[0]['uid']);
@@ -244,6 +209,100 @@ final class MediaImportTest extends AbstractImportTestCase
         }
 
         $this->assertSame(2, $this->countRows('sys_file'));
+        $this->assertSame([], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'));
+    }
+
+    // A leftover file was never verified as complete: the retry starts from an empty folder.
+    #[Test]
+    public function retriedItemStagesAfreshOverTheFolderItsKilledAttemptLeft(): void
+    {
+        $this->seedAndExpectTrailWithMedia();
+        $job = $this->startJob(1);
+        $item = $this->jobItems($job)[0]['uid'];
+        $leftover = $this->instancePath . '/fileadmin-thuecat/thuecat/_thuecat_import_job' . $job . '_item' . $item;
+        GeneralUtility::mkdir($leftover);
+        copy($this->fixtureGuzzleBase . '/cms.thuecat.org/image.jpg', $leftover . '/image_leftover.jpg');
+
+        $this->handleImportRoot($job, $item);
+
+        $this->assertSame(['logo', 'media_files', 'media_files'], $this->fetchReferenceFields(0));
+        $this->assertFileDoesNotExist($this->instancePath . '/fileadmin-thuecat/thuecat/image_leftover.jpg');
+        $this->assertSame([], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'));
+    }
+
+    #[Test]
+    public function itemAbortedByItsBudgetPromotesWhatItStagedAndLeavesNoFolder(): void
+    {
+        $this->expectErrors = true;
+        $this->seedAndExpectTrailWithMedia();
+        $this->clockMessageDeadline(0, 0, 300);
+        $job = $this->startJob(1);
+
+        $this->handleImportRootAbortedByBudget($job, $this->jobItems($job)[0]['uid']);
+
+        $this->assertCount(2, glob($this->instancePath . '/fileadmin-thuecat/thuecat/*.jpg') ?: []);
+        $this->assertSame([], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'));
+    }
+
+    #[Test]
+    public function finishingJobRemovesTheStagingFoldersItsItemsLeftButNoOtherJobs(): void
+    {
+        $this->seedAndExpectTrailWithMedia();
+        $job = $this->startJob(1);
+        $this->handleImportRoot($job, $this->jobItems($job)[0]['uid']);
+        $folder = $this->instancePath . '/fileadmin-thuecat/thuecat/';
+        GeneralUtility::mkdir($folder . '_thuecat_import_job' . $job . '_item99');
+        GeneralUtility::mkdir($folder . '_thuecat_import_job' . ($job + 1) . '_item1');
+
+        $this->handleImportFinished($job);
+
+        $this->assertSame([$folder . '_thuecat_import_job' . ($job + 1) . '_item1'], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'));
+    }
+
+    // Every item would fail on it, so the job knows at once that it cannot run.
+    #[Test]
+    public function jobWhoseFileFolderCannotBeResolvedFailsAtItsStart(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat/thuecat', true);
+
+        $job = $this->startJob(1);
+
+        $this->assertSame('failed', $this->jobRow($job)['status']);
+        $this->assertSame([], $this->jobItems($job));
+        $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_log_entry', ['import_log' => $this->jobLog($job), 'type' => 'runFailed']));
+        $this->assertEquals([new ImportFinished($job)], $this->queuedMessages());
+    }
+
+    #[Test]
+    public function jobSkippingMediaStartsWithoutItsFileFolder(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        GeneralUtility::rmdir($this->instancePath . '/fileadmin-thuecat/thuecat', true);
+
+        $job = $this->startJob(1, skipMedia: true);
+
+        $this->assertSame('running', $this->jobRow($job)['status']);
+        $this->assertCount(1, $this->jobItems($job));
+    }
+
+    #[Test]
+    public function fileAnItemPromotedIsReusedByALaterItemWithoutADownload(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsSharedAssetAcrossTwoRecords.php');
+        $this->expectFetch('attraction-sharing-asset-first.json');
+        $this->expectFetch('attraction-sharing-asset-second.json');
+        $this->expectFetch('image-shared-first-title.json');
+        $this->expectFetch('image-shared-second-title.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099200/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(1);
+
+        $this->assertSame(['media_files', 'media_files'], $this->fetchReferenceFields());
+        $this->assertSame(1, $this->countRows('sys_file'));
     }
 
     #[Test]
@@ -742,7 +801,7 @@ final class MediaImportTest extends AbstractImportTestCase
 
         $this->assertSame('error', $severity, 'The failed root must still be reported.');
         $this->assertFileExists($this->instancePath . '/fileadmin-thuecat/thuecat/image_2173acbddcfbcdb1.jpg', 'Media of the healthy root must be promoted despite the other root failing.');
-        $this->assertSame([], glob($this->instancePath . '/fileadmin-thuecat/thuecat/_thuecat_import_*') ?: [], 'The per-run staging folder must not outlive the run.');
+        $this->assertSame([], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'), 'The per-run staging folder must not outlive the run.');
     }
 
     /**

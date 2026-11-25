@@ -136,6 +136,26 @@ class ImportJobs
         );
     }
 
+    /**
+     * @return list<int>
+     */
+    public function openJobUids(): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
+
+        return array_map(
+            $this->intOf(...),
+            $queryBuilder
+                ->select('uid')
+                ->from(self::TABLE)
+                ->where(
+                    $queryBuilder->expr()->in('status', $queryBuilder->createNamedParameter(self::OPEN_STATUSES, ArrayParameterType::STRING))
+                )
+                ->executeQuery()
+                ->fetchFirstColumn()
+        );
+    }
+
     public function hasOpenJob(int $configurationUid): bool
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);

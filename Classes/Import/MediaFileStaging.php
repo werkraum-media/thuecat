@@ -60,6 +60,40 @@ class MediaFileStaging
         }
     }
 
+    /**
+     * A folder a killed attempt left behind was never verified as complete: it is replaced, never reused.
+     */
+    public function createForItem(Folder $target, int $job, int $item): Folder
+    {
+        $name = self::STAGING_PREFIX . 'job' . $job . '_item' . $item;
+        if ($target->hasFolder($name)) {
+            $this->discard($target->getSubfolder($name));
+        }
+
+        return $target->createFolder($name);
+    }
+
+    /**
+     * @return list<Folder>
+     */
+    public function stagingFoldersIn(Folder $target): array
+    {
+        return array_values(array_filter(
+            $target->getSubfolders(),
+            static fn (Folder $folder): bool => str_starts_with($folder->getName(), self::STAGING_PREFIX)
+        ));
+    }
+
+    /**
+     * Null for a folder thuecat 7 staged a whole run in: its name carries no job.
+     */
+    public function jobOf(Folder $staging): ?int
+    {
+        return preg_match('/^' . self::STAGING_PREFIX . 'job(\d+)_item\d+$/', $staging->getName(), $matches) === 1
+            ? (int)$matches[1]
+            : null;
+    }
+
     public function discard(Folder $staging): void
     {
         $staging->getStorage()->deleteFolder($staging, true);

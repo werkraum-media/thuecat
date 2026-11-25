@@ -1,12 +1,12 @@
 "tx_thuecat_import_configuration"
 ,"uid","disable","deleted","type","configuration","storage_pid","file_folder","api_key","sync_scope_id","fetch_last_x_days","contains_place_id","sync_channel_id","message_budget","fetch_cache_lifetime"
-,1,1,0,"static","",10,"1:/thuecat/static/","static-key","",1,"","",120,600
+,1,1,0,"static","",10,"1:/thuecat/static/","static-key","",1,"","",300,600
 ,2,0,1,"syncScope","",11,"1:/thuecat/scope/","","test-scope",6,"","",0,0
 ,3,0,0,"containsPlace","",12,"1:/thuecat/place/","place-key","",1,"test-place","",0,0
 ,4,0,0,"syncChannel","",13,"1:/thuecat/channel/","channel-key","",1,"","test-channel",0,0
 ,5,0,0,"static","",14,"","","",1,"","",0,0
 "tx_thuecat_import_configuration_url"
 ,"uid","pid","configuration","sorting","title","url"
-,1,0,1,1,"Erster Titel","https://thuecat.org/resources/test-first"
-,2,0,1,2,"","https://thuecat.org/resources/test-second"
+,1,3,1,1,"Erster Titel","https://thuecat.org/resources/test-first"
+,2,3,1,2,"","https://thuecat.org/resources/test-second"
 ,3,0,5,1,"","https://thuecat.org/resources/test-long"
