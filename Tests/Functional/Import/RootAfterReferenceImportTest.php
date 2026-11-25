@@ -58,7 +58,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue.json');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
         $this->assertSame((string)$this->fetchUidByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS), $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
@@ -72,7 +72,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue.json');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, array_keys($this->fetchLanguagesByRemoteId(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 10), 0, true));
         $this->assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
@@ -88,7 +88,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('079491439271-qqjm.json');
         $this->expectFetch('214681324608-rqzg.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $operator = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . '214681324608-rqzg');
         $this->assertGreaterThan(0, $operator);
@@ -102,7 +102,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue.json');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertCount(count(self::MEETING_VENUE_ROOM_FIXTURES), $this->fetchChildren('tx_thuecat_meeting_room'));
         $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
@@ -133,7 +133,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue.json');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(6);
+        $this->importJob(6);
 
         $this->assertSame('1', $this->fetchRowByRemoteId(self::TABLE, self::ATTRACTION)['contained_in_attraction']);
         $this->assertCount(count(self::MEETING_VENUE_ROOM_FIXTURES), $this->fetchMmRelatedUids(self::TABLE, 1, 'meeting_rooms'));
@@ -146,7 +146,7 @@ final class RootAfterReferenceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-in-meeting-venue-with-parking.json');
         $this->expectFetch('160874095809-phhn.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $children = $this->fetchChildren('tx_thuecat_parking_facility');
         $this->assertSame([[

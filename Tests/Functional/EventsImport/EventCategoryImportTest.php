@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\StoragePidConfigurationException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
@@ -44,7 +43,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $created = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertCount(1, $created, 'Exactly one category should be created.');
@@ -66,7 +65,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
         $culture = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
@@ -116,7 +115,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $matched = $this->fetchLogEntries('categoryMatched');
         $unmatched = $this->fetchLogEntries('categoryUnmatched');
@@ -157,7 +156,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertNotContains('thuecat:CultureEvent', array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'), 'Upstream answered every configured language; the map was never consulted.');
     }
@@ -168,7 +167,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertContains('schema:EventSeries', array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'), 'The vocabulary does not know it, so its title came from the map.');
     }
@@ -179,7 +178,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertContains('test:UnmappedByConstruction', array_column($this->fetchLogEntries('categoryUnmatched'), 'remote_id'));
     }
@@ -190,7 +189,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $reported = array_merge(
             array_column($this->fetchLogEntries('categoryMatched'), 'remote_id'),
@@ -210,7 +209,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertContains('schema:EventSeries', array_column($this->fetchLogEntries('categoryWithoutHierarchy'), 'remote_id'));
     }
@@ -228,7 +227,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         ]);
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $entries = $this->fetchLogEntries('categoryParentChosen');
 
@@ -248,7 +247,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         ]);
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchLogEntries('categoryParentChosen'));
     }
@@ -261,7 +260,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['Culture event'], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1), 'The English label upstream carries must reach the database.');
     }
@@ -272,7 +271,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['Event'], $this->fetchCategoryTranslations('type:schema:Event', 1), 'An ancestor is as visible to an editor as the type itself.');
     }
@@ -283,7 +282,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // The site configures French; upstream offers none, so none is invented.
         $this->assertSame([], $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 2));
@@ -298,7 +297,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertCount(1, $all);
@@ -311,7 +310,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // DOCUMENTS CURRENT BEHAVIOUR: submitting the translated title is what
         // keeps it current with upstream, and the same write discards an
@@ -328,7 +327,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportReimportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchCategoryTranslations('type:thuecat:CultureEvent', 1), 'A second run updates the translation rather than adding another.');
     }
@@ -339,7 +338,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Matched by remote_id despite the changed title → uid 101 reused, no
         // duplicate, and the editor's rename is preserved.
@@ -359,7 +358,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
 
@@ -374,7 +373,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $series = $this->fetchCategoriesByRemoteId('type:schema:EventSeries');
         $this->assertCount(1, $series);
@@ -388,7 +387,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportDistelPreState.php');
         $this->expectFetch('e_100771372-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchCategoriesByRemoteId('type:test:UnmappedByConstruction'), 'Unknown to both sources: the skipping rule governs, not this one.');
     }
@@ -407,7 +406,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         ]);
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
@@ -427,7 +426,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertCount(1, $all, 'Re-parenting must not create a second record.');
@@ -444,7 +443,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // A relation pointing at a replaced record would look identical in the
         // tree and be wrong everywhere it is referenced.
@@ -457,7 +456,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportRenamedPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertSame('Kultur (renamed)', $all[0]['title'], 'Moving a category is not an occasion to rename it.');
@@ -469,7 +468,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportReusePreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // uid 101 is a grandchild of parent 100; no new category is created.
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
@@ -485,7 +484,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportForeignPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Decoys 301 (wrong parent) and 401 (other site) survive; a fresh one is
         // created under 100.
@@ -514,7 +513,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportReimportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $all = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
         $this->assertCount(1, $all, 'Re-import reuses the category, no duplicate sys_category row.');
@@ -535,7 +534,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
         $named = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
@@ -551,7 +550,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
         $named = $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent');
@@ -568,7 +567,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchCategoriesByRemoteId('type:schema:Thing'), 'Every record is a Thing, so a category for it says nothing.');
     }
@@ -579,7 +578,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $ancestor = $this->fetchCategoriesByRemoteId('type:schema:Event');
         $this->assertCount(1, $ancestor);
@@ -593,7 +592,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryDroppedTypePreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countCategoryRelations(102), 'A type the payload no longer names loses its relation.');
         $this->assertSame(1, $this->countCategoryRelations(101), 'The type still named keeps its relation.');
@@ -605,7 +604,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryDroppedTypePreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchCategoriesByRemoteId('type:schema:MusicEvent'), 'Only the relation goes; editors may still be using the category.');
     }
@@ -618,7 +617,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryDroppedTypePreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countCategoryRelations(103), "A category with no remote_id is outside the importer's reach.");
     }
@@ -636,7 +635,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->expectFailure('e_19542-hubev', 500);
         $this->expectFailure('e_19542-hubev', 500);
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countCategoryRelations(101), 'A failed fetch must not be read as an upstream removal.');
         $this->assertSame(1, $this->countCategoryRelations(102), 'Not even the relation a healthy run would have dropped.');
@@ -651,29 +650,23 @@ final class EventCategoryImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportNoParentPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertCount(0, $this->fetchCategoriesByRemoteId('type:thuecat:CultureEvent'));
         $this->assertSame(1, $this->countEvents(), 'Event is imported even though category wiring is skipped.');
     }
 
     #[Test]
-    public function abortsBeforeFetchingWhenStoragePidHasNoSite(): void
+    public function failsTheJobAtStartWhenStoragePidHasNoSite(): void
     {
-        // No expectFetch(): the pre-flight validator must throw before the URL
-        // loop, so no HTTP request is attempted.
+        // No expectFetch(): every item would fail on it, so nothing is fetched.
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryImportNoSitePreState.php');
 
-        $this->expectException(StoragePidConfigurationException::class);
-        $this->expectExceptionCode(1752570000);
+        $job = $this->importJob(1);
 
-        $this->runImport();
-    }
-
-    private function runImport(): void
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
+        $this->assertSame('failed', $this->jobOutcome($job)['status']);
+        $this->assertSame([], $this->jobItems($job));
+        $this->assertSame(StoragePidConfigurationException::class, $this->logEntryContext('runFailed')['class'] ?? null);
     }
 
     /**

@@ -51,7 +51,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsFreshOrganization.php');
     }
@@ -63,7 +63,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTown.php');
     }
@@ -78,7 +78,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithRelation.php');
     }
@@ -90,7 +90,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectNotFound('018132452787-ngbe');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // The town is the point: a dead managedBy reference must cost the
         // relation, not the record that holds it.
@@ -107,7 +107,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
         $this->expectFailure('018132452787-ngbe', 500, 'Internal Server Error');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
     }
@@ -120,7 +120,7 @@ final class ImporterTest extends AbstractImportTestCase
         // 200 with an HTML error page — decoding throws, not the HTTP layer.
         $this->expectFailure('018132452787-ngbe', 200, '<html><body>Gateway</body></html>');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
     }
@@ -132,7 +132,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFailure('018132452787-ngbe', 200, '{"@graph": []}');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTownWithMissingRelation.php');
     }
@@ -145,7 +145,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-without-town.json');
         $this->expectFetch('043064193523-jcyt.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // Shared entity instances: an unfilled bucket keeps the previous
         // record's. Not media-specific.
@@ -212,7 +212,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('356133173991-cryw.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristInformationWithRelation.php');
     }
@@ -224,7 +224,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSingleSlogan.php');
     }
@@ -238,7 +238,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionWithCategories.php');
         $this->expectFetch('attraction-with-category.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithCategories.php');
     }
@@ -260,7 +260,7 @@ final class ImporterTest extends AbstractImportTestCase
         // root turn short-circuits before fetching again.
         $this->expectFetch('attraction-sighted-as-relation-first.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(['Bürgerpark', 'Park', 'Öffentlicher Park'], $this->fetchCategoryTitlesOf('https://thuecat.org/resources/attraction-sighted-as-relation-first'), 'The relation-first attraction lost the categories its @types map to.');
     }
@@ -272,7 +272,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-slogan-array.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithSloganArray.php');
     }
@@ -290,7 +290,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('018132452787-ngbe.json');
         $this->expectFetch('attraction-with-slogan-array.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTwoAttractionsSharingOrg.php');
     }
@@ -322,11 +322,9 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectNotFound('018132452787-ngbe');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity, 'A vanished upstream reference is data drift, not an operator error. '
-        . 'Anything at error or above makes the command exit non-zero and any '
-        . 'scheduler treat a healthy import as broken.');
+        $this->assertWarnsWithoutError('A vanished upstream reference is data drift, not an operator error.');
     }
 
     /**
@@ -339,10 +337,9 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTownWithMissingRelation.php');
         $this->expectNotFound('043064193523-jcyt');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('error', $severity, 'A root that cannot be fetched is an outage. If this ever reports warning, '
-        . 'a scheduler would treat a run that imported nothing as healthy.');
+        $this->assertContains('error', $this->logSeverities(), 'A root that cannot be fetched is an outage, not data drift.');
     }
 
     #[Test]
@@ -355,7 +352,7 @@ final class ImporterTest extends AbstractImportTestCase
 
         $this->expectException(ResourceNotFoundException::class);
 
-        $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
     }
 
     #[Test]
@@ -367,9 +364,9 @@ final class ImporterTest extends AbstractImportTestCase
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(Resolver::class, $this->buildResolverThrowingError());
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('error', $severity, 'An Error is our own defect, not upstream drift. Demoting it to a skipped '
+        $this->assertContains('error', $this->logSeverities(), 'An Error is our own defect, not upstream drift. Demoting it to a skipped '
         . 'reference would hide our bugs behind a run that reports success.');
     }
 
@@ -381,10 +378,9 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectNotFound('018132452787-ngbe');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('error', $severity, 'A skipped reference must not mask a real failure: the run carries the '
-        . 'highest severity seen, so the mapping error still decides the exit code.');
+        $this->assertContains('error', $this->logSeverities(), 'A skipped reference must not mask a real failure.');
     }
 
     /**
@@ -402,7 +398,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectNotFound('018132452787-ngbe');
         $this->expectNotFound('018132452787-ngbe');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/LogsSkippedReferencePerParent.php');
     }
@@ -419,7 +415,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-duplicate-first.json');
         $this->expectFetch('attraction-duplicate-second.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSameAttractionTwice.php');
     }
@@ -431,7 +427,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAddressTranslations.php');
         $this->expectFetch('900000000001-goet.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsAddressTranslations.php');
     }
@@ -461,7 +457,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsAddressVocabularyValues.php');
         $this->expectFetch('900000000002-curie.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $remoteId = 'https://thuecat.org/resources/900000000002-curie::addr::0';
         $default = $this->fetchRowByRemoteId('tx_thuecat_address', $remoteId);
@@ -482,7 +478,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
         $this->expectFetch('900000000010-orgaddr.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000010-orgaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
@@ -499,7 +495,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
         $this->expectFetch('900000000011-townaddr.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000011-townaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
@@ -516,7 +512,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
         $this->expectFetch('900000000012-tiaddr.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $parentRemoteId = 'https://thuecat.org/resources/900000000012-tiaddr';
         $address = $this->fetchRowByRemoteId('tx_thuecat_address', $parentRemoteId . '::addr::0');
@@ -533,7 +529,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsPlaceTypeAddresses.php');
         $this->expectFetch('900000000013-orgnoaddr.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId(
             'tx_thuecat_organisation',
@@ -548,7 +544,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
         $this->expectFetch('900000000013-orgnoaddr.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(0, $this->countRows('tx_thuecat_address'));
     }
@@ -563,7 +559,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportsOrganisationWithoutAddress.php');
         $this->expectNotFound('900000000013-orgnoaddr');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(1, $this->countRows('tx_thuecat_address'));
     }
@@ -578,7 +574,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ReimportAddressTranslations.php');
         $this->expectFetch('900000000001-goet.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsAddressTranslations.php');
     }
@@ -591,7 +587,7 @@ final class ImporterTest extends AbstractImportTestCase
         $connection->update('tx_thuecat_tourist_attraction', ['sorting' => 42], ['uid' => 1]);
         $this->expectFetch('900000000001-goet.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/900000000001-goet')['sorting']);
     }
@@ -603,7 +599,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('special-opening-hours.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionsWithSpecialOpeningHours.php');
     }
@@ -633,7 +629,7 @@ final class ImporterTest extends AbstractImportTestCase
         // stay identical; reached through a relation, so it drains now.
         $this->expectFetch('dms_6486108.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         /** @var list<array{uid: string, parentid: string, parenttable: string}> $openingHours */
         $openingHours = $this->getAllRecords('tx_thuecat_opening_hours');
@@ -658,7 +654,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('018132452787-ngbe.json');
         $this->expectFetch('e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithAccessibilitySpecification.php');
         /** @var list<array{accessibility_specification: string}> $records */
@@ -685,7 +681,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-accessibility-sighted-as-relation-first.json');
         $this->expectFetch('e_331baf4eeda4453db920dde62f7e6edc-rfa-accessibility-specification.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertNotSame('', $this->fetchAccessibilitySpecificationOf(
             'https://thuecat.org/resources/attraction-with-accessibility-sighted-as-relation-first'
@@ -714,7 +710,7 @@ final class ImporterTest extends AbstractImportTestCase
         // No entity handles test:NeverModelled, so it imports nothing.
         $this->expectFetch('never-modelled-place.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->getLogEntriesOfType('referenceUnrelatable'), 'The POI relates now, and the unmodelled reference never produced a record.');
         $this->assertCount(0, $this->fetchImportLog()->getUnrelatableReferences());
@@ -828,7 +824,7 @@ final class ImporterTest extends AbstractImportTestCase
         // exempt from the fetch depth cap.
         $this->expectFetch('dms_6486108.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsSyncScope.php');
         $syncScopeId = 'dd4615dc-58a6-4648-a7ce-4950293a06db';
@@ -855,7 +851,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectNotFound('018132452787-ngbe');
 
-        $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('mappingError');
 
@@ -871,11 +867,11 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectNotFound('018132452787-ngbe');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('mappingError');
 
-        $this->assertSame('error', $severity);
+        $this->assertContains('error', $this->logSeverities());
         $this->assertSame('error', $entries[0]['severity']);
         $this->assertNotSame('', $entries[0]['message']);
 
@@ -894,7 +890,7 @@ final class ImporterTest extends AbstractImportTestCase
         // 401 is what FetchData turns into an InvalidResponseException.
         $this->expectFailure('018132452787-ngbe', 401);
 
-        $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('fetchingError');
 
@@ -915,7 +911,7 @@ final class ImporterTest extends AbstractImportTestCase
         $this->expectFailure('018132452787-ngbe', 500);
         $this->expectFailure('018132452787-ngbe', 500);
 
-        $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('fetchingError');
 

@@ -37,12 +37,6 @@
                 "WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\ImportConfigurationFlexFormMigration",
                 "WerkraumMedia\\ThueCat\\Typo3\\Upgrades\\ImportSchedulerTaskMigration"
             ]
-        },
-        "LessThan": {
-            // < and <= differ only at exactly 0.2 s between two microtime() calls, which no test can produce.
-            "ignore": [
-                "WerkraumMedia\\ThueCat\\Command\\ConsoleProgressRenderer::writeDetail"
-            ]
         }
     }
 }

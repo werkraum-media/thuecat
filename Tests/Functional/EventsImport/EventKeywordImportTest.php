@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
@@ -45,7 +44,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $eventUid = $this->eventUid();
 
@@ -58,7 +57,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $eventUid = $this->eventUid();
 
@@ -72,7 +71,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         foreach ($this->remoteIdsOfCategoriesUnder(100) as $remoteId) {
             $this->assertStringStartsNotWith('keyword:', $remoteId, 'A keyword category appeared under the category anchor.');
@@ -86,7 +85,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventKeywordImportLegacyStringPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame('Vorbestehend, aus anderer Quelle', $this->eventColumn($this->eventUid(), 'keywords'), 'The string column belongs to another importer.');
         $this->assertNotSame([], $this->relatedKeywordTitles($this->eventUid()), 'Relations are written alongside it.');
@@ -102,7 +101,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
             'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['Editor keyword'], $this->relatedKeywordTitles(1));
         $this->assertSame(['Editor category', 'Kulturveranstaltung'], $this->relatedTitles(1, 'categories'));
@@ -119,7 +118,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
             'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(
             ['{"field":"keywords_relation","value":"keyword:https:\\/\\/thuecat.org\\/resources\\/475728955106-qdcc"}'],
@@ -138,7 +137,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
             'cdb.int.thuecat.org/api/resources/e_19542-without-keywords.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['Editor keyword', 'Stored Erfurt'], $this->relatedKeywordTitles(1));
     }
@@ -150,7 +149,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/Fixtures/EventWithStoredKeywordsAndCategories.csv');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['Editor category', 'Kulturveranstaltung'], $this->relatedTitles(1, 'categories'));
     }
@@ -174,7 +173,7 @@ final class EventKeywordImportTest extends AbstractImportTestCase
             'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertContains('Stored Erfurt', $this->relatedKeywordTitles(1));
     }
@@ -198,12 +197,6 @@ final class EventKeywordImportTest extends AbstractImportTestCase
             'https://thuecat.org/ontology/thuecat/1.0/Ambiance',
             'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
         );
-    }
-
-    private function runImport(): void
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
     }
 
     private function eventUid(): int

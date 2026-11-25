@@ -38,7 +38,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $row = $this->fetchTrail();
 
@@ -73,7 +73,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $expected = TrailSeason::Mar->bit()
             | TrailSeason::Apr->bit()
@@ -92,7 +92,7 @@ final class TrailImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
-        $this->importConfiguration(1);
+        $this->importJob(1);
         $this->assertNotSame(0, $this->fetchTrailSeason());
 
         // Same remote id, no thuecat:season. Without the parsed-empty sentinel
@@ -123,7 +123,7 @@ final class TrailImportTest extends AbstractImportTestCase
     {
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
-        $this->importConfiguration(1);
+        $this->importJob(1);
         $this->assertNotSame('', $this->fetchTrail()['short_description']);
 
         $this->expectFetchForUrl(
@@ -141,7 +141,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countRows('tx_thuecat_address'));
         $this->assertSame(0, $this->countRows('tx_thuecat_opening_hours'));
@@ -157,7 +157,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
         $this->assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID));
@@ -171,7 +171,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $connection->update('tx_thuecat_trail', ['sorting' => 42], ['uid' => 1]);
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertEquals(42, $this->fetchRowByRemoteId('tx_thuecat_trail', self::REMOTE_ID)['sorting']);
     }
@@ -190,7 +190,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $rows = $this->fetchChildren('tx_thuecat_trail_way_type');
 
@@ -207,7 +207,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $byType = [];
         foreach ($this->fetchChildren('tx_thuecat_trail_location') as $row) {
@@ -232,7 +232,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithConditions.php');
         $this->expectFetch('e_21827958-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $rows = $this->fetchChildren('tx_thuecat_trail_condition');
 
@@ -251,7 +251,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithConditions.php');
         $this->expectFetch('e_21827958-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchChildren('tx_thuecat_trail'));
         $this->assertSame(0, $this->countRows('tx_thuecat_trail_way_type'));
@@ -267,7 +267,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'thuecat.org/resources/attraction-in-trail.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_51872708-oatour');
         $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
@@ -288,7 +288,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $byLanguage = $this->fetchTrailsByLanguage();
 
@@ -304,7 +304,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $rows = $this->fetchAllChildren('tx_thuecat_trail_location');
 
@@ -332,7 +332,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(3, $this->fetchTrailsByLanguage());
     }
@@ -343,7 +343,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithStoredChildren.php');
         $this->expectFetch('e_52469786-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
     }
@@ -358,7 +358,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-with-fewer-way-types.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $survivors = $this->fetchChildren('tx_thuecat_trail_way_type');
         $this->assertCount(3, $survivors);
@@ -376,7 +376,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-with-fewer-way-types.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(
             [
@@ -399,7 +399,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-without-way-types.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchChildren('tx_thuecat_trail_way_type'));
         $this->assertSame(5, $this->countDeletedRows('tx_thuecat_trail_way_type'));
@@ -415,7 +415,7 @@ final class TrailImportTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-with-fewer-way-types.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertContains('Editor segment', array_column($this->fetchChildren('tx_thuecat_trail_way_type'), 'title'));
     }
@@ -432,7 +432,7 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->expectFailure('e_52469786-oatour', 500, 'Internal Server Error');
         $this->expectFailure('e_52469786-oatour', 500, 'Internal Server Error');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(5, $this->fetchChildren('tx_thuecat_trail_way_type'));
         $this->assertSame(0, $this->countDeletedRows('tx_thuecat_trail_way_type'));

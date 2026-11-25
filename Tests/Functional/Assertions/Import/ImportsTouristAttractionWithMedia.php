@@ -39,7 +39,7 @@ return [
     ],
     'sys_file' => [
         0 => [
-            'uid' => '2',
+            'uid' => '3',
             'storage' => '1',
             'type' => '2',
             'extension' => 'jpg',
@@ -48,7 +48,7 @@ return [
             'identifier' => '/thuecat/image_6ab24be70ef3f2e8.jpg',
         ],
         1 => [
-            'uid' => '3',
+            'uid' => '4',
             'storage' => '1',
             'type' => '2',
             'extension' => 'jpg',
@@ -57,7 +57,7 @@ return [
             'identifier' => '/thuecat/image_89d8f4e95612e13d.jpg',
         ],
         2 => [
-            'uid' => '4',
+            'uid' => '5',
             'storage' => '1',
             'type' => '2',
             'extension' => 'jpg',
@@ -66,7 +66,7 @@ return [
             'identifier' => '/thuecat/image_718be403bf38b616.jpg',
         ],
         3 => [
-            'uid' => '5',
+            'uid' => '6',
             'storage' => '1',
             'type' => '2',
             'extension' => 'jpg',
@@ -78,7 +78,7 @@ return [
     'sys_file_reference' => [
         0 => [
             'uid' => '1',
-            'uid_local' => '2',
+            'uid_local' => '3',
             'uid_foreign' => '1',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -87,7 +87,7 @@ return [
         ],
         1 => [
             'uid' => '2',
-            'uid_local' => '3',
+            'uid_local' => '4',
             'uid_foreign' => '1',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -96,7 +96,7 @@ return [
         ],
         2 => [
             'uid' => '3',
-            'uid_local' => '4',
+            'uid_local' => '5',
             'uid_foreign' => '1',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -105,7 +105,7 @@ return [
         ],
         3 => [
             'uid' => '4',
-            'uid_local' => '5',
+            'uid_local' => '6',
             'uid_foreign' => '1',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -114,7 +114,7 @@ return [
         ],
         4 => [
             'uid' => '5',
-            'uid_local' => '2',
+            'uid_local' => '3',
             'uid_foreign' => '2',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -122,7 +122,7 @@ return [
         ],
         5 => [
             'uid' => '6',
-            'uid_local' => '3',
+            'uid_local' => '4',
             'uid_foreign' => '2',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -130,7 +130,7 @@ return [
         ],
         6 => [
             'uid' => '7',
-            'uid_local' => '4',
+            'uid_local' => '5',
             'uid_foreign' => '2',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',
@@ -138,7 +138,7 @@ return [
         ],
         7 => [
             'uid' => '8',
-            'uid_local' => '5',
+            'uid_local' => '6',
             'uid_foreign' => '2',
             'tablenames' => 'tx_thuecat_tourist_attraction',
             'fieldname' => 'media_files',

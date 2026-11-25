@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Job\Handler\DeleteRootHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportFinishedHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportRootHandler;
@@ -324,18 +323,6 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         return self::getInstancePath() . '/typo3temp/var/log/typo3_error_0493d91d8e.log';
     }
 
-    protected function importConfiguration(int $uid): void
-    {
-        $this->importConfigurationReturningSeverity($uid);
-    }
-
-    protected function importConfigurationReturningSeverity(int $uid): string
-    {
-        $configuration = $this->fetchImportConfiguration($uid);
-
-        return $this->get(Importer::class)->importConfiguration($configuration);
-    }
-
     /**
      * Queues a manual job and handles its starting message, taken off the transport first as the consumer takes it.
      *
@@ -537,6 +524,33 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         }
 
         return $items;
+    }
+
+    /**
+     * @return list<string> the distinct severities of all log entries, sorted
+     */
+    protected function logSeverities(): array
+    {
+        $severities = $this->getConnectionPool()->getQueryBuilderForTable('tx_thuecat_import_log_entry')
+            ->selectLiteral('DISTINCT severity')
+            ->from('tx_thuecat_import_log_entry')
+            ->orderBy('severity')
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+        $this->assertContainsOnlyString($severities);
+
+        return $severities;
+    }
+
+    /**
+     * Data drift is worth a warning, never an error.
+     */
+    protected function assertWarnsWithoutError(string $message = ''): void
+    {
+        $severities = $this->logSeverities();
+        $this->assertContains('warning', $severities, $message);
+        $this->assertNotContains('error', $severities, $message);
     }
 
     /**

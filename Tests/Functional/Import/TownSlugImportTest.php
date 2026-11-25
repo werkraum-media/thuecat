@@ -32,7 +32,7 @@ final class TownSlugImportTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('erfurt', $this->fetchRowByRemoteId('tx_thuecat_town', 'https://thuecat.org/resources/043064193523-jcyt')['slug']);
     }
@@ -44,8 +44,8 @@ final class TownSlugImportTest extends AbstractImportTestCase
         $this->expectFetch('043064193523-jcyt.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
-        $this->importConfiguration(2);
+        $this->importJob(1);
+        $this->importJob(2);
 
         $this->assertSame(['erfurt', 'erfurt'], array_column($this->fetchChildren('tx_thuecat_town'), 'slug'));
     }

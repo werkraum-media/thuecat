@@ -38,7 +38,7 @@ final class UnexpectedFetchTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-with-content-responsible.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertStringContainsString('https://thuecat.org/resources/018132452787-ngbe', implode("\n", GuzzleClientFaker::tearDown()));
     }

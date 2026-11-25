@@ -43,7 +43,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_refloc-hubev.json');
         $this->expectFetchAt('thuecat.org', 'resources', '900000000001-goet.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_refloc-hubev');
 
@@ -57,7 +57,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_unknownref-hubev.json');
         $this->expectNotFoundAt('thuecat.org', 'resources', '900000000999-nope');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // The event still imports; only the relation is absent.
         $this->assertGreaterThan(0, $this->eventUidOf('https://int.thuecat.org/resources/e_unknownref-hubev'));
@@ -71,7 +71,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventInlineVenueMatchPreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
 
@@ -98,7 +98,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventPlaceTableVenuePreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([$this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')], $this->hostedEventsOf('tx_thuecat_place', 1));
     }
@@ -138,7 +138,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCrossSiteVenuePreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $eventUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
 
@@ -157,7 +157,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventAmbiguousVenuePreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertGreaterThan(0, $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev'));
 
@@ -211,7 +211,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventAddOnlyMatchPreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(901, $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev'), 'The seeded event was not reused, so this run matched a different row.');
 
@@ -228,13 +228,13 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventTwoConfigurationsPreState.php');
 
         $this->expectFetch('e_bauhaus-hubev.json');
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $firstUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev');
         $this->assertSame([$firstUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
 
         $this->expectFetch('e_bauhaus2-hubev.json');
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $secondUid = $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus2-hubev');
         $this->assertSame([$firstUid, $secondUid], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1), "The second configuration dropped the first one's relation.");
@@ -246,7 +246,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventManyHostedEventsPreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_bauhaus-hubev')], $this->hostedEventsOf('tx_thuecat_tourist_attraction', 1));
     }
@@ -257,7 +257,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventManyManagedEventsPreState.php');
         $this->expectFetch('e_orgmatch-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([...range(1000, 1059), $this->eventUidOf('https://int.thuecat.org/resources/e_orgmatch-hubev')], $this->fetchMmRelatedUids('tx_thuecat_organisation', 1, 'manages_event'));
     }
@@ -269,7 +269,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_refloc-hubev.json');
         $this->expectFetchAt('thuecat.org', 'resources', '900000000001-goet.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $results = $this->fetchMatchResults();
         $this->assertCount(1, $results, 'The run recorded no match result.');
@@ -287,7 +287,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventInlineVenueMatchPreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $results = $this->fetchMatchResults();
         $this->assertCount(1, $results);
@@ -324,7 +324,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_unknownref-hubev.json');
         $this->expectNotFoundAt('thuecat.org', 'resources', '900000000999-nope');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $results = $this->fetchMatchResults();
         $this->assertCount(1, $results);
@@ -339,7 +339,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventAmbiguousVenuePreState.php');
         $this->expectFetch('e_bauhaus-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $results = $this->fetchMatchResults();
         $this->assertCount(1, $results);
@@ -388,7 +388,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_orghosts-hubev.json');
         $this->expectFetch('e_orgrefattr-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     protected function importNegativeFixtures(): void
@@ -398,7 +398,7 @@ final class EventPlaceMatchingTest extends AbstractImportTestCase
         $this->expectFetch('e_otherstreet-hubev.json');
         $this->expectFetch('e_noaddrplace-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     protected function eventUidOf(string $remoteId): int

@@ -51,7 +51,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('079491439271-qqjm.json');
         $this->expectFetch('214681324608-rqzg.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([
             'managed_by' => $this->fetchUidByRemoteId('tx_thuecat_organisation', 'https://thuecat.org/resources/079491439271-qqjm'),
@@ -68,7 +68,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-touching-trail.json');
         $this->expectFetch('e_804174798-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('41', $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['geo_touches_trail']);
     }
@@ -80,7 +80,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/EventNamedByMeetingVenue.csv');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-naming-event.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([901], $this->fetchMmRelatedUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT), 'hosts_events'));
     }
@@ -92,7 +92,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-naming-event.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchMmRelatedUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT), 'hosts_events'));
         $entries = $this->getConnectionPool()
@@ -114,7 +114,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/EventNamedByMeetingVenueInOtherSite.csv');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-naming-event.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchMmRelatedUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::WIELANDGUT), 'hosts_events'));
     }
@@ -126,7 +126,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueHostingEarlierMatch.csv');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-naming-event.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([900, 901], $this->fetchMmRelatedUids(self::TABLE, 1, 'hosts_events'));
     }
@@ -138,7 +138,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
         $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('Christoph Martin Wieland', $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['who_was_here']);
         $this->assertSame('Christoph Martin Wieland', $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT)[1]['who_was_here'] ?? null);
@@ -152,7 +152,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
         $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame("Zielgruppe Konsum-Hedonisten\nZielgruppe Postmateriell\nKulturreisende\nZielgruppe Traditionelle", $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['tourist_types']);
         $this->assertSame('', $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT)[1]['tourist_types'] ?? null);
@@ -165,7 +165,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-named-references.json');
         $this->expectFetch(...self::NAMED_REFERENCE_FIXTURES);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame("https://thuecat.org/resources/724271217629-ffrb\nhttps://thuecat.org/resources/626444958944-bnpb", $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['subject_of']);
     }
@@ -177,7 +177,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('700475118524-zdca.json');
         $this->expectFetch('795890427838-jmby.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame('Heinrich Gentz', $this->fetchRowByRemoteId(self::TABLE, self::RIDING_HALL)['architects']);
     }
@@ -189,7 +189,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('332021174274-eyhf.json');
         $this->expectFetch('201518958399-qbmh.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $this->assertSame((string)$this->fetchUidByRemoteId(self::TABLE, 'https://thuecat.org/resources/201518958399-qbmh'), $this->fetchRowByRemoteId(self::TABLE, self::CULTURAL_ESTATE)['managed_objects']);
     }
@@ -201,7 +201,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithOperatorAndTrails.csv');
         $this->expectFetch('117034427781-ndta.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['operated_by']);
     }
@@ -214,7 +214,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-touching-trail.json');
         $this->expectFetch('e_804174798-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('41', $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['geo_touches_trail']);
     }
@@ -226,7 +226,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithOperatorAndTrails.csv');
         $this->expectFetch('117034427781-ndta.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('', $this->fetchRowByRemoteId(self::TABLE, self::WIELANDGUT)['geo_touches_trail']);
     }
@@ -238,7 +238,7 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithManagedObject.csv');
         $this->expectFetchForUrl(self::CULTURAL_ESTATE, 'thuecat.org/resources/meeting-venue-without-managed-objects.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $this->assertSame('', $this->fetchRowByRemoteId(self::TABLE, self::CULTURAL_ESTATE)['managed_objects']);
     }

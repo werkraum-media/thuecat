@@ -53,7 +53,7 @@ final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TrailKeywordAnchorsPreState.php');
         $this->expectTrailFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
         $this->assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
@@ -73,7 +73,7 @@ final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         );
         $this->expectTrailFetches();
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $trail = $this->fetchUidByRemoteId('tx_thuecat_trail', self::TRAIL);
         $this->assertSame(self::TRAILS_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_trail', $trail));
@@ -86,7 +86,7 @@ final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-sharing-trail-keyword.json');
         $this->expectTrailFetches();
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertCount(2, $this->keywordUids(), 'One record per keyword tree.');
 
@@ -103,7 +103,7 @@ final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-sharing-trail-keyword.json');
         $this->expectTrailFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, $this->keywordUids());
 
@@ -124,7 +124,7 @@ final class ScopedKeywordAnchorImportTest extends AbstractImportTestCase
         $this->expectTrailFetches();
         $this->expectFetch('tourist-information-with-trail-keyword.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $touristInformation = $this->fetchUidByRemoteId('tx_thuecat_tourist_information', self::TOURIST_INFORMATION);
         $this->assertSame(self::THUECAT_ANCHOR, $this->anchorOfKeywordRelatedTo('tx_thuecat_tourist_information', $touristInformation));

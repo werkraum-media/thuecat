@@ -36,7 +36,7 @@ final class MeetingVenueOpeningHoursImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithThreeOpeningHours.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-with-two-opening-hours.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(['Monday', 'Tuesday'], $this->fetchColumnMatching(self::TABLE, 'day_of_week', ['deleted' => 0]));
     }
@@ -49,7 +49,7 @@ final class MeetingVenueOpeningHoursImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithExpiredOpeningHours.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-with-two-opening-hours.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(['Monday', 'Tuesday'], $this->fetchColumnMatching(self::TABLE, 'day_of_week', ['deleted' => 0]));
     }
@@ -61,7 +61,7 @@ final class MeetingVenueOpeningHoursImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithThreeOpeningHours.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-parking-facilities.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame([], $this->fetchColumnMatching(self::TABLE, 'day_of_week', ['deleted' => 0]));
     }
@@ -74,7 +74,7 @@ final class MeetingVenueOpeningHoursImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingAttractionWithThreeOpeningHours.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/attraction-with-two-opening-hours.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(['Monday', 'Tuesday'], $this->fetchColumnMatching(self::TABLE, 'day_of_week', ['deleted' => 0]));
     }

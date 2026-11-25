@@ -40,8 +40,8 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesPreState.php');
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
-        $this->importConfiguration(2);
+        $this->importJob(1);
+        $this->importJob(2);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(2, $towns, 'Each site must hold its own town record.');
@@ -56,7 +56,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
 
         // Only the second site imports; the first site's records are pre-seeded
         // and stale, so any write into them shows up as a changed title.
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(2, $towns, "The second site creates its own town beside the first site's.");
@@ -72,10 +72,10 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesPreState.php');
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
-        $this->importConfiguration(2);
-        $this->importConfiguration(1);
-        $this->importConfiguration(2);
+        $this->importJob(1);
+        $this->importJob(2);
+        $this->importJob(1);
+        $this->importJob(2);
 
         $this->assertCount(2, $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID), 'A second run per site updates its own record rather than adding one.');
     }
@@ -89,7 +89,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->seedTown(4020, 'Stale title on another page of the site');
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(1, $towns, 'A record elsewhere in the same site is matched, not duplicated.');
@@ -105,8 +105,8 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->updateImportConfiguration(2, ['storage_pid' => 4020]);
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
-        $this->importConfiguration(2);
+        $this->importJob(1);
+        $this->importJob(2);
 
         $this->assertCount(1, $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID), 'Two configurations of one site share the record for an upstream object.');
     }
@@ -117,7 +117,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesWithExistingRecordPreState.php');
         $this->expectTownFetches();
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $organisations = $this->fetchRecordsByRemoteId(
             'tx_thuecat_organisation',
@@ -137,7 +137,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/TwoSitesPreState.php');
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $organisations = $this->fetchRecordsByRemoteId(
             'tx_thuecat_organisation',
@@ -155,7 +155,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/HiddenStorageFolderPreState.php');
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(1, $towns, 'A hidden storage folder must not cause a duplicate record.');
@@ -171,7 +171,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->makeStorageFolderExpired(4010);
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(1, $towns, 'An expired storage folder must not cause a duplicate record.');
@@ -188,7 +188,7 @@ final class RecordIdentityScopeTest extends AbstractImportTestCase
         $this->deleteStorageFolder(4040);
         $this->expectTownFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $towns = $this->fetchRecordsByRemoteId('tx_thuecat_town', self::TOWN_REMOTE_ID);
         $this->assertCount(2, $towns, 'A record on a deleted page is out of scope, so a fresh one is created.');

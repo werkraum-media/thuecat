@@ -61,7 +61,7 @@ final class MediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithMedia.php');
     }
@@ -80,7 +80,7 @@ final class MediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'schema:photo belongs in main_image, schema:image in media_files.');
     }
@@ -90,7 +90,7 @@ final class MediaImportTest extends AbstractImportTestCase
     {
         $this->seedAndExpectTrailWithMedia();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // Default language only: allowLanguageSynchronization gives every
         // language row its own reference, so the whole table holds one set per
@@ -115,7 +115,7 @@ final class MediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $fields = array_column($this->fetchChildren('sys_file_reference'), 'fieldname');
         sort($fields);
@@ -140,7 +140,7 @@ final class MediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $fields = array_column($this->fetchChildren('sys_file_reference'), 'fieldname');
         sort($fields);
@@ -170,7 +170,7 @@ final class MediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $references = array_filter(
             $this->fetchChildren('sys_file_reference'),
@@ -186,7 +186,7 @@ final class MediaImportTest extends AbstractImportTestCase
     {
         $this->seedAndExpectTrailWithMedia();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         foreach ([0, 1, 2] as $language) {
             $this->assertSame(['logo', 'media_files', 'media_files'], $this->fetchReferenceFields($language), 'Language ' . $language . ' relates each slot once.');
@@ -311,7 +311,7 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithoutMedia.php');
         $this->expectFetch('e_16571065-oatour.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_16571065-oatour'));
         $this->assertSame([], $this->fetchReferenceFields());
@@ -400,7 +400,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // Inline is a capability of the media import, not an event feature: a
         // POI carrying one lands it in the field that POI declares.
@@ -422,7 +422,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // A collection field makes no promise that its entries share a shape.
         $names = $this->fetchRelatedFileNamesInOrder();
@@ -472,7 +472,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(['media_files'], $this->fetchReferenceFields(), 'Same file, same field: the first node wins and the second is discarded.');
         $this->assertSame(1, $this->countRows('sys_file'), 'One asset URL is one file, whatever the editorial title says.');
@@ -491,7 +491,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(['media_files', 'media_files'], $this->fetchReferenceFields(), 'Each record keeps its own reference to the shared file.');
         $this->assertSame(1, $this->countRows('sys_file'), 'Two owners of one asset share one file.');
@@ -516,7 +516,7 @@ final class MediaImportTest extends AbstractImportTestCase
             $this->expectFetchForUrl($url, 'cms.thuecat.org/image.jpg');
         }
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(
             // oastatic paths end in "/.jpg", so those two have no stem to keep.
@@ -566,7 +566,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
         $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'photo and image map to separate fields, so both keep a reference.');
@@ -595,7 +595,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRows('sys_file'), 'One asset is one file.');
         $this->assertSame(['main_image', 'media_files'], $this->fetchReferenceFields(), 'The relation-first attraction lost the media its slots map to.');
@@ -642,7 +642,7 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->expectFetch('image-with-license-author.json');
         $this->expectFetch('image-with-author-and-license-author.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([
             ['uid' => 1, 'lang' => 0, 'deleted' => 0],
@@ -697,7 +697,7 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->expectFetch('image-with-license-author.json');
         $this->expectFetch('image-with-author-and-license-author.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ReimportTouristAttractionWithMedia.php');
     }
@@ -734,7 +734,7 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/Import/ImportsTouristAttractionWithFailingImage.php');
     }
@@ -768,10 +768,9 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        // Unfetchable images are data drift: the command must still exit 0.
-        $this->assertSame('warning', $severity);
+        $this->assertWarnsWithoutError();
 
         // Queried rather than asserted as a data set: the surrounding savingEntity
         // rows are noise here, and only the skip entry is this test's subject.
@@ -819,9 +818,9 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity, 'An unfetchable image stays a warning.');
+        $this->assertWarnsWithoutError('An unfetchable image stays a warning.');
 
         $entries = $this->getSkippedReferenceLogEntries();
         $this->assertCount(1, $entries);
@@ -845,9 +844,9 @@ final class MediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('error', $severity, 'The failed root must still be reported.');
+        $this->assertContains('error', $this->logSeverities(), 'The failed root must still be reported.');
         $this->assertFileExists($this->instancePath . '/fileadmin-thuecat/thuecat/image_2173acbddcfbcdb1.jpg', 'Media of the healthy root must be promoted despite the other root failing.');
         $this->assertSame([], $this->stagingFoldersIn($this->instancePath . '/fileadmin-thuecat/thuecat'), 'The per-run staging folder must not outlive the run.');
     }

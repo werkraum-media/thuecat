@@ -118,6 +118,7 @@ CREATE TABLE tx_thuecat_import_job (
 
 CREATE TABLE tx_thuecat_import_job_item (
     uid int(10) unsigned NOT NULL auto_increment,
+    crdate int(10) unsigned DEFAULT '0' NOT NULL,
     job int(10) unsigned DEFAULT '0' NOT NULL,
     target varchar(2048) DEFAULT '' NOT NULL,
     action varchar(16) DEFAULT '' NOT NULL,

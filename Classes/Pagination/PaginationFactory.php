@@ -51,10 +51,7 @@ final class PaginationFactory
         return $this->withFixedItemsPerPage($items, $currentPage, $itemsPerPage);
     }
 
-    /**
-     * For callers without plugin settings, e.g. backend modules.
-     */
-    public function withFixedItemsPerPage(
+    private function withFixedItemsPerPage(
         QueryResultInterface $items,
         int $currentPage,
         int $itemsPerPage

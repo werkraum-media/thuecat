@@ -109,9 +109,9 @@ final class EventDateSkippedTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventDateSkippedPreState.php');
         $this->expectFetch('e_19c21523-343f-4b72-b13c-756ac4bde8c5-noenddate.json');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity, 'A skipped date must not fail the run.');
+        $this->assertWarnsWithoutError('A skipped date must not fail the run.');
     }
 
     #[Test]
@@ -153,6 +153,6 @@ final class EventDateSkippedTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventDateSkippedPreState.php');
         $this->expectFetch('e_19c21523-343f-4b72-b13c-756ac4bde8c5-noenddate.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 }

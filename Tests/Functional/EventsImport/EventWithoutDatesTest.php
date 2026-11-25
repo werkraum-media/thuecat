@@ -115,9 +115,9 @@ final class EventWithoutDatesTest extends AbstractImportTestCase
         $this->expectFetch('e_7cbe5bb1-excepted.json');
         $this->expectFetch('e_7cbe5bb1-past.json');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity);
+        $this->assertWarnsWithoutError();
     }
 
     #[Test]
@@ -146,7 +146,7 @@ final class EventWithoutDatesTest extends AbstractImportTestCase
         $this->expectFetch('e_7cbe5bb1-nosched.json');
         $this->expectFetch('e_7cbe5bb1-tdm.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $dateCount = $this->getConnectionPool()
             ->getConnectionForTable('tx_events_domain_model_date')
@@ -164,7 +164,7 @@ final class EventWithoutDatesTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventWithoutDatesUntitledPreState.php');
         $this->expectFetch('e_7cbe5bb1-untitled.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('eventWithoutDates');
 
@@ -202,7 +202,7 @@ final class EventWithoutDatesTest extends AbstractImportTestCase
         $this->expectFetch('e_7cbe5bb1-excepted.json');
         $this->expectFetch('e_7cbe5bb1-past.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     /**

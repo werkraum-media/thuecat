@@ -32,7 +32,7 @@ final class SlugImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $remoteId = 'https://thuecat.org/resources/attraction-with-single-slogan';
         $default = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', $remoteId);
@@ -51,7 +51,7 @@ final class SlugImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $imported = $this->fetchRowByRemoteId(
             'tx_thuecat_tourist_attraction',
@@ -70,7 +70,7 @@ final class SlugImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-with-single-slogan.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $remoteId = 'https://thuecat.org/resources/attraction-with-single-slogan';
         $default = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', $remoteId);

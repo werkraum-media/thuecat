@@ -47,7 +47,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelRelatesPrivateImage.csv');
     }
@@ -61,7 +61,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // The faker matches without api_key, so the download is read back directly.
         $download = GuzzleClientFaker::getRequestForUrl(
@@ -85,7 +85,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
         );
         $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $download = GuzzleClientFaker::getRequestForUrl(
             'https://cdb.thuecat.org/assets/ttg/m-tdm/original/test-event-1/test-image-1.jpg'
@@ -105,7 +105,7 @@ final class SyncChannelMediaImportTest extends AbstractSyncChannelImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelRelatesPrivateImage.csv');
     }

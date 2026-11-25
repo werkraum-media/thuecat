@@ -74,33 +74,6 @@
                 <source>Last imported</source>
             </trans-unit>
 
-            <trans-unit id="module.imports.headline" xml:space="preserve">
-                <source>ThüCAT - Imports</source>
-            </trans-unit>
-            <trans-unit id="module.imports.missing.title" xml:space="preserve">
-                <source>No imports</source>
-            </trans-unit>
-            <trans-unit id="module.imports.missing.text" xml:space="preserve">
-                <source>No import was executed yet.</source>
-            </trans-unit>
-            <trans-unit id="module.imports.th.created" xml:space="preserve">
-                <source>Created</source>
-            </trans-unit>
-            <trans-unit id="module.imports.th.information" xml:space="preserve">
-                <source>Information</source>
-            </trans-unit>
-            <trans-unit id="module.imports.th.configuration" xml:space="preserve">
-                <source>Configuration</source>
-            </trans-unit>
-            <trans-unit id="module.imports.th.errors" xml:space="preserve">
-                <source>Errors</source>
-            </trans-unit>
-            <trans-unit id="module.imports.th.summary" xml:space="preserve">
-                <source>Summary</source>
-            </trans-unit>
-            <trans-unit id="module.imports.configuration.notAvailable" xml:space="preserve">
-                <source>Not available</source>
-            </trans-unit>
             <trans-unit id="module.imports.summary.inserted" xml:space="preserve">
                 <source>%1$s new</source>
             </trans-unit>
@@ -124,9 +97,6 @@
             </trans-unit>
             <trans-unit id="module.imports.summary.listOfErrors">
                 <source>List of Errors</source>
-            </trans-unit>
-            <trans-unit id="module.imports.summary.notices" xml:space="preserve">
-                <source>Notices and warnings</source>
             </trans-unit>
             <trans-unit id="module.imports.summary.tableName.tx_thuecat_organisation" xml:space="preserve">
                 <source>Organisation</source>

@@ -952,7 +952,6 @@ class Resolver
         $technicalFailure = false;
 
         try {
-            $context->reportProgress($uri);
             $response = $this->fetchReference($uri, $context);
         } catch (MessageBudgetExhaustedException $exhausted) {
             throw $exhausted;
@@ -2198,7 +2197,6 @@ class Resolver
         }
 
         try {
-            $context->reportProgress($reference);
             $response = $this->fetchReference($reference, $context);
             $graph = $response['@graph'] ?? [];
             if (!is_array($graph)) {
@@ -2476,7 +2474,6 @@ class Resolver
                 return;
             }
 
-            $context->reportProgress($downloadUrl);
             $failureDetail = null;
             $failureStatus = null;
             $file = $this->mediaFileDownloader->download(
@@ -2894,7 +2891,6 @@ class Resolver
      */
     protected function fetchGraphNode(string $url, ResolverContext $context, string $expectedId): array
     {
-        $context->reportProgress($url);
         $response = $this->fetchReference($url, $context);
         $graph = $response['@graph'] ?? [];
         if (!is_array($graph)) {

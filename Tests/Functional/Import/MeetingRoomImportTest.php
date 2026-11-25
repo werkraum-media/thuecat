@@ -88,7 +88,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl($venue, 'thuecat.org/resources/' . $venueFixture);
         $this->expectFetch($room . '.json');
 
-        $this->importConfiguration($configuration);
+        $this->importJob($configuration);
 
         $this->assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, 'https://thuecat.org/resources/' . $room, array_keys($expected)));
     }
@@ -100,7 +100,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetch('019950652406-nywx.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::GALERIE);
@@ -119,7 +119,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetch('019950652406-nywx.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertContains($this->fetchUidByRemoteId('sys_category', 'type:thuecat:MajorEventRoom'), $this->fetchMmRelatedCategoryUids(self::TABLE, $this->fetchUidByRemoteId(self::TABLE, self::GALERIE), 'categories'));
     }
@@ -135,7 +135,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetch('537010241706-gncn.json');
         $this->expectFetch('733143604162-wfob.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $room = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE);
         $this->assertSame(1, $room['managed_by']);
@@ -150,7 +150,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetchForUrl(self::GALERIE, 'thuecat.org/resources/meeting-room-with-unknown-unit.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(['floor_size' => '0.00', 'room_height' => '11.50'], $this->fetchColumnsByRemoteId(self::TABLE, self::GALERIE, ['floor_size', 'room_height']));
         $this->assertSingleUnmatchedValue(self::TABLE, self::GALERIE, 'schema:floorSize', 'test:UnknownUnit');
@@ -164,7 +164,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetchForUrl(self::GALERIE, 'thuecat.org/resources/meeting-room-with-url-floor-plan.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchRowByRemoteId(self::TABLE, self::GALERIE)['floor_plan']);
         $this->assertSingleUnmatchedValue(self::TABLE, self::GALERIE, 'schema:accommodationFloorPlan', 'https://example.com/test-floor-plan.pdf');
@@ -177,7 +177,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetchForUrl(self::GALERIE, 'thuecat.org/resources/meeting-room-with-long-url.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $url = $this->fetchRowByRemoteId(self::TABLE, self::GALERIE)['url'];
         $this->assertIsString($url);
@@ -192,7 +192,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetch('019950652406-nywx.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([[1, 160]], array_map(
             static fn (array $room): array => [$room['uid'], $room['capacity_banquet']],
@@ -208,7 +208,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::VENUE, 'thuecat.org/resources/meeting-venue-with-room.json');
         $this->expectFetch('019950652406-nywx.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([[7, 50, 'Galerie of the second site'], [8, 10, 'Galerie']], array_map(
             static fn (array $room): array => [$room['uid'], $room['pid'], $room['title']],
@@ -222,7 +222,7 @@ final class MeetingRoomImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $tripleRoom = 'https://thuecat.org/resources/853365081548-bobo';
         $this->assertCount(1, array_filter(

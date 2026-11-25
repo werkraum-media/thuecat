@@ -73,7 +73,7 @@ abstract class AbstractSyncChannelImportTestCase extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/' . $seedFixture);
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     /**

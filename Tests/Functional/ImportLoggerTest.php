@@ -22,10 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use WerkraumMedia\ThueCat\Command\ImportConfigurationCommand;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
@@ -34,8 +31,6 @@ use WerkraumMedia\ThueCat\Import\ImportLogger;
  * Covers the DataHandler error-capture pipeline that hangs off ImportLogger:
  * - recordDataHandlerErrors stages one tx_thuecat_import_log_entry row of
  *   type=dataHandlerError severity=error per captured errorLog line.
- * - getMaxSeverity reflects the highest staged severity for the run.
- * - ImportConfigurationCommand maps severity to exit code.
  */
 final class ImportLoggerTest extends AbstractImportTestCase
 {
@@ -50,9 +45,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
             '[1.1]: Some other complaint',
         ], 1);
 
-        $this->assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
-
-        $logger->writeLog(null, [], []);
+        $logger->writeLogInto($logger->openLog(0), [], []);
 
         $rows = $this->fetchEntries();
         $this->assertCount(2, $rows);
@@ -75,9 +68,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
             new RuntimeException('upstream returned 500', 1700000001)
         );
 
-        $this->assertSame(ImportLogger::SEVERITY_ERROR, $logger->getMaxSeverity());
-
-        $logger->writeLog(null, [], []);
+        $logger->writeLogInto($logger->openLog(0), [], []);
 
         $rows = $this->fetchEntries();
         $this->assertCount(1, $rows);
@@ -97,7 +88,7 @@ final class ImportLoggerTest extends AbstractImportTestCase
             'fetchingError',
             new RuntimeException('upstream returned 500', 1700000001)
         );
-        $logger->writeLog(null, [], []);
+        $logger->writeLogInto($logger->openLog(0), [], []);
 
         $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();
         $this->assertInstanceOf(ImportLog::class, $log);
@@ -110,21 +101,12 @@ final class ImportLoggerTest extends AbstractImportTestCase
     }
 
     #[Test]
-    public function getMaxSeverityDefaultsToDebugWhenEmpty(): void
-    {
-        $logger = $this->get(ImportLogger::class);
-        $logger->reset();
-
-        $this->assertSame(ImportLogger::SEVERITY_DEBUG, $logger->getMaxSeverity());
-    }
-
-    #[Test]
     public function recordsDataHandlerRefusalDuringImport(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsOrganizationIntoStandardPage.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $dataHandlerErrors = array_values(array_filter(
             $this->fetchEntries(),
@@ -132,41 +114,6 @@ final class ImportLoggerTest extends AbstractImportTestCase
         ));
         $this->assertNotSame([], $dataHandlerErrors);
         $this->assertSame('error', $dataHandlerErrors[0]['severity']);
-        $this->assertSame(ImportLogger::SEVERITY_ERROR, $severity);
-    }
-
-    #[Test]
-    public function commandReturnsSuccessOnCleanRun(): void
-    {
-        $this->workaroundExtbaseConfiguration();
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        $subject = $this->get(ImportConfigurationCommand::class);
-        $tester = new CommandTester($subject);
-        $exit = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
-
-        $this->assertSame(Command::SUCCESS, $exit);
-    }
-
-    #[Test]
-    public function commandReturnsFailureWhenLoggerHoldsErrorSeverity(): void
-    {
-        $this->workaroundExtbaseConfiguration();
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        // Inject a recorded DataHandler-style error into the same logger
-        // instance the importer/command will use. Mirrors what would happen
-        // if an import pass produced a non-empty $dataHandler->errorLog.
-        $logger = $this->get(ImportLogger::class);
-        $logger->recordDataHandlerErrors(['[1.2]: Simulated DataHandler refusal'], 0);
-
-        $subject = $this->get(ImportConfigurationCommand::class);
-        $tester = new CommandTester($subject);
-        $exit = $tester->execute(['configuration' => 1], ['capture_stderr_separately' => true]);
-
-        $this->assertSame(Command::FAILURE, $exit);
     }
 
     /**

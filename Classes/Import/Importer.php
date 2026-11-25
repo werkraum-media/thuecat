@@ -35,14 +35,10 @@ use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Parser\Parser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
-use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
 use WerkraumMedia\ThueCat\Import\Reconciliation\RootReconciliation;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
-use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
 use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 use WerkraumMedia\ThueCat\Service\SitePageIds;
@@ -59,54 +55,11 @@ class Importer
         protected readonly ImportLogger $importLogger,
         protected readonly ImportConfigurationValidator $configurationValidator,
         protected readonly ImportSettings $settings,
-        protected readonly EffectiveSettingsReport $effectiveSettingsReport,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
-        protected readonly UrlProviders $urlProviders,
         protected readonly MessageDeadline $deadline,
         protected readonly RootReconciliation $rootReconciliation,
     ) {
-    }
-
-    /**
-     * Runs one full import. Returns the highest severity recorded in the
-     * import log for this run, in PSR-3 vocabulary (`info` for a clean run,
-     * `error` if any DataHandler call complained or the URL loop swallowed
-     * an exception). Callers (Command) decide on an exit code from that.
-     */
-    public function importConfiguration(
-        ImportConfigurationInterface $configuration,
-        ?ImportProgressListener $listener = null
-    ): string {
-        $listener ??= new NullProgressListener();
-        $this->deadline->reset();
-
-        // Pre-flight: abort on a misconfiguration before touching the API.
-        $this->configurationValidator->validate($configuration);
-
-        // Resolve the target folder (this runs the write-access probe) and
-        // create a fresh per-run staging folder under it before touching the
-        // API. Media is downloaded into staging and only promoted into the
-        // target on a clean run; the staging folder is always discarded in
-        // the finally, so a failed run leaves no orphaned files behind.
-        $targetFolder = $this->fileFolderAccess->resolveFolder($configuration->getFileFolder());
-        $stagingFolder = $this->mediaFileStaging->createForRun($targetFolder);
-
-        $this->configureFetching($configuration, false);
-
-        try {
-            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener);
-        } catch (Throwable $failure) {
-            // Rethrown after logging: the caller still sees the failure, but the
-            // run no longer disappears without a trace.
-            $this->importLogger->recordRunFailed($failure, $this->deadline->phaseReached() ?? ImportPhase::Fetch);
-            $this->importLogger->writeLog($configuration->getUid(), [], []);
-
-            throw $failure;
-        } finally {
-            $this->fetchData->resetRunConfiguration();
-            $this->mediaFileStaging->discard($stagingFolder);
-        }
     }
 
     /**
@@ -141,7 +94,6 @@ class Importer
                 $this->sitePageIds->forRootPage($site->getRootPageId()),
                 $targetFolder,
                 $stagingFolder,
-                new NullProgressListener(),
                 $skipMedia
             );
         } catch (MessageBudgetExhaustedException $exception) {
@@ -171,52 +123,6 @@ class Importer
         }
     }
 
-    protected function runImport(
-        ImportConfigurationInterface $configuration,
-        Folder $targetFolder,
-        Folder $stagingFolder,
-        ImportProgressListener $listener
-    ): string {
-        $urlProvider = $this->urlProviders->forConfiguration($configuration);
-        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
-        $this->reportEffectiveSettings($configuration, $site, $listener);
-        // Once per run: the record lookup consults this per record and per
-        // relation, so deriving it there would rewalk the page tree for
-        // every one of them.
-        $sitePageIds = $this->sitePageIds->forRootPage($site->getRootPageId());
-
-        $loggerPayload = [];
-        $substNEWwithIDs = [];
-        $urls = $urlProvider->getUrls();
-        $urlCount = count($urls);
-        $urlNumber = 0;
-        foreach ($urls as $url) {
-            $urlNumber++;
-            $listener->progressed(new ImportProgress(ImportPhase::Fetch, $url, $urlNumber, $urlCount));
-            $outcome = $this->persistRoot(
-                $configuration,
-                $url,
-                $site,
-                $sitePageIds,
-                $targetFolder,
-                $stagingFolder,
-                $listener,
-                false
-            );
-            foreach ($outcome->loggerPayload as $table => $rows) {
-                $loggerPayload[$table] = ($loggerPayload[$table] ?? []) + $rows;
-            }
-
-            $substNEWwithIDs += $outcome->substNEWwithIDs;
-        }
-
-        $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
-        $this->importLogger->writeLog($configuration->getUid(), $loggerPayload, $substNEWwithIDs);
-        $listener->progressed(new ImportProgress(ImportPhase::Finish, 'Finishing'));
-
-        return $this->finishRun($targetFolder, $stagingFolder);
-    }
-
     /**
      * Fetches, resolves and persists one root with its translations, relations and files. Every map lives on a
      * resolver context of this root alone; what an earlier root stored is found in the database.
@@ -230,7 +136,6 @@ class Importer
         array $sitePageIds,
         ?Folder $targetFolder,
         ?Folder $stagingFolder,
-        ImportProgressListener $listener,
         bool $skipMedia
     ): RootOutcome {
         $translationLanguages = [];
@@ -252,7 +157,6 @@ class Importer
             $translationLanguages,
             $targetFolder,
             $stagingFolder,
-            $listener,
             $skipMedia,
             $sitePageIds,
             $site,
@@ -344,12 +248,6 @@ class Importer
                 );
             }
 
-            $listener->progressed(new ImportProgress(
-                ImportPhase::Persist,
-                'Writing records',
-                $iterations + 1,
-                $maxIterations
-            ));
             $cmd = $this->fanOutCmdMap($payload->getCmdMap());
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
             // Logging stays on: DataHandler fills errorLog only while it logs.
@@ -408,17 +306,6 @@ class Importer
     }
 
     /**
-     * Promote staged media unconditionally: a staged file downloaded successfully,
-     * so a failure elsewhere in the run says nothing about it.
-     */
-    protected function finishRun(Folder $targetFolder, Folder $stagingFolder): string
-    {
-        $this->mediaFileStaging->promote($stagingFolder, $targetFolder);
-
-        return $this->importLogger->getMaxSeverity();
-    }
-
-    /**
      * Fan the staged cmdmap entries out into the nested shape DataHandler::start()
      * consumes: $cmd[$table][$uid][$command] = $value.
      *
@@ -438,23 +325,6 @@ class Importer
         }
 
         return $result;
-    }
-
-    protected function reportEffectiveSettings(
-        ImportConfigurationInterface $configuration,
-        Site $site,
-        ImportProgressListener $listener
-    ): void {
-        $settings = $this->effectiveSettingsReport->record($configuration, $site);
-        if ($settings === []) {
-            return;
-        }
-
-        try {
-            $listener->settingsResolved($settings);
-        } catch (Throwable) {
-            // Diagnostics must never cost a run.
-        }
     }
 
     protected function fetchDataFromApi(string $url, string $apiKey): array

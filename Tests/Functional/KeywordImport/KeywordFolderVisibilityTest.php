@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\KeywordImport;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 /**
@@ -46,8 +45,8 @@ final class KeywordFolderVisibilityTest extends AbstractImportTestCase
 
         // First run creates the tree; hiding happens in the fixture, so the
         // second run is the one that must find it again.
-        $this->runImport();
-        $this->runImport();
+        $this->importJob(1);
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchCategoriesByRemoteId(self::TERM_REMOTE_ID), 'The keyword term must be reused, not duplicated, on a hidden folder.');
         $this->assertCount(1, $this->fetchCategoriesByRemoteId(self::SET_REMOTE_ID), 'The term set must be reused, not duplicated, on a hidden folder.');
@@ -66,12 +65,6 @@ final class KeywordFolderVisibilityTest extends AbstractImportTestCase
         $this->expectFetch('126981310364-xwgt.json');
         $this->expectFetch('475728955106-qdcc.json');
         $this->expectFetch('155933862969-mofh.json');
-    }
-
-    private function runImport(): void
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
     }
 
     /**

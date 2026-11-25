@@ -41,7 +41,7 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-managed-by-translated-organisation.json');
         $this->expectFetch('organisation-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId('tx_thuecat_organisation', self::ORGANISATION, self::STORAGE_PID));
         $this->assertSame([0, 1], $this->fetchLanguagesByRemoteId('tx_thuecat_tourist_attraction', self::ATTRACTION, self::STORAGE_PID));
@@ -54,7 +54,7 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-managed-by-translated-organisation.json');
         $this->expectFetch('organisation-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION);
         $this->assertArrayHasKey(1, $this->fetchTranslationsByParent('tx_thuecat_organisation', $organisationUid));
@@ -74,7 +74,7 @@ final class ManagedByImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-managed-by-translated-organisation.json');
         $this->expectFetch('organisation-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $attractionTranslations = $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 1);
         $this->assertArrayHasKey(1, $attractionTranslations);

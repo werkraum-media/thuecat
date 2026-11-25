@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\KeywordImport;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\Connection;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class KeywordImportTest extends AbstractImportTestCase
@@ -35,7 +34,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $created = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
         $this->assertCount(1, $created, 'Exactly one keyword category should be created.');
@@ -50,7 +49,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $set = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
@@ -72,7 +71,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->expectFetch('deep-set-mid.json');
         $this->expectFetch('deep-group-top.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $top = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/deep-group-top');
         $mid = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/deep-set-mid');
@@ -100,7 +99,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordHuskPreState.php');
         $this->expectHuskFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $top = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-group-top');
         $leaf = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-term-leaf');
@@ -116,7 +115,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordHuskPreState.php');
         $this->expectHuskFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-set-mid'), 'A label-less group must never become a title-less category.');
         $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/husk-standalone'), 'A husk referenced directly by the record is skipped outright.');
@@ -129,7 +128,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordHuskPreState.php');
         $this->expectHuskFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Order follows the POI's keyword list: the referenced term is walked
         // first, so its husk ancestor precedes the standalone husk.
@@ -179,7 +178,7 @@ final class KeywordImportTest extends AbstractImportTestCase
             'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $enum = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Ambiance');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/CollisionWeingut');
@@ -200,7 +199,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
         $set = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/155933862969-mofh');
@@ -223,7 +222,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc');
 
@@ -239,7 +238,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordOutOfScopePreState.php');
         $this->expectFetch('organisation-with-keyword.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/475728955106-qdcc'), 'An out-of-scope type must not even create the keyword category.');
 
@@ -255,7 +254,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordReapPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A keyword absent from the current payload must not stay related.');
         $this->assertSame([0, 1, 2], $this->fetchRelatedRecordLanguages('tx_thuecat_tourist_attraction', 203, 'keywords'), 'The keyword still provided keeps its relation, once per language.');
@@ -269,7 +268,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordReapPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 204), "A keyword with no remote_id is outside the importer's reach.");
     }
@@ -281,7 +280,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordReapPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertCount(1, $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/stale-term'), 'Reaping removes the relation, never the category record.');
     }
@@ -302,7 +301,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->expectFailure('guard-term-failing', 503, 'Service Unavailable');
         $this->expectFailure('guard-term-failing', 503, 'Service Unavailable');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A term that failed to resolve keeps the relation it already had.');
     }
@@ -318,7 +317,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->expectFetch('155933862969-mofh.json');
         $this->expectNotFound('guard-term-failing');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 202), 'A term upstream reports gone loses its relation.');
     }
@@ -336,7 +335,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordAllDroppedPreState.php');
         $this->expectFetch('poi-without-keywords.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertNotSame(0, $this->countKeywordRelations('tx_thuecat_tourist_attraction', 203), 'Not yet reaped: the owner collects nothing and never reaches the flush.');
 
@@ -354,7 +353,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordAllDroppedPreState.php');
         $this->expectFetch('poi-without-keywords.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRelationsForOwner('tx_thuecat_tourist_attraction', 2, 'keywords'), 'The untouched record keeps its relation to the shared keyword.');
     }
@@ -380,7 +379,7 @@ final class KeywordImportTest extends AbstractImportTestCase
             'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         foreach ([
             'reference' => 'keyword:https://thuecat.org/resources/collision-term-museum',
@@ -403,7 +402,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordManyPreState.php');
         $this->expectManyKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $set = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/resources/192875159827-xfqk');
         $this->assertCount(1, $set, 'Three members reaching one set create it once.');
@@ -427,7 +426,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordManyPreState.php');
         $this->expectManyKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         $enum = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Ambiance');
         $term = $this->fetchCategoriesByRemoteId('keyword:https://thuecat.org/ontology/thuecat/1.0/Historic');
@@ -445,7 +444,7 @@ final class KeywordImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/KeywordImportPreState.php');
         $this->expectKeywordFetches();
 
-        $this->runImport();
+        $this->importJob(1);
 
         foreach ($this->fetchCategoriesUnder(100) as $row) {
             $this->assertStringStartsNotWith('keyword:', (string)$row['remote_id'], 'A keyword category appeared under the category anchor.');
@@ -491,7 +490,7 @@ final class KeywordImportTest extends AbstractImportTestCase
             'thuecat.org/ontology/thuecat/1.0/Ambiance.json'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Museum: type category + referenced term + free-text literal.
         // Weingut: type category + ontology CURIE.
@@ -766,12 +765,6 @@ final class KeywordImportTest extends AbstractImportTestCase
             ->executeQuery()
             ->fetchAllAssociative()
         ;
-    }
-
-    private function runImport(): void
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration);
     }
 
     /**

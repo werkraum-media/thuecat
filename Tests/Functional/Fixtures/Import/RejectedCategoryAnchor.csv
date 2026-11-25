@@ -1,0 +1,7 @@
+"pages"
+,"uid","pid","title","doktype"
+,2200,0,"Event keywords",1
+,2210,2200,"Storage",254
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","storage_pid"
+,3,0,"Category anchor outside the site","static",2210

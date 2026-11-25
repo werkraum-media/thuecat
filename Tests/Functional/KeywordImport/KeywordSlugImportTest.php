@@ -35,7 +35,7 @@ final class KeywordSlugImportTest extends AbstractImportTestCase
         $this->expectFetch('475728955106-qdcc.json');
         $this->expectFetch('155933862969-mofh.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('landeshauptstadt-erfurt', $this->fetchRowByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/475728955106-qdcc')['slug']);
     }

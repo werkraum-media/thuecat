@@ -44,7 +44,7 @@ final class EventDescriptionImportTest extends AbstractImportTestCase
         $this->expectFetch('e_desc_literal-hubev.json');
         $this->expectFetch('e_desc_none-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     #[Test]

@@ -140,7 +140,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch(basename($remoteId) . '.json');
 
-        $this->importConfiguration($configuration);
+        $this->importJob($configuration);
 
         $this->assertSame($expected, $this->fetchColumnsByRemoteId(self::TABLE, $remoteId, array_keys($expected)));
     }
@@ -151,7 +151,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch('554408963544-zftr.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::HOTEL_WITH_GASTRONOMY);
         $this->assertSame('Motorcycle-Friendly Hotel and Restaurant', $translations[1]['certifications'] ?? null);
@@ -164,7 +164,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-meeting-type.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], array_filter($this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, self::VENUE_COLUMNS)));
     }
@@ -175,7 +175,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetchForUrl(self::MEETING_LOCATION, 'thuecat.org/resources/meeting-venue-with-unknown-unit.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::MEETING_LOCATION);
         $this->assertSame(0, $row['distance_fair']);
@@ -190,7 +190,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch('838757899629-mqjw.json');
 
-        $this->importConfiguration(6);
+        $this->importJob(6);
 
         $german = $this->fetchRowByRemoteId(self::TABLE, self::MEMORIAL)['description_culture_portal'];
         $english = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::MEMORIAL)[1]['description_culture_portal'] ?? null;
@@ -206,7 +206,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch('447107981156-qmxj.json');
 
-        $this->importConfiguration(7);
+        $this->importJob(7);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::VILLA);
         $this->assertIsString($row['description_lodging_meeting']);
@@ -220,7 +220,7 @@ final class MeetingVenuePropertiesImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetchForUrl(self::MEMORIAL, 'thuecat.org/resources/meeting-venue-with-unknown-description-type.json');
 
-        $this->importConfiguration(6);
+        $this->importJob(6);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::MEMORIAL);
         $this->assertEmpty($row['description_culture_portal']);

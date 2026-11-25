@@ -45,7 +45,7 @@ final class ContainsPlaceImportTest extends AbstractImportTestCase
             'thuecat.org/resources/trail-without-relations.json'
         );
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_52469786-oatour'));
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/e_106954656-oatour'));

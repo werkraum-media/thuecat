@@ -41,7 +41,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventOrganizerImportPreState.php');
         $this->expectFetch('e_organizer-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $event = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',
@@ -84,7 +84,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventWithoutOrganizerPreState.php');
         $this->expectFetch('e_noorg-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countRows('tx_events_domain_model_organizer'));
 
@@ -103,7 +103,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         $this->expectFetch('e_organizer-hubev.json');
         $this->expectFetch('e_sameorg-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(2, $this->countRows('tx_events_domain_model_event'));
         $this->assertSame(1, $this->countRows('tx_events_domain_model_organizer'), 'The shared organizer was written twice.');
@@ -122,7 +122,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventForeignOrganizerPreState.php');
         $this->expectFetch('e_organizer-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(2, $this->countRows('tx_events_domain_model_organizer'), 'The import claimed the foreign row instead of writing its own.');
 
@@ -149,7 +149,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventRelationRemovalPreState.php');
         $this->expectFetch('e_noorg-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $event = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',
@@ -179,7 +179,7 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
         // is not retried — a 500 would need one staged response per attempt.
         $this->expectFailure('e_noorg-hubev', 401);
 
-        $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
         $event = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',

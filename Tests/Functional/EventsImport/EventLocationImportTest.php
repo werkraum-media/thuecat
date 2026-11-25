@@ -41,7 +41,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationImportPreState.php');
         $this->expectFetch('e_101155874-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $event = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',
@@ -85,7 +85,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_101155874-hubev.json');
         $this->expectFetch('e_curiecountry-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRows('tx_events_domain_model_location'), 'The literal and the CURIE country forked the venue into two rows.');
 
@@ -118,7 +118,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_101155874-hubev.json');
         $this->expectFetch('e_samevenue-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(2, $this->countRows('tx_events_domain_model_event'));
         $this->assertSame(1, $this->countRows('tx_events_domain_model_location'), 'The shared venue was written twice.');
@@ -132,7 +132,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReusePreState.php');
         $this->expectFetch('e_101155874-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         // The seeded pair, and no third row.
         $this->assertSame(2, $this->countRows('tx_events_domain_model_location'));
@@ -150,7 +150,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationReusePreState.php');
         $this->expectFetch('e_101155874-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $reused = $this->fetchLocationByUid(77);
         $this->assertSame([
@@ -187,7 +187,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventLocationWithoutStreetPreState.php');
         $this->expectFetch('e_nostreet-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
 
@@ -206,7 +206,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_locref-hubev.json');
         $this->expectFetchAt('thuecat.org', 'resources', '900000000002-locr.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->countRows('tx_events_domain_model_location'));
 
@@ -261,7 +261,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_locref_dead-hubev.json');
         $this->expectNotFoundAt('thuecat.org', 'resources', '900000000003-dead');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $event = $this->fetchRowByRemoteId(
             'tx_events_domain_model_event',
@@ -288,7 +288,7 @@ final class EventLocationImportTest extends AbstractImportTestCase
         $this->expectFetch('e_locref_multi-hubev.json');
         $this->expectFetchAt('thuecat.org', 'resources', '900000000004-multi.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $location = $this->fetchLocationByUid(
             $this->locationUidOf('https://int.thuecat.org/resources/e_locref_multi-hubev')

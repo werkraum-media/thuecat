@@ -21,12 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use RuntimeException;
-use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationInterface;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
-use WerkraumMedia\ThueCat\Import\Importer;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Settings\AnchorScope;
 use WerkraumMedia\ThueCat\Import\Settings\CategoryAnchorSetting;
 
@@ -88,24 +82,12 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('effectiveSettings');
 
         $this->assertCount(1, $entries, 'One summary per run.');
         $this->assertSame('debug', $entries[0]['severity']);
-    }
-
-    // 'debug' is rank 0, so the summary cannot lift a clean run's outcome.
-    #[Test]
-    public function theSummaryDoesNotRaiseTheRunSeverity(): void
-    {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        $severity = $this->importConfigurationReturningSeverity(1);
-
-        $this->assertSame('debug', $severity);
     }
 
     /**
@@ -119,7 +101,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $expected = ['storagePid', 'fileFolder'];
         foreach ($this->scopes() as $scope) {
@@ -153,7 +135,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $reported = array_keys($this->summaryContext());
 
@@ -169,7 +151,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $context = $this->summaryContext();
 
@@ -206,7 +188,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('effectiveSettings');
         $this->assertCount(1, $entries);
@@ -218,31 +200,6 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
         // Neither a masked rendering nor a length may appear: both leak shape.
         $this->assertStringNotContainsString(str_repeat('*', 4), $serialised);
         $this->assertStringNotContainsString((string)strlen(self::API_KEY), $serialised);
-    }
-
-    // Diagnostics must never cost a run.
-    #[Test]
-    public function aListenerThrowingOnTheSummaryDoesNotFailTheImport(): void
-    {
-        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        $this->expectFetch('018132452787-ngbe.json');
-
-        $listener = new class() implements ImportProgressListener {
-            public function progressed(ImportProgress $progress): void
-            {
-            }
-
-            public function settingsResolved(array $settings): void
-            {
-                throw new RuntimeException('listener blew up', 1787000001);
-            }
-        };
-
-        $configuration = $this->get(ImportConfigurationRepository::class)->findByUid(1);
-        $this->assertInstanceOf(ImportConfigurationInterface::class, $configuration);
-        $severity = $this->get(Importer::class)->importConfiguration($configuration, $listener);
-
-        $this->assertSame('debug', $severity);
     }
 
     /**

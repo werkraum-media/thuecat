@@ -33,7 +33,7 @@ final class RecoveredRetryTest extends AbstractImportTestCase
         $this->expectFailure('018132452787-ngbe', 503, 'Service Unavailable');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('retriesRecovered');
 
@@ -58,9 +58,10 @@ final class RecoveredRetryTest extends AbstractImportTestCase
         $this->expectFailure('018132452787-ngbe', 503, 'Service Unavailable');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('notice', $severity);
+        $this->assertNotContains('warning', $this->logSeverities());
+        $this->assertNotContains('error', $this->logSeverities());
         $this->assertSame('notice', $this->getLogEntriesOfType('retriesRecovered')[0]['severity'] ?? null, 'A resource that was fetched is not a failure.');
     }
 
@@ -76,7 +77,7 @@ final class RecoveredRetryTest extends AbstractImportTestCase
         $this->expectFailure('018132452787-ngbe', 503, 'Service Unavailable');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $organisations = $this->getConnectionPool()
             ->getConnectionForTable('tx_thuecat_organisation')
@@ -96,7 +97,7 @@ final class RecoveredRetryTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->getLogEntriesOfType('retriesRecovered'), 'Presence of the entry is the signal, so a clean run must write none.');
     }

@@ -50,7 +50,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetch('109087118959-gwhg.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame(['spaces_car' => 120, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 0], $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES));
     }
@@ -62,7 +62,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetchForUrl(self::PARKING_FACILITY, 'thuecat.org/resources/parking-facility-with-shared-spaces.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame(['spaces_car' => 5, 'spaces_handicapped' => 0, 'spaces_bus' => 0, 'spaces_ev_charging' => 0, 'spaces_motorcycle' => 5], $this->fetchColumnsByRemoteId(self::TABLE, self::PARKING_FACILITY, self::SPACES));
     }
@@ -74,7 +74,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetchForUrl(self::PARKING_FACILITY, 'thuecat.org/resources/parking-facility-with-unknown-vehicle-type.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame(120, $this->fetchRowByRemoteId(self::TABLE, self::PARKING_FACILITY)['spaces_car']);
 
@@ -87,7 +87,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetch('160874095809-phhn.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([self::MULTI_PURPOSE_HALL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
         $expected = [
@@ -109,7 +109,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetch('160874095809-phhn.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertOrigin(self::VENUE_TABLE, self::MULTI_PURPOSE_HALL, 1, 'Venue with one parking facility', '');
         $this->assertOrigin(self::TABLE, self::MULTI_PURPOSE_HALL . '::parking::0', 0, '', '');
@@ -121,7 +121,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetchForUrl(self::CULTURAL_ESTATE, 'thuecat.org/resources/meeting-venue-with-described-parking-facility.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame('Parkplätze an der Kirche können ebenfalls genutzt werden.', $this->fetchRowByRemoteId(self::TABLE, self::CULTURAL_ESTATE . '::parking::0')['description']);
     }
@@ -132,7 +132,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-with-translated-parking-facility.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $translations = $this->fetchTranslationsByParentRemoteId(self::TABLE, self::WIELANDGUT . '::parking::0');
         $this->assertSame('Parking', $translations[1]['title'] ?? null);
@@ -146,7 +146,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueParking.php');
         $this->expectFetchForUrl(self::MULTI_PURPOSE_HALL, 'thuecat.org/resources/meeting-venue-with-parking-facility-opening-hours.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $parkingFacility = self::MULTI_PURPOSE_HALL . '::parking::0';
         $this->assertSame(['parentid' => $this->fetchUidByRemoteId(self::TABLE, $parkingFacility), 'parenttable' => self::TABLE], $this->fetchColumnsByRemoteId(
@@ -163,7 +163,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithParkingFacility.csv');
         $this->expectFetch('160874095809-phhn.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $parkingFacilities = $this->fetchChildren(self::TABLE);
         $this->assertCount(1, $parkingFacilities);
@@ -178,7 +178,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithTwoParkingFacilities.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-with-one-of-two-parking-facilities.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame([self::HOTEL . '::parking::0'], $this->fetchChildRemoteIds(self::TABLE));
     }
@@ -190,7 +190,7 @@ final class ParkingFacilityImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithTwoParkingFacilities.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-parking-facilities.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame([], $this->fetchChildren(self::TABLE));
     }

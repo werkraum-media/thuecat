@@ -37,7 +37,7 @@ final class TrailRelationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithRelations.php');
         $this->expectKeywordFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $term = $this->fetchCategoryByRemoteId(
             'keyword:https://thuecat.org/resources/887654277691-eatw'
@@ -58,7 +58,7 @@ final class TrailRelationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithRelations.php');
         $this->expectKeywordFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
         $this->assertGreaterThan(0, $trailUid, 'The trail must be imported.');
@@ -72,7 +72,7 @@ final class TrailRelationImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrailWithRelations.php');
         $this->expectFetchForUrl(self::REMOTE_ID, 'thuecat.org/resources/trail-without-relations.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $trailUid = $this->fetchUidByRemoteId('tx_thuecat_trail', self::REMOTE_ID);
         $this->assertGreaterThan(0, $trailUid, 'Absent relations must not block the import.');
@@ -87,7 +87,7 @@ final class TrailRelationImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::REMOTE_ID, 'thuecat.org/resources/trail-with-content-responsible.json');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $organisationUid = $this->fetchUidByRemoteId(
             'tx_thuecat_organisation',

@@ -41,7 +41,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame($this->meetingVenueRoomRemoteIds(), $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::MEETING_VENUE_WITH_ROOMS, 'meeting_rooms'));
     }
@@ -54,7 +54,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('394356958814-mhch.json');
         $this->expectFetch('201162676710-tagb.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $this->assertSame([self::RESOURCES . '201162676710-tagb'], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . 'r_22033376-oapoi', 'meeting_rooms'));
         $this->assertNotContains(self::RESOURCES . '394356958814-mhch', $this->fetchChildRemoteIds(self::VENUE_TABLE));
@@ -71,7 +71,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('394356958814-mhch.json');
         $this->expectFetch('201162676710-tagb.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame([
             '059632237210-rbpe' => [self::RESOURCES . '019950652406-nywx'],
@@ -89,7 +89,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->expectMeetingVenueWithRooms();
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame([self::RESOURCES . '541146409582-zdzo', self::RESOURCES . '853365081548-bobo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }
@@ -104,7 +104,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('757717628971-kyro.json');
         $this->expectFetch('737866811554-cmed.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame([
             'division' => [self::RESOURCES . '757717628971-kyro'],
@@ -125,7 +125,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('757717628971-kyro.json');
         $this->expectFetchForUrl(self::RESOURCES . '737866811554-cmed', 'thuecat.org/resources/meeting-room-divided-beyond-the-bound.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '737866811554-cmed', 'contained_rooms'));
         $this->assertNotContains(self::RESOURCES . '452821338011-thxk', $this->fetchChildRemoteIds(self::TABLE));
@@ -141,7 +141,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::RESOURCES . '279158168683-ypnr', 'thuecat.org/resources/meeting-room-naming-its-combination.json');
         $this->expectFetch('113066118073-geqe.json');
 
-        $this->importConfiguration(6);
+        $this->importJob(6);
 
         $this->assertCount(3, $this->fetchChildren(self::TABLE));
         $this->assertSame([
@@ -160,7 +160,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetch('771285888381-bqfq.json');
         $this->expectFetchForUrl(self::RESOURCES . 'e_ttg00020050000285951-tomas', 'thuecat.org/resources/meeting-venue-reached-as-reference.json');
 
-        $this->importConfiguration(7);
+        $this->importJob(7);
 
         $this->assertSame('meeting_venue', $this->fetchRowByRemoteId(self::VENUE_TABLE, self::RESOURCES . 'e_ttg00020050000285951-tomas')['type']);
         $this->assertSame([], $this->fetchChildren(self::TABLE));
@@ -174,7 +174,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-one-of-its-rooms.json');
         $this->expectFetch('380984144868-tjdz.json', '541146409582-zdzo.json', '853365081548-bobo.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame([self::RESOURCES . '380984144868-tjdz'], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
     }
@@ -186,7 +186,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithRooms.csv');
         $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-without-rooms.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::VENUE_TABLE, self::RESOURCES . '669150457039-gamn', 'meeting_rooms'));
     }
@@ -200,7 +200,7 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::RESOURCES . '380984144868-tjdz', 'thuecat.org/resources/meeting-room-naming-one-combination.json');
         $this->expectFetch('541146409582-zdzo.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertSame([self::RESOURCES . '541146409582-zdzo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }

@@ -43,7 +43,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
     {
         $this->expectFetch('claiming-hotel.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-hotel'));
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-hotel'));
@@ -54,7 +54,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
     {
         $this->expectFetch('claiming-bed-and-breakfast.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-bed-and-breakfast'));
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-bed-and-breakfast'));
@@ -66,7 +66,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
         $this->expectFetch('claiming-restaurant-in-hotel.json');
         $this->expectFetch('claiming-hotel.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-hotel');
         $this->assertGreaterThan(0, $hotelUid);
@@ -80,7 +80,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
     {
         $this->expectFetch('claiming-dmo.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-dmo'));
     }
@@ -90,7 +90,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
     {
         $this->expectFetch('claiming-store.json');
 
-        $this->importConfiguration(5);
+        $this->importJob(5);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-store'));
     }
@@ -100,7 +100,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
     {
         $this->expectFetch('claiming-parking.json');
 
-        $this->importConfiguration(6);
+        $this->importJob(6);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', self::RESOURCES . 'claiming-parking'));
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_organisation', self::RESOURCES . 'claiming-parking'));
@@ -112,7 +112,7 @@ final class EntityClaimingTest extends AbstractImportTestCase
         $this->expectFetch('claiming-attraction-in-untyped-place.json');
         $this->expectFetch('claiming-untyped-place.json');
 
-        $this->importConfiguration(7);
+        $this->importJob(7);
 
         $attraction = $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'claiming-attraction-in-untyped-place');
         $this->assertSame('', $attraction['contained_in_attraction']);

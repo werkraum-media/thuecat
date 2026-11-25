@@ -52,10 +52,11 @@ class ImportJobItems
      */
     public function store(int $job, array $importTargets, array $deleteTargets): void
     {
+        $now = $this->clock->now()->getTimestamp();
         $rows = [];
         foreach (['import' => $importTargets, 'delete' => $deleteTargets] as $action => $targets) {
             foreach (array_unique($targets) as $target) {
-                $rows[] = [$job, $target, $action, count($rows), 'pending'];
+                $rows[] = [$now, $job, $target, $action, count($rows), 'pending'];
             }
         }
 
@@ -66,8 +67,8 @@ class ImportJobItems
         $this->connectionPool->getConnectionForTable(self::TABLE)->bulkInsert(
             self::TABLE,
             $rows,
-            ['job', 'target', 'action', 'position', 'state'],
-            [ParameterType::INTEGER, ParameterType::STRING, ParameterType::STRING, ParameterType::INTEGER, ParameterType::STRING]
+            ['crdate', 'job', 'target', 'action', 'position', 'state'],
+            [ParameterType::INTEGER, ParameterType::INTEGER, ParameterType::STRING, ParameterType::STRING, ParameterType::INTEGER, ParameterType::STRING]
         );
     }
 

@@ -22,7 +22,6 @@ namespace WerkraumMedia\ThueCat\Import;
 
 use TYPO3\CMS\Core\Resource\Enum\DuplicationBehavior;
 use TYPO3\CMS\Core\Resource\Folder;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
  * Staging Handling for FAL imports. Download puts them into a fresh folder,
@@ -35,17 +34,9 @@ class MediaFileStaging
     protected const STAGING_PREFIX = '_thuecat_import_';
 
     /**
-     * Create a fresh, uniquely named staging subfolder under $target.
-     */
-    public function createForRun(Folder $target): Folder
-    {
-        return $target->createFolder(StringUtility::getUniqueId(self::STAGING_PREFIX));
-    }
-
-    /**
      * Move every staged file into $target. A name already present in the
      * target wins (same dms id = same file): the staged duplicate is dropped
-     * rather than moved. Called only after a clean run.
+     * rather than moved.
      */
     public function promote(Folder $staging, Folder $target): void
     {

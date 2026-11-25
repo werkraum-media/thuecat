@@ -50,7 +50,7 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
     {
         $this->expectFetch('hotel-kind-changed.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $unrelatedTranslation = $this->fetchTranslationsByParent('tx_thuecat_tourist_attraction', 6)[1];
         $this->assertSame(7, $unrelatedTranslation['uid']);
@@ -71,7 +71,7 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
     {
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/hotel-kind-changed-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
         $this->assertGreaterThan(0, $hotelUid);
@@ -84,7 +84,7 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
     {
         $this->expectFetch('hotel-kind-changed.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
         $entries = $this->getLogEntriesOfType('recordReclassification');
@@ -106,7 +106,7 @@ final class TableMismatchGuardTest extends AbstractImportTestCase
     {
         $this->expectFetch('hotel-kind-changed.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $hotelUid = $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::HOTEL);
         $log = $this->get(ImportLogRepository::class)->findAll()->getFirst();

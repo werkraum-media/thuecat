@@ -38,7 +38,7 @@ final class TranslationRelationImportTest extends AbstractImportTestCase
         $this->expectFetch('town-translated.json');
         $this->expectFetch('organisation-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $translations = $this->fetchTranslationsByParent('tx_thuecat_tourist_information', 1);
         $this->assertArrayHasKey(1, $translations);
@@ -55,7 +55,7 @@ final class TranslationRelationImportTest extends AbstractImportTestCase
         $this->expectFetch('town-managed-by-translated-organisation.json');
         $this->expectFetch('organisation-translated.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $translations = $this->fetchTranslationsByParent('tx_thuecat_town', 3);
         $this->assertArrayHasKey(1, $translations);

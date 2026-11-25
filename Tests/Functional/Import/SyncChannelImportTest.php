@@ -22,33 +22,17 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\RequestInterface;
-use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\GuzzleClientFaker;
 
 final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
 {
     #[Test]
-    public function unreadableExpiryListFailsTheRunBeforeAnyRecordIsFetched(): void
-    {
-        $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed.json');
-        $this->expectFailureForUrl(self::LIST_EXPIRED, 403);
-
-        try {
-            $this->importConfiguration(1);
-            $this->fail('The run went on without the expiry list.');
-        } catch (InvalidResponseException) {
-        }
-
-        $this->assertCount(1, $this->getLogEntriesOfType('runFailed'));
-    }
-
-    #[Test]
     public function importsAListedEventUnderItsOwnId(): void
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCSVDataSet(__DIR__ . '/Assertions/SyncChannelImportsListedEvent.csv');
     }
@@ -58,7 +42,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServing('list-changed-trail.json', 'test-trail-1');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('Test-Weg', $this->fetchRowByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-1')['title']);
         $this->assertSame(['Test-Start', 'Test-Ziel'], array_column($this->fetchChildren('tx_thuecat_trail_location'), 'title'));
@@ -71,7 +55,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServing('list-changed-attraction.json', 'test-attraction-1');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('Test-Sehenswürdigkeit', $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-attraction-1')['title']);
     }
@@ -81,7 +65,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $request = GuzzleClientFaker::getRequestForUrl(self::RECORD . 'test-event-1');
         $this->assertInstanceOf(RequestInterface::class, $request);
@@ -96,7 +80,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectFailureForUrl(self::RECORD . 'test-event-unserved', 200);
         $this->expectChannelRecords('test-event-1');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $errors = $this->getLogEntriesOfType('fetchingError');
         $this->assertCount(1, $errors);
@@ -110,7 +94,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('https://thuecat.org', $this->fetchRowByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')['source_url']);
     }
@@ -120,7 +104,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([$this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1')], $this->fetchMmRelatedUids(
             'tx_thuecat_tourist_attraction',
@@ -135,7 +119,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectChannelServing('list-changed-keyword.json', 'test-event-keyword-1');
         $this->expectKeywordOutsideTheChannel();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->getLogEntriesOfType('referenceSkipped'));
         $this->assertSame([], $this->getLogEntriesOfType('fetchingError'));
@@ -147,7 +131,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectChannelServing('list-changed-keyword.json', 'test-event-keyword-1');
         $this->expectKeywordOutsideTheChannel();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
@@ -178,7 +162,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectFetchForUrl('https://thuecat.org/resources/192875159827-xfqk', 'thuecat.org/resources/192875159827-xfqk.json');
         $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('sys_category', 'keyword:https://thuecat.org/resources/916373333853-mknj'));
     }
@@ -188,7 +172,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertOrigin('tx_events_domain_model_event', self::EVENT, 1, 'Sync Channel', 'test-channel');
     }
@@ -204,7 +188,7 @@ final class SyncChannelImportTest extends AbstractSyncChannelImportTestCase
         $this->expectFetchForUrl('https://thuecat.org/resources/192875159827-xfqk', 'thuecat.org/resources/192875159827-xfqk.json');
         $this->expectFetchForUrl(self::PLACE, self::PLACE_FIXTURE);
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertOrigin('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-keyword-1', 2, 'Static', '');
     }

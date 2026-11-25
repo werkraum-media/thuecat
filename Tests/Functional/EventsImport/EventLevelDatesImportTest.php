@@ -166,7 +166,7 @@ final class EventLevelDatesImportTest extends AbstractImportTestCase
         $this->expectFetch('e_19c21523-343f-4b72-b13c-756ac4bde8c5-tdm.json');
         $this->expectFetch('e_101176534-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $eventLevel = $this->datesOf(self::TDM . 'tdm');
         $scheduled = $this->datesOf('https://thuecat.org/resources/e_101176534-hubev');
@@ -272,7 +272,7 @@ final class EventLevelDatesImportTest extends AbstractImportTestCase
         $this->expectFetch('e_7cbe5bb1-tdm.json');
         $this->expectFetch('e_349b798696b77c81995d71a99b4460d1-emptysched.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     private function importEventLevelEvents(): void
@@ -284,6 +284,6 @@ final class EventLevelDatesImportTest extends AbstractImportTestCase
         $this->expectFetch('e_19c21523-343f-4b72-b13c-756ac4bde8c5-dateonly.json');
         $this->expectFetch('e_349b798696b77c81995d71a99b4460d1-kcev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 }

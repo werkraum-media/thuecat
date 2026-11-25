@@ -108,7 +108,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::TRAIL_ID, 'thuecat.org/resources/trail-with-content-responsible.json');
         $this->expectFetch('018132452787-ngbe.json');
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsAttractionInTrailWithRelations.php');
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $organisationUid = $this->fetchUidByRemoteId('tx_thuecat_organisation', self::ORGANISATION_ID);
         $this->assertSame($organisationUid, $this->fetchTrailManagedBy(), 'Precondition: the relation is set.');
@@ -132,7 +132,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsAttractionInTrailWithRelations.php');
         $this->expectFetch('e_106954656-oatour.json');
         $this->expectKeywordFetches();
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $trailUid = $this->fetchTrailUid();
         $this->assertSame(6, $this->countKeywordRelations($trailUid), 'Precondition: keywords are set.');
@@ -158,7 +158,7 @@ final class TrailDepthCapTest extends AbstractImportTestCase
         $this->expectFetchForUrl(self::TRAIL_ID, 'thuecat.org/resources/e_106954656-oatour.json');
         $this->expectKeywordFetches();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     private function expectKeywordFetches(): void

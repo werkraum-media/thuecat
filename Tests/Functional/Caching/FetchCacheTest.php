@@ -49,9 +49,9 @@ final class FetchCacheTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
         // Nothing staged: an HTTP request here has no response to consume.
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, GuzzleClientFaker::countConsumed(), 'Two runs, one request: the second was served from the cache.');
     }
@@ -62,7 +62,7 @@ final class FetchCacheTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $rows = $this->getConnectionPool()
             ->getConnectionForTable('cache_thuecat_fetchdata')
@@ -78,7 +78,7 @@ final class FetchCacheTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $expires = $this->getConnectionPool()
             ->getConnectionForTable('cache_thuecat_fetchdata')

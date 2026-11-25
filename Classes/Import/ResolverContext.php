@@ -25,9 +25,6 @@ use TYPO3\CMS\Core\Site\Entity\Site;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\KeywordTermEntity;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
-use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
-use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Settings\AnchorPair;
 use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryAnchor;
 
@@ -369,7 +366,6 @@ final class ResolverContext
         public readonly array $translationLanguages = [],
         public readonly ?Folder $targetFolder = null,
         public readonly ?Folder $stagingFolder = null,
-        public readonly ?ImportProgressListener $progressListener = null,
         // Drops media before any API request: both the referenced bucket and
         // inline nodes are discarded unresolved, undownloaded, unrelated.
         public readonly bool $skipMedia = false,
@@ -436,14 +432,6 @@ final class ResolverContext
 
         $this->claimedByField[$key] = true;
         $this->collectedMedia[] = $media;
-    }
-
-    // The run-scoped carrier already; cheaper than a parameter on every method.
-    public function reportProgress(string $label): void
-    {
-        $this->progressListener?->progressed(
-            new ImportProgress(ImportPhase::Resolve, $label)
-        );
     }
 
     public function markFound(string $remoteId): void

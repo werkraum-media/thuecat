@@ -53,30 +53,12 @@ class ImportLogger
 
     public const SEVERITY_EMERGENCY = 'emergency';
 
-    /**
-     * PSR-3 severity ranking; higher number = higher severity. Used by
-     * getMaxSeverity() so callers (Importer, Command) can decide on an exit
-     * code without parsing strings.
-     *
-     * @var array<string, int>
-     */
-    protected const SEVERITY_RANK = [
-        self::SEVERITY_DEBUG => 0,
-        self::SEVERITY_INFO => 1,
-        self::SEVERITY_NOTICE => 2,
-        self::SEVERITY_WARNING => 3,
-        self::SEVERITY_ERROR => 4,
-        self::SEVERITY_CRITICAL => 5,
-        self::SEVERITY_ALERT => 6,
-        self::SEVERITY_EMERGENCY => 7,
-    ];
-
     protected const UPDATE_WINDOW_SECONDS = 300;
 
     /**
      * Pending non-savingEntity entries staged via the record* methods.
-     * Flushed alongside the savingEntity rows in writeLog(). Entries are
-     * partial datamap rows minus the import_log FK, which writeLog wires up.
+     * Flushed alongside the savingEntity rows by writeLogInto(). Entries are
+     * partial datamap rows minus the import_log FK, which the flush wires up.
      *
      * @var list<array<string, mixed>>
      */
@@ -84,18 +66,11 @@ class ImportLogger
 
     /**
      * Held apart from pendingEntries so it can be written first, whenever the
-     * importer resolves it. Cleared by writeLog() along with the rest.
+     * importer resolves it. Cleared by the flush along with the rest.
      *
      * @var array<string, mixed>|null
      */
     protected ?array $effectiveSettings = null;
-
-    /**
-     * Highest severity seen across all record* calls in this run, in
-     * SEVERITY_RANK terms. Reset by writeLog() so a logger instance can be
-     * reused across runs without leaking state.
-     */
-    protected int $maxSeverityRank = 0;
 
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
@@ -840,34 +815,6 @@ class ImportLogger
         };
     }
 
-    public function getMaxSeverity(): string
-    {
-        $rank = $this->maxSeverityRank;
-        foreach (self::SEVERITY_RANK as $severity => $value) {
-            if ($value === $rank) {
-                return $severity;
-            }
-        }
-
-        return self::SEVERITY_DEBUG;
-    }
-
-    /**
-     * Writes one tx_thuecat_import_log row plus one tx_thuecat_import_log_entry
-     * per resolved record. NEW keys are inserts; existing-uid keys whose
-     * tstamp falls within UPDATE_WINDOW_SECONDS are updates; older tstamps
-     * are treated as unchanged and skipped. All entries staged via the
-     * record* methods earlier in the run are flushed in the same DataHandler
-     * call, so the import_log row contains the complete picture of one run.
-     *
-     * @param array<string, array<int|string, array<string, mixed>>> $payload
-     * @param array<string, int|string> $substNEWwithIDs
-     */
-    public function writeLog(int|null $configurationUid, array $payload, array $substNEWwithIDs): void
-    {
-        $this->persistLog((int)$configurationUid, $payload, $substNEWwithIDs, false);
-    }
-
     /**
      * Adds the staged entries to a log that exists already, the one of the job.
      *
@@ -953,14 +900,12 @@ class ImportLogger
     }
 
     /**
-     * Reset accumulators so the logger can serve a second run cleanly.
-     * Importer does not currently call this — each CLI invocation gets a
-     * fresh instance via DI — but tests that reuse the logger do.
+     * Reset accumulators so the logger can serve the next message cleanly:
+     * the consumer is long-lived, so one instance serves many messages.
      */
     public function reset(): void
     {
         $this->pendingEntries = [];
-        $this->maxSeverityRank = 0;
         $this->retryTally->reset();
         $this->requestLedger->reset();
     }
@@ -980,12 +925,6 @@ class ImportLogger
             'errors' => '[]',
         ];
         $this->pendingEntries[] = $entry;
-
-        $severity = is_string($entry['severity'] ?? null) ? $entry['severity'] : self::SEVERITY_INFO;
-        $rank = self::SEVERITY_RANK[$severity] ?? 0;
-        if ($rank > $this->maxSeverityRank) {
-            $this->maxSeverityRank = $rank;
-        }
     }
 
     /**

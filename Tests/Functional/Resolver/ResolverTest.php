@@ -322,8 +322,9 @@ final class ResolverTest extends AbstractImportTestCase
 
         // recordUnrelatableReference() only stages the entry; the Importer
         // flushes it. Calling resolve() directly skips that, so write the log
-        // the way the Importer does before reading it back.
-        $this->get(ImportLogger::class)->writeLog(null, [], []);
+        // the way an item's handler does before reading it back.
+        $logger = $this->get(ImportLogger::class);
+        $logger->writeLogInto($logger->openLog(0), [], []);
 
         $entries = $this->getLogEntriesOfType('referenceUnrelatable');
         $this->assertCount(1, $entries, 'A table with no field is reported, not silently dropped.');

@@ -86,7 +86,7 @@ final class ImportRootTest extends AbstractImportTestCase
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(ImportJobItems::class, new ImportJobItems(
             $this->get(ConnectionPool::class),
-            new SteppingClock(new DateTimeImmutable('@1795526700'), new DateTimeImmutable('@1795526704')),
+            new SteppingClock(new DateTimeImmutable('@1795526640'), new DateTimeImmutable('@1795526700'), new DateTimeImmutable('@1795526704')),
         ));
         $job = $this->startJob(1);
 

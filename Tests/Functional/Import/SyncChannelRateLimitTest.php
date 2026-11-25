@@ -25,8 +25,7 @@ use PHPUnit\Framework\Attributes\Test;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 
 /**
- * Ordinals count every request of the run: the change list is the first, the
- * expiry list the second.
+ * Ordinals count every request of one item, the root's being the first.
  */
 final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
 {
@@ -37,7 +36,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->expectFailureForUrl(self::RECORD . 'test-event-unserved', 429);
         $this->expectChannelRecords('test-event-1');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('rateLimited');
         $this->assertCount(1, $entries);
@@ -46,7 +45,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->assertIsArray($context);
         $this->assertSame(self::RECORD . 'test-event-unserved', $context['url'] ?? null);
         $this->assertSame('widgets.thuecat.org', $context['host'] ?? null);
-        $this->assertSame(3, $context['ordinal'] ?? null);
+        $this->assertSame(1, $context['ordinal'] ?? null);
         $this->assertIsString($context['time'] ?? null);
         $this->assertNotFalse(DateTimeImmutable::createFromFormat(DATE_ATOM, $context['time']));
 
@@ -63,7 +62,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->expectFailureForUrl(self::RECORD . '916373333853-mknj', 200);
         $this->expectFailureForUrl('https://thuecat.org/resources/916373333853-mknj', 429);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $entries = $this->getLogEntriesOfType('rateLimited');
         $this->assertCount(1, $entries);
@@ -72,6 +71,8 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->assertIsArray($context);
         $this->assertSame('https://thuecat.org/resources/916373333853-mknj?format=jsonld', $context['url'] ?? null);
         $this->assertSame('thuecat.org', $context['host'] ?? null);
+        // After the event, its place and the keyword's channel record.
+        $this->assertSame(4, $context['ordinal'] ?? null);
 
         $skipped = $this->getLogEntriesOfType('referenceSkipped');
         $this->assertCount(1, $skipped);
@@ -80,13 +81,13 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
-    public function twoRateLimitsInOneRunCarryDistinctOrdinals(): void
+    public function eachItemCountsItsOwnRequests(): void
     {
         $this->expectChannelLists('list-changed-media-outside-channel.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-media-2a', 429);
         $this->expectFailureForUrl(self::RECORD . 'test-event-media-2b', 429);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $ordinals = [];
         foreach ($this->getLogEntriesOfType('rateLimited') as $entry) {
@@ -96,7 +97,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
             $ordinals[] = $context['ordinal'] ?? null;
         }
 
-        $this->assertSame([3, 4], $ordinals);
+        $this->assertSame([1, 1], $ordinals);
     }
 
     // The faker serves each staged response once: a retry would find none left.
@@ -106,7 +107,7 @@ final class SyncChannelRateLimitTest extends AbstractSyncChannelImportTestCase
         $this->expectChannelLists('list-changed.json');
         $this->expectFailureForUrl(self::RECORD . 'test-event-1', 429);
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertCount(1, $this->getLogEntriesOfType('fetchingError'));
     }

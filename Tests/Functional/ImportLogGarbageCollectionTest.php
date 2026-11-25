@@ -35,6 +35,8 @@ final class ImportLogGarbageCollectionTest extends AbstractImportConfigurationTe
         yield 'log' => ['tx_thuecat_import_log'];
         yield 'log entry' => ['tx_thuecat_import_log_entry'];
         yield 'removal job' => ['tx_thuecat_removal_job'];
+        yield 'import job' => ['tx_thuecat_import_job'];
+        yield 'import job item' => ['tx_thuecat_import_job_item'];
     }
 
     #[Test]

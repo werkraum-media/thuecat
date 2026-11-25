@@ -20,13 +20,20 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
+use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use WerkraumMedia\ThueCat\Import\CategoryConfigurationException;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
+use WerkraumMedia\ThueCat\Import\KeywordConfigurationException;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 final class ImportStartedTest extends AbstractImportTestCase
 {
@@ -47,6 +54,21 @@ final class ImportStartedTest extends AbstractImportTestCase
             ['https://thuecat.org/resources/test-trail-2', 'import', 'pending'],
             ['https://thuecat.org/resources/test-trail-3', 'import', 'pending'],
         ], array_map(static fn (array $item): array => [$item['target'], $item['action'], $item['state']], $this->jobItems($job)));
+    }
+
+    // The garbage collection task removes items by this date, as it removes their job by its own.
+    #[Test]
+    public function itemsCarryTheTimeTheyWereStored(): void
+    {
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportJobItems::class, new ImportJobItems(
+            $this->get(ConnectionPool::class),
+            new FixedClock(new DateTimeImmutable('@1795526700')),
+        ));
+
+        $this->startJob(1);
+
+        $this->assertSame(3, $this->countRowsMatching('tx_thuecat_import_job_item', ['crdate' => 1795526700]));
     }
 
     #[Test]
@@ -111,5 +133,30 @@ final class ImportStartedTest extends AbstractImportTestCase
         $this->assertSame('failed', $this->jobRow($job)['status']);
         $this->assertSame([], $this->jobItems($job));
         $this->assertSame([], $this->queuedMessages());
+    }
+
+    /**
+     * @return iterable<string, array{string, class-string}>
+     */
+    public static function rejectedAnchors(): iterable
+    {
+        yield 'category anchor outside the site' => ['RejectedCategoryAnchor.csv', CategoryConfigurationException::class];
+        yield 'keyword anchor outside the site' => ['RejectedKeywordAnchor.csv', KeywordConfigurationException::class];
+    }
+
+    /**
+     * @param class-string $rejection
+     */
+    #[DataProvider('rejectedAnchors')]
+    #[Test]
+    public function jobOfAConfigurationWithARejectedAnchorFails(string $fixture, string $rejection): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Import/' . $fixture);
+
+        $job = $this->importJob(3);
+
+        $this->assertSame('failed', $this->jobOutcome($job)['status']);
+        $this->assertSame([], $this->jobItems($job));
+        $this->assertSame($rejection, $this->logEntryContext('runFailed')['class'] ?? null);
     }
 }

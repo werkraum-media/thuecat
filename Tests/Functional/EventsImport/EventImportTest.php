@@ -48,7 +48,7 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventImportKreuzchorPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventImportKreuzchor.php');
     }
@@ -59,7 +59,7 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportStaleDatesPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportStaleDates.php');
     }
@@ -70,7 +70,7 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportOtherEventPreState.php');
         $this->expectFetch('e_19542-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportOtherEvent.php');
     }
@@ -85,7 +85,7 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportExceptedDatePreState.php');
         $this->expectFetch('e_7cbe5bb1-tdm.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportExceptedDate.php');
     }
@@ -100,7 +100,7 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportShortenedSeriesPreState.php');
         $this->expectFetch('e_7cbe5bb1-shortened-tdm.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertPHPDataSet(__DIR__ . '/Assertions/EventReimportShortenedSeries.php');
     }
@@ -115,9 +115,9 @@ final class EventImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventReimportExceptedDatePreState.php');
         $this->expectFetch('e_7cbe5bb1-tdm.json');
 
-        $severity = $this->importConfigurationReturningSeverity(1);
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity);
+        $this->assertWarnsWithoutError();
         $this->assertSame([
             [
                 'type' => 'scheduleDaySkipped',

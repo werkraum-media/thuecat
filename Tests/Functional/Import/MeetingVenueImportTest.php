@@ -40,7 +40,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch('669150457039-gamn.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::HOTEL);
         $this->assertSame('meeting_venue', $row['type']);
@@ -53,7 +53,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch('766768028887-ohje.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $row = $this->fetchRowByRemoteId(self::TABLE, self::CONVENTION_CENTER);
         $this->assertSame('meeting_venue', $row['type']);
@@ -66,7 +66,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-meeting-type.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame('attraction', $this->fetchRowByRemoteId(self::TABLE, self::HOTEL)['type']);
     }
@@ -78,7 +78,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenue.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-meeting-type.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([0, 1, 2], $this->fetchLanguagesByRemoteId(self::TABLE, self::HOTEL, self::STORAGE_PID));
         $this->assertSame(1, $this->fetchUidByRemoteId(self::TABLE, self::HOTEL));
@@ -92,7 +92,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingHotelStoredAsAttraction.csv');
         $this->expectFetchForUrl(self::HOTEL, 'thuecat.org/resources/meeting-venue-without-rooms.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countRows('sys_category'));
         $this->assertSame(['uid' => 1, 'type' => 'meeting_venue', 'venue_type' => 'meeting_congress_hotel'], $this->fetchColumnsByRemoteId(self::TABLE, self::HOTEL, ['uid', 'type', 'venue_type']));
@@ -114,7 +114,7 @@ final class MeetingVenueImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenues.php');
         $this->expectFetch($fixture);
 
-        $this->importConfiguration($configuration);
+        $this->importJob($configuration);
 
         $categoryUid = $this->fetchUidByRemoteId('sys_category', $categoryRemoteId);
         $this->assertGreaterThan(0, $categoryUid);

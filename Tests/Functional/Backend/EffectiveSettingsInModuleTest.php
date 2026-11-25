@@ -34,7 +34,7 @@ final class EffectiveSettingsInModuleTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsFreshOrganization.php');
         $this->expectFetch('018132452787-ngbe.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $settings = $this->latestLog()->getEffectiveSettings();
 

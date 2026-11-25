@@ -40,7 +40,7 @@ final class EventTicketImportTest extends AbstractImportTestCase
         $this->expectFetch('e_ticket_list-hubev.json');
         $this->expectFetch('e_ticket_nourl-hubev.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
     }
 
     #[Test]

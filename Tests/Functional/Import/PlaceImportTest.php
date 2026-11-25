@@ -42,7 +42,7 @@ final class PlaceImportTest extends AbstractImportTestCase
     {
         $this->expectFetch('place-store.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $place = $this->fetchRowByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-store');
         $this->assertSame('Glaskunstladen', $place['title']);
@@ -67,7 +67,7 @@ final class PlaceImportTest extends AbstractImportTestCase
     {
         $this->expectFetch('place-manufacturer.json');
 
-        $this->importConfiguration(2);
+        $this->importJob(2);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-manufacturer'));
     }
@@ -77,7 +77,7 @@ final class PlaceImportTest extends AbstractImportTestCase
     {
         $this->expectFetch('place-attraction.json');
 
-        $this->importConfiguration(3);
+        $this->importJob(3);
 
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_thuecat_tourist_attraction', self::RESOURCES . 'place-attraction'));
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-attraction'));
@@ -89,7 +89,7 @@ final class PlaceImportTest extends AbstractImportTestCase
         $this->expectFetch('attraction-on-a-square.json');
         $this->expectFetch('place-square.json');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $squareUid = $this->fetchUidByRemoteId('tx_thuecat_place', self::RESOURCES . 'place-square');
         $this->assertGreaterThan(0, $squareUid);

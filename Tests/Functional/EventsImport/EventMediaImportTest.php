@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\EventsImport;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 // Real media import for events: download → sys_file → sys_file_reference on
@@ -59,7 +58,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([
             [
@@ -80,7 +79,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([
             [
@@ -99,7 +98,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         // would trip the unexpected-fetch guard.
         $this->expectFetch('e_inline_media-tdm.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([['uid' => 1, 'deleted' => 0]], $this->fetchReferenceState(), 'A stable identity means the stored file and its reference are reused.');
         $this->assertSame(1, $this->countFiles(), 'No second sys_file for the same asset.');
@@ -138,7 +137,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // The two shapes are consumed at different stages — inline during the
         // rekey pass, referenced during the drain — but land on one owner.
@@ -170,7 +169,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // One field, entries of both shapes: each is judged on its own.
         $names = $this->fetchRelatedFileNamesInOrder();
@@ -191,7 +190,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->expectFetch('dms_167631738.json');
         $this->expectFetch('902877780916-bgnt.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // uid 1 keeps its uid: still supplied, so reused rather than recreated.
         $this->assertSame([
@@ -211,7 +210,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->expectFetch('dms_167631738.json');
         $this->expectFetch('902877780916-bgnt.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([
             ['uid' => 1, 'deleted' => 0],
@@ -230,7 +229,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->expectFetch('dms_167631738.json');
         $this->expectFetch('902877780916-bgnt.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // A type:file relation appends, so without the reap this climbs on
         // every run.
@@ -247,7 +246,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->expectFetch('dms_167631738.json');
         $this->expectFetch('902877780916-bgnt.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame([
             ['uid' => 1, 'deleted' => 0],
@@ -340,7 +339,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             );
         }
 
-        $this->runImport();
+        $this->importJob(1);
     }
 
     private function countLiveReferences(): int
@@ -389,7 +388,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Both slots share one field, so the source ranking is all that
         // distinguishes them: schema:photo before schema:image.
@@ -411,7 +410,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         $this->assertSame(['e_unusable_media-tdm' => ['image_3e6a3987344f6d38.jpg']], $this->fetchFileNamesByEventRemoteId(), 'An uninterpretable entry costs that entry, not the root URL.');
     }
@@ -422,7 +421,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventOnlyUnusableMediaPreState.php');
         $this->expectFetch('e_only_unusable_media-tdm.json');
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Nothing usable alongside it, so the skipped entry alone has to drain
         // the bucket — an undrained one raises "no progress" and costs the root.
@@ -441,10 +440,9 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $severity = $this->runImportReturningSeverity();
+        $this->importJob(1);
 
-        $this->assertSame('warning', $severity, 'Data drift, not an operator error — at error a scheduler treats a '
-        . 'healthy import as broken.');
+        $this->assertWarnsWithoutError('Data drift, not an operator error.');
     }
 
     #[Test]
@@ -461,7 +459,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Upstream usually repeats ONE node across both slots, which dedupes to
         // a single reference. Distinct nodes must not: both belong to the
@@ -493,7 +491,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'cms.thuecat.org/image.jpg'
         );
 
-        $this->runImport();
+        $this->importJob(1);
 
         // Both media paths sit on the first event, so both are on trial.
         $this->assertSame([
@@ -650,16 +648,5 @@ final class EventMediaImportTest extends AbstractImportTestCase
             'tablenames' => is_string($row['tablenames']) ? $row['tablenames'] : '',
             'fieldname' => is_string($row['fieldname']) ? $row['fieldname'] : '',
         ], $rows);
-    }
-
-    private function runImport(): void
-    {
-        $this->runImportReturningSeverity();
-    }
-
-    private function runImportReturningSeverity(): string
-    {
-        $configuration = $this->fetchImportConfiguration(1);
-        return $this->get(Importer::class)->importConfiguration($configuration);
     }
 }

@@ -25,9 +25,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfiguration;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationRepository;
+use WerkraumMedia\ThueCat\Import\CategoryConfigurationException;
 use WerkraumMedia\ThueCat\Import\EffectiveSettingsReport;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\FileFolderAccessException;
+use WerkraumMedia\ThueCat\Import\ImportConfigurationValidator;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\ImportJob;
@@ -35,9 +37,11 @@ use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
+use WerkraumMedia\ThueCat\Import\KeywordConfigurationException;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
+use WerkraumMedia\ThueCat\Import\StoragePidConfigurationException;
 use WerkraumMedia\ThueCat\Import\SyncChannel\UnreadableSyncListException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
@@ -57,6 +61,7 @@ final readonly class ImportStartedHandler
         private ImportLogger $importLogger,
         private MessageBusInterface $messageBus,
         private FileFolderAccess $fileFolderAccess,
+        private ImportConfigurationValidator $configurationValidator,
     ) {
     }
 
@@ -87,6 +92,18 @@ final readonly class ImportStartedHandler
 
         // The consumer is long-lived and the logger shared: entries of an earlier message must not reach this log.
         $this->importLogger->reset();
+
+        // Every item would fail on it, and without a site there are no effective settings to report.
+        try {
+            $this->configurationValidator->validate($configuration);
+        } catch (StoragePidConfigurationException | CategoryConfigurationException | KeywordConfigurationException $e) {
+            $importLog = $this->importLogger->openLog($job->configurationUid);
+            $this->importJobs->markRunning($job->uid, $importLog);
+            $this->importLogger->recordRunFailed($e, ImportPhase::Fetch);
+            $this->failAtStart($job, $importLog);
+            return;
+        }
+
         $this->effectiveSettingsReport->record(
             $configuration,
             $this->siteFinder->getSiteByPageId($configuration->getStoragePid())
