@@ -62,27 +62,18 @@ class ImportConfigurationOverview
      */
     public function bySite(BackendUserAuthentication $user): array
     {
-        $configurations = $this->configurations();
-        $storageTitles = $this->readablePageTitles($user, array_values(array_unique(array_map(
-            fn (array $row): int => $this->intOf($row['storage_pid']),
-            $configurations
-        ))));
         $openJobs = $this->openJobs();
 
         $bySite = [];
-        foreach ($configurations as $row) {
+        foreach ($this->readableConfigurations($user) as $row) {
             $storagePid = $this->intOf($row['storage_pid']);
-            if (!array_key_exists($storagePid, $storageTitles)) {
-                continue;
-            }
-
             $uid = $this->intOf($row['uid']);
             $bySite[$this->siteIdentifierOf($storagePid)][] = new ImportConfigurationOverviewRow(
                 $uid,
                 $this->stringOf($row['title']),
                 $this->stringOf($row['type']),
                 $storagePid,
-                $storageTitles[$storagePid],
+                $this->stringOf($row['storage_title']),
                 (bool)$this->intOf($row['skip_media']),
                 $this->intOf($row['schedule_interval']),
                 $this->intOf($row['next_run']),
@@ -94,6 +85,102 @@ class ImportConfigurationOverview
         }
 
         return $bySite;
+    }
+
+    /**
+     * The requested jobs that belong to a configuration the user may read.
+     *
+     * @param list<int> $jobUids
+     *
+     * @return list<ImportJobOverviewRow> ordered by uid
+     */
+    public function jobs(BackendUserAuthentication $user, array $jobUids): array
+    {
+        $configurationUids = array_map(fn (array $row): int => $this->intOf($row['uid']), $this->readableConfigurations($user));
+
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_job');
+        $rows = $queryBuilder
+            ->select('*')
+            ->from('tx_thuecat_import_job')
+            ->where(
+                $queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($jobUids, ArrayParameterType::INTEGER)),
+                $queryBuilder->expr()->in(
+                    'configuration',
+                    $queryBuilder->createNamedParameter($configurationUids, ArrayParameterType::INTEGER)
+                )
+            )
+            ->orderBy('uid')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        return array_map($this->jobRow(...), $rows);
+    }
+
+    /**
+     * @return list<array{uid: int, type: string, severity: string, remoteId: string, message: string}> ordered by uid
+     */
+    public function logEntriesAfter(int $importLogUid, int $afterUid): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_log_entry');
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+        $rows = $queryBuilder
+            ->select('uid', 'type', 'severity', 'remote_id', 'message')
+            ->from('tx_thuecat_import_log_entry')
+            ->where(
+                $queryBuilder->expr()->eq('import_log', $queryBuilder->createNamedParameter($importLogUid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->gt('uid', $queryBuilder->createNamedParameter($afterUid, Connection::PARAM_INT))
+            )
+            ->orderBy('uid')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        return array_map(fn (array $row): array => [
+            'uid' => $this->intOf($row['uid']),
+            'type' => $this->stringOf($row['type']),
+            'severity' => $this->stringOf($row['severity']),
+            'remoteId' => $this->stringOf($row['remote_id']),
+            'message' => $this->stringOf($row['message']),
+        ], $rows);
+    }
+
+    /**
+     * Entries above this uid were written after the module was rendered.
+     */
+    public function latestLogEntryUid(): int
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_log_entry');
+        $queryBuilder->getRestrictions()->removeAll();
+
+        return $this->intOf($queryBuilder
+            ->addSelectLiteral($queryBuilder->expr()->max('uid'))
+            ->from('tx_thuecat_import_log_entry')
+            ->executeQuery()
+            ->fetchOne());
+    }
+
+    /**
+     * @return list<array<string, mixed>> configuration rows ordered by title, with the title of their storage page
+     *                                    as `storage_title`
+     */
+    protected function readableConfigurations(BackendUserAuthentication $user): array
+    {
+        $configurations = $this->configurations();
+        $storageTitles = $this->readablePageTitles($user, array_values(array_unique(array_map(
+            fn (array $row): int => $this->intOf($row['storage_pid']),
+            $configurations
+        ))));
+
+        $readable = [];
+        foreach ($configurations as $row) {
+            $storagePid = $this->intOf($row['storage_pid']);
+            if (array_key_exists($storagePid, $storageTitles)) {
+                $readable[] = [...$row, 'storage_title' => $storageTitles[$storagePid]];
+            }
+        }
+
+        return $readable;
     }
 
     /**

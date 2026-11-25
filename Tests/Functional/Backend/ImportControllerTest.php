@@ -181,7 +181,7 @@ final class ImportControllerTest extends AbstractBackendTestCase
     {
         /** @var BackendUserAuthentication $backendUser set up by the base class */
         $backendUser = $GLOBALS['BE_USER'];
-        $backendUser->uc['thuecat_imports']['open'] = 'jobs-41,log-2';
+        $backendUser->uc['thuecat_imports'] = ['open' => 'jobs-41,log-2'];
 
         $this->assertMatchesRegularExpression(
             '#' . preg_quote($row, '#') . '\s*<td[^>]*>\s*<details data-fold="[a-z]+-[0-9]+"' . ($open ? ' open' : '>') . '#s',
@@ -245,6 +245,12 @@ final class ImportControllerTest extends AbstractBackendTestCase
     }
 
     #[Test]
+    public function indexTellsTheRefreshTheLatestLogEntryItShows(): void
+    {
+        $this->assertStringContainsString('data-log-after="3"', (string)$this->get(ImportController::class)->indexAction($this->request)->getBody());
+    }
+
+    #[Test]
     public function indexListsTheFiveMostRecentJobsOfAConfiguration(): void
     {
         $connection = $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job');
@@ -278,6 +284,18 @@ final class ImportControllerTest extends AbstractBackendTestCase
         );
         $this->assertDoesNotMatchRegularExpression(
             '#<tr data-configuration="32">' . self::ROW . 'name="configuration"#s',
+            $html
+        );
+    }
+
+    #[Test]
+    public function indexKeepsTheStartOptionsForAModalOpenedFromTheRow(): void
+    {
+        $html = (string)$this->get(ImportController::class)->indexAction($this->request)->getBody();
+
+        $this->assertMatchesRegularExpression(
+            '#<tr data-configuration="41">' . self::ROW . '<button type="button"[^>]*data-start-import' . self::ROW
+            . '<template data-start-options>' . self::ROW . 'name="skipMedia"' . self::ROW . 'name="bypassCache"' . self::ROW . '</template>#s',
             $html
         );
     }
@@ -482,5 +500,82 @@ final class ImportControllerTest extends AbstractBackendTestCase
             '#<tr data-job="' . $job . '"' . self::ROW . 'Stalled#s',
             (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
         ));
+    }
+
+    #[Test]
+    public function statusReturnsEachRequestedJobsStateAndTheLogEntriesNewerThanTheGivenUid(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleHalfway.csv');
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportConfigurationOverview::class, new ImportConfigurationOverview(
+            $this->get(ConnectionPool::class),
+            $this->get(SiteFinder::class),
+            new FixedClock(new DateTimeImmutable('@' . (self::LAST_PROGRESS + 60))),
+        ));
+
+        $response = $this->get(ImportController::class)->statusAction(
+            $this->request->withQueryParams(['jobs' => '1,2', 'after' => '1'])
+        );
+
+        $this->assertSame([
+            'jobs' => [
+                1 => [
+                    'status' => 'running',
+                    'stalled' => false,
+                    'finished' => 4,
+                    'total' => 9,
+                    'estimate' => 'about 3 min 20 s',
+                    'done' => 0,
+                    'failed' => 0,
+                    'skipped' => 0,
+                    'startedAt' => '25.11.2026 03:00',
+                    'endedAt' => '',
+                    'logEntries' => [],
+                ],
+                2 => [
+                    'status' => 'done',
+                    'stalled' => false,
+                    'finished' => 0,
+                    'total' => 0,
+                    'estimate' => '',
+                    'done' => 12,
+                    'failed' => 0,
+                    'skipped' => 2,
+                    'startedAt' => '24.11.2026 22:15',
+                    'endedAt' => '24.11.2026 22:25',
+                    'logEntries' => [
+                        [
+                            'uid' => 2,
+                            'type' => 'referenceSkipped',
+                            'severity' => 'warning',
+                            'remoteId' => 'https://thuecat.org/resources/ref-2',
+                            'message' => 'Reference skipped: HTTP 410',
+                        ],
+                        [
+                            'uid' => 3,
+                            'type' => 'eventPlaceMatch',
+                            'severity' => 'info',
+                            'remoteId' => 'https://thuecat.org/resources/event-1',
+                            'message' => 'Related to place 3',
+                        ],
+                    ],
+                ],
+            ],
+        ], json_decode((string)$response->getBody(), true));
+    }
+
+    #[Test]
+    public function statusLeavesOutJobsOfConfigurationsTheUserMayNotRead(): void
+    {
+        $this->setUpBackendUser(3);
+
+        $response = $this->get(ImportController::class)->statusAction(
+            $this->request->withQueryParams(['jobs' => '1,2,3,5', 'after' => '0'])
+        );
+
+        $status = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($status);
+        $this->assertIsArray($status['jobs']);
+        $this->assertSame([1, 2], array_keys($status['jobs']));
     }
 }

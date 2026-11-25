@@ -96,11 +96,20 @@
             <trans-unit id="job.log" resname="job.log">
                 <source>Log</source>
             </trans-unit>
+            <trans-unit id="job.log.newEntries" resname="job.log.newEntries">
+                <source>New since the page was loaded</source>
+            </trans-unit>
             <trans-unit id="start.skipMedia" resname="start.skipMedia">
                 <source>Skip media</source>
             </trans-unit>
             <trans-unit id="start.bypassCache" resname="start.bypassCache">
                 <source>Bypass cache</source>
+            </trans-unit>
+            <trans-unit id="start.modal.title" resname="start.modal.title">
+                <source>Start the import of "%s"</source>
+            </trans-unit>
+            <trans-unit id="start.cancel" resname="start.cancel">
+                <source>Cancel</source>
             </trans-unit>
             <trans-unit id="start.submit" resname="start.submit">
                 <source>Start</source>

@@ -28,6 +28,7 @@ use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -105,8 +106,10 @@ class ImportController
 
         $this->pageRenderer->loadJavaScriptModule('@typo3/backend/modal.js');
         $this->pageRenderer->loadJavaScriptModule('@werkraummedia/thuecat/imports-module.js');
+
         $view = $this->moduleTemplateFactory->create($request);
         $view->assign('sites', $sites);
+        $view->assign('logAfter', $this->configurationOverview->latestLogEntryUid());
 
         return $view->renderResponse('Backend/Import/Index');
     }
@@ -144,6 +147,44 @@ class ImportController
         $this->notify($stoppable ? 'stop.stopping' : 'stop.refused', $stoppable);
 
         return $this->redirectToIndex();
+    }
+
+    /**
+     * What the module's JavaScript needs to update the jobs it shows in place. Log entry uids grow across logs, so
+     * one uid tells every job's entries apart from those already shown.
+     */
+    public function statusAction(ServerRequestInterface $request): ResponseInterface
+    {
+        $query = $request->getQueryParams();
+        $jobUids = GeneralUtility::intExplode(',', is_string($query['jobs'] ?? null) ? $query['jobs'] : '', true);
+        $after = is_numeric($query['after'] ?? null) ? (int)$query['after'] : 0;
+
+        $jobs = [];
+        foreach ($this->configurationOverview->jobs($this->getBackendUser(), $jobUids) as $job) {
+            $jobs[$job->uid] = [
+                'status' => $job->status,
+                'stalled' => $job->stalled,
+                'finished' => $job->finishedItems,
+                'total' => $job->totalItems,
+                'estimate' => $job->estimate === null ? '' : $this->estimate($job->estimate),
+                'done' => $job->doneItems,
+                'failed' => $job->failedItems,
+                'skipped' => $job->skippedItems,
+                'startedAt' => $this->time($job->startedAt),
+                'endedAt' => $this->time($job->endedAt),
+                'logEntries' => $job->importLog > 0 ? $this->configurationOverview->logEntriesAfter($job->importLog, $after) : [],
+            ];
+        }
+
+        return new JsonResponse(['jobs' => $jobs]);
+    }
+
+    /**
+     * Formatted as the module's Time section formats it.
+     */
+    protected function time(int $timestamp): string
+    {
+        return $timestamp > 0 ? date('d.m.Y H:i', $timestamp) : '';
     }
 
     protected function postedUid(ServerRequestInterface $request, string $field): int
@@ -197,7 +238,8 @@ class ImportController
      */
     protected function openFolds(): array
     {
-        $open = $this->getBackendUser()->uc['thuecat_imports']['open'] ?? '';
+        $moduleData = $this->getBackendUser()->uc['thuecat_imports'] ?? [];
+        $open = is_array($moduleData) ? $moduleData['open'] ?? '' : '';
 
         return is_string($open) ? GeneralUtility::trimExplode(',', $open, true) : [];
     }

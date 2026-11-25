@@ -9,9 +9,18 @@
 
         <f:if condition="{sites}">
             <f:then>
-                <f:for each="{sites}" as="site">
-                    {f:render(section: 'Site', arguments: {site: site})}
-                </f:for>
+                <div
+                    data-imports-status="{f:be.uri(route: 'ajax_thuecat_imports_status')}"
+                    data-log-after="{logAfter}"
+                    data-label-stalled="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.stalled')}"
+                    data-label-progress="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.progress')}"
+                    data-label-log="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log')}"
+                    data-label-new-entries="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log.newEntries')}"
+                >
+                    <f:for each="{sites}" as="site">
+                        {f:render(section: 'Site', arguments: {site: site})}
+                    </f:for>
+                </div>
             </f:then>
             <f:else>
                 <f:be.infobox
@@ -77,20 +86,28 @@
     </f:section>
 
     <f:section name="Start">
-        <form method="post" action="{f:be.uri(route: 'thuecat_imports.start')}" class="d-flex flex-wrap align-items-center gap-2">
+        <form method="post" action="{f:be.uri(route: 'thuecat_imports.start')}" class="d-inline">
             <input type="hidden" name="configuration" value="{row.uid}" />
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="skipMedia" value="1" id="skipMedia-{row.uid}" {f:if(condition: row.skipMedia, then: 'checked="checked"')} />
-                <label class="form-check-label" for="skipMedia-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.skipMedia')}</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="bypassCache" value="1" id="bypassCache-{row.uid}" />
-                <label class="form-check-label" for="bypassCache-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.bypassCache')}</label>
-            </div>
-            <button type="submit" class="btn btn-sm btn-default">
+            <button type="button"
+                class="btn btn-sm btn-default"
+                data-start-import
+                data-title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.modal.title', arguments: {0: row.title})}"
+                data-button-close-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.cancel')}"
+                data-button-ok-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.submit')}"
+            >
                 <core:icon identifier="actions-play" size="small" />
                 {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.submit')}
             </button>
+            <template data-start-options>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="skipMedia" value="1" id="skipMedia-{row.uid}" {f:if(condition: row.skipMedia, then: 'checked="checked"')} />
+                    <label class="form-check-label" for="skipMedia-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.skipMedia')}</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="bypassCache" value="1" id="bypassCache-{row.uid}" />
+                    <label class="form-check-label" for="bypassCache-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.bypassCache')}</label>
+                </div>
+            </template>
         </form>
     </f:section>
 
