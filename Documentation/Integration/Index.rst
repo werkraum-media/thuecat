@@ -30,7 +30,7 @@ Information about how to install and use the extension within a TYPO3 instance.
 
    .. card:: :ref:`import`
 
-      How to get data into the instance via import configuration and scheduled tasks.
+      How to get data into the instance via import configurations, their jobs and schedules.
 
    .. card:: :ref:`removal-module`
 

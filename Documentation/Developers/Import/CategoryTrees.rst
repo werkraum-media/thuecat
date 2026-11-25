@@ -87,9 +87,9 @@ with another tree's folder.
 The same resolution serves the import, the frontend filters and the category fields in the backend,
 so all three offer the tree the import writes into.
 
-Every scope is validated before every run, also scopes the run will not write, because which kinds a
-run meets is known only after fetching. A pair set halfway, or an anchor outside the site, stops the
-run before anything is fetched.
+Every scope is validated when a job starts and before every item, also scopes the job will not
+write, because which kinds a job meets is known only after fetching. A pair set halfway, or an
+anchor outside the site, fails the job before anything is fetched.
 
 Creating the records
 ====================
@@ -100,7 +100,7 @@ instead of creating categories itself; separate implementations are how the tree
 before.
 
 It is given an anchor (:php:`SysCategoryAnchor`: parent, folder, identifier prefix) and a
-deduplication state for the run (:php:`SysCategoryProvisioningState`). Both belong to one property.
+deduplication state for the root (:php:`SysCategoryProvisioningState`). Both belong to one property.
 Sharing either merges two trees.
 
 What it guarantees:
@@ -125,7 +125,7 @@ Skipping
 What it leaves to the caller: what a title means, and which parent a value belongs under.
 For ``@type`` the vocabulary answers both, for keywords their term sets do.
 
-A table that receives values but has no field for them is not written and is reported once per run
+A table that receives values but has no field for them is not written and is reported once per item
 as ``categoriesFieldMissing``.
 
 .. _category-hierarchy:
@@ -184,7 +184,7 @@ Only the types a record names become its relations. Their ancestors exist to giv
 levels.
 
 Which types become categories at all is a fixed mapping in :php:`PlaceCategoryMapper` and
-:php:`EventCategoryMapper`. Matched and unmatched types are reported per run as ``categoryMatched``
+:php:`EventCategoryMapper`. Matched and unmatched types are reported per item as ``categoryMatched``
 and ``categoryUnmatched``, so a type upstream starts using shows up in the log.
 
 .. _import-keywords:

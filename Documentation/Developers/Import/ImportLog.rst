@@ -5,9 +5,9 @@
 The import log
 ==============
 
-Every run that gets past the configuration check writes one :sql:`tx_thuecat_import_log` record with
-its entries in :sql:`tx_thuecat_import_log_entry`. It is what editors see in the backend module
-(:guilabel:`ThueCat -> Imports`) and what a developer reads first when a run behaves unexpectedly.
+Every job that starts writes one :sql:`tx_thuecat_import_log` record, with the entries of all its
+items in :sql:`tx_thuecat_import_log_entry`. It is what editors see in the backend module
+(:guilabel:`ThüCAT > Imports`) and what a developer reads first when a job behaves unexpectedly.
 
 .. contents:: On this page
    :local:
@@ -16,9 +16,8 @@ its entries in :sql:`tx_thuecat_import_log_entry`. It is what editors see in the
 Severity
 ========
 
-Every entry has a PSR-3 severity, ``debug`` to ``emergency``. The run returns the highest severity
-it recorded, and the command turns that into its exit code: ``error`` or worse fails the command.
-See :ref:`cli-exit-codes`.
+Every entry has a PSR-3 severity, ``debug`` to ``emergency``. The severity does not decide the
+job's status; that is decided by its items, see :ref:`import-job-outcome`.
 
 Choose the severity by what the reader has to do:
 
@@ -42,7 +41,7 @@ Entry types
      - Written when
    * - ``effectiveSettings``
      - debug
-     - Once per run, before fetching: the settings in effect.
+     - Once per job, before fetching: the settings in effect.
    * - ``savingEntity``
      - info
      - Per record of the default language written.
@@ -57,10 +56,21 @@ Entry types
      - The DataHandler reported an error.
    * - ``runAborted``
      - error
-     - The run budget was used up.
+     - An item used up its message budget. Names the item's URL.
    * - ``runFailed``
      - error
-     - An unexpected exception ended the run.
+     - The job failed at its start: the configuration was rejected or its file folder could not be
+       resolved.
+   * - ``itemFailed``
+     - error
+     - An attempt of an item failed. Names the attempt and the phase reached; the item is retried.
+   * - ``itemDropped``
+     - error
+     - An item failed three attempts and was given up; the next job imports it again.
+   * - ``removedUpstream``
+     - info
+     - A value or relation upstream no longer supplies was removed, see
+       :ref:`developers-import-run-reconciliation`.
    * - ``retriesRecovered``
      - notice
      - Requests succeeded only after retries, see :ref:`recovered-retries`.
@@ -99,17 +109,17 @@ Entry types
      - An event matched, or failed to match, a place.
    * - ``rateLimited``
      - warning
-     - A host answered 429. Names the URL, the host and the request's ordinal within the run. The
+     - A host answered 429. Names the URL, the host and the request's ordinal within the item. The
        request is not retried.
    * - ``storageFolderEmpty``
      - warning
-     - A ``syncChannel`` run left its storage folder without records, see
+     - A ``syncChannel`` job left its storage folder without records, see
        :ref:`sync-channel-empty-folder`.
 
 What the log does not cover:
 
-* A configuration rejected before the run writes no log; the command prints the reason.
-* The DataHandler keeps its own logging, so a run also writes to :sql:`sys_log`, for every record it
+* A job whose configuration is gone when it starts writes no log; it is marked failed.
+* The DataHandler keeps its own logging, so a job also writes to :sql:`sys_log`, for every record it
   writes. It cannot be switched off: the DataHandler collects its errors only while it logs, and
   those errors are what ``dataHandlerError`` reports.
 

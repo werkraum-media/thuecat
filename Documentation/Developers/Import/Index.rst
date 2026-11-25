@@ -15,12 +15,13 @@ How to configure and run an import is described for integrators in :ref:`import`
 Terms used throughout
 =====================
 
-Run
-   One execution of one import configuration record, from the first request to the import log.
+Job
+   One execution of one import configuration record, from its start to its status. A job imports
+   its roots one item at a time, see :ref:`developers-import-run`.
 
 Root
-   An upstream object the import configuration asks for directly, by URL. A run has one or more
-   roots.
+   An upstream object the import configuration asks for directly, by URL. A job has one item per
+   root.
 
 Entity
    A parser for one kind of upstream object. It turns one JSON-LD node into one database row of one
@@ -31,11 +32,11 @@ Reference
    The entity cannot resolve it on its own and leaves it for the resolver.
 
 Payload
-   Everything a run has parsed and is about to write: rows, translations, open references, commands.
+   Everything a root has parsed and is about to write: rows, translations, open references, commands.
    It is handed to the TYPO3 DataHandler at the end.
 
 Round
-   One pass of the DataHandler over the payload. A run needs several, see
+   One pass of the DataHandler over the payload. A root needs several, see
    :ref:`developers-import-run-rounds`.
 
 .. toctree::

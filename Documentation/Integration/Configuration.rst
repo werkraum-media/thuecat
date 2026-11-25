@@ -49,7 +49,7 @@ Import tuning values
    * - ``readTimeout``
      - 120 s
      - How long a single request may take to deliver its response. Without it one unresponsive host
-       blocks the run indefinitely.
+       blocks the import indefinitely.
    * - ``connectTimeout``
      - 30 s
      - How long establishing the connection may take.
@@ -59,11 +59,11 @@ Import tuning values
        only — a 4xx is never retried. An exhausted retry is recorded in the import log naming the
        URL, the cause and the attempt count. Requests that recovered are summarised too; see
        :ref:`recovered-retries`.
-   * - ``runBudget``
-     - 86400 s
-     - How long a whole run may take. When exceeded the run aborts deliberately at the next phase
-       boundary, writes its import log and exits non-zero, rather than being killed with nothing on
-       disk. A pass already under way is never interrupted.
+   * - ``messageBudget``
+     - 300 s
+     - How long one item of an import job may take. When exceeded, the item is aborted at the next
+       fetch or before its next write, logged as ``runAborted`` and counted as a failed attempt, see
+       :ref:`import-job-outcome`. A write already under way is never interrupted.
    * - ``fetchCacheLifetime``
      - 900 s
      - How long a fetched API response stays reusable. See :ref:`fetch-cache`.
@@ -197,7 +197,7 @@ same parent to both imports.
 * Several pairs may point at the same folder and parent category. The trees then merge and share
   their categories.
 
-Every import run reports the values it actually used, see :ref:`effective-settings`.
+Every import job reports the values it actually used, see :ref:`effective-settings`.
 
 .. _import-configuration:
 
@@ -239,29 +239,38 @@ Sync API channel
 Common settings
 ---------------
 
-Each import configuration offers fields for the following configurations:
+Each import configuration offers these fields:
 
 .. list-table::
    :header-rows: 1
 
-   * - Setting
+   * - Field
      - Meaning
-   * - ``storagePid``
+   * - :guilabel:`Storage folder` (required)
      - Target folder for imported objects. Independent of object type, records are stored here.
-   * - ``fileFolder``
-     - Target folder for imported images and other media files. Required.
-   * - ``apiDomain``
-     - Optional. Which URL to query for resources, e.g. ``https://cdb.thuecat.org`` or
-       ``https://cdb.int.thuecat.org``. Falls back to ``https://cdb.thuecat.org`` when left empty.
-   * - ``apiKey``
-     - Optional. Overrides the global :ref:`API key <extension-configuration-api-key>`.
-       Leave empty to use the global key.
-   * - ``runBudget``
-     - Optional. Overrides the Extension Configuration value, see :ref:`import-tuning`.
-   * - ``fetchCacheLifetime``
-     - Optional. Overrides the Extension Configuration value, see :ref:`import-tuning`.
+   * - :guilabel:`Target folder for imported files` (required)
+     - Target folder for imported images and other media files.
+   * - :guilabel:`API Key (optional)`
+     - Overrides the global :ref:`API key <extension-configuration-api-key>`. Leave empty to use the
+       global key.
+   * - :guilabel:`Schedule`
+     - Interval and next run of the scheduled imports, and the times of the last runs, see
+       :ref:`import-schedule`.
+   * - :guilabel:`Skip media`
+     - Scheduled imports fetch no images or other media, see :ref:`import-without-media`.
+   * - :guilabel:`Message budget (seconds)`
+     - Optional. Overrides the Extension Configuration value ``messageBudget``, see
+       :ref:`import-tuning`.
+   * - :guilabel:`Fetch cache lifetime (seconds)`
+     - Optional. Overrides the Extension Configuration value ``fetchCacheLifetime``, see
+       :ref:`import-tuning`.
+
+Resources are fetched from ``https://thuecat.org`` with the API key in the query. Media downloads
+carry the key only to ``https://cdb.thuecat.org``. The hosts are not configurable.
 
 Specific settings per import configuration type:
+
+.. _integration-configuration-import-configuration-contains-place:
 
 Contains Place (containsPlace)
 ------------------------------
@@ -269,12 +278,14 @@ Contains Place (containsPlace)
 .. list-table::
    :header-rows: 1
 
-   * - Setting
+   * - Field
      - Meaning
-   * - ``containsPlaceId`` (required)
+   * - :guilabel:`Contains Place ID` (required)
      - ID of a place, not its full URL, e.g. ``043064193523-jcyt``. The place is fetched from
-       ``<apiDomain>/resources/<id>``, and every object it lists in ``schema:containsPlace`` is
-       imported.
+       ``https://thuecat.org/resources/<id>``, and every object it lists in
+       ``schema:containsPlace`` is imported.
+
+.. _integration-configuration-import-configuration-static:
 
 Static List of URLs (static)
 ----------------------------
@@ -282,14 +293,16 @@ Static List of URLs (static)
 .. list-table::
    :header-rows: 1
 
-   * - Setting
+   * - Field
      - Meaning
-   * - ``urls``
-     - Repeatable section, one entry per resource to import.
-   * - ``url`` (required)
+   * - :guilabel:`URLs`
+     - One URL record per resource to import, in the order given.
+   * - :guilabel:`URL` (required)
      - Full URL of a ThueCat resource, without any parameters like API key or format.
-   * - ``title``
-     - Read-only. Filled on save with the name of the fetched resource.
+   * - :guilabel:`Title`
+     - Filled on save with the name of the fetched resource.
+
+.. _integration-configuration-import-configuration-sync-scope:
 
 Synchronization area (syncScope)
 --------------------------------
@@ -297,21 +310,20 @@ Synchronization area (syncScope)
 .. list-table::
    :header-rows: 1
 
-   * - Setting
+   * - Field
      - Meaning
-   * - ``syncScopeId`` (required)
+   * - :guilabel:`syncScopeId` (required)
      - ID of a sync scope provided by the ThueCat maintainers. Every object of that scope updated
-       within ``fetchLastXDays`` is imported.
-   * - ``fetchLastXDays``
-     - Number of days of changes to fetch. Empty means one day; ``0`` fetches the whole scope
-       without a time limit. Set it to cover the interval between runs with a margin, e.g. ``6``
-       for a run every five days.
+       within :guilabel:`Fetch last X Days of Changes` is imported.
+   * - :guilabel:`Fetch last X Days of Changes`
+     - Number of days of changes to fetch, ``1`` by default; ``0`` fetches the whole scope without a
+       time limit. Set it to cover the interval of the schedule with a margin, e.g. ``6`` for a job
+       every five days.
+
+.. _integration-configuration-import-configuration-sync-channel:
 
 Sync API channel (syncChannel)
 ------------------------------
 
-Its fields differ from the common settings above: it has no ``apiDomain``, and ``apiKey`` is
-required. See :ref:`sync-channel-fields`.
-
-
-
+Its API key is required, and it has no :guilabel:`Fetch last X Days of Changes`. See
+:ref:`sync-channel-fields`.

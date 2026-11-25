@@ -97,6 +97,17 @@ Until the settings exist, the kind falls back to the ``thuecat`` scope. See
 
 A kind reached only as a relation implements nothing extra and uses the ``thuecat`` scope.
 
+.. _developers-import-record-kind-reconciliation:
+
+What a re-import removes
+========================
+
+A kind declares in :php:`RECONCILED_FIELDS` every column the import owns on it, each with the
+:php:`FieldMechanism` that removes a value upstream no longer supplies: scalar columns, references
+to other records, relation lists, and inline children and media fields. Declare every column the
+entity writes, in the entity itself; a kind that declares nothing keeps every stored value. See
+:ref:`developers-import-run-reconciliation`.
+
 Relations to and from the kind
 ==============================
 
@@ -116,6 +127,7 @@ Checklist
 #. Entity with :php:`TABLE`, typed properties with defaults, :php:`handlesTypes()` and, if types
    overlap, a priority.
 #. :php:`TopLevelEntityInterface` and the scope's settings, if the kind can be a root.
+#. :php:`RECONCILED_FIELDS` with every column the entity writes.
 #. :php:`BUCKET_MAP` entries and owner fields, if other kinds relate to it.
 #. Site-scoped selects in the backend.
 #. A functional test importing one fixture of the kind, and one re-importing it, see

@@ -25,8 +25,9 @@ Two consequences:
 * Two sites importing the same upstream object each get a record of their own. Neither touches the
   other's. This is what keeps sites independent in the frontend and the backend.
 
-Within one run, every upstream object is written at most once, however many roots reference it. The
-first root to reach it writes it; later roots only relate to it.
+Within one job, every upstream object is written at most once by reference, however many roots
+reference it. The first item to reach it writes it; later items find it in the database and only
+relate to it. An object that is a root of its own is updated by its own item.
 
 Records without an ``@id`` of their own
 ---------------------------------------
@@ -34,9 +35,8 @@ Records without an ``@id`` of their own
 Some rows are produced from data nested inside another object and have no upstream identity: an
 address, an opening hours specification, a trail's start location. They get a :sql:`remote_id`
 derived from their parent's, for example ``https://thuecat.org/resources/123::addr::0`` for the
-first address of record ``123``. A re-import therefore finds the same row again. For addresses and
-the parts of a trail, a stored row whose position upstream no longer supplies is removed; opening
-hours are not cleaned up that way yet.
+first address of record ``123``. A re-import therefore finds the same row again, and a stored row
+whose position upstream no longer supplies is removed.
 
 A few tables of :composer:`werkraummedia/events` identify rows differently:
 
@@ -56,11 +56,11 @@ regions. Following every link would import the whole catalogue from one root.
 
 So references are followed one level deep. A root is at depth 0; an object it references is fetched
 and imported at depth 1. The references of a depth 1 object are only **related** if the target
-already exists, in the database or earlier in the same run. They are never fetched.
+already exists, in the database or earlier in the same root. They are never fetched.
 
 In the example of :ref:`developers-import-run`, the town is imported because the attraction
 references it. The town's own reference to its managing organisation becomes a relation only if that
-organisation was imported before, by this or an earlier run.
+organisation was imported before, by an earlier item or job.
 
 Media, keywords and accessibility specifications are exempt. They do not reference further objects
 and cannot fan out, and capping them would silently strip records found through a relation.
@@ -68,7 +68,7 @@ and cannot fan out, and capping them would silently strip records found through 
 Languages
 =========
 
-The languages of a run are the languages of the site. The default language becomes the record
+The languages of a job are the languages of the site. The default language becomes the record
 itself; every other site language becomes a translation of it. A value upstream provides in a
 language the site does not configure is ignored.
 
@@ -83,13 +83,13 @@ Values that disappear upstream
 ==============================
 
 An entity hands over only the fields that carry a value; empty fields are left out of the row, and
-the DataHandler keeps whatever was stored before. For most fields this is wanted: a field the import
-does not manage is not overwritten with nothing.
+the DataHandler keeps whatever was stored before. For a field the import does not manage this is
+wanted: it is not overwritten with nothing.
 
-It also means a value upstream **clears** survives in the database. For integer fields an entity can
-say "read and empty" explicitly by assigning :php:`AbstractEntity::PARSED_EMPTY_INTEGER` instead of
-``0``; the row is then written with ``0``. String fields have no such marker yet, so a cleared text
-stays.
+A field the import does manage is declared in the entity's :php:`RECONCILED_FIELDS`. On a root of
+that kind, a declared field upstream no longer supplies is cleared after the root is written, see
+:ref:`developers-import-run-reconciliation`. On a kind that declares nothing, a value upstream
+clears survives in the database.
 
 Entities are shared between records
 ===================================

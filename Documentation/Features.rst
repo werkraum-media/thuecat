@@ -46,18 +46,21 @@ Detail records are listed in XML sitemaps, see :ref:`frontend-output-xml-sitemap
 Backend
 =======
 
-Like usual, :ref:`configuration` is done in backend and executed via :ref:`import` with CLI.
+Like usual, :ref:`configuration` is done in backend, and imports are started there, see
+:ref:`import`.
 
-The extension comes with a backend module that displays the logs written by every import. It shows
-the status, the mapping success of incoming values, suspicious upstream data that could not be
+The extension comes with a backend module that starts and stops imports and displays the jobs and
+the logs they write. It shows the status, the progress, the mapping success of incoming values, suspicious upstream data that could not be
 converted into usable data, and other information.
 
-Scheduler and CLI
-=================
+.. _features-import-jobs:
+
+Import jobs
+===========
 
 To import ThueCat data into the local system, several kinds of import configurations can be
-configured and executed as CLI commands. These can also be wrapped into scheduler tasks to run on a
-predefined schedule. See :ref:`import` for further information.
+configured. Each import runs as a job in the background, started in the backend module or by the
+schedule of its configuration, one record at a time. See :ref:`import` for further information.
 
 Events can also be imported from a ThueCat sync channel, including licence-restricted images, see
 :ref:`sync-channel`.

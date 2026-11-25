@@ -43,7 +43,7 @@ records the value with :php:`recordTransient()` under the property name without 
 
 The resolver looks each reference up and writes the relation:
 
-#. Already imported in this run? Relate to it.
+#. Already imported in this root? Relate to it.
 #. Stored in the site? Relate to it, and fetch it again to update it — unless the owner was itself
    only reached as a relation, see :ref:`developers-import-fetch-depth`.
 #. Neither? Fetch, parse and import it, then relate to it.
@@ -65,7 +65,7 @@ What the log says about references
 
 ``referenceSkipped`` (warning)
    The target could not be fetched or parsed. The owner is written without the relation. A URL that
-   failed once is not requested again in the same run.
+   failed once is not requested again in the same root.
 
 ``referenceUnrelatable`` (info)
    The target was imported, but into a table the bucket has no field for. The record exists;
@@ -145,7 +145,7 @@ what keeps it out of every attraction query.
 A record known under one table is never written into another
 ------------------------------------------------------------
 
-A reference finds its target in whichever table holds it, and the run remembers that table and uid. The
+A reference finds its target in whichever table holds it, and the root remembers that table and uid. The
 fetched node may be claimed for another table, when the claiming rules changed since it was stored. The
 remembered uid is then not reused: the row is looked up in its own table or created there, and the case
 is logged as ``recordReclassification`` (warning). A uid is a key of its own table only; under another
@@ -199,11 +199,11 @@ identity already. Free text has none, so one is derived from the value: lowercas
 ``ölmühle`` into two records — and prefixed by its shape, ``keyword:text:ölmühle``, so two shapes
 never collide.
 
-Collect during the run, write once at the end
----------------------------------------------
+Collect during the root, write once at the end
+----------------------------------------------
 
-Resolution **collects** entries on the run's context instead of putting them into the payload. One
-flush after the last root writes them. There are two reasons for the delay:
+Resolution **collects** entries on the root's context instead of putting them into the payload. One
+flush after the root is resolved writes them. There are two reasons for the delay:
 
 * A relation field is submitted as the complete set; what is not submitted is removed. Writing
   during resolution submits an incomplete set, and entries resolved later are wiped by the earlier
@@ -223,11 +223,11 @@ Because a submitted set is complete, a target upstream no longer supplies loses 
 any deletion code. Only the relation goes; the shared target stays, editors may still use it.
 
 The dangerous half: **an entry that failed to resolve is missing from the set too.** A technical
-failure looks exactly like an upstream deletion. So the run remembers which owner and field had a
+failure looks exactly like an upstream deletion. So the root remembers which owner and field had a
 failure and submits that owner's stored relations unchanged. Only upstream positively saying a
 target is gone — HTTP ``404`` or ``410`` — may remove that relation. A server error, a refused
 credential or a rate limit hits every target on that host at once and would otherwise strip a whole
-run.
+root.
 
 Relations an editor added by hand, to a category without a :sql:`remote_id`, are kept as well.
 
@@ -236,9 +236,10 @@ references are deleted explicitly instead of left out.
 
 .. note::
 
-   A known gap shared by every property of this shape: an owner for which upstream supplies **no**
-   entry at all is never part of the flush, so its relations survive even when upstream dropped all
-   of them.
+   An owner for which upstream supplies **no** entry at all is never part of the flush. On a root of
+   a :ref:`reconciled kind <developers-import-run-reconciliation>`, reconciliation removes its
+   imported relations instead. On other kinds, and on owners reached only through a reference, they
+   survive even when upstream dropped all of them.
 
 Each property gets its own everything
 -------------------------------------

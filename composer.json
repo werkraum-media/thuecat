@@ -70,6 +70,7 @@
         "infection/infection": "^0.35.10",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-phpunit": "2.0.16",
+        "rector/rector": "<2.9",
         "saschaegerer/phpstan-typo3": "^3.0",
         "ssch/typo3-rector": "^3.16",
         "staabm/phpstan-todo-by": "^0.3.3",

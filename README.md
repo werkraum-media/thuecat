@@ -24,13 +24,12 @@ languages it defines, in the frontend as well as in the backend.
 1. Install the extension: `composer require werkraummedia/thuecat`
 2. Enter the API key in the Extension Configuration.
 3. Add the site set `werkraummedia/thuecat-import` to the `dependencies` of your site.
-4. Create an import configuration record and run it:
-   `vendor/bin/typo3 thuecat:importviaconfiguration <uid>`,
-   on the command line or as a scheduler task.
-5. Provide frontend output. The extension ships Extbase plugin configuration and example templates, but no
+4. Set up the scheduler tasks `messenger:consume` and `thuecat:import:supervise`, both every minute.
+5. Create an import configuration record and start it in the backend module, or give it a schedule.
+6. Provide frontend output. The extension ships Extbase plugin configuration and example templates, but no
    ready-made content elements: the output is meant to be fitted to your site.
 
-Every import writes a log that can be inspected in the backend module.
+Every import job writes a log that can be inspected in the backend module.
 
 ## Documentation
 
