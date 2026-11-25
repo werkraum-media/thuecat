@@ -1614,6 +1614,8 @@ class Resolver
             return;
         }
 
+        // Data drift, not a removal: the record exists, the field cannot hold it.
+        $payload->claim($ownerTable, $ownerRemoteId, ...array_values(self::BUCKET_MAP[$bucket]));
         $this->importLogger->recordUnrelatableReference(
             $ownerTable,
             $ownerRemoteId,
@@ -2130,10 +2132,11 @@ class Resolver
         string $reference
     ): string {
         if ($context->hasReferenceFailed($reference)) {
-            $this->importLogger->recordSkippedReference(
+            $this->skipReference(
+                $payload,
                 $ownerTable,
                 $ownerRemoteId,
-                'location',
+                ['location'],
                 $reference,
                 (string)$context->getReferenceFailureReason($reference)
             );
@@ -2151,7 +2154,7 @@ class Resolver
         } catch (Exception $e) {
             $reason = $e::class . ': ' . $e->getMessage();
             $context->markReferenceFailed($reference, $reason);
-            $this->importLogger->recordSkippedReference($ownerTable, $ownerRemoteId, 'location', $reference, $reason);
+            $this->skipReference($payload, $ownerTable, $ownerRemoteId, ['location'], $reference, $reason);
             return '';
         }
 
@@ -2188,10 +2191,11 @@ class Resolver
         array &$remoteIdToKey
     ): void {
         if ($context->hasReferenceFailed($reference)) {
-            $this->importLogger->recordSkippedReference(
+            $this->skipReference(
+                $payload,
                 $ownerTable,
                 $ownerRemoteId,
-                $this->defaultFieldFor($bucket),
+                array_values(self::BUCKET_MAP[$bucket]),
                 $reference,
                 (string)$context->getReferenceFailureReason($reference)
             );
@@ -2237,14 +2241,26 @@ class Resolver
         } catch (Exception $e) {
             $reason = $e::class . ': ' . $e->getMessage();
             $context->markReferenceFailed($reference, $reason);
-            $this->importLogger->recordSkippedReference(
-                $ownerTable,
-                $ownerRemoteId,
-                $this->defaultFieldFor($bucket),
-                $reference,
-                $reason
-            );
+            $this->skipReference($payload, $ownerTable, $ownerRemoteId, array_values(self::BUCKET_MAP[$bucket]), $reference, $reason);
         }
+    }
+
+    /**
+     * A reference that could not be followed says nothing about what upstream supplies, so the root keeps every
+     * field the reference could have filled.
+     *
+     * @param non-empty-list<string> $fields
+     */
+    protected function skipReference(
+        DataHandlerPayload $payload,
+        string $ownerTable,
+        string $ownerRemoteId,
+        array $fields,
+        string $reference,
+        string $reason
+    ): void {
+        $payload->claim($ownerTable, $ownerRemoteId, ...$fields);
+        $this->importLogger->recordSkippedReference($ownerTable, $ownerRemoteId, $fields[0], $reference, $reason);
     }
 
     /**

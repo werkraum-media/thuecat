@@ -719,6 +719,21 @@ class ImportLogger
         ]);
     }
 
+    /**
+     * What a root no longer supplies was removed from it.
+     */
+    public function recordRemovedUpstream(string $table, string $remoteId, string $field, string|int|float $value): void
+    {
+        $this->stage([
+            'type' => 'removedUpstream',
+            'severity' => self::SEVERITY_INFO,
+            'remote_id' => $remoteId,
+            'table_name' => $table,
+            'message' => sprintf('Field "%s" is no longer supplied upstream, removed "%s".', $field, $value),
+            'context' => json_encode(['field' => $field, 'value' => $value]) ?: '{}',
+        ]);
+    }
+
     public function recordStorageFolderEmpty(int $storagePid): void
     {
         $this->stage([

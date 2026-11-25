@@ -38,6 +38,7 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgress;
 use WerkraumMedia\ThueCat\Import\Progress\ImportProgressListener;
 use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
+use WerkraumMedia\ThueCat\Import\Reconciliation\RootReconciliation;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
@@ -62,7 +63,8 @@ class Importer
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
         protected readonly UrlProviders $urlProviders,
-        protected readonly MessageDeadline $deadline
+        protected readonly MessageDeadline $deadline,
+        protected readonly RootReconciliation $rootReconciliation,
     ) {
     }
 
@@ -365,6 +367,7 @@ class Importer
         // Only now do the events have uids the places can point at. Staged as
         // ordinary update rows, so a final pass writes them.
         $this->eventPlaceMatcher->flush($payload, $resolverContext);
+        $this->rootReconciliation->reconcile($payload, $resolverContext);
         if ($payload->getDataMap() !== []) {
             $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
             $dataHandler->start($payload->getDataMap(), []);

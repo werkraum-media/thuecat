@@ -44,31 +44,6 @@ abstract class AbstractEntity implements EntityInterface
     public const KEYWORD_BUCKET = 'keywords';
 
     /**
-     * "I read this integer field and upstream has nothing in it" — as opposed
-     * to the field never having been touched.
-     *
-     * toArray() drops falsy values, so a legitimately empty column is
-     * indistinguishable from an unset one and the row simply omits it;
-     * DataHandler then leaves whatever was there before. For a value that can
-     * be emptied upstream that means stale data survives re-import.
-     *
-     * A parser assigns this sentinel instead of the empty value. It is truthy,
-     * so it survives the filter, and DataHandlerPayload::addEntity() converts
-     * it back to 0 on the way into the datamap — nothing downstream sees it.
-     *
-     * Integer-typed columns only: the sentinel has to name the type it stands
-     * in for, because the payload restores the empty value by that type and
-     * cannot guess it. A string field needing the same treatment gets its own
-     * PARSED_EMPTY_STRING rather than reusing this one.
-     *
-     * The value is a negative unix timestamp, per the convention used for
-     * exception codes. A small number like -1 is unusable only by luck; this
-     * cannot collide with a bitmask, a count or an id even if the column's
-     * range changes later.
-     */
-    public const PARSED_EMPTY_INTEGER = -1787735164;
-
-    /**
      * Category relations wired by the resolver; not DB columns.
      *
      * @var list<array{field: string, remoteId: string, title: string}>

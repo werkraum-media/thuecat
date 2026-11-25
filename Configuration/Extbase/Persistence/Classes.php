@@ -25,6 +25,7 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RateLimited;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RecordReclassification;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ReferenceUnrelatable;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RemovedUpstream;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RetriesRecovered;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunAborted;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RunFailed;
@@ -106,6 +107,7 @@ return [
             'runFailed' => RunFailed::class,
             'itemFailed' => ItemFailed::class,
             'itemDropped' => ItemDropped::class,
+            'removedUpstream' => RemovedUpstream::class,
             'retriesRecovered' => RetriesRecovered::class,
             'effectiveSettings' => EffectiveSettings::class,
             'categoryParentChosen' => CategoryParentChosen::class,
@@ -198,6 +200,10 @@ return [
     ItemDropped::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'itemDropped',
+    ],
+    RemovedUpstream::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'removedUpstream',
     ],
     CategoryParentChosen::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

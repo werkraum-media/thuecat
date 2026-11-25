@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Places\Support\PlaceCategoryMapper;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Support\QuantityNormaliser;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 /**
  * A meeting room is reached only through the venue or the room naming it, never as an import root. It relates the
@@ -31,6 +32,30 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class MeetingRoomEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_meeting_room';
+
+    public const RECONCILED_FIELDS = [
+        'title' => FieldMechanism::Scalar,
+        'description' => FieldMechanism::Scalar,
+        'url' => FieldMechanism::Scalar,
+        'floor_size' => FieldMechanism::Scalar,
+        'room_height' => FieldMechanism::Scalar,
+        'capacity_banquet' => FieldMechanism::Scalar,
+        'capacity_classroom' => FieldMechanism::Scalar,
+        'capacity_theatre' => FieldMechanism::Scalar,
+        'capacity_standing' => FieldMechanism::Scalar,
+        'facilities' => FieldMechanism::Scalar,
+        'number_of_rooms' => FieldMechanism::Scalar,
+        'amenity_features' => FieldMechanism::Scalar,
+        'tour_booking_page' => FieldMechanism::Scalar,
+        'bookable' => FieldMechanism::Scalar,
+        'categories' => FieldMechanism::RelationReplace,
+        'keywords' => FieldMechanism::RelationReplace,
+        'main_image' => FieldMechanism::ExplicitDelete,
+        'media_files' => FieldMechanism::ExplicitDelete,
+        'floor_plan' => FieldMechanism::ExplicitDelete,
+        'managed_by' => FieldMechanism::ReferenceWrite,
+        'contained_rooms' => FieldMechanism::ReferenceWrite,
+    ];
 
     public const ROOMS_BUCKET = 'containedRooms';
 

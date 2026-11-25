@@ -129,6 +129,10 @@ return (static function (string $extensionKey, string $tableName): array {
                             'value' => 'itemDropped',
                         ],
                         [
+                            'label' => $languagePath . '.type.removedUpstream',
+                            'value' => 'removedUpstream',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -301,6 +305,9 @@ return (static function (string $extensionKey, string $tableName): array {
             ],
             'itemDropped' => [
                 'showitem' => '--palette--;;always, message, context',
+            ],
+            'removedUpstream' => [
+                'showitem' => '--palette--;;always, table_name, message, context',
             ],
             'retriesRecovered' => [
                 'showitem' => '--palette--;;always, message, context',

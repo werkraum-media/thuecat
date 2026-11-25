@@ -28,6 +28,7 @@ use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventDateFactory;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\Support\EventScheduleAdapter;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\TopLevelEntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 /**
  * Entity class for event imports.
@@ -36,6 +37,21 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class EventEntity extends AbstractEventsEntity implements TopLevelEntityInterface
 {
     public const TABLE = 'tx_events_domain_model_event';
+
+    public const RECONCILED_FIELDS = [
+        'title' => FieldMechanism::Scalar,
+        'details' => FieldMechanism::Scalar,
+        'web' => FieldMechanism::Scalar,
+        'ticket' => FieldMechanism::Scalar,
+        'source_name' => FieldMechanism::Scalar,
+        'source_url' => FieldMechanism::Scalar,
+        'thuecat_import_configuration' => FieldMechanism::Scalar,
+        'categories' => FieldMechanism::RelationReplace,
+        'keywords_relation' => FieldMechanism::RelationReplace,
+        'images' => FieldMechanism::ExplicitDelete,
+        'location' => FieldMechanism::ReferenceWrite,
+        'organizer' => FieldMechanism::ReferenceWrite,
+    ];
 
     // ext:events already uses `keywords` for the plain-string field its own
     // importer fills.

@@ -21,10 +21,18 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 class TownEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_town';
+
+    public const RECONCILED_FIELDS = [
+        'title' => FieldMechanism::Scalar,
+        'description' => FieldMechanism::Scalar,
+        'address_inline' => FieldMechanism::ExplicitDelete,
+        'managed_by' => FieldMechanism::ReferenceWrite,
+    ];
 
     protected string $remote_id = '';
 

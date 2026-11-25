@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 // Entities are constructed via the ServiceLocator, which cannot supply the node.
 // Data extraction therefore happens post-construction through configure().
@@ -42,6 +43,14 @@ interface EntityInterface
      * @var non-empty-string
      */
     public const KEYWORD_FIELD = 'keywords';
+
+    /**
+     * Fields the import owns on a root of this kind, with how one upstream no longer supplies is removed. Empty means
+     * the kind is not reconciled. Each kind names its own: inheriting another table's fields would be silently wrong.
+     *
+     * @var array<string, FieldMechanism>
+     */
+    public const RECONCILED_FIELDS = [];
 
     /**
      * @param array<string, int> $translationLanguages Two-letter language

@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 use WerkraumMedia\ThueCat\Domain\Model\TrailSeason;
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 /**
  * Entity to import entries that carry thuecat:trail
@@ -29,6 +30,59 @@ use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
 class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
 {
     public const TABLE = 'tx_thuecat_trail';
+
+    public const RECONCILED_FIELDS = [
+        'title' => FieldMechanism::Scalar,
+        'description' => FieldMechanism::Scalar,
+        'short_description' => FieldMechanism::Scalar,
+        'directions' => FieldMechanism::Scalar,
+        'getting_there' => FieldMechanism::Scalar,
+        'parking' => FieldMechanism::Scalar,
+        'public_transit' => FieldMechanism::Scalar,
+        'safety_guidelines' => FieldMechanism::Scalar,
+        'equipment' => FieldMechanism::Scalar,
+        'additional_information' => FieldMechanism::Scalar,
+        'tip' => FieldMechanism::Scalar,
+        'opening_status' => FieldMechanism::Scalar,
+        'season' => FieldMechanism::Scalar,
+        'elevation_profile' => FieldMechanism::Scalar,
+        'elevation_profile_fall_back' => FieldMechanism::Scalar,
+        'route_line' => FieldMechanism::Scalar,
+        'gpx_url' => FieldMechanism::Scalar,
+        'distance' => FieldMechanism::Scalar,
+        'distance_unit' => FieldMechanism::Scalar,
+        'duration' => FieldMechanism::Scalar,
+        'duration_unit' => FieldMechanism::Scalar,
+        'exercise_type' => FieldMechanism::Scalar,
+        'min_altitude' => FieldMechanism::Scalar,
+        'max_altitude' => FieldMechanism::Scalar,
+        'ascent_elevation' => FieldMechanism::Scalar,
+        'descent_elevation' => FieldMechanism::Scalar,
+        'rating_landscape' => FieldMechanism::Scalar,
+        'rating_landscape_min' => FieldMechanism::Scalar,
+        'rating_landscape_max' => FieldMechanism::Scalar,
+        'rating_condition' => FieldMechanism::Scalar,
+        'rating_condition_min' => FieldMechanism::Scalar,
+        'rating_condition_max' => FieldMechanism::Scalar,
+        'rating_difficulty' => FieldMechanism::Scalar,
+        'rating_difficulty_min' => FieldMechanism::Scalar,
+        'rating_difficulty_max' => FieldMechanism::Scalar,
+        'rating_quality_of_experience' => FieldMechanism::Scalar,
+        'rating_quality_of_experience_min' => FieldMechanism::Scalar,
+        'rating_quality_of_experience_max' => FieldMechanism::Scalar,
+        'rating_technique' => FieldMechanism::Scalar,
+        'rating_technique_min' => FieldMechanism::Scalar,
+        'rating_technique_max' => FieldMechanism::Scalar,
+        'keywords' => FieldMechanism::RelationReplace,
+        'main_image' => FieldMechanism::ExplicitDelete,
+        'media_files' => FieldMechanism::ExplicitDelete,
+        'logo' => FieldMechanism::ExplicitDelete,
+        'way_types' => FieldMechanism::ExplicitDelete,
+        'conditions' => FieldMechanism::ExplicitDelete,
+        'start_location' => FieldMechanism::ExplicitDelete,
+        'end_location' => FieldMechanism::ExplicitDelete,
+        'managed_by' => FieldMechanism::ReferenceWrite,
+    ];
 
     /**
      * The `logo` kind is trail-specific; the resolver routes any kind through
@@ -353,8 +407,7 @@ class TrailEntity extends AbstractEntity implements TopLevelEntityInterface
             $bits |= TrailSeason::tryFrom($member)?->bit() ?? 0;
         }
 
-        // Upstream having no seasons must clear the column
-        $this->season = $bits === 0 ? self::PARSED_EMPTY_INTEGER : $bits;
+        $this->season = $bits;
     }
 
     /**

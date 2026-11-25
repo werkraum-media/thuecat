@@ -1101,6 +1101,9 @@
             <trans-unit id="tx_thuecat_import_log_entry.type.itemDropped" xml:space="preserve">
                 <source>Item Dropped</source>
             </trans-unit>
+            <trans-unit id="tx_thuecat_import_log_entry.type.removedUpstream" xml:space="preserve">
+                <source>Removed Upstream</source>
+            </trans-unit>
             <trans-unit id="tx_thuecat_import_log_entry.type.categoryMatched" xml:space="preserve">
                 <source>Category Matched</source>
             </trans-unit>

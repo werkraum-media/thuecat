@@ -106,19 +106,21 @@ final class TrailImportTest extends AbstractImportTestCase
         $this->assertSame(0, $this->fetchTrailSeason());
     }
 
-    // Proven red 2026-08-26: the re-import kept the old German text verbatim.
-    // Kept as the standing proof — it goes green on its own once
-    // strings carry a sentinel.
+    #[Test]
+    public function stringStillSuppliedIsKept(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
+        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/StoredTrail.csv');
+        $this->expectFetch('e_52469786-oatour.json');
+
+        $this->importJob(1);
+
+        $this->assertSame('Entspannt radeln von Erfurt über die Thüringer Ackerscholle nach Eisenach.', $this->fetchTrail()['short_description']);
+    }
+
     #[Test]
     public function upstreamDroppingAStringClearsTheColumn(): void
     {
-        $this->markTestSkipped(
-            'Known defect: a string cleared upstream keeps its previous value. Re-importing a trail whose'
-            . ' thuecat:shortDescription upstream removed still yields "Entspannt radeln von Erfurt…".'
-            . ' toArray() drops the empty string, so the row omits the column and DataHandler leaves it.'
-        );
-
-        // @phpstan-ignore deadCode.unreachable (the assertion to restore once strings carry a sentinel)
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsTrail.php');
         $this->expectFetch('e_52469786-oatour.json');
         $this->importConfiguration(1);

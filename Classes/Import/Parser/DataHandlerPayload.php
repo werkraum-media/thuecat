@@ -20,7 +20,6 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Import\Parser;
 
-use WerkraumMedia\ThueCat\Import\Parser\Entity\AbstractEntity;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\Events\EventEntity;
 
@@ -117,16 +116,28 @@ class DataHandlerPayload
      */
     protected array $defaultLanguageKeys = [];
 
+    /**
+     * Rows of reconciled kinds parsed into this payload, with the columns each supplied. Only a root's own payload
+     * holds them: a fetched reference is parsed into a payload of its own, and merging leaves them behind.
+     *
+     * @var array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>}>>
+     */
+    protected array $roots = [];
+
     public function addEntity(EntityInterface $entity): void
     {
         $table = $entity::TABLE;
-        $row = $this->resolveParsedEmpty($entity->toArray());
+        $row = $entity->toArray();
         $remoteId = (string)$row['remote_id'];
 
         $this->dataMap[$table] ??= [];
 
         $this->dataMap[$table][$remoteId] = $row;
         $this->defaultLanguageKeys[$table][$remoteId] = true;
+
+        if ($entity::RECONCILED_FIELDS !== []) {
+            $this->roots[$table][$remoteId] = ['entity' => $entity::class, 'supplied' => array_keys($row)];
+        }
 
         $entityTransients = $entity->getTransients();
         if ($entityTransients !== []) {
@@ -158,27 +169,6 @@ class DataHandlerPayload
         foreach ($entity->getMatchReports() as $matchReport) {
             $this->matchReports[] = $matchReport;
         }
-    }
-
-    /**
-     * Spend the parsed-empty sentinels: each names the type it stands in for,
-     * so the empty value to restore is known rather than guessed. They exist
-     * only to survive toArray()'s falsy filter, and end here — the datamap
-     * carries real values and nothing downstream knows about them.
-     *
-     * @param array<string, string|int|float> $row
-     *
-     * @return array<string, string|int|float>
-     */
-    protected function resolveParsedEmpty(array $row): array
-    {
-        foreach ($row as $field => $value) {
-            if ($value === AbstractEntity::PARSED_EMPTY_INTEGER) {
-                $row[$field] = 0;
-            }
-        }
-
-        return $row;
     }
 
     /**
@@ -254,6 +244,7 @@ class DataHandlerPayload
         }
 
         $this->dataMap[$table][$key][$field] = $value;
+        $this->claimOnRow($table, $key, $field);
     }
 
     /**
@@ -285,6 +276,30 @@ class DataHandlerPayload
         }
 
         $this->dataMap[$table][$key][$field] = implode(',', $values);
+        $this->claimOnRow($table, $key, $field);
+    }
+
+    /**
+     * Keeps the fields of a root from being reconciled: they were written this root, or what upstream supplies for
+     * them is unknown. A record that is no root claims nothing.
+     */
+    public function claim(string $table, string $remoteId, string ...$fields): void
+    {
+        if (!isset($this->roots[$table][$remoteId])) {
+            return;
+        }
+
+        foreach ($fields as $field) {
+            $this->roots[$table][$remoteId]['supplied'][] = $field;
+        }
+    }
+
+    protected function claimOnRow(string $table, string $key, string $field): void
+    {
+        $remoteId = $this->dataMap[$table][$key]['remote_id'] ?? null;
+        if (is_string($remoteId)) {
+            $this->claim($table, $remoteId, $field);
+        }
     }
 
     /**
@@ -493,6 +508,14 @@ class DataHandlerPayload
         foreach ($other->matchReports as $matchReport) {
             $this->matchReports[] = $matchReport;
         }
+    }
+
+    /**
+     * @return array<string, array<string, array{entity: class-string<EntityInterface>, supplied: list<string>}>>
+     */
+    public function getRoots(): array
+    {
+        return $this->roots;
     }
 
     /**

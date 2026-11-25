@@ -142,20 +142,10 @@ final class EventOrganizerImportTest extends AbstractImportTestCase
      * Both relations are cleared on the event while the rows they pointed at
      * survive: they are shared between events and between import sources, so
      * dropping one event's relation may not delete them.
-     *
-     * Skipped, not deleted: it turns green when resolve-relation-reap-gap
-     * lands. AbstractEntity::toArray() ends with array_filter(), so an event
-     * carrying no organizer has no `organizer` key at all rather than an empty
-     * one, and wireChildrenOntoParentFields() never sees a value to clear.
-     * Absence of a staged value is indistinguishable from absence of a
-     * payload — the same empty-set cause as every other relation kind.
      */
     #[Test]
     public function reimportWithoutTheRelationsClearsTheColumnsAndKeepsTheRows(): void
     {
-        $this->markTestSkipped('Relation clearing awaits resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventRelationRemovalPreState.php');
         $this->expectFetch('e_noorg-hubev.json');
 

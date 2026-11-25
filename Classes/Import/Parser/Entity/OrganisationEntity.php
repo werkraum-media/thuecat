@@ -22,10 +22,17 @@ namespace WerkraumMedia\ThueCat\Import\Parser\Entity;
 
 // The managed records write managed_by; an organisation persists no outgoing relation of its own.
 use WerkraumMedia\ThueCat\Import\Parser\ParserContext;
+use WerkraumMedia\ThueCat\Import\Reconciliation\FieldMechanism;
 
 class OrganisationEntity extends AbstractPlaceEntity
 {
     public const TABLE = 'tx_thuecat_organisation';
+
+    public const RECONCILED_FIELDS = [
+        'title' => FieldMechanism::Scalar,
+        'description' => FieldMechanism::Scalar,
+        'address_inline' => FieldMechanism::ExplicitDelete,
+    ];
 
     protected string $remote_id = '';
 

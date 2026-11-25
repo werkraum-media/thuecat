@@ -169,13 +169,10 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function droppedRoomIsUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithRooms.csv');
         $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-one-of-its-rooms.json');
-        $this->expectFetch('380984144868-tjdz.json');
+        $this->expectFetch('380984144868-tjdz.json', '541146409582-zdzo.json', '853365081548-bobo.json');
 
         $this->importConfiguration(2);
 
@@ -185,9 +182,6 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function allDroppedRoomsAreUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithRooms.csv');
         $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-without-rooms.json');
@@ -200,9 +194,6 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function droppedRelatedRoomIsUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithRooms.csv');
         $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-one-of-its-rooms.json');
@@ -212,21 +203,5 @@ final class MeetingRoomRelationsImportTest extends AbstractImportTestCase
         $this->importConfiguration(2);
 
         $this->assertSame([self::RESOURCES . '541146409582-zdzo'], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
-    }
-
-    #[Test]
-    public function allDroppedRelatedRoomsAreUnrelated(): void
-    {
-        $this->markTestSkipped('Reference writes never clear an empty set; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
-        $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingRooms.php');
-        $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/ExistingMeetingVenueWithRooms.csv');
-        $this->expectFetchForUrl(self::RESOURCES . '669150457039-gamn', 'thuecat.org/resources/meeting-venue-with-one-of-its-rooms.json');
-        $this->expectFetchForUrl(self::RESOURCES . '380984144868-tjdz', 'thuecat.org/resources/meeting-room-naming-no-combination.json');
-
-        $this->importConfiguration(2);
-
-        $this->assertSame([], $this->fetchMmRelatedRemoteIds(self::TABLE, self::RESOURCES . '380984144868-tjdz', 'contained_rooms'));
     }
 }

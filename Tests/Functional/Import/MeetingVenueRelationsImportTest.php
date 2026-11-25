@@ -197,9 +197,6 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function droppedOperatorIsUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithOperatorAndTrails.csv');
         $this->expectFetch('117034427781-ndta.json');
@@ -212,9 +209,6 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function oneDroppedTrailIsUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithOperatorAndTrails.csv');
         $this->expectFetchForUrl(self::WIELANDGUT, 'thuecat.org/resources/meeting-venue-touching-trail.json');
@@ -228,9 +222,6 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function allDroppedTrailsAreUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithOperatorAndTrails.csv');
         $this->expectFetch('117034427781-ndta.json');
@@ -243,9 +234,6 @@ final class MeetingVenueRelationsImportTest extends AbstractImportTestCase
     #[Test]
     public function droppedManagedObjectIsUnrelated(): void
     {
-        $this->markTestSkipped('Reference writes never clear a dropped reference; see resolve-relation-reap-gap.');
-
-        // @phpstan-ignore-next-line deadCode.unreachable
         $this->importPHPDataSet(__DIR__ . '/../Fixtures/Import/ImportsMeetingVenueRelations.php');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/Import/MeetingVenueWithManagedObject.csv');
         $this->expectFetchForUrl(self::CULTURAL_ESTATE, 'thuecat.org/resources/meeting-venue-without-managed-objects.json');
