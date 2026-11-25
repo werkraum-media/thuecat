@@ -76,12 +76,8 @@ class ImportJobItems
      */
     public function begin(int $uid): ?ImportJobItem
     {
-        $connection = $this->connectionPool->getConnectionForTable(self::TABLE);
-        $row = $connection
-            ->select(['uid', 'target', 'position'], self::TABLE, ['uid' => $uid, 'state' => 'pending'])
-            ->fetchAssociative()
-        ;
-        if ($row === false || !is_numeric($row['uid']) || !is_string($row['target']) || !is_numeric($row['position'])) {
+        $pending = $this->findPending($uid);
+        if (!$pending instanceof ImportJobItem) {
             return null;
         }
 
@@ -93,7 +89,29 @@ class ImportJobItems
             ->executeStatement()
         ;
 
-        return new ImportJobItem((int)$row['uid'], $row['target'], (int)$row['position'], $this->clock->now()->getTimestamp());
+        return new ImportJobItem(
+            $pending->uid,
+            $pending->target,
+            $pending->position,
+            $this->clock->now()->getTimestamp(),
+            $pending->attempts + 1
+        );
+    }
+
+    /**
+     * Its clock is not started.
+     */
+    public function findPending(int $uid): ?ImportJobItem
+    {
+        $row = $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->select(['uid', 'target', 'position', 'attempts'], self::TABLE, ['uid' => $uid, 'state' => 'pending'])
+            ->fetchAssociative()
+        ;
+        if ($row === false || !is_numeric($row['uid']) || !is_string($row['target']) || !is_numeric($row['position']) || !is_numeric($row['attempts'])) {
+            return null;
+        }
+
+        return new ImportJobItem((int)$row['uid'], $row['target'], (int)$row['position'], 0, (int)$row['attempts']);
     }
 
     /**
@@ -111,6 +129,11 @@ class ImportJobItems
         return $this->connectionPool->getConnectionForTable(self::TABLE)
             ->count('uid', self::TABLE, ['job' => $job, 'state' => 'pending']) > 0
         ;
+    }
+
+    public function markFailed(ImportJobItem $item): void
+    {
+        $this->connectionPool->getConnectionForTable(self::TABLE)->update(self::TABLE, ['state' => 'failed'], ['uid' => $item->uid]);
     }
 
     public function markDone(ImportJobItem $item): void

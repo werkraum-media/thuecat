@@ -18,6 +18,8 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventDateSkipped;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventPlaceMatch;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\EventWithoutDates;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\FetchingError;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ItemDropped;
+use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\ItemFailed;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\MappingError;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RateLimited;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLogEntry\RecordReclassification;
@@ -102,6 +104,8 @@ return [
             'rateLimited' => RateLimited::class,
             'runAborted' => RunAborted::class,
             'runFailed' => RunFailed::class,
+            'itemFailed' => ItemFailed::class,
+            'itemDropped' => ItemDropped::class,
             'retriesRecovered' => RetriesRecovered::class,
             'effectiveSettings' => EffectiveSettings::class,
             'categoryParentChosen' => CategoryParentChosen::class,
@@ -186,6 +190,14 @@ return [
     RateLimited::class => [
         'tableName' => 'tx_thuecat_import_log_entry',
         'recordType' => 'rateLimited',
+    ],
+    ItemFailed::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'itemFailed',
+    ],
+    ItemDropped::class => [
+        'tableName' => 'tx_thuecat_import_log_entry',
+        'recordType' => 'itemDropped',
     ],
     CategoryParentChosen::class => [
         'tableName' => 'tx_thuecat_import_log_entry',

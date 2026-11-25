@@ -121,6 +121,14 @@ return (static function (string $extensionKey, string $tableName): array {
                             'value' => 'rateLimited',
                         ],
                         [
+                            'label' => $languagePath . '.type.itemFailed',
+                            'value' => 'itemFailed',
+                        ],
+                        [
+                            'label' => $languagePath . '.type.itemDropped',
+                            'value' => 'itemDropped',
+                        ],
+                        [
                             'label' => $languagePath . '.type.categoryMatched',
                             'value' => 'categoryMatched',
                         ],
@@ -286,6 +294,12 @@ return (static function (string $extensionKey, string $tableName): array {
                 'showitem' => '--palette--;;always, message, context',
             ],
             'runFailed' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'itemFailed' => [
+                'showitem' => '--palette--;;always, message, context',
+            ],
+            'itemDropped' => [
                 'showitem' => '--palette--;;always, message, context',
             ],
             'retriesRecovered' => [

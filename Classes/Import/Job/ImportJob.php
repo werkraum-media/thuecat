@@ -30,6 +30,7 @@ final readonly class ImportJob
         public bool $bypassCache,
         public int $importLog,
         public int $startedAt,
+        public int $backendUser,
     ) {
     }
 }

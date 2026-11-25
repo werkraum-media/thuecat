@@ -20,14 +20,22 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use RuntimeException;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Log\LogDataTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -36,6 +44,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
 {
+    use LogDataTrait;
+
     public const PATHS_TO_LINK = [
         'typo3conf/ext/thuecat/Tests/Functional/Fixtures/Import/Sites/' => 'typo3conf/sites',
     ];
@@ -121,6 +131,64 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
         }
 
         return $messages;
+    }
+
+    /**
+     * Fails the message the way the worker does: stored and being handled when the failure is announced, rejected
+     * afterwards.
+     */
+    protected function failMessage(object $message): void
+    {
+        $this->get(MessageBusInterface::class)->dispatch($message);
+        $connection = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages');
+        $inFlight = $connection->select(['id'], 'sys_messenger_messages', [], [], ['id' => 'DESC'], 1)->fetchOne();
+        $connection->update('sys_messenger_messages', ['delivered_at' => date('Y-m-d H:i:s')], ['id' => $inFlight]);
+
+        $this->announceFailure($message);
+
+        $connection->delete('sys_messenger_messages', ['id' => $inFlight]);
+    }
+
+    protected function announceFailure(object $message): void
+    {
+        $envelope = new Envelope($message);
+        $this->get(EventDispatcherInterface::class)->dispatch(new WorkerMessageFailedEvent(
+            $envelope,
+            'doctrine',
+            new HandlerFailedException($envelope, [new RuntimeException('Database gone [test]', 1795092847)])
+        ));
+    }
+
+    /**
+     * @return list<array{type: int, error: int, details: string}> the user's error entries, details formatted
+     */
+    protected function systemLogErrors(int $userId): array
+    {
+        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_log');
+        $rows = $queryBuilder
+            ->select('type', 'error', 'details', 'log_data')
+            ->from('sys_log')
+            ->where(
+                $queryBuilder->expr()->eq('userid', $queryBuilder->createNamedParameter($userId, Connection::PARAM_INT)),
+                $queryBuilder->expr()->neq('error', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+            )
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $errors = [];
+        foreach ($rows as $row) {
+            $this->assertIsInt($row['type']);
+            $this->assertIsInt($row['error']);
+            $this->assertIsString($row['details']);
+            $errors[] = [
+                'type' => $row['type'],
+                'error' => $row['error'],
+                'details' => $this->formatLogDetails($row['details'], $row['log_data']),
+            ];
+        }
+
+        return $errors;
     }
 
     protected function tearDown(): void

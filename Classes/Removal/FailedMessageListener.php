@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalMessage;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
 use WerkraumMedia\ThueCat\Removal\Message\RemoveRoot;
+use WerkraumMedia\ThueCat\Service\JobBackendUser;
 use WerkraumMedia\ThueCat\Service\WaitingMessages;
 
 /**
@@ -68,7 +69,7 @@ final readonly class FailedMessageListener
         $failure = sprintf('%s failed: %s (%d)', $this->label($message), $cause->getMessage(), $cause->getCode());
 
         $this->removalJobs->recordFailure($job->uid, $failure);
-        $this->jobBackendUser->of($job)->writelog(
+        $this->jobBackendUser->of($job->backendUser)->writelog(
             SystemLogType::ERROR,
             SystemLogGeneralAction::UNDEFINED,
             SystemLogErrorClassification::SYSTEM_ERROR,

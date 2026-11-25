@@ -27,6 +27,7 @@ final readonly class ImportJobItem
         public string $target,
         public int $position,
         public int $startedAt,
+        public int $attempts,
     ) {
     }
 }

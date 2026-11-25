@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\SysLog\Action as SystemLogGeneralAction;
 use TYPO3\CMS\Core\SysLog\Error as SystemLogErrorClassification;
 use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Service\JobBackendUser;
 
 /**
  * Removes one root and the relations it leaves unused, each by its own DataHandler run, with the rights of the
@@ -55,7 +56,7 @@ class RootRemoval
             return new RootOutcome(false, true);
         }
 
-        $backendUser = $this->jobBackendUser->of($job);
+        $backendUser = $this->jobBackendUser->of($job->backendUser);
         $candidates = $this->relationUsage->candidatesOf($root->table, $root->uid);
         $fileCandidates = $job->removeFiles ? $this->fileUsage->candidatesOf($root->table, $root->uid) : [];
 

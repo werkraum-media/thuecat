@@ -18,21 +18,21 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-namespace WerkraumMedia\ThueCat\Removal;
+namespace WerkraumMedia\ThueCat\Service;
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Provides the backend user who started a job. The worker runs as _cli_, an admin; deleting and logging as the
+ * Provides the backend user who started a queued job. The worker runs as _cli_, an admin; acting and logging as the
  * job's own user brings back the group's permissions and puts the job's entries under that user in the log.
  */
 final readonly class JobBackendUser
 {
-    public function of(RemovalJob $job): BackendUserAuthentication
+    public function of(int $backendUserUid): BackendUserAuthentication
     {
         $backendUser = GeneralUtility::makeInstance(BackendUserAuthentication::class);
-        $backendUser->setBeUserByUid($job->backendUser);
+        $backendUser->setBeUserByUid($backendUserUid);
         $backendUser->fetchGroupData();
 
         return $backendUser;

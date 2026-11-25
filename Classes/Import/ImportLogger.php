@@ -691,6 +691,28 @@ class ImportLogger
      * another folder of the site, which is a configuration question, not a
      * failed import.
      */
+    public function recordItemFailed(string $target, string $failure, int $attempt): void
+    {
+        $this->stage([
+            'type' => 'itemFailed',
+            'severity' => self::SEVERITY_ERROR,
+            'remote_id' => $target,
+            'message' => $failure,
+            'context' => json_encode(['attempt' => $attempt]) ?: '{}',
+        ]);
+    }
+
+    public function recordItemDropped(string $target, int $attempts): void
+    {
+        $this->stage([
+            'type' => 'itemDropped',
+            'severity' => self::SEVERITY_ERROR,
+            'remote_id' => $target,
+            'message' => sprintf('Dropped after %d failed attempts; the next job brings it in again.', $attempts),
+            'context' => json_encode(['attempts' => $attempts]) ?: '{}',
+        ]);
+    }
+
     public function recordStorageFolderEmpty(int $storagePid): void
     {
         $this->stage([

@@ -77,7 +77,7 @@ class ImportJobs
     public function find(int $uid): ?ImportJob
     {
         $row = $this->connectionPool->getConnectionForTable(self::TABLE)
-            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log', 'started_at'], self::TABLE, ['uid' => $uid])
+            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log', 'started_at', 'backend_user'], self::TABLE, ['uid' => $uid])
             ->fetchAssociative()
         ;
         if ($row === false) {
@@ -92,6 +92,7 @@ class ImportJobs
             (bool)$this->intOf($row['bypass_cache']),
             $this->intOf($row['import_log']),
             $this->intOf($row['started_at']),
+            $this->intOf($row['backend_user']),
         );
     }
 

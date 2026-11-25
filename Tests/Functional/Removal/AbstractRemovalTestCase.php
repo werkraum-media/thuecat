@@ -20,14 +20,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Removal;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use RuntimeException;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
-use Symfony\Component\Messenger\Exception\HandlerFailedException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Log\LogDataTrait;
 use WerkraumMedia\ThueCat\Removal\Handler\RemovalStartedHandler;
 use WerkraumMedia\ThueCat\Removal\Handler\RemoveRootHandler;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalStarted;
@@ -42,8 +35,6 @@ use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
  */
 abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
 {
-    use LogDataTrait;
-
     protected function queueJob(
         Selection $selection,
         int $backendUser = 1,
@@ -98,32 +89,6 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
     }
 
     /**
-     * Fails the message the way the worker does: stored and being handled when the failure is announced, rejected
-     * afterwards.
-     */
-    protected function failMessage(object $message): void
-    {
-        $this->get(MessageBusInterface::class)->dispatch($message);
-        $connection = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages');
-        $inFlight = $connection->select(['id'], 'sys_messenger_messages', [], [], ['id' => 'DESC'], 1)->fetchOne();
-        $connection->update('sys_messenger_messages', ['delivered_at' => date('Y-m-d H:i:s')], ['id' => $inFlight]);
-
-        $this->announceFailure($message);
-
-        $connection->delete('sys_messenger_messages', ['id' => $inFlight]);
-    }
-
-    protected function announceFailure(object $message): void
-    {
-        $envelope = new Envelope($message);
-        $this->get(EventDispatcherInterface::class)->dispatch(new WorkerMessageFailedEvent(
-            $envelope,
-            'doctrine',
-            new HandlerFailedException($envelope, [new RuntimeException('Database gone [test]', 1795092847)])
-        ));
-    }
-
-    /**
      * @return array<string, mixed>
      */
     protected function jobRow(int $uid): array
@@ -135,38 +100,6 @@ abstract class AbstractRemovalTestCase extends AbstractBackendTestCase
         $this->assertIsArray($row);
 
         return $row;
-    }
-
-    /**
-     * @return list<array{type: int, error: int, details: string}> the user's error entries, details formatted
-     */
-    protected function systemLogErrors(int $userId): array
-    {
-        $queryBuilder = $this->getConnectionPool()->getQueryBuilderForTable('sys_log');
-        $rows = $queryBuilder
-            ->select('type', 'error', 'details', 'log_data')
-            ->from('sys_log')
-            ->where(
-                $queryBuilder->expr()->eq('userid', $queryBuilder->createNamedParameter($userId, Connection::PARAM_INT)),
-                $queryBuilder->expr()->neq('error', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
-            )
-            ->executeQuery()
-            ->fetchAllAssociative()
-        ;
-
-        $errors = [];
-        foreach ($rows as $row) {
-            $this->assertIsInt($row['type']);
-            $this->assertIsInt($row['error']);
-            $this->assertIsString($row['details']);
-            $errors[] = [
-                'type' => $row['type'],
-                'error' => $row['error'],
-                'details' => $this->formatLogDetails($row['details'], $row['log_data']),
-            ];
-        }
-
-        return $errors;
     }
 
     protected function referenceExists(string $table, int $uid, string $refTable, int $refUid): bool

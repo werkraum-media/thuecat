@@ -91,7 +91,7 @@ deptrac:
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\(Domain\\DetailRecordKind|Pagination|Typo3Wrapper)\\#'
         - type: classNameRegex
-          value: '#^WerkraumMedia\\ThueCat\\Service\\(SitePageIds|WaitingMessages)$#'
+          value: '#^WerkraumMedia\\ThueCat\\Service\\(JobBackendUser|SitePageIds|WaitingMessages)$#'
         - type: classNameRegex
           value: '#^WerkraumMedia\\ThueCat\\Import\\Settings\\(Anchor|CategoryAnchor)#'
 
