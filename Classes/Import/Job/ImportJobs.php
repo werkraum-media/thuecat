@@ -77,7 +77,7 @@ class ImportJobs
     public function find(int $uid): ?ImportJob
     {
         $row = $this->connectionPool->getConnectionForTable(self::TABLE)
-            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log'], self::TABLE, ['uid' => $uid])
+            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log', 'started_at'], self::TABLE, ['uid' => $uid])
             ->fetchAssociative()
         ;
         if ($row === false) {
@@ -91,6 +91,7 @@ class ImportJobs
             (bool)$this->intOf($row['skip_media']),
             (bool)$this->intOf($row['bypass_cache']),
             $this->intOf($row['import_log']),
+            $this->intOf($row['started_at']),
         );
     }
 
@@ -110,6 +111,26 @@ class ImportJobs
         $this->connectionPool->getConnectionForTable(self::TABLE)->update(
             self::TABLE,
             ['status' => 'failed', 'ended_at' => $now, 'progressed_at' => $now],
+            ['uid' => $uid]
+        );
+    }
+
+    /**
+     * @param array{done: int, failed: int, skipped: int} $counts
+     */
+    public function finish(int $uid, string $status, array $counts): void
+    {
+        $now = $this->clock->now()->getTimestamp();
+        $this->connectionPool->getConnectionForTable(self::TABLE)->update(
+            self::TABLE,
+            [
+                'status' => $status,
+                'ended_at' => $now,
+                'progressed_at' => $now,
+                'done_items' => $counts['done'],
+                'failed_items' => $counts['failed'],
+                'skipped_items' => $counts['skipped'],
+            ],
             ['uid' => $uid]
         );
     }

@@ -29,6 +29,7 @@ final readonly class ImportJob
         public bool $skipMedia,
         public bool $bypassCache,
         public int $importLog,
+        public int $startedAt,
     ) {
     }
 }

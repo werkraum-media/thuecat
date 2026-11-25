@@ -31,9 +31,11 @@ use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\ImportJob;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
+use WerkraumMedia\ThueCat\Import\SyncChannel\UnreadableSyncListException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
 
@@ -75,7 +77,8 @@ final readonly class ImportStartedHandler
             $configuration,
             $this->siteFinder->getSiteByPageId($configuration->getStoragePid())
         );
-        $this->importJobs->markRunning($job->uid, $this->importLogger->openLog($job->configurationUid));
+        $importLog = $this->importLogger->openLog($job->configurationUid);
+        $this->importJobs->markRunning($job->uid, $importLog);
 
         $this->fetchData->configureForRun(
             $job->bypassCache,
@@ -90,6 +93,13 @@ final readonly class ImportStartedHandler
             $targets = $urlProvider instanceof SyncChannelUrlProvider
                 ? $urlProvider->getTargets()
                 : ['import' => array_values($urlProvider->getUrls()), 'delete' => []];
+        } catch (UnreadableSyncListException $e) {
+            // Without both lists the job knows neither what changed nor what to delete.
+            $this->importLogger->recordException('fetchingError', $e->failure, $e->url);
+            $this->importLogger->writeLogInto($importLog, [], []);
+            $this->importJobs->markFailed($job->uid);
+            $this->messageBus->dispatch(new ImportFinished($job->uid));
+            return;
         } finally {
             $this->fetchData->resetRunConfiguration();
         }

@@ -28,11 +28,13 @@ use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Job\Handler\DeleteRootHandler;
+use WerkraumMedia\ThueCat\Import\Job\Handler\ImportFinishedHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportRootHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
 use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
@@ -345,7 +347,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $job = $this->get(ImportJobs::class)->queue($configurationUid, ImportTrigger::Manual, $skipMedia, $bypassCache, 1);
         $this->assertIsInt($job);
-        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->takeQueuedMessages();
         $this->workaroundExtbaseConfiguration();
         $this->get(ImportStartedHandler::class)(new ImportStarted($job));
 
@@ -353,7 +355,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     }
 
     /**
-     * Starts a job and handles each of its items in turn, as the consumer would.
+     * Starts a job, handles each of its items in turn and finishes it, as the consumer would.
      *
      * @return int the job's uid
      */
@@ -366,6 +368,8 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
                 : $this->handleImportRoot($job, $item['uid']);
         }
 
+        $this->handleImportFinished($job);
+
         return $job;
     }
 
@@ -374,7 +378,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
      */
     protected function handleDeleteRoot(int $job, int $item): void
     {
-        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->takeQueuedMessages();
         $this->get(DeleteRootHandler::class)(new DeleteRoot($job, $item));
     }
 
@@ -383,8 +387,25 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
      */
     protected function handleImportRoot(int $job, int $item): void
     {
-        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->takeQueuedMessages();
         $this->get(ImportRootHandler::class)(new ImportRoot($job, $item));
+    }
+
+    /**
+     * Handles the job's finishing message, taken off the transport first as the consumer takes it.
+     */
+    protected function handleImportFinished(int $job): void
+    {
+        $this->takeQueuedMessages();
+        $this->get(ImportFinishedHandler::class)(new ImportFinished($job));
+    }
+
+    /**
+     * Empties the transport, as the consumer does when it takes a message.
+     */
+    protected function takeQueuedMessages(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
     }
 
     /**
@@ -399,6 +420,38 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
         $this->assertIsArray($row);
 
         return $row;
+    }
+
+    /**
+     * @return array{status: mixed, ended_at: mixed, done_items: mixed, failed_items: mixed, skipped_items: mixed}
+     */
+    protected function jobOutcome(int $uid): array
+    {
+        $row = $this->jobRow($uid);
+
+        return [
+            'status' => $row['status'],
+            'ended_at' => $row['ended_at'],
+            'done_items' => $row['done_items'],
+            'failed_items' => $row['failed_items'],
+            'skipped_items' => $row['skipped_items'],
+        ];
+    }
+
+    protected function jobLog(int $job): int
+    {
+        $log = $this->jobRow($job)['import_log'];
+        $this->assertIsInt($log);
+
+        return $log;
+    }
+
+    protected function importConfigurationValue(int $uid, string $column): mixed
+    {
+        return $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')
+            ->select([$column], 'tx_thuecat_import_configuration', ['uid' => $uid])
+            ->fetchOne()
+        ;
     }
 
     /**

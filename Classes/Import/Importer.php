@@ -41,9 +41,6 @@ use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
-use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
-use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
-use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
 use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
@@ -67,7 +64,6 @@ class Importer
         protected readonly EffectiveSettingsReport $effectiveSettingsReport,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
-        protected readonly SyncWindow $syncWindow,
         protected readonly UrlProviders $urlProviders
     ) {
     }
@@ -202,14 +198,12 @@ class Importer
 
         $loggerPayload = [];
         $substNEWwithIDs = [];
-        $aborted = false;
         $urls = $urlProvider->getUrls();
         $urlCount = count($urls);
         $urlNumber = 0;
         foreach ($urls as $url) {
             if ($deadline->isExpired()) {
                 $this->recordAbort($deadline, ImportPhase::Fetch);
-                $aborted = true;
                 break;
             }
 
@@ -232,13 +226,8 @@ class Importer
 
             $substNEWwithIDs += $outcome->substNEWwithIDs;
             if ($outcome->aborted) {
-                $aborted = true;
                 break;
             }
-        }
-
-        if (!$aborted) {
-            $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
         }
 
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
@@ -465,24 +454,6 @@ class Importer
         }
 
         return $result;
-    }
-
-    /**
-     * Site-wide identity updates a record where it already lives, so a run can
-     * succeed and still leave its own folder empty. An empty folder also
-     * restarts the five-year window on every run.
-     */
-    protected function warnOfEmptyStorageFolder(UrlProvider $urlProvider, ImportConfigurationInterface $configuration): void
-    {
-        if (!$urlProvider instanceof SyncChannelUrlProvider) {
-            return;
-        }
-
-        if ($this->syncWindow->holdsRecord($configuration->getStoragePid())) {
-            return;
-        }
-
-        $this->importLogger->recordStorageFolderEmpty($configuration->getStoragePid());
     }
 
     protected function reportEffectiveSettings(

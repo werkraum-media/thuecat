@@ -97,6 +97,20 @@ class ImportJobItems
     }
 
     /**
+     * @return array{done: int, failed: int, skipped: int}
+     */
+    public function countByState(int $job): array
+    {
+        $connection = $this->connectionPool->getConnectionForTable(self::TABLE);
+
+        return [
+            'done' => $connection->count('uid', self::TABLE, ['job' => $job, 'state' => 'done']),
+            'failed' => $connection->count('uid', self::TABLE, ['job' => $job, 'state' => 'failed']),
+            'skipped' => $connection->count('uid', self::TABLE, ['job' => $job, 'state' => 'skipped']),
+        ];
+    }
+
+    /**
      * The message of the first pending item after the given position, or the job's finishing message when none is
      * pending. An item waiting for its retry before that position gets its message from the retry instead.
      */

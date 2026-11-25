@@ -21,7 +21,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Import\SyncChannel;
 
 use DateTimeImmutable;
+use Psr\Http\Client\ClientExceptionInterface;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
+use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 
 /**
  * Reads a channel's change and expiry lists once per run and turns them into
@@ -64,7 +66,7 @@ class SyncChannel
 
         return new SyncChannelLists(
             array_values(array_diff(array_values(array_unique($changed)), $gone)),
-            array_map(fn (string $id): string => $this->fetchData->getFullResourceUrl($id), $gone),
+            array_map($this->fetchData->getFullResourceUrl(...), $gone),
         );
     }
 
@@ -76,7 +78,13 @@ class SyncChannel
     protected function pages(string $url, array $query): iterable
     {
         do {
-            $page = $this->fetchData->jsonLDFromUrlIgnoringCache($url . '?' . http_build_query($query));
+            $pageUrl = $url . '?' . http_build_query($query);
+            try {
+                $page = $this->fetchData->jsonLDFromUrlIgnoringCache($pageUrl);
+            } catch (InvalidResponseException | ClientExceptionInterface $e) {
+                throw new UnreadableSyncListException($pageUrl, $e);
+            }
+
             yield $page;
             $pageToken = $page['pageToken'] ?? null;
             $query['pageToken'] = is_string($pageToken) ? $pageToken : '';

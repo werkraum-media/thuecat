@@ -21,7 +21,6 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
@@ -176,32 +175,28 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
         $this->expectFetchForUrl(self::LIST_CHANGED, 'widgets.thuecat.org/api/sync/test-channel/list-changed-removed.json');
         $this->expectFailureForUrl(self::LIST_EXPIRED, 403);
 
-        try {
-            $this->importJob(1);
-            $this->fail('The job went on without the expiry list.');
-        } catch (InvalidResponseException) {
-        }
+        $this->importJob(1);
 
         $this->assertSame(0, $this->countRows('tx_thuecat_import_job_item'));
         $this->assertSame(11, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
     }
 
     #[Test]
-    public function failedDeletionIsADataHandlerErrorOfTheJobsLog(): void
+    public function failedDeletionIsADataHandlerErrorAndKeepsTheJobAsLastSuccessfulRun(): void
     {
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(SyncChannelReaper::class, new SyncChannelReaperFailingStub());
         $this->expectChannelLists('list-changed-removed-with-import.json');
-        $job = $this->startJob(1);
+        $this->expectChannelRecords('test-event-1');
 
-        $this->handleDeleteRoot($job, $this->jobItems($job)[1]['uid']);
+        $job = $this->importJob(1);
 
-        $log = $this->jobRow($job)['import_log'];
-        $this->assertIsInt($log);
+        $log = $this->jobLog($job);
         $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_log_entry', [
             'import_log' => $log,
             'type' => 'dataHandlerError',
             'message' => SyncChannelReaperFailingStub::ERROR,
         ]));
+        $this->assertSame($this->jobRow($job)['started_at'], $this->importConfigurationValue(1, 'last_successful_run'));
     }
 }

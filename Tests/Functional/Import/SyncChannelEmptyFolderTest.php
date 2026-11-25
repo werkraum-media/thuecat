@@ -58,11 +58,11 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
-    public function runWhoseEventsAllMatchElsewhereWarnsOfTheEmptyFolder(): void
+    public function jobWhoseEventsAllMatchElsewhereWarnsOfTheEmptyFolder(): void
     {
         $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $entries = $this->getLogEntriesOfType('storageFolderEmpty');
         $this->assertCount(1, $entries);
@@ -70,50 +70,45 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
-    public function runFillingItsFolderDoesNotWarn(): void
+    public function jobFillingItsFolderDoesNotWarn(): void
     {
         $this->expectChannelServingOneEvent();
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
     }
 
     #[Test]
-    public function runStoringTrailsInItsFolderDoesNotWarn(): void
+    public function jobStoringTrailsInItsFolderDoesNotWarn(): void
     {
         $this->expectFiveYearRunServing('list-changed-trail.json', 'test-trail-1');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(50, $this->fetchRowByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-1')['pid']);
         $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
     }
 
     #[Test]
-    public function runStoringTouristAttractionsInItsFolderDoesNotWarn(): void
+    public function jobStoringTouristAttractionsInItsFolderDoesNotWarn(): void
     {
         $this->expectFiveYearRunServing('list-changed-attraction.json', 'test-attraction-1');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $this->assertSame(50, $this->fetchRowByRemoteId('tx_thuecat_tourist_attraction', 'https://thuecat.org/resources/test-attraction-1')['pid']);
         $this->assertSame([], $this->getLogEntriesOfType('storageFolderEmpty'));
     }
 
     #[Test]
-    public function emptyFolderWarningKeepsTheRunAsAnchor(): void
+    public function emptyFolderWarningKeepsTheJobAsLastSuccessfulRun(): void
     {
         $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
-        $this->importConfiguration(4);
+        $job = $this->importJob(4);
 
-        $runCreated = $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log')
-            ->select(['crdate'], 'tx_thuecat_import_log', ['configuration' => 4], [], ['uid' => 'DESC'], 1)
-            ->fetchOne()
-        ;
-        $this->assertSame($runCreated, $this->get(ImportLogRepository::class)->findLatestSuccessfulCreation(4)?->getTimestamp());
+        $this->assertSame($this->jobRow($job)['started_at'], $this->importConfigurationValue(4, 'last_successful_run'));
     }
 
     // The module lists a warning only once the entry hydrates to its own class.
@@ -122,7 +117,7 @@ final class SyncChannelEmptyFolderTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectFiveYearRunServing('list-changed.json', 'test-event-1');
 
-        $this->importConfiguration(4);
+        $this->importJob(4);
 
         $log = null;
         foreach ($this->get(ImportLogRepository::class)->findAll() as $candidate) {

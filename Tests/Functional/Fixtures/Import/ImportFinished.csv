@@ -1,0 +1,44 @@
+"pages"
+,"uid","pid","title","doktype"
+,1,0,"Root",1
+,10,1,"Storage",254
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","storage_pid","last_run","last_successful_run"
+,1,0,"Every item done","static",10,1700000000,1700000000
+,2,0,"An item failed","static",10,1700000000,1700000000
+,3,0,"Run failed","static",10,1700000000,1700000000
+,4,0,"Failed at its start","static",10,1700000000,1700000000
+,5,0,"Stopping","static",10,1700000000,1700000000
+,6,0,"Faults of single records","static",10,1700000000,1700000000
+"tx_thuecat_import_job"
+,"uid","configuration","job_trigger","status","started_at","import_log"
+,1,1,"schedule","running",1795526700,1
+,2,2,"schedule","running",1795526700,2
+,3,3,"schedule","running",1795526700,3
+,4,4,"schedule","failed",1795526700,4
+,5,5,"schedule","stopping",1795526700,5
+,6,6,"schedule","running",1795526700,6
+"tx_thuecat_import_job_item"
+,"uid","job","target","action","position","state"
+,1,1,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,2,1,"https://thuecat.org/resources/test-trail-removed","delete",1,"done"
+,3,2,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,4,2,"https://thuecat.org/resources/test-trail-2","import",1,"failed"
+,5,3,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,6,5,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,7,5,"https://thuecat.org/resources/test-trail-2","import",1,"skipped"
+,8,6,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+"tx_thuecat_import_log"
+,"uid","pid","configuration","crdate"
+,1,0,1,1795526700
+,2,0,2,1795526700
+,3,0,3,1795526700
+,4,0,4,1795526700
+,5,0,5,1795526700
+,6,0,6,1795526700
+"tx_thuecat_import_log_entry"
+,"uid","pid","import_log","type","severity","remote_id","message"
+,1,0,3,"runFailed","error","","Run failed [test]"
+,2,0,4,"fetchingError","error","https://widgets.thuecat.org/api/sync/test-channel/list-expired","Forbidden [test]"
+,3,0,6,"fetchingError","error","https://thuecat.org/resources/test-trail-1","Not found [test]"
+,4,0,6,"dataHandlerError","error","","Attempt to delete record without delete-permissions [test]"

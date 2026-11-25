@@ -49,8 +49,7 @@ final class JobImportLogTest extends AbstractImportTestCase
 
         $job = $this->importJob(1);
 
-        $log = $this->jobRow($job)['import_log'];
-        $this->assertIsInt($log);
+        $log = $this->jobLog($job);
         $this->assertSame(
             [self::FIRST_TRAIL, self::SECOND_TRAIL],
             $this->fetchColumnMatching('tx_thuecat_import_log_entry', 'remote_id', ['import_log' => $log, 'type' => 'referenceSkipped'])

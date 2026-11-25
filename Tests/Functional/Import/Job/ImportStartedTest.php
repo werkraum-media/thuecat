@@ -73,8 +73,7 @@ final class ImportStartedTest extends AbstractImportTestCase
     {
         $job = $this->startJob(1);
 
-        $log = $this->jobRow($job)['import_log'];
-        $this->assertIsInt($log);
+        $log = $this->jobLog($job);
         $this->assertSame(['effectiveSettings'], $this->fetchColumnMatching('tx_thuecat_import_log_entry', 'type', ['import_log' => $log]));
         $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_log', ['uid' => $log, 'configuration' => 1]));
     }
@@ -83,7 +82,7 @@ final class ImportStartedTest extends AbstractImportTestCase
     public function redeliveredStartIsDropped(): void
     {
         $job = $this->startJob(1);
-        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->takeQueuedMessages();
 
         $this->get(ImportStartedHandler::class)(new ImportStarted($job));
 
@@ -107,7 +106,7 @@ final class ImportStartedTest extends AbstractImportTestCase
         $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')
             ->update('tx_thuecat_import_configuration', ['deleted' => 1], ['uid' => 1])
         ;
-        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->takeQueuedMessages();
         $this->workaroundExtbaseConfiguration();
 
         $this->get(ImportStartedHandler::class)(new ImportStarted($job));
