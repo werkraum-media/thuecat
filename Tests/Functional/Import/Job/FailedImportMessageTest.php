@@ -22,12 +22,13 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\Job\ImportConfigurationGoneException;
 use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 
 final class FailedImportMessageTest extends AbstractImportTestCase
@@ -66,6 +67,44 @@ final class FailedImportMessageTest extends AbstractImportTestCase
     }
 
     #[Test]
+    public function failureNamesThePhaseItsItemReached(): void
+    {
+        $this->get(MessageDeadline::class)->assertNotExpired(ImportPhase::Persist);
+
+        $this->failMessage(new ImportRoot(1, 1));
+
+        $this->assertSame(['attempt' => 1, 'phase' => 'persist'], $this->logEntryContext('itemFailed'));
+    }
+
+    #[Test]
+    public function failureOfAnImportItemThatReachedNoPhaseNamesNone(): void
+    {
+        $this->get(MessageDeadline::class)->assertNotExpired(ImportPhase::Persist);
+        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')
+            ->delete('tx_thuecat_import_configuration', ['uid' => 1])
+        ;
+        try {
+            $this->handleImportRoot(1, 1);
+            $this->fail('The configuration is gone.');
+        } catch (ImportConfigurationGoneException) {
+        }
+
+        $this->failMessage(new ImportRoot(1, 1));
+
+        $this->assertSame(['attempt' => 2], $this->logEntryContext('itemFailed'));
+    }
+
+    #[Test]
+    public function failureOfADeleteItemNamesNoPhase(): void
+    {
+        $this->get(MessageDeadline::class)->assertNotExpired(ImportPhase::Persist);
+
+        $this->failMessage(new DeleteRoot(1, 3));
+
+        $this->assertSame(['attempt' => 1], $this->logEntryContext('itemFailed'));
+    }
+
+    #[Test]
     public function failureIsLoggedInTheSystemLogAsAnErrorOfTheJobsUser(): void
     {
         $this->failMessage(new ImportRoot(1, 1));
@@ -81,12 +120,7 @@ final class FailedImportMessageTest extends AbstractImportTestCase
         $this->failMessage(new ImportRoot(1, 1));
 
         $this->assertEquals([new ImportRoot(1, 1)], $this->queuedMessages());
-        $body = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
-            ->select(['body'], 'sys_messenger_messages')
-            ->fetchOne()
-        ;
-        $this->assertIsString($body);
-        $this->assertSame(60000, new PhpSerializer()->decode(['body' => $body])->last(DelayStamp::class)?->getDelay());
+        $this->assertSame(60000, $this->queuedMessageDelay());
         $this->assertSame('pending', $this->jobItems(1)[0]['state']);
     }
 

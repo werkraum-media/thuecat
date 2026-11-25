@@ -34,7 +34,10 @@ use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryingClient;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
+use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\RequestFactory;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 
 class FetchData
 {
@@ -59,7 +62,8 @@ class FetchData
         protected readonly RequestFactoryInterface $requestFactory,
         protected readonly ImportHttpClient $httpClient,
         #[Autowire(service: 'cache.thuecat_fetchdata')]
-        protected readonly CacheFrontendInterface $cache
+        protected readonly CacheFrontendInterface $cache,
+        protected readonly MessageDeadline $deadline
     ) {
     }
 
@@ -123,8 +127,12 @@ class FetchData
         return $this->urlPrefix . '/resources/' . ltrim($id, '/');
     }
 
+    /**
+     * @throws MessageBudgetExhaustedException before the fetch, so a fan-out ends at its next reference
+     */
     public function jsonLDFromUrl(string $url, ?string $apiKey = null): array
     {
+        $this->deadline->assertNotExpired(ImportPhase::Fetch);
         // Keyed on the api key too: different keys must not share responses.
         $cacheIdentifier = sha1($url . '|' . ($apiKey ?? ''));
         // A bypassing run still writes, so the fresh response is what a later

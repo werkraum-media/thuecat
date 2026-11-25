@@ -32,6 +32,7 @@ use WerkraumMedia\ThueCat\Import\Job\ImportJobItem;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 
 #[AsMessageHandler]
 final readonly class ImportRootHandler
@@ -42,14 +43,16 @@ final readonly class ImportRootHandler
         private ImportConfigurationRepository $configurationRepository,
         private Importer $importer,
         private ImportLogger $importLogger,
+        private MessageDeadline $deadline,
         private MessageBusInterface $messageBus,
     ) {
     }
 
     public function __invoke(ImportRoot $message): void
     {
-        // The consumer is long-lived and the logger shared: entries of an earlier message must not reach this log.
+        // The consumer is long-lived and both are shared: what an earlier message left must not reach this one.
         $this->importLogger->reset();
+        $this->deadline->reset();
         $job = $this->importJobs->find($message->jobUid);
         if (!$job instanceof ImportJob) {
             return;

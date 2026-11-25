@@ -22,8 +22,6 @@ namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use WerkraumMedia\ThueCat\Import\Job\ImportConfigurationGoneException;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
@@ -97,12 +95,7 @@ final class ImportChainTest extends AbstractImportTestCase
 
         $this->assertSame('running', $this->jobOutcome(1)['status']);
         $this->assertEquals([new ImportFinished(1)], $this->queuedMessages());
-        $body = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
-            ->select(['body'], 'sys_messenger_messages')
-            ->fetchOne()
-        ;
-        $this->assertIsString($body);
-        $this->assertSame(60000, new PhpSerializer()->decode(['body' => $body])->last(DelayStamp::class)?->getDelay());
+        $this->assertSame(60000, $this->queuedMessageDelay());
     }
 
     #[Test]

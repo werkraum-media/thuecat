@@ -13,8 +13,8 @@ connectTimeout = 30
 # cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:maxAttempts
 maxAttempts = 3
 
-# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:runBudget
-runBudget = 86400
+# cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:messageBudget
+messageBudget = 300
 
 # cat=import; type=int+; label=LLL:EXT:thuecat/Resources/Private/Language/locallang_conf.xlf:fetchCacheLifetime
 fetchCacheLifetime = 900

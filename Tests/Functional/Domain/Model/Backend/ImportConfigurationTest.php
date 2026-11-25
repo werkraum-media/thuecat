@@ -41,7 +41,7 @@ final class ImportConfigurationTest extends AbstractImportConfigurationTestCase
         $this->assertSame(10, $configuration->getStoragePid());
         $this->assertSame('1:/thuecat/static/', $configuration->getFileFolder());
         $this->assertSame('static-key', $configuration->getApiKey());
-        $this->assertSame(120, $configuration->getRunBudget());
+        $this->assertSame(120, $configuration->getMessageBudget());
         $this->assertSame(600, $configuration->getFetchCacheLifetime());
     }
 
@@ -86,22 +86,22 @@ final class ImportConfigurationTest extends AbstractImportConfigurationTestCase
     #[Test]
     public function aConfiguredTunableWinsOverTheExtensionConfiguration(): void
     {
-        $this->writeExtensionConfiguration(['runBudget' => '50', 'fetchCacheLifetime' => '60']);
+        $this->writeExtensionConfiguration(['messageBudget' => '50', 'fetchCacheLifetime' => '60']);
         $configuration = $this->fetchImportConfiguration(1);
         $settings = $this->get(ImportSettings::class);
 
-        $this->assertSame(120, $settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()));
+        $this->assertSame(120, $settings->resolve(ImportSetting::MessageBudget, $configuration->getMessageBudget()));
         $this->assertSame(600, $settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime()));
     }
 
     #[Test]
     public function anEmptyTunableFallsBackToTheExtensionConfiguration(): void
     {
-        $this->writeExtensionConfiguration(['runBudget' => '50', 'fetchCacheLifetime' => '60']);
+        $this->writeExtensionConfiguration(['messageBudget' => '50', 'fetchCacheLifetime' => '60']);
         $configuration = $this->fetchImportConfiguration(2);
         $settings = $this->get(ImportSettings::class);
 
-        $this->assertSame(50, $settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()));
+        $this->assertSame(50, $settings->resolve(ImportSetting::MessageBudget, $configuration->getMessageBudget()));
         $this->assertSame(60, $settings->resolve(ImportSetting::FetchCacheLifetime, $configuration->getFetchCacheLifetime()));
     }
 }

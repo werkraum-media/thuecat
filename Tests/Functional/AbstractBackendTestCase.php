@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Backend\Form\FormDataCompiler;
 use TYPO3\CMS\Backend\Form\FormDataGroup\TcaDatabaseRecord;
@@ -131,6 +132,20 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
         }
 
         return $messages;
+    }
+
+    /**
+     * @return int|null milliseconds the only queued message waits before the consumer takes it
+     */
+    protected function queuedMessageDelay(): ?int
+    {
+        $body = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
+            ->select(['body'], 'sys_messenger_messages')
+            ->fetchOne()
+        ;
+        $this->assertIsString($body);
+
+        return new PhpSerializer()->decode(['body' => $body])->last(DelayStamp::class)?->getDelay();
     }
 
     /**

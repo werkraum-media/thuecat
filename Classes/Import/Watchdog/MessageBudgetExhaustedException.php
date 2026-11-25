@@ -23,15 +23,15 @@ namespace WerkraumMedia\ThueCat\Import\Watchdog;
 use RuntimeException;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 
-// Deliberate abort, caught by the importer so the log still gets written.
-final class RunBudgetExhaustedException extends RuntimeException
+// Fails the item's message, so the abort counts as a failed attempt of the item.
+final class MessageBudgetExhaustedException extends RuntimeException
 {
     public function __construct(
         string $message,
         int $code,
         public readonly ImportPhase $phase,
         public readonly int $budgetSeconds,
-        public readonly float $elapsedSeconds,
+        public readonly int $elapsedSeconds,
     ) {
         parent::__construct($message, $code);
     }

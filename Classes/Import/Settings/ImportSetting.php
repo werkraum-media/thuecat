@@ -30,12 +30,12 @@ enum ImportSetting: string
     case ReadTimeout = 'readTimeout';
     case ConnectTimeout = 'connectTimeout';
     case MaxAttempts = 'maxAttempts';
-    case RunBudget = 'runBudget';
+    case MessageBudget = 'messageBudget';
     case FetchCacheLifetime = 'fetchCacheLifetime';
 
     /**
-     * Seconds, except MaxAttempts (a count). Generous while the import runs at
-     * ~5s per event; a tighter budget would abort healthy large runs.
+     * Seconds, except MaxAttempts (a count). The message budget bounds one
+     * root, so it stays well below what a whole job may take.
      */
     public function default(): int
     {
@@ -43,7 +43,7 @@ enum ImportSetting: string
             self::ReadTimeout => 120,
             self::ConnectTimeout => 30,
             self::MaxAttempts => 3,
-            self::RunBudget => 86400, // 1 day
+            self::MessageBudget => 300,
             self::FetchCacheLifetime => 900, // 15 min
         };
     }

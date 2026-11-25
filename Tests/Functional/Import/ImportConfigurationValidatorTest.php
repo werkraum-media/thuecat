@@ -341,7 +341,7 @@ final class ImportConfigurationValidatorTest extends AbstractImportConfiguration
                 return 0;
             }
 
-            public function getRunBudget(): int
+            public function getMessageBudget(): int
             {
                 return 0;
             }

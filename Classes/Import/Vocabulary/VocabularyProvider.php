@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Import\Vocabulary;
 use Throwable;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
 
 /**
  * Hands out the merged class index, fetching it only when what is stored has
@@ -58,6 +59,9 @@ class VocabularyProvider
 
         try {
             $index = $this->fetch($apiKey);
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            // An abort of the item, not a failure of the vocabulary.
+            throw $exhausted;
         } catch (Throwable $failure) {
             return $this->indexBehindFailure($stored, $failure, $now);
         }

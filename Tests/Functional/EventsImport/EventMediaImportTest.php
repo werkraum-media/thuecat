@@ -667,7 +667,7 @@ final class EventMediaImportTest extends AbstractImportTestCase
     private function runImportSkippingMedia(): void
     {
         $configuration = $this->fetchImportConfiguration(1);
-        $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
+        $this->get(Importer::class)->importConfiguration($configuration, null, false, true);
     }
 
     private function runImportReturningSeverity(): string

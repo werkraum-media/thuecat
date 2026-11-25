@@ -33,7 +33,7 @@ use WerkraumMedia\ThueCat\Import\Http\RequestLedger;
 use WerkraumMedia\ThueCat\Import\Http\RetryExhaustedException;
 use WerkraumMedia\ThueCat\Import\Http\RetryTally;
 use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
-use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
 
 class ImportLogger
 {
@@ -244,17 +244,18 @@ class ImportLogger
         $this->requestLedger->reset();
     }
 
-    // The phase reached is the diagnosis: it says where the run ran out.
-    public function recordRunAborted(RunBudgetExhaustedException $exception): void
+    // The phase reached is the diagnosis: it says where the item ran out.
+    public function recordRunAborted(MessageBudgetExhaustedException $exception, string $target): void
     {
         $this->stage([
             'type' => 'runAborted',
             'severity' => self::SEVERITY_ERROR,
+            'remote_id' => $target,
             'message' => $exception->getMessage(),
             'context' => json_encode([
                 'phase' => $exception->phase->value,
                 'budgetSeconds' => $exception->budgetSeconds,
-                'elapsedSeconds' => round($exception->elapsedSeconds, 1),
+                'elapsedSeconds' => $exception->elapsedSeconds,
             ]) ?: '{}',
         ]);
     }
@@ -691,14 +692,19 @@ class ImportLogger
      * another folder of the site, which is a configuration question, not a
      * failed import.
      */
-    public function recordItemFailed(string $target, string $failure, int $attempt): void
+    public function recordItemFailed(string $target, string $failure, int $attempt, ?ImportPhase $phaseReached): void
     {
+        $context = ['attempt' => $attempt];
+        if ($phaseReached instanceof ImportPhase) {
+            $context['phase'] = $phaseReached->value;
+        }
+
         $this->stage([
             'type' => 'itemFailed',
             'severity' => self::SEVERITY_ERROR,
             'remote_id' => $target,
             'message' => $failure,
-            'context' => json_encode(['attempt' => $attempt]) ?: '{}',
+            'context' => json_encode($context) ?: '{}',
         ]);
     }
 

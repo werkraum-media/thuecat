@@ -97,7 +97,7 @@ final class ImportSettingsTest extends TestCase
     {
         $subject = new ImportSettings($this->extensionConfigurationReturning('0'));
 
-        $this->assertSame(ImportSetting::RunBudget->default(), $subject->resolve(ImportSetting::RunBudget, ''));
+        $this->assertSame(ImportSetting::MessageBudget->default(), $subject->resolve(ImportSetting::MessageBudget, ''));
     }
 
     #[Test]

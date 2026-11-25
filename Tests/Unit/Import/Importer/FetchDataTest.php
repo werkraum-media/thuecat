@@ -23,6 +23,7 @@ namespace WerkraumMedia\ThueCat\Tests\Unit\Import\Importer;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Clock\ClockInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -33,6 +34,7 @@ use WerkraumMedia\ThueCat\Import\Http\ImportHttpClient;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\ResourceNotFoundException;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 
 final class FetchDataTest extends TestCase
 {
@@ -58,7 +60,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -94,7 +97,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -119,7 +123,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $result = $subject->jsonLDFromUrl('https://example.com/resources/018132452787-ngbe');
@@ -154,7 +159,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $this->assertSame(['expired' => ['e_1-test']], $subject->jsonLDFromUrlIgnoringCache('https://example.com/api/sync/test-channel/list-expired'));
@@ -187,7 +193,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $this->expectException(InvalidResponseException::class);
@@ -216,7 +223,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $this->expectException(InvalidResponseException::class);
@@ -252,7 +260,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $this->expectException(ResourceNotFoundException::class);
@@ -283,7 +292,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $result = $subject->jsonLDFromUrl('https://widgets.thuecat.org/api/sync/test-channel/jsonld/e_test-event');
@@ -319,7 +329,8 @@ final class FetchDataTest extends TestCase
         $subject = new FetchData(
             $requestFactory,
             $httpClient,
-            $cache
+            $cache,
+            new MessageDeadline($this->createStub(ClockInterface::class))
         );
 
         $result = $subject->jsonLDFromUrl('https://cdb.thuecat.org/api/ext-sync/get-updated-nodes?syncScopeId=dd4615dc-58a6-4648-a7ce-4950293a06db');

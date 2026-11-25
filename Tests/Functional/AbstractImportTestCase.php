@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional;
 
+use DateTimeImmutable;
 use GuzzleHttp\Psr7\Response;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Log\LogLevel;
@@ -41,6 +42,8 @@ use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyClass;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndexCache;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 
 abstract class AbstractImportTestCase extends AbstractBackendTestCase
 {
@@ -327,7 +330,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $configuration = $this->fetchImportConfiguration($uid);
 
-        return $this->get(Importer::class)->importConfiguration($configuration, null, null, true);
+        return $this->get(Importer::class)->importConfiguration($configuration, null, true);
     }
 
     /** The programmatic half of --no_media: no console command involved. */
@@ -335,7 +338,7 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $configuration = $this->fetchImportConfiguration($uid);
 
-        return $this->get(Importer::class)->importConfiguration($configuration, null, null, false, true);
+        return $this->get(Importer::class)->importConfiguration($configuration, null, false, true);
     }
 
     /**
@@ -398,6 +401,36 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $this->takeQueuedMessages();
         $this->get(ImportFinishedHandler::class)(new ImportFinished($job));
+    }
+
+    /**
+     * Handles an item's message that its budget aborts, then fails the message as the worker does, so the job's
+     * log holds what the item recorded.
+     */
+    protected function handleImportRootAbortedByBudget(int $job, int $item): MessageBudgetExhaustedException
+    {
+        try {
+            $this->handleImportRoot($job, $item);
+        } catch (MessageBudgetExhaustedException $exception) {
+            $this->failMessage(new ImportRoot($job, $item));
+
+            return $exception;
+        }
+
+        $this->fail('The item was not aborted by its budget.');
+    }
+
+    /**
+     * The deadline reads the first offset when its message starts and one more at each check.
+     */
+    protected function clockMessageDeadline(int ...$secondsElapsed): void
+    {
+        $instants = array_map(
+            static fn (int $seconds): DateTimeImmutable => new DateTimeImmutable('@' . (1795600000 + $seconds)),
+            $secondsElapsed
+        );
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(MessageDeadline::class, new MessageDeadline(new SteppingClock(...$instants)));
     }
 
     /**
@@ -493,6 +526,20 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
             )
             ->fetchAllAssociative()
         ;
+    }
+
+    /**
+     * @return array<mixed> the decoded context of the only log entry of that type
+     */
+    protected function logEntryContext(string $type): array
+    {
+        $entries = $this->getLogEntriesOfType($type);
+        $this->assertCount(1, $entries);
+        $this->assertIsString($entries[0]['context']);
+        $context = json_decode($entries[0]['context'], true);
+        $this->assertIsArray($context);
+
+        return $context;
     }
 
     protected function assertOrigin(string $table, string $remoteId, int $configurationUid, string $configurationTitle, string $syncId): void

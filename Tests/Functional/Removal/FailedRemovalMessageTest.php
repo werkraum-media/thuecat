@@ -24,8 +24,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use stdClass;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Transport\Serialization\PhpSerializer;
 use TYPO3\CMS\Core\SysLog\Error as SystemLogErrorClassification;
 use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use WerkraumMedia\ThueCat\Removal\Message\RemovalFinished;
@@ -108,13 +106,7 @@ final class FailedRemovalMessageTest extends AbstractRemovalTestCase
         $this->failMessage($message($this->job));
 
         $this->assertEquals([$message($this->job)], $this->queuedMessages());
-        $body = $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')
-            ->select(['body'], 'sys_messenger_messages')
-            ->fetchOne()
-        ;
-        $this->assertIsString($body);
-        $delay = new PhpSerializer()->decode(['body' => $body])->last(DelayStamp::class);
-        $this->assertSame(60000, $delay?->getDelay());
+        $this->assertSame(60000, $this->queuedMessageDelay());
     }
 
     #[Test]

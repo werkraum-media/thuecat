@@ -74,7 +74,7 @@ interface ImportConfigurationInterface
 
     public function getFetchLastXDays(): int;
 
-    public function getRunBudget(): int;
+    public function getMessageBudget(): int;
 
     public function getFetchCacheLifetime(): int;
 }

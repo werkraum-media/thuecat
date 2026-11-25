@@ -72,6 +72,7 @@ use WerkraumMedia\ThueCat\Import\SysCategory\SysCategoryTerm;
 use WerkraumMedia\ThueCat\Import\SysCategory\TitleResolver;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyIndex;
 use WerkraumMedia\ThueCat\Import\Vocabulary\VocabularyProvider;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
 
 #[Autoconfigure(public: true)]
 class Resolver
@@ -958,6 +959,8 @@ class Resolver
         try {
             $context->reportProgress($uri);
             $response = $this->fetchReference($uri, $context);
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            throw $exhausted;
         } catch (Exception $e) {
             $technicalFailure = !$this->fetchFailureVerdict->failureMeansGone($e);
             $this->importLogger->recordSkippedReference(
@@ -2069,6 +2072,8 @@ class Resolver
         if (!isset($context->namedReferenceNodes[$reference])) {
             try {
                 $context->namedReferenceNodes[$reference] = $this->fetchGraphNode($reference, $context, $reference);
+            } catch (MessageBudgetExhaustedException $exhausted) {
+                throw $exhausted;
             } catch (Exception $e) {
                 $reason = $e::class . ': ' . $e->getMessage();
                 $context->markReferenceFailed($reference, $reason);
@@ -2141,6 +2146,8 @@ class Resolver
 
         try {
             $node = $this->fetchGraphNode($reference, $context, $reference);
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            throw $exhausted;
         } catch (Exception $e) {
             $reason = $e::class . ': ' . $e->getMessage();
             $context->markReferenceFailed($reference, $reason);
@@ -2224,6 +2231,9 @@ class Resolver
                 $reference,
                 $remoteIdToKey[$reference] ?? ''
             );
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            // An abort of the item, not a failure of the reference.
+            throw $exhausted;
         } catch (Exception $e) {
             $reason = $e::class . ': ' . $e->getMessage();
             $context->markReferenceFailed($reference, $reason);

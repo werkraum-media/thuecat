@@ -162,7 +162,7 @@ class ImportConfiguration extends AbstractEntity implements ImportConfigurationI
         return $this->fetchLastXDays;
     }
 
-    public function getRunBudget(): int
+    public function getMessageBudget(): int
     {
         return $this->messageBudget;
     }

@@ -42,15 +42,12 @@ use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
-use WerkraumMedia\ThueCat\Import\Watchdog\RunBudgetExhaustedException;
-use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageBudgetExhaustedException;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 use WerkraumMedia\ThueCat\Service\SitePageIds;
 
 class Importer
 {
-    // Last phase entered, so a run-ending throwable can say where it died.
-    protected ImportPhase $phaseReached = ImportPhase::Fetch;
-
     public function __construct(
         protected readonly Parser $parser,
         protected readonly FetchData $fetchData,
@@ -64,7 +61,8 @@ class Importer
         protected readonly EffectiveSettingsReport $effectiveSettingsReport,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
-        protected readonly UrlProviders $urlProviders
+        protected readonly UrlProviders $urlProviders,
+        protected readonly MessageDeadline $deadline
     ) {
     }
 
@@ -77,12 +75,11 @@ class Importer
     public function importConfiguration(
         ImportConfigurationInterface $configuration,
         ?ImportProgressListener $listener = null,
-        ?RunDeadline $deadline = null,
         bool $bypassCache = false,
         bool $skipMedia = false
     ): string {
         $listener ??= new NullProgressListener();
-        $deadline ??= $this->deadlineFor($configuration);
+        $this->deadline->reset();
 
         // Pre-flight: abort on a misconfiguration before touching the API.
         $this->configurationValidator->validate($configuration);
@@ -105,11 +102,11 @@ class Importer
         $this->configureFetching($configuration, $bypassCache);
 
         try {
-            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $deadline, $skipMedia);
+            return $this->runImport($configuration, $targetFolder, $stagingFolder, $listener, $skipMedia);
         } catch (Throwable $failure) {
             // Rethrown after logging: the caller still sees the failure, but the
             // run no longer disappears without a trace.
-            $this->importLogger->recordRunFailed($failure, $this->phaseReached);
+            $this->importLogger->recordRunFailed($failure, $this->deadline->phaseReached() ?? ImportPhase::Fetch);
             $this->importLogger->writeLog($configuration->getUid(), [], []);
 
             throw $failure;
@@ -140,6 +137,7 @@ class Importer
 
         $this->configureFetching($configuration, $bypassCache);
 
+        $this->deadline->start($this->settings->resolve(ImportSetting::MessageBudget, $configuration->getMessageBudget()));
         try {
             $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
             $outcome = $this->persistRoot(
@@ -150,23 +148,23 @@ class Importer
                 $targetFolder,
                 $stagingFolder,
                 new NullProgressListener(),
-                $this->deadlineFor($configuration),
                 $skipMedia
             );
             $this->finishRun($targetFolder, $stagingFolder);
 
             return $outcome;
+        } catch (MessageBudgetExhaustedException $exception) {
+            // Thrown on, so the abort fails the message and counts as an attempt.
+            $this->importLogger->recordRunAborted($exception, $url);
+
+            throw $exception;
         } finally {
+            $this->deadline->stop();
             $this->fetchData->resetRunConfiguration();
             if ($stagingFolder instanceof Folder) {
                 $this->mediaFileStaging->discard($stagingFolder);
             }
         }
-    }
-
-    protected function deadlineFor(ImportConfigurationInterface $configuration): RunDeadline
-    {
-        return new RunDeadline($this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()));
     }
 
     protected function configureFetching(ImportConfigurationInterface $configuration, bool $bypassCache): void
@@ -185,7 +183,6 @@ class Importer
         ?Folder $targetFolder,
         ?Folder $stagingFolder,
         ImportProgressListener $listener,
-        RunDeadline $deadline,
         bool $skipMedia
     ): string {
         $urlProvider = $this->urlProviders->forConfiguration($configuration);
@@ -202,11 +199,6 @@ class Importer
         $urlCount = count($urls);
         $urlNumber = 0;
         foreach ($urls as $url) {
-            if ($deadline->isExpired()) {
-                $this->recordAbort($deadline, ImportPhase::Fetch);
-                break;
-            }
-
             $urlNumber++;
             $listener->progressed(new ImportProgress(ImportPhase::Fetch, $url, $urlNumber, $urlCount));
             $outcome = $this->persistRoot(
@@ -217,7 +209,6 @@ class Importer
                 $targetFolder,
                 $stagingFolder,
                 $listener,
-                $deadline,
                 $skipMedia
             );
             foreach ($outcome->loggerPayload as $table => $rows) {
@@ -225,9 +216,6 @@ class Importer
             }
 
             $substNEWwithIDs += $outcome->substNEWwithIDs;
-            if ($outcome->aborted) {
-                break;
-            }
         }
 
         $listener->progressed(new ImportProgress(ImportPhase::Log, 'Writing import log'));
@@ -251,7 +239,6 @@ class Importer
         ?Folder $targetFolder,
         ?Folder $stagingFolder,
         ImportProgressListener $listener,
-        RunDeadline $deadline,
         bool $skipMedia
     ): RootOutcome {
         $translationLanguages = [];
@@ -284,7 +271,6 @@ class Importer
             $configuration instanceof ImportConfiguration ? ImportOrigin::fromConfiguration($configuration) : null,
         );
 
-        $this->phaseReached = ImportPhase::Fetch;
         // A broken root is logged and costs only itself.
         try {
             $inputData = $this->fetchDataFromApi($url, $configuration->getApiKey());
@@ -296,6 +282,8 @@ class Importer
         try {
             $this->parser->parse($inputData, $parserContext, $defaultLanguage, $translationLanguages);
             $payload = $this->resolver->resolve($this->parser->getDataHandlerPayload(), $resolverContext);
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            throw $exhausted;
         } catch (Throwable $e) {
             $this->importLogger->recordException('mappingError', $e, $url);
             return new RootOutcome();
@@ -315,7 +303,6 @@ class Importer
         $matchReports = $payload->getMatchReports();
 
         $iterations = 0;
-        $aborted = false;
         // DataHandler's cmdMap is keyed [table][uid][command] = value, so
         // two localize commands on the same uid (one per target language)
         // collapse to a single entry — only the last survives. Each
@@ -342,13 +329,8 @@ class Importer
         // instead of re-querying or re-fetching.
         $substNEWwithIDs = [];
         while ($payload->getDataMap() !== [] || $payload->getCmdMap() !== []) {
-            $this->phaseReached = ImportPhase::Persist;
             // Between passes: a pass under way is never interrupted mid-write.
-            if ($deadline->isExpired()) {
-                $this->recordAbort($deadline, ImportPhase::Persist);
-                $aborted = true;
-                break;
-            }
+            $this->deadline->assertNotExpired(ImportPhase::Persist);
 
             if ($iterations >= $maxIterations) {
                 throw new RuntimeException(
@@ -417,7 +399,7 @@ class Importer
         $this->importLogger->recordEventsWithoutDates($parserContext->eventsWithoutDates);
         $this->importLogger->recordUnmatchedValues($parserContext->unmatchedValues);
 
-        return new RootOutcome($loggerPayload, $substNEWwithIDs, $aborted);
+        return new RootOutcome($loggerPayload, $substNEWwithIDs);
     }
 
     /**
@@ -470,19 +452,6 @@ class Importer
             $listener->settingsResolved($settings);
         } catch (Throwable) {
             // Diagnostics must never cost a run.
-        }
-    }
-
-    /**
-     * Staged, not thrown: the run must still reach writeLog(), or an aborted
-     * run leaves nothing behind — which is the failure this exists to fix.
-     */
-    protected function recordAbort(RunDeadline $deadline, ImportPhase $phase): void
-    {
-        try {
-            $deadline->assertNotExpired($phase);
-        } catch (RunBudgetExhaustedException $exception) {
-            $this->importLogger->recordRunAborted($exception);
         }
     }
 

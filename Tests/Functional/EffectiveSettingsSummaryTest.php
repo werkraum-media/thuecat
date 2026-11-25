@@ -132,7 +132,7 @@ final class EffectiveSettingsSummaryTest extends AbstractImportTestCase
             'readTimeout',
             'connectTimeout',
             'maxAttempts',
-            'runBudget',
+            'messageBudget',
             'fetchCacheLifetime',
         ]);
 

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\SysLog\Type as SystemLogType;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
+use WerkraumMedia\ThueCat\Import\Watchdog\MessageDeadline;
 use WerkraumMedia\ThueCat\Service\JobBackendUser;
 
 /**
@@ -49,6 +50,7 @@ final readonly class FailedMessageListener
         private ImportJobs $importJobs,
         private ImportJobItems $importJobItems,
         private ImportLogger $importLogger,
+        private MessageDeadline $deadline,
         private JobBackendUser $jobBackendUser,
         private MessageBusInterface $messageBus,
     ) {
@@ -78,7 +80,13 @@ final readonly class FailedMessageListener
         );
 
         // Entries the failed message recorded are still staged and go into the log along with its failure.
-        $this->importLogger->recordItemFailed($item->target, $failure, $item->attempts);
+        // A delete runs through no phases.
+        $this->importLogger->recordItemFailed(
+            $item->target,
+            $failure,
+            $item->attempts,
+            $message instanceof ImportRoot ? $this->deadline->phaseReached() : null
+        );
         $dropped = $item->attempts >= self::MAX_ATTEMPTS;
         if ($dropped) {
             $this->importJobItems->markFailed($item);

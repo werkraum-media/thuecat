@@ -90,7 +90,6 @@ class ImportConfigurationCommand extends Command
         $severity = $this->importer->importConfiguration(
             $configuration,
             new ConsoleProgressRenderer($output, $output->isDecorated()),
-            null,
             $input->getOption('fresh') === true,
             $input->getOption('no_media') === true
         );

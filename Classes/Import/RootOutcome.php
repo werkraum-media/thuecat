@@ -32,7 +32,6 @@ final readonly class RootOutcome
     public function __construct(
         public array $loggerPayload = [],
         public array $substNEWwithIDs = [],
-        public bool $aborted = false,
     ) {
     }
 }

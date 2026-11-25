@@ -74,7 +74,7 @@ readonly class EffectiveSettingsReport
                 'readTimeout' => $this->settings->resolve(ImportSetting::ReadTimeout, 0),
                 'connectTimeout' => $this->settings->resolve(ImportSetting::ConnectTimeout, 0),
                 'maxAttempts' => $this->settings->resolve(ImportSetting::MaxAttempts, 0),
-                'runBudget' => $this->settings->resolve(ImportSetting::RunBudget, $configuration->getRunBudget()),
+                'messageBudget' => $this->settings->resolve(ImportSetting::MessageBudget, $configuration->getMessageBudget()),
                 'fetchCacheLifetime' => $this->settings->resolve(
                     ImportSetting::FetchCacheLifetime,
                     $configuration->getFetchCacheLifetime()
