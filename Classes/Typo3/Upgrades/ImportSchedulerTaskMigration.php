@@ -33,7 +33,6 @@ use TYPO3\CMS\Core\Upgrades\ChattyInterface;
 use TYPO3\CMS\Core\Upgrades\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Core\Upgrades\UpgradeWizardInterface;
 use TYPO3\CMS\Scheduler\CronCommand\CronCommand;
-use TYPO3\CMS\Scheduler\Migration\SchedulerDatabaseStorageMigration;
 
 /**
  * Moves the schedule of every scheduler task that runs thuecat 7's import command onto the configuration it names,
@@ -65,7 +64,6 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
     public function __construct(
         private readonly ConnectionPool $connectionPool,
         private readonly TcaSchemaFactory $tcaSchemaFactory,
-        private readonly SchedulerDatabaseStorageMigration $schedulerStorageMigration,
     ) {
         $this->output = new NullOutput();
     }
@@ -106,11 +104,12 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
     }
 
     /**
-     * A task stored the way of earlier TYPO3 versions has no task type yet; core's storage migration gives it one.
+     * An import task stored the way of earlier TYPO3 versions has no task type until core's storage migration gives
+     * it one. Core's own answer is no guide: it keeps counting native tasks it has already migrated.
      */
     public function updateNecessary(): bool
     {
-        return !$this->schedulerStorageMigration->updateNecessary()
+        return !$this->hasUnmigratedImportTasks()
             && ($this->taskRows() !== [] || $this->configurationsToSeed() !== []);
     }
 
@@ -163,7 +162,8 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
     private function taskOf(array $row): array
     {
         // Core stores every option of the command and every timing detail.
-        /** @var array{arguments: array{configuration: int|string}, options: array{fresh: bool, no_media: bool}} $parameters */
+        // Tasks created before the command had options store none.
+        /** @var array{arguments: array{configuration: int|string}, options?: array{fresh?: bool, no_media?: bool}} $parameters */
         $parameters = json_decode($row['parameters'], true);
         /** @var array{interval: int, cronCmd: string} $execution */
         $execution = json_decode($row['execution_details'], true);
@@ -184,7 +184,7 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
             ));
         }
 
-        if ($parameters['options']['fresh']) {
+        if ($parameters['options']['fresh'] ?? false) {
             $this->output->writeln(sprintf(
                 'Scheduler task %d: the option --fresh of import configuration %d was not carried over.',
                 $uid,
@@ -198,7 +198,7 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
             'enabled' => (int)$row['disabled'] === 0,
             'interval' => $interval,
             'nextRun' => $nextRun,
-            'skipMedia' => $parameters['options']['no_media'],
+            'skipMedia' => $parameters['options']['no_media'] ?? false,
         ];
     }
 
@@ -283,6 +283,36 @@ final class ImportSchedulerTaskMigration implements UpgradeWizardInterface, Chat
         $crdate = $queryBuilder->executeQuery()->fetchOne();
 
         return (int)$crdate;
+    }
+
+    // The serialized object is a BLOB, which not every database matches with LIKE.
+    private function hasUnmigratedImportTasks(): bool
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TASK_TABLE);
+        $queryBuilder->getRestrictions()->removeAll();
+        $deleted = $this->tcaSchemaFactory->get(self::TASK_TABLE)->getCapability(TcaSchemaCapability::SoftDelete)->getFieldName();
+
+        $serializedTasks = $queryBuilder
+            ->select('serialized_task_object')
+            ->from(self::TASK_TABLE)
+            ->where(
+                $queryBuilder->expr()->eq($deleted, $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->eq('tasktype', $queryBuilder->createNamedParameter('')),
+                    $queryBuilder->expr()->isNull('tasktype')
+                )
+            )
+            ->executeQuery()
+            ->fetchFirstColumn()
+        ;
+
+        foreach ($serializedTasks as $serializedTask) {
+            if (is_string($serializedTask) && str_contains($serializedTask, self::COMMAND)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -111,10 +111,73 @@ final class ImportSchedulerTaskMigrationTest extends AbstractFunctionalTestCase
     #[Test]
     public function waitsForTheSchedulerStorageMigrationOfCore(): void
     {
-        $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')
-            ->insert('tx_scheduler_task', ['pid' => 0, 'tasktype' => '', 'serialized_task_object' => 'O:8:"stdClass":0:{}'])
-        ;
+        $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')->insert('tx_scheduler_task', [
+            'pid' => 0,
+            'tasktype' => '',
+            'serialized_task_object' => 'O:8:"stdClass":1:{s:17:"commandIdentifier";s:30:"thuecat:importviaconfiguration";}',
+        ]);
 
         $this->assertFalse($this->wizard->updateNecessary());
+    }
+
+    #[Test]
+    public function doesNotWaitForUnmigratedTasksOfOtherCommands(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')->insert('tx_scheduler_task', [
+            'pid' => 0,
+            'tasktype' => '',
+            'serialized_task_object' => 'O:8:"stdClass":1:{s:17:"commandIdentifier";s:11:"cache:flush";}',
+        ]);
+
+        $this->assertTrue($this->wizard->updateNecessary());
+    }
+
+    // Core keeps counting native tasks it has already migrated, so its own answer never turns false.
+    #[Test]
+    public function doesNotWaitForAlreadyMigratedNativeTasks(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')->insert('tx_scheduler_task', [
+            'pid' => 0,
+            'tasktype' => 'TYPO3\\CMS\\Scheduler\\Task\\TableGarbageCollectionTask',
+            'parameters' => [],
+        ]);
+
+        $this->assertTrue($this->wizard->updateNecessary());
+    }
+
+    // Tasks created before the command had options store none.
+    #[Test]
+    public function movesATaskStoredWithoutOptions(): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')->insert(
+            'tx_thuecat_import_configuration',
+            ['uid' => 99, 'pid' => 0, 'title' => 'Without options', 'type' => 'static']
+        );
+        $this->getConnectionPool()->getConnectionForTable('tx_scheduler_task')->insert('tx_scheduler_task', [
+            'uid' => 99,
+            'pid' => 0,
+            'tasktype' => 'thuecat:importviaconfiguration',
+            'parameters' => [
+                'arguments' => ['configuration' => '99'],
+                'commandIdentifier' => 'thuecat:importviaconfiguration',
+            ],
+            'execution_details' => [
+                'start' => 1795000000,
+                'end' => 0,
+                'interval' => 86400,
+                'multiple' => false,
+                'cronCmd' => '',
+                'isNewSingleExecution' => false,
+            ],
+            'nextexecution' => 1795755600,
+        ]);
+
+        $this->assertTrue($this->wizard->executeUpdate());
+
+        $this->assertSame(1, $this->countRowsMatching(
+            'tx_thuecat_import_configuration',
+            ['uid' => 99, 'schedule_interval' => 86400, 'next_run' => 1795755600, 'skip_media' => 0]
+        ));
+        $this->assertSame(0, $this->countRowsMatching('tx_scheduler_task', ['uid' => 99]));
     }
 }
