@@ -41,7 +41,6 @@ use WerkraumMedia\ThueCat\Import\Progress\NullProgressListener;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannel;
-use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProvider;
@@ -68,7 +67,6 @@ class Importer
         protected readonly EffectiveSettingsReport $effectiveSettingsReport,
         protected readonly SitePageIds $sitePageIds,
         protected readonly EventPlaceMatcher $eventPlaceMatcher,
-        protected readonly SyncChannelReaper $syncChannelReaper,
         protected readonly SyncWindow $syncWindow,
         protected readonly UrlProviders $urlProviders
     ) {
@@ -204,7 +202,6 @@ class Importer
 
         $loggerPayload = [];
         $substNEWwithIDs = [];
-        $iterations = 0;
         $aborted = false;
         $urls = $urlProvider->getUrls();
         $urlCount = count($urls);
@@ -234,7 +231,6 @@ class Importer
             }
 
             $substNEWwithIDs += $outcome->substNEWwithIDs;
-            $iterations = max($iterations, $outcome->iterations);
             if ($outcome->aborted) {
                 $aborted = true;
                 break;
@@ -242,7 +238,6 @@ class Importer
         }
 
         if (!$aborted) {
-            $this->reapGoneEvents($urlProvider, $sitePageIds, $iterations);
             $this->warnOfEmptyStorageFolder($urlProvider, $configuration);
         }
 
@@ -433,7 +428,7 @@ class Importer
         $this->importLogger->recordEventsWithoutDates($parserContext->eventsWithoutDates);
         $this->importLogger->recordUnmatchedValues($parserContext->unmatchedValues);
 
-        return new RootOutcome($loggerPayload, $substNEWwithIDs, $iterations, $aborted);
+        return new RootOutcome($loggerPayload, $substNEWwithIDs, $aborted);
     }
 
     /**
@@ -470,25 +465,6 @@ class Importer
         }
 
         return $result;
-    }
-
-    /**
-     * Only a run that saw both lists and was not cut short gets here, so a
-     * partial view of the channel never deletes anything.
-     */
-    /**
-     * @param list<int> $sitePageIds
-     */
-    protected function reapGoneEvents(UrlProvider $urlProvider, array $sitePageIds, int $iteration): void
-    {
-        if (!$urlProvider instanceof SyncChannelUrlProvider) {
-            return;
-        }
-
-        $this->importLogger->recordDataHandlerErrors(
-            $this->syncChannelReaper->delete($urlProvider->getRemoteIdsToDelete(), $sitePageIds),
-            $iteration
-        );
     }
 
     /**

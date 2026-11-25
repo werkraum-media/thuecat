@@ -33,7 +33,7 @@ final class SyncChannelReaperFailingStub extends SyncChannelReaper
     {
     }
 
-    public function delete(array $remoteIds, array $sitePageIds): array
+    public function delete(string $remoteId, array $sitePageIds): array
     {
         return [self::ERROR];
     }

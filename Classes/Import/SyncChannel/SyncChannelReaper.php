@@ -49,22 +49,23 @@ class SyncChannelReaper
     }
 
     /**
-     * @param list<string> $remoteIds
+     * One remote ID per call, so each removal is a DataHandler run of its own.
+     *
      * @param list<int> $sitePageIds
      *
      * @return list<string> DataHandler's error log of the delete call.
      */
-    public function delete(array $remoteIds, array $sitePageIds): array
+    public function delete(string $remoteId, array $sitePageIds): array
     {
         // Without the site's pages the scope is unknown; deleting unscoped
         // would reach into other sites.
-        if ($remoteIds === [] || $sitePageIds === []) {
+        if ($sitePageIds === []) {
             return [];
         }
 
         $cmd = [];
         foreach (RecordTables::STANDALONE as $table) {
-            foreach ($this->findUids($table, $remoteIds, $sitePageIds) as $uid) {
+            foreach ($this->findUids($table, $remoteId, $sitePageIds) as $uid) {
                 $cmd[$table][$uid]['delete'] = 1;
             }
         }
@@ -85,12 +86,11 @@ class SyncChannelReaper
     }
 
     /**
-     * @param list<string> $remoteIds
      * @param list<int> $sitePageIds
      *
      * @return list<int>
      */
-    protected function findUids(string $table, array $remoteIds, array $sitePageIds): array
+    protected function findUids(string $table, string $remoteId, array $sitePageIds): array
     {
         $languageField = $this->tcaSchemaFactory
             ->get($table)
@@ -106,9 +106,9 @@ class SyncChannelReaper
             ->select('uid')
             ->from($table)
             ->where(
-                $queryBuilder->expr()->in(
+                $queryBuilder->expr()->eq(
                     'remote_id',
-                    $queryBuilder->createNamedParameter($remoteIds, ArrayParameterType::STRING)
+                    $queryBuilder->createNamedParameter($remoteId)
                 ),
                 $queryBuilder->expr()->in(
                     'pid',

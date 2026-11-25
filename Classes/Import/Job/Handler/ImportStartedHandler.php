@@ -87,13 +87,14 @@ final readonly class ImportStartedHandler
 
         try {
             $urlProvider = $this->urlProviders->forConfiguration($configuration);
-            $importTargets = array_values($urlProvider->getUrls());
-            $deleteTargets = $urlProvider instanceof SyncChannelUrlProvider ? $urlProvider->getRemoteIdsToDelete() : [];
+            $targets = $urlProvider instanceof SyncChannelUrlProvider
+                ? $urlProvider->getTargets()
+                : ['import' => array_values($urlProvider->getUrls()), 'delete' => []];
         } finally {
             $this->fetchData->resetRunConfiguration();
         }
 
-        $this->importJobItems->store($job->uid, $importTargets, $deleteTargets);
+        $this->importJobItems->store($job->uid, $targets['import'], $targets['delete']);
         $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid));
     }
 }

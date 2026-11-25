@@ -21,11 +21,9 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import;
 
 use PHPUnit\Framework\Attributes\Test;
-use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportLogRepository;
-use WerkraumMedia\ThueCat\Import\Importer;
 use WerkraumMedia\ThueCat\Import\Importer\FetchData\InvalidResponseException;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
-use WerkraumMedia\ThueCat\Import\Watchdog\RunDeadline;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractSyncChannelImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\SyncChannelReaperFailingStub;
 
@@ -43,18 +41,18 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
     }
 
     #[Test]
-    public function removedEventIsDeletedWhenTheRunImportsEventsAsWell(): void
+    public function removedEventIsDeletedWhenTheJobImportsEventsAsWell(): void
     {
         $this->expectChannelLists('list-changed-removed-with-import.json');
         $this->expectChannelRecords('test-event-1');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
         $this->assertGreaterThan(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-1'));
@@ -65,7 +63,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-expired'));
     }
@@ -75,7 +73,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed-elsewhere'));
     }
@@ -85,7 +83,7 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(14, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed-other-site'));
     }
@@ -95,19 +93,19 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(1, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-0'));
         $this->assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
     }
 
-    // One run for every record kind: Infection skips the reaper's mutants once this class outruns the mutant timeout.
+    // One job for every record kind: Infection skips the reaper's mutants once this class outruns the mutant timeout.
     #[Test]
     public function removedRecordsOfEveryTableAreDeletedWithTheirChildrenWithinTheSite(): void
     {
         $this->expectChannelLists('list-changed-removed-records.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-removed'));
         $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', 'https://thuecat.org/resources/test-parking-removed'));
@@ -122,11 +120,35 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
+    public function deleteItemDeletesOnlyItsOwnRecord(): void
+    {
+        $this->expectChannelLists('list-changed-removed-records.json');
+        $job = $this->startJob(1);
+
+        $this->handleDeleteRoot($job, $this->jobItems($job)[0]['uid']);
+
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_thuecat_trail', 'https://thuecat.org/resources/test-trail-removed'));
+        $this->assertSame(31, $this->fetchUidByRemoteId('tx_thuecat_parking_facility', 'https://thuecat.org/resources/test-parking-removed'));
+    }
+
+    #[Test]
+    public function deleteItemIsDoneAfterSendingItsSuccessor(): void
+    {
+        $this->expectChannelLists('list-changed-removed-with-import.json');
+        $job = $this->startJob(1);
+
+        $this->handleDeleteRoot($job, $this->jobItems($job)[1]['uid']);
+
+        $this->assertSame('done', $this->jobItems($job)[1]['state']);
+        $this->assertEquals([new ImportFinished($job)], $this->queuedMessages());
+    }
+
+    #[Test]
     public function deletedEventTakesItsTranslationDatesAndFileReferencesWithIt(): void
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
 
-        $this->importConfiguration(1);
+        $this->importJob(1);
 
         $this->assertSame([], $this->fetchTranslationsByParent('tx_events_domain_model_event', 11));
         $this->assertSame(0, $this->countRows('tx_events_domain_model_date'));
@@ -134,16 +156,18 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
-    public function abortedRunDeletesNothing(): void
+    public function failedImportItemDoesNotPreventTheDelete(): void
     {
-        $this->expectErrors = true;
         $this->expectChannelLists('list-changed-removed-with-import.json');
-        $configuration = $this->fetchImportConfiguration(1);
+        $job = $this->startJob(1);
+        [$importItem, $deleteItem] = $this->jobItems($job);
+        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job_item')
+            ->update('tx_thuecat_import_job_item', ['state' => 'failed', 'attempts' => 3], ['uid' => $importItem['uid']])
+        ;
 
-        $this->get(Importer::class)->importConfiguration($configuration, null, new RunDeadline(10, microtime(true) - 20.0));
+        $this->handleDeleteRoot($job, $deleteItem['uid']);
 
-        $this->assertCount(1, $this->getLogEntriesOfType('runAborted'));
-        $this->assertSame(11, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
+        $this->assertSame(0, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
     }
 
     #[Test]
@@ -153,31 +177,31 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
         $this->expectFailureForUrl(self::LIST_EXPIRED, 403);
 
         try {
-            $this->importConfiguration(1);
-            $this->fail('The run went on without the expiry list.');
+            $this->importJob(1);
+            $this->fail('The job went on without the expiry list.');
         } catch (InvalidResponseException) {
         }
 
+        $this->assertSame(0, $this->countRows('tx_thuecat_import_job_item'));
         $this->assertSame(11, $this->fetchUidByRemoteId('tx_events_domain_model_event', 'https://thuecat.org/resources/test-event-removed'));
     }
 
     #[Test]
-    public function failedDeletionIsADataHandlerErrorAndKeepsTheRunAsAnchor(): void
+    public function failedDeletionIsADataHandlerErrorOfTheJobsLog(): void
     {
         // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
         $this->getContainer()->set(SyncChannelReaper::class, new SyncChannelReaperFailingStub());
-        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
+        $this->expectChannelLists('list-changed-removed-with-import.json');
+        $job = $this->startJob(1);
 
-        $this->importConfiguration(1);
+        $this->handleDeleteRoot($job, $this->jobItems($job)[1]['uid']);
 
-        $errors = $this->getLogEntriesOfType('dataHandlerError');
-        $this->assertCount(1, $errors);
-        $this->assertSame(SyncChannelReaperFailingStub::ERROR, $errors[0]['message']);
-        $runCreated = $this->getConnectionPool()
-            ->getConnectionForTable('tx_thuecat_import_log')
-            ->select(['crdate'], 'tx_thuecat_import_log', ['configuration' => 1], [], ['uid' => 'DESC'], 1)
-            ->fetchOne()
-        ;
-        $this->assertSame($runCreated, $this->get(ImportLogRepository::class)->findLatestSuccessfulCreation(1)?->getTimestamp());
+        $log = $this->jobRow($job)['import_log'];
+        $this->assertIsInt($log);
+        $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_log_entry', [
+            'import_log' => $log,
+            'type' => 'dataHandlerError',
+            'message' => SyncChannelReaperFailingStub::ERROR,
+        ]));
     }
 }

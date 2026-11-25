@@ -36,11 +36,6 @@ class SyncChannelUrlProvider implements UrlProvider
 
     protected string $syncHost = '';
 
-    /**
-     * @var list<string>
-     */
-    protected array $remoteIdsToDelete = [];
-
     public function __construct(
         protected readonly SyncChannel $syncChannel,
         protected readonly SyncWindow $syncWindow,
@@ -69,28 +64,29 @@ class SyncChannelUrlProvider implements UrlProvider
 
     public function getUrls(): array
     {
+        return $this->getTargets()['import'];
+    }
+
+    /**
+     * Both lists of one read, so a job's work list never mixes two windows.
+     *
+     * @return array{import: list<string>, delete: list<string>} record URLs to import, remote IDs to delete
+     */
+    public function getTargets(): array
+    {
         $lists = $this->syncChannel->read(
             $this->syncHost,
             $this->channelId,
             $this->syncWindow->since($this->configurationUid, $this->storagePid)
         );
-        $this->remoteIdsToDelete = $lists->remoteIdsToDelete;
         $recordUrl = SyncChannel::recordUrlPrefix($this->syncHost, $this->channelId);
 
-        return array_map(
-            static fn (string $id): string => $recordUrl . rawurlencode($id),
-            $lists->idsToImport
-        );
-    }
-
-    /**
-     * Read together with the URLs, so the lists are fetched once per run.
-     * Empty until getUrls() has run.
-     *
-     * @return list<string>
-     */
-    public function getRemoteIdsToDelete(): array
-    {
-        return $this->remoteIdsToDelete;
+        return [
+            'import' => array_map(
+                static fn (string $id): string => $recordUrl . rawurlencode($id),
+                $lists->idsToImport
+            ),
+            'delete' => $lists->remoteIdsToDelete,
+        ];
     }
 }

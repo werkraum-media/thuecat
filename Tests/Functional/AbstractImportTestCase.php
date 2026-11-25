@@ -27,10 +27,12 @@ use TYPO3\CMS\Core\Log\LogLevel;
 use TYPO3\CMS\Core\Log\Writer\FileWriter;
 use WerkraumMedia\ThueCat\Import\FileFolderAccess;
 use WerkraumMedia\ThueCat\Import\Importer;
+use WerkraumMedia\ThueCat\Import\Job\Handler\DeleteRootHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportRootHandler;
 use WerkraumMedia\ThueCat\Import\Job\Handler\ImportStartedHandler;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\ImportTrigger;
+use WerkraumMedia\ThueCat\Import\Job\Message\DeleteRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportRoot;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Import\MediaFileDownloader;
@@ -359,10 +361,21 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     {
         $job = $this->startJob($configurationUid);
         foreach ($this->jobItems($job) as $item) {
-            $this->handleImportRoot($job, $item['uid']);
+            $item['action'] === 'delete'
+                ? $this->handleDeleteRoot($job, $item['uid'])
+                : $this->handleImportRoot($job, $item['uid']);
         }
 
         return $job;
+    }
+
+    /**
+     * Handles the item's message, taken off the transport first as the consumer takes it.
+     */
+    protected function handleDeleteRoot(int $job, int $item): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('sys_messenger_messages')->truncate('sys_messenger_messages');
+        $this->get(DeleteRootHandler::class)(new DeleteRoot($job, $item));
     }
 
     /**
