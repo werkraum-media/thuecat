@@ -60,7 +60,7 @@
                         <f:if condition="{configuration.jobs}">
                             <tr data-jobs="{configuration.row.uid}">
                                 <td colspan="8">
-                                    <details>
+                                    <details data-fold="jobs-{configuration.row.uid}"{f:if(condition: configuration.open, then: ' open')}>
                                         <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:jobs.summary', arguments: {0: '{configuration.jobs -> f:count()}'})}</summary>
                                         <table class="table table-sm mb-0">
                                             {f:render(section: 'Jobs', arguments: {jobs: configuration.jobs})}
@@ -131,7 +131,18 @@
         <tbody>
         <f:for each="{jobs}" as="job">
             <tr data-job="{job.row.uid}">
-                <td>{job.row.status}</td>
+                <td>
+                    {job.row.status}
+                    <f:if condition="{job.row.stalled}">
+                        <span class="badge badge-warning">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.stalled')}</span>
+                    </f:if>
+                    <f:if condition="{job.row.totalItems}">
+                        <div class="progress mt-1" role="progressbar" aria-valuenow="{job.row.finishedItems}" aria-valuemin="0" aria-valuemax="{job.row.totalItems}" aria-label="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.progress')}">
+                            <div class="progress-bar" style="width: {job.progress}%"></div>
+                        </div>
+                        <small>{job.row.finishedItems} / {job.row.totalItems}<f:if condition="{job.estimate}">, {job.estimate}</f:if></small>
+                    </f:if>
+                </td>
                 <td>{job.trigger}</td>
                 <td>{job.user}</td>
                 <td>{f:render(section: 'Time', arguments: {timestamp: job.row.startedAt})}</td>
@@ -143,7 +154,7 @@
             <f:if condition="{job.log}">
                 <tr data-job-log="{job.row.uid}">
                     <td colspan="8">
-                        <details>
+                        <details data-fold="log-{job.row.uid}"{f:if(condition: job.logOpen, then: ' open')}>
                             <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log')}</summary>
                             <f:render partial="Backend/ImportLog" arguments="{log: job.log}" />
                         </details>

@@ -27,6 +27,9 @@ final readonly class ImportJobOverviewRow
 {
     /**
      * @param int $importLog 0 before the job has started
+     * @param int $finishedItems done, failed and skipped items of a running job, 0 otherwise
+     * @param int $totalItems all items of a running job, 0 otherwise
+     * @param int|null $estimate remaining seconds of a running job, null before its first item is done
      */
     public function __construct(
         public int $uid,
@@ -39,6 +42,10 @@ final readonly class ImportJobOverviewRow
         public int $failedItems,
         public int $skippedItems,
         public int $importLog,
+        public int $finishedItems,
+        public int $totalItems,
+        public ?int $estimate,
+        public bool $stalled,
     ) {
     }
 }

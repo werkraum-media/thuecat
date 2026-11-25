@@ -84,6 +84,15 @@
             <trans-unit id="jobs.summary" resname="jobs.summary">
                 <source>Recent jobs (%d)</source>
             </trans-unit>
+            <trans-unit id="job.stalled" resname="job.stalled">
+                <source>Stalled</source>
+            </trans-unit>
+            <trans-unit id="job.progress" resname="job.progress">
+                <source>Progress</source>
+            </trans-unit>
+            <trans-unit id="job.estimate" resname="job.estimate">
+                <source>about %1$d min %2$d s</source>
+            </trans-unit>
             <trans-unit id="job.log" resname="job.log">
                 <source>Log</source>
             </trans-unit>

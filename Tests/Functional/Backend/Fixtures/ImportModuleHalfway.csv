@@ -1,0 +1,11 @@
+"tx_thuecat_import_job_item"
+,"uid","job","target","action","position","state","duration"
+,1,1,"https://thuecat.org/resources/1","import",0,"done",30
+,2,1,"https://thuecat.org/resources/2","import",1,"done",50
+,3,1,"https://thuecat.org/resources/3","import",2,"failed",0
+,4,1,"https://thuecat.org/resources/4","import",3,"skipped",0
+,5,1,"https://thuecat.org/resources/5","import",4,"pending",0
+,6,1,"https://thuecat.org/resources/6","import",5,"pending",0
+,7,1,"https://thuecat.org/resources/7","import",6,"pending",0
+,8,1,"https://thuecat.org/resources/8","import",7,"pending",0
+,9,1,"https://thuecat.org/resources/9","import",8,"pending",0

@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Domain\Repository\Backend;
 
 use Doctrine\DBAL\ArrayParameterType;
+use Psr\Clock\ClockInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -35,15 +37,22 @@ use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportJobOverviewRow;
 /**
  * Lists the configurations whose storage page the user may read, grouped by the site of that page.
  */
+#[Autoconfigure(public: true)]
 class ImportConfigurationOverview
 {
     protected const OPEN_JOB_STATUSES = ['queued', 'running', 'stopping'];
 
     protected const RECENT_JOBS = 5;
 
+    /**
+     * Seconds a queued job may wait, or a running job may go without progress, before it is marked stalled.
+     */
+    protected const STALLED_AFTER = 300;
+
     public function __construct(
         protected readonly ConnectionPool $connectionPool,
         protected readonly SiteFinder $siteFinder,
+        protected readonly ClockInterface $clock,
     ) {
     }
 
@@ -186,9 +195,24 @@ class ImportConfigurationOverview
             ->fetchAllAssociative()
         ;
 
-        return array_map(fn (array $row): ImportJobOverviewRow => new ImportJobOverviewRow(
-            $this->intOf($row['uid']),
-            $this->stringOf($row['status']),
+        return array_map($this->jobRow(...), $rows);
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    protected function jobRow(array $row): ImportJobOverviewRow
+    {
+        $uid = $this->intOf($row['uid']);
+        $status = $this->stringOf($row['status']);
+        $items = $status === 'running' ? $this->itemsByState($uid) : [];
+        $pending = $items['pending']['count'] ?? 0;
+        $done = $items['done'] ?? ['count' => 0, 'duration' => 0];
+        $total = array_sum(array_column($items, 'count'));
+
+        return new ImportJobOverviewRow(
+            $uid,
+            $status,
             $this->stringOf($row['job_trigger']),
             $this->intOf($row['backend_user']),
             $this->intOf($row['started_at']),
@@ -197,7 +221,42 @@ class ImportConfigurationOverview
             $this->intOf($row['failed_items']),
             $this->intOf($row['skipped_items']),
             $this->intOf($row['import_log']),
-        ), $rows);
+            $total - $pending,
+            $total,
+            $done['count'] > 0 ? (int)round($done['duration'] * $pending / $done['count']) : null,
+            in_array($status, ['queued', 'running'], true)
+                && $this->clock->now()->getTimestamp() - $this->intOf($row['progressed_at']) > self::STALLED_AFTER,
+        );
+    }
+
+    /**
+     * @return array<string, array{count: int, duration: int}> keyed by item state
+     */
+    protected function itemsByState(int $jobUid): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_job_item');
+        $rows = $queryBuilder
+            ->select('state')
+            ->addSelectLiteral(
+                $queryBuilder->expr()->count('uid', 'items'),
+                $queryBuilder->expr()->sum('duration', 'duration')
+            )
+            ->from('tx_thuecat_import_job_item')
+            ->where($queryBuilder->expr()->eq('job', $queryBuilder->createNamedParameter($jobUid, Connection::PARAM_INT)))
+            ->groupBy('state')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
+
+        $items = [];
+        foreach ($rows as $row) {
+            $items[$this->stringOf($row['state'])] = [
+                'count' => $this->intOf($row['items']),
+                'duration' => $this->intOf($row['duration']),
+            ];
+        }
+
+        return $items;
     }
 
     protected function siteIdentifierOf(int $pageUid): string

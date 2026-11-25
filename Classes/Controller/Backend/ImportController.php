@@ -36,6 +36,7 @@ use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationOverviewRow;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportJobOverviewRow;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
@@ -78,8 +79,9 @@ class ImportController
     {
         $sites = [];
         $outsideSites = null;
+        $openFolds = $this->openFolds();
         foreach ($this->configurationOverview->bySite($this->getBackendUser()) as $siteIdentifier => $rows) {
-            $configurations = array_map($this->listed(...), $rows);
+            $configurations = array_map(fn (ImportConfigurationOverviewRow $row): array => $this->listed($row, $openFolds), $rows);
             if ($siteIdentifier === '') {
                 $outsideSites = [
                     'identifier' => '',
@@ -102,6 +104,7 @@ class ImportController
         }
 
         $this->pageRenderer->loadJavaScriptModule('@typo3/backend/modal.js');
+        $this->pageRenderer->loadJavaScriptModule('@werkraummedia/thuecat/imports-module.js');
         $view = $this->moduleTemplateFactory->create($request);
         $view->assign('sites', $sites);
 
@@ -188,22 +191,39 @@ class ImportController
     }
 
     /**
-     * @return array{row: ImportConfigurationOverviewRow, type: string, schedule: string, jobs: list<array<string, mixed>>}
+     * The folded blocks the user left open, as the module's JavaScript stores them.
+     *
+     * @return list<string>
      */
-    protected function listed(ImportConfigurationOverviewRow $row): array
+    protected function openFolds(): array
+    {
+        $open = $this->getBackendUser()->uc['thuecat_imports']['open'] ?? '';
+
+        return is_string($open) ? GeneralUtility::trimExplode(',', $open, true) : [];
+    }
+
+    /**
+     * @param list<string> $openFolds
+     *
+     * @return array{row: ImportConfigurationOverviewRow, type: string, schedule: string, open: bool, jobs: list<array<string, mixed>>}
+     */
+    protected function listed(ImportConfigurationOverviewRow $row, array $openFolds): array
     {
         return [
             'row' => $row,
             'type' => $this->getLanguageService()->sL(self::TCA_LABELS . 'type.' . $row->type),
             'schedule' => $this->schedule($row->scheduleInterval),
-            'jobs' => array_map($this->listedJob(...), $row->jobs),
+            'open' => in_array('jobs-' . $row->uid, $openFolds, true),
+            'jobs' => array_map(fn (ImportJobOverviewRow $job): array => $this->listedJob($job, $openFolds), $row->jobs),
         ];
     }
 
     /**
-     * @return array{row: ImportJobOverviewRow, trigger: string, user: string, log: ImportLog|null}
+     * @param list<string> $openFolds
+     *
+     * @return array{row: ImportJobOverviewRow, trigger: string, user: string, log: ImportLog|null, logOpen: bool, progress: int, estimate: string}
      */
-    protected function listedJob(ImportJobOverviewRow $job): array
+    protected function listedJob(ImportJobOverviewRow $job, array $openFolds): array
     {
         $user = $job->backendUser > 0 ? BackendUtility::getRecord('be_users', $job->backendUser)['username'] ?? '' : '';
         $log = $job->importLog > 0 ? $this->importLogRepository->findByUid($job->importLog) : null;
@@ -213,7 +233,15 @@ class ImportController
             'trigger' => $this->getLanguageService()->sL(self::LABELS . 'job.trigger.' . $job->trigger),
             'user' => is_string($user) ? $user : '',
             'log' => $log instanceof ImportLog ? $log : null,
+            'logOpen' => in_array('log-' . $job->uid, $openFolds, true),
+            'progress' => $job->totalItems > 0 ? intdiv(100 * $job->finishedItems, $job->totalItems) : 0,
+            'estimate' => $job->estimate === null ? '' : $this->estimate($job->estimate),
         ];
+    }
+
+    protected function estimate(int $seconds): string
+    {
+        return sprintf($this->getLanguageService()->sL(self::LABELS . 'job.estimate'), intdiv($seconds, 60), $seconds % 60);
     }
 
     protected function schedule(int $interval): string

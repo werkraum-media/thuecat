@@ -20,17 +20,22 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Backend;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Router;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
+use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationOverview;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 final class ImportControllerTest extends AbstractBackendTestCase
 {
@@ -38,6 +43,11 @@ final class ImportControllerTest extends AbstractBackendTestCase
      * Within one table row.
      */
     private const string ROW = '(?:(?!</tr>).)*';
+
+    /**
+     * Queued job 3 and running job 1 last progressed then.
+     */
+    private const int LAST_PROGRESS = 1795572000;
 
     protected array $configurationToUseInTestInstance = [
         'SYS' => ['phpTimeZone' => 'Europe/Berlin'],
@@ -150,7 +160,31 @@ final class ImportControllerTest extends AbstractBackendTestCase
     public function indexFoldsTheJobsOfEachConfigurationBeneathASummaryNamingTheirNumber(): void
     {
         $this->assertMatchesRegularExpression(
-            '#<tr data-configuration="41">.*<tr data-jobs="41">\s*<td[^>]*>\s*<details>\s*<summary>Recent jobs \(2\)</summary>.*<tr data-job="2"#s',
+            '#<tr data-configuration="41">.*<tr data-jobs="41">\s*<td[^>]*>\s*<details[^>]*>\s*<summary>Recent jobs \(2\)</summary>.*<tr data-job="2"#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    /**
+     * @return iterable<string, array{string, bool}>
+     */
+    public static function foldStates(): iterable
+    {
+        yield 'jobs the user left open' => ['<tr data-jobs="41">', true];
+        yield 'a log the user left open' => ['<tr data-job-log="2">', true];
+        yield 'jobs the user left closed' => ['<tr data-jobs="7">', false];
+    }
+
+    #[DataProvider('foldStates')]
+    #[Test]
+    public function indexRendersTheBlocksTheUserLeftOpenOpen(string $row, bool $open): void
+    {
+        /** @var BackendUserAuthentication $backendUser set up by the base class */
+        $backendUser = $GLOBALS['BE_USER'];
+        $backendUser->uc['thuecat_imports']['open'] = 'jobs-41,log-2';
+
+        $this->assertMatchesRegularExpression(
+            '#' . preg_quote($row, '#') . '\s*<td[^>]*>\s*<details data-fold="[a-z]+-[0-9]+"' . ($open ? ' open' : '>') . '#s',
             (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
         );
     }
@@ -387,5 +421,66 @@ final class ImportControllerTest extends AbstractBackendTestCase
         $this->assertSame(5, $this->countRows('tx_thuecat_import_job'));
         $this->assertSame(1, $this->countRowsMatching('tx_thuecat_import_job', ['uid' => $openJob, 'status' => $status]));
         $this->assertSame([], $this->queuedMessages());
+    }
+
+    #[Test]
+    public function indexShowsARunningJobsProgressAsFinishedOutOfAllItems(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleHalfway.csv');
+
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="1"' . self::ROW . 'role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="9"' . self::ROW . '4 / 9#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexEstimatesTheRemainingTimeAsTheAverageItemDurationTimesThePendingItems(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleHalfway.csv');
+
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="1"' . self::ROW . 'about 3 min 20 s#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexShowsNoEstimateBeforeTheFirstItemHasFinished(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleNoneFinished.csv');
+
+        $html = (string)$this->get(ImportController::class)->indexAction($this->request)->getBody();
+
+        $this->assertMatchesRegularExpression('#<tr data-job="1"' . self::ROW . '0 / 3#s', $html);
+        $this->assertDoesNotMatchRegularExpression('#<tr data-job="1"' . self::ROW . 'about #s', $html);
+    }
+
+    /**
+     * @return iterable<string, array{int, int, bool}>
+     */
+    public static function stalls(): iterable
+    {
+        yield 'queued for five minutes' => [3, 300, false];
+        yield 'queued for more than five minutes' => [3, 301, true];
+        yield 'running for five minutes without progress' => [1, 300, false];
+        yield 'running for more than five minutes without progress' => [1, 301, true];
+    }
+
+    #[DataProvider('stalls')]
+    #[Test]
+    public function indexMarksAJobStalledAfterFiveMinutesWithoutProgress(int $job, int $secondsSinceProgress, bool $stalled): void
+    {
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportConfigurationOverview::class, new ImportConfigurationOverview(
+            $this->get(ConnectionPool::class),
+            $this->get(SiteFinder::class),
+            new FixedClock(new DateTimeImmutable('@' . (self::LAST_PROGRESS + $secondsSinceProgress))),
+        ));
+
+        $this->assertSame($stalled, (bool)preg_match(
+            '#<tr data-job="' . $job . '"' . self::ROW . 'Stalled#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        ));
     }
 }
