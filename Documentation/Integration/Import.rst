@@ -69,11 +69,21 @@ Each configuration shows its type, storage folder, schedule, next and last run, 
 recent jobs with their status, trigger, the user who started them, start and end, and the number of
 items done, failed and skipped. Beneath each job, its import log lists what happened.
 
+Beside the last run, a badge tells how the last finished job ended: :guilabel:`Done`,
+:guilabel:`Done with warnings`, :guilabel:`Done with errors`, :guilabel:`Failed` or
+:guilabel:`Stopped`. While a job is queued or running, the row shows that job's status instead.
+After errors or a failure, the configuration's jobs are shown unfolded, so the log that explains
+them is in view, unless you folded them yourself. The module remembers every block you open or
+close. The button beside each site's name opens all jobs of the site, or closes them once all are
+open.
+
 A running job shows its progress and an estimate of the remaining time. A job queued, or running
 without progress, for more than five minutes is marked :guilabel:`Stalled`; this usually means
 that the message worker does not run.
 
-While it is open, the module refreshes the jobs it shows once a minute, without a reload.
+While it is open, the module refreshes each configuration once a minute, without a reload: its
+runs, its outcome, its open job, its buttons, and its jobs with their logs, including jobs started
+after the page was loaded.
 
 .. _import-module-start:
 

@@ -81,6 +81,24 @@
             <trans-unit id="job.trigger.schedule" resname="job.trigger.schedule">
                 <source>Scheduled</source>
             </trans-unit>
+            <trans-unit id="outcome.done" resname="outcome.done">
+                <source>Done</source>
+            </trans-unit>
+            <trans-unit id="outcome.warnings" resname="outcome.warnings">
+                <source>Done with warnings</source>
+            </trans-unit>
+            <trans-unit id="outcome.errors" resname="outcome.errors">
+                <source>Done with errors</source>
+            </trans-unit>
+            <trans-unit id="outcome.failed" resname="outcome.failed">
+                <source>Failed</source>
+            </trans-unit>
+            <trans-unit id="outcome.stopped" resname="outcome.stopped">
+                <source>Stopped</source>
+            </trans-unit>
+            <trans-unit id="jobs.toggleSite" resname="jobs.toggleSite">
+                <source>Expand or collapse all jobs</source>
+            </trans-unit>
             <trans-unit id="jobs.summary" resname="jobs.summary">
                 <source>Recent jobs (%d)</source>
             </trans-unit>
@@ -95,9 +113,6 @@
             </trans-unit>
             <trans-unit id="job.log" resname="job.log">
                 <source>Log</source>
-            </trans-unit>
-            <trans-unit id="job.log.newEntries" resname="job.log.newEntries">
-                <source>New since the page was loaded</source>
             </trans-unit>
             <trans-unit id="start.skipMedia" resname="start.skipMedia">
                 <source>Skip media</source>

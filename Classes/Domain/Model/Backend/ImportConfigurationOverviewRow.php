@@ -29,6 +29,8 @@ final readonly class ImportConfigurationOverviewRow
      * @param int $openJobUid 0 without an open job
      * @param string $openJobStatus '' without an open job
      * @param list<ImportJobOverviewRow> $jobs newest first
+     * @param string $lastOutcome how the newest finished job ended: done, warnings, errors, failed or stopped; '' before
+     *                            the first job has finished
      */
     public function __construct(
         public int $uid,
@@ -43,6 +45,7 @@ final readonly class ImportConfigurationOverviewRow
         public int $openJobUid,
         public string $openJobStatus,
         public array $jobs,
+        public string $lastOutcome,
     ) {
     }
 }

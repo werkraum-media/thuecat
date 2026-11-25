@@ -9,25 +9,84 @@ import Modal from '@typo3/backend/modal.js';
 import Persistent from '@typo3/backend/storage/persistent.js';
 import {SeverityEnum} from '@typo3/backend/enum/severity.js';
 
-const key = 'thuecat_imports.open';
+const container = document.querySelector('[data-imports-status]');
+const refreshInterval = 60000;
 
-const openFolds = () => Array.from(document.querySelectorAll('details[data-fold][open]'), (details) => details.dataset.fold).join(',');
+const element = (name, attributes = {}, text = '') => {
+    const created = document.createElement(name);
+    Object.entries(attributes).forEach(([attribute, value]) => created.setAttribute(attribute, value));
+    created.textContent = text;
+    return created;
+};
 
-// Blocks rendered open fire a toggle event on load too; only a change is stored.
-let stored = openFolds();
+// Only what the user chose differently from a block's default is stored, so a block nobody touched follows its
+// default on every render, e.g. the jobs of a configuration whose last job just failed open up.
+const folds = {
+    open: new Set((container?.dataset.foldsOpen ?? '').split(',').filter((fold) => fold !== '')),
+    closed: new Set((container?.dataset.foldsClosed ?? '').split(',').filter((fold) => fold !== '')),
+};
 
-// toggle does not bubble, so it is caught on its way down.
-document.addEventListener('toggle', (event) => {
-    if (!(event.target instanceof HTMLDetailsElement) || event.target.dataset.fold === undefined) {
+// Each store rewrites the whole user settings, so two at once lose one of them: they run one after another, and a
+// store still waiting takes the latest choices along.
+let saving = Promise.resolve();
+let saveQueued = false;
+const save = () => {
+    if (saveQueued) {
         return;
     }
 
-    const current = openFolds();
-    if (current !== stored) {
-        stored = current;
-        Persistent.set(key, current);
+    saveQueued = true;
+    saving = saving
+        .then(async () => {
+            saveQueued = false;
+            await Persistent.set('thuecat_imports.open', Array.from(folds.open).join(','));
+            await Persistent.set('thuecat_imports.closed', Array.from(folds.closed).join(','));
+        })
+        .catch(() => {});
+};
+
+const isOpen = (details) => folds.open.has(details.dataset.fold)
+    || (details.dataset.foldDefault === 'open' && !folds.closed.has(details.dataset.fold));
+
+// toggle does not bubble, so it is caught on its way down. A block rendered open fires it on insertion too; that
+// matches its rendered state and changes nothing.
+document.addEventListener('toggle', (event) => {
+    const details = event.target;
+    if (!(details instanceof HTMLDetailsElement) || details.dataset.fold === undefined) {
+        return;
     }
+
+    const fold = details.dataset.fold;
+    const chosen = details.open !== (details.dataset.foldDefault === 'open');
+    const [list, other] = details.open ? ['open', 'closed'] : ['closed', 'open'];
+    const changed = (chosen && !folds[list].has(fold)) || folds[other].has(fold) || (!chosen && folds[list].has(fold));
+    if (!changed) {
+        return;
+    }
+
+    folds[other].delete(fold);
+    if (chosen) {
+        folds[list].add(fold);
+    } else {
+        folds[list].delete(fold);
+    }
+
+    save();
 }, true);
+
+// One button per site opens every jobs block of the site, or closes them all once none is closed.
+document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-toggle-site-jobs]') : null;
+    if (button === null) {
+        return;
+    }
+
+    const blocks = Array.from(button.closest('section[data-site]').querySelectorAll('details[data-fold^="jobs-"]'));
+    const open = blocks.some((details) => !details.open);
+    blocks.forEach((details) => {
+        details.open = open;
+    });
+});
 
 // The modal opens in the backend's top window, so the chosen options are carried back into the row's form, which
 // is submitted in the module's own frame.
@@ -63,101 +122,35 @@ document.addEventListener('click', (event) => {
     });
 });
 
-const container = document.querySelector('[data-imports-status]');
-const refreshInterval = 60000;
-let logAfter = Number(container?.dataset.logAfter ?? 0);
-
-const element = (name, attributes = {}, text = '') => {
-    const created = document.createElement(name);
-    Object.entries(attributes).forEach(([attribute, value]) => created.setAttribute(attribute, value));
-    created.textContent = text;
-    return created;
-};
-
-// The cells keep their element, so nothing around them is redrawn and every fold keeps its state.
-const renderStatus = (cell, job) => {
-    cell.replaceChildren(document.createTextNode(job.status));
-    if (job.stalled) {
-        cell.append(' ', element('span', {class: 'badge badge-warning'}, container.dataset.labelStalled));
-    }
-
-    if (job.total > 0) {
-        const bar = element('div', {
-            class: 'progress mt-1',
-            role: 'progressbar',
-            'aria-valuenow': job.finished,
-            'aria-valuemin': 0,
-            'aria-valuemax': job.total,
-            'aria-label': container.dataset.labelProgress,
-        });
-        bar.append(element('div', {class: 'progress-bar', style: `width: ${Math.floor(100 * job.finished / job.total)}%`}));
-        cell.append(bar, element('small', {}, `${job.finished} / ${job.total}${job.estimate ? `, ${job.estimate}` : ''}`));
-    }
-};
-
-const newEntriesList = (uid, row) => {
-    let logRow = document.querySelector(`tr[data-job-log="${uid}"]`);
-    if (logRow === null) {
-        logRow = element('tr', {'data-job-log': uid});
-        const cell = element('td', {colspan: 8});
-        const details = element('details', {'data-fold': `log-${uid}`});
-        details.append(element('summary', {}, container.dataset.labelLog));
-        cell.append(details);
-        logRow.append(cell);
-        row.after(logRow);
-    }
-
-    let list = logRow.querySelector('ul[data-log-new]');
-    if (list === null) {
-        const details = logRow.querySelector('details');
-        details.append(element('p', {class: 'mb-0'}, container.dataset.labelNewEntries));
-        list = element('ul', {'data-log-new': ''});
-        details.append(list);
-    }
-
-    return list;
-};
-
-const renderLogEntries = (uid, row, entries) => {
-    if (entries.length === 0) {
-        return;
-    }
-
-    const list = newEntriesList(uid, row);
-    entries.forEach((entry) => {
-        const text = entry.remoteId === '' ? entry.message : `${entry.remoteId}: ${entry.message}`;
-        list.append(element('li', {'data-severity': entry.severity}, `[${entry.type}] ${text}`));
-        logAfter = Math.max(logAfter, entry.uid);
-    });
-};
-
-const renderJob = (uid, job) => {
-    const row = document.querySelector(`tr[data-job="${uid}"]`);
-    if (row === null) {
-        return;
-    }
-
-    const [status, , , started, ended, done, failed, skipped] = row.cells;
-    renderStatus(status, job);
-    started.textContent = job.startedAt || '–';
-    ended.textContent = job.endedAt || '–';
-    done.textContent = job.done;
-    failed.textContent = job.failed;
-    skipped.textContent = job.skipped;
-    renderLogEntries(uid, row, job.logEntries);
-};
+// Each configuration's block is rendered by the server as the page renders it, and swapped in whole when it changed.
+const rendered = new Map();
 
 const refresh = async () => {
-    const jobs = Array.from(document.querySelectorAll('tr[data-job]'), (row) => row.dataset.job);
-    if (jobs.length === 0) {
+    const blocks = Array.from(document.querySelectorAll('tbody[data-configuration-block]'));
+    if (blocks.length === 0) {
         return;
     }
 
+    await saving;
     const response = await new AjaxRequest(container.dataset.importsStatus)
-        .withQueryArguments({jobs: jobs.join(','), after: logAfter})
+        .withQueryArguments({configurations: blocks.map((block) => block.dataset.configurationBlock).join(',')})
         .get();
     const status = await response.resolve();
-    Object.entries(status.jobs).forEach(([uid, job]) => renderJob(uid, job));
+    Object.entries(status.configurations).forEach(([uid, html]) => {
+        const block = document.querySelector(`tbody[data-configuration-block="${uid}"]`);
+        if (block === null || rendered.get(uid) === html) {
+            return;
+        }
+
+        rendered.set(uid, html);
+        const template = document.createElement('template');
+        template.innerHTML = html.trim();
+        // The page's own record of the user's choices is newer than what the server rendered from.
+        template.content.querySelectorAll('details[data-fold]').forEach((details) => {
+            details.open = isOpen(details);
+        });
+        block.replaceWith(template.content);
+    });
 };
 
 if (container !== null) {

@@ -11,11 +11,8 @@
             <f:then>
                 <div
                     data-imports-status="{f:be.uri(route: 'ajax_thuecat_imports_status')}"
-                    data-log-after="{logAfter}"
-                    data-label-stalled="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.stalled')}"
-                    data-label-progress="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.progress')}"
-                    data-label-log="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log')}"
-                    data-label-new-entries="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log.newEntries')}"
+                    data-folds-open="{folds.open -> f:join(separator: ',')}"
+                    data-folds-closed="{folds.closed -> f:join(separator: ',')}"
                 >
                     <f:for each="{sites}" as="site">
                         {f:render(section: 'Site', arguments: {site: site})}
@@ -35,7 +32,13 @@
 
     <f:section name="Site">
         <section data-site="{site.identifier}">
-        <h2>{site.title}</h2>
+        <h2>
+            {site.title}
+            <button type="button" class="btn btn-sm btn-default" data-toggle-site-jobs>
+                <core:icon identifier="actions-chevron-expand" size="small" />
+                {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:jobs.toggleSite')}
+            </button>
+        </h2>
 
         <div class="panel panel-default table-fit">
             <table class="table table-striped table-hover">
@@ -50,142 +53,12 @@
                         <th colspan="2">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job')}</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <f:for each="{site.configurations}" as="configuration">
-                        <tr data-configuration="{configuration.row.uid}">
-                            <td>{configuration.row.title}</td>
-                            <td>{configuration.type}</td>
-                            <td>{configuration.row.storageTitle} [{configuration.row.storagePid}]</td>
-                            <td>{configuration.schedule}</td>
-                            <td>{f:render(section: 'Time', arguments: {timestamp: configuration.row.nextRun})}</td>
-                            <td>{f:render(section: 'Time', arguments: {timestamp: configuration.row.lastRun})}</td>
-                            <td colspan="2">
-                                <f:if condition="{configuration.row.openJobUid}">
-                                    <f:then>{f:render(section: 'Stop', arguments: {row: configuration.row})}</f:then>
-                                    <f:else>{f:render(section: 'Start', arguments: {row: configuration.row})}</f:else>
-                                </f:if>
-                            </td>
-                        </tr>
-                        <f:if condition="{configuration.jobs}">
-                            <tr data-jobs="{configuration.row.uid}">
-                                <td colspan="8">
-                                    <details data-fold="jobs-{configuration.row.uid}"{f:if(condition: configuration.open, then: ' open')}>
-                                        <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:jobs.summary', arguments: {0: '{configuration.jobs -> f:count()}'})}</summary>
-                                        <table class="table table-sm mb-0">
-                                            {f:render(section: 'Jobs', arguments: {jobs: configuration.jobs})}
-                                        </table>
-                                    </details>
-                                </td>
-                            </tr>
-                        </f:if>
-                    </f:for>
-                </tbody>
+                <f:for each="{site.configurations}" as="configuration">
+                    <f:render partial="Backend/ImportConfiguration" arguments="{configuration: configuration}" />
+                </f:for>
             </table>
         </div>
         </section>
     </f:section>
 
-    <f:section name="Start">
-        <form method="post" action="{f:be.uri(route: 'thuecat_imports.start')}" class="d-inline">
-            <input type="hidden" name="configuration" value="{row.uid}" />
-            <button type="button"
-                class="btn btn-sm btn-default"
-                data-start-import
-                data-title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.modal.title', arguments: {0: row.title})}"
-                data-button-close-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.cancel')}"
-                data-button-ok-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.submit')}"
-            >
-                <core:icon identifier="actions-play" size="small" />
-                {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.submit')}
-            </button>
-            <template data-start-options>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="skipMedia" value="1" id="skipMedia-{row.uid}" {f:if(condition: row.skipMedia, then: 'checked="checked"')} />
-                    <label class="form-check-label" for="skipMedia-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.skipMedia')}</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="bypassCache" value="1" id="bypassCache-{row.uid}" />
-                    <label class="form-check-label" for="bypassCache-{row.uid}">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:start.bypassCache')}</label>
-                </div>
-            </template>
-        </form>
-    </f:section>
-
-    <f:section name="Stop">
-        <span class="badge badge-info">{row.openJobStatus}</span>
-        <f:if condition="{row.openJobStatus} != 'stopping'">
-            <form method="post" action="{f:be.uri(route: 'thuecat_imports.stop')}" class="d-inline">
-                <input type="hidden" name="job" value="{row.openJobUid}" />
-                <button
-                    type="submit"
-                    class="btn btn-sm btn-default t3js-modal-trigger"
-                    data-severity="warning"
-                    data-title="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.title')}"
-                    data-content="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.text')}"
-                    data-button-close-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.confirm.cancel')}"
-                    data-button-ok-text="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.submit')}"
-                >
-                    <core:icon identifier="actions-stop" size="small" />
-                    {f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:stop.submit')}
-                </button>
-            </form>
-        </f:if>
-    </f:section>
-
-    <f:section name="Jobs">
-        <thead>
-        <tr>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.status')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.trigger')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.user')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.started')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.ended')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.done')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.failed')}</th>
-            <th>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:th.job.skipped')}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <f:for each="{jobs}" as="job">
-            <tr data-job="{job.row.uid}">
-                <td>
-                    {job.row.status}
-                    <f:if condition="{job.row.stalled}">
-                        <span class="badge badge-warning">{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.stalled')}</span>
-                    </f:if>
-                    <f:if condition="{job.row.totalItems}">
-                        <div class="progress mt-1" role="progressbar" aria-valuenow="{job.row.finishedItems}" aria-valuemin="0" aria-valuemax="{job.row.totalItems}" aria-label="{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.progress')}">
-                            <div class="progress-bar" style="width: {job.progress}%"></div>
-                        </div>
-                        <small>{job.row.finishedItems} / {job.row.totalItems}<f:if condition="{job.estimate}">, {job.estimate}</f:if></small>
-                    </f:if>
-                </td>
-                <td>{job.trigger}</td>
-                <td>{job.user}</td>
-                <td>{f:render(section: 'Time', arguments: {timestamp: job.row.startedAt})}</td>
-                <td>{f:render(section: 'Time', arguments: {timestamp: job.row.endedAt})}</td>
-                <td>{job.row.doneItems}</td>
-                <td>{job.row.failedItems}</td>
-                <td>{job.row.skippedItems}</td>
-            </tr>
-            <f:if condition="{job.log}">
-                <tr data-job-log="{job.row.uid}">
-                    <td colspan="8">
-                        <details data-fold="log-{job.row.uid}"{f:if(condition: job.logOpen, then: ' open')}>
-                            <summary>{f:translate(key: 'LLL:EXT:thuecat/Resources/Private/Language/locallang_mod_imports.xlf:job.log')}</summary>
-                            <f:render partial="Backend/ImportLog" arguments="{log: job.log}" />
-                        </details>
-                    </td>
-                </tr>
-            </f:if>
-        </f:for>
-        </tbody>
-    </f:section>
-
-    <f:section name="Time">
-        <f:if condition="{timestamp}">
-            <f:then>{timestamp -> f:format.date(format: 'd.m.Y H:i')}</f:then>
-            <f:else>&ndash;</f:else>
-        </f:if>
-    </f:section>
 </html>

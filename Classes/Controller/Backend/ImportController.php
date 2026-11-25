@@ -38,6 +38,8 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportConfigurationOverviewRow;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportJobOverviewRow;
 use WerkraumMedia\ThueCat\Domain\Model\Backend\ImportLog;
@@ -56,6 +58,17 @@ class ImportController
     /**
      * The presets the schedule field offers, by interval in seconds.
      */
+    /**
+     * The badge state of each outcome of a configuration's last finished job.
+     */
+    protected const OUTCOME_STATES = [
+        'done' => 'success',
+        'warnings' => 'warning',
+        'errors' => 'danger',
+        'failed' => 'danger',
+        'stopped' => 'secondary',
+    ];
+
     protected const SCHEDULE_PRESETS = [
         3600 => 'hourly',
         21600 => 'sixHourly',
@@ -73,6 +86,7 @@ class ImportController
         protected readonly ImportJobs $importJobs,
         protected readonly FlashMessageService $flashMessageService,
         protected readonly PageRenderer $pageRenderer,
+        protected readonly ViewFactoryInterface $viewFactory,
     ) {
     }
 
@@ -80,9 +94,9 @@ class ImportController
     {
         $sites = [];
         $outsideSites = null;
-        $openFolds = $this->openFolds();
+        $folds = $this->folds();
         foreach ($this->configurationOverview->bySite($this->getBackendUser()) as $siteIdentifier => $rows) {
-            $configurations = array_map(fn (ImportConfigurationOverviewRow $row): array => $this->listed($row, $openFolds), $rows);
+            $configurations = array_map(fn (ImportConfigurationOverviewRow $row): array => $this->listed($row, $folds), $rows);
             if ($siteIdentifier === '') {
                 $outsideSites = [
                     'identifier' => '',
@@ -109,7 +123,7 @@ class ImportController
 
         $view = $this->moduleTemplateFactory->create($request);
         $view->assign('sites', $sites);
-        $view->assign('logAfter', $this->configurationOverview->latestLogEntryUid());
+        $view->assign('folds', $folds);
 
         return $view->renderResponse('Backend/Import/Index');
     }
@@ -150,41 +164,32 @@ class ImportController
     }
 
     /**
-     * What the module's JavaScript needs to update the jobs it shows in place. Log entry uids grow across logs, so
-     * one uid tells every job's entries apart from those already shown.
+     * Each requested configuration's block, rendered as the index renders it, so the module's JavaScript swaps it in
+     * whole: its runs, outcome, open job and buttons as well as jobs queued after the page was loaded.
      */
     public function statusAction(ServerRequestInterface $request): ResponseInterface
     {
         $query = $request->getQueryParams();
-        $jobUids = GeneralUtility::intExplode(',', is_string($query['jobs'] ?? null) ? $query['jobs'] : '', true);
-        $after = is_numeric($query['after'] ?? null) ? (int)$query['after'] : 0;
+        $requested = GeneralUtility::intExplode(',', is_string($query['configurations'] ?? null) ? $query['configurations'] : '', true);
+        $readable = $this->readableConfigurations();
+        $folds = $this->folds();
 
-        $jobs = [];
-        foreach ($this->configurationOverview->jobs($this->getBackendUser(), $jobUids) as $job) {
-            $jobs[$job->uid] = [
-                'status' => $job->status,
-                'stalled' => $job->stalled,
-                'finished' => $job->finishedItems,
-                'total' => $job->totalItems,
-                'estimate' => $job->estimate === null ? '' : $this->estimate($job->estimate),
-                'done' => $job->doneItems,
-                'failed' => $job->failedItems,
-                'skipped' => $job->skippedItems,
-                'startedAt' => $this->time($job->startedAt),
-                'endedAt' => $this->time($job->endedAt),
-                'logEntries' => $job->importLog > 0 ? $this->configurationOverview->logEntriesAfter($job->importLog, $after) : [],
-            ];
+        $blocks = [];
+        foreach ($requested as $uid) {
+            if (!isset($readable[$uid])) {
+                continue;
+            }
+
+            $view = $this->viewFactory->create(new ViewFactoryData(
+                templateRootPaths: ['EXT:thuecat/Resources/Private/Templates'],
+                partialRootPaths: ['EXT:thuecat/Resources/Private/Partials'],
+                request: $request,
+            ));
+            $view->assign('configuration', $this->listed($readable[$uid], $folds));
+            $blocks[$uid] = $view->render('Backend/Import/Configuration');
         }
 
-        return new JsonResponse(['jobs' => $jobs]);
-    }
-
-    /**
-     * Formatted as the module's Time section formats it.
-     */
-    protected function time(int $timestamp): string
-    {
-        return $timestamp > 0 ? date('d.m.Y H:i', $timestamp) : '';
+        return new JsonResponse(['configurations' => $blocks]);
     }
 
     protected function postedUid(ServerRequestInterface $request, string $field): int
@@ -200,20 +205,23 @@ class ImportController
      */
     protected function mayManage(int $configurationUid): bool
     {
-        $user = $this->getBackendUser();
-        if (!$user->check('modules', 'thuecat_imports')) {
-            return false;
-        }
+        return $this->getBackendUser()->check('modules', 'thuecat_imports')
+            && isset($this->readableConfigurations()[$configurationUid]);
+    }
 
-        foreach ($this->configurationOverview->bySite($user) as $rows) {
+    /**
+     * @return array<int, ImportConfigurationOverviewRow> keyed by uid
+     */
+    protected function readableConfigurations(): array
+    {
+        $readable = [];
+        foreach ($this->configurationOverview->bySite($this->getBackendUser()) as $rows) {
             foreach ($rows as $row) {
-                if ($row->uid === $configurationUid) {
-                    return true;
-                }
+                $readable[$row->uid] = $row;
             }
         }
 
-        return false;
+        return $readable;
     }
 
     protected function notify(string $label, bool $succeeded): void
@@ -232,31 +240,48 @@ class ImportController
     }
 
     /**
-     * The folded blocks the user left open, as the module's JavaScript stores them.
+     * The folded blocks the user opened or closed, as the module's JavaScript stores them. A block the user left
+     * alone follows its default.
      *
-     * @return list<string>
+     * @return array{open: list<string>, closed: list<string>}
      */
-    protected function openFolds(): array
+    protected function folds(): array
     {
         $moduleData = $this->getBackendUser()->uc['thuecat_imports'] ?? [];
-        $open = is_array($moduleData) ? $moduleData['open'] ?? '' : '';
+        $moduleData = is_array($moduleData) ? $moduleData : [];
 
-        return is_string($open) ? GeneralUtility::trimExplode(',', $open, true) : [];
+        return [
+            'open' => GeneralUtility::trimExplode(',', is_string($moduleData['open'] ?? null) ? $moduleData['open'] : '', true),
+            'closed' => GeneralUtility::trimExplode(',', is_string($moduleData['closed'] ?? null) ? $moduleData['closed'] : '', true),
+        ];
     }
 
     /**
-     * @param list<string> $openFolds
+     * @param array{open: list<string>, closed: list<string>} $folds
      *
-     * @return array{row: ImportConfigurationOverviewRow, type: string, schedule: string, open: bool, jobs: list<array<string, mixed>>}
+     * @return array{row: ImportConfigurationOverviewRow, type: string, schedule: string, outcome: array{label: string, state: string}|null, fold: array{default: string, open: bool}, jobs: list<array<string, mixed>>}
      */
-    protected function listed(ImportConfigurationOverviewRow $row, array $openFolds): array
+    protected function listed(ImportConfigurationOverviewRow $row, array $folds): array
     {
+        // An open job's status is what the row shows; an outcome from before it would contradict it.
+        $outcomeState = $row->openJobUid > 0 ? null : self::OUTCOME_STATES[$row->lastOutcome] ?? null;
+        // A last job that ended with errors shows its log without a click, unless the user closed it.
+        $openByDefault = $outcomeState === 'danger';
+        $fold = 'jobs-' . $row->uid;
+
         return [
             'row' => $row,
             'type' => $this->getLanguageService()->sL(self::TCA_LABELS . 'type.' . $row->type),
             'schedule' => $this->schedule($row->scheduleInterval),
-            'open' => in_array('jobs-' . $row->uid, $openFolds, true),
-            'jobs' => array_map(fn (ImportJobOverviewRow $job): array => $this->listedJob($job, $openFolds), $row->jobs),
+            'outcome' => $outcomeState === null ? null : [
+                'label' => $this->getLanguageService()->sL(self::LABELS . 'outcome.' . $row->lastOutcome),
+                'state' => $outcomeState,
+            ],
+            'fold' => [
+                'default' => $openByDefault ? 'open' : 'closed',
+                'open' => in_array($fold, $folds['open'], true) || ($openByDefault && !in_array($fold, $folds['closed'], true)),
+            ],
+            'jobs' => array_map(fn (ImportJobOverviewRow $job): array => $this->listedJob($job, $folds['open']), $row->jobs),
         ];
     }
 

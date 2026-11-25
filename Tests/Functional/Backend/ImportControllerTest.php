@@ -33,6 +33,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use WerkraumMedia\ThueCat\Controller\Backend\ImportController;
 use WerkraumMedia\ThueCat\Domain\Repository\Backend\ImportConfigurationOverview;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportStarted;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractBackendTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
@@ -128,7 +129,146 @@ final class ImportControllerTest extends AbstractBackendTestCase
     public function indexShowsNoJobStateForAConfigurationWhoseJobsAreFinished(): void
     {
         $this->assertDoesNotMatchRegularExpression(
-            '#<tr data-configuration="41">' . self::ROW . 'done#s',
+            '#<tr data-configuration="41">' . self::ROW . 'badge-info#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    /**
+     * @return iterable<string, array{int, string, string}>
+     */
+    public static function lastOutcomes(): iterable
+    {
+        yield 'done without findings' => [84, 'success', 'Done'];
+        yield 'done with warnings' => [41, 'warning', 'Done with warnings'];
+        yield 'done with errors' => [82, 'danger', 'Done with errors'];
+        yield 'failed after an earlier success' => [81, 'danger', 'Failed'];
+        yield 'stopped' => [85, 'secondary', 'Stopped'];
+    }
+
+    #[DataProvider('lastOutcomes')]
+    #[Test]
+    public function indexShowsTheOutcomeOfTheLastFinishedJobBesideTheLastRun(int $configuration, string $state, string $label): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+
+        $this->assertMatchesRegularExpression(
+            '#<tr data-configuration="' . $configuration . '">' . self::ROW
+            . '<td>\s*\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}\s*<span class="badge badge-' . $state . '">' . preg_quote($label, '#') . '</span>\s*</td>#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    /**
+     * @return iterable<string, array{int}>
+     */
+    public static function configurationsWithoutOutcome(): iterable
+    {
+        yield 'only a running job' => [32];
+        yield 'never run' => [50];
+        yield 'running after a failure' => [86];
+    }
+
+    #[DataProvider('configurationsWithoutOutcome')]
+    #[Test]
+    public function indexShowsNoOutcomeWhileAJobIsOpenOrBeforeTheFirstHasFinished(int $configuration): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+
+        $this->assertDoesNotMatchRegularExpression(
+            '#<tr data-configuration="' . $configuration . '">' . self::ROW . 'badge-(?:success|warning|danger|secondary)#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    /**
+     * @return iterable<string, array{int, bool}>
+     */
+    public static function jobFoldsByOutcome(): iterable
+    {
+        yield 'failed' => [81, true];
+        yield 'done with errors' => [82, true];
+        yield 'done with warnings' => [41, false];
+        yield 'done without findings' => [84, false];
+        yield 'running after a failure' => [86, false];
+    }
+
+    #[DataProvider('jobFoldsByOutcome')]
+    #[Test]
+    public function indexOpensTheJobsOfAConfigurationWhoseLastJobEndedWithErrors(int $configuration, bool $open): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+
+        $this->assertMatchesRegularExpression(
+            '#<tr data-jobs="' . $configuration . '">\s*<td[^>]*>\s*<details data-fold="jobs-' . $configuration . '" data-fold-default="[a-z]+"' . ($open ? ' open' : '>') . '#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexKeepsTheJobsTheUserClosedClosedAfterAFailure(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+        /** @var BackendUserAuthentication $backendUser set up by the base class */
+        $backendUser = $GLOBALS['BE_USER'];
+        $backendUser->uc['thuecat_imports'] = ['closed' => 'jobs-81'];
+
+        $this->assertMatchesRegularExpression(
+            '#<details data-fold="jobs-81" data-fold-default="open">#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function foldDefaults(): iterable
+    {
+        yield 'jobs after a failure' => ['jobs-81', 'open'];
+        yield 'jobs after warnings' => ['jobs-41', 'closed'];
+        yield 'a log' => ['log-2', 'closed'];
+    }
+
+    #[DataProvider('foldDefaults')]
+    #[Test]
+    public function indexTellsTheScriptWhetherAFoldIsOpenWithoutAChoiceOfTheUser(string $fold, string $default): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+
+        $this->assertStringContainsString(
+            '<details data-fold="' . $fold . '" data-fold-default="' . $default . '"',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexHandsTheScriptTheFoldsTheUserOpenedAndClosed(): void
+    {
+        /** @var BackendUserAuthentication $backendUser set up by the base class */
+        $backendUser = $GLOBALS['BE_USER'];
+        $backendUser->uc['thuecat_imports'] = ['open' => 'jobs-41,log-2', 'closed' => 'jobs-81'];
+
+        $this->assertMatchesRegularExpression(
+            '#<div\s+data-imports-status="[^"]+"\s+data-folds-open="jobs-41,log-2"\s+data-folds-closed="jobs-81"#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexRendersEachConfigurationWithItsJobsAsABlockOfItsOwn(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '#<tbody data-configuration-block="41">\s*<tr data-configuration="41">.*<tr data-jobs="41">#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
+    public function indexOffersAButtonToExpandOrCollapseAllJobsOfASiteBesideItsHeadline(): void
+    {
+        $this->assertMatchesRegularExpression(
+            '#<section data-site="example">\s*<h2>\s*Example site\s*<button type="button" class="btn btn-sm btn-default" data-toggle-site-jobs>\s*'
+            . '(?:<[^>]+>\s*)*' . 'Expand or collapse all jobs#s',
             (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
         );
     }
@@ -184,7 +324,7 @@ final class ImportControllerTest extends AbstractBackendTestCase
         $backendUser->uc['thuecat_imports'] = ['open' => 'jobs-41,log-2'];
 
         $this->assertMatchesRegularExpression(
-            '#' . preg_quote($row, '#') . '\s*<td[^>]*>\s*<details data-fold="[a-z]+-[0-9]+"' . ($open ? ' open' : '>') . '#s',
+            '#' . preg_quote($row, '#') . '\s*<td[^>]*>\s*<details data-fold="[a-z]+-[0-9]+" data-fold-default="[a-z]+"' . ($open ? ' open' : '>') . '#s',
             (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
         );
     }
@@ -242,12 +382,6 @@ final class ImportControllerTest extends AbstractBackendTestCase
     public function indexShowsNoLogBlockForAJobWithoutLog(): void
     {
         $this->assertStringNotContainsString('data-job-log="4"', (string)$this->get(ImportController::class)->indexAction($this->request)->getBody());
-    }
-
-    #[Test]
-    public function indexTellsTheRefreshTheLatestLogEntryItShows(): void
-    {
-        $this->assertStringContainsString('data-log-after="3"', (string)$this->get(ImportController::class)->indexAction($this->request)->getBody());
     }
 
     #[Test]
@@ -503,79 +637,56 @@ final class ImportControllerTest extends AbstractBackendTestCase
     }
 
     #[Test]
-    public function statusReturnsEachRequestedJobsStateAndTheLogEntriesNewerThanTheGivenUid(): void
+    public function statusReturnsTheBlockOfEachRequestedConfigurationAsTheIndexRendersIt(): void
     {
-        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleHalfway.csv');
-        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
-        $this->getContainer()->set(ImportConfigurationOverview::class, new ImportConfigurationOverview(
-            $this->get(ConnectionPool::class),
-            $this->get(SiteFinder::class),
-            new FixedClock(new DateTimeImmutable('@' . (self::LAST_PROGRESS + 60))),
-        ));
+        $html = (string)$this->get(ImportController::class)->indexAction($this->request)->getBody();
 
         $response = $this->get(ImportController::class)->statusAction(
-            $this->request->withQueryParams(['jobs' => '1,2', 'after' => '1'])
-        );
-
-        $this->assertSame([
-            'jobs' => [
-                1 => [
-                    'status' => 'running',
-                    'stalled' => false,
-                    'finished' => 4,
-                    'total' => 9,
-                    'estimate' => 'about 3 min 20 s',
-                    'done' => 0,
-                    'failed' => 0,
-                    'skipped' => 0,
-                    'startedAt' => '25.11.2026 03:00',
-                    'endedAt' => '',
-                    'logEntries' => [],
-                ],
-                2 => [
-                    'status' => 'done',
-                    'stalled' => false,
-                    'finished' => 0,
-                    'total' => 0,
-                    'estimate' => '',
-                    'done' => 12,
-                    'failed' => 0,
-                    'skipped' => 2,
-                    'startedAt' => '24.11.2026 22:15',
-                    'endedAt' => '24.11.2026 22:25',
-                    'logEntries' => [
-                        [
-                            'uid' => 2,
-                            'type' => 'referenceSkipped',
-                            'severity' => 'warning',
-                            'remoteId' => 'https://thuecat.org/resources/ref-2',
-                            'message' => 'Reference skipped: HTTP 410',
-                        ],
-                        [
-                            'uid' => 3,
-                            'type' => 'eventPlaceMatch',
-                            'severity' => 'info',
-                            'remoteId' => 'https://thuecat.org/resources/event-1',
-                            'message' => 'Related to place 3',
-                        ],
-                    ],
-                ],
-            ],
-        ], json_decode((string)$response->getBody(), true));
-    }
-
-    #[Test]
-    public function statusLeavesOutJobsOfConfigurationsTheUserMayNotRead(): void
-    {
-        $this->setUpBackendUser(3);
-
-        $response = $this->get(ImportController::class)->statusAction(
-            $this->request->withQueryParams(['jobs' => '1,2,3,5', 'after' => '0'])
+            $this->request->withQueryParams(['configurations' => '41,7'])
         );
 
         $status = json_decode((string)$response->getBody(), true);
         $this->assertIsArray($status);
-        $this->assertIsArray($status['jobs']);
-        $this->assertSame([1, 2], array_keys($status['jobs']));
+        $this->assertIsArray($status['configurations']);
+        $this->assertSame([41, 7], array_keys($status['configurations']));
+        foreach ($status['configurations'] as $uid => $block) {
+            $this->assertIsString($block);
+            $this->assertStringStartsWith('<tbody data-configuration-block="' . $uid . '">', trim($block));
+            $this->assertStringContainsString(trim($block), $html);
+        }
+    }
+
+    #[Test]
+    public function statusShowsAJobQueuedAfterThePageWasRendered(): void
+    {
+        $job = $this->get(ImportJobs::class)->queueScheduled(41);
+
+        $response = $this->get(ImportController::class)->statusAction(
+            $this->request->withQueryParams(['configurations' => '41'])
+        );
+
+        $status = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($status);
+        $this->assertIsArray($status['configurations']);
+        $this->assertIsString($status['configurations'][41]);
+        $this->assertMatchesRegularExpression(
+            '#<tr data-configuration="41">' . self::ROW . '<span class="badge badge-info">queued</span>.*<tr data-job="' . $job . '"#s',
+            $status['configurations'][41]
+        );
+    }
+
+    #[Test]
+    public function statusLeavesOutConfigurationsTheUserMayNotRead(): void
+    {
+        $this->setUpBackendUser(3);
+
+        $response = $this->get(ImportController::class)->statusAction(
+            $this->request->withQueryParams(['configurations' => '32,41,7,50'])
+        );
+
+        $status = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($status);
+        $this->assertIsArray($status['configurations']);
+        $this->assertSame([32, 41], array_keys($status['configurations']));
     }
 }
