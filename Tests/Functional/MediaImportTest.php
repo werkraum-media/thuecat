@@ -317,6 +317,54 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->assertSame([], $this->fetchReferenceFields());
     }
 
+    #[Test]
+    public function trailSupplyingNoImageLosesItsImportedImages(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithoutMedia.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/StoredImagesOnTrailWithoutMedia.csv');
+        $this->expectFetch('e_16571065-oatour.json');
+
+        $this->importJob(1);
+
+        $this->assertSame([], $this->fetchReferenceFields(0));
+        $this->assertSame(
+            [
+                '{"field":"media_files","value":"\/thuecat\/stored.jpg"}',
+                '{"field":"logo","value":"\/thuecat\/stored.jpg"}',
+            ],
+            array_column($this->getLogEntriesOfType('removedUpstream'), 'context')
+        );
+    }
+
+    #[Test]
+    public function jobSkippingMediaKeepsTheImagesOfATrailSupplyingNone(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithoutMedia.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/StoredImagesOnTrailWithoutMedia.csv');
+        $this->expectFetch('e_16571065-oatour.json');
+
+        $this->importJob(1, skipMedia: true);
+
+        $this->assertSame(['logo', 'media_files'], $this->fetchReferenceFields(0));
+    }
+
+    #[Test]
+    public function failedDownloadsKeepTheTrailsStoredImages(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTrailWithMedia.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/StoredImagesOnTrailWithMedia.csv');
+        $this->expectFetch('e_39285647-oatour.json');
+        foreach (['22046887', '39286664'] as $image) {
+            foreach ([1, 2, 3] as $attempt) {
+                $this->expectFailureForUrl('http://img.oastatic.com/img/' . $image . '/.jpg', 503);
+            }
+        }
+
+        $this->importJob(1);
+
+        $this->assertSame(['logo', 'media_files'], $this->fetchReferenceFields(0));
+    }
+
     /**
      * @param int|null $language null counts every language's references
      *

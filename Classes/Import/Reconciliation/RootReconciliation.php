@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\DataHandling\TableColumnType;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
+use WerkraumMedia\ThueCat\Import\CollectedMedia;
 use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Parser\DataHandlerPayload;
 use WerkraumMedia\ThueCat\Import\Parser\Entity\EntityInterface;
@@ -69,7 +70,7 @@ final readonly class RootReconciliation
     }
 
     /**
-     * The deletions of inline children upstream no longer supplies, as a DataHandler cmdmap. They run before the
+     * The deletions of inline children and file references upstream no longer supplies, as a DataHandler cmdmap. They run before the
      * persist loop: localizing a root copies every inline child still stored, deleted ones included.
      *
      * @return array<string, array<int, array{delete: 1}>>
@@ -85,7 +86,7 @@ final readonly class RootReconciliation
                     continue;
                 }
 
-                foreach ($this->unsuppliedChildrenOf($table, $remoteId, (int)$uid, $root['entity'], $root['children']) as $childTable => $commands) {
+                foreach ($this->unsuppliedChildrenOf($context, $table, $remoteId, (int)$uid, $root['entity'], $root['children']) as $childTable => $commands) {
                     $deletions[$childTable] = ($deletions[$childTable] ?? []) + $commands;
                 }
             }
@@ -186,6 +187,7 @@ final readonly class RootReconciliation
      * @return array<string, array<int, array{delete: 1}>>
      */
     private function unsuppliedChildrenOf(
+        ResolverContext $context,
         string $table,
         string $remoteId,
         int $uid,
@@ -196,7 +198,14 @@ final readonly class RootReconciliation
         $schema = $this->tcaSchemaFactory->get($table);
         foreach (array_keys($entity::RECONCILED_FIELDS, FieldMechanism::ExplicitDelete, true) as $field) {
             $tcaField = $schema->getField($field);
-            if (!$tcaField->isType(TableColumnType::INLINE)) {
+            if ($tcaField->isType(TableColumnType::FILE)) {
+                if ($this->suppliedNoMedia($context, $table, $uid, $field)) {
+                    foreach ($this->storedFileReferences($table, $uid, $field) as $referenceUid => $identifier) {
+                        $this->importLogger->recordRemovedUpstream($table, $remoteId, $field, $identifier);
+                        $deletions['sys_file_reference'][$referenceUid] = ['delete' => 1];
+                    }
+                }
+
                 continue;
             }
 
@@ -214,6 +223,47 @@ final readonly class RootReconciliation
         }
 
         return $deletions;
+    }
+
+    /**
+     * A field that collected an image is reaped by the media flush. Without media, or after a failed download, what
+     * upstream supplies is unknown.
+     */
+    private function suppliedNoMedia(ResolverContext $context, string $table, int $uid, string $field): bool
+    {
+        if ($context->skipMedia || isset($context->mediaFailureByField[$table . '|' . $uid . '|' . $field])) {
+            return false;
+        }
+        return array_all($context->collectedMedia, fn (CollectedMedia $media): bool => !($media->ownerTable === $table && $media->ownerKey === (string)$uid && $media->targetField === $field));
+    }
+
+    /**
+     * Default-language references in one file field, as uid => the file's identifier.
+     *
+     * @return array<int, string>
+     */
+    private function storedFileReferences(string $table, int $uid, string $field): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_file_reference');
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+        $queryBuilder->select('r.uid', 'f.identifier')
+            ->from('sys_file_reference', 'r')
+            ->join('r', 'sys_file', 'f', $queryBuilder->expr()->eq('f.uid', $queryBuilder->quoteIdentifier('r.uid_local')))
+            ->where(
+                $queryBuilder->expr()->eq('r.tablenames', $queryBuilder->createNamedParameter($table)),
+                $queryBuilder->expr()->eq('r.fieldname', $queryBuilder->createNamedParameter($field)),
+                $queryBuilder->expr()->eq('r.uid_foreign', $queryBuilder->createNamedParameter($uid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->eq('r.sys_language_uid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
+            )
+        ;
+
+        $references = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $row) {
+            /** @var array{uid: int|string, identifier: string} $row */
+            $references[(int)$row['uid']] = $row['identifier'];
+        }
+
+        return $references;
     }
 
     /**

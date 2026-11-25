@@ -1,0 +1,10 @@
+"tx_thuecat_trail"
+,"uid","pid","remote_id","title","media_files","logo"
+,1,10,"https://thuecat.org/resources/e_16571065-oatour","Stored trail",1,1
+"sys_file"
+,"uid","storage","type","extension","mime_type","name","identifier"
+,1,1,2,"jpg","image/jpeg","stored.jpg","/thuecat/stored.jpg"
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname"
+,1,10,1,1,"tx_thuecat_trail","media_files"
+,2,10,1,1,"tx_thuecat_trail","logo"
