@@ -21,11 +21,14 @@ declare(strict_types=1);
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Messenger\MessageBusInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
+use WerkraumMedia\ThueCat\Import\Job\ImportSchedule;
+use WerkraumMedia\ThueCat\Import\Job\Message\ImportDue;
 use WerkraumMedia\ThueCat\Service\WaitingMessages;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
 use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
@@ -37,6 +40,8 @@ final class ImportFinishedTest extends AbstractImportTestCase
     private const int ENDED = 1795527000;
 
     private const int EARLIER_RUN = 1700000000;
+
+    private const string ZONE = 'Europe/Berlin';
 
     protected function setUp(): void
     {
@@ -50,6 +55,12 @@ final class ImportFinishedTest extends AbstractImportTestCase
             $this->get(MessageBusInterface::class),
             $this->get(ImportJobItems::class),
             new WaitingMessages($this->get(ConnectionPool::class)),
+        ));
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportSchedule::class, new ImportSchedule(
+            $this->get(ConnectionPool::class),
+            new FixedClock(new DateTimeImmutable('@' . self::ENDED)),
+            $this->get(MessageBusInterface::class),
         ));
     }
 
@@ -147,5 +158,102 @@ final class ImportFinishedTest extends AbstractImportTestCase
         $this->handleImportFinished(6);
 
         $this->assertSame(self::STARTED, $this->importConfigurationValue(6, 'last_successful_run'));
+    }
+
+    // The job ends at 14:30 on 2026-11-24, Berlin time.
+    #[Test]
+    public function nextRunKeepsTheDailyCadence(): void
+    {
+        $this->updateImportConfiguration(1, [
+            'schedule_interval' => 86400,
+            'next_run' => new DateTimeImmutable('2026-11-24 03:00', new DateTimeZone(self::ZONE))->getTimestamp(),
+        ]);
+
+        $this->handleImportFinished(1);
+
+        $this->assertSame(
+            new DateTimeImmutable('2026-11-25 03:00', new DateTimeZone(self::ZONE))->getTimestamp(),
+            $this->importConfigurationValue(1, 'next_run')
+        );
+    }
+
+    #[Test]
+    public function lateJobSkipsTheMissedSlots(): void
+    {
+        $this->updateImportConfiguration(1, [
+            'schedule_interval' => 3600,
+            'next_run' => new DateTimeImmutable('2026-11-24 11:15', new DateTimeZone(self::ZONE))->getTimestamp(),
+        ]);
+
+        $this->handleImportFinished(1);
+
+        $this->assertSame(
+            new DateTimeImmutable('2026-11-24 15:15', new DateTimeZone(self::ZONE))->getTimestamp(),
+            $this->importConfigurationValue(1, 'next_run')
+        );
+    }
+
+    #[Test]
+    public function nextRunAtTheJobsEndIsNotInTheFuture(): void
+    {
+        $this->updateImportConfiguration(1, ['schedule_interval' => 3600, 'next_run' => self::ENDED]);
+
+        $this->handleImportFinished(1);
+
+        $this->assertSame(self::ENDED + 3600, $this->importConfigurationValue(1, 'next_run'));
+    }
+
+    // An editor rescheduled while the job ran.
+    #[Test]
+    public function nextRunInTheFutureIsKept(): void
+    {
+        $this->updateImportConfiguration(1, ['schedule_interval' => 3600, 'next_run' => self::ENDED + 600]);
+
+        $this->handleImportFinished(1);
+
+        $this->assertSame(self::ENDED + 600, $this->importConfigurationValue(1, 'next_run'));
+        $this->assertEquals([new ImportDue(1, self::ENDED + 600)], $this->queuedMessages());
+    }
+
+    #[Test]
+    public function dueMessageWaitsForTheNextRun(): void
+    {
+        $nextRun = new DateTimeImmutable('2026-11-25 03:00', new DateTimeZone(self::ZONE))->getTimestamp();
+        $this->updateImportConfiguration(1, [
+            'schedule_interval' => 86400,
+            'next_run' => new DateTimeImmutable('2026-11-24 03:00', new DateTimeZone(self::ZONE))->getTimestamp(),
+        ]);
+
+        $this->handleImportFinished(1);
+
+        $this->assertEquals([new ImportDue(1, $nextRun)], $this->queuedMessages());
+        $this->assertSame(($nextRun - self::ENDED) * 1000, $this->queuedMessageDelay());
+    }
+
+    #[Test]
+    public function manualOnlyConfigurationSchedulesNothing(): void
+    {
+        $this->handleImportFinished(1);
+
+        $this->assertSame([], $this->queuedMessages());
+        $this->assertSame(0, $this->importConfigurationValue(1, 'next_run'));
+    }
+
+    #[Test]
+    public function failedAndStoppedJobsStillSchedule(): void
+    {
+        foreach ([2, 4, 5] as $uid) {
+            $this->updateImportConfiguration($uid, [
+                'schedule_interval' => 86400,
+                'next_run' => new DateTimeImmutable('2026-11-24 03:00', new DateTimeZone(self::ZONE))->getTimestamp(),
+            ]);
+            $this->handleImportFinished($uid);
+        }
+
+        $nextRun = new DateTimeImmutable('2026-11-25 03:00', new DateTimeZone(self::ZONE))->getTimestamp();
+        $this->assertSame(
+            [$nextRun, $nextRun, $nextRun],
+            array_map(fn (int $uid): mixed => $this->importConfigurationValue($uid, 'next_run'), [2, 4, 5])
+        );
     }
 }

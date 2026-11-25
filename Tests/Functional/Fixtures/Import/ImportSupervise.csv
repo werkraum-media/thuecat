@@ -1,0 +1,37 @@
+"pages"
+,"uid","pid","title","doktype"
+,1,0,"Root",1
+,10,1,"Storage",254
+"tx_thuecat_import_configuration"
+,"uid","pid","title","type","storage_pid","schedule_interval","next_run","message_budget"
+,1,0,"Due","static",10,86400,1795526880,0
+,2,0,"Due message waits","static",10,86400,1795526880,0
+,3,0,"Manual only","static",10,0,1795526880,0
+,4,0,"Not yet due","static",10,86400,1795527060,0
+,5,0,"Due with an open job","static",10,86400,1795526880,0
+,6,0,"Schedule set for the first time","static",10,3600,1700000000,0
+,7,0,"Short budget","static",10,0,0,60
+,8,0,"Due this second","static",10,86400,1795527000,0
+"tx_thuecat_import_job"
+,"uid","configuration","job_trigger","status","progressed_at"
+,1,3,"manual","running",1795526399
+,2,3,"manual","running",1795526399
+,3,3,"manual","running",1795526400
+,4,3,"manual","running",1795526399
+,5,5,"manual","running",1795527000
+,6,7,"manual","running",1795526879
+,7,3,"manual","queued",1795527000
+,8,3,"manual","queued",1795527000
+,9,3,"manual","done",1795520000
+,10,3,"manual","stopping",1795526399
+"tx_thuecat_import_job_item"
+,"uid","job","target","action","position","state"
+,1,1,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,2,1,"https://thuecat.org/resources/test-trail-removed","delete",1,"pending"
+,3,1,"https://thuecat.org/resources/test-trail-2","import",2,"pending"
+,4,2,"https://thuecat.org/resources/test-trail-1","import",0,"done"
+,5,3,"https://thuecat.org/resources/test-trail-1","import",0,"pending"
+,6,4,"https://thuecat.org/resources/test-trail-1","import",0,"pending"
+,7,5,"https://thuecat.org/resources/test-trail-1","import",0,"pending"
+,8,6,"https://thuecat.org/resources/test-trail-1","import",0,"pending"
+,9,10,"https://thuecat.org/resources/test-trail-1","import",0,"pending"

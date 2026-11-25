@@ -105,14 +105,12 @@ final class ImportJobCreationTest extends AbstractBackendTestCase
     #[DataProvider('earlierJobs')]
     public function onlyAnOpenJobRefusesASecondOne(string $status, bool $queued): void
     {
-        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
-            ->insert('tx_thuecat_import_job', ['configuration' => 1, 'status' => $status])
-        ;
+        $this->insertImportJob(['configuration' => 1, 'status' => $status]);
 
         $job = $this->get(ImportJobs::class)->queueScheduled(1);
 
         $this->assertSame($queued, is_int($job));
-        $this->assertSame($queued ? 2 : 1, $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')->count('*', 'tx_thuecat_import_job', []));
+        $this->assertSame($queued ? 2 : 1, $this->countRows('tx_thuecat_import_job'));
         $this->assertCount($queued ? 1 : 0, $this->queuedMessages());
     }
 }

@@ -30,6 +30,7 @@ use WerkraumMedia\ThueCat\Import\ImportLogger;
 use WerkraumMedia\ThueCat\Import\Job\ImportJob;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
 use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
+use WerkraumMedia\ThueCat\Import\Job\ImportSchedule;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
 use WerkraumMedia\ThueCat\Import\MediaStagingSweep;
 use WerkraumMedia\ThueCat\Import\SyncChannel\SyncWindow;
@@ -52,6 +53,7 @@ final readonly class ImportFinishedHandler
         private ConnectionPool $connectionPool,
         private MessageBusInterface $messageBus,
         private MediaStagingSweep $mediaStagingSweep,
+        private ImportSchedule $importSchedule,
     ) {
     }
 
@@ -87,6 +89,7 @@ final readonly class ImportFinishedHandler
 
         $this->recordRun($job, $status === 'done' && !$this->logHoldsAFailedRun($job));
         $this->importJobs->finish($job->uid, $status, $counts);
+        $this->importSchedule->scheduleNext($job->configurationUid);
 
         // A consumer killed mid-item leaves its staging folder behind.
         if ($configuration instanceof ImportConfiguration && !$job->skipMedia) {

@@ -31,6 +31,7 @@ final readonly class ImportJob
         public int $importLog,
         public int $startedAt,
         public int $backendUser,
+        public int $progressedAt,
     ) {
     }
 }

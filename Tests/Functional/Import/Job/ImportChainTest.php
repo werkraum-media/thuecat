@@ -20,19 +20,36 @@ declare(strict_types=1);
 
 namespace WerkraumMedia\ThueCat\Tests\Functional\Import\Job;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Messenger\MessageBusInterface;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use WerkraumMedia\ThueCat\Import\Job\ImportConfigurationGoneException;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobItems;
+use WerkraumMedia\ThueCat\Import\Job\ImportJobs;
 use WerkraumMedia\ThueCat\Import\Job\Message\ImportFinished;
+use WerkraumMedia\ThueCat\Service\WaitingMessages;
 use WerkraumMedia\ThueCat\Tests\Functional\AbstractImportTestCase;
+use WerkraumMedia\ThueCat\Tests\Functional\FixedClock;
 
 final class ImportChainTest extends AbstractImportTestCase
 {
+    private const int NOW = 1795527000;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Import/ImportChain.csv');
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportJobs::class, new ImportJobs(
+            $this->get(ConnectionPool::class),
+            new FixedClock(new DateTimeImmutable('@' . self::NOW)),
+            $this->get(MessageBusInterface::class),
+            $this->get(ImportJobItems::class),
+            new WaitingMessages($this->get(ConnectionPool::class)),
+        ));
     }
 
     // As the doctrine transport delivers it again after a consumer died.
@@ -147,5 +164,27 @@ final class ImportChainTest extends AbstractImportTestCase
         $this->handleImportFinished(3);
 
         $this->assertSame('done', $this->jobOutcome(3)['status']);
+    }
+
+    // The supervisor resumes a chain only after its items made no progress for a while.
+    #[DataProvider('itemHandlers')]
+    #[Test]
+    public function beginningAnItemIsTheJobsProgress(string $handle): void
+    {
+        try {
+            $this->{$handle}(2, 5);
+        } catch (ImportConfigurationGoneException) {
+        }
+
+        $this->assertSame(self::NOW, $this->jobRow(2)['progressed_at']);
+    }
+
+    #[Test]
+    public function redeliveredItemIsNoProgress(): void
+    {
+        $this->handleImportRoot(1, 1);
+        $this->handleDeleteRoot(1, 2);
+
+        $this->assertSame(0, $this->jobRow(1)['progressed_at']);
     }
 }

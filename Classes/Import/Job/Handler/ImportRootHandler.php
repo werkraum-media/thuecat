@@ -72,6 +72,8 @@ final readonly class ImportRootHandler
             return;
         }
 
+        $this->importJobs->markProgressed($job->uid);
+
         // Sent first, so a failure of this item does not end the chain.
         if ($this->importJobItems->claimSuccessor($item)) {
             $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid, $item->position));

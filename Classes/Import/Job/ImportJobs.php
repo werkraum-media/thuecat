@@ -101,7 +101,7 @@ class ImportJobs
     public function find(int $uid): ?ImportJob
     {
         $row = $this->connectionPool->getConnectionForTable(self::TABLE)
-            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log', 'started_at', 'backend_user'], self::TABLE, ['uid' => $uid])
+            ->select(['uid', 'configuration', 'status', 'skip_media', 'bypass_cache', 'import_log', 'started_at', 'backend_user', 'progressed_at'], self::TABLE, ['uid' => $uid])
             ->fetchAssociative()
         ;
         if ($row === false) {
@@ -117,6 +117,7 @@ class ImportJobs
             $this->intOf($row['import_log']),
             $this->intOf($row['started_at']),
             $this->intOf($row['backend_user']),
+            $this->intOf($row['progressed_at']),
         );
     }
 
@@ -128,6 +129,16 @@ class ImportJobs
             ['status' => 'running', 'started_at' => $now, 'progressed_at' => $now, 'import_log' => $importLog],
             ['uid' => $uid]
         );
+    }
+
+    /**
+     * An item has begun. The supervisor takes a job without progress for twice the message budget as a broken chain.
+     */
+    public function markProgressed(int $uid): void
+    {
+        $this->connectionPool->getConnectionForTable(self::TABLE)
+            ->update(self::TABLE, ['progressed_at' => $this->clock->now()->getTimestamp()], ['uid' => $uid])
+        ;
     }
 
     public function markFailed(int $uid): void
@@ -176,7 +187,7 @@ class ImportJobs
             )
             ->executeStatement()
         ;
-        if ($stopping === 0 || $this->waitingMessages->exists(fn (object $message): bool => $this->isMessageOf($message, $uid))) {
+        if ($stopping === 0 || $this->hasWaitingMessage($uid)) {
             return;
         }
 
@@ -197,6 +208,14 @@ class ImportJobs
      */
     public function openJobUids(): array
     {
+        return $this->uidsWithStatus(...self::OPEN_STATUSES);
+    }
+
+    /**
+     * @return list<int>
+     */
+    public function uidsWithStatus(string ...$statuses): array
+    {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLE);
 
         return array_map(
@@ -205,7 +224,7 @@ class ImportJobs
                 ->select('uid')
                 ->from(self::TABLE)
                 ->where(
-                    $queryBuilder->expr()->in('status', $queryBuilder->createNamedParameter(self::OPEN_STATUSES, ArrayParameterType::STRING))
+                    $queryBuilder->expr()->in('status', $queryBuilder->createNamedParameter($statuses, ArrayParameterType::STRING))
                 )
                 ->executeQuery()
                 ->fetchFirstColumn()
@@ -228,6 +247,14 @@ class ImportJobs
         ;
 
         return is_numeric($count) && (int)$count > 0;
+    }
+
+    /**
+     * A message being handled is no longer waiting.
+     */
+    public function hasWaitingMessage(int $uid): bool
+    {
+        return $this->waitingMessages->exists(fn (object $message): bool => $this->isMessageOf($message, $uid));
     }
 
     protected function isMessageOf(object $message, int $uid): bool

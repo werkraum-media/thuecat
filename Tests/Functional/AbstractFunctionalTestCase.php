@@ -505,6 +505,14 @@ abstract class AbstractFunctionalTestCase extends FunctionalTestCase
     /**
      * @param array<string, int|string> $values
      */
+    protected function insertImportJob(array $values): void
+    {
+        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')->insert('tx_thuecat_import_job', $values);
+    }
+
+    /**
+     * @param array<string, int|string> $values
+     */
     protected function updateImportConfiguration(int $uid, array $values): void
     {
         $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_configuration')

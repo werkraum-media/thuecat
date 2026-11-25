@@ -22,6 +22,7 @@ namespace WerkraumMedia\ThueCat\Tests\Functional;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
+use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -38,6 +39,7 @@ use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Log\LogDataTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use WerkraumMedia\ThueCat\Command\ImportSuperviseCommand;
 
 /**
  * Sets up a logged-in backend user, the `LANG` global and the site configurations
@@ -112,6 +114,13 @@ abstract class AbstractBackendTestCase extends AbstractFunctionalTestCase
         ])->render();
 
         return is_string($result['html'] ?? null) ? $result['html'] : '';
+    }
+
+    protected function superviseImports(): void
+    {
+        $tester = new CommandTester($this->get(ImportSuperviseCommand::class));
+        $tester->execute([]);
+        $tester->assertCommandIsSuccessful();
     }
 
     /**

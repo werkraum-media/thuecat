@@ -53,9 +53,7 @@ final class MediaStagingSweepTest extends AbstractFunctionalTestCase
     #[Test]
     public function anOpenJobsFolderIsKept(): void
     {
-        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
-            ->insert('tx_thuecat_import_job', ['uid' => 3, 'configuration' => 1, 'status' => 'running'])
-        ;
+        $this->insertImportJob(['uid' => 3, 'configuration' => 1, 'status' => 'running']);
         GeneralUtility::mkdir($this->folder . '/_thuecat_import_job3_item1');
         GeneralUtility::mkdir($this->folder . '/_thuecat_import_job1_item1');
 
@@ -78,9 +76,7 @@ final class MediaStagingSweepTest extends AbstractFunctionalTestCase
     #[Test]
     public function foldersOfThuecat7AreKeptWhileAJobIsOpen(): void
     {
-        $this->getConnectionPool()->getConnectionForTable('tx_thuecat_import_job')
-            ->insert('tx_thuecat_import_job', ['uid' => 3, 'configuration' => 1, 'status' => 'running'])
-        ;
+        $this->insertImportJob(['uid' => 3, 'configuration' => 1, 'status' => 'running']);
         GeneralUtility::mkdir($this->folder . '/_thuecat_import_6578a1b2c3d4e');
 
         $this->get(MediaStagingSweep::class)->sweep();
