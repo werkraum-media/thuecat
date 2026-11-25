@@ -2320,18 +2320,25 @@ class Resolver
             } catch (ResourceNotFoundException) {
                 // Upstream removed the media — drop the reference
                 continue;
+            } catch (MessageBudgetExhaustedException $exhausted) {
+                throw $exhausted;
+            } catch (Exception $e) {
+                $failedField = $this->mediaFieldMap->fieldFor($ownerTable, $entry['kind']);
+                if (!$this->fetchFailureVerdict->failureMeansGone($e)) {
+                    $context->mediaFailureByField[$ownerTable . '|' . $ownerKey . '|' . $failedField] = true;
+                }
+
+                $this->importLogger->recordSkippedReference(
+                    $ownerTable,
+                    $ownerRemoteId,
+                    $failedField,
+                    $reference,
+                    $e::class . ': ' . $e->getMessage()
+                );
+                continue;
             }
 
-            $resolvedAuthor = null;
-            $authorRef = MediaEntity::authorReference($mediaNode);
-            if ($authorRef !== null) {
-                try {
-                    $personNode = $this->fetchGraphNode($authorRef, $context, $authorRef);
-                    $resolvedAuthor = MediaEntity::shapePersonName($personNode, $context->language);
-                } catch (ResourceNotFoundException) {
-                    // Author resource gone; leave the media without an author.
-                }
-            }
+            $resolvedAuthor = $this->resolveMediaAuthor($mediaNode, $context);
 
             $mediaEntity = new MediaEntity();
             $mediaEntity->configure($mediaNode, $entry['kind'], $context->language, $resolvedAuthor);
@@ -2367,6 +2374,37 @@ class Resolver
                 is_array($entry) ? $entry['id'] : $entry
             );
         }
+    }
+
+    /**
+     * A blank node identifier means nothing outside its response, so such an
+     * author is read from the node as supplied. An author that cannot be
+     * fetched costs the media its author only.
+     *
+     * @param array<string, mixed> $mediaNode
+     */
+    protected function resolveMediaAuthor(array $mediaNode, ResolverContext $context): ?string
+    {
+        $authorRef = MediaEntity::authorReference($mediaNode);
+        if ($authorRef === null) {
+            return null;
+        }
+
+        if (!$this->isFetchableUrl($authorRef)) {
+            /** @var array<string, mixed> $authorNode authorReference() found its @id */
+            $authorNode = $mediaNode['schema:author'];
+            return MediaEntity::shapePersonName($authorNode, $context->language);
+        }
+
+        try {
+            $personNode = $this->fetchGraphNode($authorRef, $context, $authorRef);
+        } catch (MessageBudgetExhaustedException $exhausted) {
+            throw $exhausted;
+        } catch (Exception) {
+            return null;
+        }
+
+        return MediaEntity::shapePersonName($personNode, $context->language);
     }
 
     /**

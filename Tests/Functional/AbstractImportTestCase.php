@@ -295,6 +295,16 @@ abstract class AbstractImportTestCase extends AbstractBackendTestCase
     }
 
     /**
+     * A 5xx is retried: one response per attempt, and maxAttempts defaults to 3.
+     */
+    protected function expectExhaustedRetry(string $segment, int $status = 500): void
+    {
+        foreach ([1, 2, 3] as $attempt) {
+            $this->expectFailure($segment, $status);
+        }
+    }
+
+    /**
      * Stage a failing response for a URL that doesn't fit the
      * `<domain>/<path>/<segment>` convention — image downloads, for instance.
      */

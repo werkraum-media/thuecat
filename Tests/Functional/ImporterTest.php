@@ -906,10 +906,7 @@ final class ImporterTest extends AbstractImportTestCase
     public function exhaustedRetryOnARootUrlIsRecordedAsAFetchingError(): void
     {
         $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsFreshOrganization.php');
-        // One per attempt: maxAttempts defaults to 3.
-        $this->expectFailure('018132452787-ngbe', 500);
-        $this->expectFailure('018132452787-ngbe', 500);
-        $this->expectFailure('018132452787-ngbe', 500);
+        $this->expectExhaustedRetry('018132452787-ngbe');
 
         $this->importJob(1);
 

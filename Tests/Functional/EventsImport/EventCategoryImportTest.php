@@ -630,10 +630,7 @@ final class EventCategoryImportTest extends AbstractImportTestCase
     {
         $this->expectErrors = true;
         $this->importPHPDataSet(__DIR__ . '/Fixtures/EventCategoryDroppedTypePreState.php');
-        // One per attempt: a 500 is retried, and maxAttempts defaults to 3.
-        $this->expectFailure('e_19542-hubev', 500);
-        $this->expectFailure('e_19542-hubev', 500);
-        $this->expectFailure('e_19542-hubev', 500);
+        $this->expectExhaustedRetry('e_19542-hubev');
 
         $this->importJob(1);
 

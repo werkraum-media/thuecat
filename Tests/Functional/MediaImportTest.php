@@ -828,6 +828,125 @@ final class MediaImportTest extends AbstractImportTestCase
         $this->assertStringContainsString('after 3 attempts', $entries[0]['message'], 'The message names how many attempts were made.');
     }
 
+    /**
+     * A blank node identifier is meaningful only within its response, so requesting it
+     * fails; the faker reports any such request on tearDown.
+     */
+    #[Test]
+    public function authorGivenAsBlankNodeIsReadFromTheNode(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->expectFetch('attraction-with-blank-node-author.json', 'image-with-blank-node-author.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(1);
+
+        $this->assertSame(['media_files'], $this->fetchReferenceFields(0));
+        $this->assertSame(['Fotografin Rhön'], $this->fetchColumnMatching('sys_file_metadata', 'creator', ['sys_language_uid' => 0]));
+    }
+
+    #[Test]
+    public function authorGivenAsBareBlankNodeIdentifierLeavesTheMediaWithoutAuthor(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->expectFetch('attraction-with-bare-blank-node-author.json', 'image-with-bare-blank-node-author.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(2);
+
+        $this->assertSame(['media_files'], $this->fetchReferenceFields(0));
+        $this->assertSame([''], $this->fetchColumnMatching('sys_file_metadata', 'creator', ['sys_language_uid' => 0]));
+    }
+
+    #[Test]
+    public function failingAuthorLeavesTheMediaWithoutAuthor(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->expectFetch('attraction-with-failing-author.json', 'image-with-failing-author.json');
+        $this->expectExhaustedRetry('author-failing');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099196/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(3);
+
+        $this->assertSame(['Attraktion mit fehlerhaftem Autor'], $this->fetchColumnMatching('tx_thuecat_tourist_attraction', 'title', ['sys_language_uid' => 0]));
+        $this->assertSame(['media_files'], $this->fetchReferenceFields(0));
+        $this->assertSame([''], $this->fetchColumnMatching('sys_file_metadata', 'creator', ['sys_language_uid' => 0]));
+    }
+
+    #[Test]
+    public function failingMediaResourceSkipsOnlyThatMedia(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->expectFetch('attraction-with-failing-media-resource.json');
+        $this->expectExhaustedRetry('image-failing-resource');
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(4);
+
+        $this->assertWarnsWithoutError();
+        $this->assertSame(['Attraktion mit fehlerhaftem Medium'], $this->fetchColumnMatching('tx_thuecat_tourist_attraction', 'title', ['sys_language_uid' => 0]));
+        $this->assertSame(['Bild nach dem Fehler'], $this->fetchColumnMatching('sys_file_metadata', 'title', ['sys_language_uid' => 0]));
+
+        $entries = $this->getSkippedReferenceLogEntries();
+        $this->assertCount(1, $entries);
+        $this->assertSame('warning', $entries[0]['severity']);
+        $this->assertSame('tx_thuecat_tourist_attraction', $entries[0]['table_name']);
+        $this->assertSame('https://thuecat.org/resources/attraction-with-failing-media-resource', $entries[0]['remote_id']);
+        $this->assertIsString($entries[0]['message']);
+        $this->assertStringContainsString('"https://thuecat.org/resources/image-failing-resource" for field "media_files"', $entries[0]['message']);
+    }
+
+    #[Test]
+    public function failingMediaResourceKeepsTheStoredImages(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/StoredImageOnAttractionWithFailingMediaResource.csv');
+        $this->expectFetch('attraction-with-failing-media-resource.json');
+        $this->expectExhaustedRetry('image-failing-resource');
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(4);
+
+        $this->assertSame(['media_files', 'media_files'], $this->fetchReferenceFields(0));
+        $this->assertSame(1, $this->countRowsMatching('sys_file_reference', ['uid' => 1, 'deleted' => 0]), 'The stored image must be kept.');
+    }
+
+    #[Test]
+    public function goneMediaResourceLetsTheStoredImagesGo(): void
+    {
+        $this->importPHPDataSet(__DIR__ . '/Fixtures/Import/ImportsTouristAttractionsWithUnresolvableMediaParts.php');
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/Import/StoredImageOnAttractionWithFailingMediaResource.csv');
+        $this->expectFetch('attraction-with-failing-media-resource.json');
+        $this->expectFailure('image-failing-resource', 410);
+        $this->expectFetch('image-served-after-failure.json');
+        $this->expectFetchForUrl(
+            'https://cms.thuecat.org/o/adaptive-media/image/5099197/Preview-1280x0/image',
+            'cms.thuecat.org/image.jpg'
+        );
+
+        $this->importJob(4);
+
+        $this->assertSame(['media_files'], $this->fetchReferenceFields(0));
+        $this->assertSame(0, $this->countRowsMatching('sys_file_reference', ['uid' => 1, 'deleted' => 0]), 'The stored image must go.');
+    }
+
     // Promotion was gated on the run's overall severity while the finally
     // discarded staging regardless, so one failed root deleted every root's media.
     #[Test]

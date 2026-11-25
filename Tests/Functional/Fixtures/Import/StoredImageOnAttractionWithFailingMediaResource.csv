@@ -1,0 +1,9 @@
+"tx_thuecat_tourist_attraction"
+,"uid","pid","remote_id","title","media_files"
+,1,10,"https://thuecat.org/resources/attraction-with-failing-media-resource","Stored attraction",1
+"sys_file"
+,"uid","storage","type","extension","mime_type","name","identifier"
+,1,1,2,"jpg","image/jpeg","stored.jpg","/thuecat/stored.jpg"
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname"
+,1,10,1,1,"tx_thuecat_tourist_attraction","media_files"
