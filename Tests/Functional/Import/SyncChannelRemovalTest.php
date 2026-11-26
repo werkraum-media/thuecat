@@ -143,6 +143,19 @@ final class SyncChannelRemovalTest extends AbstractSyncChannelImportTestCase
     }
 
     #[Test]
+    public function deleteItemOfARecordGoneSinceTheStartDeletesNothing(): void
+    {
+        $this->expectChannelLists('list-changed-removed-with-import.json');
+        $job = $this->startJob(1);
+        $this->processCmdMap(['tx_events_domain_model_event' => [11 => ['delete' => 1]]]);
+
+        $this->handleDeleteRoot($job, $this->jobItems($job)[1]['uid']);
+
+        $this->assertSame('done', $this->jobItemStates($job)[1]);
+        $this->assertSame([], $this->getLogEntriesOfType('dataHandlerError'));
+    }
+
+    #[Test]
     public function deletedEventTakesItsTranslationDatesAndFileReferencesWithIt(): void
     {
         $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');

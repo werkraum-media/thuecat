@@ -29,6 +29,7 @@ final class SyncChannelImportStartedTest extends AbstractSyncChannelImportTestCa
     #[Test]
     public function channelListsBecomeImportItemsFollowedByDeleteItems(): void
     {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Import/SyncChannelRemoval.csv');
         $this->expectChannelLists('list-changed-removed-with-import.json', 'list-expired-expired.json');
 
         $job = $this->startJob(1);
@@ -38,6 +39,33 @@ final class SyncChannelImportStartedTest extends AbstractSyncChannelImportTestCa
             ['https://thuecat.org/resources/test-event-removed', 'delete'],
             ['https://thuecat.org/resources/test-event-expired', 'delete'],
         ], array_map(static fn (array $item): array => [$item['target'], $item['action']], $this->jobItems($job)));
+    }
+
+    #[Test]
+    public function onlyRemovedIdsTheSiteStoresBecomeDeleteItems(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Import/SyncChannelRemoval.csv');
+        $this->expectChannelLists('list-changed-removed.json', 'list-expired-expired.json');
+
+        $job = $this->startJob(1);
+
+        $this->assertSame([
+            ['https://thuecat.org/resources/test-event-removed', 'delete'],
+            ['https://thuecat.org/resources/test-event-removed-elsewhere', 'delete'],
+            ['https://thuecat.org/resources/test-event-expired', 'delete'],
+        ], array_map(static fn (array $item): array => [$item['target'], $item['action']], $this->jobItems($job)));
+    }
+
+    #[Test]
+    public function removedIdsOnlyOnATranslationOrADeletedRecordQueueNothing(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/../../Fixtures/Import/SyncChannelRemovalUnstored.csv');
+        $this->expectChannelLists('list-changed-removed-unstored.json');
+
+        $job = $this->startJob(1);
+
+        $this->assertSame([], $this->jobItems($job));
+        $this->assertEquals([new ImportFinished($job)], $this->queuedMessages());
     }
 
     #[Test]

@@ -288,6 +288,17 @@ final class ImportControllerTest extends AbstractBackendTestCase
     }
 
     #[Test]
+    public function indexListsNoDisabledConfiguration(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleOutcomes.csv');
+
+        $this->assertStringNotContainsString(
+            'data-configuration="87"',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
+    }
+
+    #[Test]
     public function indexListsTheJobsOfEachConfigurationNewestFirstBeneathIt(): void
     {
         $this->assertMatchesRegularExpression(

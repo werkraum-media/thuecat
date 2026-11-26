@@ -24,6 +24,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Schema\Capability\TcaSchemaCapability;
@@ -46,6 +47,35 @@ class SyncChannelReaper
         protected readonly ConnectionPool $connectionPool,
         protected readonly TcaSchemaFactory $tcaSchemaFactory,
     ) {
+    }
+
+    /**
+     * @param list<string> $remoteIds
+     * @param list<int> $sitePageIds
+     *
+     * @return list<string>
+     */
+    public function storedRemoteIds(array $remoteIds, array $sitePageIds): array
+    {
+        if ($sitePageIds === []) {
+            return [];
+        }
+
+        // The site's own remote IDs number in the thousands, a channel's removals in a five-year window in the tens of
+        // thousands: one query per table beats an IN list per chunk on a column without index.
+        $stored = [];
+        foreach (RecordTables::STANDALONE as $table) {
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+            $queryBuilder->select('remote_id')->from($table);
+            $this->constrainToSite($queryBuilder, $table, $sitePageIds);
+            foreach ($queryBuilder->executeQuery()->fetchFirstColumn() as $remoteId) {
+                if (is_string($remoteId)) {
+                    $stored[$remoteId] = $remoteId;
+                }
+            }
+        }
+
+        return array_values(array_filter($remoteIds, static fn (string $remoteId): bool => isset($stored[$remoteId])));
     }
 
     /**
@@ -92,6 +122,24 @@ class SyncChannelReaper
      */
     protected function findUids(string $table, string $remoteId, array $sitePageIds): array
     {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
+        $queryBuilder->select('uid')->from($table);
+        $this->constrainToSite($queryBuilder, $table, $sitePageIds);
+        $queryBuilder->andWhere($queryBuilder->expr()->eq('remote_id', $queryBuilder->createNamedParameter($remoteId)));
+
+        $uids = $queryBuilder->executeQuery()->fetchFirstColumn();
+
+        return array_values(array_map(intval(...), array_filter($uids, is_numeric(...))));
+    }
+
+    /**
+     * What the site stores, as both the start check and the deletion read it: default-language records on the site's
+     * pages, deleted ones excluded.
+     *
+     * @param list<int> $sitePageIds
+     */
+    protected function constrainToSite(QueryBuilder $queryBuilder, string $table, array $sitePageIds): void
+    {
         $languageField = $this->tcaSchemaFactory
             ->get($table)
             ->getCapability(TcaSchemaCapability::Language)
@@ -99,30 +147,10 @@ class SyncChannelReaper
             ->getName()
         ;
 
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
-
-        $uids = $queryBuilder
-            ->select('uid')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'remote_id',
-                    $queryBuilder->createNamedParameter($remoteId)
-                ),
-                $queryBuilder->expr()->in(
-                    'pid',
-                    $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)
-                ),
-                $queryBuilder->expr()->eq(
-                    $languageField,
-                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
-                )
-            )
-            ->executeQuery()
-            ->fetchFirstColumn()
-        ;
-
-        return array_values(array_map(intval(...), array_filter($uids, is_numeric(...))));
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->in('pid', $queryBuilder->createNamedParameter($sitePageIds, ArrayParameterType::INTEGER)),
+            $queryBuilder->expr()->eq($languageField, $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+        );
     }
 }

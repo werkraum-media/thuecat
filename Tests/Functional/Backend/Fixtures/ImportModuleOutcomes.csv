@@ -1,10 +1,11 @@
 "tx_thuecat_import_configuration"
-,"uid","pid","deleted","title","type","storage_pid","schedule_interval","next_run","last_run","skip_media"
-,81,0,0,"Failed after a success","static",10,0,0,1795554900,0
-,82,0,0,"Done with errors","static",10,0,0,1795554900,0
-,84,0,0,"Done clean","static",10,0,0,1795554900,0
-,85,0,0,"Stopped","static",10,0,0,1795554900,0
-,86,0,0,"Running after a failure","static",10,0,0,1795554900,0
+,"uid","pid","deleted","disable","title","type","storage_pid","schedule_interval","next_run","last_run","skip_media"
+,81,0,0,0,"Failed after a success","static",10,0,0,1795554900,0
+,82,0,0,0,"Done with errors","static",10,0,0,1795554900,0
+,84,0,0,0,"Done clean","static",10,0,0,1795554900,0
+,85,0,0,0,"Stopped","static",10,0,0,1795554900,0
+,86,0,0,0,"Running after a failure","static",10,0,0,1795554900,0
+,87,0,0,1,"Disabled","static",10,0,0,0,0
 "tx_thuecat_import_job"
 ,"uid","configuration","status","job_trigger","backend_user","crdate","progressed_at","started_at","ended_at","done_items","failed_items","skipped_items","import_log"
 ,20,81,"done","schedule",0,1795468500,1795468560,1795468500,1795468560,3,0,0,20

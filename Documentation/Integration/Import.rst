@@ -61,8 +61,9 @@ The supervising task
 The imports module
 ==================
 
-The backend module :guilabel:`ThüCAT > Imports` lists the import configurations whose storage
-folder the user may read, grouped by the site of the storage folder. Configurations whose folder
+The backend module :guilabel:`ThüCAT > Imports` lists the enabled import configurations whose
+storage folder the user may read, grouped by the site of the storage folder. A disabled
+configuration is neither listed nor scheduled. Configurations whose folder
 belongs to no site are listed last.
 
 Each configuration shows its type, storage folder, schedule, next and last run, and its five most

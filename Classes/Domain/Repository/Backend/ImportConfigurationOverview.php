@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -118,7 +119,8 @@ class ImportConfigurationOverview
     protected function configurations(): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_configuration');
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+        // A disabled configuration is never scheduled and cannot start, as everywhere the default restrictions apply.
+        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction())->add(new HiddenRestriction());
 
         return $queryBuilder
             ->select('uid', 'title', 'type', 'storage_pid', 'skip_media', 'schedule_interval', 'next_run', 'last_run')

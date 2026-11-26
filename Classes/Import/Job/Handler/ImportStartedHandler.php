@@ -42,9 +42,11 @@ use WerkraumMedia\ThueCat\Import\Progress\ImportPhase;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSetting;
 use WerkraumMedia\ThueCat\Import\Settings\ImportSettings;
 use WerkraumMedia\ThueCat\Import\StoragePidConfigurationException;
+use WerkraumMedia\ThueCat\Import\SyncChannel\SyncChannelReaper;
 use WerkraumMedia\ThueCat\Import\SyncChannel\UnreadableSyncListException;
 use WerkraumMedia\ThueCat\Import\UrlProvider\SyncChannelUrlProvider;
 use WerkraumMedia\ThueCat\Import\UrlProvider\UrlProviders;
+use WerkraumMedia\ThueCat\Service\SitePageIds;
 
 #[AsMessageHandler]
 final readonly class ImportStartedHandler
@@ -62,6 +64,8 @@ final readonly class ImportStartedHandler
         private MessageBusInterface $messageBus,
         private FileFolderAccess $fileFolderAccess,
         private ImportConfigurationValidator $configurationValidator,
+        private SyncChannelReaper $syncChannelReaper,
+        private SitePageIds $sitePageIds,
     ) {
     }
 
@@ -104,10 +108,8 @@ final readonly class ImportStartedHandler
             return;
         }
 
-        $this->effectiveSettingsReport->record(
-            $configuration,
-            $this->siteFinder->getSiteByPageId($configuration->getStoragePid())
-        );
+        $site = $this->siteFinder->getSiteByPageId($configuration->getStoragePid());
+        $this->effectiveSettingsReport->record($configuration, $site);
         $importLog = $this->importLogger->openLog($job->configurationUid);
         $this->importJobs->markRunning($job->uid, $importLog);
 
@@ -144,7 +146,12 @@ final readonly class ImportStartedHandler
             $this->fetchData->resetRunConfiguration();
         }
 
-        $this->importJobItems->store($job->uid, $targets['import'], $targets['delete']);
+        // A removal the site never stored would cost a message and delete nothing.
+        $this->importJobItems->store(
+            $job->uid,
+            $targets['import'],
+            $this->syncChannelReaper->storedRemoteIds($targets['delete'], $this->sitePageIds->forRootPage($site->getRootPageId()))
+        );
         $this->messageBus->dispatch($this->importJobItems->nextMessage($job->uid));
     }
 

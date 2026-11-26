@@ -33,6 +33,14 @@ final class SyncChannelReaperFailingStub extends SyncChannelReaper
     {
     }
 
+    /**
+     * Every listed ID counts as stored, so each one gets the delete item this stub refuses.
+     */
+    public function storedRemoteIds(array $remoteIds, array $sitePageIds): array
+    {
+        return $remoteIds;
+    }
+
     public function delete(string $remoteId, array $sitePageIds): array
     {
         return [self::ERROR];

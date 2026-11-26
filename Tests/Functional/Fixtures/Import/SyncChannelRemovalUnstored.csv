@@ -1,0 +1,4 @@
+"tx_events_domain_model_event"
+,"uid","pid","deleted","sys_language_uid","l10n_parent","title","remote_id"
+,60,10,1,0,0,"Deleted event","https://thuecat.org/resources/test-event-removed-deleted"
+,61,10,0,1,1,"Event (en) whose ID only the translation carries","https://thuecat.org/resources/test-event-removed-translation-only"
