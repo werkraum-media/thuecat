@@ -57,10 +57,6 @@ class SyncChannelReaper
      */
     public function storedRemoteIds(array $remoteIds, array $sitePageIds): array
     {
-        if ($sitePageIds === []) {
-            return [];
-        }
-
         // The site's own remote IDs number in the thousands, a channel's removals in a five-year window in the tens of
         // thousands: one query per table beats an IN list per chunk on a column without index.
         $stored = [];

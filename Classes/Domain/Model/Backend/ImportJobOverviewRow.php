@@ -29,7 +29,7 @@ final readonly class ImportJobOverviewRow
      * @param int $importLog 0 before the job has started
      * @param int $finishedItems done, failed and skipped items of a running job, 0 otherwise
      * @param int $totalItems all items of a running job, 0 otherwise
-     * @param int|null $estimate remaining seconds of a running job, null before its first item is done
+     * @param int|null $estimate remaining seconds of a running job at its pace since it started, null before its first item has finished
      */
     public function __construct(
         public int $uid,

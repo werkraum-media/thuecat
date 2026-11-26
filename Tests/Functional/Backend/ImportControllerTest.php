@@ -597,26 +597,60 @@ final class ImportControllerTest extends AbstractBackendTestCase
         );
     }
 
+    /**
+     * Job 1 has finished 4 items and has 5 pending, so the estimate is 5/4 of the time since its start.
+     *
+     * @return iterable<string, array{int, string}>
+     */
+    public static function estimates(): iterable
+    {
+        yield 'minutes and seconds' => [200, 'about 4 min 10 s'];
+        yield 'waiting behind other jobs counts' => [288000, 'about 4 d 4 h'];
+        yield 'hours and minutes' => [9600, 'about 3 h 20 min'];
+        yield 'a zero unit in between is skipped' => [2884, 'about 1 h 5 s'];
+        yield 'a single unit' => [96, 'about 2 min'];
+        yield 'a third unit is left out' => [2932, 'about 1 h 1 min'];
+        yield 'rounded down to the nearest second' => [97, 'about 2 min 1 s'];
+        yield 'rounded up to the nearest second' => [99, 'about 2 min 4 s'];
+    }
+
+    #[DataProvider('estimates')]
     #[Test]
-    public function indexEstimatesTheRemainingTimeAsTheAverageItemDurationTimesThePendingItems(): void
+    public function indexEstimatesTheRemainingTimeFromTheJobsPaceSinceItStarted(int $secondsSinceStart, string $estimate): void
     {
         $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleHalfway.csv');
+        // @phpstan-ignore method.notFound (functional test container is the Symfony Container, which has set())
+        $this->getContainer()->set(ImportConfigurationOverview::class, new ImportConfigurationOverview(
+            $this->get(ConnectionPool::class),
+            $this->get(SiteFinder::class),
+            new FixedClock(new DateTimeImmutable('@' . (self::LAST_PROGRESS + $secondsSinceStart))),
+        ));
 
         $this->assertMatchesRegularExpression(
-            '#<tr data-job="1"' . self::ROW . 'about 3 min 20 s#s',
+            '#<tr data-job="1"' . self::ROW . '4 / 9, ' . $estimate . '</small>#s',
             (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
         );
     }
 
-    #[Test]
-    public function indexShowsNoEstimateBeforeTheFirstItemHasFinished(): void
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function jobsWithoutEstimate(): iterable
     {
-        $this->importCSVDataSet(__DIR__ . '/Fixtures/ImportModuleNoneFinished.csv');
+        yield 'before the first item has finished' => ['ImportModuleNoneFinished.csv', '0 / 3'];
+        yield 'once no item is pending' => ['ImportModuleAllFinished.csv', '3 / 3'];
+    }
 
-        $html = (string)$this->get(ImportController::class)->indexAction($this->request)->getBody();
+    #[DataProvider('jobsWithoutEstimate')]
+    #[Test]
+    public function indexShowsNoEstimateWithoutFinishedOrPendingItems(string $fixture, string $progress): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/' . $fixture);
 
-        $this->assertMatchesRegularExpression('#<tr data-job="1"' . self::ROW . '0 / 3#s', $html);
-        $this->assertDoesNotMatchRegularExpression('#<tr data-job="1"' . self::ROW . 'about #s', $html);
+        $this->assertMatchesRegularExpression(
+            '#<tr data-job="1"' . self::ROW . $progress . '</small>#s',
+            (string)$this->get(ImportController::class)->indexAction($this->request)->getBody()
+        );
     }
 
     /**

@@ -306,9 +306,19 @@ class ImportController
         ];
     }
 
+    /**
+     * The label of each unit pair orders and names its units, as a translation needs.
+     */
     protected function estimate(int $seconds): string
     {
-        return sprintf($this->getLanguageService()->sL(self::LABELS . 'job.estimate'), intdiv($seconds, 60), $seconds % 60);
+        $units = array_slice(array_filter([
+            'd' => intdiv($seconds, 86400),
+            'h' => intdiv($seconds, 3600) % 24,
+            'min' => intdiv($seconds, 60) % 60,
+            's' => $seconds % 60,
+        ]), 0, 2);
+
+        return sprintf($this->getLanguageService()->sL(self::LABELS . 'job.estimate.' . implode('.', array_keys($units))), ...array_values($units));
     }
 
     protected function schedule(int $interval): string

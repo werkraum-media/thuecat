@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
@@ -119,8 +118,6 @@ class ImportConfigurationOverview
     protected function configurations(): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_configuration');
-        // A disabled configuration is never scheduled and cannot start, as everywhere the default restrictions apply.
-        $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction())->add(new HiddenRestriction());
 
         return $queryBuilder
             ->select('uid', 'title', 'type', 'storage_pid', 'skip_media', 'schedule_interval', 'next_run', 'last_run')
@@ -224,9 +221,10 @@ class ImportConfigurationOverview
         $uid = $this->intOf($row['uid']);
         $status = $this->stringOf($row['status']);
         $items = $status === 'running' ? $this->itemsByState($uid) : [];
-        $pending = $items['pending']['count'] ?? 0;
-        $done = $items['done'] ?? ['count' => 0, 'duration' => 0];
-        $total = array_sum(array_column($items, 'count'));
+        $pending = $items['pending'] ?? 0;
+        $total = array_sum($items);
+        $finished = $total - $pending;
+        $now = $this->clock->now()->getTimestamp();
 
         return new ImportJobOverviewRow(
             $uid,
@@ -239,26 +237,23 @@ class ImportConfigurationOverview
             $this->intOf($row['failed_items']),
             $this->intOf($row['skipped_items']),
             $this->intOf($row['import_log']),
-            $total - $pending,
+            $finished,
             $total,
-            $done['count'] > 0 ? (int)round($done['duration'] * $pending / $done['count']) : null,
+            $finished > 0 ? (int)round(($now - $this->intOf($row['started_at'])) * $pending / $finished) : null,
             in_array($status, ['queued', 'running'], true)
-                && $this->clock->now()->getTimestamp() - $this->intOf($row['progressed_at']) > self::STALLED_AFTER,
+                && $now - $this->intOf($row['progressed_at']) > self::STALLED_AFTER,
         );
     }
 
     /**
-     * @return array<string, array{count: int, duration: int}> keyed by item state
+     * @return array<string, int> item count keyed by item state
      */
     protected function itemsByState(int $jobUid): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_thuecat_import_job_item');
         $rows = $queryBuilder
             ->select('state')
-            ->addSelectLiteral(
-                $queryBuilder->expr()->count('uid', 'items'),
-                $queryBuilder->expr()->sum('duration', 'duration')
-            )
+            ->addSelectLiteral($queryBuilder->expr()->count('uid', 'items'))
             ->from('tx_thuecat_import_job_item')
             ->where($queryBuilder->expr()->eq('job', $queryBuilder->createNamedParameter($jobUid, Connection::PARAM_INT)))
             ->groupBy('state')
@@ -268,10 +263,7 @@ class ImportConfigurationOverview
 
         $items = [];
         foreach ($rows as $row) {
-            $items[$this->stringOf($row['state'])] = [
-                'count' => $this->intOf($row['items']),
-                'duration' => $this->intOf($row['duration']),
-            ];
+            $items[$this->stringOf($row['state'])] = $this->intOf($row['items']);
         }
 
         return $items;

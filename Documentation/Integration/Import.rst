@@ -78,9 +78,13 @@ them is in view, unless you folded them yourself. The module remembers every blo
 close. The button beside each site's name opens all jobs of the site, or closes them once all are
 open.
 
-A running job shows its progress and an estimate of the remaining time. A job queued, or running
-without progress, for more than five minutes is marked :guilabel:`Stalled`; this usually means
-that the message worker does not run.
+A running job shows its progress and an estimate of the remaining time, once its first item has
+finished. The estimate follows the job's pace since it started: the time passed, divided by the
+items finished, times the items still pending. Jobs take turns on the one message worker, so the
+time a job waits behind other jobs is included, as is any time the worker did not run.
+
+A job queued, or running without progress, for more than five minutes is marked
+:guilabel:`Stalled`; this usually means that the message worker does not run.
 
 While it is open, the module refreshes each configuration once a minute, without a reload: its
 runs, its outcome, its open job, its buttons, and its jobs with their logs, including jobs started

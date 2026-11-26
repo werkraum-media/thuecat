@@ -92,14 +92,18 @@ Removal applies to the whole site
 =================================
 
 After the records to import, the job deletes every record the channel lists as removed or expired,
-one item per ThueCat ID, in the whole site
-the storage folder belongs to. It does not matter which import configuration imported the record,
-which folder of the site holds it, or which kind of record the configuration imports. A ThueCat ID
-stored in more than one table is deleted from each. Records of other sites are not touched.
+in the whole site the storage folder belongs to. It does not matter which import configuration
+imported the record, which folder of the site holds it, or which kind of record the configuration
+imports. A ThueCat ID stored in more than one table is deleted from each. Records of other sites are
+not touched.
 
 This follows from record identity: a site holds one record per ThueCat ID, whichever configuration
 wrote it, see :ref:`developers-import-records`. Deleting only this configuration's records would leave
 a record the channel declares invalid in place.
+
+When the job starts, it queues one item per listed ThueCat ID that the site stores in its default
+language; an ID the site does not store gets no item. A record deleted by other means before its
+item runs leaves nothing to delete.
 
 Records are deleted through the DataHandler, so their translations, inline children (addresses,
 opening hours, a trail's way types, locations and conditions), dates and file references go with

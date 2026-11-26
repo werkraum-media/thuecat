@@ -108,8 +108,35 @@
             <trans-unit id="job.progress" resname="job.progress">
                 <source>Progress</source>
             </trans-unit>
-            <trans-unit id="job.estimate" resname="job.estimate">
+            <trans-unit id="job.estimate.d" resname="job.estimate.d">
+                <source>about %1$d d</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.d.h" resname="job.estimate.d.h">
+                <source>about %1$d d %2$d h</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.d.min" resname="job.estimate.d.min">
+                <source>about %1$d d %2$d min</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.d.s" resname="job.estimate.d.s">
+                <source>about %1$d d %2$d s</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.h" resname="job.estimate.h">
+                <source>about %1$d h</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.h.min" resname="job.estimate.h.min">
+                <source>about %1$d h %2$d min</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.h.s" resname="job.estimate.h.s">
+                <source>about %1$d h %2$d s</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.min" resname="job.estimate.min">
+                <source>about %1$d min</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.min.s" resname="job.estimate.min.s">
                 <source>about %1$d min %2$d s</source>
+            </trans-unit>
+            <trans-unit id="job.estimate.s" resname="job.estimate.s">
+                <source>about %1$d s</source>
             </trans-unit>
             <trans-unit id="job.log" resname="job.log">
                 <source>Log</source>
